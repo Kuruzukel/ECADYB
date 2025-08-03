@@ -174,7 +174,7 @@ function deleteStudent(studentId, collection) {
     )
   ) {
     // Send delete request to server
-    fetch("delete_student.php", {
+    fetch("../../Connection/DeleteStudent.php", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

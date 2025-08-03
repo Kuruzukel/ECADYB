@@ -82,7 +82,7 @@ window.addEventListener("DOMContentLoaded", () => {
 // Global variable to store original modal content
 let originalModalContent = null;
 let isPreviewMode = false;
-let modalState = 'confirm'; // 'confirm' or 'preview'
+let modalState = "confirm"; // 'confirm' or 'preview'
 
 // Modern Announcement Form JavaScript
 document.addEventListener("DOMContentLoaded", function () {
@@ -100,6 +100,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Initialize preview functionality
   initializePreview();
+
+  // Initialize date status checking
+  initializeDateStatusCheck();
 });
 
 // Display current date in header
@@ -239,7 +242,7 @@ function showModal() {
   const modalOverlay = document.getElementById("modal-overlay");
   if (modalOverlay) {
     // Set modal state to confirm
-    modalState = 'confirm';
+    modalState = "confirm";
     modalOverlay.style.display = "flex";
     modalOverlay.style.animation = "fadeIn 0.3s ease-out";
   }
@@ -253,13 +256,13 @@ function hideModal() {
     setTimeout(() => {
       modalOverlay.style.display = "none";
       // Only restore original modal content if we were in preview mode
-      if (modalState === 'preview') {
+      if (modalState === "preview") {
         const modal = modalOverlay.querySelector(".modal");
         if (modal && originalModalContent) {
           modal.innerHTML = originalModalContent;
         }
         // Reset modal state
-        modalState = 'confirm';
+        modalState = "confirm";
       }
     }, 300);
   }
@@ -279,35 +282,65 @@ function submitForm() {
       // Get form data
       const formData = new FormData(form);
 
+      // Set default date to today if no date is provided
+      const dateInput = document.getElementById("date");
+      if (dateInput && !dateInput.value) {
+        const today = new Date().toISOString().split("T")[0];
+        dateInput.value = today;
+        formData.set("date", today);
+      }
+
       // Submit via AJAX
-      fetch('submit_announcement.php', {
-        method: 'POST',
-        body: formData
+      fetch("../../Connection/SubmitAnnouncement.php", {
+        method: "POST",
+        body: formData,
       })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          showNotification(data.message, "success");
-          // Reset form
-          form.reset();
-          // Reset character counter
-          const charCountElement = document.getElementById("char-count");
-          if (charCountElement) {
-            charCountElement.textContent = "0";
+        .then((response) => {
+          console.log("Response status:", response.status);
+          return response.json();
+        })
+        .then((data) => {
+          console.log("Response data:", data);
+          if (data.success) {
+            showNotification(data.message, "success");
+            // Reset form
+            form.reset();
+            // Reset character counter
+            const charCountElement = document.getElementById("char-count");
+            if (charCountElement) {
+              charCountElement.textContent = "0";
+            }
+
+            // Reset date input to current date and update status
+            const dateInput = document.getElementById("date");
+            if (dateInput) {
+              const today = new Date().toISOString().split("T")[0];
+              dateInput.value = today;
+            }
+
+            // Update date status after successful submission
+            setTimeout(() => {
+              checkDateStatus();
+            }, 500);
+
+            // Stay on the same page after successful submission
+            // The announcement will be available in the Event Calendar when you visit it
+          } else {
+            showNotification(data.message, "error");
           }
-        } else {
-          showNotification(data.message, "error");
-        }
-      })
-      .catch(error => {
-        showNotification("An error occurred while posting the announcement", "error");
-        console.error('Error:', error);
-      })
-      .finally(() => {
-        // Restore button state
-        submitBtn.innerHTML = originalText;
-        submitBtn.disabled = false;
-      });
+        })
+        .catch((error) => {
+          console.error("Network error:", error);
+          showNotification(
+            "An error occurred while posting the announcement. Please check your connection and try again.",
+            "error"
+          );
+        })
+        .finally(() => {
+          // Restore button state
+          submitBtn.innerHTML = originalText;
+          submitBtn.disabled = false;
+        });
     }
   }
 }
@@ -342,7 +375,7 @@ function showPreviewModal(title, message) {
   const modal = modalOverlay.querySelector(".modal");
 
   // Set modal state to preview
-  modalState = 'preview';
+  modalState = "preview";
 
   // Create preview content
   const previewContent = `
@@ -432,6 +465,65 @@ function getNotificationColor(type) {
     info: "#8b5cf6",
   };
   return colors[type] || "#8b5cf6";
+}
+
+// Date status checking functionality
+function initializeDateStatusCheck() {
+  const dateInput = document.getElementById("date");
+  const dateStatus = document.getElementById("date-status");
+
+  if (dateInput && dateStatus) {
+    // Check status on page load
+    checkDateStatus();
+
+    // Check status when date changes
+    dateInput.addEventListener("change", checkDateStatus);
+  }
+}
+
+async function checkDateStatus() {
+  const dateInput = document.getElementById("date");
+  const dateStatus = document.getElementById("date-status");
+
+  if (!dateInput || !dateStatus) return;
+
+  const selectedDate = dateInput.value;
+  if (!selectedDate) {
+    dateStatus.innerHTML = "";
+    return;
+  }
+
+  try {
+    const response = await fetch("../../Connection/FetchAnnouncement.php");
+    const data = await response.json();
+
+    if (data.success) {
+      const announcementsForDate = data.announcements.filter(
+        (announcement) => announcement.date === selectedDate
+      );
+
+      const count = announcementsForDate.length;
+
+      if (count >= 5) {
+        dateStatus.innerHTML = `<span style="color: #dc2626;">⚠️ Maximum announcements reached (${count}/5). Cannot add more announcements for this date.</span>`;
+        dateStatus.style.color = "#dc2626";
+      } else if (count === 4) {
+        dateStatus.innerHTML = `<span style="color: #f59e0b;">⚠️ ${count} announcement(s) for this date (1 remaining)</span>`;
+        dateStatus.style.color = "#f59e0b";
+      } else {
+        dateStatus.innerHTML = `<span style="color: #059669;">✓ ${count} announcement(s) for this date (${
+          5 - count
+        } remaining)</span>`;
+        dateStatus.style.color = "#059669";
+      }
+    } else {
+      console.error("Failed to fetch announcements:", data.message);
+      dateStatus.innerHTML = "";
+    }
+  } catch (error) {
+    console.error("Error checking date status:", error);
+    dateStatus.innerHTML = "";
+  }
 }
 
 // Add CSS animations

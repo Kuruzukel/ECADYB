@@ -18,8 +18,6 @@
 
         <div class="form-content">
             <div class="form-group">
-                <!-- Event Form Section -->
-
                 <!-- Calendar Section -->
                 <div class="section">
 
@@ -40,6 +38,10 @@
                             <button class="view-btn" data-view="week">Week</button>
                             <button class="view-btn" data-view="day">Day</button>
                             <button class="view-btn" data-view="list">List</button>
+                            <button class="view-btn refresh-btn" id="refresh-calendar">
+                                <i class="fas fa-sync-alt"></i>
+                                Refresh
+                            </button>
                         </div>
 
                         <div class="calendar-grid" id="calendar-grid">
@@ -63,13 +65,9 @@
                     </div>
                 </div>
                 <div class="modal-buttons">
-                    <button class="modal-btn confirm" id="confirm-event-btn">
-                        <i class="fas fa-check"></i>
-                        Schedule Event
-                    </button>
                     <button class="modal-btn cancel" id="cancel-event-btn">
                         <i class="fas fa-times"></i>
-                        Cancel
+                        Close
                     </button>
                 </div>
             </div>

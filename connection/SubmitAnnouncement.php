@@ -2,7 +2,10 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-require __DIR__ . '/../../vendor/autoload.php';
+// Set timezone to ensure consistent date handling
+date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
+
+require __DIR__ . '/../vendor/autoload.php';
 
 use MongoDB\Client;
 
@@ -11,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         // Connect to MongoDB
         $client = new Client("mongodb://localhost:27017");
-        $collection = $client->mydb->announcements;
+        $collection = $client->Announcement->Calendar;
 
         // Get form data
         $title = trim($_POST['title'] ?? '');
@@ -24,15 +27,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             throw new Exception("Title and message are required");
         }
 
+        // Check if there are already 5 announcements for the selected date
+        $selectedDate = $date ?: date('Y-m-d');
+        $existingCount = $collection->countDocuments([
+            'date' => $selectedDate,
+            'status' => 'active'
+        ]);
+
+        if ($existingCount >= 5) {
+            throw new Exception("Cannot post announcement. Maximum of 5 announcements per day allowed. This date already has {$existingCount} announcements.");
+        }
+
         // Create announcement document
         $announcement = [
             'title' => $title,
             'message' => $message,
-            'date' => $date,
+            'date' => $date ?: date('Y-m-d'), // Use current date if no date provided
             'time' => $time,
             'created_at' => new MongoDB\BSON\UTCDateTime(),
-            'status' => 'active'
+            'status' => 'active',
+            'type' => 'announcement'
         ];
+
+        // Debug: Log the date being saved
+        error_log("Saving announcement with date: " . $announcement['date']);
 
         // Insert into database
         $result = $collection->insertOne($announcement);
@@ -42,13 +60,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $response = [
                 'success' => true,
                 'message' => 'Announcement posted successfully!',
-                'id' => $result->getInsertedId()
+                'id' => (string)$result->getInsertedId(),
+                'announcement' => $announcement
             ];
         } else {
             throw new Exception("Failed to insert announcement");
         }
 
     } catch (Exception $e) {
+        // Log error for debugging
+        error_log("Announcement submission error: " . $e->getMessage());
         $response = [
             'success' => false,
             'message' => 'Error: ' . $e->getMessage()
@@ -62,6 +83,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // If not POST request, redirect to create announcement page
-header('Location: CreateAnnouncement.php');
+header('Location: ../Admin/Components/CreateAnnouncement.php');
 exit;
-?> 
+?>

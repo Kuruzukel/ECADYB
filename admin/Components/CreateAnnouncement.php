@@ -17,7 +17,7 @@
         </div>
 
         <div class="form-content">
-            <form id="announcementForm" action="submit_announcement.php" method="post">
+            <form id="announcementForm" action="../../Connection/SubmitAnnouncement.php" method="post">
                 <label for="title">Title</label>
                 <input type="text" id="title" name="title" placeholder="Enter announcement title" required />
 
@@ -28,7 +28,10 @@
                 </div>
 
                 <label for="date">Date (optional)</label>
-                <input type="date" id="date" name="date" />
+                <input type="date" id="date" name="date"
+                    value="<?php date_default_timezone_set('Asia/Manila'); echo date('Y-m-d'); ?>" />
+                <div id="date-status" class="date-status"
+                    style="margin-top: 0.5rem; font-size: 0.875rem; color: #6b7280;"></div>
 
                 <label for="time">Time (optional)</label>
                 <input type="time" id="time" name="time" />
