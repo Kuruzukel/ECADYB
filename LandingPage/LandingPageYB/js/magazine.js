@@ -185,7 +185,8 @@ function resizeViewport() {
     ) {
       $(".magazine").turn("size", bound.width, bound.height);
 
-      if ($(".magazine").turn("page") == 1) $(".magazine").turn("peel", "br");
+      // Peel effect removed
+      // if ($(".magazine").turn("page") == 1) $(".magazine").turn("peel", "br");
 
       $(".next-button").css({
         height: bound.height,
