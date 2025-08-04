@@ -658,7 +658,7 @@ class EventCalendar {
     // Show custom confirmation modal
     const confirmed = await this.showConfirmationModal(
       " Delete Announcement",
-      "Are you sure you want to delete this announcement?<br><br>This action cannot be undone and the announcement will be permanently removed from the database."
+      "Are you sure you want to delete this announcement?"
     );
 
     if (!confirmed) {
@@ -699,10 +699,7 @@ class EventCalendar {
 
       if (result.success) {
         // Success notification with more details
-        this.showNotification(
-          "✅ Announcement deleted successfully!",
-          "success"
-        );
+        this.showNotification("Announcement deleted successfully!", "success");
 
         // Refresh the calendar data
         await this.loadEvents();
