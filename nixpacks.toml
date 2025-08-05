@@ -1,0 +1,11 @@
+[phases.setup]
+nixPkgs = ["php"]
+
+[phases.install]
+cmds = ["composer install --optimize-autoloader --no-scripts --no-interaction --ignore-platform-reqs"]
+
+[phases.build]
+cmds = ["echo 'Build complete'"]
+
+[start]
+cmd = "php -S 0.0.0.0:$PORT -t ." 

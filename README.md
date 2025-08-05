@@ -20,10 +20,11 @@ Make sure to set the following environment variable in your Railway project:
 
 ### Troubleshooting Deployment Issues
 
-If you encounter the "php-extensions.mongodb" error:
+If you encounter deployment errors:
 1. Railway will automatically install the MongoDB PHP extension
-2. The `composer.json` file now includes `"ext-mongodb": "*"` to ensure the extension is available
+2. The `composer.json` file is configured to ignore platform requirements during installation
 3. All connection files have been updated to use environment variables instead of hardcoded localhost
+4. Both Docker and Nixpacks configurations are available as deployment options
 
 ### Local Development
 To run locally:
@@ -39,6 +40,8 @@ To run locally:
 - `vendor/`: Composer dependencies (including MongoDB PHP driver)
 
 ### Configuration Files
-- `railway.json`: Railway deployment configuration
-- `composer.json`: PHP dependencies with MongoDB extension requirement
+- `railway.json`: Railway deployment configuration (Nixpacks)
+- `Dockerfile`: Alternative Docker deployment configuration
+- `nixpacks.toml`: Nixpacks build configuration
+- `composer.json`: PHP dependencies
 - `.railwayignore`: Files to exclude from deployment 

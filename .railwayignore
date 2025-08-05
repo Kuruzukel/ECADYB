@@ -11,6 +11,5 @@ Thumbs.db
 *.tmp
 *.temp
 
-# Docker files (not needed for Nixpacks)
-Dockerfile
-docker/ 
+# Test files
+test-mongodb.php 
