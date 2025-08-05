@@ -2148,7 +2148,6 @@ header.hidden {
 @media screen and (max-width: 1000px) {
   header {
     width: 85%;
-    padding: 0 1.2rem;
   }
 
   .logo {
@@ -2165,24 +2164,6 @@ header.hidden {
     display: none;
   }
 
-  .login-btn {
-    
-    font-size: 0.9rem;
-  }
-
-  .center-nav {
-    display: flex;
-    transform: translateX(-50%);
-    gap: clamp(0.5rem, 1.5vw, 1rem);
-  }
-
-  .center-nav a {
-    padding: 0.4rem 1rem;
-    font-size: 0.9rem;
-    margin: 0 0.15rem;
-    white-space: nowrap;
-  }
-
   .login-dropdown-menu {
     min-width: clamp(120px, 28vw, 160px);
     right: clamp(-8px, -2vw, -2px);
@@ -2196,8 +2177,8 @@ header.hidden {
 
   /* Ensure navigation doesn't wrap */
   .center-nav {
-    flex-wrap: nowrap;
-    overflow: hidden;
+    display: flex;
+    transform: translateX(-50%);
   }
 
   /* Adjust header for better spacing */
@@ -2210,37 +2191,12 @@ header.hidden {
 /* Responsive adjustments for 900px and below */
 @media screen and (max-width: 900px) {
   header {
-    height: 50px;
+    height: 60px;
   }
-  
+
   .logo-img {
     width: 45px;
     height: 45px;
-  }
-  
-  .login-btn {
-   
-    font-size: 0.85rem;
-  }
-  
-  .center-nav a {
-    padding: 0.35rem 0.9rem;
-    font-size: 0.85rem;
-    margin: 0 0.12rem;
-  }
-  
-  .center-nav {
-    gap: clamp(0.5rem, 1.5vw, 1rem);
-  }
-  
-  .login-dropdown-menu {
-    min-width: clamp(120px, 28vw, 160px);
-    right: clamp(-8px, -2vw, -2px);
-  }
-  
-  .login-dropdown-item {
-    padding: clamp(0.6rem, 2vw, 0.8rem) clamp(1rem, 3vw, 1.4rem);
-    font-size: clamp(0.85rem, 2.7vw, 1rem);
   }
 }
 
@@ -2250,60 +2206,26 @@ header.hidden {
     width: 42px;
     height: 42px;
   }
-  
-  .login-btn {
-    padding: 0.6rem 0.8rem;
-    font-size: 0.8rem;
-  }
-  
-  .center-nav a {
-    padding: 0.3rem 0.8rem;
-    font-size: 0.8rem;
-    margin: 0 0.1rem;
-  }
-  
-  .login-dropdown-menu {
-    min-width: clamp(120px, 28vw, 160px);
-    right: clamp(-8px, -2vw, -2px);
-    top: clamp(110%, 112%, 115%);
-  }
-  
-  .login-dropdown-item {
-    padding: clamp(0.5rem, 1.8vw, 0.7rem) clamp(0.9rem, 2.8vw, 1.2rem);
-    font-size: clamp(0.8rem, 2.4vw, 0.95rem);
-  }
 }
 
 /* Responsive adjustments for 760px and below */
 @media screen and (max-width: 760px) {
-  .center-nav {
-    display: flex;
-    transform: translateX(-50%);
-    gap: clamp(0.3rem, 1vw, 0.5rem);
-  }
-  
-  .center-nav a {
-    padding: 0.25rem 0.7rem;
-    font-size: 0.75rem;
-    margin: 0 0.08rem;
-  }
-  
   .logo-img {
     width: 40px;
     height: 40px;
   }
-  
+
   .login-btn {
     padding: 0.6rem 0.9rem;
     font-size: 0.75rem;
   }
-  
+
   .login-dropdown-menu {
     min-width: clamp(100px, 22vw, 125px);
     right: clamp(-12px, -3vw, -6px);
     top: clamp(112%, 115%, 118%);
   }
-  
+
   .login-dropdown-item {
     padding: clamp(0.45rem, 1.6vw, 0.65rem) clamp(0.8rem, 2.6vw, 1.1rem);
     font-size: clamp(0.75rem, 2.1vw, 0.9rem);
@@ -2317,29 +2239,29 @@ header.hidden {
     transform: translateX(-50%);
     gap: clamp(0.2rem, 0.8vw, 0.4rem);
   }
-  
+
   .center-nav a {
     padding: 0.2rem 0.6rem;
     font-size: 0.7rem;
     margin: 0 0.06rem;
   }
-  
+
   .logo-img {
     width: 38px;
     height: 38px;
   }
-  
+
   .login-btn {
     padding: 0.5rem 0.7rem;
     font-size: 0.7rem;
   }
-  
+
   .login-dropdown-menu {
     min-width: clamp(90px, 20vw, 110px);
     right: clamp(-15px, -3.5vw, -8px);
     top: clamp(115%, 118%, 120%);
   }
-  
+
   .login-dropdown-item {
     padding: clamp(0.4rem, 1.4vw, 0.6rem) clamp(0.7rem, 2.4vw, 1rem);
     font-size: clamp(0.7rem, 1.9vw, 0.85rem);
@@ -2353,29 +2275,29 @@ header.hidden {
     transform: translateX(-50%);
     gap: clamp(0.15rem, 0.6vw, 0.3rem);
   }
-  
+
   .center-nav a {
     padding: 0.15rem 0.5rem;
     font-size: 0.65rem;
     margin: 0 0.05rem;
   }
-  
+
   .logo-img {
     width: 35px;
     height: 35px;
   }
-  
+
   .login-btn {
     padding: 0.5rem 0.7rem;
     font-size: 0.65rem;
   }
-  
+
   .login-dropdown-menu {
     min-width: clamp(80px, 18vw, 100px);
     right: clamp(-18px, -4vw, -10px);
     top: clamp(118%, 120%, 122%);
   }
-  
+
   .login-dropdown-item {
     padding: clamp(0.35rem, 1.2vw, 0.55rem) clamp(0.6rem, 2.2vw, 0.9rem);
     font-size: clamp(0.65rem, 1.7vw, 0.8rem);
@@ -2389,29 +2311,29 @@ header.hidden {
     transform: translateX(-50%);
     gap: clamp(0.12rem, 0.55vw, 0.28rem);
   }
-  
+
   .center-nav a {
     padding: 0.12rem 0.45rem;
     font-size: 0.62rem;
     margin: 0 0.045rem;
   }
-  
+
   .logo-img {
     width: 33px;
     height: 33px;
   }
-  
+
   .login-btn {
     padding: 0.5rem 0.7rem;
     font-size: 0.62rem;
   }
-  
+
   .login-dropdown-menu {
     min-width: clamp(75px, 17vw, 95px);
     right: clamp(-19px, -4.25vw, -11px);
     top: clamp(119%, 121%, 123%);
   }
-  
+
   .login-dropdown-item {
     padding: clamp(0.32rem, 1.1vw, 0.52rem) clamp(0.55rem, 2.1vw, 0.85rem);
     font-size: clamp(0.62rem, 1.6vw, 0.77rem);
@@ -2425,29 +2347,29 @@ header.hidden {
     transform: translateX(-50%);
     gap: clamp(0.1rem, 0.5vw, 0.25rem);
   }
-  
+
   .center-nav a {
     padding: 0.1rem 0.4rem;
     font-size: 0.6rem;
     margin: 0 0.04rem;
   }
-  
+
   .logo-img {
     width: 32px;
     height: 32px;
   }
-  
+
   .login-btn {
     padding: 0.5rem 0.7rem;
     font-size: 0.6rem;
   }
-  
+
   .login-dropdown-menu {
     min-width: clamp(70px, 16vw, 90px);
     right: clamp(-20px, -4.5vw, -12px);
     top: clamp(120%, 122%, 125%);
   }
-  
+
   .login-dropdown-item {
     padding: clamp(0.3rem, 1vw, 0.5rem) clamp(0.5rem, 2vw, 0.8rem);
     font-size: clamp(0.6rem, 1.5vw, 0.75rem);
@@ -2461,29 +2383,29 @@ header.hidden {
     transform: translateX(-50%);
     gap: clamp(0.09rem, 0.47vw, 0.24rem);
   }
-  
+
   .center-nav a {
     padding: 0.09rem 0.37rem;
     font-size: 0.59rem;
     margin: 0 0.037rem;
   }
-  
+
   .logo-img {
     width: 31.5px;
     height: 31.5px;
   }
-  
+
   .login-btn {
     padding: 0.5rem 0.7rem;
     font-size: 0.6rem;
   }
-  
+
   .login-dropdown-menu {
     min-width: clamp(67px, 15.5vw, 87px);
     right: clamp(-20.5px, -4.62vw, -12.5px);
     top: clamp(120.5%, 122.5%, 125.5%);
   }
-  
+
   .login-dropdown-item {
     padding: clamp(0.29rem, 0.95vw, 0.49rem) clamp(0.47rem, 1.95vw, 0.77rem);
     font-size: clamp(0.59rem, 1.45vw, 0.73rem);
@@ -2497,32 +2419,32 @@ header.hidden {
     transform: translateX(-50%);
     gap: clamp(0.06rem, 0.44vw, 0.21rem);
   }
-  
+
   .center-nav a {
     padding: 0.06rem 0.34rem;
     font-size: 0.56rem;
     margin: 0 0.034rem;
   }
-  
+
   .logo-img {
     width: 30.8px;
     height: 30.8px;
   }
-  
+
   .login-btn {
     padding: 0.5rem 0.7rem;
     font-size: 0.6rem;
   }
-  
+
   .login-dropdown-menu {
     min-width: clamp(64px, 14.8vw, 84px);
     right: clamp(-19.8px, -4.4vw, -11.8px);
     top: clamp(119.8%, 121.8%, 124.8%);
   }
-  
+
   .login-dropdown-item {
     padding: clamp(0.26rem, 0.92vw, 0.46rem) clamp(0.44rem, 1.92vw, 0.74rem);
-    font-size: clamp(0.56rem, 1.42vw, 0.70rem);
+    font-size: clamp(0.56rem, 1.42vw, 0.7rem);
   }
 }
 
@@ -2531,31 +2453,31 @@ header.hidden {
   .center-nav {
     display: flex;
     transform: translateX(-50%);
-    gap: clamp(0.rem, 0vw, 0.20rem);
+    gap: clamp(0rem, 0vw, 0.2rem);
   }
-  
+
   .center-nav a {
     padding: 0.05rem 0.33rem;
     font-size: 0.55rem;
     margin: 0 0.033rem;
   }
-  
+
   .logo-img {
     width: 30.6px;
     height: 30.6px;
   }
-  
+
   .login-btn {
     padding: 0.5rem 0.7rem;
     font-size: 0.6rem;
   }
-  
+
   .login-dropdown-menu {
     min-width: clamp(63px, 14.6vw, 83px);
     right: clamp(-19.6px, -4.3vw, -11.6px);
     top: clamp(119.6%, 121.6%, 124.6%);
   }
-  
+
   .login-dropdown-item {
     padding: clamp(0.25rem, 0.91vw, 0.45rem) clamp(0.43rem, 1.91vw, 0.73rem);
     font-size: clamp(0.55rem, 1.41vw, 0.69rem);
@@ -2567,34 +2489,34 @@ header.hidden {
   .center-nav {
     display: flex;
     transform: translateX(-50%);
-    gap: clamp(0.rem, 0vw, 0.15rem);
+    gap: clamp(0rem, 0vw, 0.15rem);
   }
-  
+
   .center-nav a {
     padding: 0.04rem 0.32rem;
     font-size: 0.54rem;
     margin: 0 0.032rem;
   }
-  
+
   .logo-img {
     width: 30.4px;
     height: 30.4px;
   }
-  
+
   .login-btn {
     padding: 0.5rem 0.7rem;
     font-size: 0.6rem;
   }
-  
+
   .login-dropdown-menu {
     min-width: clamp(62px, 14.4vw, 82px);
     right: clamp(-19.4px, -4.2vw, -11.4px);
     top: clamp(119.4%, 121.4%, 124.4%);
   }
-  
+
   .login-dropdown-item {
-    padding: clamp(0.24rem, 0.90vw, 0.44rem) clamp(0.42rem, 1.90vw, 0.72rem);
-    font-size: clamp(0.54rem, 1.40vw, 0.68rem);
+    padding: clamp(0.24rem, 0.9vw, 0.44rem) clamp(0.42rem, 1.9vw, 0.72rem);
+    font-size: clamp(0.54rem, 1.4vw, 0.68rem);
   }
 }
 
@@ -2603,31 +2525,31 @@ header.hidden {
   .center-nav {
     display: flex;
     transform: translateX(-50%);
-    gap: clamp(0rem, 0vw, 0.10rem);
+    gap: clamp(0rem, 0vw, 0.1rem);
   }
-  
+
   .center-nav a {
     padding: 0.03rem 0.31rem;
     font-size: 0.53rem;
     margin: 0 0.031rem;
   }
-  
+
   .logo-img {
     width: 30.2px;
     height: 30.2px;
   }
-  
+
   .login-btn {
     padding: 0.5rem 0.7rem;
     font-size: 0.6rem;
   }
-  
+
   .login-dropdown-menu {
     min-width: clamp(61px, 14.2vw, 81px);
     right: clamp(-19.2px, -4.1vw, -11.2px);
     top: clamp(119.2%, 121.2%, 124.2%);
   }
-  
+
   .login-dropdown-item {
     padding: clamp(0.23rem, 0.89vw, 0.43rem) clamp(0.41rem, 1.89vw, 0.71rem);
     font-size: clamp(0.53rem, 1.39vw, 0.67rem);
@@ -2639,69 +2561,253 @@ header.hidden {
   .center-nav {
     display: flex;
     transform: translateX(-50%);
-    gap: clamp(0rem, 0vw, 0.10rem);
+    gap: clamp(0rem, 0vw, 0.1rem);
   }
-  
+
   .center-nav a {
-    padding: 0.02rem 0.30rem;
+    padding: 0.02rem 0.3rem;
     font-size: 0.52rem;
-    margin: 0 0.030rem;
+    margin: 0 0.03rem;
   }
-  
+
   .logo-img {
     width: 30px;
     height: 30px;
   }
-  
+
   .login-btn {
     padding: 0.5rem 0.7rem;
     font-size: 0.6rem;
   }
-  
+
   .login-dropdown-menu {
     min-width: clamp(60px, 14vw, 80px);
     right: clamp(-19px, -4vw, -11px);
     top: clamp(119%, 121%, 124%);
   }
-  
+
   .login-dropdown-item {
-    padding: clamp(0.22rem, 0.88vw, 0.42rem) clamp(0.40rem, 1.88vw, 0.70rem);
+    padding: clamp(0.22rem, 0.88vw, 0.42rem) clamp(0.4rem, 1.88vw, 0.7rem);
     font-size: clamp(0.52rem, 1.38vw, 0.66rem);
   }
 }
 
 /* Responsive adjustments for 450px and below */
 @media screen and (max-width: 450px) {
-  .center-nav {
-    display: flex;
-    transform: translateX(-50%);
-    gap: clamp(0rem, 0vw, 0.10rem);
+  header {
+    width: 88%;
+    padding: 0 0.3rem;
+    height: 45px;
   }
-  
+
+  .center-nav {
+    display: none;
+  }
+
   .center-nav a {
     padding: 0.01rem 0.29rem;
     font-size: 0.51rem;
     margin: 0 0.029rem;
   }
-  
+
   .logo-img {
     width: 29.8px;
     height: 29.8px;
   }
-  
+
   .login-btn {
-    padding: 0.5rem 0.7rem;
-    font-size: 0.6rem;
+    display: none;
   }
-  
+
   .login-dropdown-menu {
     min-width: clamp(59px, 13.8vw, 79px);
     right: clamp(-18.8px, -3.9vw, -10.8px);
     top: clamp(118.8%, 120.8%, 123.8%);
   }
-  
+
   .login-dropdown-item {
     padding: clamp(0.21rem, 0.87vw, 0.41rem) clamp(0.39rem, 1.87vw, 0.69rem);
     font-size: clamp(0.51rem, 1.37vw, 0.65rem);
+  }
+}
+
+/* Hamburger Menu Icon */
+.hamburger-menu {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  margin-left: auto;
+  align-self: center;
+}
+
+.hamburger-menu:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: scale(1.05);
+}
+
+.hamburger-menu:active {
+  transform: scale(0.95);
+}
+
+.hamburger-icon {
+  width: 24px;
+  height: 24px;
+  color: #ffffff;
+  transition: all 0.3s ease;
+}
+
+/* Hamburger lines */
+.hamburger-line {
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+
+/* Close lines (hidden by default) */
+.close-line {
+  opacity: 0;
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+
+/* Active state - transform hamburger to X */
+.hamburger-menu.active .hamburger-line {
+  opacity: 0;
+}
+
+.hamburger-menu.active .close-line {
+  opacity: 1;
+}
+
+/* Smooth animations for hamburger to X transformation */
+.hamburger-menu.active .line-1 {
+  transform: translateY(6px) rotate(45deg);
+}
+
+.hamburger-menu.active .line-2 {
+  transform: scaleX(0);
+}
+
+.hamburger-menu.active .line-3 {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+.hamburger-menu.active .close-1 {
+  transform: rotate(45deg);
+}
+
+.hamburger-menu.active .close-2 {
+  transform: rotate(-45deg);
+}
+
+/* Show hamburger menu on smaller screens */
+@media screen and (max-width: 760px) {
+  .center-nav {
+    display: none;
+  }
+}
+
+/* Animation for mobile menu slide down */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive adjustments for 880px and below */
+@media screen and (max-width: 880px) {
+  .center-nav {
+    display: flex;
+    transform: translateX(-50%);
+    gap: clamp(0.4rem, 1.2vw, 0.8rem);
+  }
+
+  .center-nav a {
+    padding: 0.3rem 0.8rem;
+    font-size: 0.85rem;
+    margin: 0 0.1rem;
+  }
+
+  .logo-img {
+    width: 44px;
+    height: 44px;
+  }
+
+  .login-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+  }
+
+  .login-dropdown-menu {
+    min-width: clamp(130px, 27vw, 145px);
+    right: clamp(-8px, -1.8vw, -6px);
+    top: 110%;
+  }
+
+  .login-dropdown-item {
+    padding: clamp(0.65rem, 1.8vw, 0.72rem) clamp(1.1rem, 2.9vw, 1.25rem);
+    font-size: clamp(0.9rem, 2.4vw, 0.97rem);
+  }
+}
+
+/* Responsive adjustments for 760px and below */
+@media screen and (max-width: 760px) {
+  .logo-img {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+/* Show hamburger menu on very small screens only */
+@media screen and (max-width: 500px) {
+  .hamburger-menu {
+    display: flex;
+  }
+
+  .login-btn {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  .center-nav {
+    display: none;
+  }
+  /* When hamburger menu is active, show center nav */
+  .hamburger-menu.active + .center-nav,
+  .center-nav.mobile-active {
+    display: flex;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, #112d4e 0%, #1a237e 100%);
+    flex-direction: column;
+    padding: 1rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    border-radius: 0 0 12px 12px;
+    z-index: 1000;
+    transform: translateX(0);
+    animation: slideDown 0.3s ease;
+  }
+  .center-nav.mobile-active a {
+    padding: 0.8rem 1rem;
+    margin: 0.2rem 0;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+  }
+  .center-nav.mobile-active a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateX(5px);
   }
 }
