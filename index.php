@@ -1,15 +1,23 @@
 <?php
 // Railway deployment entry point
-// Redirect to the main application or show a welcome page
+// Serve the main application or show a welcome page
 
 if (php_sapi_name() !== 'cli') {
-    // For web requests, redirect to the LandingPage if it exists
+    // For web requests, serve the LandingPage if it exists
     if (file_exists('LandingPage/LandingPage.html')) {
-        header('Location: LandingPage/LandingPage.html');
+        // Serve the HTML file directly
+        $htmlContent = file_get_contents('LandingPage/LandingPage.html');
+        
+        // Fix relative paths in the HTML
+        $htmlContent = str_replace('src="../img/', 'src="img/', $htmlContent);
+        $htmlContent = str_replace('href="../', 'href="', $htmlContent);
+        
+        echo $htmlContent;
         exit;
     } else {
         echo '<h1>ECADYB Application</h1>';
         echo '<p>Application is running successfully!</p>';
+        echo '<p>File check: LandingPage/LandingPage.html ' . (file_exists('LandingPage/LandingPage.html') ? 'exists' : 'not found') . '</p>';
         echo '<p>MongoDB Connection Status: ';
         
         // Test MongoDB connection
