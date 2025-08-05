@@ -2152,26 +2152,35 @@ header.hidden {
 
 /* Responsive adjustments for 900px and below */
 @media screen and (max-width: 900px) {
+  header {
+    height: 60px;
+  }
+  
+  .logo-img {
+    width: 45px;
+    height: 45px;
+  }
+  
   .login-btn {
     padding: 0.45rem 0.9rem;
     font-size: 0.85rem;
   }
-
+  
   .center-nav a {
     padding: 0.35rem 0.9rem;
     font-size: 0.85rem;
     margin: 0 0.12rem;
   }
-
+  
   .center-nav {
     gap: clamp(0.5rem, 1.5vw, 1rem);
   }
-
+  
   .login-dropdown-menu {
     min-width: clamp(120px, 28vw, 160px);
     right: clamp(-8px, -2vw, -2px);
   }
-
+  
   .login-dropdown-item {
     padding: clamp(0.6rem, 2vw, 0.8rem) clamp(1rem, 3vw, 1.4rem);
     font-size: clamp(0.85rem, 2.7vw, 1rem);
