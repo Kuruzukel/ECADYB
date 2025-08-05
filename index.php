@@ -2,11 +2,10 @@
 // Railway deployment entry point
 // Redirect to the main application or show a welcome page
 
-// Check if we're in a web context
 if (php_sapi_name() !== 'cli') {
-    // For web requests, redirect to the main application
-    if (file_exists('LandingPage/index.html')) {
-        header('Location: LandingPage/index.html');
+    // For web requests, redirect to the LandingPage if it exists
+    if (file_exists('LandingPage/LandingPage.html')) {
+        header('Location: LandingPage/LandingPage.html');
         exit;
     } else {
         echo '<h1>ECADYB Application</h1>';
@@ -29,7 +28,6 @@ if (php_sapi_name() !== 'cli') {
         echo '</p>';
     }
 } else {
-    // For CLI requests (like Railway health checks)
     echo "ECADYB Application is running\n";
 }
-?> 
+?>
