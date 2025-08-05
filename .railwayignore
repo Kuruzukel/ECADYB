@@ -1,0 +1,16 @@
+# Development files
+.vscode/
+.idea/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+
+# Docker files (not needed for Nixpacks)
+Dockerfile
+docker/ 

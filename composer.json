@@ -1,5 +1,9 @@
 {
     "require": {
-        "mongodb/mongodb": "^1.16"
+        "mongodb/mongodb": "^1.16",
+        "ext-mongodb": "*"
+    },
+    "config": {
+        "optimize-autoloader": true
     }
 }

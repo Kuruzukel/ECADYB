@@ -14,9 +14,16 @@ Make sure to set the following environment variable in your Railway project:
 
 ### Deployment Steps
 1. Connect your GitHub repository to Railway
-2. Railway will automatically detect the PHP application
+2. Railway will automatically detect the PHP application and install the MongoDB extension
 3. The application will use the `MONGO_URL` environment variable to connect to your MongoDB service
 4. Deploy and your application will be available at the provided Railway URL
+
+### Troubleshooting Deployment Issues
+
+If you encounter the "php-extensions.mongodb" error:
+1. Railway will automatically install the MongoDB PHP extension
+2. The `composer.json` file now includes `"ext-mongodb": "*"` to ensure the extension is available
+3. All connection files have been updated to use environment variables instead of hardcoded localhost
 
 ### Local Development
 To run locally:
@@ -33,5 +40,5 @@ To run locally:
 
 ### Configuration Files
 - `railway.json`: Railway deployment configuration
-- `nixpacks.toml`: PHP build configuration for Railway
-- `composer.json`: PHP dependencies 
+- `composer.json`: PHP dependencies with MongoDB extension requirement
+- `.railwayignore`: Files to exclude from deployment 
