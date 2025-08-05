@@ -6,7 +6,9 @@ use MongoDB\Client;
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     header('Content-Type: application/json');
 
-    $client = new Client("mongodb://localhost:27017");
+    // Get MongoDB connection string from environment variable
+$mongoUrl = getenv('MONGO_URL') ?: 'mongodb://localhost:27017';
+$client = new Client($mongoUrl);
     $db = $client->Departments;
 
     $programMap = [

@@ -105,7 +105,9 @@ function importCSVByMessage($tmpName, $collection) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $client = new Client("mongodb://localhost:27017");
+            // Get MongoDB connection string from environment variable
+        $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://localhost:27017';
+        $client = new Client($mongoUrl);
 
 
     if (!empty($_FILES['top_management_message']['tmp_name'])) {

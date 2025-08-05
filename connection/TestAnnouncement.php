@@ -11,7 +11,10 @@ echo "<h1>Announcement System Test</h1>";
 try {
     // Test MongoDB connection
     echo "<h2>Testing MongoDB Connection</h2>";
-    $client = new Client("mongodb://localhost:27017");
+    
+    // Get MongoDB connection string from environment variable
+    $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://localhost:27017';
+    $client = new Client($mongoUrl);
     $collection = $client->Announcement->Calendar;
     echo "<p style='color: green;'>✓ MongoDB connection successful</p>";
 

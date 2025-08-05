@@ -1,0 +1,11 @@
+[phases.setup]
+nixPkgs = ["php", "php-extensions.mongodb"]
+
+[phases.install]
+cmds = ["composer install --optimize-autoloader --no-scripts --no-interaction"]
+
+[phases.build]
+cmds = ["echo 'Build complete'"]
+
+[start]
+cmd = "php -S 0.0.0.0:$PORT -t ." 

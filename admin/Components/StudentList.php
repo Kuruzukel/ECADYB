@@ -4,7 +4,9 @@ require __DIR__ . '/../../vendor/autoload.php';
 use MongoDB\Client;
 
 // Connect to MongoDB
-$client = new Client("mongodb://localhost:27017");
+// Get MongoDB connection string from environment variable
+$mongoUrl = getenv('MONGO_URL') ?: 'mongodb://localhost:27017';
+$client = new Client($mongoUrl);
 $db = $client->Departments;
 
 // Define all program collections
