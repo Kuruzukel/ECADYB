@@ -8,9 +8,13 @@ if (php_sapi_name() !== 'cli') {
         // Serve the HTML file directly
         $htmlContent = file_get_contents('LandingPage/LandingPage.html');
         
-        // Fix relative paths in the HTML
+        // Fix relative paths in the HTML for Railway deployment
+        $htmlContent = str_replace('href="LandingPage.css"', 'href="LandingPage/LandingPage.css"', $htmlContent);
+        $htmlContent = str_replace('src="LandingPage.js"', 'src="LandingPage/LandingPage.js"', $htmlContent);
         $htmlContent = str_replace('src="../img/', 'src="img/', $htmlContent);
         $htmlContent = str_replace('href="../', 'href="', $htmlContent);
+        $htmlContent = str_replace('href="admin/', 'href="Admin/', $htmlContent);
+        $htmlContent = str_replace('href="student/', 'href="student/', $htmlContent);
         
         echo $htmlContent;
         exit;
