@@ -1939,13 +1939,14 @@ header.hidden {
     height: 60px;
   }
 
-  .logo {
-    gap: 17px;
-    flex: 0.3;
+  .logo span {
+    font-size: 0.8rem;
+    gap: 15px;
   }
 
-  .logo span {
-    display: none;
+  .logo {
+    gap: 15px;
+    flex: 0.3;
   }
 
   .logo-img {
@@ -1955,13 +1956,12 @@ header.hidden {
 
   .center-nav {
     display: flex;
-    transform: translateX(-50%);
   }
 
   .center-nav a {
-    padding: 0.48rem 1.15rem;
-    font-size: 0.98rem;
-    margin: 0 0.19rem;
+    padding: 0.42rem 1.05rem;
+    font-size: 0.8rem;
+    margin: 0 0.17rem;
   }
 
   .login-dropdown-menu {
@@ -2135,14 +2135,6 @@ header.hidden {
 
 /* Show logo span text for 1300px and above */
 @media screen and (min-width: 1300px) {
-  .logo span {
-    display: block;
-    color: #ffffff;
-    font-weight: 600;
-    font-size: 1.1rem;
-    letter-spacing: 0.5px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  }
 }
 
 /* Responsive adjustments for 1000px and below */
@@ -2966,5 +2958,24 @@ header.hidden {
 @media screen and (max-width: 510px) {
   .center-nav {
     display: none;
+  }
+
+  .hamburger-menu {
+    display: block;
+  }
+
+  .login-btn {
+    display: none;
+  }
+
+  .logo span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 0.7rem;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
   }
 }
