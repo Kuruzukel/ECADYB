@@ -51,7 +51,7 @@ header {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
-  border: 2px solid #0c27be;
+  border: 1px solid #0c27be;
 }
 
 header.header-hidden {
@@ -169,7 +169,7 @@ header.hidden {
   font-weight: 500;
   transition: all 0.3s ease;
   box-shadow: 0 2px 12px rgba(99, 102, 241, 0.18);
-  border: 2px solid #0c27be;
+  border: 1px solid #0c27be;
 }
 
 .login-btn:hover {
@@ -282,20 +282,20 @@ header.hidden {
   text-decoration: none;
   box-shadow: 0 4px 16px rgba(0, 0, 66, 0.13);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 2px solid #112d4e;
+  border: 1.5px solid #112d4e;
   position: relative;
 }
 .hero-btn:hover {
   background: rgb(13, 57, 217);
   transform: translateY(-2px) scale(1.04);
   box-shadow: 0 6px 20px rgba(0, 0, 66, 0.2);
-  border: 2px solid #0c27be;
+  border: 1.5px solid #0c27be;
 }
 .hero-btn-secondary {
   background: #112d4e;
   color: white;
   box-shadow: 0 2px 12px rgba(99, 102, 241, 0.18);
-  border: 2px solid #0c27be;
+  border: 1.5px solid #0c27be;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
 }
@@ -304,7 +304,7 @@ header.hidden {
   color: rgb(13, 57, 217);
   transform: translateY(-2px) scale(1.04);
   box-shadow: 0 6px 20px rgba(99, 102, 241, 0.25);
-  border: 2px solid #112d4e;
+  border: 1.5px solid #112d4e;
 }
 
 .hero-btn.clicked {
@@ -313,7 +313,7 @@ header.hidden {
   border-radius: 999px;
   box-shadow: 0 4px 20px rgba(99, 102, 241, 0.25),
     0 0 0 2px rgba(252, 218, 21, 0.3);
-  border: 2px solid #fcda15;
+  border: 1px solid #fcda15;
   transform: scale(1.05);
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -326,7 +326,7 @@ header.hidden {
   border-radius: 999px;
   box-shadow: 0 4px 20px rgba(99, 102, 241, 0.25),
     0 0 0 2px rgba(252, 218, 21, 0.3);
-  border: 2px solid #fcda15;
+  border: 1px solid #fcda15;
   transform: scale(1.05);
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -2972,7 +2972,7 @@ header.hidden {
     justify-content: center;
     align-items: center;
     text-align: center;
-    font-size: 0.60rem;
+    font-size: 0.6rem;
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
