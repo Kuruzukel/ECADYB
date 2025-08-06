@@ -273,25 +273,30 @@ window.addEventListener("scroll", () => {
 });
 
 // Mobile login dropdown functionality
-document.addEventListener('DOMContentLoaded', function() {
-  const mobileLoginBtn = document.getElementById('mobileLoginDropdownBtn');
-  const mobileLoginMenu = document.getElementById('mobileLoginDropdownMenu');
+document.addEventListener("DOMContentLoaded", function () {
+  const mobileLoginBtn = document.getElementById("mobileLoginDropdownBtn");
+  const mobileLoginMenu = document.getElementById("mobileLoginDropdownMenu");
   if (mobileLoginBtn && mobileLoginMenu) {
-    mobileLoginBtn.addEventListener('click', function(e) {
+    mobileLoginBtn.addEventListener("click", function (e) {
       e.stopPropagation();
-      mobileLoginMenu.classList.toggle('active');
+      mobileLoginMenu.classList.toggle("active");
     });
     // Close dropdown when clicking outside
-    document.addEventListener('click', function(event) {
-      if (!mobileLoginBtn.contains(event.target) && !mobileLoginMenu.contains(event.target)) {
-        mobileLoginMenu.classList.remove('active');
+    document.addEventListener("click", function (event) {
+      if (
+        !mobileLoginBtn.contains(event.target) &&
+        !mobileLoginMenu.contains(event.target)
+      ) {
+        mobileLoginMenu.classList.remove("active");
       }
     });
     // Close dropdown when clicking a dropdown item
-    const mobileLoginItems = mobileLoginMenu.querySelectorAll('.mobile-login-dropdown-item');
-    mobileLoginItems.forEach(item => {
-      item.addEventListener('click', function() {
-        mobileLoginMenu.classList.remove('active');
+    const mobileLoginItems = mobileLoginMenu.querySelectorAll(
+      ".mobile-login-dropdown-item"
+    );
+    mobileLoginItems.forEach((item) => {
+      item.addEventListener("click", function () {
+        mobileLoginMenu.classList.remove("active");
       });
     });
   }

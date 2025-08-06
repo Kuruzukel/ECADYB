@@ -3042,7 +3042,7 @@ header.hidden {
     flex-direction: column;
     width: 100%;
     align-self: center;
-    margin: 0.3rem auto 0 auto;
+    margin: 1.5rem auto 0 auto;
     background: linear-gradient(135deg, #112d4e 0%, #1a237e 100%);
     border-radius: 16px;
     position: relative;
@@ -3079,5 +3079,52 @@ header.hidden {
     font-size: 1.1rem;
     font-weight: 600;
     transform: none !important;
+  }
+
+  .mobile-login-btn {
+    width: 90%;
+    margin: 0.5rem auto 0 auto;
+    padding: 0.8rem 1.5rem;
+    background: none;
+    border: 2px solid springgreen;
+    border-radius: 8px;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.18);
+    cursor: pointer;
+    position: relative;
+    z-index: 1100;
+    text-decoration: none;
+  }
+  /* Style for mobile login dropdown items to match .center-nav.mobile-active a */
+  .mobile-login-dropdown-item {
+    background: linear-gradient(135deg, #112d4e 0%, #1a237e 100%);
+    color: #fff;
+    padding: 1rem 1.2rem;
+    margin: 0.3rem 0;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: background 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    letter-spacing: 0.5px;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+  }
+
+  .mobile-login-dropdown-item:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    transform: translateX(8px) scale(1.02);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   }
 }
