@@ -2498,8 +2498,7 @@ header.hidden {
 }
 
 .hamburger-menu:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  transform: scale(1.05);
+  /* Hover effects removed */
 }
 
 .hamburger-menu:active {
@@ -2973,7 +2972,7 @@ header.hidden {
     justify-content: center;
     align-items: center;
     text-align: center;
-    font-size: 0.7rem;
+    font-size: 0.60rem;
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
