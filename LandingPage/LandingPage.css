@@ -2497,10 +2497,6 @@ header.hidden {
   align-self: center;
 }
 
-.hamburger-menu:hover {
-  /* Hover effects removed */
-}
-
 .hamburger-menu:active {
   transform: scale(0.95);
 }
@@ -2645,7 +2641,7 @@ header.hidden {
     flex-direction: column;
     padding: 1rem;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    border-radius: 0 0 12px 12px;
+    border-radius: 12px;
     z-index: 1000;
     transform: translateX(0);
     animation: slideDown 0.3s ease;
@@ -2976,5 +2972,74 @@ header.hidden {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
+  }
+}
+
+@media screen and (max-width: 760px) {
+  .mobile-login-dropdown {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 0.5rem;
+  }
+  .mobile-login-btn {
+    width: 90%;
+    margin: 0.5rem auto 0 auto;
+    padding: 0.8rem 1.5rem;
+    background: none;
+    border: 2px solid springgreen;
+    border-radius: 8px;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.18);
+    cursor: pointer;
+    position: relative;
+    z-index: 1100;
+  }
+
+  .mobile-login-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateX(5px);
+  }
+  .mobile-login-dropdown-menu {
+    display: none;
+    flex-direction: column;
+    width: 90%;
+    margin: 0 auto;
+    background: transparent;
+    border-radius: 8px;
+    position: relative;
+    z-index: 1100;
+    margin-top: 0.2rem;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+    transition: opacity 0.3s cubic-bezier(0.4,0,0.2,1), transform 0.3s cubic-bezier(0.4,0,0.2,1);
+  }
+  .mobile-login-dropdown-menu.active {
+    display: flex;
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  .mobile-login-dropdown-item {
+    color: white;
+    padding: 0.8rem 1rem;
+    text-align: center;
+    text-decoration: none;
+    font-size: 1rem;
+    margin: 0.2rem 0;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    background: transparent;
+  }
+  .mobile-login-dropdown-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateX(5px);
   }
 }
