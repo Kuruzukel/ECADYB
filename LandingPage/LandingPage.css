@@ -3034,19 +3034,21 @@ header.hidden {
   .mobile-login-dropdown-menu {
     display: none;
     flex-direction: column;
-    width: 90%;
-    margin: 0 auto;
-    background: transparent;
-    border-radius: 8px;
+    width: 100%;
+    align-self: center;
+    margin: 0.3rem auto 0 auto;
+    background: linear-gradient(135deg, #112d4e 0%, #1a237e 100%);
+    border-radius: 16px;
     position: relative;
     z-index: 1100;
-    margin-top: 0.2rem;
     overflow: hidden;
     opacity: 0;
     transform: translateY(-10px);
     pointer-events: none;
     transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
       transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
   }
   .mobile-login-dropdown-menu.active {
     display: flex;
@@ -3060,13 +3062,16 @@ header.hidden {
     text-align: center;
     text-decoration: none;
     font-size: 1rem;
-    margin: 0.2rem 0;
     border-radius: 8px;
-    transition: all 0.3s ease;
-    background: transparent;
+    transition: font-size 0.2s, font-weight 0.2s;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    position: relative;
+    overflow: hidden;
   }
   .mobile-login-dropdown-item:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    transform: translateX(5px);
+    font-size: 1.1rem;
+    font-weight: 600;
+    transform: none !important
   }
 }
