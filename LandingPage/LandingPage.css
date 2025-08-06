@@ -843,6 +843,12 @@ header.hidden {
   word-break: break-word;
 }
 
+@media (min-width: 511px) {
+  #mobileLoginDropdownBtn,
+  #mobileLoginDropdownMenu {
+    display: none !important;
+  }
+}
 /* ===== MEDIA QUERIES FOR RESPONSIVE DESIGN ===== */
 
 /* iPhone SE (375 x 667) */
