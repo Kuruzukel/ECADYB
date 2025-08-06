@@ -3072,6 +3072,6 @@ header.hidden {
   .mobile-login-dropdown-item:hover {
     font-size: 1.1rem;
     font-weight: 600;
-    transform: none !important
+    transform: none !important;
   }
 }
