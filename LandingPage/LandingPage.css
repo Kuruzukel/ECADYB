@@ -3139,30 +3139,34 @@ header.hidden {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   }
 }
-@media screen and (max-width: 760px) {
+@media screen and (max-width: 400px) {
   .main-hero-text .logo-container .logo-img {
     width: 100%x;
     height: 100%px;
-    margin-bottom: 11rem;
+    margin-bottom: 3rem;
     object-fit: contain;
+    margin-top: -7rem;
   }
 
   .main-hero-text {
-    margin-bottom: 8rem;
+    margin-top: 0rem;
   }
 
   .logo-container {
-    width: 260px;
-    height: 260px;
+    width: 320px;
+    height: 320px;
   }
 
   .hero-message {
-    font-size: 0.8rem;
-    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    margin-bottom: 3rem;
+    max-width: 93%;
   }
 
   .hero-message-bold {
-    font-size: 1rem;
+    font-size: 1.2rem;
     font-weight: 600;
+    max-width: 96%;
+    margin-top: 1.3rem;
   }
 }
