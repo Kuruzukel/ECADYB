@@ -1,9 +1,9 @@
 {
-    "require": {
-        "mongodb/mongodb": "^1.16"
-    },
-    "config": {
-        "optimize-autoloader": true,
-        "platform-check": false
-    }
+  "require": {
+    "mongodb/mongodb": "^1.16"
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "platform-check": false
+  }
 }

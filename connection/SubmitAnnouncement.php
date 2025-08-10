@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'message' => $message,
             'date' => $date ?: date('Y-m-d'), // Use current date if no date provided
             'time' => $time,
-            'created_at' => new MongoDB\BSON\UTCDateTime(),
+            'created_at' => new MongoDB\BSON\UTCDateTime(round(microtime(true) * 1000)),
             'status' => 'active',
             'type' => 'announcement'
         ];

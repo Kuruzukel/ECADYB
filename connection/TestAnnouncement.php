@@ -25,7 +25,7 @@ try {
         'message' => 'This is a test announcement to verify the system is working.',
         'date' => date('Y-m-d'),
         'time' => date('H:i'),
-        'created_at' => new MongoDB\BSON\UTCDateTime(),
+        'created_at' => new MongoDB\BSON\UTCDateTime(round(microtime(true) * 1000)),
         'status' => 'active',
         'type' => 'announcement'
     ];
