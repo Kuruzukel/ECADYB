@@ -375,7 +375,7 @@ header.hidden {
 
 .yearbooks-section .section-title {
   color: #ffffff;
-  margin-top: 4rem;
+  margin-top: 3rem;
   text-align: center;
   margin-bottom: 4rem;
 }
@@ -395,7 +395,6 @@ header.hidden {
   width: 280px;
   max-width: 280px;
   height: 480px;
-  border-radius: 12px;
   transition: transform 0.2s, box-shadow 0.2s;
   display: flex;
   flex-direction: column;
@@ -416,13 +415,12 @@ header.hidden {
   object-fit: cover;
   background: #22243a; /* Ensure image area is also solid */
   display: block;
-  border-radius: 12px;
 }
 
 .yearbook-title {
   margin-top: 1.5rem;
   color: #fff;
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   font-weight: 600;
   text-align: center;
   line-height: 1.3;
@@ -547,17 +545,16 @@ header.hidden {
 .about-section .section-title {
   color: white;
   margin-bottom: 0.5rem;
-  margin-top: 12.5rem;
+  margin-top: 8.8rem;
 }
 
 .about-description {
-  font-size: 1.1rem;
+  font-size: 1.6rem;
   margin: 0 auto;
   line-height: 1.7;
   color: white;
-  margin-bottom: 5rem;
-  margin-left: 5rem;
-  margin-right: 5rem;
+  margin-left: 5.1rem;
+  margin-right: 5.1rem;
 }
 
 .about-blur-vignette {
@@ -3140,16 +3137,19 @@ header.hidden {
   }
 }
 @media screen and (max-width: 400px) {
+  .logo span {
+    font-size: 0.68rem;
+  }
   .main-hero-text .logo-container .logo-img {
-    width: 100%x;
+    width: 100%;
     height: 100%px;
-    margin-bottom: 3rem;
     object-fit: contain;
-    margin-top: -7rem;
+    margin-top: -3rem;
   }
 
   .main-hero-text {
     margin-top: 0rem;
+    margin-bottom: 2.4rem;
   }
 
   .logo-container {
@@ -3159,7 +3159,7 @@ header.hidden {
 
   .hero-message {
     font-size: 1.2rem;
-    margin-bottom: 3rem;
+    margin-bottom: 3.5rem;
     max-width: 93%;
   }
 
@@ -3167,6 +3167,39 @@ header.hidden {
     font-size: 1.2rem;
     font-weight: 600;
     max-width: 96%;
-    margin-top: 1.3rem;
+    margin-top: 0.8rem;
+  }
+
+  .about-image {
+    display: none;
+  }
+
+  .about-section {
+    padding: none;
+  }
+
+  .about-section .section-title {
+    font-size: 2.2rem;
+    text-align: center;
+    margin-top: 1.6rem;
+  }
+
+  .about-description {
+    width: 100%;
+    text-align: center;
+    font-size: 1.16rem;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .yearbooks-section .section-title {
+    font-size: 2.2rem;
+    text-align: center;
+    margin-top: 1.6rem;
+  }
+
+  .yearbooks-row {
+    flex-direction: column;
+    align-items: center;
   }
 }
