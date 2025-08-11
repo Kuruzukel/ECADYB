@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Login</title>
-    <link href="../../Admin/Assets/css/AdminLogin.css" rel="stylesheet">
+    <link href="../Admin/Assets/css/AdminLogin.css" rel="stylesheet">
 
 </head>
 
@@ -81,6 +81,6 @@
             </form>
         </div>
     </body>
-    <script src="../../Admin/Assets/js/AdminLogin.js"></script>
+    <script src="../Admin/Assets/js/AdminLogin.js"></script>
 
 </html>
