@@ -10,6 +10,24 @@ if (php_sapi_name() !== 'cli') {
         include __DIR__ . '/LandingPage/LandingPageYB/index.php';
         exit;
     }
+
+    // Handle StudentLogin requests
+    if (strpos($requestUri, '/student/StudentLogin.php') !== false) {
+        include __DIR__ . '/student/StudentLogin.php';
+        exit;
+    }
+
+    // Serve StudentLogin CSS and JS directly (assets inside /student/)
+    if (strpos($requestUri, '/student/assets/css/StudentLogin.css') !== false) {
+        header('Content-Type: text/css');
+        readfile(__DIR__ . '/student/assets/css/StudentLogin.css');
+        exit;
+    }
+    if (strpos($requestUri, '/student/assets/js/StudentLogin.js') !== false) {
+        header('Content-Type: application/javascript');
+        readfile(__DIR__ . '/student/assets/js/StudentLogin.js');
+        exit;
+    }
     
     // For web requests, serve the LandingPage if it exists
     if (file_exists('LandingPage/LandingPage.html')) {
