@@ -32,13 +32,13 @@ if (php_sapi_name() !== 'cli') {
 
     // Handle AdminLogin requests
     if (strpos($normalizedUri, '/admin/session/adminlogin.php') !== false) {
-        include __DIR__ . '/Admin/Session/AdminLogin.php';
+        include __DIR__ . '/admin/Session/AdminLogin.php';
         exit;
     }
 
     // Serve AdminLogin CSS and JS files
     if (preg_match('#^/admin/assets/(css|js)/(.+)$#i', $requestUri, $matches)) {
-        $filePath = __DIR__ . '/Admin/assets/' . $matches[1] . '/' . $matches[2];
+        $filePath = __DIR__ . '/admin/assets/' . $matches[1] . '/' . $matches[2];
         if (file_exists($filePath)) {
             $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
             $mimeTypes = ['css' => 'text/css', 'js' => 'application/javascript'];
