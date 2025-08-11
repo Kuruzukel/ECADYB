@@ -12,8 +12,8 @@ if (php_sapi_name() !== 'cli') {
     }
 
     // Handle StudentLogin requests
-    if (strpos($requestUri, '/student/StudentLogin.php') !== false) {
-        include __DIR__ . '/student/StudentLogin.php';
+    if (strpos($requestUri, '/student/Session/StudentLogin.php') !== false) {
+        include __DIR__ . '/student/Session/StudentLogin.php';
         exit;
     }
 
@@ -28,6 +28,25 @@ if (php_sapi_name() !== 'cli') {
         readfile(__DIR__ . '/student/assets/js/StudentLogin.js');
         exit;
     }
+
+    // Handle AdminLogin requests
+    if (strpos($requestUri, '/admin/Session/AdminLogin.php') !== false) {
+        include __DIR__ . '/Admin/Session/AdminLogin.php';
+        exit;
+    }
+
+    // Serve AdminLogin CSS and JS directly (assets inside /admin/)
+    if (strpos($requestUri, '/admin/assets/css/AdminLogin.css') !== false) {
+        header('Content-Type: text/css');
+        readfile(__DIR__ . '/Admin/assets/css/AdminLogin.css');
+        exit;
+    }
+    if (strpos($requestUri, '/admin/assets/js/AdminLogin.js') !== false) {
+        header('Content-Type: application/javascript');
+        readfile(__DIR__ . '/Admin/assets/js/AdminLogin.js');
+        exit;
+    }
+      
     
     // For web requests, serve the LandingPage if it exists
     if (file_exists('LandingPage/LandingPage.html')) {
