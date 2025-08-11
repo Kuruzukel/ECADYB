@@ -31,14 +31,14 @@
           <div class="mobile-login-dropdown-menu" id="mobileLoginDropdownMenu">
             <button
               class="mobile-login-dropdown-item"
-              onclick="window.location.href='/admin/Components/AdminDashboard.php'"
+              onclick="window.location.href='/ECADYB/Admin/Session/AdminLogin.php'"
               type="button"
             >
               Admin
             </button>
             <button
               class="mobile-login-dropdown-item"
-              onclick="window.location.href='/student/index.php'"
+              onclick="window.location.href='/ECADYB/Student/Session/StudentLogin.php'"
               type="button"
             >
               Student
@@ -49,16 +49,21 @@
       <div class="login-dropdown">
         <button class="login-btn" id="loginDropdownBtn">Log In</button>
         <div class="login-dropdown-menu" id="loginDropdownMenu">
-          <a href="../Admin/Session/AdminLogin.php" class="login-dropdown-item"
-            >Admin</a
-          >
           <a
-            href="../student/Session/StudentLogin.php"
+            href="/ECADYB/Admin/Session/AdminLogin.php"
             class="login-dropdown-item"
-            >Student</a
           >
+            Admin
+          </a>
+          <a
+            href="/ECADYB/Student/Session/StudentLogin.php"
+            class="login-dropdown-item"
+          >
+            Student
+          </a>
         </div>
       </div>
+
       <!-- Hamburger Menu Icon -->
       <button class="hamburger-menu" id="hamburgerMenu">
         <svg
