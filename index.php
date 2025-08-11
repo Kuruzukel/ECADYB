@@ -67,7 +67,7 @@ if (php_sapi_name() !== 'cli') {
             'src="LandingPage/LandingPage.js"',
             'src="img/',
             'href="',
-            'href="Admin/',
+            'href="admin/',
             'href="student/',  // Keep lowercase here if your folder is lowercase student
             'src="LandingPage/LandingPageYB/',
         ], $htmlContent);
