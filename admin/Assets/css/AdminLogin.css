@@ -1,0 +1,381 @@
+* {
+  margin: 0;
+  box-sizing: border-box;
+  color: white;
+}
+
+body {
+  background-image: url("../../../img/ECABG.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  height: 100dvh;
+  width: 100dvw;
+  font-family: Arial, Helvetica, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.loginCard {
+  width: 50rem;
+  background: rgba(0, 0, 0, 0.45);
+  border-radius: 2rem;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 1rem;
+  min-height: fit-content;
+  position: relative;
+}
+
+label {
+  font-weight: bold;
+  margin-top: 1rem;
+}
+
+.title {
+  font-weight: bold;
+  font-size: 3.5rem;
+  color: rgb(255, 255, 255);
+  text-align: center;
+  text-shadow: 2px 2px 4px rgb(0, 0, 0);
+  margin-top: 20px;
+  /* Added or increased */
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  text-align: center;
+  font-weight: bold;
+  font-size: 2.5rem;
+  color: white;
+  margin-top: 2rem;
+  text-shadow: 2px 2px 4px rgb(0, 0, 0);
+}
+
+.field {
+  width: 20rem;
+}
+
+.user.field {
+  margin-top: 2rem;
+}
+
+.pass.field {
+  margin-top: 2rem;
+}
+
+.handle {
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin-bottom: 4px;
+  /* background-color: red; */
+}
+
+.passwordField {
+  position: relative;
+  /* background-color: red; */
+}
+
+.eyeIcon {
+  height: 1.5rem;
+  width: 1.5rem;
+  position: absolute;
+  top: 0.5rem;
+  right: 1rem;
+  cursor: pointer;
+}
+
+.passwordField[data-isVisible="false"] .eyeIcon.open {
+  display: none;
+}
+
+.passwordField[data-isVisible="false"] .eyeIcon.close {
+  display: block;
+}
+
+.passwordField[data-isVisible="true"] .eyeIcon.close {
+  display: none;
+}
+
+.passwordField[data-isVisible="true"] .eyeIcon.open {
+  display: block;
+}
+
+input {
+  background-color: rgb(255, 255, 255);
+  /* Keep background color */
+  color: black;
+  /* Set text color to white */
+  border: none;
+  outline: none;
+  width: 100%;
+  height: 2.5rem;
+  border-radius: 1rem;
+  padding-inline: 1rem;
+  font-size: 1rem;
+  /* Ensure readability */
+}
+
+/* Remove number input spinner */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+/* Placeholder color adjustment */
+input::placeholder {
+  color: rgb(0, 0, 0);
+  /* Light white for readability */
+}
+
+button[type="submit"] {
+  transition: 0.3s;
+  background-color: black;
+  height: 2.5rem;
+  width: 43%;
+  color: white;
+  border-radius: 1rem;
+  outline: none;
+  border: none;
+  margin-top: 1rem;
+  /* reduce this to move it closer to the top */
+  margin-bottom: 2.5rem;
+  cursor: pointer;
+}
+
+button[type="submit"]:hover {
+  transform: scale(1.02);
+  background-color: rgba(7, 42, 168, 0.68);
+}
+form {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  align-items: center;
+}
+
+.logoContainer {
+  height: 10rem;
+  width: 10rem;
+  max-width: 55%;
+  max-height: 55%;
+  margin-bottom: 0rem;
+  /* Move it closer to the top */
+  background: url("../../../img/ECALOGO.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.forgot-password {
+  margin-top: 0.5rem;
+  text-align: right;
+  width: 100%;
+}
+
+.forgot-password {
+  text-align: center;
+  margin-top: 1rem;
+  /* optional spacing */
+}
+
+.forgot-password a {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.3s;
+}
+
+.forgot-password a:hover {
+  color: #4dabf7;
+  text-decoration: underline;
+}
+
+@media screen and (max-width: 801px) {
+}
+
+@media screen and (max-width: 920px) {
+  .loginCard {
+    width: 90%;
+    padding-inline: 2rem;
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .title {
+    font-size: 3rem;
+  }
+
+  .subtitle {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: white;
+    margin-top: 2rem;
+  }
+
+  .input {
+    width: 80%;
+  }
+}
+
+.field {
+  width: 15rem;
+}
+
+.user.field {
+  margin-top: 2rem;
+}
+
+.pass.field {
+  margin-top: 2rem;
+}
+
+.error-message {
+  color: white;
+  font-size: 1rem;
+  margin-top: 5px;
+  margin-bottom: -20px;
+  text-align: center;
+  background-color: rgba(250, 0, 0, 0.2);
+  padding: 10px;
+  border-radius: 5px;
+  border: 3px darkred solid;
+  opacity: 0;
+  /* Initial opacity */
+  transition: opacity 1s ease-in-out;
+  /* Transition for fade-in and fade-out */
+  visibility: hidden;
+  /* Hidden by default */
+}
+
+.error-message.show {
+  opacity: 1;
+  /* Fully visible */
+  visibility: visible;
+  /* Ensure visibility */
+}
+
+@media (max-width: 768px) {
+  input {
+    background-color: rgb(255, 255, 255);
+    /* Keep background color */
+    color: black;
+    /* Set text color to white */
+    border: none;
+    outline: none;
+    width: 100%;
+    height: 2.5rem;
+    border-radius: 1rem;
+    padding-inline: 1rem;
+    font-size: 1rem;
+    /* Ensure readability */
+  }
+}
+
+@media (max-width: 549px) {
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .logoContainer {
+    height: 10rem;
+    width: 20rem;
+    max-width: 55%;
+    max-height: 55%;
+  }
+}
+
+@media (max-width: 480px) {
+  .book {
+    padding: 1rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .page {
+    padding: 1rem;
+  }
+
+  label {
+    font-size: 0.9rem;
+  }
+
+  .logoContainer {
+    height: 10rem;
+    width: 20rem;
+    max-width: 55%;
+    max-height: 55%;
+  }
+}
+
+@media screen and (max-width: 465px) {
+  .title {
+    font-size: 1.8rem;
+  }
+
+  .subtitle {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.3rem;
+    color: white;
+    margin-top: 2rem;
+  }
+
+  .error-message {
+    font-size: 1rem;
+    margin-bottom: -20px;
+    text-align: center;
+    padding: 10px;
+    border-radius: 15px;
+  }
+
+  .loginCard {
+    justify-content: flex-start;
+    height: 85vh;
+    padding-block: 0.5rem;
+  }
+
+  .logoContainer {
+    height: 10rem;
+    width: 20rem;
+    max-width: 55%;
+    max-height: 55%;
+  }
+
+  .field {
+    width: 15rem;
+  }
+
+  .user.field {
+    margin-top: 2rem;
+  }
+
+  .pass.field {
+    margin-top: 2rem;
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .logoContainer {
+    height: 10rem;
+    width: 20rem;
+    max-width: 55%;
+    max-height: 55%;
+  }
+}

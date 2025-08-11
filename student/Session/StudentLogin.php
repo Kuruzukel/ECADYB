@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Student Login</title>
-    <link href="assets/css/StudentLogin.css" rel="stylesheet">
+    <link href="../assets/css/StudentLogin.css" rel="stylesheet">
 
 </head>
 
@@ -17,7 +17,7 @@
         </div>
         <?php endif; ?>
         <form method="POST" action="">
-            <p class="title">DIGITAL YEAR BOOK</p>
+            <p class="title">DIGITAL YEARBOOK</p>
             <p class="subtitle">STUDENT LOGIN</p>
             <div class="user field">
                 <div class="handle">
@@ -31,7 +31,7 @@
                     </svg>
                     <p>Student ID:</p>
                 </div>
-                <input name="studentId" id="idInput" type="number" placeholder="Student ID" maxlength="4"
+                <input name="studentId" id="idInput" type="number" placeholder="Student ID" maxlength="6"
                     autocomplete="off" required oninput="limitID()" />
             </div>
             <div class="pass field">
@@ -79,6 +79,6 @@
         </form>
     </div>
 </body>
-<script src="./assets/js/StudentLogin.js"></script>
+<script src="../assets/js/StudentLogin.js"></script>
 
 </html>
