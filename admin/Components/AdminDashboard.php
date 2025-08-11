@@ -103,7 +103,7 @@
                     </a>
 
                     <a href="AdminDashboard.php?page=template" class="tab sub-tab">
-                        </i>Templates
+                        </i>Batch Templates
                     </a>
 
                 </div>

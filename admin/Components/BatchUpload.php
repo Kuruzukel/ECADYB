@@ -1,5 +1,6 @@
 <?php
-require '../vendor/autoload.php';
+require __DIR__ . '/../../vendor/autoload.php';
+
 use MongoDB\Client;
 
 $uploadStatus = [
@@ -191,7 +192,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <!-- Image Upload (future use) -->
                     <div class="section">
-                        <div class="section-header">Student Photo, Template, and Logos</div>
+                        <div class="section-header">Student and Top Management Images</div>
                         <div class="file-card">
                             <label class="custom-upload" for="image-upload">Upload Image Folder</label>
                             <input type="file" id="image-upload" class="upload-input" accept="image/*" multiple>

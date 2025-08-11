@@ -17,7 +17,7 @@
 
             <div class="form-group">
                 <div class="section">
-                    <div class="section-header">Template 1</div>
+                    <div class="section-header">Batch Template 1</div>
                     <div class="section-content">
                         <div class="file-card">
 
@@ -26,7 +26,7 @@
                 </div>
 
                 <div class="section">
-                    <div class="section-header">Template 2</div>
+                    <div class="section-header">Batch Template 2</div>
                     <div class="section-content">
                         <div class="file-card">
 
@@ -35,7 +35,7 @@
                 </div>
 
                 <div class="section">
-                    <div class="section-header">Template 3</div>
+                    <div class="section-header">Batch Template 3</div>
                     <div class="section-content">
                         <div class="file-card">
 
