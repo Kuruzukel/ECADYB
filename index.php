@@ -6,6 +6,30 @@ if (php_sapi_name() !== 'cli') {
     $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH); // Only the path, ignore query string
     $normalizedUri = strtolower($requestUri); // For case-insensitive routing
 
+    // ----------------------
+    // Serve LandingPageYB images
+    // ----------------------
+    if (preg_match('#^/LandingPage/LandingPageYB/pages/(.+)$#i', $requestUri, $matches)) {
+        $filePath = __DIR__ . '/LandingPage/LandingPageYB/pages/' . $matches[1];
+        if (file_exists($filePath)) {
+            $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+            $mimeTypes = [
+                'jpg' => 'image/jpeg',
+                'jpeg' => 'image/jpeg',
+                'png' => 'image/png',
+                'gif' => 'image/gif',
+                'webp' => 'image/webp'
+            ];
+            header('Content-Type: ' . ($mimeTypes[$ext] ?? 'application/octet-stream'));
+            readfile($filePath);
+            exit;
+        } else {
+            http_response_code(404);
+            echo "File not found";
+            exit;
+        }
+    }
+
     // Handle LandingPageYB requests
     if (strpos($normalizedUri, '/landingpage/landingpageyb/') !== false || strpos($normalizedUri, '/landingpageyb/') !== false) {
         include __DIR__ . '/LandingPage/LandingPageYB/index.php';
@@ -68,7 +92,7 @@ if (php_sapi_name() !== 'cli') {
             'src="img/',
             'href="',
             'href="admin/',
-            'href="student/',  // Keep lowercase here if your folder is lowercase student
+            'href="student/',
             'src="LandingPage/LandingPageYB/',
         ], $htmlContent);
 
@@ -97,6 +121,4 @@ if (php_sapi_name() !== 'cli') {
 } else {
     echo "ECADYB Application is running\n";
 }
-
-
 ?>

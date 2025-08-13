@@ -70,4 +70,4 @@ echo "<p><a href='img/ECALOGO.png' target='_blank'>Test Image: img/ECALOGO.png</
 echo "<h2>🎯 Current URL Info</h2>";
 echo "<p><strong>Current URL:</strong> " . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . "</p>";
 echo "<p><strong>Base URL:</strong> https://" . $_SERVER['HTTP_HOST'] . "</p>";
-?> 
+?>

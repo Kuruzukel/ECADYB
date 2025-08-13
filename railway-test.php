@@ -28,4 +28,4 @@ echo "<p>Time: " . date('Y-m-d H:i:s') . "</p>";
 
 echo "<h2>🎉 Deployment Successful!</h2>";
 echo "<p>Your PHP application is now running on Railway!</p>";
-?> 
+?>

@@ -115,14 +115,6 @@ header.hidden {
 }
 
 .center-nav a:hover {
-  background: rgb(13, 57, 217);
-  color: #fff;
-  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.15);
-  text-shadow: 0 1px 4px rgba(99, 102, 241, 0.15);
-  border: 2px solid #112d4e;
-}
-
-.center-nav a.clicked {
   background: linear-gradient(135deg, #0d39d9 0%, #112d4e 100%);
   color: #ffffff !important;
   border-radius: 2rem;
@@ -130,18 +122,6 @@ header.hidden {
     0 0 0 2px rgba(252, 218, 21, 0.3);
   border: 2px solid #fcda15;
   transform: scale(1.05);
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-}
-
-.center-nav a.active {
-  background: linear-gradient(135deg, #0d39d9 0%, #112d4e 100%);
-  color: #ffffff !important;
-  border-radius: 2rem;
-  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.25),
-    0 0 0 2px rgba(252, 218, 21, 0.3);
-  border: 2px solid #fcda15;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
@@ -1130,14 +1110,14 @@ header.hidden {
     margin: 0.5rem auto 0 auto;
     padding: 0.8rem 1.5rem;
     background: none;
-    border: 2px solid springgreen;
-    border-radius: 8px;
+    border: 2px solid #000042;
+    border-radius: 999px;
     color: white;
     font-size: 1rem;
     font-weight: 600;
     text-align: center;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.18);
+    box-shadow: 0 2px 12px #112d4e;
     cursor: pointer;
     position: relative;
     z-index: 1100;
@@ -1196,18 +1176,17 @@ header.hidden {
     margin: 0.5rem auto 0 auto;
     padding: 0.8rem 1.5rem;
     background: none;
-    border: 2px solid springgreen;
-    border-radius: 8px;
+    border: 2px solid #000042;
+    border-radius: 999px;
     color: white;
     font-size: 1rem;
     font-weight: 600;
     text-align: center;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.18);
+    box-shadow: 0 2px 12px #112d4e;
     cursor: pointer;
     position: relative;
     z-index: 1100;
-    text-decoration: none;
   }
   /* Style for mobile login dropdown items to match .center-nav.mobile-active a */
   .mobile-login-dropdown-item {
@@ -1248,6 +1227,32 @@ header.hidden {
       opacity: 1;
       transform: translateY(0) scale(1);
     }
+  }
+  .hero-btn {
+    background: #000042;
+    color: #fff;
+    padding: 0.85rem 2rem;
+    border: none;
+    border-radius: 999px;
+    font-size: 0.99rem;
+    font-weight: 505;
+    cursor: pointer;
+    text-decoration: none;
+    box-shadow: 0 4px 16px rgba(0, 0, 66, 0.13);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1.5px solid #112d4e;
+    position: relative;
+    width: 235px;
+    height: 50px;
+  }
+
+  .hero-btn-secondary {
+    background: #112d4e;
+    color: white;
+    box-shadow: 0 2px 12px rgba(99, 102, 241, 0.18);
+    border: 1.5px solid #0c27be;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
   }
 }
 
@@ -1361,19 +1366,18 @@ header.hidden {
     margin: 0.5rem auto 0 auto;
     padding: 0.8rem 1.5rem;
     background: none;
-    border: 2px solid springgreen;
-    border-radius: 8px;
+    border: 2px solid #000042;
+    border-radius: 999px;
     color: white;
     font-size: 1rem;
     font-weight: 600;
     text-align: center;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.18);
+    box-shadow: 0 2px 12px #112d4e;
     cursor: pointer;
     position: relative;
     z-index: 1100;
   }
-
   .mobile-login-btn:hover {
     background-color: rgba(255, 255, 255, 0.1);
     transform: translateX(5px);
@@ -1427,19 +1431,19 @@ header.hidden {
     margin: 0.5rem auto 0 auto;
     padding: 0.8rem 1.5rem;
     background: none;
-    border: 2px solid springgreen;
-    border-radius: 8px;
+    border: 2px solid #000042;
+    border-radius: 999px;
     color: white;
     font-size: 1rem;
     font-weight: 600;
     text-align: center;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.18);
+    box-shadow: 0 2px 12px #112d4e;
     cursor: pointer;
     position: relative;
     z-index: 1100;
-    text-decoration: none;
   }
+
   /* Style for mobile login dropdown items to match .center-nav.mobile-active a */
   .mobile-login-dropdown-item {
     background: linear-gradient(135deg, #112d4e 0%, #1a237e 100%);
@@ -1508,6 +1512,33 @@ header.hidden {
     font-weight: 600;
     max-width: 96%;
     margin-top: 0.8rem;
+  }
+
+  .hero-btn {
+    background: #000042;
+    color: #fff;
+    padding: 0.85rem 2rem;
+    border: none;
+    border-radius: 999px;
+    font-size: 0.99rem;
+    font-weight: 505;
+    cursor: pointer;
+    text-decoration: none;
+    box-shadow: 0 4px 16px rgba(0, 0, 66, 0.13);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1.5px solid #112d4e;
+    position: relative;
+    width: 235px;
+    height: 50px;
+  }
+
+  .hero-btn-secondary {
+    background: #112d4e;
+    color: white;
+    box-shadow: 0 2px 12px rgba(99, 102, 241, 0.18);
+    border: 1.5px solid #0c27be;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
   }
 
   .about-image {
@@ -1654,14 +1685,14 @@ header.hidden {
     margin: 0.5rem auto 0 auto;
     padding: 0.8rem 1.5rem;
     background: none;
-    border: 2px solid springgreen;
-    border-radius: 8px;
+    border: 2px solid #000042;
+    border-radius: 999px;
     color: white;
     font-size: 1rem;
     font-weight: 600;
     text-align: center;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.18);
+    box-shadow: 0 2px 12px #112d4e;
     cursor: pointer;
     position: relative;
     z-index: 1100;
@@ -1720,19 +1751,19 @@ header.hidden {
     margin: 0.5rem auto 0 auto;
     padding: 0.8rem 1.5rem;
     background: none;
-    border: 2px solid springgreen;
-    border-radius: 8px;
+    border: 2px solid #000042;
+    border-radius: 999px;
     color: white;
     font-size: 1rem;
     font-weight: 600;
     text-align: center;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.18);
+    box-shadow: 0 2px 12px #112d4e;
     cursor: pointer;
     position: relative;
     z-index: 1100;
-    text-decoration: none;
   }
+
   /* Style for mobile login dropdown items to match .center-nav.mobile-active a */
   .mobile-login-dropdown-item {
     background: linear-gradient(135deg, #112d4e 0%, #1a237e 100%);
@@ -1801,6 +1832,33 @@ header.hidden {
     font-weight: 600;
     max-width: 96%;
     margin-top: 0.8rem;
+  }
+
+  .hero-btn {
+    background: #000042;
+    color: #fff;
+    padding: 0.85rem 2rem;
+    border: none;
+    border-radius: 999px;
+    font-size: 0.99rem;
+    font-weight: 505;
+    cursor: pointer;
+    text-decoration: none;
+    box-shadow: 0 4px 16px rgba(0, 0, 66, 0.13);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1.5px solid #112d4e;
+    position: relative;
+    width: 235px;
+    height: 50px;
+  }
+
+  .hero-btn-secondary {
+    background: #112d4e;
+    color: white;
+    box-shadow: 0 2px 12px rgba(99, 102, 241, 0.18);
+    border: 1.5px solid #0c27be;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
   }
 
   .about-image {
