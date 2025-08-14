@@ -182,25 +182,25 @@
                         include('ChangePassword.php');
                         break;
                     case 'maritime':
-                        include('./Departments/Maritime.php');
+                        include('../Departments/Maritime.php');
                         break;
                     case 'criminology':
-                        include('./Departments/Criminology.php');
+                        include('../Departments/Criminology.php');
                         break;
                     case 'tourism':
-                        include('./Departments/Tourism.php');
+                        include('../Departments/Tourism.php');
                         break;  
                    case 'education':
-                        include('./Departments/Education.php');
+                        include('../Departments/Education.php');
                         break; 
                     case 'nursing':
-                        include('./Departments/Nursing.php');
+                        include('../Departments/Nursing.php');
                         break;   
                     case 'informationsys':
-                        include('./Departments/InformationSystem.php');
+                        include('../Departments/InformationSystem.php');
                         break;  
                     case 'businessad':
-                        include('./Departments/BusinessAdministration.php');
+                        include('../Departments/BusinessAdministration.php');
                         break;                    
                     default:
                         include('StudentList.php');
