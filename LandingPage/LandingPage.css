@@ -927,6 +927,24 @@ header.hidden {
   .center-nav a {
     font-size: 0.9rem;
   }
+
+  .yearbook-card {
+    width: calc(28% - 1rem);
+    max-width: none;
+    height: auto;
+    margin-bottom: -1rem;
+  }
+
+  .yearbooks-row {
+    padding: 0 1rem;
+    gap: 1rem;
+  }
+
+  .yearbook-title {
+    font-size: 1.8rem;
+    margin-top: 1rem;
+    margin-bottom: 3rem;
+  }
 }
 
 /* Small laptop / Large tablet */
@@ -952,6 +970,24 @@ header.hidden {
   .center-nav a {
     font-size: 0.8rem;
   }
+
+  .yearbook-card {
+    width: calc(30% - 1rem);
+    max-width: none;
+    height: auto;
+    margin-bottom: -1rem;
+  }
+
+  .yearbooks-row {
+    padding: 0 1rem;
+    gap: 1rem;
+  }
+
+  .yearbook-title {
+    font-size: 1.8rem;
+    margin-top: 1rem;
+    margin-bottom: 3rem;
+  }
 }
 
 @media (max-width: 1120px) and (min-width: 991px) {
@@ -974,6 +1010,24 @@ header.hidden {
 
   .center-nav a {
     font-size: 0.9rem;
+  }
+
+  .yearbook-card {
+    width: calc(30% - 1rem);
+    max-width: none;
+    height: auto;
+    margin-bottom: -1rem;
+  }
+
+  .yearbooks-row {
+    padding: 0 1rem;
+    gap: 1rem;
+  }
+
+  .yearbook-title {
+    font-size: 1.5rem;
+    margin-top: 1rem;
+    margin-bottom: 3rem;
   }
 }
 
@@ -999,6 +1053,30 @@ header.hidden {
   .center-nav a {
     font-size: 0.8rem;
     margin: auto;
+  }
+
+  .yearbooks-section .section-title {
+    font-size: 2.2rem;
+    text-align: center;
+    margin-top: 1.6rem;
+  }
+
+  .yearbook-card {
+    width: calc(28% - 1rem);
+    max-width: none;
+    height: auto;
+    margin-bottom: -1rem;
+  }
+
+  .yearbooks-row {
+    padding: 0 1rem;
+    gap: 1rem;
+  }
+
+  .yearbook-title {
+    font-size: 1rem;
+    margin-top: 0.5rem;
+    margin-bottom: 3rem;
   }
 }
 
@@ -1255,6 +1333,30 @@ header.hidden {
     border: 1.5px solid #0c27be;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
+  }
+
+  .yearbooks-section .section-title {
+    font-size: 2.2rem;
+    text-align: center;
+    margin-top: 1.6rem;
+  }
+
+  .yearbook-card {
+    width: calc(30% - 1rem);
+    max-width: none;
+    height: auto;
+    margin-bottom: -1rem;
+  }
+
+  .yearbooks-row {
+    padding: 0 1rem;
+    gap: 1rem;
+  }
+
+  .yearbook-title {
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    margin-bottom: 3rem;
   }
 }
 
@@ -1571,9 +1673,22 @@ header.hidden {
     margin-top: 1.6rem;
   }
 
+  .yearbook-card {
+    width: calc(30% - 1rem);
+    max-width: none;
+    height: auto;
+    margin-bottom: -1rem;
+  }
+
   .yearbooks-row {
-    flex-direction: column;
-    align-items: center;
+    padding: 0 1rem;
+    gap: 1rem;
+  }
+
+  .yearbook-title {
+    font-size: 0.7rem;
+    margin-top: 0.5rem;
+    margin-bottom: 3rem;
   }
 }
 
@@ -1892,7 +2007,7 @@ header.hidden {
   }
 
   .yearbook-card {
-    width: calc(50% - 1rem);
+    width: calc(48% - 1rem);
     max-width: none;
     height: auto;
     margin-bottom: -1rem;
@@ -1904,6 +2019,7 @@ header.hidden {
   }
 
   .yearbook-title {
-    font-size: 0.66rem;
+    font-size: 0.7rem;
+    margin-top: 0.5rem;
   }
 }
