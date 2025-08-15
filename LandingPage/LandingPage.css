@@ -401,7 +401,6 @@ header.hidden {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  background: #22243a; /* Ensure image area is also solid */
   display: block;
 }
 
@@ -521,20 +520,21 @@ header.hidden {
   position: absolute;
   right: 0;
   top: 110%;
-  min-width: 140px;
-  background: linear-gradient(135deg, #e0e7ff 60%, #fff0f5 100%);
+  min-width: 150px;
+  background: linear-gradient(135deg, #112d4e 0%, #1a237e 100%);
   border: 2px solid #000042;
   border-radius: 14px;
   box-shadow: 0 8px 32px rgba(0, 0, 66, 0.13);
   z-index: 100;
   padding: 0.5rem 0;
   transition: border 0.2s, box-shadow 0.2s, background 0.2s;
+  text-align: center;
 }
 
 .login-dropdown-item {
   display: block;
   padding: 0.7rem 1.2rem;
-  color: #000042;
+  color: #ffffff;
   text-decoration: none;
   font-weight: 500;
   border-radius: 8px;
@@ -542,8 +542,17 @@ header.hidden {
 }
 
 .login-dropdown-item:hover {
-  background: #e0e7ff;
-  color: #1a237e;
+  width: 100%;
+  background: linear-gradient(135deg, #0d39d9 0%, #112d4e 100%);
+  color: #ffffff !important;
+  border-radius: 999px;
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.25),
+    0 0 0 2px rgba(252, 218, 21, 0.3);
+  border: 1px solid #fcda15;
+  transform: scale(0.9);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
 }
 
 .logo-container {
