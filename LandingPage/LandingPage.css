@@ -9,12 +9,12 @@ body {
   color: #ffffff;
   min-height: 100vh;
   overflow-x: hidden;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   overflow-y: scroll;
 }
 body::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+  display: none;
 }
 
 html,
@@ -313,7 +313,6 @@ header.hidden {
   position: relative;
 }
 
-/* Additional Sections */
 .content-sections {
   position: relative;
   z-index: 4;
@@ -348,9 +347,8 @@ header.hidden {
   }
 }
 
-/* Yearbooks Section */
 .yearbooks-section {
-  background: #021326; /* Or your preferred color */
+  background: #021326;
 }
 
 .yearbooks-section .section-title {
@@ -384,14 +382,12 @@ header.hidden {
   z-index: 3;
 }
 
-/* Target only the last 3 cards for the second row */
 .yearbook-card:nth-child(n + 1) {
-  margin-top: 1rem; /* space from first row */
+  margin-top: 1rem;
 }
 
-/* Optional: add horizontal gap between last row cards */
 .yearbooks-row {
-  gap: 2rem; /* space between cards horizontally and vertically */
+  gap: 2rem;
 }
 .yearbook-card:hover {
   transform: translateY(-8px) scale(1.05);
@@ -438,7 +434,6 @@ header.hidden {
 }
 .yearbooks-alt-curl {
   width: 100%;
-  /* Do NOT set position: fixed or absolute */
   pointer-events: none;
   z-index: auto;
 }
@@ -455,8 +450,8 @@ header.hidden {
   bottom: 0;
   width: 100vw;
   height: 60px;
-  z-index: 1000; /* Make sure it's above other content */
-  pointer-events: none; /* So it doesn't block clicks */
+  z-index: 1000;
+  pointer-events: none;
 }
 
 .yearbook-lower-curl svg {
@@ -497,7 +492,7 @@ header.hidden {
   height: 100%;
   pointer-events: none;
   z-index: 2;
-  opacity: 0.25; /* Increase for more visibility */
+  opacity: 0.25;
   background-image: linear-gradient(
       to right,
       rgba(255, 255, 255, 0.179) 1px,
@@ -507,7 +502,7 @@ header.hidden {
   background-size: 35px 33px;
 }
 .main-hero {
-  position: relative; /* Ensure stacking context */
+  position: relative;
 }
 
 .login-dropdown {
@@ -727,7 +722,6 @@ header.hidden {
   animation-play-state: paused;
 }
 
-/* Footer Section Styles */
 .footer-section {
   background: #021326;
   color: #fff;
@@ -858,14 +852,12 @@ header.hidden {
   transform-origin: center;
 }
 
-/* Close lines (hidden by default) */
 .close-line {
   opacity: 0;
   transition: all 0.3s ease;
   transform-origin: center;
 }
 
-/* Active state - transform hamburger to X */
 .hamburger-menu.active .hamburger-line {
   opacity: 0;
 }
@@ -874,7 +866,6 @@ header.hidden {
   opacity: 1;
 }
 
-/* Smooth animations for hamburger to X transformation */
 .hamburger-menu.active .line-1 {
   transform: translateY(6px) rotate(45deg);
 }
@@ -895,7 +886,6 @@ header.hidden {
   transform: rotate(-45deg);
 }
 
-/* Animation for mobile menu slide down */
 @keyframes slideDown {
   from {
     opacity: 0;
@@ -1277,7 +1267,7 @@ header.hidden {
     position: relative;
     z-index: 1100;
   }
-  /* Style for mobile login dropdown items to match .center-nav.mobile-active a */
+
   .mobile-login-dropdown-item {
     background: linear-gradient(135deg, #112d4e 0%, #1a237e 100%);
     color: #fff;
@@ -1306,7 +1296,6 @@ header.hidden {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   }
 
-  /* Animation for mobile menu slide down */
   @keyframes slideDown {
     from {
       opacity: 0;
@@ -1557,7 +1546,6 @@ header.hidden {
     z-index: 1100;
   }
 
-  /* Style for mobile login dropdown items to match .center-nav.mobile-active a */
   .mobile-login-dropdown-item {
     background: linear-gradient(135deg, #112d4e 0%, #1a237e 100%);
     color: #fff;
@@ -1586,7 +1574,6 @@ header.hidden {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   }
 
-  /* Animation for mobile menu slide down */
   @keyframes slideDown {
     from {
       opacity: 0;
@@ -1890,7 +1877,6 @@ header.hidden {
     z-index: 1100;
   }
 
-  /* Style for mobile login dropdown items to match .center-nav.mobile-active a */
   .mobile-login-dropdown-item {
     background: linear-gradient(135deg, #112d4e 0%, #1a237e 100%);
     color: #fff;
@@ -1919,7 +1905,6 @@ header.hidden {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   }
 
-  /* Animation for mobile menu slide down */
   @keyframes slideDown {
     from {
       opacity: 0;
