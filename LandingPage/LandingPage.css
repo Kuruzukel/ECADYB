@@ -581,6 +581,16 @@ header.hidden {
   background-position: top center;
 }
 
+.about-image {
+  width: 420px;
+  height: 550px;
+  border-radius: 0;
+  margin-top: 4.5rem;
+  margin-left: 5rem;
+  z-index: 2;
+  position: relative;
+}
+
 .about-section .section-title {
   color: white;
   margin-bottom: 0.5rem;
@@ -927,6 +937,32 @@ header.hidden {
     font-size: 0.9rem;
   }
 
+  .about-image {
+    width: 420px;
+    height: 550px;
+    border-radius: 0;
+    margin-top: 4.5rem;
+    margin-left: 5rem;
+    z-index: 2;
+    position: relative;
+  }
+
+  .about-section .section-title {
+    color: white;
+    margin-bottom: 0.5rem;
+    margin-top: 8.8rem;
+    font-size: 2rem;
+  }
+
+  .about-description {
+    font-size: 1.3rem;
+    margin: 0 auto;
+    line-height: 1.7;
+    color: white;
+    margin-left: 5.1rem;
+    margin-right: 5.1rem;
+  }
+
   .yearbook-card {
     width: calc(28% - 1rem);
     max-width: none;
@@ -970,6 +1006,32 @@ header.hidden {
     font-size: 0.8rem;
   }
 
+  .about-image {
+    width: 400px;
+    height: 530px;
+    border: none;
+    margin-top: 4.5rem;
+    margin-left: 2rem;
+    z-index: 2;
+    position: relative;
+  }
+
+  .about-section .section-title {
+    font-size: 2rem;
+    text-align: center;
+    margin-top: 10rem;
+    margin-left: 2rem;
+  }
+
+  .about-description {
+    width: 100%;
+    text-align: center;
+    font-size: 1.3rem;
+    margin-left: 3rem;
+    margin-right: 0;
+    width: 88%;
+  }
+
   .yearbook-card {
     width: calc(30% - 1rem);
     max-width: none;
@@ -1009,6 +1071,89 @@ header.hidden {
 
   .center-nav a {
     font-size: 0.9rem;
+  }
+
+  .main-hero-text .logo-container .logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    margin-top: -3rem;
+  }
+
+  .main-hero-text {
+    margin-top: 0rem;
+    margin-bottom: 1.6rem;
+  }
+
+  .logo-container {
+    width: 380px;
+    height: 380px;
+  }
+
+  .hero-message {
+    font-size: 1.2rem;
+    margin-bottom: 3.5rem;
+    max-width: 93%;
+  }
+
+  .hero-message-bold {
+    font-size: 1.2rem;
+    font-weight: 600;
+    max-width: 96%;
+    margin-top: 0.8rem;
+  }
+
+  .hero-btn {
+    background: #000042;
+    color: #fff;
+    padding: 0.85rem 2rem;
+    border: none;
+    border-radius: 999px;
+    font-size: 0.89rem;
+    font-weight: 505;
+    cursor: pointer;
+    text-decoration: none;
+    box-shadow: 0 4px 16px rgba(0, 0, 66, 0.13);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1.5px solid #112d4e;
+    position: relative;
+    width: 200px;
+    height: 50px;
+  }
+
+  .hero-btn-secondary {
+    background: #112d4e;
+    color: white;
+    box-shadow: 0 2px 12px rgba(99, 102, 241, 0.18);
+    border: 1.5px solid #0c27be;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+  }
+
+  .about-image {
+    width: 350px;
+    height: 480px;
+    border: none;
+    margin-top: 4.5rem;
+    margin-left: 2rem;
+    z-index: 2;
+    position: relative;
+  }
+
+  .about-section .section-title {
+    font-size: 1.89rem;
+    text-align: center;
+    margin-top: 10rem;
+    margin-left: 2rem;
+  }
+
+  .about-description {
+    width: 100%;
+    text-align: center;
+    font-size: 1rem;
+    margin-left: 3rem;
+    margin-right: 0;
+    width: 88%;
   }
 
   .yearbook-card {
@@ -1052,6 +1197,89 @@ header.hidden {
   .center-nav a {
     font-size: 0.8rem;
     margin: auto;
+  }
+
+  .main-hero-text .logo-container .logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    margin-top: -3rem;
+  }
+
+  .main-hero-text {
+    margin-top: 0rem;
+    margin-bottom: 1.6rem;
+  }
+
+  .logo-container {
+    width: 380px;
+    height: 380px;
+  }
+
+  .hero-message {
+    font-size: 1.2rem;
+    margin-bottom: 3.5rem;
+    max-width: 93%;
+  }
+
+  .hero-message-bold {
+    font-size: 1.2rem;
+    font-weight: 600;
+    max-width: 96%;
+    margin-top: 0.8rem;
+  }
+
+  .hero-btn {
+    background: #000042;
+    color: #fff;
+    padding: 0.85rem 2rem;
+    border: none;
+    border-radius: 999px;
+    font-size: 0.89rem;
+    font-weight: 505;
+    cursor: pointer;
+    text-decoration: none;
+    box-shadow: 0 4px 16px rgba(0, 0, 66, 0.13);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1.5px solid #112d4e;
+    position: relative;
+    width: 200px;
+    height: 50px;
+  }
+
+  .hero-btn-secondary {
+    background: #112d4e;
+    color: white;
+    box-shadow: 0 2px 12px rgba(99, 102, 241, 0.18);
+    border: 1.5px solid #0c27be;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+  }
+
+  .about-image {
+    width: 300px;
+    height: 390px;
+    border: none;
+    margin-top: 4.5rem;
+    margin-left: 0.5rem;
+    z-index: 2;
+    position: relative;
+  }
+
+  .about-section .section-title {
+    font-size: 1.4rem;
+    text-align: center;
+    margin-top: 10rem;
+    margin-left: 2rem;
+  }
+
+  .about-description {
+    width: 100%;
+    text-align: center;
+    font-size: 0.7rem;
+    margin-left: 3rem;
+    margin-right: 0;
+    width: 88%;
   }
 
   .yearbooks-section .section-title {
@@ -1306,13 +1534,44 @@ header.hidden {
       transform: translateY(0) scale(1);
     }
   }
+
+  .main-hero-text .logo-container .logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    margin-top: -3rem;
+  }
+
+  .main-hero-text {
+    margin-top: 0rem;
+    margin-bottom: 1.6rem;
+  }
+
+  .logo-container {
+    width: 370px;
+    height: 370px;
+  }
+
+  .hero-message {
+    font-size: 1.2rem;
+    margin-bottom: 3.5rem;
+    max-width: 93%;
+  }
+
+  .hero-message-bold {
+    font-size: 1.2rem;
+    font-weight: 600;
+    max-width: 96%;
+    margin-top: 0.8rem;
+  }
+
   .hero-btn {
     background: #000042;
     color: #fff;
     padding: 0.85rem 2rem;
     border: none;
     border-radius: 999px;
-    font-size: 0.99rem;
+    font-size: 0.89rem;
     font-weight: 505;
     cursor: pointer;
     text-decoration: none;
@@ -1320,7 +1579,7 @@ header.hidden {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border: 1.5px solid #112d4e;
     position: relative;
-    width: 235px;
+    width: 200px;
     height: 50px;
   }
 
@@ -1331,6 +1590,28 @@ header.hidden {
     border: 1.5px solid #0c27be;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
+  }
+
+  .about-image {
+    display: none;
+  }
+
+  .about-section {
+    padding: none;
+  }
+
+  .about-section .section-title {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-top: 1.6rem;
+  }
+
+  .about-description {
+    width: 100%;
+    text-align: center;
+    font-size: 1.85rem;
+    margin-left: 0;
+    margin-right: 0;
   }
 
   .yearbooks-section .section-title {
@@ -1586,19 +1867,19 @@ header.hidden {
   }
   .main-hero-text .logo-container .logo-img {
     width: 100%;
-    height: 100%px;
+    height: 100%;
     object-fit: contain;
     margin-top: -3rem;
   }
 
   .main-hero-text {
     margin-top: 0rem;
-    margin-bottom: 2.4rem;
+    margin-bottom: 1.6rem;
   }
 
   .logo-container {
-    width: 320px;
-    height: 320px;
+    width: 330px;
+    height: 330px;
   }
 
   .hero-message {
@@ -1620,7 +1901,7 @@ header.hidden {
     padding: 0.85rem 2rem;
     border: none;
     border-radius: 999px;
-    font-size: 0.99rem;
+    font-size: 0.89rem;
     font-weight: 505;
     cursor: pointer;
     text-decoration: none;
@@ -1628,7 +1909,7 @@ header.hidden {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border: 1.5px solid #112d4e;
     position: relative;
-    width: 235px;
+    width: 195px;
     height: 50px;
   }
 
@@ -1650,7 +1931,7 @@ header.hidden {
   }
 
   .about-section .section-title {
-    font-size: 2.2rem;
+    font-size: 2.3rem;
     text-align: center;
     margin-top: 1.6rem;
   }
@@ -1658,7 +1939,7 @@ header.hidden {
   .about-description {
     width: 100%;
     text-align: center;
-    font-size: 1.16rem;
+    font-size: 1.59rem;
     margin-left: 0;
     margin-right: 0;
   }
@@ -1917,7 +2198,7 @@ header.hidden {
   }
   .main-hero-text .logo-container .logo-img {
     width: 100%;
-    height: 100%px;
+    height: 100%;
     object-fit: contain;
     margin-top: -3rem;
   }
@@ -1934,7 +2215,7 @@ header.hidden {
 
   .hero-message {
     font-size: 1.2rem;
-    margin-bottom: 3.5rem;
+    margin-bottom: 3.2rem;
     max-width: 93%;
   }
 
@@ -1945,13 +2226,17 @@ header.hidden {
     margin-top: 0.8rem;
   }
 
+  .hero-buttons {
+    margin-bottom: 1.5rem;
+  }
+
   .hero-btn {
     background: #000042;
     color: #fff;
-    padding: 0.85rem 2rem;
+    padding: 0.8rem 2rem;
     border: none;
     border-radius: 999px;
-    font-size: 0.99rem;
+    font-size: 0.7rem;
     font-weight: 505;
     cursor: pointer;
     text-decoration: none;
@@ -1959,8 +2244,8 @@ header.hidden {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border: 1.5px solid #112d4e;
     position: relative;
-    width: 235px;
-    height: 50px;
+    width: 195px;
+    height: 45px;
   }
 
   .hero-btn-secondary {
@@ -1989,7 +2274,7 @@ header.hidden {
   .about-description {
     width: 100%;
     text-align: center;
-    font-size: 1.16rem;
+    font-size: 1.45rem;
     margin-left: 0;
     margin-right: 0;
   }
