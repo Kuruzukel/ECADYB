@@ -724,7 +724,7 @@ header.hidden {
     transform: translateX(0);
   }
   100% {
-    transform: translateX(-60%);
+    transform: translateX(-50%);
   }
 }
 
@@ -1173,6 +1173,53 @@ header.hidden {
     margin-top: 1rem;
     margin-bottom: 3rem;
   }
+
+  .carousel-subtitle {
+    text-align: center;
+    color: white;
+    font-size: 1rem;
+    margin-bottom: 2.5rem;
+    margin-top: 0.5rem;
+    letter-spacing: 1px;
+    font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
+      BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  }
+
+  .carousel-section .section-title {
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    margin-top: 1.8rem;
+    letter-spacing: 1px;
+    text-shadow: none;
+    font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
+      BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    border-bottom: none;
+    display: block;
+    padding-bottom: 0;
+    text-align: center;
+  }
+
+  @keyframes carousel-scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-1000%);
+    }
+  }
+
+  .carousel-track img {
+    width: 100%;
+    max-width: 600px;
+    height: 100%; /* fills the container height */
+    object-fit: contain; /* keeps full image */
+    border-radius: 12px;
+    margin: 0 1rem;
+    flex-shrink: 0;
+    background: #021326; /* fills gaps */
+  }
 }
 
 /* Tablet */
@@ -1304,6 +1351,53 @@ header.hidden {
     font-size: 1rem;
     margin-top: 0.5rem;
     margin-bottom: 3rem;
+  }
+
+  .carousel-subtitle {
+    text-align: center;
+    color: white;
+    font-size: 1rem;
+    margin-bottom: 2.5rem;
+    margin-top: 0.5rem;
+    letter-spacing: 1px;
+    font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
+      BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  }
+
+  .carousel-section .section-title {
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    margin-top: 1.8rem;
+    letter-spacing: 1px;
+    text-shadow: none;
+    font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
+      BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    border-bottom: none;
+    display: block;
+    padding-bottom: 0;
+    text-align: center;
+  }
+
+  @keyframes carousel-scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-1000%);
+    }
+  }
+
+  .carousel-track img {
+    width: 100%;
+    max-width: 550px;
+    height: 100%; /* fills the container height */
+    object-fit: contain; /* keeps full image */
+    border-radius: 12px;
+    margin: 0 1rem;
+    flex-shrink: 0;
+    background: #021326; /* fills gaps */
   }
 }
 
@@ -1637,6 +1731,53 @@ header.hidden {
     margin-top: 0.5rem;
     margin-bottom: 3rem;
   }
+
+  .carousel-subtitle {
+    text-align: center;
+    color: white;
+    font-size: 1rem;
+    margin-bottom: 2.5rem;
+    margin-top: 0.5rem;
+    letter-spacing: 1px;
+    font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
+      BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  }
+
+  .carousel-section .section-title {
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    margin-top: 1.8rem;
+    letter-spacing: 1px;
+    text-shadow: none;
+    font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
+      BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    border-bottom: none;
+    display: block;
+    padding-bottom: 0;
+    text-align: center;
+  }
+
+  @keyframes carousel-scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-1000%);
+    }
+  }
+
+  .carousel-track img {
+    width: 100%;
+    max-width: 480px;
+    height: 100%; /* fills the container height */
+    object-fit: contain; /* keeps full image */
+    border-radius: 12px;
+    margin: 0 1rem;
+    flex-shrink: 0;
+    background: #021326; /* fills gaps */
+  }
 }
 
 /* Medium phone */
@@ -1966,6 +2107,53 @@ header.hidden {
     font-size: 0.7rem;
     margin-top: 0.5rem;
     margin-bottom: 3rem;
+  }
+
+  .carousel-subtitle {
+    text-align: center;
+    color: white;
+    font-size: 1rem;
+    margin-bottom: 2.5rem;
+    margin-top: 0.5rem;
+    letter-spacing: 1px;
+    font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
+      BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  }
+
+  .carousel-section .section-title {
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    margin-top: 1.8rem;
+    letter-spacing: 1px;
+    text-shadow: none;
+    font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
+      BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    border-bottom: none;
+    display: block;
+    padding-bottom: 0;
+    text-align: center;
+  }
+
+  @keyframes carousel-scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-1000%);
+    }
+  }
+
+  .carousel-track img {
+    width: 100%;
+    max-width: 430px;
+    height: 100%; /* fills the container height */
+    object-fit: contain; /* keeps full image */
+    border-radius: 12px;
+    margin: 0 1rem;
+    flex-shrink: 0;
+    background: #021326; /* fills gaps */
   }
 }
 
@@ -2300,5 +2488,52 @@ header.hidden {
   .yearbook-title {
     font-size: 0.7rem;
     margin-top: 0.5rem;
+  }
+
+  .carousel-subtitle {
+    text-align: center;
+    color: white;
+    font-size: 1rem;
+    margin-bottom: 2.5rem;
+    margin-top: 0.5rem;
+    letter-spacing: 1px;
+    font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
+      BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  }
+
+  .carousel-section .section-title {
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    margin-top: 1.8rem;
+    letter-spacing: 1px;
+    text-shadow: none;
+    font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
+      BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    border-bottom: none;
+    display: block;
+    padding-bottom: 0;
+    text-align: center;
+  }
+
+  @keyframes carousel-scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-1000%);
+    }
+  }
+
+  .carousel-track img {
+    width: 100%;
+    max-width: 380px;
+    height: 100%; /* fills the container height */
+    object-fit: contain; /* keeps full image */
+    border-radius: 12px;
+    margin: 0 1rem;
+    flex-shrink: 0;
+    background: #021326; /* fills gaps */
   }
 }
