@@ -7,6 +7,14 @@ if (php_sapi_name() !== 'cli') {
     $normalizedUri = strtolower($requestUri); // For case-insensitive routing
 
     // ----------------------
+    // Redirect root (/) to /login
+    // ----------------------
+    if ($normalizedUri === '/' || $normalizedUri === '/index.php') {
+        header("Location: /login");
+        exit;
+    }
+
+    // ----------------------
     // Serve LandingPageYB images
     // ----------------------
     if (preg_match('#^/LandingPage/LandingPageYB/pages/(.+)$#i', $requestUri, $matches)) {
@@ -30,77 +38,81 @@ if (php_sapi_name() !== 'cli') {
         }
     }
 
-    // Handle LandingPageYB requests
-    if (strpos($normalizedUri, '/landingpage/landingpageyb/') !== false || strpos($normalizedUri, '/landingpageyb/') !== false) {
-        include __DIR__ . '/LandingPage/LandingPageYB/index.php';
-        exit;
+    // ----------------------
+    // Serve Public/login.html
+    // ----------------------
+    if ($normalizedUri === '/public/login.html' || $normalizedUri === '/login' || $normalizedUri === '/login.html') {
+        $filePath = __DIR__ . '/public/login.html';
+        if (file_exists($filePath)) {
+            $htmlContent = file_get_contents($filePath);
+
+            // Fix relative paths (so css/js load correctly)
+            $htmlContent = str_replace([
+                'href="css/',
+                'src="js/',
+            ], [
+                'href="/public/css/',
+                'src="/public/js/',
+            ], $htmlContent);
+
+            echo $htmlContent;
+            exit;
+        } else {
+            http_response_code(404);
+            echo "Login page not found";
+            exit;
+        }
     }
 
-    // Handle StudentLogin requests
-    if (strpos($normalizedUri, '/student/session/studentlogin.php') !== false) {
-        include __DIR__ . '/student/Session/StudentLogin.php';
-        exit;
-    }
-
-    // Serve StudentLogin CSS and JS files
-    if (preg_match('#^/student/assets/(css|js)/(.+)$#i', $requestUri, $matches)) {
-        $filePath = __DIR__ . '/student/assets/' . $matches[1] . '/' . $matches[2];
+    // ----------------------
+    // Serve Public assets (CSS/JS for login.html)
+    // ----------------------
+    if (preg_match('#^/public/(css|js)/(.+)$#i', $requestUri, $matches)) {
+        $filePath = __DIR__ . '/public/' . $matches[1] . '/' . $matches[2];
         if (file_exists($filePath)) {
             $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
             $mimeTypes = ['css' => 'text/css', 'js' => 'application/javascript'];
             header('Content-Type: ' . ($mimeTypes[$ext] ?? 'application/octet-stream'));
             readfile($filePath);
             exit;
-        }
-    }
-
-    // Handle AdminLogin requests
-    if (strpos($normalizedUri, '/admin/session/adminlogin.php') !== false) {
-        include __DIR__ . '/admin/Session/AdminLogin.php';
-        exit;
-    }
-
-    // Serve AdminLogin CSS and JS files
-    if (preg_match('#^/admin/assets/(css|js)/(.+)$#i', $requestUri, $matches)) {
-        $filePath = __DIR__ . '/admin/assets/' . $matches[1] . '/' . $matches[2];
-        if (file_exists($filePath)) {
-            $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
-            $mimeTypes = ['css' => 'text/css', 'js' => 'application/javascript'];
-            header('Content-Type: ' . ($mimeTypes[$ext] ?? 'application/octet-stream'));
-            readfile($filePath);
+        } else {
+            http_response_code(404);
+            echo "Asset not found";
             exit;
         }
     }
 
-    // Serve LandingPage.html for root or other requests if exists
+    // ----------------------
+    // Serve LandingPage.html (only if someone visits /LandingPage/)
+    // ----------------------
     $landingPagePath = __DIR__ . '/LandingPage/LandingPage.html';
-    if (file_exists($landingPagePath)) {
-        $htmlContent = file_get_contents($landingPagePath);
+    if ($normalizedUri === '/landingpage' || $normalizedUri === '/landingpage/landingpage.html') {
+        if (file_exists($landingPagePath)) {
+            $htmlContent = file_get_contents($landingPagePath);
 
-        // Fix relative paths for deployment
-        $htmlContent = str_replace([
-            'href="LandingPage.css"',
-            'src="LandingPage.js"',
-            'src="../img/',
-            'href="../',
-            'href="admin/',
-            'href="student/',
-            'src="LandingPageYB/',
-        ], [
-            'href="LandingPage/LandingPage.css"',
-            'src="LandingPage/LandingPage.js"',
-            'src="img/',
-            'href="',
-            'href="admin/',
-            'href="student/',
-            'src="LandingPage/LandingPageYB/',
-        ], $htmlContent);
+            // Fix relative paths for deployment
+            $htmlContent = str_replace([
+                'href="LandingPage.css"',
+                'src="LandingPage.js"',
+                'src="../img/',
+                'href="../',
+                'src="LandingPageYB/',
+            ], [
+                'href="LandingPage/LandingPage.css"',
+                'src="LandingPage/LandingPage.js"',
+                'src="img/',
+                'href="',
+                'src="LandingPage/LandingPageYB/',
+            ], $htmlContent);
 
-        echo $htmlContent;
-        exit;
+            echo $htmlContent;
+            exit;
+        }
     }
 
-    // Default response if no match
+    // ----------------------
+    // Default response
+    // ----------------------
     echo '<h1>ECADYB Application</h1>';
     echo '<p>Application is running successfully!</p>';
     echo '<p>File check: LandingPage/LandingPage.html ' . (file_exists($landingPagePath) ? 'exists' : 'not found') . '</p>';

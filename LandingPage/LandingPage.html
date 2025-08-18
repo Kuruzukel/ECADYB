@@ -4,6 +4,37 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Landing Page</title>
+    <!-- Open Graph -->
+    <meta
+      property="og:title"
+      content="Graduation Gallery - Exact Colleges of Asia"
+    />
+    <meta
+      property="og:description"
+      content="Step into your digital yearbook. Every achievement and memory comes alive."
+    />
+    <meta
+      property="og:image"
+      content="https://grad-gallery.up.railway.app/img/ADMINGRALLERYLOGO.png"
+    />
+    <meta property="og:url" content="https://grad-gallery.up.railway.app" />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Graduation Gallery - Exact Colleges of Asia"
+    />
+    <meta
+      name="twitter:description"
+      content="Step into your digital yearbook. Every achievement and memory comes alive."
+    />
+    <meta
+      name="twitter:image"
+      content="https://grad-gallery.up.railway.app/img/ADMINGRALLERYLOGO.png"
+    />
+
     <link rel="stylesheet" href="LandingPage.css" />
     <!-- Font Awesome CDN -->
     <link
@@ -25,25 +56,13 @@
         <a href="#captured-moments">Memories</a>
         <a href="#footer">Contacts</a>
         <div class="mobile-login-dropdown">
-          <button class="mobile-login-btn" id="mobileLoginDropdownBtn">
+          <button
+            class="mobile-login-btn"
+            id="mobileLoginDropdownBtn"
+            onclick="window.location.href='/Public/login.html'"
+          >
             Log In
           </button>
-          <div class="mobile-login-dropdown-menu" id="mobileLoginDropdownMenu">
-            <button
-              class="mobile-login-dropdown-item"
-              onclick="window.location.href='/admin/Session/AdminLogin.php'"
-              type="button"
-            >
-              Admin
-            </button>
-            <button
-              class="mobile-login-dropdown-item"
-              onclick="window.location.href='/student/Session/StudentLogin.php'"
-              type="button"
-            >
-              Student
-            </button>
-          </div>
         </div>
       </nav>
       <div class="login-dropdown">
