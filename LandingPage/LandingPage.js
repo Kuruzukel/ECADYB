@@ -1,26 +1,3 @@
-// Feature toggle logic for tab style
-document.addEventListener("DOMContentLoaded", function () {
-  const buttons = document.querySelectorAll(".feature-toggle-btn");
-  const descs = document.querySelectorAll(".feature-toggle-desc");
-  function showDesc(idx) {
-    descs.forEach((d, i) => {
-      d.classList.remove("active");
-      if (i === idx) {
-        d.classList.add("active");
-      }
-    });
-    buttons.forEach((b) => b.classList.remove("active"));
-    buttons[idx].classList.add("active");
-  }
-  buttons.forEach((btn, idx) => {
-    btn.addEventListener("click", function () {
-      showDesc(idx);
-    });
-  });
-  // Show the first by default
-  showDesc(0);
-});
-
 // Login dropdown functionality
 const loginBtn = document.getElementById("loginDropdownBtn");
 const loginMenu = document.getElementById("loginDropdownMenu");
@@ -289,3 +266,12 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("./service-worker.js")
+      .then((reg) => console.log("✅ Service Worker registered:", reg.scope))
+      .catch((err) => console.log("❌ Service Worker failed:", err));
+  });
+}
