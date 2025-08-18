@@ -18,12 +18,10 @@ if (php_sapi_name() !== 'cli') {
                 'href="LandingPage.css"',
                 'src="LandingPage.js"',
                 'src="../img/',
-                'src="../img/',
                 'src="LandingPageYB/',
             ], [
                 'href="/LandingPage/LandingPage.css"',
                 'src="/LandingPage/LandingPage.js"',
-                'src="/img/',
                 'src="/img/',
                 'src="/LandingPage/LandingPageYB/',
             ], $htmlContent);
@@ -31,8 +29,10 @@ if (php_sapi_name() !== 'cli') {
             // Fix Log In buttons
             $htmlContent = str_replace(
                 ['id="loginDropdownBtn"', 'id="mobileLoginDropdownBtn"'],
-                ['id="loginDropdownBtn" onclick="window.location.href=\'/public/login.html\'"',
-                 'id="mobileLoginDropdownBtn" onclick="window.location.href=\'/public/login.html\'"'],
+                [
+                    'id="loginDropdownBtn" onclick="window.location.href=\'/public/login.html\'"',
+                    'id="mobileLoginDropdownBtn" onclick="window.location.href=\'/public/login.html\'"'
+                ],
                 $htmlContent
             );
 
@@ -46,7 +46,7 @@ if (php_sapi_name() !== 'cli') {
     }
 
     // ----------------------
-    // Serve images from /img
+    // Serve images from /img (including subfolders)
     // ----------------------
     if (preg_match('#^/img/(.+)$#i', $requestUri, $matches)) {
         $filePath = __DIR__ . '/img/' . $matches[1];
@@ -97,7 +97,7 @@ if (php_sapi_name() !== 'cli') {
     // Serve Public login page
     // ----------------------
     if ($normalizedUri === '/public/login.html') {
-        $filePath = __DIR__ . '/public/login.html';
+        $filePath = __DIR__ . '/Public/Login.html'; // match folder/file case
         if (file_exists($filePath)) {
             $htmlContent = file_get_contents($filePath);
 
