@@ -272,32 +272,20 @@ window.addEventListener("scroll", () => {
   });
 });
 
-// Mobile login dropdown functionality
+// Mobile & Desktop login buttons - simple redirect
 document.addEventListener("DOMContentLoaded", function () {
+  const loginBtn = document.getElementById("loginDropdownBtn");
   const mobileLoginBtn = document.getElementById("mobileLoginDropdownBtn");
-  const mobileLoginMenu = document.getElementById("mobileLoginDropdownMenu");
-  if (mobileLoginBtn && mobileLoginMenu) {
-    mobileLoginBtn.addEventListener("click", function (e) {
-      e.stopPropagation();
-      mobileLoginMenu.classList.toggle("active");
+
+  if (loginBtn) {
+    loginBtn.addEventListener("click", () => {
+      window.location.href = "/public/login.html";
     });
-    // Close dropdown when clicking outside
-    document.addEventListener("click", function (event) {
-      if (
-        !mobileLoginBtn.contains(event.target) &&
-        !mobileLoginMenu.contains(event.target)
-      ) {
-        mobileLoginMenu.classList.remove("active");
-      }
-    });
-    // Close dropdown when clicking a dropdown item
-    const mobileLoginItems = mobileLoginMenu.querySelectorAll(
-      ".mobile-login-dropdown-item"
-    );
-    mobileLoginItems.forEach((item) => {
-      item.addEventListener("click", function () {
-        mobileLoginMenu.classList.remove("active");
-      });
+  }
+
+  if (mobileLoginBtn) {
+    mobileLoginBtn.addEventListener("click", () => {
+      window.location.href = "/public/login.html";
     });
   }
 });
