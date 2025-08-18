@@ -30,8 +30,8 @@ if (php_sapi_name() !== 'cli') {
             $htmlContent = str_replace(
                 ['id="loginDropdownBtn"', 'id="mobileLoginDropdownBtn"'],
                 [
-                    'id="loginDropdownBtn" onclick="window.location.href=\'/public/login.html\'"',
-                    'id="mobileLoginDropdownBtn" onclick="window.location.href=\'/public/login.html\'"'
+                    'id="loginDropdownBtn" onclick="window.location.href=\'/Public/Login.html\'"',
+                    'id="mobileLoginDropdownBtn" onclick="window.location.href=\'/Public/Login.html\'"'
                 ],
                 $htmlContent
             );
@@ -94,10 +94,10 @@ if (php_sapi_name() !== 'cli') {
     }
 
     // ----------------------
-    // Serve Public login page
+    // Serve Public login page (case-sensitive)
     // ----------------------
-    if ($normalizedUri === '/public/login.html') {
-        $filePath = __DIR__ . '/public/login.html'; // lowercase folder/file
+    if (preg_match('#^/Public/Login\.html$#i', $requestUri)) {
+        $filePath = __DIR__ . '/Public/Login.html';
         if (file_exists($filePath)) {
             $htmlContent = file_get_contents($filePath);
 
@@ -106,8 +106,8 @@ if (php_sapi_name() !== 'cli') {
                 'href="css/',
                 'src="js/',
             ], [
-                'href="/public/css/',
-                'src="/public/js/',
+                'href="/Public/css/',
+                'src="/Public/js/',
             ], $htmlContent);
 
             echo $htmlContent;
@@ -122,8 +122,8 @@ if (php_sapi_name() !== 'cli') {
     // ----------------------
     // Serve Public assets (CSS/JS)
     // ----------------------
-    if (preg_match('#^/public/(css|js)/(.+)$#i', $requestUri, $matches)) {
-        $filePath = __DIR__ . '/public/' . $matches[1] . '/' . $matches[2];
+    if (preg_match('#^/Public/(css|js)/(.+)$#i', $requestUri, $matches)) {
+        $filePath = __DIR__ . '/Public/' . $matches[1] . '/' . $matches[2];
         if (file_exists($filePath)) {
             $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
             $mimeTypes = ['css' => 'text/css', 'js' => 'application/javascript'];
