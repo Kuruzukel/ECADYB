@@ -13,25 +13,26 @@ if (php_sapi_name() !== 'cli') {
         if (file_exists($landingPagePath)) {
             $htmlContent = file_get_contents($landingPagePath);
 
-            // Fix relative paths for CSS/JS/images
+            // Fix paths for deployment
             $htmlContent = str_replace([
                 'href="LandingPage.css"',
                 'src="LandingPage.js"',
                 'src="../img/',
-                'href="../',
+                'src="../img/',
                 'src="LandingPageYB/',
             ], [
                 'href="/LandingPage/LandingPage.css"',
                 'src="/LandingPage/LandingPage.js"',
-                'src="/LandingPage/img/',
-                'href="/LandingPage/',
+                'src="/img/',
+                'src="/img/',
                 'src="/LandingPage/LandingPageYB/',
             ], $htmlContent);
 
-            // Optionally, ensure the Log In button points to /public/login.html
+            // Fix Log In buttons
             $htmlContent = str_replace(
-                'id="loginBtn"',
-                'id="loginBtn" onclick="window.location.href=\'/public/login.html\'"',
+                ['id="loginDropdownBtn"', 'id="mobileLoginDropdownBtn"'],
+                ['id="loginDropdownBtn" onclick="window.location.href=\'/public/login.html\'"',
+                 'id="mobileLoginDropdownBtn" onclick="window.location.href=\'/public/login.html\'"'],
                 $htmlContent
             );
 
@@ -45,7 +46,31 @@ if (php_sapi_name() !== 'cli') {
     }
 
     // ----------------------
-    // Serve LandingPageYB images
+    // Serve images from /img
+    // ----------------------
+    if (preg_match('#^/img/(.+)$#i', $requestUri, $matches)) {
+        $filePath = __DIR__ . '/img/' . $matches[1];
+        if (file_exists($filePath)) {
+            $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+            $mimeTypes = [
+                'jpg' => 'image/jpeg',
+                'jpeg' => 'image/jpeg',
+                'png' => 'image/png',
+                'gif' => 'image/gif',
+                'webp' => 'image/webp'
+            ];
+            header('Content-Type: ' . ($mimeTypes[$ext] ?? 'application/octet-stream'));
+            readfile($filePath);
+            exit;
+        } else {
+            http_response_code(404);
+            echo "Image not found";
+            exit;
+        }
+    }
+
+    // ----------------------
+    // Serve LandingPageYB pages
     // ----------------------
     if (preg_match('#^/LandingPage/LandingPageYB/pages/(.+)$#i', $requestUri, $matches)) {
         $filePath = __DIR__ . '/LandingPage/LandingPageYB/pages/' . $matches[1];
@@ -69,14 +94,14 @@ if (php_sapi_name() !== 'cli') {
     }
 
     // ----------------------
-    // Serve Public Login Form
+    // Serve Public login page
     // ----------------------
     if ($normalizedUri === '/public/login.html') {
         $filePath = __DIR__ . '/public/login.html';
         if (file_exists($filePath)) {
             $htmlContent = file_get_contents($filePath);
 
-            // Fix relative paths
+            // Fix relative paths for CSS/JS
             $htmlContent = str_replace([
                 'href="css/',
                 'src="js/',
