@@ -279,13 +279,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if (loginBtn) {
     loginBtn.addEventListener("click", () => {
-      window.location.href = "/public/login.html";
+      window.location.href = "/Public/Login.html";
     });
   }
 
   if (mobileLoginBtn) {
     mobileLoginBtn.addEventListener("click", () => {
-      window.location.href = "/public/login.html";
+      window.location.href = "/Public/Login.html";
     });
   }
 });
