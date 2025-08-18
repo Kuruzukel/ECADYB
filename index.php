@@ -1,17 +1,47 @@
 <?php
 // Railway deployment entry point
-// Serve the main application or show a welcome page
 
 if (php_sapi_name() !== 'cli') {
-    $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH); // Only the path, ignore query string
-    $normalizedUri = strtolower($requestUri); // For case-insensitive routing
+    $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+    $normalizedUri = strtolower($requestUri);
 
     // ----------------------
-    // Redirect root (/) to /login
+    // Serve LandingPage.html at root (/)
     // ----------------------
     if ($normalizedUri === '/' || $normalizedUri === '/index.php') {
-        header("Location: /login");
-        exit;
+        $landingPagePath = __DIR__ . '/LandingPage/LandingPage.html';
+        if (file_exists($landingPagePath)) {
+            $htmlContent = file_get_contents($landingPagePath);
+
+            // Fix relative paths for CSS/JS/images
+            $htmlContent = str_replace([
+                'href="LandingPage.css"',
+                'src="LandingPage.js"',
+                'src="../img/',
+                'href="../',
+                'src="LandingPageYB/',
+            ], [
+                'href="/LandingPage/LandingPage.css"',
+                'src="/LandingPage/LandingPage.js"',
+                'src="/LandingPage/img/',
+                'href="/LandingPage/',
+                'src="/LandingPage/LandingPageYB/',
+            ], $htmlContent);
+
+            // Optionally, ensure the Log In button points to /public/login.html
+            $htmlContent = str_replace(
+                'id="loginBtn"',
+                'id="loginBtn" onclick="window.location.href=\'/public/login.html\'"',
+                $htmlContent
+            );
+
+            echo $htmlContent;
+            exit;
+        } else {
+            http_response_code(404);
+            echo "Landing page not found";
+            exit;
+        }
     }
 
     // ----------------------
@@ -39,14 +69,14 @@ if (php_sapi_name() !== 'cli') {
     }
 
     // ----------------------
-    // Serve Public/login.html
+    // Serve Public Login Form
     // ----------------------
-    if ($normalizedUri === '/public/login.html' || $normalizedUri === '/login' || $normalizedUri === '/login.html') {
+    if ($normalizedUri === '/public/login.html') {
         $filePath = __DIR__ . '/public/login.html';
         if (file_exists($filePath)) {
             $htmlContent = file_get_contents($filePath);
 
-            // Fix relative paths (so css/js load correctly)
+            // Fix relative paths
             $htmlContent = str_replace([
                 'href="css/',
                 'src="js/',
@@ -65,7 +95,7 @@ if (php_sapi_name() !== 'cli') {
     }
 
     // ----------------------
-    // Serve Public assets (CSS/JS for login.html)
+    // Serve Public assets (CSS/JS)
     // ----------------------
     if (preg_match('#^/public/(css|js)/(.+)$#i', $requestUri, $matches)) {
         $filePath = __DIR__ . '/public/' . $matches[1] . '/' . $matches[2];
@@ -83,54 +113,9 @@ if (php_sapi_name() !== 'cli') {
     }
 
     // ----------------------
-    // Serve LandingPage.html (only if someone visits /LandingPage/)
-    // ----------------------
-    $landingPagePath = __DIR__ . '/LandingPage/LandingPage.html';
-    if ($normalizedUri === '/landingpage' || $normalizedUri === '/landingpage/landingpage.html') {
-        if (file_exists($landingPagePath)) {
-            $htmlContent = file_get_contents($landingPagePath);
-
-            // Fix relative paths for deployment
-            $htmlContent = str_replace([
-                'href="LandingPage.css"',
-                'src="LandingPage.js"',
-                'src="../img/',
-                'href="../',
-                'src="LandingPageYB/',
-            ], [
-                'href="LandingPage/LandingPage.css"',
-                'src="LandingPage/LandingPage.js"',
-                'src="img/',
-                'href="',
-                'src="LandingPage/LandingPageYB/',
-            ], $htmlContent);
-
-            echo $htmlContent;
-            exit;
-        }
-    }
-
-    // ----------------------
-    // Default response
+    // Default fallback
     // ----------------------
     echo '<h1>ECADYB Application</h1>';
     echo '<p>Application is running successfully!</p>';
-    echo '<p>File check: LandingPage/LandingPage.html ' . (file_exists($landingPagePath) ? 'exists' : 'not found') . '</p>';
-    echo '<p>MongoDB Connection Status: ';
-
-    try {
-        require __DIR__ . '/vendor/autoload.php';
-
-        $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://localhost:27017';
-        $client = new \MongoDB\Client($mongoUrl);
-
-        $client->listDatabases();
-        echo '<span style="color: green;">✓ Connected</span>';
-    } catch (Exception $e) {
-        echo '<span style="color: red;">✗ Error: ' . htmlspecialchars($e->getMessage()) . '</span>';
-    }
-    echo '</p>';
-} else {
-    echo "ECADYB Application is running\n";
 }
 ?>
