@@ -97,7 +97,7 @@ if (php_sapi_name() !== 'cli') {
     // Serve Public login page
     // ----------------------
     if ($normalizedUri === '/public/login.html') {
-        $filePath = __DIR__ . '/Public/Login.html'; // match folder/file case
+        $filePath = __DIR__ . '/public/login.html'; // lowercase folder/file
         if (file_exists($filePath)) {
             $htmlContent = file_get_contents($filePath);
 
