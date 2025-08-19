@@ -1,13 +1,13 @@
 <?php
 session_start();
 
-// Include MongoDB connections
-require 'C:/xampp/htdocs/ECADYB/Connection/MongoConnect.php';
+$mongoPath = __DIR__ . '/../../Connection/MongoConnect.php';
+if (!file_exists($mongoPath)) {
+    die("MongoConnect.php not found at: $mongoPath");
+}
 
+require $mongoPath;
 ?>
-
-
-
 
 
 <!DOCTYPE html>
