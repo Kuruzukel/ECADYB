@@ -1,6 +1,6 @@
 {
   "require": {
-    "mongodb/mongodb": "^1.16"
+    "mongodb/mongodb": "^1.19"
   },
   "config": {
     "optimize-autoloader": true,
