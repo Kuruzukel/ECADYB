@@ -1,16 +1,10 @@
 <?php
 session_start();
 
-// Include MongoDB connections
-require __DIR__ . '/../../../ECADYB/Connection/MongoConnect.php';
-
-
-// MongoConnect.php should contain all your database connections:
-// $departmentsDB, $collections, $announcementDB, $calendarCollection, 
-// $topManagementDB, $messageCollection, $adminDB, $adminSampleCollection
-
-// Now all the collections and DBs are available in this page
+// Include MongoDB connections dynamically
+require BASE_PATH . '/Connection/MongoConnect.php';
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
