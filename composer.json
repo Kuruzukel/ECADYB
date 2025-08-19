@@ -1,6 +1,7 @@
 {
   "require": {
-    "mongodb/mongodb": "^1.16"
+    "mongodb/mongodb": "1.19.1",
+    "psr/log": "3.0.2"
   },
   "config": {
     "optimize-autoloader": true,
