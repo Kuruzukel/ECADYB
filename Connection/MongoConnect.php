@@ -1,5 +1,5 @@
 <?php
-require __DIR__ . '/../../vendor/autoload.php'; // Composer autoload
+require __DIR__ . '/../vendor/autoload.php'; // Composer autoload
 
 use MongoDB\Client;
 
