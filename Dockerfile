@@ -1,38 +1,42 @@
-# Use the PHP Apache image
-FROM php:8.2-apache
+FROM php:8.2.12-apache
 
-# Install required dependencies
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
+    libcurl4-openssl-dev \
+    pkg-config \
     libssl-dev \
-    unzip \
     git \
+    unzip \
     && rm -rf /var/lib/apt/lists/*
 
-# Install specific version of mongodb extension (matching composer.lock)
-RUN pecl install mongodb-1.16.2 \
+# Install MongoDB extension
+RUN pecl install mongodb \
     && docker-php-ext-enable mongodb
 
-# Enable Apache modules
-RUN a2enmod rewrite
-
-# Copy source code
-COPY . /var/www/html
+# Install Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Set working directory
 WORKDIR /var/www/html
 
-# Install Composer
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+# Copy composer files first for better caching
+COPY composer.json composer.lock ./
 
-# Install PHP dependencies (no update, keep lock)
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+# Install PHP dependencies (ignore platform requirements for ext-mongodb)
+RUN composer install --optimize-autoloader --no-scripts --no-interaction --ignore-platform-reqs
 
-# Fix permissions
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html
+# Copy the rest of the application
+COPY . .
 
-# Expose port 80
+# Set permissions
+RUN chown -R www-data:www-data /var/www/html
+
+# Configure Apache
+RUN a2enmod rewrite
+COPY docker/apache.conf /etc/apache2/sites-available/000-default.conf
+
+# Expose port
 EXPOSE 80
 
 # Start Apache
-CMD ["apache2-foreground"]
+CMD ["apache2-foreground"] 
