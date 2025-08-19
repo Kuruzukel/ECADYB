@@ -58,7 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['studentId'], $_POST['
         if ($admin) {
             $_SESSION['role'] = 'admin';
             $_SESSION['username'] = $username;
-            header("Location: /admin/Components/AdminDashboard.php");
+            header("Location: /Admin/Components/AdminDashboard.php");
             exit();
         }
 
