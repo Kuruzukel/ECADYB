@@ -74,8 +74,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['studentId'], $_POST['
 // Router
 // ----------------------
 if (php_sapi_name() !== 'cli') {
-    $requestUri    = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+    $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     $normalizedUri = strtolower($requestUri);
+
+    // Serve PHP files directly if they exist
+    $directFile = __DIR__ . $requestUri;
+    if (file_exists($directFile) && pathinfo($directFile, PATHINFO_EXTENSION) === 'php') {
+        include $directFile;
+        exit;
+    }
 
     // Root Landing Page
     if ($normalizedUri === '/' || $normalizedUri === '/index.php') {
@@ -109,61 +116,31 @@ if (php_sapi_name() !== 'cli') {
         }
     }
 
-    // Images (/img)
-    if (preg_match('#^/img/(.+)$#i', $requestUri, $matches)) {
-        $filePath = __DIR__ . '/img/' . $matches[1];
-        if (file_exists($filePath)) {
-            $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
-            $mimeTypes = ['jpg'=>'image/jpeg','jpeg'=>'image/jpeg','png'=>'image/png','gif'=>'image/gif','webp'=>'image/webp'];
-            header('Content-Type: ' . ($mimeTypes[$ext] ?? 'application/octet-stream'));
-            readfile($filePath);
-            exit;
+    // Serve static assets (images, css, js)
+    $staticPatterns = [
+        '#^/img/(.+)$#i'                   => '/img/',
+        '#^/LandingPage/LandingPageYB/pages/(.+)$#i' => '/LandingPage/LandingPageYB/pages/',
+        '#^/Public/(css|js)/(.+)$#i'      => '/Public/$1/'
+    ];
+
+    foreach ($staticPatterns as $pattern => $baseDir) {
+        if (preg_match($pattern, $requestUri, $matches)) {
+            $filePath = __DIR__ . $baseDir . $matches[1];
+            if (file_exists($filePath)) {
+                $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+                $mimeTypes = [
+                    'jpg'=>'image/jpeg','jpeg'=>'image/jpeg','png'=>'image/png',
+                    'gif'=>'image/gif','webp'=>'image/webp','css'=>'text/css','js'=>'application/javascript'
+                ];
+                header('Content-Type: ' . ($mimeTypes[$ext] ?? 'application/octet-stream'));
+                readfile($filePath);
+                exit;
+            }
         }
     }
 
-    // LandingPageYB pages
-    if (preg_match('#^/LandingPage/LandingPageYB/pages/(.+)$#i', $requestUri, $matches)) {
-        $filePath = __DIR__ . '/LandingPage/LandingPageYB/pages/' . $matches[1];
-        if (file_exists($filePath)) {
-            $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
-            $mimeTypes = ['jpg'=>'image/jpeg','jpeg'=>'image/jpeg','png'=>'image/png','gif'=>'image/gif','webp'=>'image/webp'];
-            header('Content-Type: ' . ($mimeTypes[$ext] ?? 'application/octet-stream'));
-            readfile($filePath);
-            exit;
-        }
-    }
-
-    // ----------------------
-    // Login Page (Login.php)
-    // ----------------------
-    if ($normalizedUri === '/public/login.php') {
-        $filePath = __DIR__ . '/Public/Login.php';
-        if (file_exists($filePath)) {
-            // Render the login page with error messages if needed
-            include $filePath;
-            exit;
-        } else {
-            http_response_code(404);
-            echo "Login page not found";
-            exit;
-        }
-    }
-
-    // Public assets (css/js)
-    if (preg_match('#^/Public/(css|js)/(.+)$#i', $requestUri, $matches)) {
-        $filePath = __DIR__ . '/Public/' . $matches[1] . '/' . $matches[2];
-        if (file_exists($filePath)) {
-            $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
-            $mimeTypes = ['css'=>'text/css','js'=>'application/javascript'];
-            header('Content-Type: ' . ($mimeTypes[$ext] ?? 'application/octet-stream'));
-            readfile($filePath);
-            exit;
-        }
-    }
-
-    // ----------------------
     // Default fallback
-    // ----------------------
+    http_response_code(404);
     echo '<h1>ECADYB Application</h1>';
-    echo '<p>Application is running successfully!</p>';
+    echo '<p>Page not found.</p>';
 }
