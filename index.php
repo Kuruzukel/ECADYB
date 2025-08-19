@@ -75,17 +75,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['studentId'], $_POST['
 // ----------------------
 if (php_sapi_name() !== 'cli') {
     $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-    $normalizedUri = strtolower($requestUri);
 
-    // Serve PHP files directly if they exist
-    $directFile = __DIR__ . $requestUri;
-    if (file_exists($directFile) && pathinfo($directFile, PATHINFO_EXTENSION) === 'php') {
-        include $directFile;
+    // Serve any PHP file directly (preserve case)
+    $phpFile = __DIR__ . $requestUri;
+    if (file_exists($phpFile) && pathinfo($phpFile, PATHINFO_EXTENSION) === 'php') {
+        include $phpFile;
         exit;
     }
 
     // Root Landing Page
-    if ($normalizedUri === '/' || $normalizedUri === '/index.php') {
+    if ($requestUri === '/' || $requestUri === '/index.php') {
         $landingPagePath = __DIR__ . '/LandingPage/LandingPage.html';
         if (file_exists($landingPagePath)) {
             $htmlContent = file_get_contents($landingPagePath);
@@ -97,7 +96,7 @@ if (php_sapi_name() !== 'cli') {
                 $htmlContent
             );
 
-            // Fix login buttons → point to PHP login page
+            // Fix login buttons
             $htmlContent = str_replace(
                 ['id="loginDropdownBtn"', 'id="mobileLoginDropdownBtn"'],
                 [
@@ -117,15 +116,16 @@ if (php_sapi_name() !== 'cli') {
     }
 
     // Serve static assets (images, css, js)
-    $staticPatterns = [
-        '#^/img/(.+)$#i'                   => '/img/',
-        '#^/LandingPage/LandingPageYB/pages/(.+)$#i' => '/LandingPage/LandingPageYB/pages/',
-        '#^/Public/(css|js)/(.+)$#i'      => '/Public/$1/'
+    $staticPaths = [
+        '/img/' => '/img/',
+        '/LandingPage/LandingPageYB/pages/' => '/LandingPage/LandingPageYB/pages/',
+        '/Public/css/' => '/Public/css/',
+        '/Public/js/'  => '/Public/js/'
     ];
 
-    foreach ($staticPatterns as $pattern => $baseDir) {
-        if (preg_match($pattern, $requestUri, $matches)) {
-            $filePath = __DIR__ . $baseDir . $matches[1];
+    foreach ($staticPaths as $uriPrefix => $folder) {
+        if (str_starts_with($requestUri, $uriPrefix)) {
+            $filePath = __DIR__ . $folder . substr($requestUri, strlen($uriPrefix));
             if (file_exists($filePath)) {
                 $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
                 $mimeTypes = [
