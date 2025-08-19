@@ -1,21 +1,20 @@
 <?php
-require __DIR__ . '/../../vendor/autoload.php'; // Adjust path if needed
+require __DIR__ . '/../../vendor/autoload.php'; // Composer autoload
 
 use MongoDB\Client;
 
 // ----------------------
 // MongoDB Connection
 // ----------------------
-$mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX:56957/';
+$mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 $client = new Client($mongoUrl);
 
 // ----------------------
 // Departments Database
 // ----------------------
 $departmentsDB = $client->Departments;
-$adminCollection = $departmentsDB->Admin; // Admin collection in Departments DB
+$adminCollection = $departmentsDB->Admin;
 
-// Department collections
 $collections = [
     "bsme"   => "BS Marine Engineering",
     "bsmt"   => "BS Marine Transportation",

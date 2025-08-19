@@ -4,18 +4,14 @@ require __DIR__ . '/vendor/autoload.php'; // Composer autoload
 
 use MongoDB\Client;
 
-// ----------------------
-// MongoDB Connection
-// ----------------------
-$mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX:56957/';
+$mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 $client = new Client($mongoUrl);
 
-// ----------------------
-// Departments Database
-// ----------------------
+// Departments
 $departmentsDB = $client->Departments;
 $adminCollection = $departmentsDB->Admin; // Admin collection in Departments DB
 
+// Department collections
 $collections = [
     "bsme"   => "BS Marine Engineering",
     "bsmt"   => "BS Marine Transportation",
@@ -29,21 +25,15 @@ $collections = [
     "bse"    => "BS Entrepreneurship"
 ];
 
-// ----------------------
-// Announcement Database
-// ----------------------
+// Announcement
 $announcementDB = $client->Announcement;
 $calendarCollection = $announcementDB->Calendar;
 
-// ----------------------
-// Top Management Database
-// ----------------------
+// Top Management
 $topManagementDB = $client->Top_Management;
 $messageCollection = $topManagementDB->message;
 
-// ----------------------
-// Admin Database
-// ----------------------
+// Admin database
 $adminDB = $client->admin;
 $adminSampleCollection = $adminDB->AdminSample;
 
