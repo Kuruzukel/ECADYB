@@ -1,6 +1,7 @@
 <?php
 session_start();
-require '/../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
+
 
 // MongoDB connection
 $client = new MongoDB\Client("mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957/");
