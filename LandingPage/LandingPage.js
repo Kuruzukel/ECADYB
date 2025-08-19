@@ -256,13 +256,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if (loginBtn) {
     loginBtn.addEventListener("click", () => {
-      window.location.href = "/Public/Login.html";
+      window.location.href = "/Public/Login.php";
     });
   }
 
   if (mobileLoginBtn) {
     mobileLoginBtn.addEventListener("click", () => {
-      window.location.href = "/Public/Login.html";
+      window.location.href = "/Public/Login.php";
     });
   }
 });
