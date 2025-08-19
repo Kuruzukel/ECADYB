@@ -1,3 +1,15 @@
+<?php
+session_start();
+
+// Include MongoDB connections
+require __DIR__ . '/Connection/MongoConnect.php'; 
+// MongoConnect.php should contain all your database connections:
+// $departmentsDB, $collections, $announcementDB, $calendarCollection, 
+// $topManagementDB, $messageCollection, $adminDB, $adminSampleCollection
+
+// Now all the collections and DBs are available in this page
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 

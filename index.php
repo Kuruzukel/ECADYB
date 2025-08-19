@@ -1,15 +1,21 @@
 <?php
 session_start();
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/vendor/autoload.php'; // Composer autoload
+
+use MongoDB\Client;
 
 // ----------------------
-// MongoDB connection
+// MongoDB Connection
 // ----------------------
-$client = new MongoDB\Client("mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957/");
+$mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX:56957/';
+$client = new Client($mongoUrl);
+
+// ----------------------
+// Departments Database
+// ----------------------
 $departmentsDB = $client->Departments;
-$adminCollection = $departmentsDB->Admin;
+$adminCollection = $departmentsDB->Admin; // Admin collection in Departments DB
 
-// Department collections
 $collections = [
     "bsme"   => "BS Marine Engineering",
     "bsmt"   => "BS Marine Transportation",
@@ -23,11 +29,29 @@ $collections = [
     "bse"    => "BS Entrepreneurship"
 ];
 
-$error_message = '';
+// ----------------------
+// Announcement Database
+// ----------------------
+$announcementDB = $client->Announcement;
+$calendarCollection = $announcementDB->Calendar;
+
+// ----------------------
+// Top Management Database
+// ----------------------
+$topManagementDB = $client->Top_Management;
+$messageCollection = $topManagementDB->message;
+
+// ----------------------
+// Admin Database
+// ----------------------
+$adminDB = $client->admin;
+$adminSampleCollection = $adminDB->AdminSample;
 
 // ----------------------
 // Handle login POST
 // ----------------------
+$error_message = '';
+
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['studentId'], $_POST['password'])) {
     $username = trim($_POST['studentId']);
     $password = trim($_POST['password']);
@@ -35,7 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['studentId'], $_POST['
     if (strlen($password) > 8) {
         $error_message = "Password must not exceed 8 characters.";
     } else {
-        // ADMIN LOGIN
+        // Admin login
         $admin = $adminCollection->findOne([
             'username' => $username,
             'password' => $password
@@ -44,11 +68,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['studentId'], $_POST['
         if ($admin) {
             $_SESSION['role'] = 'admin';
             $_SESSION['username'] = $username;
-            header("Location: /Admin/Components/AdminDashboard.php");
+            header("Location: /admin/Components/AdminDashboard.php");
             exit();
         }
 
-        // STUDENT LOGIN
+        // Student login
         foreach ($collections as $collectionName => $course) {
             $collection = $departmentsDB->{$collectionName};
             $student = $collection->findOne([
@@ -71,12 +95,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['studentId'], $_POST['
 }
 
 // ----------------------
-// Router
+// Router / Landing Page
 // ----------------------
 if (php_sapi_name() !== 'cli') {
     $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-    // Serve any PHP file directly (preserve case)
+    // Serve any PHP file directly
     $phpFile = __DIR__ . $requestUri;
     if (file_exists($phpFile) && pathinfo($phpFile, PATHINFO_EXTENSION) === 'php') {
         include $phpFile;
@@ -115,7 +139,7 @@ if (php_sapi_name() !== 'cli') {
         }
     }
 
-    // Serve static assets (images, css, js)
+    // Serve static assets
     $staticPaths = [
         '/img/' => '/img/',
         '/LandingPage/LandingPageYB/pages/' => '/LandingPage/LandingPageYB/pages/',
