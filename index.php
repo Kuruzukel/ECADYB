@@ -1,50 +1,21 @@
 <?php
 session_start();
-require __DIR__ . '/vendor/autoload.php'; // Composer autoload
 
-use MongoDB\Client;
+// Include Composer autoload
+require __DIR__ . '/vendor/autoload.php'; 
+
+// Include MongoDB connections
+$mongoPath = __DIR__ . '/Connection/MongoConnect.php';
+if (!file_exists($mongoPath)) {
+    die("MongoConnect.php not found at: $mongoPath");
+}
+require $mongoPath; // This file should define $client, $departmentsDB, $collections, etc.
 
 // ----------------------
 // Base paths
 // ----------------------
-define('BASE_PATH', __DIR__);          // Filesystem path to project root
-define('BASE_URL', '/');               // Base URL (adjust if project is in a subfolder)
-
-// ----------------------
-// MongoDB Connection
-// ----------------------
-$mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
-$client = new Client($mongoUrl);
-
-// Departments
-$departmentsDB = $client->Departments;
-$adminCollection = $departmentsDB->Admin;
-
-// Department collections
-$collections = [
-    "bsme"   => "BS Marine Engineering",
-    "bsmt"   => "BS Marine Transportation",
-    "bscje"  => "BS Criminal Justice Education",
-    "bstm"   => "BS Tourism Management",
-    "btvted" => "BS Technical-Vocational Teacher Education",
-    "beced"  => "BS Early Childhood Education",
-    "bsn"    => "BS Nursing",
-    "bsis"   => "BS Information System",
-    "bsma"   => "BS Management Accounting",
-    "bse"    => "BS Entrepreneurship"
-];
-
-// Announcement
-$announcementDB = $client->Announcement;
-$calendarCollection = $announcementDB->Calendar;
-
-// Top Management
-$topManagementDB = $client->Top_Management;
-$messageCollection = $topManagementDB->message;
-
-// Admin database
-$adminDB = $client->admin;
-$adminSampleCollection = $adminDB->AdminSample;
+define('BASE_PATH', __DIR__); // Filesystem path to project root
+define('BASE_URL', '/');      // Base URL (adjust if project is in a subfolder)
 
 // ----------------------
 // Handle login POST
@@ -105,7 +76,7 @@ if ($requestUri === '/' || $requestUri === '/index.php') {
     if (file_exists($landingPagePath)) {
         $htmlContent = file_get_contents($landingPagePath);
 
-        // Fix asset paths for deployment
+        // Fix asset paths
         $htmlContent = str_replace(
             ['href="LandingPage.css"', 'src="LandingPage.js"', 'src="../img/', 'src="LandingPageYB/'],
             ['href="'.BASE_URL.'LandingPage/LandingPage.css"', 

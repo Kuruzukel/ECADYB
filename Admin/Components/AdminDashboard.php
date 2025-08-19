@@ -1,12 +1,15 @@
 <?php
 session_start();
 
-$mongoPath = __DIR__ . '/../../Connection/MongoConnect.php';
-if (!file_exists($mongoPath)) {
-    die("MongoConnect.php not found at: $mongoPath");
+// Absolute path to MongoConnect.php
+$mongoPath = realpath(__DIR__ . '/Connection/MongoConnect.php');
+
+if (!$mongoPath || !file_exists($mongoPath)) {
+    die("MongoConnect.php not found at: " . (__DIR__ . '/Connection/MongoConnect.php'));
 }
 
 require $mongoPath;
+
 ?>
 
 
