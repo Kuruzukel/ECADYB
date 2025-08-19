@@ -2,7 +2,8 @@
 session_start();
 
 // Include MongoDB connections
-require __DIR__ . '/../../Connection/MongoConnect.php';
+require __DIR__ . '/../../../ECADYB/Connection/MongoConnect.php';
+
 
 // MongoConnect.php should contain all your database connections:
 // $departmentsDB, $collections, $announcementDB, $calendarCollection, 
