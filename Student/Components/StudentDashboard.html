@@ -69,82 +69,35 @@
     <!-- Navbar -->
     <header>
       <div class="logo">
-        <img src="/img/ECALOGO.png" alt="Logo" class="logo-img" />
-        <span>EXACT COLLEGES OF ASIA</span>
+        <img src="/img/ADMINGRALLERYLOGO.png" alt="Logo" class="logo-img" />
+        <span>GRADUATION GALLERY</span>
       </div>
+
       <nav class="center-nav">
         <a href="#main-hero">Home</a>
         <a href="#about">About</a>
-        <a href="#yearbooks">Yearbooks</a>
+        <a href="#yearbooks">Yearbook</a>
         <a href="#captured-moments">Memories</a>
         <a href="#footer">Contacts</a>
-        <div class="mobile-login-dropdown">
-          <button
-            class="mobile-login-btn"
-            id="mobileLoginDropdownBtn"
-            onclick="window.location.href='/Public/login.php'"
-          >
-            Log In
-          </button>
-        </div>
       </nav>
-      <div class="login-dropdown">
-        <button
-          class="login-btn"
-          id="loginDropdownBtn"
-          onclick="window.location.href='/Public/login.php'"
-        >
-          Log In
-        </button>
-      </div>
 
-      <!-- Hamburger Menu Icon -->
-      <button class="hamburger-menu" id="hamburgerMenu">
-        <svg
-          class="hamburger-icon"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <!-- Hamburger lines -->
-          <path
-            class="hamburger-line line-1"
-            d="M3 6h18"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-          />
-          <path
-            class="hamburger-line line-2"
-            d="M3 12h18"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-          />
-          <path
-            class="hamburger-line line-3"
-            d="M3 18h18"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-          />
-          <!-- Close X (hidden by default) -->
-          <path
-            class="close-line close-1"
-            d="M18 6L6 18"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-          />
-          <path
-            class="close-line close-2"
-            d="M6 6L18 18"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-          />
-        </svg>
-      </button>
+      <div class="profile-dropdown">
+        <img
+          src="/img/Profile.png"
+          alt="Profile"
+          class="profile-icon"
+          id="profileDropdownBtn"
+        />
+        <div class="dropdown-menu" id="profileDropdownMenu">
+          <button class="dropdown-item" onclick="changePassword()">
+            Change Password
+          </button>
+          <button class="dropdown-item" onclick="editProfile()">
+            Edit Profile
+          </button>
+          <button class="dropdown-item" onclick="logout()">Logout</button>
+        </div>
+      </div>
     </header>
 
     <!-- Hero Section -->
@@ -157,21 +110,18 @@
         </div>
         <div class="hero-message">
           <div>
-            Welcome to the Exact Colleges of Asia Digital Yearbook Grallery.
+            🎓 Welcome to the Exact Colleges of Asia Digital Yearbook! Hello,
+            We're excited to have you here. Explore your personalized digital
+            yearbook to revisit all your memorable moments, from classes to
+            special events. Don't forget to check out your captured moments
+            during graduation relive the smiles, laughter, and achievements that
+            made this year truly unforgettable! Enjoy browsing your memories and
+            celebrating your journey with us. 🌟
           </div>
-          <div>
-            Step into your digital yearbook. Every achievement and memory comes
-            alive.
-          </div>
+
           <div class="hero-message-bold">
-            Explore memories, connect the present, inspire the future.
+            “The past remembered, the present celebrated, the future awaits.”
           </div>
-        </div>
-        <div class="hero-buttons">
-          <a href="#yearbooks" class="hero-btn">Explore Yearbooks</a>
-          <a href="#captured-moments" class="hero-btn hero-btn-secondary"
-            >Captured Moments
-          </a>
         </div>
       </div>
       <!-- Lower Curl SVG Divider -->
@@ -271,7 +221,7 @@
           />
         </svg>
       </div>
-      <h2 class="section-title">Digital Yearbooks</h2>
+      <h2 class="section-title">Digital Yearbook</h2>
       <div class="yearbooks-row">
         <div class="yearbook-card">
           <img
@@ -460,33 +410,35 @@
     </footer>
     <script src="/Student/assets/js/StudentDashboard.js"></script>
     <script>
-      // Hamburger Menu Functionality
+      // Profile Dropdown Functionality
       document.addEventListener("DOMContentLoaded", function () {
-        const hamburgerMenu = document.getElementById("hamburgerMenu");
-        const centerNav = document.querySelector(".center-nav");
+        const profileBtn = document.getElementById("profileDropdownBtn");
+        const profileMenu = document.getElementById("profileDropdownMenu");
 
-        hamburgerMenu.addEventListener("click", function () {
-          hamburgerMenu.classList.toggle("active");
-          centerNav.classList.toggle("mobile-active");
+        // Toggle dropdown on profile click
+        profileBtn.addEventListener("click", function (e) {
+          e.stopPropagation(); // Prevent closing immediately
+          profileBtn.classList.toggle("active"); // optional visual feedback
+          profileMenu.classList.toggle("show"); // uses CSS 'show' for animation
         });
 
-        // Close mobile menu when clicking on a link
-        const navLinks = centerNav.querySelectorAll("a");
-        navLinks.forEach((link) => {
-          link.addEventListener("click", function () {
-            hamburgerMenu.classList.remove("active");
-            centerNav.classList.remove("mobile-active");
+        // Close dropdown when clicking on any dropdown item
+        const dropdownItems = profileMenu.querySelectorAll(".dropdown-item");
+        dropdownItems.forEach((item) => {
+          item.addEventListener("click", function () {
+            profileBtn.classList.remove("active");
+            profileMenu.classList.remove("show");
           });
         });
 
-        // Close mobile menu when clicking outside
+        // Close dropdown when clicking outside
         document.addEventListener("click", function (event) {
           if (
-            !hamburgerMenu.contains(event.target) &&
-            !centerNav.contains(event.target)
+            !profileBtn.contains(event.target) &&
+            !profileMenu.contains(event.target)
           ) {
-            hamburgerMenu.classList.remove("active");
-            centerNav.classList.remove("mobile-active");
+            profileBtn.classList.remove("active");
+            profileMenu.classList.remove("show");
           }
         });
       });

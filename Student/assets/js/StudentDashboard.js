@@ -1,29 +1,31 @@
-// Login dropdown functionality
-const loginBtn = document.getElementById("loginDropdownBtn");
-const loginMenu = document.getElementById("loginDropdownMenu");
+// Profile dropdown functionality
+const profileBtn = document.getElementById("profileDropdownBtn");
+const profileMenu = document.getElementById("profileDropdownMenu");
 
-// Add click behavior for login button
-if (loginBtn) {
-  loginBtn.addEventListener("click", function () {
-    // Toggle clicked class for visual feedback
+// Add click behavior for profile button
+if (profileBtn) {
+  profileBtn.addEventListener("click", function (e) {
+    e.stopPropagation(); // Prevent triggering the document click event
+    // Toggle clicked class for visual feedback (optional)
     this.classList.toggle("clicked");
 
     // Toggle dropdown menu
-    loginMenu.style.display =
-      loginMenu.style.display === "block" ? "none" : "block";
+    profileMenu.style.display =
+      profileMenu.style.display === "flex" ? "none" : "flex";
   });
 }
 
+// Close dropdown when clicking outside
 document.addEventListener("click", function (e) {
-  if (loginBtn && loginBtn.contains(e.target)) {
+  if (profileBtn && profileBtn.contains(e.target)) {
     // Click handled by the button's own event listener
   } else {
-    if (loginMenu) {
-      loginMenu.style.display = "none";
+    if (profileMenu) {
+      profileMenu.style.display = "none";
     }
     // Remove clicked class when clicking outside
-    if (loginBtn) {
-      loginBtn.classList.remove("clicked");
+    if (profileBtn) {
+      profileBtn.classList.remove("clicked");
     }
   }
 });
