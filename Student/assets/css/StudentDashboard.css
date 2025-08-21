@@ -168,7 +168,29 @@ header.hidden {
 
 .profile-icon:hover {
   transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(135deg, #0d39d9 0%, #112d4e 100%);
+  color: #ffffff !important;
+  border-radius: 2rem;
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.25),
+    0 0 0 2px rgba(252, 218, 21, 0.3);
+  border: 2px solid #fcda15;
+  transform: scale(1.05);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.profile-icon.clicked {
+  background: linear-gradient(135deg, #0d39d9 0%, #112d4e 100%);
+  color: #ffffff !important;
+  border-radius: 999px;
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.25),
+    0 0 0 2px rgba(252, 218, 21, 0.3);
+  border: 2px solid #0d39d9;
+  transform: scale(1.05);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
 }
 
 .profile-dropdown {
