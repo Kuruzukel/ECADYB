@@ -66,29 +66,74 @@ const themes = {
   },
 };
 
+let pendingTheme = null; // store selected theme until confirmed
+
 function selectColor(el) {
+  // highlight selected box
   document
     .querySelectorAll(".color-box")
     .forEach((box) => box.classList.remove("selected"));
   el.classList.add("selected");
-  const themeLabel = el.getAttribute("data-label");
-  applyTheme(themeLabel);
+
+  // save the theme to apply later
+  pendingTheme = el.getAttribute("data-label");
+
+  // show modal
+  document.getElementById("modal-overlay").style.display = "flex";
 }
 
 function applyTheme(theme) {
   const root = document.documentElement;
   const selectedTheme = themes[theme] || themes["Default"];
+
+  // Apply theme colors
   for (const [varName, color] of Object.entries(selectedTheme)) {
     root.style.setProperty(varName, color);
   }
+
+  // Always lock modal background to Default theme's section-bg
+  const defaultSectionBg = themes["Default"]["--section-bg"];
+  const modal = document.querySelector(".modal");
+  if (modal) {
+    modal.style.background = defaultSectionBg;
+  }
+
   localStorage.setItem("dashboard-theme", theme);
 }
 
 window.addEventListener("DOMContentLoaded", () => {
+  // load saved theme
   const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
   applyTheme(savedTheme);
   const selectedBox = document.querySelector(
     `.color-box[data-label="${savedTheme}"]`
   );
   if (selectedBox) selectedBox.classList.add("selected");
+
+  // modal buttons
+  const confirmBtn = document.getElementById("confirm-btn");
+  const cancelBtn = document.getElementById("cancel-btn");
+  const modalOverlay = document.getElementById("modal-overlay");
+
+  confirmBtn.addEventListener("click", () => {
+    if (pendingTheme) {
+      applyTheme(pendingTheme);
+      pendingTheme = null;
+    }
+    modalOverlay.style.display = "none";
+  });
+
+  cancelBtn.addEventListener("click", () => {
+    pendingTheme = null;
+    modalOverlay.style.display = "none";
+    // remove accidental highlight if cancelled
+    document
+      .querySelectorAll(".color-box")
+      .forEach((box) => box.classList.remove("selected"));
+    const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
+    const selectedBox = document.querySelector(
+      `.color-box[data-label="${savedTheme}"]`
+    );
+    if (selectedBox) selectedBox.classList.add("selected");
+  });
 });

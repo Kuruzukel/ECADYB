@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// Absolute path to MongoConnect.php (go up two levels)
 $mongoPath = realpath(__DIR__ . '/../../Connection/MongoConnect.php');
 
 if (!$mongoPath || !file_exists($mongoPath)) {

@@ -68,6 +68,29 @@
         </div>
     </div>
 
+    <!-- Modal -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal" style="font-family: Arial, sans-serif;">
+            <div class="modal-header">
+                <i class="fas fa-question-circle modal-icon"></i>
+                <h3>Confirm Change</h3>
+            </div>
+            <div class="modal-content">
+                <p>Are you sure you want to change the theme?</p>
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-btn confirm" id="confirm-btn">
+                    <i class="fas fa-check"></i>
+                    Yes, Change it
+                </button>
+                <button class="modal-btn cancel" id="cancel-btn">
+                    <i class="fas fa-times"></i>
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script src="../Assets/js/Themes.js"></script>
 </body>
 

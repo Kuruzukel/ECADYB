@@ -161,7 +161,7 @@ function applyFilters() {
 // Edit student function
 function editStudent(studentId, collection) {
   // Redirect to edit page with student ID and collection
-  window.location.href = `editstudentinfo.php?student_id=${encodeURIComponent(
+  window.location.href = `EditStudentInformation.php?student_id=${encodeURIComponent(
     studentId
   )}&collection=${encodeURIComponent(collection)}`;
 }

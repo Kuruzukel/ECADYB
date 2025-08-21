@@ -4,7 +4,6 @@ require __DIR__ . '/../../vendor/autoload.php';
 use MongoDB\Client;
 
 // Connect to MongoDB
-// Get MongoDB connection string from environment variable
 $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://localhost:27017';
 $client = new Client($mongoUrl);
 $db = $client->Departments;
@@ -38,7 +37,6 @@ function generatePassword($length = 8) {
     $special = '!@#$%^&*()_+-={}[]|:;<>,.?';
     
     $password = '';
-    // Ensure at least one uppercase and one special character
     $password .= $upper[random_int(0, strlen($upper) - 1)];
     $password .= $special[random_int(0, strlen($special) - 1)];
     
@@ -46,7 +44,6 @@ function generatePassword($length = 8) {
     for ($i = 2; $i < $length; $i++) {
         $password .= $all[random_int(0, strlen($all) - 1)];
     }
-    // Shuffle to randomize position
     return str_shuffle($password);
 }
 
@@ -57,10 +54,9 @@ foreach ($maritimeCollections as $collectionKey => $programName) {
         $cursor = $collection->find();
         
         foreach ($cursor as $student) {
-            // Check if password exists
+            // Ensure password exists
             if (empty($student['password'])) {
                 $password = generatePassword(8);
-                // Update the student document in MongoDB
                 $collection->updateOne(
                     ['_id' => $student['_id']],
                     ['$set' => ['password' => $password]]
@@ -69,33 +65,36 @@ foreach ($maritimeCollections as $collectionKey => $programName) {
                 $password = $student['password'];
             }
 
+            // Ensure numeric ID for sorting
+            $studentIdNum = isset($student['id']) ? (int)$student['id'] : 0;
+
             $allStudents[] = [
-                'id' => $student['id'] ?? '',
+                'id' => $studentIdNum,
                 'student_id' => $student['student id'] ?? '',
                 'first_name' => $student['first name'] ?? '',
                 'middle_name' => $student['middle name'] ?? '',
                 'last_name' => $student['last name'] ?? '',
                 'department_section' => $student['department section'] ?? $programName,
                 'academic_year' => $student['academic year'] ?? '',
-                'status' => $student['status'] ?? 'Pending', // Get status from database or default to Pending
+                'status' => $student['status'] ?? 'Pending',
                 'collection' => $collectionKey,
-                'password' => $password // Use the stored/generated password
+                'password' => $password
             ];
         }
     } catch (Exception $e) {
-        // Skip collections that don't exist
         continue;
     }
 }
 
-// Sort students by ID
+// Sort students by numeric ID
 usort($allStudents, function($a, $b) {
-    return $a['id'] - $b['id'];
+    return $a['id'] <=> $b['id'];
 });
 
-// Limit to 10 students by default
+// Limit to exactly 10 students by default
 $allStudents = array_slice($allStudents, 0, 10);
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -108,23 +107,15 @@ $allStudents = array_slice($allStudents, 0, 10);
 </head>
 
 <body>
-
     <div class="container">
         <div class="header-container" style="width: 100%;">
             <h1>Student List</h1>
         </div>
-        <div class="form-content" style="width: 100%, ">
+        <div class="form-content" style="width: 100%;">
             <div class="card">
                 <div class="card-header">
                     <div class="filter-bar">
-                        <label for="entries-count" class="filter-label">
-                            <select id="entries-count" class="filter-select">
-                                <option value="" disabled selected>Show Users</option>
-                                <option value="10">10</option>
-                                <option value="25">25</option>
-                                <option value="50">50</option>
-                            </select>
-                        </label>
+
                         <label for="department-filter" class="filter-label">
                             <select id="department-filter" class="filter-select">
                                 <option value="" disabled selected>Select Department</option>
@@ -138,7 +129,6 @@ $allStudents = array_slice($allStudents, 0, 10);
                                 <option value="information">Information System</option>
                                 <option value="business">Entrepreneurship</option>
                                 <option value="maritime">Management Accouting</option>
-                                <!-- Add more departments as needed -->
                             </select>
                         </label>
                         <label for="status-filter" class="filter-label">
@@ -148,6 +138,12 @@ $allStudents = array_slice($allStudents, 0, 10);
                                 <option value="pending">Pending</option>
                             </select>
                         </label>
+                        <!-- Pagination Buttons -->
+                        <div class="pagination-controls"
+                            style="margin-top:1em; display:flex; justify-content:center; gap:1em;">
+                            <button id="prev-btn" onclick="changePage(-1)">Previous</button>
+                            <button id="next-btn" onclick="changePage(1)">Next</button>
+                        </div>
                     </div>
                 </div>
 
@@ -179,10 +175,9 @@ $allStudents = array_slice($allStudents, 0, 10);
                             <tr class="student-row">
                                 <td class="student-name">
                                     <?php 
-                                    // Get the first letter of middle name as initial
-                                    $middleInitial = !empty($student['middle_name']) ? substr($student['middle_name'], 0, 1) . '.' : '';
-                                    echo htmlspecialchars($student['last_name'] . ', ' . $student['first_name'] . ' ' . $middleInitial); 
-                                    ?>
+                                $middleInitial = !empty($student['middle_name']) ? substr($student['middle_name'], 0, 1) . '.' : '';
+                                echo htmlspecialchars($student['last_name'] . ', ' . $student['first_name'] . ' ' . $middleInitial); 
+                                ?>
                                 </td>
                                 <td class="student-id"><?php echo htmlspecialchars($student['student_id']); ?></td>
                                 <td class="student-dept"><?php echo htmlspecialchars($student['department_section']); ?>
@@ -200,10 +195,9 @@ $allStudents = array_slice($allStudents, 0, 10);
                                         data-student-id="<?php echo htmlspecialchars($student['student_id']); ?>"
                                         data-collection="<?php echo htmlspecialchars($student['collection']); ?>"
                                         <?php echo ($student['status'] === 'Active') ? 'checked' : ''; ?>>
-                                    <div class="eyeIcon close eyeIcon-list"
-                                        style="margin-right:0.5em;display:flex;align-items:center;cursor:pointer;"
-                                        onclick="togglePass(this)">
-                                        <!-- SVG for closed eye -->
+                                    <div class="eyeIcon close eyeIcon-list" onclick="togglePass(this)"
+                                        style="margin-right:0.5em;display:flex;align-items:center;cursor:pointer;">
+                                        <!-- Closed eye SVG -->
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                                             style="height: 1.2em; vertical-align: middle;">
                                             <g fill="none" fill-rule="evenodd">
@@ -214,10 +208,9 @@ $allStudents = array_slice($allStudents, 0, 10);
                                             </g>
                                         </svg>
                                     </div>
-                                    <div class="eyeIcon open eyeIcon-list"
-                                        style="margin-right:0.5em;display:none;align-items:center;cursor:pointer;"
-                                        onclick="togglePass(this)">
-                                        <!-- SVG for open eye -->
+                                    <div class="eyeIcon open eyeIcon-list" onclick="togglePass(this)"
+                                        style="margin-right:0.5em;display:none;align-items:center;cursor:pointer;">
+                                        <!-- Open eye SVG -->
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                                             style="height: 1.2em; vertical-align: middle;">
                                             <g fill="none">
@@ -243,14 +236,49 @@ $allStudents = array_slice($allStudents, 0, 10);
                         </tbody>
                     </table>
 
-                </div>
 
+
+                </div>
             </div>
         </div>
     </div>
-    </div>
+
+    <script>
+    let currentPage = 1;
+    const entriesPerPageSelect = document.getElementById('entries-count');
+    let entriesPerPage = parseInt(entriesPerPageSelect.value) || 10;
+
+    entriesPerPageSelect.addEventListener('change', () => {
+        entriesPerPage = parseInt(entriesPerPageSelect.value);
+        currentPage = 1;
+        renderTable();
+    });
+
+    function changePage(direction) {
+        const rows = document.querySelectorAll('.student-row');
+        const totalPages = Math.ceil(rows.length / entriesPerPage);
+        currentPage += direction;
+        if (currentPage < 1) currentPage = 1;
+        if (currentPage > totalPages) currentPage = totalPages;
+        renderTable();
+    }
+
+    function renderTable() {
+        const rows = document.querySelectorAll('.student-row');
+        const start = (currentPage - 1) * entriesPerPage;
+        const end = start + entriesPerPage;
+
+        rows.forEach((row, index) => {
+            if (index >= start && index < end) row.style.display = '';
+            else row.style.display = 'none';
+        });
+    }
+
+    // Initialize table
+    renderTable();
+    </script>
+
+    <script src="../Assets/js/StudentList.js"></script>
 </body>
-</div>
-<script src="../Assets/js/StudentList.js"></script>
 
 </html>

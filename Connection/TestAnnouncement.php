@@ -5,27 +5,29 @@ ini_set('display_errors', 1);
 require __DIR__ . '/../vendor/autoload.php';
 
 use MongoDB\Client;
+use MongoDB\BSON\UTCDateTime;
 
 echo "<h1>Announcement System Test</h1>";
 
 try {
     // Test MongoDB connection
     echo "<h2>Testing MongoDB Connection</h2>";
-    
-    // Get MongoDB connection string from environment variable
+
     $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://localhost:27017';
     $client = new Client($mongoUrl);
     $collection = $client->Announcement->Calendar;
+
     echo "<p style='color: green;'>✓ MongoDB connection successful</p>";
 
     // Test inserting a sample announcement
     echo "<h2>Testing Announcement Insertion</h2>";
+
     $testAnnouncement = [
         'title' => 'Test Announcement',
         'message' => 'This is a test announcement to verify the system is working.',
         'date' => date('Y-m-d'),
-        'time' => date('H:i'),
-        'created_at' => new MongoDB\BSON\UTCDateTime(round(microtime(true) * 1000)),
+        'time' => date('H:i:s'),
+        'created_at' => new UTCDateTime((int)(microtime(true) * 1000)),
         'status' => 'active',
         'type' => 'announcement'
     ];
@@ -48,7 +50,7 @@ try {
     echo "<h2>Current Announcements</h2>";
     echo "<table border='1' style='border-collapse: collapse; width: 100%;'>";
     echo "<tr><th>Title</th><th>Message</th><th>Date</th><th>Time</th><th>Created</th></tr>";
-    
+
     foreach ($cursor as $doc) {
         echo "<tr>";
         echo "<td>" . htmlspecialchars($doc['title']) . "</td>";
@@ -58,6 +60,7 @@ try {
         echo "<td>" . $doc['created_at']->toDateTime()->format('Y-m-d H:i:s') . "</td>";
         echo "</tr>";
     }
+
     echo "</table>";
 
     // Clean up test announcement
@@ -72,4 +75,3 @@ try {
 
 echo "<h2>Test Complete</h2>";
 echo "<p>If you see green checkmarks above, the announcement system is working correctly.</p>";
-?>

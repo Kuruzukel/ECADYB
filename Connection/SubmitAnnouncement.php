@@ -2,24 +2,23 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Set timezone to ensure consistent date handling
-date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
+// Set timezone
+date_default_timezone_set('Asia/Manila');
 
 require __DIR__ . '/../vendor/autoload.php';
 
 use MongoDB\Client;
+use MongoDB\BSON\UTCDateTime;
 
 // Check if form was submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
-            // Get MongoDB connection string from environment variable
-    $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://localhost:27017';
-    
-    // Connect to MongoDB
-    $client = new Client($mongoUrl);
+        // MongoDB connection
+        $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://localhost:27017';
+        $client = new Client($mongoUrl);
         $collection = $client->Announcement->Calendar;
 
-        // Get form data
+        // Get POST data
         $title = trim($_POST['title'] ?? '');
         $message = trim($_POST['message'] ?? '');
         $date = $_POST['date'] ?? '';
@@ -30,8 +29,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             throw new Exception("Title and message are required");
         }
 
-        // Check if there are already 5 announcements for the selected date
+        // Use current date if not provided
         $selectedDate = $date ?: date('Y-m-d');
+        $selectedTime = $time ?: date('H:i:s');
+
+        // Check max 5 announcements per day
         $existingCount = $collection->countDocuments([
             'date' => $selectedDate,
             'status' => 'active'
@@ -41,25 +43,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             throw new Exception("Cannot post announcement. Maximum of 5 announcements per day allowed. This date already has {$existingCount} announcements.");
         }
 
-        // Create announcement document
+        // Create announcement
         $announcement = [
             'title' => $title,
             'message' => $message,
-            'date' => $date ?: date('Y-m-d'), // Use current date if no date provided
-            'time' => $time,
-            'created_at' => new MongoDB\BSON\UTCDateTime(round(microtime(true) * 1000)),
+            'date' => $selectedDate,
+            'time' => $selectedTime,
+            'created_at' => new \MongoDB\BSON\UTCDateTime((int)(microtime(true) * 1000)), // fully qualified name
             'status' => 'active',
             'type' => 'announcement'
         ];
 
-        // Debug: Log the date being saved
-        error_log("Saving announcement with date: " . $announcement['date']);
+        // Log for debugging
+        error_log("Saving announcement: " . json_encode($announcement));
 
         // Insert into database
         $result = $collection->insertOne($announcement);
 
         if ($result->getInsertedCount() > 0) {
-            // Success response
             $response = [
                 'success' => true,
                 'message' => 'Announcement posted successfully!',
@@ -71,7 +72,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
     } catch (Exception $e) {
-        // Log error for debugging
         error_log("Announcement submission error: " . $e->getMessage());
         $response = [
             'success' => false,
@@ -85,7 +85,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-// If not POST request, redirect to create announcement page
+// Redirect if not POST
 header('Location: ../Admin/Components/CreateAnnouncement.php');
 exit;
-?>
