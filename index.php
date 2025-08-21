@@ -62,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['studentId'], $_POST['
 $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 // ✅ Redirect old login path to the correct one
-if ($requestUri === '/Public/Login.php') {
+if ($requestUri === '/Public/Components/Login.php') {
     header("Location: " . BASE_URL . "Public/Components/Login.php");
     exit;
 }
