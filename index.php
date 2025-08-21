@@ -61,6 +61,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['studentId'], $_POST['
 // ----------------------
 $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
+// ✅ Redirect old login path to the correct one
+if ($requestUri === '/Public/Login.php') {
+    header("Location: " . BASE_URL . "Public/Components/Login.php");
+    exit;
+}
+
 // Serve PHP files directly
 $phpFile = BASE_PATH . $requestUri;
 if (file_exists($phpFile) && pathinfo($phpFile, PATHINFO_EXTENSION) === 'php') {
@@ -117,7 +123,7 @@ $staticPaths = [
     '/img/' => '/img/',
     '/LandingPage/LandingPageYB/pages/' => '/LandingPage/LandingPageYB/pages/',
     '/Public/assets/css/' => '/Public/assets/css/',
-    '/Public/assets/js/'  => '/Public/Aassets/js/'
+    '/Public/assets/js/'  => '/Public/assets/js/' // ✅ fixed typo here
 ];
 
 foreach ($staticPaths as $uriPrefix => $folder) {
