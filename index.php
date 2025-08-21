@@ -9,7 +9,7 @@ $mongoPath = __DIR__ . '/Connection/MongoConnect.php';
 if (!file_exists($mongoPath)) {
     die("MongoConnect.php not found at: $mongoPath");
 }
-require $mongoPath; // This file should define $client, $departmentsDB, $collections, etc.
+require $mongoPath; // Defines $client, $departmentsDB, $collections, $adminCollection
 
 // ----------------------
 // Base paths
@@ -31,7 +31,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['studentId'], $_POST['
     } else {
         // Admin login
         $admin = $adminCollection->findOne(['username'=>$username,'password'=>$password]);
-
         if ($admin) {
             $_SESSION['role'] = 'admin';
             $_SESSION['username'] = $username;
@@ -43,7 +42,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['studentId'], $_POST['
         foreach ($collections as $collectionName => $course) {
             $collection = $departmentsDB->{$collectionName};
             $student = $collection->findOne(['student_id'=>$username,'password'=>$password]);
-
             if ($student) {
                 $_SESSION['role']       = 'student';
                 $_SESSION['student_id'] = $student['student_id'];
@@ -78,11 +76,18 @@ if ($requestUri === '/' || $requestUri === '/index.php') {
 
         // Fix asset paths
         $htmlContent = str_replace(
-            ['href="LandingPage.css"', 'src="LandingPage.js"', 'src="../img/', 'src="LandingPageYB/'],
-            ['href="'.BASE_URL.'LandingPage/LandingPage.css"', 
-             'src="'.BASE_URL.'LandingPage/LandingPage.js"', 
-             'src="'.BASE_URL.'img/', 
-             'src="'.BASE_URL.'LandingPage/LandingPageYB/'],
+            [
+                'href="LandingPage.css"',
+                'src="LandingPage.js"',
+                'src="../img/',
+                'src="LandingPageYB/'
+            ],
+            [
+                'href="'.BASE_URL.'LandingPage/LandingPage.css"',
+                'src="'.BASE_URL.'LandingPage/LandingPage.js"',
+                'src="'.BASE_URL.'img/',
+                'src="'.BASE_URL.'LandingPage/LandingPageYB/'
+            ],
             $htmlContent
         );
 
@@ -105,12 +110,14 @@ if ($requestUri === '/' || $requestUri === '/index.php') {
     }
 }
 
+// ----------------------
 // Serve static assets
+// ----------------------
 $staticPaths = [
     '/img/' => '/img/',
     '/LandingPage/LandingPageYB/pages/' => '/LandingPage/LandingPageYB/pages/',
-    '/Public/css/' => '/Public/css/',
-    '/Public/js/'  => '/Public/js/'
+    '/Public/Assets/css/' => '/Public/Assets/css/',
+    '/Public/Assets/js/'  => '/Public/Assets/js/'
 ];
 
 foreach ($staticPaths as $uriPrefix => $folder) {
@@ -120,7 +127,8 @@ foreach ($staticPaths as $uriPrefix => $folder) {
             $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
             $mimeTypes = [
                 'jpg'=>'image/jpeg','jpeg'=>'image/jpeg','png'=>'image/png',
-                'gif'=>'image/gif','webp'=>'image/webp','css'=>'text/css','js'=>'application/javascript'
+                'gif'=>'image/gif','webp'=>'image/webp',
+                'css'=>'text/css','js'=>'application/javascript'
             ];
             header('Content-Type: ' . ($mimeTypes[$ext] ?? 'application/octet-stream'));
             readfile($filePath);
@@ -133,3 +141,5 @@ foreach ($staticPaths as $uriPrefix => $folder) {
 http_response_code(404);
 echo '<h1>ECADYB Application</h1>';
 echo '<p>Page not found.</p>';
+exit;
+?>
