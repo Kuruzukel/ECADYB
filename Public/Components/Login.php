@@ -76,7 +76,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login Page</title>
-    <link href="/ECADYB/Public/css/Login.css" rel="stylesheet" />
+    <link href="/ECADYB/Public/assets/css/Login.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 
@@ -152,6 +152,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </form>
     </div>
 </body>
-<script src="ECADYB/Public/js/Login.js"></script>
+<script src="ECADYB/Public/assets/js/Login.js"></script>
 
 </html>

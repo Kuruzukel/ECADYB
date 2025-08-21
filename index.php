@@ -116,8 +116,8 @@ if ($requestUri === '/' || $requestUri === '/index.php') {
 $staticPaths = [
     '/img/' => '/img/',
     '/LandingPage/LandingPageYB/pages/' => '/LandingPage/LandingPageYB/pages/',
-    '/Public/Assets/css/' => '/Public/Assets/css/',
-    '/Public/Assets/js/'  => '/Public/Assets/js/'
+    '/Public/assets/css/' => '/Public/assets/css/',
+    '/Public/assets/js/'  => '/Public/Aassets/js/'
 ];
 
 foreach ($staticPaths as $uriPrefix => $folder) {
