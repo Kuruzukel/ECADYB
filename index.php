@@ -49,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['studentId'], $_POST['
                 $_SESSION['student_id'] = $student['student_id'];
                 $_SESSION['name']       = $student['name'];
                 $_SESSION['department'] = $course;
-                header("Location: " . BASE_URL . "student_dashboard.php");
+                header("Location: " . BASE_URL . "Student/Components/StudentDashboard.php");
                 exit();
             }
         }
@@ -90,8 +90,8 @@ if ($requestUri === '/' || $requestUri === '/index.php') {
         $htmlContent = str_replace(
             ['id="loginDropdownBtn"', 'id="mobileLoginDropdownBtn"'],
             [
-                'id="loginDropdownBtn" onclick="window.location.href=\''.BASE_URL.'Public/Login.php\'"',
-                'id="mobileLoginDropdownBtn" onclick="window.location.href=\''.BASE_URL.'Public/Login.php\'"'
+                'id="loginDropdownBtn" onclick="window.location.href=\''.BASE_URL.'Public/Components/Login.php\'"',
+                'id="mobileLoginDropdownBtn" onclick="window.location.href=\''.BASE_URL.'Public/Components/Login.php\'"'
             ],
             $htmlContent
         );

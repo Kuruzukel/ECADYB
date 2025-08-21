@@ -1,6 +1,6 @@
 <?php
 session_start();
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/../../vendor/autoload.php';
 
 
 // MongoDB connection
@@ -75,8 +75,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Student Login</title>
-    <link href="./css/Login.css" rel="stylesheet" />
+    <title>Login Page</title>
+    <link href="/ECADYB/Public/css/Login.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 
 <body>
@@ -140,14 +141,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
                 </div>
                 <div class="forgot-password">
-                    <a href="#">Forgot Password?</a>
+                    <a href="/ECADYB/Public/ForgotPassword.html">Forgot Password?</a>
                 </div>
             </div>
             <button type="submit">Login</button>
             <div class="logoContainer"></div>
+            <button type="back" onclick="window.location.href='/ECADYB/LandingPage/LandingPage.html'">
+                <i class="fas fa-arrow-left"></i> Back to Homepage
+            </button>
         </form>
     </div>
 </body>
-<script src="./js/Login.js"></script>
+<script src="ECADYB/Public/js/Login.js"></script>
 
 </html>
