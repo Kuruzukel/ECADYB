@@ -3,33 +3,36 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 use MongoDB\Client;
 
-// Connect to MongoDB
+// 🔗 Connect to MongoDB
 $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://localhost:27017';
 $client = new Client($mongoUrl);
 $db = $client->Departments;
 
-// Define all program collections
+// 📌 Define all program collections
 $collections = [
-    "bsme" => "BS Marine Engineering",
-    "bsmt" => "BS Marine Transportation", 
-    "bscje" => "BS Criminal Justice Education",
-    "bstm" => "BS Tourism Management",
+    "bsme"   => "BS Marine Engineering",
+    "bsmt"   => "BS Marine Transportation", 
+    "bscje"  => "BS Criminal Justice Education",
+    "bstm"   => "BS Tourism Management",
     "btvted" => "BS Technical-Vocational Teacher Education",
-    "beced" => "BS Early Childhood Education",
-    "bsn" => "BS Nursing",
-    "bsis" => "BS Information System",
-    "bsma" => "BS Management Accounting",
-    "bse" => "BS Entrepreneurship"
+    "beced"  => "BS Early Childhood Education",
+    "bsn"    => "BS Nursing",
+    "bsis"   => "BS Information System",
+    "bsma"   => "BS Management Accounting",
+    "bse"    => "BS Entrepreneurship"
 ];
 
 $allStudents = [];
 
-// Filter to show only Maritime Education students by default
-$maritimeCollections = [
-    "bsme" => "BS Marine Engineering"
-];
+// ✅ Detect selected filter from request
+$selectedDepartment = $_GET['department'] ?? "bsme"; // default: BSME
 
-// Password generator function
+// ✅ If invalid, reset to default
+if (!array_key_exists($selectedDepartment, $collections)) {
+    $selectedDepartment = "bsme";
+}
+
+// 🔐 Password generator function
 function generatePassword($length = 8) {
     $upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $lower = 'abcdefghijklmnopqrstuvwxyz';
@@ -47,51 +50,49 @@ function generatePassword($length = 8) {
     return str_shuffle($password);
 }
 
-// Fetch students from Maritime Education collections only
-foreach ($maritimeCollections as $collectionKey => $programName) {
-    try {
-        $collection = $db->$collectionKey;
-        $cursor = $collection->find();
-        
-        foreach ($cursor as $student) {
-            // Ensure password exists
-            if (empty($student['password'])) {
-                $password = generatePassword(8);
-                $collection->updateOne(
-                    ['_id' => $student['_id']],
-                    ['$set' => ['password' => $password]]
-                );
-            } else {
-                $password = $student['password'];
-            }
+// ✅ Fetch students only from the selected department
+try {
+    $collection = $db->$selectedDepartment;
+    $cursor = $collection->find();
 
-            // Ensure numeric ID for sorting
-            $studentIdNum = isset($student['id']) ? (int)$student['id'] : 0;
-
-            $allStudents[] = [
-                'id' => $studentIdNum,
-                'student_id' => $student['student id'] ?? '',
-                'first_name' => $student['first name'] ?? '',
-                'middle_name' => $student['middle name'] ?? '',
-                'last_name' => $student['last name'] ?? '',
-                'department_section' => $student['department section'] ?? $programName,
-                'academic_year' => $student['academic year'] ?? '',
-                'status' => $student['status'] ?? 'Pending',
-                'collection' => $collectionKey,
-                'password' => $password
-            ];
+    foreach ($cursor as $student) {
+        // Ensure password exists
+        if (empty($student['password'])) {
+            $password = generatePassword(8);
+            $collection->updateOne(
+                ['_id' => $student['_id']],
+                ['$set' => ['password' => $password]]
+            );
+        } else {
+            $password = $student['password'];
         }
-    } catch (Exception $e) {
-        continue;
+
+        // Ensure numeric ID for sorting
+        $studentIdNum = isset($student['id']) ? (int)$student['id'] : 0;
+
+        $allStudents[] = [
+            'id' => $studentIdNum,
+            'student_id' => $student['student id'] ?? '',
+            'first_name' => $student['first name'] ?? '',
+            'middle_name' => $student['middle name'] ?? '',
+            'last_name' => $student['last name'] ?? '',
+            'department_section' => $student['department section'] ?? $collections[$selectedDepartment],
+            'academic_year' => $student['academic year'] ?? '',
+            'status' => $student['status'] ?? 'Pending',
+            'collection' => $selectedDepartment,
+            'password' => $password
+        ];
     }
+} catch (Exception $e) {
+    $allStudents = [];
 }
 
-// Sort students by numeric ID
+// ✅ Sort students by numeric ID
 usort($allStudents, function($a, $b) {
     return $a['id'] <=> $b['id'];
 });
 
-// Limit to exactly 10 students by default
+// ✅ Limit to exactly 10 students by default
 $allStudents = array_slice($allStudents, 0, 10);
 ?>
 
@@ -116,21 +117,20 @@ $allStudents = array_slice($allStudents, 0, 10);
                 <div class="card-header">
                     <div class="filter-bar">
 
+                        <!-- Department Filter -->
                         <label for="department-filter" class="filter-label">
                             <select id="department-filter" class="filter-select">
-                                <option value="" disabled selected>Select Department</option>
-                                <option value="maritime">Marine Engineering</option>
-                                <option value="maritime">Marine Transfortation</option>
-                                <option value="criminology">Criminology</option>
-                                <option value="tourism">Tourism Management</option>
-                                <option value="education">Technical-Vocational Teacher Education</option>
-                                <option value="education">Early Childhood Education</option>
-                                <option value="nursing">Nursing</option>
-                                <option value="information">Information System</option>
-                                <option value="business">Entrepreneurship</option>
-                                <option value="maritime">Management Accouting</option>
+                                <option value="" disabled>Select Department</option>
+                                <?php foreach ($collections as $key => $name): ?>
+                                <option value="<?php echo $key; ?>"
+                                    <?php if ($selectedDepartment == $key) echo "selected"; ?>>
+                                    <?php echo $name; ?>
+                                </option>
+                                <?php endforeach; ?>
                             </select>
                         </label>
+
+                        <!-- Status Filter -->
                         <label for="status-filter" class="filter-label">
                             <select id="status-filter" class="filter-select">
                                 <option value="" disabled selected>Select Status</option>
@@ -138,6 +138,7 @@ $allStudents = array_slice($allStudents, 0, 10);
                                 <option value="pending">Pending</option>
                             </select>
                         </label>
+
                         <!-- Pagination Buttons -->
                         <div class="pagination-controls"
                             style="margin-top:1em; display:flex; justify-content:center; gap:1em;">
@@ -168,16 +169,16 @@ $allStudents = array_slice($allStudents, 0, 10);
                             <?php if (empty($allStudents)): ?>
                             <tr class="no-students">
                                 <td colspan="8" style="text-align:center; padding:40px; color:#fff; font-style:italic;">
-                                    No students found in the database.</td>
+                                    No students found in this department.</td>
                             </tr>
                             <?php else: ?>
                             <?php foreach ($allStudents as $student): ?>
                             <tr class="student-row">
                                 <td class="student-name">
                                     <?php 
-                                $middleInitial = !empty($student['middle_name']) ? substr($student['middle_name'], 0, 1) . '.' : '';
-                                echo htmlspecialchars($student['last_name'] . ', ' . $student['first_name'] . ' ' . $middleInitial); 
-                                ?>
+                                    $middleInitial = !empty($student['middle_name']) ? substr($student['middle_name'], 0, 1) . '.' : '';
+                                    echo htmlspecialchars($student['last_name'] . ', ' . $student['first_name'] . ' ' . $middleInitial); 
+                                    ?>
                                 </td>
                                 <td class="student-id"><?php echo htmlspecialchars($student['student_id']); ?></td>
                                 <td class="student-dept"><?php echo htmlspecialchars($student['department_section']); ?>
@@ -185,7 +186,8 @@ $allStudents = array_slice($allStudents, 0, 10);
                                 <td class="student-year"><?php echo htmlspecialchars($student['academic_year']); ?></td>
                                 <td
                                     class="student-status <?php echo ($student['status'] === 'Active') ? 'status-active' : 'status-pending'; ?>">
-                                    <?php echo htmlspecialchars($student['status']); ?></td>
+                                    <?php echo htmlspecialchars($student['status']); ?>
+                                </td>
                                 <td class="student-password">
                                     <span class="password-text"
                                         data-password="<?php echo htmlspecialchars($student['password']); ?>">********</span>
@@ -235,47 +237,18 @@ $allStudents = array_slice($allStudents, 0, 10);
                             <?php endif; ?>
                         </tbody>
                     </table>
-
-
-
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-    let currentPage = 1;
-    const entriesPerPageSelect = document.getElementById('entries-count');
-    let entriesPerPage = parseInt(entriesPerPageSelect.value) || 10;
-
-    entriesPerPageSelect.addEventListener('change', () => {
-        entriesPerPage = parseInt(entriesPerPageSelect.value);
-        currentPage = 1;
-        renderTable();
+    document.getElementById("department-filter").addEventListener("change", function() {
+        const dept = this.value;
+        if (dept) {
+            window.location.href = "?department=" + encodeURIComponent(dept);
+        }
     });
-
-    function changePage(direction) {
-        const rows = document.querySelectorAll('.student-row');
-        const totalPages = Math.ceil(rows.length / entriesPerPage);
-        currentPage += direction;
-        if (currentPage < 1) currentPage = 1;
-        if (currentPage > totalPages) currentPage = totalPages;
-        renderTable();
-    }
-
-    function renderTable() {
-        const rows = document.querySelectorAll('.student-row');
-        const start = (currentPage - 1) * entriesPerPage;
-        const end = start + entriesPerPage;
-
-        rows.forEach((row, index) => {
-            if (index >= start && index < end) row.style.display = '';
-            else row.style.display = 'none';
-        });
-    }
-
-    // Initialize table
-    renderTable();
     </script>
 
     <script src="../Assets/js/StudentList.js"></script>

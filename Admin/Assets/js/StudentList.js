@@ -134,22 +134,22 @@ function applyFilters() {
   studentRows.forEach((row) => {
     let showRow = true;
 
-    // Department filter
+    // Department filter (uses data-collection from checkbox)
     if (departmentFilter && departmentFilter !== "") {
-      const deptText = row
-        .querySelector(".student-dept")
-        .textContent.toLowerCase();
-      if (!deptText.includes(departmentFilter.toLowerCase())) {
+      const deptValue = row
+        .querySelector(".student-checkbox")
+        ?.getAttribute("data-collection");
+      if (deptValue !== departmentFilter) {
         showRow = false;
       }
     }
 
-    // Status filter
+    // Status filter (use data-status instead of text)
     if (statusFilter && statusFilter !== "") {
-      const statusText = row
+      const statusValue = row
         .querySelector(".student-status")
-        .textContent.toLowerCase();
-      if (statusText !== statusFilter.toLowerCase()) {
+        ?.getAttribute("data-status");
+      if (statusValue !== statusFilter) {
         showRow = false;
       }
     }
@@ -226,3 +226,36 @@ function togglePass(icon) {
     if (eyeOpen) eyeOpen.style.display = "none";
   }
 }
+
+let currentPage = 1;
+const entriesPerPageSelect = document.getElementById("entries-count");
+let entriesPerPage = parseInt(entriesPerPageSelect.value) || 10;
+
+entriesPerPageSelect.addEventListener("change", () => {
+  entriesPerPage = parseInt(entriesPerPageSelect.value);
+  currentPage = 1;
+  renderTable();
+});
+
+function changePage(direction) {
+  const rows = document.querySelectorAll(".student-row");
+  const totalPages = Math.ceil(rows.length / entriesPerPage);
+  currentPage += direction;
+  if (currentPage < 1) currentPage = 1;
+  if (currentPage > totalPages) currentPage = totalPages;
+  renderTable();
+}
+
+function renderTable() {
+  const rows = document.querySelectorAll(".student-row");
+  const start = (currentPage - 1) * entriesPerPage;
+  const end = start + entriesPerPage;
+
+  rows.forEach((row, index) => {
+    if (index >= start && index < end) row.style.display = "";
+    else row.style.display = "none";
+  });
+}
+
+// Initialize table
+renderTable();
