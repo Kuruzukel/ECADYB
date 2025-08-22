@@ -36,7 +36,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
         $error_message = "Password must not exceed 8 characters.";
     } else {
         try {
+            // ----------------------
             // Admin login
+            // ----------------------
             $admin = $adminCollection->findOne([
                 'username' => $studentId,
                 'password' => $password
@@ -49,7 +51,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
                 exit();
             }
 
+            // ----------------------
             // Student login
+            // ----------------------
             $foundStudent = false;
 
             foreach ($collections as $collectionName => $departmentName) {
@@ -61,11 +65,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
                 ]);
 
                 if ($student) {
-                    $_SESSION['role'] = 'student';
+                    $_SESSION['role']       = 'student';
                     $_SESSION['student_id'] = $student['student id'];
-                    $_SESSION['name'] = $student['first name'] . ' ' . $student['middle name'] . ' ' . $student['last name'];
+                    $_SESSION['name']       = $student['first name'] . ' ' . $student['middle name'] . ' ' . $student['last name'];
                     $_SESSION['department'] = $departmentName;
-                    $_SESSION['section'] = $student['department section'] ?? '';
+                    $_SESSION['section']    = $student['department section'] ?? '';
 
                     $foundStudent = true;
 
@@ -84,7 +88,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
     }
 }
 
+// ----------------------
 // Display login error
+// ----------------------
 if (!empty($error_message)) {
     echo "<div style='color:red; font-weight:bold; margin:10px 0;'>$error_message</div>";
 }
