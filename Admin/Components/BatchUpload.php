@@ -107,7 +107,7 @@ function importCSVByMessage($tmpName, $collection) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Get MongoDB connection string from environment variable
-        $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://localhost:27017';
+        $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
         $client = new Client($mongoUrl);
 
 

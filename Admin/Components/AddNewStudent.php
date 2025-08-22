@@ -7,8 +7,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     header('Content-Type: application/json');
 
     // Get MongoDB connection string from environment variable
-$mongoUrl = getenv('MONGO_URL') ?: 'mongodb://localhost:27017';
-$client = new Client($mongoUrl);
+$mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
+$client   = new Client($mongoUrl);
     $db = $client->Departments;
 
     $programMap = [
