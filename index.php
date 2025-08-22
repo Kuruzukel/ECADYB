@@ -14,13 +14,13 @@ if (!file_exists($mongoPath)) {
     die("❌ MongoConnect.php not found at: $mongoPath");
 }
 require $mongoPath; 
-// Now we have: $client, $departmentsDB, $collections, $adminCollection, etc.
+// $client, $departmentsDB, $collections, $adminCollection are now available
 
 // ----------------------
 // Base paths
 // ----------------------
 define('BASE_PATH', __DIR__); 
-define('BASE_URL', '/');  // Railway serves at root
+define('BASE_URL', '/');  // Root path for Railway deployment
 
 // ----------------------
 // Handle login POST
@@ -37,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['studentId'], $_POST['
     } else {
         try {
             // ----------------------
-            // Admin login first
+            // Admin login
             // ----------------------
             $admin = $adminCollection->findOne([
                 'username' => $studentId,
@@ -58,8 +58,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['studentId'], $_POST['
 
             foreach ($collections as $collectionName => $departmentName) {
                 $collection = $departmentsDB->{$collectionName};
+
+                // Query MongoDB with correct field names
                 $student = $collection->findOne([
-                    'student id' => $studentId,  // MongoDB field with space
+                    'student id' => $studentId,
                     'password'   => $password
                 ]);
 
