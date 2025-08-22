@@ -28,24 +28,25 @@ define('BASE_URL', '/');  // Railway serves at root
 $error_message = '';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['studentId'], $_POST['password'])) {
-    $username = trim($_POST['studentId']);
-    $password = trim($_POST['password']);
+    $studentId = trim($_POST['studentId']);
+    $password  = trim($_POST['password']);
 
+    // ✅ Check password length
     if (strlen($password) > 8) {
         $error_message = "Password must not exceed 8 characters.";
     } else {
         try {
             // ----------------------
-            // Admin login
+            // Admin login first
             // ----------------------
             $admin = $adminCollection->findOne([
-                'username' => $username,
+                'username' => $studentId,
                 'password' => $password
             ]);
 
             if ($admin) {
                 $_SESSION['role']     = 'admin';
-                $_SESSION['username'] = $username;
+                $_SESSION['username'] = $studentId;
                 header("Location: " . BASE_URL . "Admin/Components/AdminDashboard.php");
                 exit();
             }
@@ -53,29 +54,44 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['studentId'], $_POST['
             // ----------------------
             // Student login
             // ----------------------
-            foreach ($collections as $collectionName => $course) {
+            $foundStudent = false;
+
+            foreach ($collections as $collectionName => $departmentName) {
                 $collection = $departmentsDB->{$collectionName};
                 $student = $collection->findOne([
-                    'student_id' => $username,
+                    'student id' => $studentId,  // MongoDB field with space
                     'password'   => $password
                 ]);
 
                 if ($student) {
                     $_SESSION['role']       = 'student';
-                    $_SESSION['student_id'] = $student['student_id'];
-                    $_SESSION['name']       = $student['name'];
-                    $_SESSION['department'] = $course;
+                    $_SESSION['student_id'] = $student['student id'];
+                    $_SESSION['name']       = $student['first name'] . ' ' . $student['middle name'] . ' ' . $student['last name'];
+                    $_SESSION['department'] = $departmentName;
+                    $_SESSION['section']    = $student['department section'] ?? '';
+
+                    $foundStudent = true;
 
                     header("Location: " . BASE_URL . "Student/Components/StudentDashboard.php");
                     exit();
                 }
             }
 
-            $error_message = "Invalid username or password!";
+            if (!$foundStudent) {
+                $error_message = "Invalid Student ID or password!";
+            }
+
         } catch (Exception $e) {
             $error_message = "Database error: " . $e->getMessage();
         }
     }
+}
+
+// ----------------------
+// Display login error if exists
+// ----------------------
+if (!empty($error_message)) {
+    echo "<div style='color:red; font-weight:bold; margin:10px 0;'>$error_message</div>";
 }
 
 // ----------------------
