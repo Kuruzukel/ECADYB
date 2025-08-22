@@ -1,31 +1,31 @@
 <?php
 session_start();
 
-// ----------------------
-// Composer autoload
-// ----------------------
+// ======================================================
+// Composer Autoload
+// ======================================================
 require __DIR__ . '/vendor/autoload.php';
 
 use MongoDB\Client;
 
-// ----------------------
+// ======================================================
 // MongoDB Connection
-// ----------------------
+// ======================================================
 $mongoPath = __DIR__ . '/Connection/MongoConnect.php';
 if (!file_exists($mongoPath)) {
     die("❌ MongoConnect.php not found at: $mongoPath");
 }
-require $mongoPath; // provides $client, $departmentsDB, $collections, $adminCollection
+require $mongoPath; // Provides $client, $departmentsDB, $collections, $adminCollection
 
-// ----------------------
-// Base paths
-// ----------------------
+// ======================================================
+// Base Paths
+// ======================================================
 define('BASE_PATH', __DIR__);
-define('BASE_URL', '/'); // Root path for Railway deployment
+define('BASE_URL', '/'); // Railway deployment root
 
-// ----------------------
-// Handle login POST
-// ----------------------
+// ======================================================
+// Handle Login POST
+// ======================================================
 $error_message = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['password'])) {
@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
 
     try {
         // ----------------------
-        // Admin login
+        // Admin Login
         // ----------------------
         $admin = $adminCollection->findOne([
             'username' => $studentId,
@@ -44,19 +44,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
         if ($admin) {
             $_SESSION['role']     = 'admin';
             $_SESSION['username'] = $studentId;
+
             header("Location: " . BASE_URL . "Admin/Components/AdminDashboard.php");
-            exit();
+            exit;
         }
 
         // ----------------------
-        // Student login
+        // Student Login
         // ----------------------
         $foundStudent = false;
 
         foreach ($collections as $collectionName => $departmentName) {
             $collection = $departmentsDB->{$collectionName};
 
-            // ⚡ Keep field name "student id" (with space)
+            // ⚡ Field in DB: "student id" (with space)
             $student = $collection->findOne([
                 'student id' => $studentId,
                 'password'   => $password
@@ -71,8 +72,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
 
                 $foundStudent = true;
 
-                header("Location: " . BASE_URL . "Student/Components/StudentDashboard.php");
-                exit();
+                header("Location: " . BASE_URL . "Student/Components/StudentDashboard.html");
+                exit;
             }
         }
 
@@ -85,38 +86,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
     }
 }
 
-// ----------------------
-// Display login error
-// ----------------------
+// ======================================================
+// Display Login Error (if any)
+// ======================================================
 if (!empty($error_message)) {
     echo "<div style='color:red; font-weight:bold; margin:10px 0;'>$error_message</div>";
 }
 
-// ----------------------
-// Router / Landing Page
-// ----------------------
+// ======================================================
+// Router / Landing Page Handling
+// ======================================================
 $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-// Redirect old login path
-if ($requestUri === '/Public/Components/Login.php') {
+// Redirect for old login path (backwards compatibility)
+if ($requestUri === '/Public/Login.php') {
     header("Location: " . BASE_URL . "Public/Components/Login.php");
     exit;
 }
 
-// Serve PHP files directly
+// Serve PHP files directly if they exist
 $phpFile = BASE_PATH . $requestUri;
 if (file_exists($phpFile) && pathinfo($phpFile, PATHINFO_EXTENSION) === 'php') {
     include $phpFile;
     exit;
 }
 
+// ----------------------
 // Serve Landing Page
+// ----------------------
 if ($requestUri === '/' || $requestUri === '/index.php') {
     $landingPagePath = BASE_PATH . '/LandingPage/LandingPage.html';
+
     if (file_exists($landingPagePath)) {
         $htmlContent = file_get_contents($landingPagePath);
 
-        // Fix asset paths for Railway deployment
+        // ✅ Fix asset paths for Railway deployment
         $htmlContent = str_replace(
             [
                 'href="LandingPage.css"',
@@ -133,7 +137,7 @@ if ($requestUri === '/' || $requestUri === '/index.php') {
             $htmlContent
         );
 
-        // Fix login buttons
+        // ✅ Fix login buttons to redirect properly
         $htmlContent = str_replace(
             ['id="loginDropdownBtn"', 'id="mobileLoginDropdownBtn"'],
             [
@@ -152,12 +156,14 @@ if ($requestUri === '/' || $requestUri === '/index.php') {
     }
 }
 
-// Serve static assets
+// ----------------------
+// Serve Static Assets
+// ----------------------
 $staticPaths = [
-    '/img/' => '/img/',
+    '/img/'                           => '/img/',
     '/LandingPage/LandingPageYB/pages/' => '/LandingPage/LandingPageYB/pages/',
-    '/Public/assets/css/' => '/Public/assets/css/',
-    '/Public/assets/js/' => '/Public/assets/js/'
+    '/Public/assets/css/'             => '/Public/assets/css/',
+    '/Public/assets/js/'              => '/Public/assets/js/'
 ];
 
 foreach ($staticPaths as $uriPrefix => $folder) {
@@ -172,7 +178,8 @@ foreach ($staticPaths as $uriPrefix => $folder) {
                 'gif'  => 'image/gif',
                 'webp' => 'image/webp',
                 'css'  => 'text/css',
-                'js'   => 'application/javascript'
+                'js'   => 'application/javascript',
+                'svg'  => 'image/svg+xml'
             ];
             header('Content-Type: ' . ($mimeTypes[$ext] ?? 'application/octet-stream'));
             readfile($filePath);
@@ -181,7 +188,9 @@ foreach ($staticPaths as $uriPrefix => $folder) {
     }
 }
 
-// Default fallback
+// ======================================================
+// Default Fallback (404)
+// ======================================================
 http_response_code(404);
 echo '<h1>ECADYB Application</h1>';
 echo '<p>Page not found.</p>';

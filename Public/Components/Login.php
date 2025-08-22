@@ -2,29 +2,36 @@
 session_start();
 require __DIR__ . '/../../vendor/autoload.php';
 
+use MongoDB\Client;
 
-// MongoDB connection
-$client = new MongoDB\Client("mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957/");
-
-// Database and collections
+// =============================
+// MongoDB Connection
+// =============================
+$client = new Client("mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957/");
 $departmentsDB = $client->Departments;     
 $adminCollection = $departmentsDB->Admin;  // Admin collection
 
+// =============================
+// Department Collections
+// =============================
 $collections = [
-    "bsme" => "BS Marine Engineering",
-    "bsmt" => "BS Marine Transportation",
-    "bscje" => "BS Criminal Justice Education",
-    "bstm" => "BS Tourism Management",
+    "bsme"   => "BS Marine Engineering",
+    "bsmt"   => "BS Marine Transportation",
+    "bscje"  => "BS Criminal Justice Education",
+    "bstm"   => "BS Tourism Management",
     "btvted" => "BS Technical-Vocational Teacher Education",
-    "beced" => "BS Early Childhood Education",
-    "bsn" => "BS Nursing",
-    "bsis" => "BS Information System",
-    "bsma" => "BS Management Accounting",
-    "bse" => "BS Entrepreneurship"
+    "beced"  => "BS Early Childhood Education",
+    "bsn"    => "BS Nursing",
+    "bsis"   => "BS Information System",
+    "bsma"   => "BS Management Accounting",
+    "bse"    => "BS Entrepreneurship"
 ];
 
 $error_message = '';
 
+// =============================
+// Handle Login
+// =============================
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = trim($_POST['studentId']);
     $password = trim($_POST['password']);
@@ -39,7 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         ]);
 
         if ($admin) {
-            $_SESSION['role'] = 'admin';
+            $_SESSION['role']     = 'admin';
             $_SESSION['username'] = $username;
             header("Location: /Admin/Components/AdminDashboard.php");
             exit();
@@ -48,25 +55,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // ----- STUDENT LOGIN -----
         foreach ($collections as $collectionName => $course) {
             $collection = $departmentsDB->{$collectionName};
+
             $student = $collection->findOne([
-                'student_id' => $username,
-                'password' => $password
+                'student id' => $username,
+                'password'   => $password
             ]);
 
             if ($student) {
-                $_SESSION['role'] = 'student';
-                $_SESSION['student_id'] = $student['student_id'];
-                $_SESSION['name'] = $student['name'];
+                $_SESSION['role']       = 'student';
+                $_SESSION['student_id'] = $student['student id'];
+                $_SESSION['name']       = trim(($student['first name'] ?? '') . ' ' . ($student['middle name'] ?? '') . ' ' . ($student['last name'] ?? ''));
                 $_SESSION['department'] = $course;
-                header("Location: student_dashboard.php");
+                $_SESSION['section']    = $student['department section'] ?? '';
+
+                header("Location: /Student/Components/StudentDashboard.html");
                 exit();
             }
         }
 
-        $error_message = "Invalid username or password!";
+        $error_message = "Invalid student ID or password!";
     }
 }
 ?>
+
+
 
 
 <!DOCTYPE html>
