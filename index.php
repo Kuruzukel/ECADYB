@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
 
                 $foundStudent = true;
 
-                header("Location: " . BASE_URL . "Student/Components/StudentDashboard.html");
+                header("Location: " . BASE_URL . "Student/Components/StudentDashboard.php");
                 exit;
             }
         }

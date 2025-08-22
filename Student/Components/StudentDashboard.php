@@ -1,0 +1,331 @@
+<?php
+session_start();
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'student') {
+    header("Location: /Public/Components/Login.php");
+    exit();
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Graduation Gallery - Exact Colleges of Asia</title>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="fb:app_id" content="1767810860531321" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:title" content="Graduation Gallery - Exact Colleges of Asia" />
+    <meta property="og:description"
+        content="Step into your digital yearbook. Every achievement and memory comes alive." />
+    <meta property="og:image" content="https://grad-gallery.up.railway.app/img/PREVIEWLOGO.png" />
+    <meta property="og:image:secure_url" content="https://grad-gallery.up.railway.app/img/PREVIEWLOGO.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:url" content="https://grad-gallery.up.railway.app" />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Graduation Gallery - Exact Colleges of Asia" />
+    <meta name="twitter:description"
+        content="Step into your digital yearbook. Every achievement and memory comes alive." />
+    <meta name="twitter:image" content="https://grad-gallery.up.railway.app/img/PREVIEWLOGO.png" />
+    <meta name="twitter:image:alt" content="Exact Colleges of Asia Graduation Gallery Preview Logo" />
+
+    <!-- Favicon -->
+    <link rel="icon" href="https://grad-gallery.up.railway.app/img/PREVIEWLOGO.png" type="image/png" />
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/Student/assets/css/StudentDashboard.css" />
+
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+</head>
+
+<body>
+    <!-- Navbar -->
+    <header>
+        <div class="logo">
+            <img src="/img/ADMINGRALLERYLOGO.png" alt="Logo" class="logo-img" />
+            <span>GRADUATION GALLERY</span>
+        </div>
+
+        <nav class="center-nav">
+            <a href="#main-hero">Home</a>
+            <a href="#about">About</a>
+            <a href="#yearbooks">Yearbook</a>
+            <a href="#captured-moments">Memories</a>
+            <a href="#footer">Contacts</a>
+        </nav>
+
+        <div class="profile-dropdown">
+            <img src="/img/Profile.png" alt="Profile" class="profile-icon" id="profileDropdownBtn" />
+            <div class="dropdown-menu" id="profileDropdownMenu">
+                <button class="dropdown-item" onclick="window.location.href='/Student/Components/ChangePassword.html'">
+                    Change Password
+                </button>
+                <button class="dropdown-item" onclick="editProfile()">
+                    Edit Profile
+                </button>
+                <button class="dropdown-item" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="main-hero" id="main-hero">
+        <div class="main_blur_overlay"></div>
+        <div class="main-hero-background"></div>
+        <div class="main-hero-text">
+            <div class="logo-container">
+                <img src="/img/GRALLERYLOGO4.0.png" alt="Logo" class="logo-img" />
+            </div>
+            <div class="hero-message">
+                <div>
+                    🎓 Welcome to the Exact Colleges of Asia Digital Yearbook! Hello,
+                    We're excited to have you here. Explore your personalized digital
+                    yearbook to revisit all your memorable moments, from classes to
+                    special events. Don't forget to check out your captured moments
+                    during graduation relive the smiles, laughter, and achievements that
+                    made this year truly unforgettable! Enjoy browsing your memories and
+                    celebrating your journey with us. 🌟
+                </div>
+
+                <div class="hero-message-bold">
+                    “The past remembered, the present celebrated, the future awaits.”
+                </div>
+            </div>
+        </div>
+        <!-- Lower Curl SVG Divider -->
+        <div class="main-hero-lower-curl">
+            <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"
+                style="display: block; width: 100%; height: 60px">
+                <!-- Back wave -->
+                <path d="M0,60 Q180,100 360,60 T720,60 T1080,60 T1440,60 L1440,120 L0,120 Z" fill="#1a237e"
+                    opacity="0.4" />
+                <!-- Middle wave -->
+                <path d="M0,80 Q180,40 360,80 T720,80 T1080,80 T1440,80 L1440,120 L0,120 Z" fill="#112d4e"
+                    opacity="0.7" />
+                <!-- Front wave -->
+                <path d="M0,100 Q180,60 360,100 T720,100 T1080,100 T1440,100 L1440,120 L0,120 Z" fill="#021326" />
+            </svg>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="section about-section" id="about">
+        <div class="about-blur-vignette"></div>
+        <div class="grid-overlay"></div>
+        <div style="display: flex; align-items: flex-start; gap: 0rem">
+            <!-- Left: Iframe -->
+            <div>
+                <img src="/img/ABOUTIMG.png" class="about-image" alt="Yearbook
+          Preview" ; />
+            </div>
+            <!-- Right: About Section -->
+            <div>
+                <h2 class="section-title">About</h2>
+                <p class="about-description">
+                    Welcome to our Digital Yearbook: Graduation Gallery, a space created
+                    to celebrate the incredible journey of our graduates. This virtual
+                    gallery captures memories, milestones, and meaningful moments from
+                    the academic year. A tribute to the resilience, growth, and
+                    achievements of every student. Whether you're looking back at your
+                    own story or exploring the journey of classmates, this digital
+                    yearbook is a living reminder that while graduation marks the end of
+                    a chapter, the memories last forever.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Yearbooks Section -->
+
+    <section class="yearbooks-section" id="yearbooks" style="position: relative; overflow: hidden">
+        <div class="yearbooks-background"></div>
+        <div class="main-hero-lower-curl">
+            <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"
+                style="display: block; width: 100%; height: 60px">
+                <!-- Back wave -->
+                <path d="M0,60 Q180,20 360,60 T720,60 T1080,60 T1440,60 L1440,0 L0,0 Z" fill="#1a237e" opacity="0.4" />
+                <!-- Middle wave -->
+                <path d="M0,40 Q180,80 360,40 T720,40 T1080,40 T1440,40 L1440,0 L0,0 Z" fill="#112d4e" opacity="0.7" />
+                <!-- Front wave -->
+                <path d="M0,20 Q180,60 360,20 T720,20 T1080,20 T1440,20 L1440,0 L0,0 Z" fill="#021326" />
+            </svg>
+        </div>
+        <h2 class="section-title">Digital Yearbook</h2>
+        <div class="yearbooks-row">
+            <div class="yearbook-card">
+                <img src="/img/YB COVER/MaritimeEducation.png" class="yearbook-cover" />
+                <div class="yearbook-title">COLLEGE OF MARITIME EDUCATION</div>
+            </div>
+            <div class="yearbook-card">
+                <img src="/img/YB COVER/TourismManagement.png" class="yearbook-cover" />
+                <div class="yearbook-title">COLLEGE OF TOURISM MANAGEMENT</div>
+            </div>
+            <div class="yearbook-card">
+                <img src="/img/YB COVER/CriminalJusticeEducation.png" class="yearbook-cover" />
+                <div class="yearbook-title">
+                    COLLEGE OF CRIMINAL JUSTICE EDUCATION
+                </div>
+            </div>
+            <div class="yearbook-card">
+                <img src="/img/YB COVER/InformationSystem.png" class="yearbook-cover" />
+                <div class="yearbook-title">COLLEGE OF INFORMATION SYSTEM</div>
+            </div>
+            <div class="yearbook-card">
+                <img src="/img/YB COVER/BusinessAdministration.png" class="yearbook-cover" />
+                <div class="yearbook-title">COLLEGE OF BUSINESS ADMINISTRATION</div>
+            </div>
+            <div class="yearbook-card">
+                <img src="/img/YB COVER/Education.png" class="yearbook-cover" />
+                <div class="yearbook-title">COLLEGE OF EDUCATION</div>
+            </div>
+            <div class="yearbook-card">
+                <img src="/img/YB COVER/Nursing.png" class="yearbook-cover" />
+                <div class="yearbook-title">COLLEGE OF NURSING</div>
+            </div>
+        </div>
+
+        <div class="yearbook-lower-curl">
+            <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"
+                style="display: block; width: 100%; height: 60px">
+                <!-- Back wave -->
+                <path d="M0,60 Q180,100 360,60 T720,60 T1080,60 T1440,60 L1440,120 L0,120 Z" fill="#1a237e"
+                    opacity="0.4" />
+                <!-- Middle wave -->
+                <path d="M0,80 Q180,40 360,80 T720,80 T1080,80 T1440,80 L1440,120 L0,120 Z" fill="#112d4e"
+                    opacity="0.7" />
+                <!-- Front wave -->
+                <path d="M0,100 Q180,60 360,100 T720,100 T1080,100 T1440,100 L1440,120 L0,120 Z" fill="#021326" />
+            </svg>
+        </div>
+    </section>
+
+    <!-- Carousel Section -->
+    <section class="carousel-section" id="captured-moments">
+        <div class="about-blur-vignette"></div>
+        <div class="grid-overlay"></div>
+        <h2 class="section-title">Captured Moments</h2>
+        <p class="carousel-subtitle">
+            A collection of unforgettable memories from our journey together.
+        </p>
+        <div class="carousel-container">
+            <div class="carousel-track" id="carousel-track">
+                <img src="/img/CAROUSEL/sample1.jpg" class="carousel-img" />
+                <img src="/img/CAROUSEL/sample2.jpg" class="carousel-img" />
+                <img src="/img/CAROUSEL/sample3.jpg" class="carousel-img" />
+                <img src="/img/CAROUSEL/sample4.jpg" class="carousel-img" />
+                <img src="/img/CAROUSEL/sample5.jpg" class="carousel-img" />
+                <img src="/img/CAROUSEL/sample6.jpg" class="carousel-img" />
+                <img src="/img/CAROUSEL/sample7.jpg" class="carousel-img" />
+                <img src="/img/CAROUSEL/sample8.jpg" class="carousel-img" />
+                <img src="/img/CAROUSEL/sample9.jpg" class="carousel-img" />
+                <img src="/img/CAROUSEL/sample10.jpg" class="carousel-img" />
+                <img src="/img/CAROUSEL/sample11.jpg" class="carousel-img" />
+                <img src="/img/CAROUSEL/sample12.jpg" class="carousel-img" />
+                <img src="/img/CAROUSEL/sample13.jpg" class="carousel-img" />
+                <img src="/img/CAROUSEL/sample14.jpg" class="carousel-img" />
+                <img src="/img/CAROUSEL/sample15.jpg" class="carousel-img" />
+                <img src="/img/CAROUSEL/sample1.jpg" class="carousel-img" />
+                <img src="/img/CAROUSEL/sample2.jpg" class="carousel-img" />
+                <img src="/img/CAROUSEL/sample3.jpg" class="carousel-img" />
+                <img src="/img/CAROUSEL/sample4.jpg" class="carousel-img" />
+                <img src="/img/CAROUSEL/sample5.jpg" class="carousel-img" />
+                <img src="/img/CAROUSEL/sample6.jpg" class="carousel-img" />
+                <img src="/img/CAROUSEL/sample7.jpg" class="carousel-img" />
+                <img src="/img/CAROUSEL/sample8.jpg" class="carousel-img" />
+                <img src="/img/CAROUSEL/sample9.jpg" class="carousel-img" />
+                <img src="/img/CAROUSEL/sample10.jpg" class="carousel-img" />
+                <img src="/img/CAROUSEL/sample11.jpg" class="carousel-img" />
+                <img src="/img/CAROUSEL/sample12.jpg" class="carousel-img" />
+                <img src="/img/CAROUSEL/sample13.jpg" class="carousel-img" />
+                <img src="/img/CAROUSEL/sample14.jpg" class="carousel-img" />
+                <img src="/img/CAROUSEL/sample15.jpg" class="carousel-img" />
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer class="footer-section" id="footer">
+        <div class="footer-inner-container">
+            <div class="footer-logo-container left">
+                <img src="/img/ECALOGO.png" alt="ECA Logo" class="footer-logo-img footer-logo-img-left" />
+            </div>
+            <div class="footer-content">
+                <div class="footer-contact-info">
+                    <div class="footer-contact-item">
+                        <div class="footer-contact-desc">
+                            <i class="fa-solid fa-location-dot" style="margin-right: 8px; color: #bfcfff"></i>
+                            Suclayin Arayat, Pampanga, Arayat, Philippines
+                        </div>
+                    </div>
+                    <div class="footer-contact-item">
+                        <div class="footer-contact-desc">
+                            <i class="fa-solid fa-phone" style="margin-right: 8px; color: #bfcfff"></i>
+                            0969 516 6181
+                        </div>
+                    </div>
+                    <div class="footer-contact-item">
+                        <div class="footer-contact-desc">
+                            <i class="fa-solid fa-envelope" style="margin-right: 8px; color: #bfcfff"></i>
+                            exact.colleges@yahoo.com
+                        </div>
+                    </div>
+                    <div class="footer-contact-item">
+                        <div class="footer-contact-desc">
+                            <i class="fa-brands fa-facebook" style="margin-right: 8px; color: #bfcfff"></i>
+                            <a href="https://www.facebook.com/ExactCollegesAsia" target="_blank"
+                                style="color: inherit; text-decoration: none">facebook.com/ExactCollegesAsia</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-copy">&copy; 2025 TEAM NOVA SPIRE.</div>
+            </div>
+            <div class="footer-logo-container right">
+                <img src="/img/GRALLERYLOGO4.0.png" alt="Grallery Logo" class="footer-logo-img footer-logo-img-right" />
+            </div>
+        </div>
+    </footer>
+    <script src="/Student/assets/js/StudentDashboard.js"></script>
+    <script>
+    // Profile Dropdown Functionality
+    document.addEventListener("DOMContentLoaded", function() {
+        const profileBtn = document.getElementById("profileDropdownBtn");
+        const profileMenu = document.getElementById("profileDropdownMenu");
+
+        // Toggle dropdown on profile click
+        profileBtn.addEventListener("click", function(e) {
+            e.stopPropagation(); // Prevent closing immediately
+            profileBtn.classList.toggle("active"); // optional visual feedback
+            profileMenu.classList.toggle("show"); // uses CSS 'show' for animation
+        });
+
+        // Close dropdown when clicking on any dropdown item
+        const dropdownItems = profileMenu.querySelectorAll(".dropdown-item");
+        dropdownItems.forEach((item) => {
+            item.addEventListener("click", function() {
+                profileBtn.classList.remove("active");
+                profileMenu.classList.remove("show");
+            });
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener("click", function(event) {
+            if (
+                !profileBtn.contains(event.target) &&
+                !profileMenu.contains(event.target)
+            ) {
+                profileBtn.classList.remove("active");
+                profileMenu.classList.remove("show");
+            }
+        });
+    });
+    </script>
+</body>
+
+</html>

@@ -68,7 +68,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['department'] = $course;
                 $_SESSION['section']    = $student['department section'] ?? '';
 
-                header("Location: /Student/Components/StudentDashboard.html");
+                header("Location: /Student/Components/StudentDashboard.php");
                 exit();
             }
         }
