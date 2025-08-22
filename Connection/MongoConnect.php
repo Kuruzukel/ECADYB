@@ -51,16 +51,3 @@ $adminSampleCollection = $adminDB->AdminSample;
 // ----------------------
 // Debug/Test (optional)
 // ----------------------
-try {
-    $dbs = $client->listDatabases();
-    foreach ($dbs as $db) {
-        echo "<strong>Database:</strong> " . $db->getName() . "<br>";
-        $dbObj = $client->selectDatabase($db->getName());
-        foreach ($dbObj->listCollections() as $col) {
-            echo "— Collection: " . $col->getName() . "<br>";
-        }
-        echo "<br>";
-    }
-} catch (Exception $e) {
-    echo "MongoDB Connection failed: " . $e->getMessage();
-}
