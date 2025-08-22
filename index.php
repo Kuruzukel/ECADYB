@@ -32,59 +32,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
     $studentId = trim($_POST['studentId']);
     $password  = trim($_POST['password']);
 
-    if (strlen($password) > 8) {
-        $error_message = "Password must not exceed 8 characters.";
-    } else {
-        try {
-            // ----------------------
-            // Admin login
-            // ----------------------
-            $admin = $adminCollection->findOne([
-                'username' => $studentId,
-                'password' => $password
+    try {
+        // ----------------------
+        // Admin login
+        // ----------------------
+        $admin = $adminCollection->findOne([
+            'username' => $studentId,
+            'password' => $password
+        ]);
+
+        if ($admin) {
+            $_SESSION['role']     = 'admin';
+            $_SESSION['username'] = $studentId;
+            header("Location: " . BASE_URL . "Admin/Components/AdminDashboard.php");
+            exit();
+        }
+
+        // ----------------------
+        // Student login
+        // ----------------------
+        $foundStudent = false;
+
+        foreach ($collections as $collectionName => $departmentName) {
+            $collection = $departmentsDB->{$collectionName};
+
+            // ⚡ Keep field name "student id" (with space)
+            $student = $collection->findOne([
+                'student id' => $studentId,
+                'password'   => $password
             ]);
 
-            if ($admin) {
-                $_SESSION['role'] = 'admin';
-                $_SESSION['username'] = $studentId;
-                header("Location: " . BASE_URL . "Admin/Components/AdminDashboard.php");
+            if ($student) {
+                $_SESSION['role']       = 'student';
+                $_SESSION['student_id'] = $student['student id'];
+                $_SESSION['name']       = trim(($student['first name'] ?? '') . ' ' . ($student['middle name'] ?? '') . ' ' . ($student['last name'] ?? ''));
+                $_SESSION['department'] = $departmentName;
+                $_SESSION['section']    = $student['department section'] ?? '';
+
+                $foundStudent = true;
+
+                header("Location: " . BASE_URL . "Student/Components/StudentDashboard.php");
                 exit();
             }
-
-            // ----------------------
-            // Student login
-            // ----------------------
-            $foundStudent = false;
-
-            foreach ($collections as $collectionName => $departmentName) {
-                $collection = $departmentsDB->{$collectionName};
-
-                $student = $collection->findOne([
-                    'student id' => $studentId,
-                    'password'   => $password
-                ]);
-
-                if ($student) {
-                    $_SESSION['role']       = 'student';
-                    $_SESSION['student_id'] = $student['student id'];
-                    $_SESSION['name']       = $student['first name'] . ' ' . $student['middle name'] . ' ' . $student['last name'];
-                    $_SESSION['department'] = $departmentName;
-                    $_SESSION['section']    = $student['department section'] ?? '';
-
-                    $foundStudent = true;
-
-                    header("Location: " . BASE_URL . "Student/Components/StudentDashboard.php");
-                    exit();
-                }
-            }
-
-            if (!$foundStudent) {
-                $error_message = "Invalid Student ID or password!";
-            }
-
-        } catch (Exception $e) {
-            $error_message = "Database error: " . $e->getMessage();
         }
+
+        if (!$foundStudent) {
+            $error_message = "Invalid Student ID or password!";
+        }
+
+    } catch (Exception $e) {
+        $error_message = "Database error: " . $e->getMessage();
     }
 }
 
