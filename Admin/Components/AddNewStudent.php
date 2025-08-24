@@ -30,23 +30,33 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $section = trim($_POST["section"] ?? '');
 
-    // Create student document
-    $student = [
-        "first name" => trim($_POST["first_name"] ?? ''),
-        "middle name" => trim($_POST["middle_name"] ?? ''),
-        "last name" => trim($_POST["last_name"] ?? ''),
-        "email" => trim($_POST["email"] ?? ''),
-        "academic year" => trim($_POST["academic_year"] ?? ''),
-        "student id" => trim($_POST["student_id"] ?? ''),
-        "program" => $programName, // Full program name
-        "section" => $section,
-        // Department section now uses shortcut letters in ALL CAPS
-        "department section" => strtoupper($programKey) . ' - ' . strtoupper($section),
-        "motto" => trim($_POST["motto"] ?? ''),
-        "honors" => trim($_POST["honors"] ?? ''),
-        "milestone" => trim($_POST["milestone"] ?? ''),
-        "batch name" => trim($_POST["batch_name"] ?? '')
-    ];
+// Create student document
+$student = [
+    "first name" => trim($_POST["first_name"] ?? ''),
+    "middle name" => trim($_POST["middle_name"] ?? ''),
+    "last name" => trim($_POST["last_name"] ?? ''),
+    "email" => trim($_POST["email"] ?? ''),
+    "academic year" => trim($_POST["academic_year"] ?? ''),
+    "student id" => trim($_POST["student_id"] ?? ''),
+    "program" => $programName,
+    "section" => $section,
+    "department section" => strtoupper($programKey) . ' - ' . strtoupper($section),
+];
+
+// Add optional fields only if they’re not empty
+if (!empty($_POST["motto"])) {
+    $student["motto"] = trim($_POST["motto"]);
+}
+if (!empty($_POST["honors"])) {
+    $student["honors"] = trim($_POST["honors"]);
+}
+if (!empty($_POST["milestone"])) {
+    $student["milestone"] = trim($_POST["milestone"]);
+}
+if (!empty($_POST["batch_name"])) {
+    $student["batch name"] = trim($_POST["batch_name"]); // keep consistent naming
+}
+
 
     // Insert into collection named by shortcut (e.g., bsme, bsmt)
     $collection = $db->$programKey;
@@ -128,8 +138,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         </select>
 
                         <label for="section">Section:</label>
-                        <input type="text" id="section" name="section" placeholder="Section"
-                            oninput="allowOnlyLetters(this)">
+                        <input type="text" id="section" name="section" placeholder="Section">
 
                         <label for="student-id">Student ID:</label>
                         <input type="text" id="student-id" name="student_id" placeholder="0000-000000" maxlength="11"
