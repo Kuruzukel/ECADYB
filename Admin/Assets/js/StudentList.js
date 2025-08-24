@@ -226,36 +226,3 @@ function togglePass(icon) {
     if (eyeOpen) eyeOpen.style.display = "none";
   }
 }
-
-let currentPage = 1;
-const entriesPerPageSelect = document.getElementById("entries-count");
-let entriesPerPage = parseInt(entriesPerPageSelect.value) || 10;
-
-entriesPerPageSelect.addEventListener("change", () => {
-  entriesPerPage = parseInt(entriesPerPageSelect.value);
-  currentPage = 1;
-  renderTable();
-});
-
-function changePage(direction) {
-  const rows = document.querySelectorAll(".student-row");
-  const totalPages = Math.ceil(rows.length / entriesPerPage);
-  currentPage += direction;
-  if (currentPage < 1) currentPage = 1;
-  if (currentPage > totalPages) currentPage = totalPages;
-  renderTable();
-}
-
-function renderTable() {
-  const rows = document.querySelectorAll(".student-row");
-  const start = (currentPage - 1) * entriesPerPage;
-  const end = start + entriesPerPage;
-
-  rows.forEach((row, index) => {
-    if (index >= start && index < end) row.style.display = "";
-    else row.style.display = "none";
-  });
-}
-
-// Initialize table
-renderTable();

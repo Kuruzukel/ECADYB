@@ -565,21 +565,24 @@ th {
 }
 
 .pagination-controls button {
-  background-color: var(--header-bg); /* Dark blue from your theme */
-  color: #fff;
-  border: 2px solid #217ff7; /* Accent border */
-  padding: 8px 16px;
   border-radius: 8px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: all 0.3s ease;
+  border: 2px solid #34495e;
+  background: transparent;
+  color: #fff;
+  height: 35px;
+  min-width: 120px;
+  max-width: 100%;
+  width: 100%;
+  font-family: Arial, sans-serif;
+  font-size: 0.9em;
+  box-sizing: border-box;
+  margin-bottom: 0.62rem;
 }
 
 .pagination-controls button:hover {
   background-color: #217ff7; /* Lighter blue on hover */
   color: #fff;
   border-color: #0c27be;
-  transform: translateY(-2px);
 }
 
 .pagination-controls button:active {
@@ -587,9 +590,19 @@ th {
   background-color: #0c27be;
 }
 
-.pagination-controls {
-  margin-top: 1em;
-  display: flex;
-  justify-content: center;
-  gap: 1em;
+.pagination-controls span {
+  display: flex; /* enables flexbox */
+  align-items: center; /* vertical center */
+  justify-content: center; /* horizontal center */
+  border-radius: 8px;
+  border: 2px solid #34495e;
+  background: transparent;
+  color: #fff;
+  height: 35px;
+  min-width: 120px;
+  max-width: 100%;
+  width: 100%;
+  font-family: Arial, sans-serif;
+  font-size: 0.9em;
+  box-sizing: border-box;
 }

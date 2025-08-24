@@ -92,8 +92,17 @@ usort($allStudents, function($a, $b) {
     return $a['id'] <=> $b['id'];
 });
 
-// ✅ Limit to exactly 10 students by default
-$allStudents = array_slice($allStudents, 0, 10);
+// ✅ Pagination setup
+$perPage = 10;
+$page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1; // default: 1
+$offset = ($page - 1) * $perPage;
+
+$totalStudents = count($allStudents);
+$totalPages = ceil($totalStudents / $perPage);
+
+// Slice array for current page
+$allStudents = array_slice($allStudents, $offset, $perPage);
+
 ?>
 
 <!DOCTYPE html>
@@ -142,9 +151,29 @@ $allStudents = array_slice($allStudents, 0, 10);
                         <!-- Pagination Buttons -->
                         <div class="pagination-controls"
                             style="margin-top:1em; display:flex; justify-content:center; gap:1em;">
-                            <button id="prev-btn" onclick="changePage(-1)">Previous</button>
-                            <button id="next-btn" onclick="changePage(1)">Next</button>
+
+                            <?php if ($page > 1): ?>
+                            <a
+                                href="?department=<?php echo urlencode($selectedDepartment); ?>&page=<?php echo $page - 1; ?>">
+                                <button id="prev-btn">Previous</button>
+                            </a>
+                            <?php else: ?>
+                            <button id="prev-btn" disabled>Previous</button>
+                            <?php endif; ?>
+
+                            <?php if ($page < $totalPages): ?>
+                            <a
+                                href="?department=<?php echo urlencode($selectedDepartment); ?>&page=<?php echo $page + 1; ?>">
+                                <button id="next-btn">Next</button>
+                            </a>
+                            <?php else: ?>
+                            <button id="next-btn" disabled>Next</button>
+                            <?php endif; ?>
+
+                            <span>Page <?php echo $page; ?> of <?php echo $totalPages; ?></span>
                         </div>
+
+
                     </div>
                 </div>
 
