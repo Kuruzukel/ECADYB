@@ -146,7 +146,7 @@ if (!empty($_POST["batch_name"])) {
                     </div>
 
                     <div class="section">
-                        <div class="section-header">Additional Information</div>
+                        <div class="section-header">Additional Information / Optional</div>
 
                         <label for="motto">Personal Philosophy:</label>
                         <input type="text" id="motto" name="motto" placeholder="Personal Philosophy">

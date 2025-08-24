@@ -114,17 +114,20 @@ function removeSpaces(input) {
 }
 
 // Validate required fields (Academic Year and Student ID) before submission.
-// If a field is invalid, its border is set to red.
+// Ignore optional fields: motto, honors, milestone, batch-name
 function validateForm() {
   let isValid = true;
 
-  // Get all input fields inside the form
-  const allInputs = document.querySelectorAll("#addStudentForm input");
+  // Required input fields only (exclude optional ones)
+  const requiredInputs = document.querySelectorAll(
+    "#addStudentForm input:not(#motto):not(#honors):not(#milestone):not(#batch-name)"
+  );
+
   // Remove previous error styling
-  allInputs.forEach((input) => input.classList.remove("input-error"));
+  requiredInputs.forEach((input) => input.classList.remove("input-error"));
 
   // Check for empty fields
-  allInputs.forEach((input) => {
+  requiredInputs.forEach((input) => {
     if (!input.value.trim()) {
       input.classList.add("input-error");
       isValid = false;
