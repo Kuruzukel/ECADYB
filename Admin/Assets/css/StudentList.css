@@ -606,3 +606,217 @@ th {
   font-size: 0.9em;
   box-sizing: border-box;
 }
+
+/* ===========================
+   Overlay
+=========================== */
+.editStudentModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  transition: opacity 0.3s ease;
+  opacity: 0;
+}
+
+.editStudentModal.active {
+  display: flex;
+  opacity: 1;
+}
+
+/* ===========================
+   Modal Box
+=========================== */
+.editStudentModal .modal-content {
+  background: var(--section-bg, #2d2f3a);
+  border-radius: 16px;
+  padding: 1rem;
+  width: 92%;
+  height: 90%;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+  border: 1px solid #475569;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  animation: slideIn 0.35s ease;
+  overflow-y: hidden; /* prevent scrollbar */
+}
+
+/* Slide animation */
+@keyframes slideIn {
+  from {
+    transform: translateY(-30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ===========================
+   Header
+=========================== */
+.editStudentModal .modal-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.editStudentModal .modal-icon {
+  font-size: 1.6rem;
+  color: #217ff7;
+}
+
+.editStudentModal h3 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+}
+
+/* ===========================
+   Modal Body (matches add form)
+=========================== */
+.editStudentModal .modal-body {
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.editStudentModal .form-group {
+  display: flex;
+  justify-content: space-between;
+  gap: 25px;
+}
+
+/* ===========================
+   Section Cards
+=========================== */
+.editStudentModal .section {
+  height: 100%;
+  width: 32%;
+  min-width: 250px;
+  background-color: var(--section-bg, #2d2f3a);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+  box-sizing: border-box;
+  min-height: 570px;
+  display: flex;
+  flex-direction: column;
+}
+
+.editStudentModal .section-header {
+  width: calc(100% + 40px);
+  height: 50px;
+  background-color: var(--section-header, #475569);
+  color: #ffffff;
+  padding: 12px;
+  margin: -20px -20px 20px -20px;
+  border-radius: 8px 8px 0 0;
+  text-align: center;
+  font-size: 1.1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===========================
+   Inputs & Labels
+=========================== */
+.editStudentModal label {
+  display: block;
+  margin: 12px 0 6px;
+  color: #e0e0e0;
+}
+
+.editStudentModal .section input,
+.editStudentModal .section select,
+.editStudentModal .section textarea {
+  margin-bottom: 16px;
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  background-color: #f0f0f0;
+  font-size: 16px;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.editStudentModal .section input:focus,
+.editStudentModal .section select:focus,
+.editStudentModal .section textarea:focus {
+  outline: none;
+  border: 1px solid #3b82f6;
+  background-color: #ffffff;
+}
+
+/* ===========================
+   Buttons
+=========================== */
+.editStudentModal .modal-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: auto;
+}
+
+.editStudentModal .modal-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-family: inherit;
+}
+
+.editStudentModal .modal-btn.confirm {
+  background: #10b981;
+  color: #ffffff;
+}
+
+.editStudentModal .modal-btn.confirm:hover {
+  background: #059669;
+  transform: translateY(-1px);
+}
+
+.editStudentModal .modal-btn.cancel {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+.editStudentModal .modal-btn.cancel:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+}
+
+/* ===========================
+   Close Button
+=========================== */
+.editStudentModal .close-btn {
+  position: absolute;
+  top: 12px;
+  right: 15px;
+  font-size: 22px;
+  color: #ffffff;
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.editStudentModal .close-btn:hover {
+  transform: scale(1.15);
+  color: #f87171;
+}

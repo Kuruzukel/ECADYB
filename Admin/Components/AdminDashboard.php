@@ -174,9 +174,6 @@ require $mongoPath;
                     case 'add-new-student':
                         include('AddNewStudent.php');
                         break;
-                    case 'edit-student':
-                        include('EditStudentInformation.php');
-                        break;
                     case 'create-announcement':
                         include('CreateAnnouncement.php');
                         break;

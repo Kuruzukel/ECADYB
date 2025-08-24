@@ -71,17 +71,25 @@ try {
         $studentIdNum = isset($student['id']) ? (int)$student['id'] : 0;
 
         $allStudents[] = [
-            'id' => $studentIdNum,
-            'student_id' => $student['student id'] ?? '',
-            'first_name' => $student['first name'] ?? '',
-            'middle_name' => $student['middle name'] ?? '',
-            'last_name' => $student['last name'] ?? '',
-            'department_section' => $student['department section'] ?? $collections[$selectedDepartment],
-            'academic_year' => $student['academic year'] ?? '',
-            'status' => $student['status'] ?? 'Pending',
-            'collection' => $selectedDepartment,
-            'password' => $password
-        ];
+    'id' => $studentIdNum,
+    'student_id' => $student['student id'] ?? '',
+    'first_name' => $student['first name'] ?? '',
+    'middle_name' => $student['middle name'] ?? '',
+    'last_name' => $student['last name'] ?? '',
+    'email' => $student['email'] ?? '',
+    'academic_year' => $student['academic year'] ?? '',
+    'program' => $student['program'] ?? '',
+    'section' => $student['section'] ?? '',
+    'department_section' => $student['department section'] ?? $collections[$selectedDepartment],
+    'motto' => $student['motto'] ?? '',
+    'honors' => $student['honors'] ?? '',
+    'milestone' => $student['milestone'] ?? '',
+    'batch_name' => $student['batch name'] ?? '',
+    'status' => $student['status'] ?? 'Pending',
+    'collection' => $selectedDepartment,
+    'password' => $password
+];
+
     }
 } catch (Exception $e) {
     $allStudents = [];
@@ -252,23 +260,197 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
                                             </g>
                                         </svg>
                                     </div>
+
+
+                                    <!-- Edit Button -->
                                     <button class="action-btn edit-btn"
-                                        onclick="editStudent('<?php echo htmlspecialchars($student['student_id']); ?>', '<?php echo htmlspecialchars($student['collection']); ?>')">
+                                        onclick="openModal('editModal_<?php echo $student['student_id']; ?>')">
                                         <i class="fas fa-edit"></i>
                                     </button>
-                                    <button class="action-btn delete-btn"
-                                        onclick="deleteStudent('<?php echo htmlspecialchars($student['student_id']); ?>', '<?php echo htmlspecialchars($student['collection']); ?>')">
-                                        <i class="fa-solid fa-trash-can"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <?php endforeach; ?>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
+
+                                    <!-- Modal -->
+                                    <div id="editModal_<?php echo $student['student_id']; ?>" class="editStudentModal">
+                                        <div class="modal-content">
+
+                                            <!-- Header -->
+                                            <div class="modal-header">
+                                                <i class="fas fa-user-edit modal-icon"></i>
+                                                <h3>Edit Student</h3>
+                                            </div>
+
+                                            <!-- Body -->
+                                            <div class="modal-body">
+                                                <form method="POST" action="updateStudent.php">
+                                                    <input type="hidden" name="student_id"
+                                                        value="<?php echo htmlspecialchars($student['student_id']); ?>">
+                                                    <input type="hidden" name="collection"
+                                                        value="<?php echo htmlspecialchars($student['collection']); ?>">
+
+                                                    <div class="form-group">
+
+                                                        <!-- Personal Information Section -->
+                                                        <div class="section">
+                                                            <div class="section-header">Personal Information</div>
+
+                                                            <label for="first-name">First Name:</label>
+                                                            <input type="text" id="first-name" name="first_name"
+                                                                value="<?php echo htmlspecialchars($student['first_name']); ?>"
+                                                                required oninput="allowOnlyLetters(this)"
+                                                                onkeypress="return /[a-zA-Z\s]/.test(event.key)"
+                                                                placeholder="First Name">
+
+                                                            <label for="middle-name">Middle Name:</label>
+                                                            <input type="text" id="middle-name" name="middle_name"
+                                                                value="<?php echo htmlspecialchars($student['middle_name']); ?>"
+                                                                oninput="allowOnlyLetters(this);removeSpaces(this)"
+                                                                onkeypress="return /[a-zA-Z\s]/.test(event.key)"
+                                                                placeholder="Middle Name">
+
+                                                            <label for="last-name">Last Name:</label>
+                                                            <input type="text" id="last-name" name="last_name"
+                                                                value="<?php echo htmlspecialchars($student['last_name']); ?>"
+                                                                required
+                                                                oninput="allowOnlyLetters(this);removeSpaces(this)"
+                                                                onkeypress="return /[a-zA-Z\s]/.test(event.key)"
+                                                                placeholder="Last Name">
+
+                                                            <label for="email">Email:</label>
+                                                            <input type="text" id="email" name="email"
+                                                                value="<?php echo htmlspecialchars($student['email']); ?>"
+                                                                oninput="removeSpaces(this)" placeholder="Email">
+
+                                                            <label for="password">Password:</label>
+                                                            <input type="text" id="password" name="password"
+                                                                value="<?php echo htmlspecialchars($student['password']); ?>"
+                                                                placeholder="Password">
+                                                        </div>
+
+                                                        <!-- Academic Information Section -->
+                                                        <div class="section">
+                                                            <div class="section-header">Academic Information</div>
+
+                                                            <label for="academic-year">Academic Year:</label>
+                                                            <input type="text" id="academic-year" name="academic_year"
+                                                                value="<?php echo htmlspecialchars($student['academic_year']); ?>"
+                                                                placeholder="0000-0000" maxlength="9"
+                                                                oninput="formatAcademicYear(this)">
+
+                                                            <label for="program">Program:</label>
+                                                            <select id="program" name="program">
+                                                                <option value="" disabled>Select a program</option>
+                                                                <option value="bsme"
+                                                                    <?php if($student['program']=="bsme") echo "selected"; ?>>
+                                                                    BS Marine Engineering</option>
+                                                                <option value="bsmt"
+                                                                    <?php if($student['program']=="bsmt") echo "selected"; ?>>
+                                                                    BS Marine Transportation</option>
+                                                                <option value="bscje"
+                                                                    <?php if($student['program']=="bscje") echo "selected"; ?>>
+                                                                    BS Criminal Justice Education</option>
+                                                                <option value="bstm"
+                                                                    <?php if($student['program']=="bstm") echo "selected"; ?>>
+                                                                    BS Tourism Management</option>
+                                                                <option value="btvted"
+                                                                    <?php if($student['program']=="btvted") echo "selected"; ?>>
+                                                                    BS Technical-Vocational Teacher Education</option>
+                                                                <option value="beced"
+                                                                    <?php if($student['program']=="beced") echo "selected"; ?>>
+                                                                    BS Early Childhood Education</option>
+                                                                <option value="bsn"
+                                                                    <?php if($student['program']=="bsn") echo "selected"; ?>>
+                                                                    BS Nursing</option>
+                                                                <option value="bsis"
+                                                                    <?php if($student['program']=="bsis") echo "selected"; ?>>
+                                                                    BS Information System</option>
+                                                                <option value="bsma"
+                                                                    <?php if($student['program']=="bsma") echo "selected"; ?>>
+                                                                    BS Management Accounting</option>
+                                                                <option value="bse"
+                                                                    <?php if($student['program']=="bse") echo "selected"; ?>>
+                                                                    BS Entrepreneurship</option>
+                                                            </select>
+
+                                                            <label for="section">Section:</label>
+                                                            <input type="text" id="section" name="section"
+                                                                value="<?php echo htmlspecialchars($student['section']); ?>"
+                                                                placeholder="Section">
+                                                            <label for="student-id">Student ID:</label>
+                                                            <input type="text" id="student-id" name="student_id"
+                                                                value="<?php echo htmlspecialchars($student['student_id']); ?>"
+                                                                placeholder="0000-000000" maxlength="11"
+                                                                oninput="formatStudentID(this)">
+                                                        </div>
+
+                                                        <!-- Additional / Optional Section -->
+                                                        <div class="section">
+                                                            <div class="section-header">Additional Information /
+                                                                Optional</div>
+
+                                                            <label for="motto">Personal Philosophy:</label>
+                                                            <input type="text" id="motto" name="motto"
+                                                                value="<?php echo htmlspecialchars($student['motto']); ?>"
+                                                                placeholder="Personal Philosophy">
+
+                                                            <label for="honors">Latin Awards:</label>
+                                                            <input type="text" id="honors" name="honors"
+                                                                value="<?php echo htmlspecialchars($student['honors']); ?>"
+                                                                placeholder="Latin Awards">
+
+                                                            <label for="milestone">Career Highlights:</label>
+                                                            <input type="text" id="milestone" name="milestone"
+                                                                value="<?php echo htmlspecialchars($student['milestone']); ?>"
+                                                                placeholder="Career Highlights">
+
+                                                            <label for="batch-name">Batch Name:</label>
+                                                            <input type="text" id="batch-name" name="batch_name"
+                                                                value="<?php echo isset($student['batch name']) ? htmlspecialchars($student['batch name']) : ''; ?>"
+                                                                placeholder="Batch Name"
+                                                                oninput="allowOnlyLetters(this)">
+
+                                                            <!-- Buttons -->
+                                                            <div class="modal-buttons">
+                                                                <button type="submit"
+                                                                    class="modal-btn confirm">Save</button>
+                                                                <button type="button" class="modal-btn cancel"
+                                                                    onclick="closeModal('editModal_<?php echo $student['student_id']; ?>')">
+                                                                    Cancel
+                                                                </button>
+
+                                                            </div>
+
+
+                                                        </div>
+
+                                                    </div>
+
+
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+
+
+
+
+                                    </form>
                 </div>
             </div>
+            <button class="action-btn delete-btn"
+                onclick="deleteStudent('<?php echo htmlspecialchars($student['student_id']); ?>', '<?php echo htmlspecialchars($student['collection']); ?>')">
+                <i class="fa-solid fa-trash-can"></i>
+            </button>
+            </td>
+            </tr>
+            <?php endforeach; ?>
+            <?php endif; ?>
+            </tbody>
+            </table>
         </div>
+    </div>
+    </div>
     </div>
 
     <script>
@@ -278,6 +460,29 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
             window.location.href = "?department=" + encodeURIComponent(dept);
         }
     });
+
+    const editBtn = document.querySelector('.edit-btn');
+    const modal = document.querySelector('.editStudentModal');
+    const closeBtn = document.querySelector('.editStudentModal .close-btn');
+    const cancelBtn = document.querySelector('.editStudentModal .modal-btn.cancel'); // Cancel button
+
+    if (editBtn && modal) {
+        editBtn.addEventListener('click', () => {
+            modal.classList.add('active');
+        });
+    }
+
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+    }
+
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+    }
     </script>
 
     <script src="../Assets/js/StudentList.js"></script>
