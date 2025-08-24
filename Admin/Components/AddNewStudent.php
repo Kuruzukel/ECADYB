@@ -7,10 +7,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     header('Content-Type: application/json');
 
     // Get MongoDB connection string from environment variable
-$mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
-$client   = new Client($mongoUrl);
+    $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
+    $client   = new Client($mongoUrl);
     $db = $client->Departments;
 
+    // Mapping program shortcuts to full names
     $programMap = [
         "bsme" => "BS Marine Engineering",
         "bsmt" => "BS Marine Transportation",
@@ -29,6 +30,7 @@ $client   = new Client($mongoUrl);
 
     $section = trim($_POST["section"] ?? '');
 
+    // Create student document
     $student = [
         "first name" => trim($_POST["first_name"] ?? ''),
         "middle name" => trim($_POST["middle_name"] ?? ''),
@@ -36,15 +38,17 @@ $client   = new Client($mongoUrl);
         "email" => trim($_POST["email"] ?? ''),
         "academic year" => trim($_POST["academic_year"] ?? ''),
         "student id" => trim($_POST["student_id"] ?? ''),
-        "program" => $programName,
+        "program" => $programName, // Full program name
         "section" => $section,
-        "department section" => $programName . ' - ' . $section,
+        // Department section now uses shortcut letters in ALL CAPS
+        "department section" => strtoupper($programKey) . ' - ' . strtoupper($section),
         "motto" => trim($_POST["motto"] ?? ''),
         "honors" => trim($_POST["honors"] ?? ''),
         "milestone" => trim($_POST["milestone"] ?? ''),
         "batch name" => trim($_POST["batch_name"] ?? '')
     ];
 
+    // Insert into collection named by shortcut (e.g., bsme, bsmt)
     $collection = $db->$programKey;
 
     $studentCount = $collection->countDocuments();
@@ -59,6 +63,7 @@ $client   = new Client($mongoUrl);
     exit;
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
