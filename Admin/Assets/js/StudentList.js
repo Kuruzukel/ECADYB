@@ -310,13 +310,17 @@ function initializeStatusUpdates() {
       const status = this.checked ? "Active" : "Pending";
 
       try {
-        const res = await fetch(STATUS_ENDPOINT, {
+        // Use relative path to avoid deployment path issues
+        const endpoint = "./Connection/UpdateStatus.php";
+
+        const res = await fetch(endpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ student_id: studentId, collection, status }),
         });
 
         const text = await res.text();
+        console.log("Raw response from server:", text); // <-- debug log
         let data;
 
         try {
@@ -329,6 +333,7 @@ function initializeStatusUpdates() {
         }
 
         if (data && data.success) {
+          // Update checkbox dataset and table cell
           this.dataset.status = status.toLowerCase();
           const row = this.closest("tr");
           const statusCell = row?.querySelector(".student-status");
@@ -340,6 +345,7 @@ function initializeStatusUpdates() {
                 : "status-pending"
             }`;
           }
+
           applyFilters();
           showNotification(data.message || "Status updated.", "success");
         } else {
