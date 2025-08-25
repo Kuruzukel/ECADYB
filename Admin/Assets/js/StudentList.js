@@ -84,27 +84,8 @@ function applyTheme(themeName) {
 // ----------------------
 // Global constants
 // ----------------------
-const STATUS_ENDPOINT = "../Connection/UpdateStatus.php"; // Only one definition
-
-// ----------------------
-// Notifications
-// ----------------------
-function showNotification(message, type = "success", duration = 3000) {
-  const container = document.getElementById("notification-container");
-  if (!container) return;
-
-  const notif = document.createElement("div");
-  notif.className = `notification ${type} show`;
-  notif.innerHTML = `<i class="fas ${
-    type === "success" ? "fa-check-circle" : "fa-exclamation-circle"
-  }"></i><span>${message}</span>`;
-  container.appendChild(notif);
-
-  setTimeout(() => {
-    notif.classList.remove("show");
-    setTimeout(() => notif.remove(), 500);
-  }, duration);
-}
+// Use dynamic origin for Railway & local
+const STATUS_ENDPOINT = `${window.location.origin}/ECADYB/Connection/UpdateStatus.php`;
 
 // ----------------------
 // Initialize all DOM events on page load
@@ -131,8 +112,9 @@ function initializeSelectAll() {
     studentCheckboxes.forEach((checkbox) => {
       const was = checkbox.checked;
       checkbox.checked = this.checked;
-      if (was !== this.checked)
+      if (was !== this.checked) {
         checkbox.dispatchEvent(new Event("change", { bubbles: true }));
+      }
     });
   });
 
@@ -176,26 +158,53 @@ function applyFilters() {
     if (row.classList.contains("header")) return;
 
     let showRow = true;
+
     if (deptVal) {
       const deptValue =
         row.querySelector(".student-checkbox")?.dataset.collection;
       if (deptValue !== deptVal) showRow = false;
     }
+
     if (statusVal) {
       const statusAttr =
         row.querySelector(".student-checkbox")?.dataset.status || "";
       if (statusAttr.toLowerCase() !== statusVal.toLowerCase()) showRow = false;
     }
+
     row.style.display = showRow ? "" : "none";
   });
 }
 
 // ----------------------
+// Notifications
+// ----------------------
+function showNotification(message, type = "success") {
+  const container = document.getElementById("notification-container");
+  if (!container) return;
+
+  const notif = document.createElement("div");
+  notif.className = `notification ${type} show`;
+  notif.innerHTML = `
+    <i class="fas ${
+      type === "success" ? "fa-check-circle" : "fa-exclamation-circle"
+    }"></i>
+    <span>${message}</span>
+  `;
+  container.appendChild(notif);
+
+  setTimeout(() => {
+    notif.classList.remove("show");
+    setTimeout(() => notif.remove(), 500);
+  }, 3000);
+}
+
+// ----------------------
 // Delete student modal
 // ----------------------
-let deleteModal = document.getElementById("delete-modal-overlay");
-let confirmDeleteBtn = document.getElementById("confirm-delete-btn");
-let cancelDeleteBtn = document.getElementById("cancel-delete-btn");
+const deleteModal = document.getElementById("delete-modal-overlay");
+const confirmDeleteBtn = document.getElementById("confirm-delete-btn");
+const cancelDeleteBtn = document.getElementById("cancel-delete-btn");
+
 let selectedStudentId = null;
 let selectedCollection = null;
 
@@ -217,14 +226,17 @@ async function confirmDeleteStudent() {
   confirmDeleteBtn.disabled = true;
 
   try {
-    const res = await fetch("../Connection/DeleteStudent.php", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        student_id: selectedStudentId,
-        collection: selectedCollection,
-      }),
-    });
+    const res = await fetch(
+      `${window.location.origin}/ECADYB/Connection/DeleteStudent.php`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          student_id: selectedStudentId,
+          collection: selectedCollection,
+        }),
+      }
+    );
 
     const data = await res.json();
     showNotification(data.message, data.success ? "success" : "error");
@@ -281,7 +293,7 @@ function togglePass(icon) {
 }
 
 // ----------------------
-// Update Status
+// Update status (Railway-ready)
 // ----------------------
 function initializeStatusUpdates() {
   const studentCheckboxes = document.querySelectorAll(".student-checkbox");
@@ -311,7 +323,19 @@ function initializeStatusUpdates() {
         });
 
         if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
-        const data = await res.json();
+
+        let data;
+        try {
+          data = await res.json();
+        } catch (err) {
+          console.error("[UpdateStatus] Invalid JSON:", err);
+          showNotification(
+            "Server error: Invalid JSON response from UpdateStatus.php",
+            "error"
+          );
+          this.checked = !this.checked;
+          return;
+        }
 
         if (data && data.success) {
           this.dataset.status = status.toLowerCase();
@@ -325,6 +349,7 @@ function initializeStatusUpdates() {
                 : "status-pending"
             }`;
           }
+          applyFilters();
           showNotification(
             data.message || "Status updated successfully",
             "success"
