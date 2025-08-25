@@ -1,5 +1,5 @@
 // ================================
-// StudentList.js (clean + updated)
+// StudentList.js (Updated for DeleteStudent.php & Notifications)
 // ================================
 
 // ----------------------
@@ -88,6 +88,7 @@ window.addEventListener("DOMContentLoaded", () => {
   initializeSelectAll();
   initializeFilters();
   initializeStatusUpdates();
+  initializeDeleteModal(); // renamed for clarity
 });
 
 // ----------------------
@@ -140,9 +141,7 @@ function initializeFilters() {
   const statusFilter = document.getElementById("status-filter");
 
   [entriesCount, departmentFilter, statusFilter].forEach((filter) => {
-    if (filter) {
-      filter.addEventListener("change", applyFilters);
-    }
+    if (filter) filter.addEventListener("change", applyFilters);
   });
 
   applyFilters();
@@ -163,16 +162,14 @@ function applyFilters() {
     let showRow = true;
 
     if (deptVal) {
-      const deptValue = row
-        .querySelector(".student-checkbox")
-        ?.getAttribute("data-collection");
+      const deptValue =
+        row.querySelector(".student-checkbox")?.dataset.collection;
       if (deptValue !== deptVal) showRow = false;
     }
 
     if (statusVal) {
       const statusAttr =
-        row.querySelector(".student-checkbox")?.getAttribute("data-status") ||
-        "";
+        row.querySelector(".student-checkbox")?.dataset.status || "";
       if (statusAttr.toLowerCase() !== statusVal.toLowerCase()) showRow = false;
     }
 
@@ -181,46 +178,101 @@ function applyFilters() {
 }
 
 // ----------------------
-// Edit student
+// Notifications
 // ----------------------
-function editStudent(studentId, collection) {
-  window.location.href = `EditStudentInformation.php?student_id=${encodeURIComponent(
-    studentId
-  )}&collection=${encodeURIComponent(collection)}`;
+function showNotification(message, type = "success") {
+  const container = document.getElementById("notification-container");
+  if (!container) return;
+
+  const notif = document.createElement("div");
+  notif.className = `notification ${type} show`;
+  notif.innerHTML = `
+    <i class="fas ${
+      type === "success" ? "fa-check-circle" : "fa-exclamation-circle"
+    }"></i>
+    <span>${message}</span>
+  `;
+  container.appendChild(notif);
+
+  setTimeout(() => {
+    notif.classList.remove("show");
+    setTimeout(() => notif.remove(), 500);
+  }, 3000);
 }
 
 // ----------------------
-// Delete student
+// Delete student modal
 // ----------------------
-function deleteStudent(studentId, collection) {
-  if (
-    confirm(
-      "Are you sure you want to delete this student? This action cannot be undone."
-    )
-  ) {
-    fetch("../../Connection/DeleteStudent.php", {
+const deleteModal = document.getElementById("delete-modal-overlay");
+const confirmDeleteBtn = document.getElementById("confirm-delete-btn");
+const cancelDeleteBtn = document.getElementById("cancel-delete-btn");
+
+let selectedStudentId = null;
+let selectedCollection = null;
+
+function openDeleteModal(studentId, collection) {
+  selectedStudentId = studentId?.trim();
+  selectedCollection = collection?.trim();
+  if (deleteModal) deleteModal.style.display = "flex";
+}
+
+function closeDeleteModal() {
+  selectedStudentId = null;
+  selectedCollection = null;
+  if (deleteModal) deleteModal.style.display = "none";
+}
+
+async function confirmDeleteStudent() {
+  if (!selectedStudentId || !selectedCollection) return;
+
+  confirmDeleteBtn.disabled = true;
+
+  try {
+    const res = await fetch("/ECADYB/Connection/DeleteStudent.php", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ student_id: studentId, collection }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.success) {
-          alert("Student deleted successfully!");
-          location.reload();
-        } else {
-          alert("Error deleting student: " + data.message);
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        alert("Error deleting student. Please try again.");
-      });
+      body: JSON.stringify({
+        student_id: selectedStudentId,
+        collection: selectedCollection,
+      }),
+    });
+
+    const data = await res.json();
+    showNotification(data.message, data.success ? "success" : "error");
+
+    if (data.success) {
+      // Remove student row from table
+      const row = document
+        .querySelector(
+          `.student-checkbox[data-student-id="${selectedStudentId}"]`
+        )
+        ?.closest("tr");
+      if (row) row.remove();
+    }
+  } catch (err) {
+    console.error("Error deleting student:", err);
+    showNotification("Error deleting student.", "error");
+  } finally {
+    confirmDeleteBtn.disabled = false;
+    closeDeleteModal(); // only close after fetch completes
   }
 }
 
+function initializeDeleteModal() {
+  if (!confirmDeleteBtn || !cancelDeleteBtn || !deleteModal) return;
+
+  cancelDeleteBtn.addEventListener("click", closeDeleteModal);
+  deleteModal.addEventListener("click", (e) => {
+    if (e.target === deleteModal) closeDeleteModal();
+  });
+  confirmDeleteBtn.addEventListener("click", confirmDeleteStudent);
+}
+
+// Initialize delete modal when DOM is ready
+document.addEventListener("DOMContentLoaded", initializeDeleteModal);
+
 // ----------------------
-// Toggle password view
+// Toggle password
 // ----------------------
 function togglePass(icon) {
   const studentRow = icon.closest(".student-row");
@@ -270,34 +322,30 @@ function initializeStatusUpdates() {
         try {
           data = JSON.parse(text);
         } catch (e) {
-          console.error("Non-JSON response from UpdateStatus.php:", text);
-          throw new Error("Invalid response from server.");
+          console.error("Non-JSON response:", text);
+          throw new Error("Invalid response");
         }
 
         if (data && data.success) {
-          this.setAttribute("data-status", status.toLowerCase());
-
-          // update status cell in table
+          this.dataset.status = status.toLowerCase();
           const row = this.closest("tr");
           const statusCell = row.querySelector(".student-status");
           if (statusCell) {
             statusCell.textContent = status;
-            statusCell.className =
-              "student-status " +
-              (status.toLowerCase() === "active"
+            statusCell.className = `student-status ${
+              status.toLowerCase() === "active"
                 ? "status-active"
-                : "status-pending");
+                : "status-pending"
+            }`;
           }
-
           applyFilters();
         } else {
-          console.error("Update failed:", data);
-          alert("Failed to update status.");
+          showNotification("Failed to update status.", "error");
           this.checked = !this.checked;
         }
       } catch (err) {
-        console.error("Network/Server error:", err);
-        alert("Error updating status. Check console for details.");
+        console.error(err);
+        showNotification("Error updating status.", "error");
         this.checked = !this.checked;
       } finally {
         this.dataset.busy = "0";

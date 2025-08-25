@@ -436,9 +436,38 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
                 </div>
             </div>
             <button class="action-btn delete-btn"
-                onclick="deleteStudent('<?php echo htmlspecialchars($student['student_id']); ?>', '<?php echo htmlspecialchars($student['collection']); ?>')">
+                onclick="openDeleteModal('<?php echo htmlspecialchars($student['student_id']); ?>', '<?php echo htmlspecialchars($student['collection']); ?>')">
                 <i class="fa-solid fa-trash-can"></i>
             </button>
+
+            <!-- Delete Confirmation Modal -->
+            <div class="modal-overlay" id="delete-modal-overlay">
+                <div class="modal">
+                    <div class="modal-header">
+                        <i class="fas fa-question-circle modal-icon"></i>
+                        <h3>Confirm Delete</h3>
+                    </div>
+                    <div class="modal-content">
+                        <p>Are you sure you want to delete this student?</p>
+                    </div>
+                    <div class="modal-buttons">
+                        <button class="modal-btn confirm" id="confirm-delete-btn">
+                            <i class="fas fa-check"></i> Yes, Delete
+                        </button>
+                        <button class="modal-btn cancel" id="cancel-delete-btn">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notification container -->
+            <div id="notification-container"></div>
+
+
+
+
+
             </td>
             </tr>
             <?php endforeach; ?>
