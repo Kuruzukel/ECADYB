@@ -456,28 +456,29 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
         }
     });
 
-    const editBtn = document.querySelector('.edit-btn');
-    const modal = document.querySelector('.editStudentModal');
-    const closeBtn = document.querySelector('.editStudentModal .close-btn');
-    const cancelBtn = document.querySelector('.editStudentModal .modal-btn.cancel'); // Cancel button
-
-    if (editBtn && modal) {
-        editBtn.addEventListener('click', () => {
-            modal.classList.add('active');
-        });
+    function openModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.classList.add("active");
+        }
     }
 
-    if (closeBtn) {
-        closeBtn.addEventListener('click', () => {
-            modal.classList.remove('active');
-        });
+    function closeModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.classList.remove("active");
+        }
     }
 
-    if (cancelBtn) {
-        cancelBtn.addEventListener('click', () => {
-            modal.classList.remove('active');
+    // Optional: close modal if user clicks outside the modal-content
+    window.addEventListener("click", function(event) {
+        const modals = document.querySelectorAll(".editStudentModal");
+        modals.forEach(modal => {
+            if (event.target === modal) {
+                modal.classList.remove("active");
+            }
         });
-    }
+    });
     </script>
 
     <script src="../Assets/js/StudentList.js"></script>
