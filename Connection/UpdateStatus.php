@@ -15,24 +15,33 @@ $db       = $client->Departments;
 // Handle POST request
 // ----------------------
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Collect values
-    $studentId   = $_POST['student_id'] ?? null;
-    $originalId  = $_POST['original_student_id'] ?? null; // if form uses hidden ID
-    $collection  = $_POST['collection'] ?? null;
-    $status      = $_POST['status'] ?? null;
+
+    // Read JSON input
+    $input = json_decode(file_get_contents('php://input'), true);
+
+    $studentId  = $input['student_id'] ?? null;
+    $collection = $input['collection'] ?? null;
+    $status     = $input['status'] ?? null;
 
     // Validation
-    if ($collection && $status && ($studentId || $originalId)) {
+    if (!$studentId || !$collection || !$status) {
+        echo json_encode([
+            "success" => false,
+            "message" => "Missing required data",
+            "received" => $input
+        ]);
+        exit;
+    }
+
+    // Access the collection
+    try {
         $coll = $db->$collection;
 
-        // Use original ID for lookup if provided, else fall back to student_id
-        $lookupId = $originalId ?: $studentId;
-
-        // Match either "student_id" or "student id" (in case schema differs)
+        // Filter by student_id or "student id"
         $filter = [
             '$or' => [
-                ['student_id' => $lookupId],
-                ['student id' => $lookupId]
+                ['student_id' => $studentId],
+                ['student id' => $studentId]
             ]
         ];
 
@@ -40,28 +49,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $result = $coll->updateOne($filter, $update);
 
+        if ($result->getModifiedCount() > 0 || $result->getMatchedCount() > 0) {
+            echo json_encode([
+                "success"     => true,
+                "message"     => "Status updated successfully",
+                "lookup_id"   => $studentId,
+                "new_status"  => $status,
+                "collection"  => $collection,
+                "matched"     => $result->getMatchedCount(),
+                "modified"    => $result->getModifiedCount()
+            ]);
+        } else {
+            echo json_encode([
+                "success" => false,
+                "message" => "No matching student found",
+                "lookup_id" => $studentId,
+                "collection" => $collection
+            ]);
+        }
+    } catch (Exception $e) {
         echo json_encode([
-            "success"     => true,
-            "lookup_id"   => $lookupId,
-            "new_status"  => $status,
-            "collection"  => $collection,
-            "matched"     => $result->getMatchedCount(),
-            "modified"    => $result->getModifiedCount()
+            "success" => false,
+            "message" => "Database error: " . $e->getMessage()
         ]);
-        exit;
     }
 
-    // If missing data
-    echo json_encode([
-        "success"  => false,
-        "message"  => "Missing required data",
-        "received" => $_POST // debug helper
-    ]);
     exit;
 }
 
 // ----------------------
-// Fallback for non-POST
+// Fallback for non-POST requests
 // ----------------------
 echo json_encode([
     "success" => false,

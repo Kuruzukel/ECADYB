@@ -1,5 +1,5 @@
 // ================================
-// StudentList.js (Updated for DeleteStudent.php & Notifications)
+// StudentList.js (Railway-ready)
 // ================================
 
 // ----------------------
@@ -81,18 +81,8 @@ function applyTheme(themeName) {
   }
 }
 
-window.addEventListener("DOMContentLoaded", () => {
-  const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
-  applyTheme(savedTheme);
-
-  initializeSelectAll();
-  initializeFilters();
-  initializeStatusUpdates();
-  initializeDeleteModal(); // renamed for clarity
-});
-
 // ----------------------
-// Helpers
+// Global constants
 // ----------------------
 const STATUS_ENDPOINT = "/ECADYB/Connection/UpdateStatus.php";
 
@@ -103,7 +93,20 @@ function toForm(bodyObj) {
 }
 
 // ----------------------
-// Select all functionality
+// Initialize all DOM events on page load
+// ----------------------
+window.addEventListener("DOMContentLoaded", () => {
+  const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
+  applyTheme(savedTheme);
+
+  initializeSelectAll();
+  initializeFilters();
+  initializeStatusUpdates();
+  initializeDeleteModal();
+});
+
+// ----------------------
+// Select all checkboxes
 // ----------------------
 function initializeSelectAll() {
   const selectAllCheckbox = document.getElementById("select-all-header");
@@ -133,7 +136,7 @@ function initializeSelectAll() {
 }
 
 // ----------------------
-// Filter functionality
+// Filters (department, status, entries)
 // ----------------------
 function initializeFilters() {
   const entriesCount = document.getElementById("entries-count");
@@ -241,7 +244,6 @@ async function confirmDeleteStudent() {
     showNotification(data.message, data.success ? "success" : "error");
 
     if (data.success) {
-      // Remove student row from table
       const row = document
         .querySelector(
           `.student-checkbox[data-student-id="${selectedStudentId}"]`
@@ -254,7 +256,7 @@ async function confirmDeleteStudent() {
     showNotification("Error deleting student.", "error");
   } finally {
     confirmDeleteBtn.disabled = false;
-    closeDeleteModal(); // only close after fetch completes
+    closeDeleteModal();
   }
 }
 
@@ -268,11 +270,8 @@ function initializeDeleteModal() {
   confirmDeleteBtn.addEventListener("click", confirmDeleteStudent);
 }
 
-// Initialize delete modal when DOM is ready
-document.addEventListener("DOMContentLoaded", initializeDeleteModal);
-
 // ----------------------
-// Toggle password
+// Toggle password visibility
 // ----------------------
 function togglePass(icon) {
   const studentRow = icon.closest(".student-row");
@@ -296,7 +295,7 @@ function togglePass(icon) {
 }
 
 // ----------------------
-// Update status
+// Update status (Railway-ready)
 // ----------------------
 function initializeStatusUpdates() {
   const studentCheckboxes = document.querySelectorAll(".student-checkbox");
@@ -313,23 +312,26 @@ function initializeStatusUpdates() {
       try {
         const res = await fetch(STATUS_ENDPOINT, {
           method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: toForm({ student_id: studentId, collection, status }),
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ student_id: studentId, collection, status }),
         });
 
         const text = await res.text();
         let data;
+
         try {
           data = JSON.parse(text);
         } catch (e) {
-          console.error("Non-JSON response:", text);
-          throw new Error("Invalid response");
+          console.error("UpdateStatus.php response is not valid JSON:", text);
+          showNotification("Server error: Invalid response.", "error");
+          this.checked = !this.checked;
+          return;
         }
 
         if (data && data.success) {
           this.dataset.status = status.toLowerCase();
           const row = this.closest("tr");
-          const statusCell = row.querySelector(".student-status");
+          const statusCell = row?.querySelector(".student-status");
           if (statusCell) {
             statusCell.textContent = status;
             statusCell.className = `student-status ${
@@ -339,12 +341,13 @@ function initializeStatusUpdates() {
             }`;
           }
           applyFilters();
+          showNotification(data.message || "Status updated.", "success");
         } else {
-          showNotification("Failed to update status.", "error");
+          showNotification(data.message || "Failed to update status.", "error");
           this.checked = !this.checked;
         }
       } catch (err) {
-        console.error(err);
+        console.error("Fetch error:", err);
         showNotification("Error updating status.", "error");
         this.checked = !this.checked;
       } finally {
