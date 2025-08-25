@@ -311,7 +311,7 @@ function initializeStatusUpdates() {
 
       try {
         // Use relative path to avoid deployment path issues
-        const endpoint = "./Connection/UpdateStatus.php";
+        const endpoint = "/ECADYB/Connection/UpdateStatus.php";
 
         const res = await fetch(endpoint, {
           method: "POST",
