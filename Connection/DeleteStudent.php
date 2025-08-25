@@ -3,7 +3,6 @@ session_start();
 require __DIR__ . '/../vendor/autoload.php';
 
 use MongoDB\Client;
-use MongoDB\BSON\Regex;
 
 header('Content-Type: application/json');
 
@@ -60,14 +59,17 @@ $collection = $departmentsDB->$collectionName;
 // Attempt deletion
 // ----------------------
 try {
-    // Use regex for exact match ignoring case & trimming spaces
-    $studentIdRegex = new Regex('^' . preg_quote($studentId) . '$', 'i');
+    // Use regex array for exact match ignoring case
+    $studentIdRegex = [
+        '$regex' => '^' . preg_quote($studentId) . '$',
+        '$options' => 'i'
+    ];
 
     // Find student by "student id" (space included)
     $student = $collection->findOne(['student id' => $studentIdRegex]);
 
     if (!$student) {
-        // Optional: debug log all student IDs for Railway
+        // Debug: list all student IDs in collection (optional)
         $allStudents = $collection->find([], ['projection' => ['student id' => 1]]);
         $ids = [];
         foreach ($allStudents as $s) {
