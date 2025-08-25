@@ -130,7 +130,7 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
             <h1>Student List</h1>
         </div>
 
-        
+
 
         <div class="form-content">
             <div class="card">
@@ -289,7 +289,9 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
                                             <div class="modal-body">
                                                 <form id="edit-student-form-<?php echo $student['student_id']; ?>">
                                                     <!-- Hidden collection field for JavaScript -->
-                                                    <input type="hidden" id="collection-hidden-<?php echo $student['student_id']; ?>" value="<?php echo htmlspecialchars($student['collection'] ?? 'students'); ?>">
+                                                    <input type="hidden"
+                                                        id="collection-hidden-<?php echo $student['student_id']; ?>"
+                                                        value="<?php echo htmlspecialchars($student['collection'] ?? 'students'); ?>">
 
                                                     <div class="form-group">
 
@@ -407,7 +409,7 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
                                                                 value="<?php echo htmlspecialchars($student['section'] ?? ''); ?>"
                                                                 placeholder="Section">
 
-                                                            
+
 
                                                             <label
                                                                 for="student_id<?php echo $student['student_id']; ?>">Student
@@ -462,7 +464,7 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
                                                                 placeholder="Batch Name"
                                                                 oninput="allowOnlyLetters(this)">
 
-                                                            
+
 
                                                             <!-- Buttons -->
                                                             <div class="modal-buttons">
