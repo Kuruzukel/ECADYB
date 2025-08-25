@@ -231,9 +231,13 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
                                 </td>
                                 <td class="student-actions">
                                     <input type="checkbox" class="student-checkbox"
-                                        data-student-id="<?php echo htmlspecialchars($student['student_id']); ?>"
-                                        data-collection="<?php echo htmlspecialchars($student['collection']); ?>"
-                                        <?php echo ($student['status'] === 'Active') ? 'checked' : ''; ?>>
+                                        data-student-id="<?php echo htmlspecialchars($student['student_id'] ?? $student['student id'] ?? ''); ?>"
+                                        data-collection="<?php echo htmlspecialchars($student['collection'] ?? ''); ?>"
+                                        data-status="<?php echo strtolower($student['status'] ?? 'pending'); ?>"
+                                        <?php echo (strtolower($student['status'] ?? '') === 'active') ? 'checked' : ''; ?>>
+
+
+
                                     <div class="eyeIcon close eyeIcon-list" onclick="togglePass(this)"
                                         style="margin-right:0.5em;display:flex;align-items:center;cursor:pointer;">
                                         <!-- Closed eye SVG -->
@@ -428,13 +432,6 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
                                             </div>
                                         </div>
                                     </div>
-
-
-
-
-
-
-
                                     </form>
                 </div>
             </div>
@@ -449,8 +446,6 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
             </tbody>
             </table>
         </div>
-    </div>
-    </div>
     </div>
 
     <script>

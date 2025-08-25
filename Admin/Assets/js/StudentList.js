@@ -1,3 +1,10 @@
+// ================================
+// StudentList.js (clean + updated)
+// ================================
+
+// ----------------------
+// Themes
+// ----------------------
 const themes = {
   "Theme 1": {
     "--primary-bg": "#470a0a",
@@ -78,117 +85,129 @@ window.addEventListener("DOMContentLoaded", () => {
   const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
   applyTheme(savedTheme);
 
-  // Initialize select all functionality
   initializeSelectAll();
-
-  // Initialize filters
   initializeFilters();
+  initializeStatusUpdates();
 });
 
+// ----------------------
+// Helpers
+// ----------------------
+const STATUS_ENDPOINT = "/ECADYB/Connection/UpdateStatus.php";
+
+function toForm(bodyObj) {
+  return Object.entries(bodyObj)
+    .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
+    .join("&");
+}
+
+// ----------------------
 // Select all functionality
+// ----------------------
 function initializeSelectAll() {
   const selectAllCheckbox = document.getElementById("select-all-header");
   const studentCheckboxes = document.querySelectorAll(".student-checkbox");
+  if (!selectAllCheckbox) return;
 
   selectAllCheckbox.addEventListener("change", function () {
     studentCheckboxes.forEach((checkbox) => {
+      const was = checkbox.checked;
       checkbox.checked = this.checked;
+      if (was !== this.checked) {
+        checkbox.dispatchEvent(new Event("change", { bubbles: true }));
+      }
     });
   });
 
-  // Update select all when individual checkboxes change
   studentCheckboxes.forEach((checkbox) => {
     checkbox.addEventListener("change", function () {
       const allChecked = Array.from(studentCheckboxes).every(
         (cb) => cb.checked
       );
       const anyChecked = Array.from(studentCheckboxes).some((cb) => cb.checked);
-
       selectAllCheckbox.checked = allChecked;
       selectAllCheckbox.indeterminate = anyChecked && !allChecked;
     });
   });
 }
 
+// ----------------------
 // Filter functionality
+// ----------------------
 function initializeFilters() {
   const entriesCount = document.getElementById("entries-count");
   const departmentFilter = document.getElementById("department-filter");
   const statusFilter = document.getElementById("status-filter");
 
-  // Add event listeners for filters
   [entriesCount, departmentFilter, statusFilter].forEach((filter) => {
     if (filter) {
-      filter.addEventListener("change", function () {
-        applyFilters();
-      });
+      filter.addEventListener("change", applyFilters);
     }
   });
+
+  applyFilters();
 }
 
 function applyFilters() {
-  const departmentFilter = document.getElementById("department-filter").value;
-  const statusFilter = document.getElementById("status-filter").value;
+  const deptVal = (
+    document.getElementById("department-filter")?.value || ""
+  ).trim();
+  const statusVal = (
+    document.getElementById("status-filter")?.value || ""
+  ).trim();
   const studentRows = document.querySelectorAll(".student-row");
 
   studentRows.forEach((row) => {
+    if (row.classList.contains("header")) return;
+
     let showRow = true;
 
-    // Department filter (uses data-collection from checkbox)
-    if (departmentFilter && departmentFilter !== "") {
+    if (deptVal) {
       const deptValue = row
         .querySelector(".student-checkbox")
         ?.getAttribute("data-collection");
-      if (deptValue !== departmentFilter) {
-        showRow = false;
-      }
+      if (deptValue !== deptVal) showRow = false;
     }
 
-    // Status filter (use data-status instead of text)
-    if (statusFilter && statusFilter !== "") {
-      const statusValue = row
-        .querySelector(".student-status")
-        ?.getAttribute("data-status");
-      if (statusValue !== statusFilter) {
-        showRow = false;
-      }
+    if (statusVal) {
+      const statusAttr =
+        row.querySelector(".student-checkbox")?.getAttribute("data-status") ||
+        "";
+      if (statusAttr.toLowerCase() !== statusVal.toLowerCase()) showRow = false;
     }
 
-    row.style.display = showRow ? "flex" : "none";
+    row.style.display = showRow ? "" : "none";
   });
 }
 
-// Edit student function
+// ----------------------
+// Edit student
+// ----------------------
 function editStudent(studentId, collection) {
-  // Redirect to edit page with student ID and collection
   window.location.href = `EditStudentInformation.php?student_id=${encodeURIComponent(
     studentId
   )}&collection=${encodeURIComponent(collection)}`;
 }
 
-// Delete student function
+// ----------------------
+// Delete student
+// ----------------------
 function deleteStudent(studentId, collection) {
   if (
     confirm(
       "Are you sure you want to delete this student? This action cannot be undone."
     )
   ) {
-    // Send delete request to server
     fetch("../../Connection/DeleteStudent.php", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        student_id: studentId,
-        collection: collection,
-      }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ student_id: studentId, collection }),
     })
       .then((response) => response.json())
       .then((data) => {
         if (data.success) {
           alert("Student deleted successfully!");
-          location.reload(); // Reload the page to update the list
+          location.reload();
         } else {
           alert("Error deleting student: " + data.message);
         }
@@ -200,29 +219,89 @@ function deleteStudent(studentId, collection) {
   }
 }
 
+// ----------------------
+// Toggle password view
+// ----------------------
 function togglePass(icon) {
   const studentRow = icon.closest(".student-row");
   if (!studentRow) return;
 
   const passwordText = studentRow.querySelector(".password-text");
-  if (!passwordText) return;
-
   const eyeOpen = studentRow.querySelector(".eyeIcon.open.eyeIcon-list");
   const eyeClose = studentRow.querySelector(".eyeIcon.close.eyeIcon-list");
 
+  if (!passwordText) return;
+
   if (eyeClose && eyeClose.style.display !== "none") {
     passwordText.textContent = passwordText.getAttribute("data-password");
-    passwordText.style.color = "#FFFFFF";
-    passwordText.style.fontSize = "14px";
-    passwordText.style.filter = "";
     eyeClose.style.display = "none";
     if (eyeOpen) eyeOpen.style.display = "flex";
   } else {
     passwordText.textContent = "********";
-    passwordText.style.color = "#FFFFFF";
-    passwordText.style.fontSize = "14px";
-    passwordText.style.filter = "";
     if (eyeClose) eyeClose.style.display = "flex";
     if (eyeOpen) eyeOpen.style.display = "none";
   }
+}
+
+// ----------------------
+// Update status
+// ----------------------
+function initializeStatusUpdates() {
+  const studentCheckboxes = document.querySelectorAll(".student-checkbox");
+
+  studentCheckboxes.forEach((checkbox) => {
+    checkbox.addEventListener("change", async function () {
+      if (this.dataset.busy === "1") return;
+      this.dataset.busy = "1";
+
+      const studentId = this.dataset.studentId;
+      const collection = this.dataset.collection;
+      const status = this.checked ? "Active" : "Pending";
+
+      try {
+        const res = await fetch(STATUS_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: toForm({ student_id: studentId, collection, status }),
+        });
+
+        const text = await res.text();
+        let data;
+        try {
+          data = JSON.parse(text);
+        } catch (e) {
+          console.error("Non-JSON response from UpdateStatus.php:", text);
+          throw new Error("Invalid response from server.");
+        }
+
+        if (data && data.success) {
+          this.setAttribute("data-status", status.toLowerCase());
+
+          // update status cell in table
+          const row = this.closest("tr");
+          const statusCell = row.querySelector(".student-status");
+          if (statusCell) {
+            statusCell.textContent = status;
+            statusCell.className =
+              "student-status " +
+              (status.toLowerCase() === "active"
+                ? "status-active"
+                : "status-pending");
+          }
+
+          applyFilters();
+        } else {
+          console.error("Update failed:", data);
+          alert("Failed to update status.");
+          this.checked = !this.checked;
+        }
+      } catch (err) {
+        console.error("Network/Server error:", err);
+        alert("Error updating status. Check console for details.");
+        this.checked = !this.checked;
+      } finally {
+        this.dataset.busy = "0";
+      }
+    });
+  });
 }
