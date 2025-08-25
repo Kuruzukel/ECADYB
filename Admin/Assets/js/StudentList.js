@@ -293,15 +293,24 @@ function togglePass(icon) {
 // ----------------------
 function initializeStatusUpdates() {
   const studentCheckboxes = document.querySelectorAll(".student-checkbox");
+  if (!studentCheckboxes.length) return;
 
   studentCheckboxes.forEach((checkbox) => {
     checkbox.addEventListener("change", async function () {
+      // prevent double-click or rapid changes
       if (this.dataset.busy === "1") return;
       this.dataset.busy = "1";
 
       const studentId = this.dataset.studentId?.trim();
       const collection = this.dataset.collection?.trim();
       const status = this.checked ? "Active" : "Pending";
+
+      if (!studentId || !collection) {
+        showNotification("Student ID or collection missing", "error");
+        this.checked = !this.checked;
+        this.dataset.busy = "0";
+        return;
+      }
 
       try {
         const res = await fetch(STATUS_ENDPOINT, {
@@ -312,7 +321,7 @@ function initializeStatusUpdates() {
 
         if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
 
-        let data = {};
+        let data;
         try {
           data = await res.json();
         } catch (err) {
@@ -326,6 +335,7 @@ function initializeStatusUpdates() {
         }
 
         if (data && data.success) {
+          // Update dataset & table cell
           this.dataset.status = status.toLowerCase();
           const row = this.closest("tr");
           const statusCell = row?.querySelector(".student-status");
