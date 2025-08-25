@@ -84,7 +84,27 @@ function applyTheme(themeName) {
 // ----------------------
 // Global constants
 // ----------------------
-const STATUS_ENDPOINT = "/ECADYB/Connection/UpdateStatus.php";
+const STATUS_ENDPOINT = "../Connection/UpdateStatus.php"; // Only one definition
+
+// ----------------------
+// Notifications
+// ----------------------
+function showNotification(message, type = "success", duration = 3000) {
+  const container = document.getElementById("notification-container");
+  if (!container) return;
+
+  const notif = document.createElement("div");
+  notif.className = `notification ${type} show`;
+  notif.innerHTML = `<i class="fas ${
+    type === "success" ? "fa-check-circle" : "fa-exclamation-circle"
+  }"></i><span>${message}</span>`;
+  container.appendChild(notif);
+
+  setTimeout(() => {
+    notif.classList.remove("show");
+    setTimeout(() => notif.remove(), 500);
+  }, duration);
+}
 
 // ----------------------
 // Initialize all DOM events on page load
@@ -111,9 +131,8 @@ function initializeSelectAll() {
     studentCheckboxes.forEach((checkbox) => {
       const was = checkbox.checked;
       checkbox.checked = this.checked;
-      if (was !== this.checked) {
+      if (was !== this.checked)
         checkbox.dispatchEvent(new Event("change", { bubbles: true }));
-      }
     });
   });
 
@@ -157,53 +176,26 @@ function applyFilters() {
     if (row.classList.contains("header")) return;
 
     let showRow = true;
-
     if (deptVal) {
       const deptValue =
         row.querySelector(".student-checkbox")?.dataset.collection;
       if (deptValue !== deptVal) showRow = false;
     }
-
     if (statusVal) {
       const statusAttr =
         row.querySelector(".student-checkbox")?.dataset.status || "";
       if (statusAttr.toLowerCase() !== statusVal.toLowerCase()) showRow = false;
     }
-
     row.style.display = showRow ? "" : "none";
   });
 }
 
 // ----------------------
-// Notifications
-// ----------------------
-function showNotification(message, type = "success") {
-  const container = document.getElementById("notification-container");
-  if (!container) return;
-
-  const notif = document.createElement("div");
-  notif.className = `notification ${type} show`;
-  notif.innerHTML = `
-    <i class="fas ${
-      type === "success" ? "fa-check-circle" : "fa-exclamation-circle"
-    }"></i>
-    <span>${message}</span>
-  `;
-  container.appendChild(notif);
-
-  setTimeout(() => {
-    notif.classList.remove("show");
-    setTimeout(() => notif.remove(), 500);
-  }, 3000);
-}
-
-// ----------------------
 // Delete student modal
 // ----------------------
-const deleteModal = document.getElementById("delete-modal-overlay");
-const confirmDeleteBtn = document.getElementById("confirm-delete-btn");
-const cancelDeleteBtn = document.getElementById("cancel-delete-btn");
-
+let deleteModal = document.getElementById("delete-modal-overlay");
+let confirmDeleteBtn = document.getElementById("confirm-delete-btn");
+let cancelDeleteBtn = document.getElementById("cancel-delete-btn");
 let selectedStudentId = null;
 let selectedCollection = null;
 
@@ -225,7 +217,7 @@ async function confirmDeleteStudent() {
   confirmDeleteBtn.disabled = true;
 
   try {
-    const res = await fetch("/ECADYB/Connection/DeleteStudent.php", {
+    const res = await fetch("../Connection/DeleteStudent.php", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -289,7 +281,7 @@ function togglePass(icon) {
 }
 
 // ----------------------
-// Update status (Railway-ready)
+// Update Status
 // ----------------------
 function initializeStatusUpdates() {
   const studentCheckboxes = document.querySelectorAll(".student-checkbox");
@@ -297,7 +289,6 @@ function initializeStatusUpdates() {
 
   studentCheckboxes.forEach((checkbox) => {
     checkbox.addEventListener("change", async function () {
-      // prevent double-click or rapid changes
       if (this.dataset.busy === "1") return;
       this.dataset.busy = "1";
 
@@ -320,22 +311,9 @@ function initializeStatusUpdates() {
         });
 
         if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
-
-        let data;
-        try {
-          data = await res.json();
-        } catch (err) {
-          console.error("[UpdateStatus] Invalid JSON:", err);
-          showNotification(
-            "Server error: Invalid JSON response from UpdateStatus.php",
-            "error"
-          );
-          this.checked = !this.checked;
-          return;
-        }
+        const data = await res.json();
 
         if (data && data.success) {
-          // Update dataset & table cell
           this.dataset.status = status.toLowerCase();
           const row = this.closest("tr");
           const statusCell = row?.querySelector(".student-status");
@@ -347,7 +325,6 @@ function initializeStatusUpdates() {
                 : "status-pending"
             }`;
           }
-          applyFilters();
           showNotification(
             data.message || "Status updated successfully",
             "success"
