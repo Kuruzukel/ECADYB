@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $collection = $input['collection'] ?? null;
     $status     = $input['status'] ?? null;
 
-    // Validation
+    // Validate required fields
     if (!$studentId || !$collection || !$status) {
         echo json_encode([
             "success" => false,
@@ -33,7 +33,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Access the collection
     try {
         $coll = $db->$collection;
 
@@ -49,15 +48,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $result = $coll->updateOne($filter, $update);
 
-        if ($result->getModifiedCount() > 0 || $result->getMatchedCount() > 0) {
+        if ($result->getMatchedCount() > 0) {
             echo json_encode([
-                "success"     => true,
-                "message"     => "Status updated successfully",
-                "lookup_id"   => $studentId,
-                "new_status"  => $status,
-                "collection"  => $collection,
-                "matched"     => $result->getMatchedCount(),
-                "modified"    => $result->getModifiedCount()
+                "success"    => true,
+                "message"    => "Status updated successfully",
+                "lookup_id"  => $studentId,
+                "new_status" => $status,
+                "collection" => $collection,
+                "matched"    => $result->getMatchedCount(),
+                "modified"   => $result->getModifiedCount()
             ]);
         } else {
             echo json_encode([
@@ -78,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // ----------------------
-// Fallback for non-POST requests
+// Fallback for non-POST
 // ----------------------
 echo json_encode([
     "success" => false,
