@@ -310,7 +310,7 @@ function initializeStatusUpdates() {
       const status = this.checked ? "Active" : "Pending";
 
       try {
-        // Use relative path to avoid deployment path issues
+        // Match DeleteStudent.php path
         const endpoint = "/ECADYB/Connection/UpdateStatus.php";
 
         const res = await fetch(endpoint, {
@@ -320,20 +320,23 @@ function initializeStatusUpdates() {
         });
 
         const text = await res.text();
-        console.log("Raw response from server:", text); // <-- debug log
-        let data;
+        console.log("[UpdateStatus] Raw response:", text); // debug log
 
+        let data;
         try {
           data = JSON.parse(text);
         } catch (e) {
-          console.error("UpdateStatus.php response is not valid JSON:", text);
-          showNotification("Server error: Invalid response.", "error");
+          console.error("[UpdateStatus] Invalid JSON:", e, text);
+          showNotification(
+            "Server error: Invalid response from UpdateStatus.php",
+            "error"
+          );
           this.checked = !this.checked;
           return;
         }
 
         if (data && data.success) {
-          // Update checkbox dataset and table cell
+          // Update dataset and table cell
           this.dataset.status = status.toLowerCase();
           const row = this.closest("tr");
           const statusCell = row?.querySelector(".student-status");
@@ -347,14 +350,17 @@ function initializeStatusUpdates() {
           }
 
           applyFilters();
-          showNotification(data.message || "Status updated.", "success");
+          showNotification(
+            data.message || "Status updated successfully",
+            "success"
+          );
         } else {
-          showNotification(data.message || "Failed to update status.", "error");
+          showNotification(data.message || "Failed to update status", "error");
           this.checked = !this.checked;
         }
       } catch (err) {
-        console.error("Fetch error:", err);
-        showNotification("Error updating status.", "error");
+        console.error("[UpdateStatus] Fetch error:", err);
+        showNotification("Error updating status. Check console.", "error");
         this.checked = !this.checked;
       } finally {
         this.dataset.busy = "0";
