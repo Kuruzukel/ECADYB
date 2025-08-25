@@ -6,7 +6,7 @@ use MongoDB\Client;
 // Headers
 // ----------------------
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *'); // optional, useful for fetch
+header('Access-Control-Allow-Origin: *'); // optional for fetch
 header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Content-Type');
 
@@ -29,13 +29,16 @@ try {
 // Handle POST request
 // ----------------------
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Read JSON input safely
-    $input = json_decode(file_get_contents('php://input'), true);
+
+    // Read JSON input
+    $inputRaw = file_get_contents('php://input');
+    $input = json_decode($inputRaw, true);
+
     if (!is_array($input)) {
         echo json_encode([
             "success" => false,
             "message" => "Invalid JSON input",
-            "raw_input" => file_get_contents('php://input')
+            "raw_input" => $inputRaw
         ]);
         exit;
     }
@@ -63,6 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ['student id' => $studentId]
             ]
         ];
+
         $update = ['$set' => ['status' => $status]];
 
         $result = $coll->updateOne($filter, $update);
@@ -77,6 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             "matched"    => $result->getMatchedCount(),
             "modified"   => $result->getModifiedCount()
         ]);
+
     } catch (Exception $e) {
         echo json_encode([
             "success" => false,
@@ -88,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // ----------------------
-// Non-POST fallback
+// Fallback for non-POST
 // ----------------------
 echo json_encode([
     "success" => false,

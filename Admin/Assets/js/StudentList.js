@@ -86,12 +86,6 @@ function applyTheme(themeName) {
 // ----------------------
 const STATUS_ENDPOINT = "/ECADYB/Connection/UpdateStatus.php";
 
-function toForm(bodyObj) {
-  return Object.entries(bodyObj)
-    .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
-    .join("&");
-}
-
 // ----------------------
 // Initialize all DOM events on page load
 // ----------------------
@@ -305,30 +299,26 @@ function initializeStatusUpdates() {
       if (this.dataset.busy === "1") return;
       this.dataset.busy = "1";
 
-      const studentId = this.dataset.studentId;
-      const collection = this.dataset.collection;
+      const studentId = this.dataset.studentId?.trim();
+      const collection = this.dataset.collection?.trim();
       const status = this.checked ? "Active" : "Pending";
 
       try {
-        // Match DeleteStudent.php path
-        const endpoint = "/ECADYB/Connection/UpdateStatus.php";
-
-        const res = await fetch(endpoint, {
+        const res = await fetch(STATUS_ENDPOINT, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ student_id: studentId, collection, status }),
         });
 
-        const text = await res.text();
-        console.log("[UpdateStatus] Raw response:", text); // debug log
+        if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
 
-        let data;
+        let data = {};
         try {
-          data = JSON.parse(text);
-        } catch (e) {
-          console.error("[UpdateStatus] Invalid JSON:", e, text);
+          data = await res.json();
+        } catch (err) {
+          console.error("[UpdateStatus] Invalid JSON:", err);
           showNotification(
-            "Server error: Invalid response from UpdateStatus.php",
+            "Server error: Invalid JSON response from UpdateStatus.php",
             "error"
           );
           this.checked = !this.checked;
@@ -336,7 +326,6 @@ function initializeStatusUpdates() {
         }
 
         if (data && data.success) {
-          // Update dataset and table cell
           this.dataset.status = status.toLowerCase();
           const row = this.closest("tr");
           const statusCell = row?.querySelector(".student-status");
@@ -348,7 +337,6 @@ function initializeStatusUpdates() {
                 : "status-pending"
             }`;
           }
-
           applyFilters();
           showNotification(
             data.message || "Status updated successfully",
