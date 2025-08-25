@@ -84,8 +84,18 @@ function applyTheme(themeName) {
 // ----------------------
 // Global constants
 // ----------------------
-// Use dynamic origin for Railway & local
-const STATUS_ENDPOINT = `${window.location.origin}/ECADYB/Connection/UpdateStatus.php`;
+// Dynamic detection for local / Railway
+const STATUS_ENDPOINT = (() => {
+  const origin = window.location.origin;
+  const pathSegments = window.location.pathname.split("/").filter(Boolean);
+
+  // If deployed root-level (Railway), assume /Connection folder is at root
+  if (pathSegments[0] !== "ECADYB") {
+    return `${origin}/Connection/UpdateStatus.php`;
+  }
+  // If local dev under ECADYB folder
+  return `${origin}/ECADYB/Connection/UpdateStatus.php`;
+})();
 
 // ----------------------
 // Initialize all DOM events on page load
