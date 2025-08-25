@@ -126,10 +126,13 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
 
 <body>
     <div class="container">
-        <div class="header-container" style="width: 100%;">
+        <div class="header-container">
             <h1>Student List</h1>
         </div>
-        <div class="form-content" style="width: 100%;">
+
+        
+
+        <div class="form-content">
             <div class="card">
                 <div class="card-header">
                     <div class="filter-bar">
@@ -284,11 +287,9 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
 
                                             <!-- Body -->
                                             <div class="modal-body">
-                                                <form method="POST" action="updateStudent.php">
-                                                    <input type="hidden" name="student_id"
-                                                        value="<?php echo htmlspecialchars($student['student_id']); ?>">
-                                                    <input type="hidden" name="collection"
-                                                        value="<?php echo htmlspecialchars($student['collection']); ?>">
+                                                <form id="edit-student-form-<?php echo $student['student_id']; ?>">
+                                                    <!-- Hidden collection field for JavaScript -->
+                                                    <input type="hidden" id="collection-hidden-<?php echo $student['student_id']; ?>" value="<?php echo htmlspecialchars($student['collection'] ?? 'students'); ?>">
 
                                                     <div class="form-group">
 
@@ -296,36 +297,54 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
                                                         <div class="section">
                                                             <div class="section-header">Personal Information</div>
 
-                                                            <label for="first-name">First Name:</label>
-                                                            <input type="text" id="first-name" name="first_name"
-                                                                value="<?php echo htmlspecialchars($student['first_name']); ?>"
+                                                            <label
+                                                                for="first_name<?php echo $student['student_id']; ?>">First
+                                                                Name:</label>
+                                                            <input type="text"
+                                                                id="first_name<?php echo $student['student_id']; ?>"
+                                                                name="first_name"
+                                                                value="<?php echo htmlspecialchars($student['first_name'] ?? ''); ?>"
                                                                 required oninput="allowOnlyLetters(this)"
                                                                 onkeypress="return /[a-zA-Z\s]/.test(event.key)"
                                                                 placeholder="First Name">
 
-                                                            <label for="middle-name">Middle Name:</label>
-                                                            <input type="text" id="middle-name" name="middle_name"
-                                                                value="<?php echo htmlspecialchars($student['middle_name']); ?>"
+                                                            <label
+                                                                for="middle_name<?php echo $student['student_id']; ?>">Middle
+                                                                Name:</label>
+                                                            <input type="text"
+                                                                id="middle_name<?php echo $student['student_id']; ?>"
+                                                                name="middle_name"
+                                                                value="<?php echo htmlspecialchars($student['middle_name'] ?? ''); ?>"
                                                                 oninput="allowOnlyLetters(this);removeSpaces(this)"
                                                                 onkeypress="return /[a-zA-Z\s]/.test(event.key)"
                                                                 placeholder="Middle Name">
 
-                                                            <label for="last-name">Last Name:</label>
-                                                            <input type="text" id="last-name" name="last_name"
-                                                                value="<?php echo htmlspecialchars($student['last_name']); ?>"
+                                                            <label
+                                                                for="last_name<?php echo $student['student_id']; ?>">Last
+                                                                Name:</label>
+                                                            <input type="text"
+                                                                id="last_name<?php echo $student['student_id']; ?>"
+                                                                name="last_name"
+                                                                value="<?php echo htmlspecialchars($student['last_name'] ?? ''); ?>"
                                                                 required
                                                                 oninput="allowOnlyLetters(this);removeSpaces(this)"
                                                                 onkeypress="return /[a-zA-Z\s]/.test(event.key)"
                                                                 placeholder="Last Name">
 
-                                                            <label for="email">Email:</label>
-                                                            <input type="text" id="email" name="email"
-                                                                value="<?php echo htmlspecialchars($student['email']); ?>"
+                                                            <label
+                                                                for="email<?php echo $student['student_id']; ?>">Email:</label>
+                                                            <input type="text"
+                                                                id="email<?php echo $student['student_id']; ?>"
+                                                                name="email"
+                                                                value="<?php echo htmlspecialchars($student['email'] ?? ''); ?>"
                                                                 oninput="removeSpaces(this)" placeholder="Email">
 
-                                                            <label for="password">Password:</label>
-                                                            <input type="text" id="password" name="password"
-                                                                value="<?php echo htmlspecialchars($student['password']); ?>"
+                                                            <label
+                                                                for="password<?php echo $student['student_id']; ?>">Password:</label>
+                                                            <input type="text"
+                                                                id="password<?php echo $student['student_id']; ?>"
+                                                                name="password"
+                                                                value="<?php echo htmlspecialchars($student['password'] ?? ''); ?>"
                                                                 placeholder="Password">
                                                         </div>
 
@@ -333,54 +352,70 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
                                                         <div class="section">
                                                             <div class="section-header">Academic Information</div>
 
-                                                            <label for="academic-year">Academic Year:</label>
-                                                            <input type="text" id="academic-year" name="academic_year"
-                                                                value="<?php echo htmlspecialchars($student['academic_year']); ?>"
+                                                            <label
+                                                                for="academic_year<?php echo $student['student_id']; ?>">Academic
+                                                                Year:</label>
+                                                            <input type="text"
+                                                                id="academic_year<?php echo $student['student_id']; ?>"
+                                                                name="academic_year"
+                                                                value="<?php echo htmlspecialchars($student['academic_year'] ?? ''); ?>"
                                                                 placeholder="0000-0000" maxlength="9"
                                                                 oninput="formatAcademicYear(this)">
 
-                                                            <label for="program">Program:</label>
-                                                            <select id="program" name="program">
+                                                            <label
+                                                                for="program<?php echo $student['student_id']; ?>">Program:</label>
+                                                            <select id="program<?php echo $student['student_id']; ?>"
+                                                                name="program">
                                                                 <option value="" disabled>Select a program</option>
                                                                 <option value="bsme"
-                                                                    <?php if($student['program']=="bsme") echo "selected"; ?>>
+                                                                    <?php if(($student['program'] ?? '')=="bsme") echo "selected"; ?>>
                                                                     BS Marine Engineering</option>
                                                                 <option value="bsmt"
-                                                                    <?php if($student['program']=="bsmt") echo "selected"; ?>>
+                                                                    <?php if(($student['program'] ?? '')=="bsmt") echo "selected"; ?>>
                                                                     BS Marine Transportation</option>
                                                                 <option value="bscje"
-                                                                    <?php if($student['program']=="bscje") echo "selected"; ?>>
+                                                                    <?php if(($student['program'] ?? '')=="bscje") echo "selected"; ?>>
                                                                     BS Criminal Justice Education</option>
                                                                 <option value="bstm"
-                                                                    <?php if($student['program']=="bstm") echo "selected"; ?>>
+                                                                    <?php if(($student['program'] ?? '')=="bstm") echo "selected"; ?>>
                                                                     BS Tourism Management</option>
                                                                 <option value="btvted"
-                                                                    <?php if($student['program']=="btvted") echo "selected"; ?>>
+                                                                    <?php if(($student['program'] ?? '')=="btvted") echo "selected"; ?>>
                                                                     BS Technical-Vocational Teacher Education</option>
                                                                 <option value="beced"
-                                                                    <?php if($student['program']=="beced") echo "selected"; ?>>
+                                                                    <?php if(($student['program'] ?? '')=="beced") echo "selected"; ?>>
                                                                     BS Early Childhood Education</option>
                                                                 <option value="bsn"
-                                                                    <?php if($student['program']=="bsn") echo "selected"; ?>>
+                                                                    <?php if(($student['program'] ?? '')=="bsn") echo "selected"; ?>>
                                                                     BS Nursing</option>
                                                                 <option value="bsis"
-                                                                    <?php if($student['program']=="bsis") echo "selected"; ?>>
+                                                                    <?php if(($student['program'] ?? '')=="bsis") echo "selected"; ?>>
                                                                     BS Information System</option>
                                                                 <option value="bsma"
-                                                                    <?php if($student['program']=="bsma") echo "selected"; ?>>
+                                                                    <?php if(($student['program'] ?? '')=="bsma") echo "selected"; ?>>
                                                                     BS Management Accounting</option>
                                                                 <option value="bse"
-                                                                    <?php if($student['program']=="bse") echo "selected"; ?>>
+                                                                    <?php if(($student['program'] ?? '')=="bse") echo "selected"; ?>>
                                                                     BS Entrepreneurship</option>
                                                             </select>
 
-                                                            <label for="section">Section:</label>
-                                                            <input type="text" id="section" name="section"
-                                                                value="<?php echo htmlspecialchars($student['section']); ?>"
+                                                            <label
+                                                                for="section<?php echo $student['student_id']; ?>">Section:</label>
+                                                            <input type="text"
+                                                                id="section<?php echo $student['student_id']; ?>"
+                                                                name="section"
+                                                                value="<?php echo htmlspecialchars($student['section'] ?? ''); ?>"
                                                                 placeholder="Section">
-                                                            <label for="student-id">Student ID:</label>
-                                                            <input type="text" id="student-id" name="student_id"
-                                                                value="<?php echo htmlspecialchars($student['student_id']); ?>"
+
+                                                            
+
+                                                            <label
+                                                                for="student_id<?php echo $student['student_id']; ?>">Student
+                                                                ID:</label>
+                                                            <input type="text"
+                                                                id="student_id<?php echo $student['student_id']; ?>"
+                                                                name="student_id"
+                                                                value="<?php echo htmlspecialchars($student['student_id'] ?? ''); ?>"
                                                                 placeholder="0000-000000" maxlength="11"
                                                                 oninput="formatStudentID(this)">
                                                         </div>
@@ -390,45 +425,61 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
                                                             <div class="section-header">Additional Information /
                                                                 Optional</div>
 
-                                                            <label for="motto">Personal Philosophy:</label>
-                                                            <input type="text" id="motto" name="motto"
-                                                                value="<?php echo htmlspecialchars($student['motto']); ?>"
+                                                            <label
+                                                                for="motto<?php echo $student['student_id']; ?>">Personal
+                                                                Philosophy:</label>
+                                                            <input type="text"
+                                                                id="motto<?php echo $student['student_id']; ?>"
+                                                                name="motto"
+                                                                value="<?php echo htmlspecialchars($student['motto'] ?? ''); ?>"
                                                                 placeholder="Personal Philosophy">
 
-                                                            <label for="honors">Latin Awards:</label>
-                                                            <input type="text" id="honors" name="honors"
-                                                                value="<?php echo htmlspecialchars($student['honors']); ?>"
+                                                            <label
+                                                                for="honors<?php echo $student['student_id']; ?>">Latin
+                                                                Awards:</label>
+                                                            <input type="text"
+                                                                id="honors<?php echo $student['student_id']; ?>"
+                                                                name="honors"
+                                                                value="<?php echo htmlspecialchars($student['honors'] ?? ''); ?>"
                                                                 placeholder="Latin Awards">
 
-                                                            <label for="milestone">Career Highlights:</label>
-                                                            <input type="text" id="milestone" name="milestone"
-                                                                value="<?php echo htmlspecialchars($student['milestone']); ?>"
+                                                            <label
+                                                                for="milestone<?php echo $student['student_id']; ?>">Career
+                                                                Highlights:</label>
+                                                            <input type="text"
+                                                                id="milestone<?php echo $student['student_id']; ?>"
+                                                                name="milestone"
+                                                                value="<?php echo htmlspecialchars($student['milestone'] ?? ''); ?>"
                                                                 placeholder="Career Highlights">
 
-                                                            <label for="batch-name">Batch Name:</label>
-                                                            <input type="text" id="batch-name" name="batch_name"
-                                                                value="<?php echo isset($student['batch name']) ? htmlspecialchars($student['batch name']) : ''; ?>"
+                                                            <label
+                                                                for="batch_name<?php echo $student['student_id']; ?>">Batch
+                                                                Name:</label>
+                                                            <input type="text"
+                                                                id="batch_name<?php echo $student['student_id']; ?>"
+                                                                name="batch_name"
+                                                                value="<?php echo htmlspecialchars($student['batch_name'] ?? ''); ?>"
                                                                 placeholder="Batch Name"
                                                                 oninput="allowOnlyLetters(this)">
 
+                                                            
+
                                                             <!-- Buttons -->
                                                             <div class="modal-buttons">
-                                                                <button type="submit"
-                                                                    class="modal-btn confirm">Save</button>
+                                                                <button type="button" class="modal-btn confirm"
+                                                                    onclick="submitStudentForm('<?php echo $student['student_id']; ?>')">Save</button>
                                                                 <button type="button" class="modal-btn cancel"
-                                                                    onclick="closeModal('editModal_<?php echo $student['student_id']; ?>')">
-                                                                    Cancel
-                                                                </button>
-
+                                                                    onclick="closeModal('editModal_<?php echo $student['student_id']; ?>')">Cancel</button>
                                                             </div>
-
-
                                                         </div>
-
                                                     </div>
-
-
                                                 </form>
+
+
+
+
+
+
                                             </div>
                                         </div>
                                     </div>

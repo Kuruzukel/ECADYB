@@ -84,23 +84,32 @@ function applyTheme(themeName) {
 // ----------------------
 // Global constants
 // ----------------------
-// Dynamic detection for local / Railway
 const STATUS_ENDPOINT = (() => {
   const origin = window.location.origin;
   const pathSegments = window.location.pathname.split("/").filter(Boolean);
 
-  // If deployed root-level (Railway), assume /Connection folder is at root
   if (pathSegments[0] !== "ECADYB") {
     return `${origin}/Connection/UpdateStatus.php`;
   }
-  // If local dev under ECADYB folder
   return `${origin}/ECADYB/Connection/UpdateStatus.php`;
 })();
 
+const STUDENT_UPDATE_ENDPOINT = (() => {
+  const origin = window.location.origin;
+  const pathSegments = window.location.pathname.split("/").filter(Boolean);
+
+  if (pathSegments[0] !== "ECADYB") {
+    return `${origin}/Connection/UpdateStudent.php`;
+  }
+  return `${origin}/ECADYB/Connection/UpdateStudent.php`;
+})();
+
 // ----------------------
-// Initialize all DOM events on page load
+// Initialize on page load
 // ----------------------
 window.addEventListener("DOMContentLoaded", () => {
+  console.log("StudentList.js loaded successfully");
+
   const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
   applyTheme(savedTheme);
 
@@ -108,6 +117,13 @@ window.addEventListener("DOMContentLoaded", () => {
   initializeFilters();
   initializeStatusUpdates();
   initializeDeleteModal();
+
+  // Test if submitStudentForm function is available
+  if (typeof submitStudentForm === "function") {
+    console.log("submitStudentForm function is available");
+  } else {
+    console.error("submitStudentForm function is NOT available");
+  }
 });
 
 // ----------------------
@@ -141,7 +157,7 @@ function initializeSelectAll() {
 }
 
 // ----------------------
-// Filters (department, status, entries)
+// Filters
 // ----------------------
 function initializeFilters() {
   const entriesCount = document.getElementById("entries-count");
@@ -279,7 +295,7 @@ function initializeDeleteModal() {
 }
 
 // ----------------------
-// Toggle password visibility
+// Toggle password
 // ----------------------
 function togglePass(icon) {
   const studentRow = icon.closest(".student-row");
@@ -303,7 +319,7 @@ function togglePass(icon) {
 }
 
 // ----------------------
-// Update status (Railway-ready)
+// Update status
 // ----------------------
 function initializeStatusUpdates() {
   const studentCheckboxes = document.querySelectorAll(".student-checkbox");
@@ -377,4 +393,161 @@ function initializeStatusUpdates() {
       }
     });
   });
+}
+// ----------------------
+// Update student details
+// ----------------------
+async function updateStudentDetails(studentId, fields) {
+  if (!studentId) return;
+
+  // Include hidden collection field
+  const collectionEl = document.getElementById(
+    `collection-hidden-${studentId}`
+  );
+  if (collectionEl) fields["collection"] = collectionEl.value;
+
+  try {
+    const res = await fetch(STUDENT_UPDATE_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      // Use "student id" (with space) to match MongoDB
+      body: JSON.stringify({ "student id": studentId, ...fields }),
+    });
+
+    const data = await res.json().catch(() => null);
+
+    if (data?.success) {
+      showNotification(
+        data.message || "Student Details Saved Successfully",
+        "success"
+      );
+
+      // Auto-refresh the page after successful save
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500); // Wait 1.5 seconds to show the success message
+    } else {
+      showNotification(
+        data?.message || "Failed to save student details",
+        "error"
+      );
+    }
+  } catch {
+    showNotification("Error saving student details", "error");
+  }
+}
+
+// ----------------------
+// Submit student form
+// ----------------------
+function submitStudentForm(studentId) {
+  console.log("submitStudentForm called with studentId:", studentId);
+
+  if (!studentId) {
+    console.error("No studentId provided");
+    return;
+  }
+
+  const fields = {};
+  // Create a mapping of form field names to MongoDB keys
+  const fieldMapping = {
+    first_name: "first name",
+    middle_name: "middle name",
+    last_name: "last name",
+    email: "email",
+    password: "password",
+    academic_year: "academic year",
+    program: "program",
+    section: "section",
+    // Remove student_id mapping since we handle it separately
+    motto: "motto",
+    honors: "honors",
+    milestone: "milestone",
+    batch_name: "batch name",
+    department_section: "department section", // included
+    status: "status", // added for completeness
+  };
+
+  // Iterate over the mapping to collect field values
+  for (const [key, mongoKey] of Object.entries(fieldMapping)) {
+    const el = document.getElementById(`${key}${studentId}`);
+    if (el) {
+      fields[mongoKey] = el.value.trim(); // Use mongoKey for the final object
+      console.log(`Field ${key} (${mongoKey}):`, el.value.trim());
+    } else {
+      console.warn(`Element not found for field: ${key}${studentId}`);
+    }
+  }
+
+  // Include the student ID and collection name
+  fields["student id"] = studentId; // Add student ID with space
+  console.log("Student ID field:", studentId);
+
+  const collectionEl = document.getElementById(
+    `collection-hidden-${studentId}`
+  );
+  if (collectionEl) {
+    fields["collection"] = collectionEl.value; // Assuming you have a hidden field for collection
+    console.log("Collection field:", collectionEl.value);
+  } else {
+    console.error(
+      `Collection hidden field not found: collection-hidden-${studentId}`
+    );
+    return;
+  }
+
+  console.log("Final fields object:", fields);
+
+  // Close modal immediately after sending save request
+  const modal = document.getElementById(`editModal_${studentId}`);
+  if (modal) modal.classList.remove("active");
+
+  updateStudentDetails(studentId, fields);
+}
+
+// ----------------------
+// Test function for debugging
+// ----------------------
+function testFunction() {
+  console.log("Test function called successfully!");
+  alert(
+    "JavaScript is working! submitStudentForm function: " +
+      (typeof submitStudentForm === "function" ? "Available" : "NOT Available")
+  );
+}
+
+// ----------------------
+// Utility functions for form validation
+// ----------------------
+
+// Allow only alphabet characters and single spaces
+function allowOnlyLetters(input) {
+  let sanitized = input.value
+    .replace(/[^a-zA-Z\s]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+  input.value = sanitized;
+}
+
+// Format academic year as YYYY-YYYY
+function formatAcademicYear(input) {
+  let value = input.value.replace(/\D/g, "").slice(0, 8);
+  if (value.length > 4) {
+    value = value.slice(0, 4) + "-" + value.slice(4);
+  }
+  input.value = value;
+}
+
+// Format student ID as XXXX-XXXXXX
+function formatStudentID(input) {
+  let value = input.value.replace(/\D/g, "").slice(0, 10);
+  if (value.length > 4) {
+    value = value.slice(0, 4) + "-" + value.slice(4);
+  }
+  input.value = value;
+}
+
+// Remove spaces from last name, middle name, and email fields on input
+function removeSpaces(input) {
+  input.value = input.value.replace(/\s+/g, "");
 }
