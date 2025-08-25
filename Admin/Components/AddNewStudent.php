@@ -1,77 +1,129 @@
 <?php
-require __DIR__ . '/../../vendor/autoload.php'; 
-
+require __DIR__ . '/../../vendor/autoload.php';
 use MongoDB\Client;
 
+// ----------------------
+// Program mapping (for HTML and POST)
+// ----------------------
+$programMap = [
+    "bsme" => "BS Marine Engineering",
+    "bsmt" => "BS Marine Transportation",
+    "bscje" => "BS Criminal Justice Education",
+    "bstm" => "BS Tourism Management",
+    "btvted" => "BS Technical-Vocational Teacher Education",
+    "beced" => "BS Early Childhood Education",
+    "bsn" => "BS Nursing",
+    "bsis" => "BS Information System",
+    "bsma" => "BS Management Accounting",
+    "bse" => "BS Entrepreneurship"
+];
+
+// ----------------------
+// Handle POST request (add student)
+// ----------------------
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     header('Content-Type: application/json');
 
-    // Get MongoDB connection string from environment variable
+    // ----------------------
+    // MongoDB connection
+    // ----------------------
     $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
-    $client   = new Client($mongoUrl);
-    $db = $client->Departments;
+    try {
+        $client = new Client($mongoUrl);
+        $db = $client->Departments;
+    } catch (Exception $e) {
+        echo json_encode([
+            "success" => false,
+            "message" => "MongoDB connection failed: " . $e->getMessage()
+        ]);
+        exit;
+    }
 
-    // Mapping program shortcuts to full names
-    $programMap = [
-        "bsme" => "BS Marine Engineering",
-        "bsmt" => "BS Marine Transportation",
-        "bscje" => "BS Criminal Justice Education",
-        "bstm" => "BS Tourism Management",
-        "btvted" => "BS Technical-Vocational Teacher Education",
-        "beced" => "BS Early Childhood Education",
-        "bsn" => "BS Nursing",
-        "bsis" => "BS Information System",
-        "bsma" => "BS Management Accounting",
-        "bse" => "BS Entrepreneurship"
-    ];
-
-    $programKey = $_POST["program"] ?? '';
+    $programKey = trim($_POST["program"] ?? '');
     $programName = $programMap[$programKey] ?? 'Unknown';
-
     $section = trim($_POST["section"] ?? '');
 
-// Create student document
-$student = [
-    "first name" => trim($_POST["first_name"] ?? ''),
-    "middle name" => trim($_POST["middle_name"] ?? ''),
-    "last name" => trim($_POST["last_name"] ?? ''),
-    "email" => trim($_POST["email"] ?? ''),
-    "academic year" => trim($_POST["academic_year"] ?? ''),
-    "student id" => trim($_POST["student_id"] ?? ''),
-    "program" => $programName,
-    "section" => $section,
-    "department section" => strtoupper($programKey) . ' - ' . strtoupper($section),
-];
+    // ----------------------
+    // Validate required fields
+    // ----------------------
+    $requiredFields = ['first_name', 'last_name', 'email', 'academic_year', 'student_id'];
+    foreach ($requiredFields as $field) {
+        if (empty(trim($_POST[$field] ?? ''))) {
+            echo json_encode([
+                "success" => false,
+                "message" => ucfirst(str_replace("_", " ", $field)) . " is required."
+            ]);
+            exit;
+        }
+    }
 
-// Add optional fields only if they’re not empty
-if (!empty($_POST["motto"])) {
-    $student["motto"] = trim($_POST["motto"]);
-}
-if (!empty($_POST["honors"])) {
-    $student["honors"] = trim($_POST["honors"]);
-}
-if (!empty($_POST["milestone"])) {
-    $student["milestone"] = trim($_POST["milestone"]);
-}
-if (!empty($_POST["batch_name"])) {
-    $student["batch name"] = trim($_POST["batch_name"]); // keep consistent naming
-}
+    if (!$programKey) {
+        echo json_encode([
+            "success" => false,
+            "message" => "Invalid program selected."
+        ]);
+        exit;
+    }
 
+    // ----------------------
+    // Prepare student document
+    // ----------------------
+    $student = [
+        "first name" => trim($_POST["first_name"]),
+        "middle name" => trim($_POST["middle_name"] ?? ''),
+        "last name" => trim($_POST["last_name"]),
+        "email" => trim($_POST["email"]),
+        "academic year" => trim($_POST["academic_year"]),
+        "student id" => trim($_POST["student_id"]),
+        "program" => $programName,
+        "section" => $section,
+        "department section" => strtoupper($programKey) . ' - ' . strtoupper($section),
+    ];
 
-    // Insert into collection named by shortcut (e.g., bsme, bsmt)
-    $collection = $db->$programKey;
+    // Optional fields
+    $optionalFields = ["motto", "honors", "milestone", "batch_name"];
+    foreach ($optionalFields as $field) {
+        if (!empty(trim($_POST[$field] ?? ''))) {
+            $key = $field === "batch_name" ? "batch name" : $field;
+            $student[$key] = trim($_POST[$field]);
+        }
+    }
 
-    $studentCount = $collection->countDocuments();
-    $student["id"] = $studentCount + 1;
+    // ----------------------
+    // Insert into MongoDB
+    // ----------------------
+    try {
+        $collection = $db->$programKey;
 
-    $collection->insertOne($student);
+        // Auto-increment ID based on collection count
+        $student["id"] = $collection->countDocuments() + 1;
 
-    echo json_encode([
-        "success" => true,
-        "message" => "Student added successfully to '$programKey' collection with ID {$student['id']}."
-    ]);
+        $insertResult = $collection->insertOne($student);
+
+        if ($insertResult->getInsertedCount() > 0) {
+            echo json_encode([
+                "success" => true,
+                "message" => "Student added successfully to '$programKey' collection with ID {$student['id']}."
+            ]);
+        } else {
+            echo json_encode([
+                "success" => false,
+                "message" => "Failed to add student."
+            ]);
+        }
+    } catch (Exception $e) {
+        echo json_encode([
+            "success" => false,
+            "message" => "Error inserting student: " . $e->getMessage()
+        ]);
+    }
+
     exit;
 }
+
+// ----------------------
+// If GET request, serve HTML form
+// ----------------------
 ?>
 
 
@@ -96,28 +148,21 @@ if (!empty($_POST["batch_name"])) {
                 <div class="form-group">
                     <div class="section">
                         <div class="section-header">Personal Information</div>
-
                         <label for="first-name">First Name:</label>
-                        <input type="text" id="first-name" name="first_name" oninput="allowOnlyLetters(this)"
-                            onkeypress="return /[a-zA-Z\s]/.test(event.key)" placeholder="First Name">
+                        <input type="text" id="first-name" name="first_name" placeholder="First Name">
 
                         <label for="middle-name">Middle Name:</label>
-                        <input type="text" id="middle-name" name="middle_name"
-                            oninput="allowOnlyLetters(this);removeSpaces(this)"
-                            onkeypress="return /[a-zA-Z\s]/.test(event.key)" placeholder="Middle Name">
+                        <input type="text" id="middle-name" name="middle_name" placeholder="Middle Name">
 
                         <label for="last-name">Last Name:</label>
-                        <input type="text" id="last-name" name="last_name"
-                            oninput="allowOnlyLetters(this);removeSpaces(this)"
-                            onkeypress="return /[a-zA-Z\s]/.test(event.key)" placeholder="Last Name">
+                        <input type="text" id="last-name" name="last_name" placeholder="Last Name">
 
                         <label for="email">Email:</label>
-                        <input type="text" id="email" name="email" oninput="removeSpaces(this)" placeholder="Email">
+                        <input type="text" id="email" name="email" placeholder="Email">
                     </div>
 
                     <div class="section">
                         <div class="section-header">Academic Information</div>
-
                         <label for="academic-year">Academic Year:</label>
                         <input type="text" id="academic-year" name="academic_year" placeholder="0000-0000" maxlength="9"
                             oninput="formatAcademicYear(this)">
@@ -125,17 +170,11 @@ if (!empty($_POST["batch_name"])) {
                         <label for="program">Program:</label>
                         <select id="program" name="program">
                             <option value="" disabled selected>Select a program</option>
-                            <option value="bsme">BS Marine Engineering</option>
-                            <option value="bsmt">BS Marine Transportation</option>
-                            <option value="bscje">BS Criminal Justice Education</option>
-                            <option value="bstm">BS Tourism Management</option>
-                            <option value="btvted">BS Technical-Vocational Teacher Education</option>
-                            <option value="beced">BS Early Childhood Education</option>
-                            <option value="bsn">BS Nursing</option>
-                            <option value="bsis">BS Information System</option>
-                            <option value="bsma">BS Management Accounting</option>
-                            <option value="bse">BS Entrepreneurship</option>
+                            <?php foreach ($programMap as $key => $name) : ?>
+                            <option value="<?= $key ?>"><?= $name ?></option>
+                            <?php endforeach; ?>
                         </select>
+
 
                         <label for="section">Section:</label>
                         <input type="text" id="section" name="section" placeholder="Section">
@@ -147,7 +186,6 @@ if (!empty($_POST["batch_name"])) {
 
                     <div class="section">
                         <div class="section-header">Additional Information / Optional</div>
-
                         <label for="motto">Personal Philosophy:</label>
                         <input type="text" id="motto" name="motto" placeholder="Personal Philosophy">
 
@@ -157,17 +195,12 @@ if (!empty($_POST["batch_name"])) {
                         <label for="milestone">Career Highlights:</label>
                         <input type="text" id="milestone" name="milestone" placeholder="Career Highlights">
 
-                        <label for="bacth-name">Batch Name:</label>
-                        <input type="text" id="batch-name" name="batch_name" placeholder="Batch Name"
-                            oninput="allowOnlyLetters(this)">
-
+                        <label for="batch-name">Batch Name:</label>
+                        <input type="text" id="batch-name" name="batch_name" placeholder="Batch Name">
                     </div>
                 </div>
                 <button type="button" class="submit-btn" id="add-student-btn">Add Student</button>
-
                 <p id="responseMessage" class="success" style="text-align: center; margin-top: 10px;"></p>
-
-
             </div>
         </form>
 
@@ -181,7 +214,6 @@ if (!empty($_POST["batch_name"])) {
                 </div>
             </div>
         </div>
-
     </div>
 
     <script src="../Assets/js/AddNewStudent.js"></script>
