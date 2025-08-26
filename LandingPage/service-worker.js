@@ -1,13 +1,15 @@
 // service-worker.js
 
-const CACHE_NAME = "grad-gallery-cache-v2";
+const CACHE_NAME = "grad-gallery-cache-v3";
 
 // Files you want to cache for offline use
 const urlsToCache = [
   "/", // index.html
   "/LandingPage/LandingPage.css",
   "/LandingPage/LandingPage.js",
-  "/Public/login.html",
+  "/Public/Components/Login.php",
+  "/Public/Components/Loader.html",
+  "/Public/assets/css/Loader.css",
 
   // Logos
   "/img/PREVIEWLOGO.png",
