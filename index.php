@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
             $_SESSION['role']     = 'admin';
             $_SESSION['username'] = $studentId;
 
-            header("Location: " . BASE_URL . "Admin/Components/AdminDashboard.php");
+            header("Location: " . BASE_URL . "admin");
             exit;
         }
 
@@ -57,7 +57,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
         foreach ($collections as $collectionName => $departmentName) {
             $collection = $departmentsDB->{$collectionName};
 
-            // ⚡ Field in DB: "student id" (with space)
             $student = $collection->findOne([
                 'student id' => $studentId,
                 'password'   => $password
@@ -72,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
 
                 $foundStudent = true;
 
-                header("Location: " . BASE_URL . "Student/Components/StudentDashboard.php");
+                header("Location: " . BASE_URL . "student");
                 exit;
             }
         }
@@ -94,79 +93,64 @@ if (!empty($error_message)) {
 }
 
 // ======================================================
-// Router / Landing Page Handling
+// Router / Clean URLs
 // ======================================================
 $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-// Redirect for old login path (backwards compatibility)
-if ($requestUri === '/Public/Login.php') {
-    header("Location: " . BASE_URL . "Public/Components/Login.php");
-    exit;
-}
-
-// Serve PHP files directly if they exist
-$phpFile = BASE_PATH . $requestUri;
-if (file_exists($phpFile) && pathinfo($phpFile, PATHINFO_EXTENSION) === 'php') {
-    include $phpFile;
-    exit;
-}
+// Define clean routes
+$routes = [
+    '/'        => BASE_PATH . '/LandingPage/LandingPage.html',
+    '/login'   => BASE_PATH . '/Public/Components/Login.php',
+    '/admin'   => BASE_PATH . '/Admin/Components/AdminDashboard.php',
+    '/student' => BASE_PATH . '/Student/Components/StudentDashboard.php',
+    '/loader'  => BASE_PATH . '/Public/Components/Loader.html',
+];
 
 // ----------------------
-// Serve Loader at root
+// Serve matched route
 // ----------------------
-if ($requestUri === '/' || $requestUri === '/index.php') {
-    $loaderPath = BASE_PATH . '/Public/Components/Loader.html';
-    if (file_exists($loaderPath)) {
-        readfile($loaderPath);
+if (array_key_exists($requestUri, $routes)) {
+    $filePath = $routes[$requestUri];
+    if (file_exists($filePath)) {
+        $ext = pathinfo($filePath, PATHINFO_EXTENSION);
+
+        if ($ext === 'php') {
+            include $filePath;
+        } else {
+            // For HTML, fix asset paths before output
+            $htmlContent = file_get_contents($filePath);
+            $htmlContent = str_replace(
+                [
+                    'href="LandingPage.css"',
+                    'src="LandingPage.js"',
+                    'src="../img/',
+                    'src="LandingPageYB/'
+                ],
+                [
+                    'href="' . BASE_URL . 'LandingPage/LandingPage.css"',
+                    'src="' . BASE_URL . 'LandingPage/LandingPage.js"',
+                    'src="' . BASE_URL . 'img/',
+                    'src="' . BASE_URL . 'LandingPage/LandingPageYB/'
+                ],
+                $htmlContent
+            );
+
+            // Fix login button redirects
+            $htmlContent = str_replace(
+                ['id="loginDropdownBtn"', 'id="mobileLoginDropdownBtn"'],
+                [
+                    'id="loginDropdownBtn" onclick="window.location.href=\'' . BASE_URL . 'login\'"',
+                    'id="mobileLoginDropdownBtn" onclick="window.location.href=\'' . BASE_URL . 'login\'"'
+                ],
+                $htmlContent
+            );
+
+            echo $htmlContent;
+        }
         exit;
     } else {
         http_response_code(404);
-        echo 'Loader page not found';
-        exit;
-    }
-}
-
-// ----------------------
-// Serve Landing Page at /LandingPage/LandingPage.html
-// ----------------------
-if ($requestUri === '/LandingPage/LandingPage.html') {
-    $landingPagePath = BASE_PATH . '/LandingPage/LandingPage.html';
-
-    if (file_exists($landingPagePath)) {
-        $htmlContent = file_get_contents($landingPagePath);
-
-        // ✅ Fix asset paths for Railway deployment
-        $htmlContent = str_replace(
-            [
-                'href="LandingPage.css"',
-                'src="LandingPage.js"',
-                'src="../img/',
-                'src="LandingPageYB/'
-            ],
-            [
-                'href="' . BASE_URL . 'LandingPage/LandingPage.css"',
-                'src="' . BASE_URL . 'LandingPage/LandingPage.js"',
-                'src="' . BASE_URL . 'img/',
-                'src="' . BASE_URL . 'LandingPage/LandingPageYB/'
-            ],
-            $htmlContent
-        );
-
-        // ✅ Fix login buttons to redirect properly
-        $htmlContent = str_replace(
-            ['id="loginDropdownBtn"', 'id="mobileLoginDropdownBtn"'],
-            [
-                'id="loginDropdownBtn" onclick="window.location.href=\'' . BASE_URL . 'Public/Components/Login.php\'"',
-                'id="mobileLoginDropdownBtn" onclick="window.location.href=\'' . BASE_URL . 'Public/Components/Login.php\'"'
-            ],
-            $htmlContent
-        );
-
-        echo $htmlContent;
-        exit;
-    } else {
-        http_response_code(404);
-        echo 'Landing page not found';
+        echo "❌ File not found for route: $requestUri";
         exit;
     }
 }
@@ -175,11 +159,11 @@ if ($requestUri === '/LandingPage/LandingPage.html') {
 // Serve Static Assets
 // ----------------------
 $staticPaths = [
-    '/img/'                           => '/img/',
+    '/img/'                             => '/img/',
     '/LandingPage/LandingPageYB/pages/' => '/LandingPage/LandingPageYB/pages/',
-    '/LandingPage/'                   => '/LandingPage/',
-    '/Public/assets/css/'             => '/Public/assets/css/',
-    '/Public/assets/js/'              => '/Public/assets/js/'
+    '/LandingPage/'                     => '/LandingPage/',
+    '/Public/assets/css/'               => '/Public/assets/css/',
+    '/Public/assets/js/'                => '/Public/assets/js/'
 ];
 
 foreach ($staticPaths as $uriPrefix => $folder) {
