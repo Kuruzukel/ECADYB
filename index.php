@@ -129,7 +129,7 @@ if ($requestUri === '/' || $requestUri === '/index.php') {
 // ----------------------
 // Serve Landing Page at /landing
 // ----------------------
-if ($requestUri === '/landing') {
+if ($requestUri === '/LandingPage/LandingPage.html') {
     $landingPagePath = BASE_PATH . '/LandingPage/LandingPage.html';
 
     if (file_exists($landingPagePath)) {
