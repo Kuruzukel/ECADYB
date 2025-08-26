@@ -144,10 +144,10 @@ if ($requestUri === '/LandingPage/LandingPage.html') {
                 'src="LandingPageYB/'
             ],
             [
-                'href="' . BASE_URL . 'static/lp/LandingPage.css"',
-                'src="' . BASE_URL . 'static/lp/LandingPage.js"',
-                'src="' . BASE_URL . 'static/img/',
-                'src="' . BASE_URL . 'static/lp/LandingPageYB/'
+                'href="' . BASE_URL . 'LandingPage/LandingPage.css"',
+                'src="' . BASE_URL . 'LandingPage/LandingPage.js"',
+                'src="' . BASE_URL . 'img/',
+                'src="' . BASE_URL . 'LandingPage/LandingPageYB/'
             ],
             $htmlContent
         );
@@ -172,24 +172,20 @@ if ($requestUri === '/LandingPage/LandingPage.html') {
 }
 
 // ----------------------
-// Serve Static Assets via Aliased Paths (/static/{alias}/...)
+// Serve Static Assets
 // ----------------------
-if (str_starts_with($requestUri, '/static/')) {
-    $aliasMap = [
-        'img' => '/img/',
-        'lp'  => '/LandingPage/',
-        'pub' => '/Public/assets/'
-    ];
+$staticPaths = [
+    '/img/'                           => '/img/',
+    '/LandingPage/LandingPageYB/pages/' => '/LandingPage/LandingPageYB/pages/',
+    '/LandingPage/'                   => '/LandingPage/',
+    '/Public/assets/css/'             => '/Public/assets/css/',
+    '/Public/assets/js/'              => '/Public/assets/js/'
+];
 
-    $rest = substr($requestUri, strlen('/static/'));
-    $firstSlashPos = strpos($rest, '/');
-    $alias = $firstSlashPos === false ? $rest : substr($rest, 0, $firstSlashPos);
-    $relativePath = $firstSlashPos === false ? '' : substr($rest, $firstSlashPos + 1);
-
-    if (isset($aliasMap[$alias])) {
-        $baseFolder = $aliasMap[$alias];
-        $filePath = BASE_PATH . $baseFolder . $relativePath;
-        if (file_exists($filePath) && is_file($filePath)) {
+foreach ($staticPaths as $uriPrefix => $folder) {
+    if (str_starts_with($requestUri, $uriPrefix)) {
+        $filePath = BASE_PATH . $folder . substr($requestUri, strlen($uriPrefix));
+        if (file_exists($filePath)) {
             $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
             $mimeTypes = [
                 'jpg'  => 'image/jpeg',
@@ -199,8 +195,7 @@ if (str_starts_with($requestUri, '/static/')) {
                 'webp' => 'image/webp',
                 'css'  => 'text/css',
                 'js'   => 'application/javascript',
-                'svg'  => 'image/svg+xml',
-                'html' => 'text/html'
+                'svg'  => 'image/svg+xml'
             ];
             header('Content-Type: ' . ($mimeTypes[$ext] ?? 'application/octet-stream'));
             readfile($filePath);
