@@ -44,6 +44,7 @@
         </div>
       </div>
       <!-- Lower Curl SVG Divider -->
+      <iframe id="preload-frame" src="/landing" style="position:absolute; width:1px; height:1px; opacity:0; pointer-events:none; border:0;" loading="eager"></iframe>
       <div class="main-hero-lower-curl">
         <svg
           viewBox="0 0 1440 120"
@@ -72,5 +73,31 @@
         </svg>
       </div>
     </section>
+    <script>
+      (function () {
+        const iframe = document.getElementById('preload-frame');
+        function allImagesLoaded(doc) {
+          const imgs = Array.from(doc ? doc.images : []);
+          if (imgs.length === 0) return true;
+          return imgs.every((img) => img.complete && img.naturalWidth > 0);
+        }
+        function tryRedirect() {
+          try {
+            const doc = iframe.contentDocument || iframe.contentWindow.document;
+            if (doc && allImagesLoaded(doc)) {
+              window.location.replace('/landing');
+            }
+          } catch (_) {}
+        }
+        iframe.addEventListener('load', () => {
+          tryRedirect();
+          const interval = setInterval(tryRedirect, 300);
+          setTimeout(() => {
+            clearInterval(interval);
+            window.location.replace('/landing');
+          }, 10000);
+        });
+      })();
+    </script>
   </body>
 </html>

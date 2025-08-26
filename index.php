@@ -112,9 +112,24 @@ if (file_exists($phpFile) && pathinfo($phpFile, PATHINFO_EXTENSION) === 'php') {
 }
 
 // ----------------------
-// Serve Landing Page
+// Serve Loader at root
 // ----------------------
 if ($requestUri === '/' || $requestUri === '/index.php') {
+    $loaderPath = BASE_PATH . '/Public/Components/Loader.html';
+    if (file_exists($loaderPath)) {
+        readfile($loaderPath);
+        exit;
+    } else {
+        http_response_code(404);
+        echo 'Loader page not found';
+        exit;
+    }
+}
+
+// ----------------------
+// Serve Landing Page at /landing
+// ----------------------
+if ($requestUri === '/landing') {
     $landingPagePath = BASE_PATH . '/LandingPage/LandingPage.html';
 
     if (file_exists($landingPagePath)) {
@@ -151,7 +166,7 @@ if ($requestUri === '/' || $requestUri === '/index.php') {
         exit;
     } else {
         http_response_code(404);
-        echo "Landing page not found";
+        echo 'Landing page not found';
         exit;
     }
 }
