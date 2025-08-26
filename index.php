@@ -99,11 +99,11 @@ $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 // Define clean routes
 $routes = [
-    '/'        => BASE_PATH . '/LandingPage/LandingPage.html',
-    '/login'   => BASE_PATH . '/Public/Components/Login.php',
-    '/admin'   => BASE_PATH . '/Admin/Components/AdminDashboard.php',
-    '/student' => BASE_PATH . '/Student/Components/StudentDashboard.php',
-    '/loader'  => BASE_PATH . '/Public/Components/Loader.html',
+    '/LandingPage'        => BASE_PATH . '/LandingPage/LandingPage.html',
+    '/Login'   => BASE_PATH . '/Public/Components/Login.php',
+    '/Admin'   => BASE_PATH . '/Admin/Components/AdminDashboard.php',
+    '/Student' => BASE_PATH . '/Student/Components/StudentDashboard.php',
+    '/'  => BASE_PATH . '/Public/Components/Loader.html',
 ];
 
 // ----------------------
