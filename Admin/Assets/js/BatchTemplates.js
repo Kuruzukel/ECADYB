@@ -74,6 +74,92 @@ function applyTheme(themeName) {
   }
 }
 
+// ----------------------
+// Delete student modal
+// ----------------------
+const deleteModal = document.getElementById("delete-modal-overlay");
+const confirmDeleteBtn = document.getElementById("confirm-delete-btn");
+const cancelDeleteBtn = document.getElementById("cancel-delete-btn");
+
+let selectedStudentId = null;
+let selectedCollection = null;
+let selectedConfirmAction = null; // for image deletion in BatchTemplates
+
+function openDeleteModal(studentId, collection) {
+  selectedStudentId = studentId?.trim();
+  selectedCollection = collection?.trim();
+  if (deleteModal) deleteModal.style.display = "flex";
+}
+
+function closeDeleteModal() {
+  selectedStudentId = null;
+  selectedCollection = null;
+  selectedConfirmAction = null;
+  if (deleteModal) deleteModal.style.display = "none";
+}
+
+async function confirmDeleteStudent() {
+  if (!selectedStudentId || !selectedCollection) return;
+
+  if (confirmDeleteBtn) confirmDeleteBtn.disabled = true;
+
+  try {
+    const res = await fetch(
+      `${window.location.origin}/ECADYB/Connection/DeleteStudent.php`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          student_id: selectedStudentId,
+          collection: selectedCollection,
+        }),
+      }
+    );
+
+    const data = await res.json();
+    if (typeof showNotification === "function") {
+      showNotification(data.message, data.success ? "success" : "error");
+    }
+
+    if (data.success) {
+      const row = document
+        .querySelector(
+          `.student-checkbox[data-student-id="${selectedStudentId}"]`
+        )
+        ?.closest("tr");
+      if (row) row.remove();
+    }
+  } catch (err) {
+    console.error("Error deleting student:", err);
+    if (typeof showNotification === "function") {
+      showNotification("Error deleting student.", "error");
+    }
+  } finally {
+    if (confirmDeleteBtn) confirmDeleteBtn.disabled = false;
+    closeDeleteModal();
+  }
+}
+
+function initializeDeleteModal() {
+  if (!confirmDeleteBtn || !cancelDeleteBtn || !deleteModal) return;
+
+  cancelDeleteBtn.addEventListener("click", closeDeleteModal);
+  deleteModal.addEventListener("click", (e) => {
+    if (e.target === deleteModal) closeDeleteModal();
+  });
+  confirmDeleteBtn.addEventListener("click", async () => {
+    // Prefer student deletion if ids are set, else run image deletion action
+    if (selectedStudentId && selectedCollection) {
+      await confirmDeleteStudent();
+    } else if (typeof selectedConfirmAction === "function") {
+      selectedConfirmAction();
+      closeDeleteModal();
+    } else {
+      closeDeleteModal();
+    }
+  });
+}
+
 window.addEventListener("DOMContentLoaded", () => {
   const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
   applyTheme(savedTheme);
@@ -166,20 +252,26 @@ window.addEventListener("DOMContentLoaded", () => {
 
     deleteBtn.addEventListener("click", (event) => {
       event.stopPropagation();
-      frontImg = null;
-      backImg = null;
-      showingFront = true;
-      box.innerHTML = "";
-      // Recreate plus icon
-      const newPlus = document.createElement("span");
-      newPlus.className = "plus-icon";
-      newPlus.textContent = "+";
-      box.appendChild(newPlus);
-      ensureChildren();
-      deleteBtn.style.display = "none";
-      frontInput.value = "";
-      backInput.value = "";
-      box.classList.remove("has-image");
+      // Defer actual deletion until modal confirmation
+      selectedConfirmAction = () => {
+        frontImg = null;
+        backImg = null;
+        showingFront = true;
+        box.innerHTML = "";
+        // Recreate plus icon
+        const newPlus = document.createElement("span");
+        newPlus.className = "plus-icon";
+        newPlus.textContent = "+";
+        box.appendChild(newPlus);
+        ensureChildren();
+        deleteBtn.style.display = "none";
+        frontInput.value = "";
+        backInput.value = "";
+        box.classList.remove("has-image");
+      };
+      openDeleteModal();
     });
   });
+  
+  initializeDeleteModal();
 });
