@@ -1,12 +1,12 @@
 // service-worker.js
 
-const CACHE_NAME = "grad-gallery-cache-v1";
+const CACHE_NAME = "grad-gallery-cache-v2";
 
 // Files you want to cache for offline use
 const urlsToCache = [
   "/", // index.html
   "/LandingPage/LandingPage.css",
-  "/LandingPage.js",
+  "/LandingPage/LandingPage.js",
   "/Public/login.html",
 
   // Logos
@@ -61,31 +61,44 @@ self.addEventListener("install", (event) => {
 
 // Fetch: use cache first, then network
 self.addEventListener("fetch", (event) => {
+  const { request } = event;
+
+  // Network-first strategy for CSS to always get the latest styles
+  if (
+    request.destination === "style" ||
+    request.url.endsWith(".css")
+  ) {
+    event.respondWith(
+      fetch(new Request(request, { cache: "no-store" }))
+        .then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            const responseClone = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, responseClone));
+          }
+          return networkResponse;
+        })
+        .catch(() => caches.match(request))
+    );
+    return;
+  }
+
+  // Default: cache-first with network update
   event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
+    caches.match(request).then((cachedResponse) => {
       if (cachedResponse) {
         return cachedResponse;
       }
-
-      return fetch(event.request)
+      return fetch(request)
         .then((response) => {
           if (!response || response.status !== 200) {
             return response;
           }
-
-          let responseClone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseClone);
-          });
-
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(request, responseClone));
           return response;
         })
         .catch((error) => {
-          console.warn(
-            "[ServiceWorker] Fetch failed for:",
-            event.request.url,
-            error
-          );
+          console.warn("[ServiceWorker] Fetch failed for:", request.url, error);
           throw error;
         });
     })
