@@ -25,16 +25,7 @@
     const interval = setInterval(tryRedirect, 300);
     setTimeout(() => {
       clearInterval(interval);
-      // Force transition even if not all images finished loading
-      try {
-        const doc = iframe.contentDocument || iframe.contentWindow.document;
-        if (doc) {
-          const html = doc.documentElement.outerHTML;
-          document.open();
-          document.write(html);
-          document.close();
-        }
-      } catch (_) {}
+      tryRedirect();
     }, 10000);
   });
 })();
