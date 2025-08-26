@@ -3,7 +3,7 @@ body {
   align-items: center;
   justify-content: center;
   margin: 0;
-  background-image: url("/img/ECABG.jpg");
+  background-image: url("https://ECADYB.b-cdn.net/img/ECABG.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -65,7 +65,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: url("/img/ECABG.jpg") center center/cover no-repeat;
+  background: url("https://ECADYB.b-cdn.net/img/ECABG.jpg") center center/cover no-repeat;
   pointer-events: none;
   filter: blur(6px);
   transform: scale(1.1);

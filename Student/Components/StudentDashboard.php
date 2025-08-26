@@ -49,7 +49,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'student') {
     <!-- Navbar -->
     <header>
         <div class="logo">
-            <img src="/img/ADMINGRALLERYLOGO.png" alt="Logo" class="logo-img" />
+            <img src="https://ECADYB.b-cdn.net/img/ADMINGRALLERYLOGO.png" alt="Logo" class="logo-img" />
             <span>GRADUATION GALLERY</span>
         </div>
 
@@ -62,7 +62,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'student') {
         </nav>
 
         <div class="profile-dropdown">
-            <img src="/img/Profile.png" alt="Profile" class="profile-icon" id="profileDropdownBtn" />
+            <img src="https://ECADYB.b-cdn.net/img/Profile.png" alt="Profile" class="profile-icon" id="profileDropdownBtn" />
             <div class="dropdown-menu" id="profileDropdownMenu">
                 <button class="dropdown-item" onclick="window.location.href='/Student/Components/ChangePassword.html'">
                     Change Password
@@ -81,7 +81,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'student') {
         <div class="main-hero-background"></div>
         <div class="main-hero-text">
             <div class="logo-container">
-                <img src="/img/GRALLERYLOGO4.0.png" alt="Logo" class="logo-img" />
+                <img src="https://ECADYB.b-cdn.net/img/GRALLERYLOGO4.0.png" alt="Logo" class="logo-img" />
             </div>
             <div class="hero-message">
                 <div>
@@ -122,7 +122,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'student') {
         <div style="display: flex; align-items: flex-start; gap: 0rem">
             <!-- Left: Iframe -->
             <div>
-                <img src="/img/ABOUTIMG.png" class="about-image" alt="Yearbook
+                <img src="https://ECADYB.b-cdn.net/img/ABOUTIMG.png" class="about-image" alt="Yearbook
           Preview" ; />
             </div>
             <!-- Right: About Section -->
@@ -160,33 +160,33 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'student') {
         <h2 class="section-title">Digital Yearbook</h2>
         <div class="yearbooks-row">
             <div class="yearbook-card">
-                <img src="/img/YB COVER/MaritimeEducation.png" class="yearbook-cover" />
+                <img src="https://ECADYB.b-cdn.net/img/YB COVER/MaritimeEducation.png" class="yearbook-cover" />
                 <div class="yearbook-title">COLLEGE OF MARITIME EDUCATION</div>
             </div>
             <div class="yearbook-card">
-                <img src="/img/YB COVER/TourismManagement.png" class="yearbook-cover" />
+                <img src="https://ECADYB.b-cdn.net/img/YB COVER/TourismManagement.png" class="yearbook-cover" />
                 <div class="yearbook-title">COLLEGE OF TOURISM MANAGEMENT</div>
             </div>
             <div class="yearbook-card">
-                <img src="/img/YB COVER/CriminalJusticeEducation.png" class="yearbook-cover" />
+                <img src="https://ECADYB.b-cdn.net/img/YB COVER/CriminalJusticeEducation.png" class="yearbook-cover" />
                 <div class="yearbook-title">
                     COLLEGE OF CRIMINAL JUSTICE EDUCATION
                 </div>
             </div>
             <div class="yearbook-card">
-                <img src="/img/YB COVER/InformationSystem.png" class="yearbook-cover" />
+                <img src="https://ECADYB.b-cdn.net/img/YB COVER/InformationSystem.png" class="yearbook-cover" />
                 <div class="yearbook-title">COLLEGE OF INFORMATION SYSTEM</div>
             </div>
             <div class="yearbook-card">
-                <img src="/img/YB COVER/BusinessAdministration.png" class="yearbook-cover" />
+                <img src="https://ECADYB.b-cdn.net/img/YB COVER/BusinessAdministration.png" class="yearbook-cover" />
                 <div class="yearbook-title">COLLEGE OF BUSINESS ADMINISTRATION</div>
             </div>
             <div class="yearbook-card">
-                <img src="/img/YB COVER/Education.png" class="yearbook-cover" />
+                <img src="https://ECADYB.b-cdn.net/img/YB COVER/Education.png" class="yearbook-cover" />
                 <div class="yearbook-title">COLLEGE OF EDUCATION</div>
             </div>
             <div class="yearbook-card">
-                <img src="/img/YB COVER/Nursing.png" class="yearbook-cover" />
+                <img src="https://ECADYB.b-cdn.net/img/YB COVER/Nursing.png" class="yearbook-cover" />
                 <div class="yearbook-title">COLLEGE OF NURSING</div>
             </div>
         </div>
@@ -216,36 +216,36 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'student') {
         </p>
         <div class="carousel-container">
             <div class="carousel-track" id="carousel-track">
-                <img src="/img/CAROUSEL/sample1.jpg" class="carousel-img" />
-                <img src="/img/CAROUSEL/sample2.jpg" class="carousel-img" />
-                <img src="/img/CAROUSEL/sample3.jpg" class="carousel-img" />
-                <img src="/img/CAROUSEL/sample4.jpg" class="carousel-img" />
-                <img src="/img/CAROUSEL/sample5.jpg" class="carousel-img" />
-                <img src="/img/CAROUSEL/sample6.jpg" class="carousel-img" />
-                <img src="/img/CAROUSEL/sample7.jpg" class="carousel-img" />
-                <img src="/img/CAROUSEL/sample8.jpg" class="carousel-img" />
-                <img src="/img/CAROUSEL/sample9.jpg" class="carousel-img" />
-                <img src="/img/CAROUSEL/sample10.jpg" class="carousel-img" />
-                <img src="/img/CAROUSEL/sample11.jpg" class="carousel-img" />
-                <img src="/img/CAROUSEL/sample12.jpg" class="carousel-img" />
-                <img src="/img/CAROUSEL/sample13.jpg" class="carousel-img" />
-                <img src="/img/CAROUSEL/sample14.jpg" class="carousel-img" />
-                <img src="/img/CAROUSEL/sample15.jpg" class="carousel-img" />
-                <img src="/img/CAROUSEL/sample1.jpg" class="carousel-img" />
-                <img src="/img/CAROUSEL/sample2.jpg" class="carousel-img" />
-                <img src="/img/CAROUSEL/sample3.jpg" class="carousel-img" />
-                <img src="/img/CAROUSEL/sample4.jpg" class="carousel-img" />
-                <img src="/img/CAROUSEL/sample5.jpg" class="carousel-img" />
-                <img src="/img/CAROUSEL/sample6.jpg" class="carousel-img" />
-                <img src="/img/CAROUSEL/sample7.jpg" class="carousel-img" />
-                <img src="/img/CAROUSEL/sample8.jpg" class="carousel-img" />
-                <img src="/img/CAROUSEL/sample9.jpg" class="carousel-img" />
-                <img src="/img/CAROUSEL/sample10.jpg" class="carousel-img" />
-                <img src="/img/CAROUSEL/sample11.jpg" class="carousel-img" />
-                <img src="/img/CAROUSEL/sample12.jpg" class="carousel-img" />
-                <img src="/img/CAROUSEL/sample13.jpg" class="carousel-img" />
-                <img src="/img/CAROUSEL/sample14.jpg" class="carousel-img" />
-                <img src="/img/CAROUSEL/sample15.jpg" class="carousel-img" />
+                <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample1.jpg" class="carousel-img" />
+                <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample2.jpg" class="carousel-img" />
+                <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample3.jpg" class="carousel-img" />
+                <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample4.jpg" class="carousel-img" />
+                <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample5.jpg" class="carousel-img" />
+                <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample6.jpg" class="carousel-img" />
+                <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample7.jpg" class="carousel-img" />
+                <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample8.jpg" class="carousel-img" />
+                <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample9.jpg" class="carousel-img" />
+                <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample10.jpg" class="carousel-img" />
+                <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample11.jpg" class="carousel-img" />
+                <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample12.jpg" class="carousel-img" />
+                <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample13.jpg" class="carousel-img" />
+                <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample14.jpg" class="carousel-img" />
+                <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample15.jpg" class="carousel-img" />
+                <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample1.jpg" class="carousel-img" />
+                <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample2.jpg" class="carousel-img" />
+                <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample3.jpg" class="carousel-img" />
+                <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample4.jpg" class="carousel-img" />
+                <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample5.jpg" class="carousel-img" />
+                <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample6.jpg" class="carousel-img" />
+                <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample7.jpg" class="carousel-img" />
+                <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample8.jpg" class="carousel-img" />
+                <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample9.jpg" class="carousel-img" />
+                <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample10.jpg" class="carousel-img" />
+                <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample11.jpg" class="carousel-img" />
+                <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample12.jpg" class="carousel-img" />
+                <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample13.jpg" class="carousel-img" />
+                <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample14.jpg" class="carousel-img" />
+                <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample15.jpg" class="carousel-img" />
             </div>
         </div>
     </section>
@@ -254,7 +254,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'student') {
     <footer class="footer-section" id="footer">
         <div class="footer-inner-container">
             <div class="footer-logo-container left">
-                <img src="/img/ECALOGO.png" alt="ECA Logo" class="footer-logo-img footer-logo-img-left" />
+                <img src="https://ECADYB.b-cdn.net/img/ECALOGO.png" alt="ECA Logo" class="footer-logo-img footer-logo-img-left" />
             </div>
             <div class="footer-content">
                 <div class="footer-contact-info">
@@ -287,7 +287,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'student') {
                 <div class="footer-copy">&copy; 2025 TEAM NOVA SPIRE.</div>
             </div>
             <div class="footer-logo-container right">
-                <img src="/img/GRALLERYLOGO4.0.png" alt="Grallery Logo" class="footer-logo-img footer-logo-img-right" />
+                <img src="https://ECADYB.b-cdn.net/img/GRALLERYLOGO4.0.png" alt="Grallery Logo" class="footer-logo-img footer-logo-img-right" />
             </div>
         </div>
     </footer>
