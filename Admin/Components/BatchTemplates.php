@@ -19,8 +19,55 @@
                 <div class="section">
                     <div class="section-header">Batch Template 1</div>
                     <div class="section-content">
-                        <div class="file-card">
-
+                        <div class="upload-grid">
+                            <div class="upload-box">
+                                <span class="plus-icon">+</span>
+                                <input type="file" class="frontInput" accept="image/*" hidden>
+                                <input type="file" class="backInput" accept="image/*" hidden>
+                                <button class="delete-btn">&times;</button>
+                            </div>
+                            <div class="upload-box">
+                                <span class="plus-icon">+</span>
+                                <input type="file" class="frontInput" accept="image/*" hidden>
+                                <input type="file" class="backInput" accept="image/*" hidden>
+                                <button class="delete-btn">&times;</button>
+                            </div>
+                            <div class="upload-box">
+                                <span class="plus-icon">+</span>
+                                <input type="file" class="frontInput" accept="image/*" hidden>
+                                <input type="file" class="backInput" accept="image/*" hidden>
+                                <button class="delete-btn">&times;</button>
+                            </div>
+                            <div class="upload-box">
+                                <span class="plus-icon">+</span>
+                                <input type="file" class="frontInput" accept="image/*" hidden>
+                                <input type="file" class="backInput" accept="image/*" hidden>
+                                <button class="delete-btn">&times;</button>
+                            </div>
+                            <div class="upload-box">
+                                <span class="plus-icon">+</span>
+                                <input type="file" class="frontInput" accept="image/*" hidden>
+                                <input type="file" class="backInput" accept="image/*" hidden>
+                                <button class="delete-btn">&times;</button>
+                            </div>
+                            <div class="upload-box">
+                                <span class="plus-icon">+</span>
+                                <input type="file" class="frontInput" accept="image/*" hidden>
+                                <input type="file" class="backInput" accept="image/*" hidden>
+                                <button class="delete-btn">&times;</button>
+                            </div>
+                            <div class="upload-box">
+                                <span class="plus-icon">+</span>
+                                <input type="file" class="frontInput" accept="image/*" hidden>
+                                <input type="file" class="backInput" accept="image/*" hidden>
+                                <button class="delete-btn">&times;</button>
+                            </div>
+                            <div class="upload-box">
+                                <span class="plus-icon">+</span>
+                                <input type="file" class="frontInput" accept="image/*" hidden>
+                                <input type="file" class="backInput" accept="image/*" hidden>
+                                <button class="delete-btn">&times;</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -28,8 +75,55 @@
                 <div class="section">
                     <div class="section-header">Batch Template 2</div>
                     <div class="section-content">
-                        <div class="file-card">
-
+                        <div class="upload-grid">
+                            <div class="upload-box">
+                                <span class="plus-icon">+</span>
+                                <input type="file" class="frontInput" accept="image/*" hidden>
+                                <input type="file" class="backInput" accept="image/*" hidden>
+                                <button class="delete-btn">&times;</button>
+                            </div>
+                            <div class="upload-box">
+                                <span class="plus-icon">+</span>
+                                <input type="file" class="frontInput" accept="image/*" hidden>
+                                <input type="file" class="backInput" accept="image/*" hidden>
+                                <button class="delete-btn">&times;</button>
+                            </div>
+                            <div class="upload-box">
+                                <span class="plus-icon">+</span>
+                                <input type="file" class="frontInput" accept="image/*" hidden>
+                                <input type="file" class="backInput" accept="image/*" hidden>
+                                <button class="delete-btn">&times;</button>
+                            </div>
+                            <div class="upload-box">
+                                <span class="plus-icon">+</span>
+                                <input type="file" class="frontInput" accept="image/*" hidden>
+                                <input type="file" class="backInput" accept="image/*" hidden>
+                                <button class="delete-btn">&times;</button>
+                            </div>
+                            <div class="upload-box">
+                                <span class="plus-icon">+</span>
+                                <input type="file" class="frontInput" accept="image/*" hidden>
+                                <input type="file" class="backInput" accept="image/*" hidden>
+                                <button class="delete-btn">&times;</button>
+                            </div>
+                            <div class="upload-box">
+                                <span class="plus-icon">+</span>
+                                <input type="file" class="frontInput" accept="image/*" hidden>
+                                <input type="file" class="backInput" accept="image/*" hidden>
+                                <button class="delete-btn">&times;</button>
+                            </div>
+                            <div class="upload-box">
+                                <span class="plus-icon">+</span>
+                                <input type="file" class="frontInput" accept="image/*" hidden>
+                                <input type="file" class="backInput" accept="image/*" hidden>
+                                <button class="delete-btn">&times;</button>
+                            </div>
+                            <div class="upload-box">
+                                <span class="plus-icon">+</span>
+                                <input type="file" class="frontInput" accept="image/*" hidden>
+                                <input type="file" class="backInput" accept="image/*" hidden>
+                                <button class="delete-btn">&times;</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -37,8 +131,55 @@
                 <div class="section">
                     <div class="section-header">Batch Template 3</div>
                     <div class="section-content">
-                        <div class="file-card">
-
+                        <div class="upload-grid">
+                            <div class="upload-box">
+                                <span class="plus-icon">+</span>
+                                <input type="file" class="frontInput" accept="image/*" hidden>
+                                <input type="file" class="backInput" accept="image/*" hidden>
+                                <button class="delete-btn">&times;</button>
+                            </div>
+                            <div class="upload-box">
+                                <span class="plus-icon">+</span>
+                                <input type="file" class="frontInput" accept="image/*" hidden>
+                                <input type="file" class="backInput" accept="image/*" hidden>
+                                <button class="delete-btn">&times;</button>
+                            </div>
+                            <div class="upload-box">
+                                <span class="plus-icon">+</span>
+                                <input type="file" class="frontInput" accept="image/*" hidden>
+                                <input type="file" class="backInput" accept="image/*" hidden>
+                                <button class="delete-btn">&times;</button>
+                            </div>
+                            <div class="upload-box">
+                                <span class="plus-icon">+</span>
+                                <input type="file" class="frontInput" accept="image/*" hidden>
+                                <input type="file" class="backInput" accept="image/*" hidden>
+                                <button class="delete-btn">&times;</button>
+                            </div>
+                            <div class="upload-box">
+                                <span class="plus-icon">+</span>
+                                <input type="file" class="frontInput" accept="image/*" hidden>
+                                <input type="file" class="backInput" accept="image/*" hidden>
+                                <button class="delete-btn">&times;</button>
+                            </div>
+                            <div class="upload-box">
+                                <span class="plus-icon">+</span>
+                                <input type="file" class="frontInput" accept="image/*" hidden>
+                                <input type="file" class="backInput" accept="image/*" hidden>
+                                <button class="delete-btn">&times;</button>
+                            </div>
+                            <div class="upload-box">
+                                <span class="plus-icon">+</span>
+                                <input type="file" class="frontInput" accept="image/*" hidden>
+                                <input type="file" class="backInput" accept="image/*" hidden>
+                                <button class="delete-btn">&times;</button>
+                            </div>
+                            <div class="upload-box">
+                                <span class="plus-icon">+</span>
+                                <input type="file" class="frontInput" accept="image/*" hidden>
+                                <input type="file" class="backInput" accept="image/*" hidden>
+                                <button class="delete-btn">&times;</button>
+                            </div>
                         </div>
                     </div>
                 </div>

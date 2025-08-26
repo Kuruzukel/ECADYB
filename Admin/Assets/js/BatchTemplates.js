@@ -77,4 +77,109 @@ function applyTheme(themeName) {
 window.addEventListener("DOMContentLoaded", () => {
   const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
   applyTheme(savedTheme);
+
+  // Initialize upload boxes (front/back/toggle/delete per box)
+  const uploadBoxes = document.querySelectorAll(".upload-box");
+  uploadBoxes.forEach((box) => {
+    const frontInput = box.querySelector(".frontInput");
+    const backInput = box.querySelector(".backInput");
+    const deleteBtn = box.querySelector(".delete-btn");
+    const plusIcon = box.querySelector(".plus-icon");
+
+    let frontImg = null;
+    let backImg = null;
+    let showingFront = true;
+
+    const toggleImages = () => {
+      showingFront = !showingFront;
+      if (frontImg && backImg) {
+        if (showingFront) {
+          frontImg.style.opacity = 1;
+          backImg.style.opacity = 0;
+        } else {
+          frontImg.style.opacity = 0;
+          backImg.style.opacity = 1;
+        }
+      }
+    };
+
+    const ensureChildren = () => {
+      if (frontImg) box.appendChild(frontImg);
+      if (backImg) box.appendChild(backImg);
+      box.appendChild(deleteBtn);
+      box.appendChild(frontInput);
+      box.appendChild(backInput);
+    };
+
+    box.addEventListener("click", (event) => {
+      if (event.target === deleteBtn) return;
+
+      if (!frontImg) {
+        frontInput.click();
+      } else if (!backImg) {
+        backInput.click();
+      } else {
+        toggleImages();
+      }
+    });
+
+    frontInput.addEventListener("change", (event) => {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        frontImg = document.createElement("img");
+        frontImg.src = e.target.result;
+        frontImg.classList.add("front-img");
+
+        box.innerHTML = "";
+        if (plusIcon) plusIcon.remove();
+        ensureChildren();
+        deleteBtn.style.display = "flex";
+        box.classList.add("has-image");
+      };
+      reader.readAsDataURL(file);
+    });
+
+    backInput.addEventListener("change", (event) => {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        backImg = document.createElement("img");
+        backImg.src = e.target.result;
+        backImg.classList.add("back-img");
+
+        box.innerHTML = "";
+        ensureChildren();
+        deleteBtn.style.display = "flex";
+        box.classList.add("has-image");
+        // Always start by showing front if available
+        showingFront = true;
+        if (frontImg) {
+          frontImg.style.opacity = 1;
+          if (backImg) backImg.style.opacity = 0;
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+
+    deleteBtn.addEventListener("click", (event) => {
+      event.stopPropagation();
+      frontImg = null;
+      backImg = null;
+      showingFront = true;
+      box.innerHTML = "";
+      // Recreate plus icon
+      const newPlus = document.createElement("span");
+      newPlus.className = "plus-icon";
+      newPlus.textContent = "+";
+      box.appendChild(newPlus);
+      ensureChildren();
+      deleteBtn.style.display = "none";
+      frontInput.value = "";
+      backInput.value = "";
+      box.classList.remove("has-image");
+    });
+  });
 });
