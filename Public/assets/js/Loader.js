@@ -11,7 +11,11 @@
     try {
       const doc = iframe.contentDocument || iframe.contentWindow.document;
       if (doc && allImagesLoaded(doc)) {
-        window.location.replace('/LandingPage/LandingPage.html');
+        // Inject preloaded HTML into current page to keep URL at root
+        const html = doc.documentElement.outerHTML;
+        document.open();
+        document.write(html);
+        document.close();
       }
     } catch (_) {}
   }
@@ -21,7 +25,7 @@
     const interval = setInterval(tryRedirect, 300);
     setTimeout(() => {
       clearInterval(interval);
-      window.location.replace('/LandingPage/LandingPage.html');
+      tryRedirect();
     }, 10000);
   });
 })();
