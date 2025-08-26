@@ -127,7 +127,7 @@ if ($requestUri === '/' || $requestUri === '/index.php') {
 }
 
 // ----------------------
-// Serve Landing Page at /landing
+// Serve Landing Page at /LandingPage/LandingPage.html
 // ----------------------
 if ($requestUri === '/LandingPage/LandingPage.html') {
     $landingPagePath = BASE_PATH . '/LandingPage/LandingPage.html';
@@ -177,6 +177,7 @@ if ($requestUri === '/LandingPage/LandingPage.html') {
 $staticPaths = [
     '/img/'                           => '/img/',
     '/LandingPage/LandingPageYB/pages/' => '/LandingPage/LandingPageYB/pages/',
+    '/LandingPage/'                   => '/LandingPage/',
     '/Public/assets/css/'             => '/Public/assets/css/',
     '/Public/assets/js/'              => '/Public/assets/js/'
 ];
