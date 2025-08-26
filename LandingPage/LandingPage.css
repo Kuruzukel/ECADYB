@@ -1613,358 +1613,16 @@ header.hidden {
 
 /* Large phone */
 @media (max-width: 767px) and (min-width: 600px) {
-  header {
-    width: 80%;
-    height: 55px;
-    padding: 0 0.3rem;
-  }
-
-  .logo-img {
-    width: 45px;
-    height: 45px;
-  }
-
-  .logo span {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    font-size: 1.2rem;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
-  .center-nav {
-    display: none;
-  }
-
-  .center-nav a {
-    font-size: 0.8rem;
-    margin: auto;
-  }
-
-  .login-btn {
-    display: none;
-  }
-
-  .hamburger-menu {
+  .main-hero {
+    position: relative;
+    width: 100%;
+    min-height: 88vh;
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-
-  .hamburger-menu.active + .center-nav,
-  .center-nav.mobile-active {
-    display: flex;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: linear-gradient(135deg, #112d4e 0%, #1a237e 100%);
-    flex-direction: column;
-    padding: 1.5rem;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-    border-radius: 16px;
-    z-index: 1000;
-    transform: translateX(0);
-    animation: slideDown 0.3s ease;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    margin: 0.5rem;
-  }
-  .center-nav.mobile-active a {
-    padding: 1rem 1.2rem;
-    margin: 0.3rem 0;
-    border-radius: 12px;
-    text-align: center;
-    font-size: 1rem;
-    font-weight: 500;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
     overflow: hidden;
-    letter-spacing: 0.5px;
-  }
-  .center-nav.mobile-active a::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.1),
-      transparent
-    );
-    transition: left 0.5s ease;
-  }
-  .center-nav.mobile-active a:hover::before {
-    left: 100%;
-  }
-  .center-nav.mobile-active a:hover {
-    background-color: rgba(255, 255, 255, 0.15);
-    transform: translateX(8px) scale(1.02);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   }
 
-  .mobile-login-dropdown {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 0.5rem;
-  }
-  .mobile-login-btn {
-    width: 90%;
-    margin: 0.5rem auto 0 auto;
-    padding: 0.8rem 1.5rem;
-    background: none;
-    border: 2px solid #000042;
-    border-radius: 999px;
-    color: white;
-    font-size: 1rem;
-    font-weight: 600;
-    text-align: center;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 12px #112d4e;
-    cursor: pointer;
-    position: relative;
-    z-index: 1100;
-  }
-
-  .mobile-login-btn:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    transform: translateX(5px);
-  }
-  .mobile-login-dropdown-menu {
-    display: none;
-    flex-direction: column;
-    width: 100%;
-    align-self: center;
-    margin: 1.5rem auto 0 auto;
-    background: linear-gradient(135deg, #112d4e 0%, #1a237e 100%);
-    border-radius: 16px;
-    position: relative;
-    z-index: 1100;
-    overflow: hidden;
-    opacity: 0;
-    transform: translateY(-10px);
-    pointer-events: none;
-    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-      transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .mobile-login-dropdown-item:hover {
-    font-size: 1.1rem;
-    font-weight: 600;
-    transform: none !important;
-  }
-
-  .mobile-login-btn {
-    width: 90%;
-    margin: 0.5rem auto 0 auto;
-    padding: 0.8rem 1.5rem;
-    background: none;
-    border: 2px solid #000042;
-    border-radius: 999px;
-    color: white;
-    font-size: 1rem;
-    font-weight: 600;
-    text-align: center;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 12px #112d4e;
-    cursor: pointer;
-    position: relative;
-    z-index: 1100;
-  }
-
-  .mobile-login-dropdown-item:hover {
-    background-color: rgba(255, 255, 255, 0.15);
-    color: #fff;
-    transform: translateX(8px) scale(1.02);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  }
-
-  @keyframes slideDown {
-    from {
-      opacity: 0;
-      transform: translateY(-20px) scale(0.95);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-  }
-
-  .main-hero-text .logo-container .logo-img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    margin-top: -3rem;
-  }
-
-  .main-hero-text {
-    margin-top: 0rem;
-    margin-bottom: 1.6rem;
-  }
-
-  .logo-container {
-    width: 370px;
-    height: 370px;
-  }
-
-  .hero-message {
-    font-size: 1.2rem;
-    margin-bottom: 3.5rem;
-    max-width: 93%;
-  }
-
-  .hero-message-bold {
-    font-size: 1.2rem;
-    font-weight: 600;
-    max-width: 96%;
-    margin-top: 0.8rem;
-  }
-
-  .hero-btn {
-    background: #000042;
-    color: #fff;
-    padding: 0.85rem 2rem;
-    border: none;
-    border-radius: 999px;
-    font-size: 0.89rem;
-    font-weight: 505;
-    cursor: pointer;
-    text-decoration: none;
-    box-shadow: 0 4px 16px rgba(0, 0, 66, 0.13);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1.5px solid #112d4e;
-    position: relative;
-    width: 200px;
-    height: 50px;
-  }
-
-  .hero-btn-secondary {
-    background: #112d4e;
-    color: white;
-    box-shadow: 0 2px 12px rgba(99, 102, 241, 0.18);
-    border: 1.5px solid #0c27be;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-  }
-
-  .about-image {
-    display: none;
-  }
-
-  .about-section {
-    padding: none;
-  }
-
-  .about-section .section-title {
-    font-size: 2.5rem;
-    text-align: center;
-    margin-top: 1.6rem;
-  }
-
-  .about-description {
-    width: 100%;
-    text-align: center;
-    font-size: 1.85rem;
-    margin-left: 0;
-    margin-right: 0;
-  }
-
-  .yearbooks-section .section-title {
-    font-size: 2.2rem;
-    text-align: center;
-    margin-top: 1.6rem;
-  }
-
-  .yearbook-card {
-    width: calc(30% - 1rem);
-    max-width: none;
-    height: auto;
-    margin-bottom: -1rem;
-  }
-
-  .yearbooks-row {
-    padding: 0 1rem;
-    gap: 1rem;
-  }
-
-  .yearbook-title {
-    font-size: 0.9rem;
-    margin-top: 0.5rem;
-    margin-bottom: 3rem;
-  }
-
-  .carousel-subtitle {
-    text-align: center;
-    color: white;
-    font-size: 1rem;
-    margin-bottom: 2.5rem;
-    margin-top: 0.5rem;
-    letter-spacing: 1px;
-    font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
-      BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-  }
-
-  .carousel-section .section-title {
-    color: white;
-    font-size: 2rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-    margin-top: 1.8rem;
-    letter-spacing: 1px;
-    text-shadow: none;
-    font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
-      BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-    border-bottom: none;
-    display: block;
-    padding-bottom: 0;
-    text-align: center;
-  }
-
-  @keyframes carousel-scroll {
-    0% {
-      transform: translateX(0);
-    }
-    100% {
-      transform: translateX(-1000%);
-    }
-  }
-
-  .carousel-track img {
-    width: 100%;
-    max-width: 480px;
-    height: 100%; /* fills the container height */
-    object-fit: contain; /* keeps full image */
-    border-radius: 12px;
-    margin: 0 1rem;
-    flex-shrink: 0;
-    background: #021326; /* fills gaps */
-  }
-
-  .footer-inner-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border: 2px solid #0c27be;
-    border-radius: 18px;
-    margin: 0 auto;
-    padding: 1.5rem 2rem;
-    background: #000042;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
-  }
-}
-
-/* Medium phone */
-@media (max-width: 599px) and (min-width: 480px) {
   header {
     width: 80%;
     height: 50px;
@@ -1972,8 +1630,8 @@ header.hidden {
   }
 
   .logo-img {
-    width: 40px;
-    height: 40px;
+    width: 38px;
+    height: 38px;
   }
 
   .logo span {
@@ -2161,6 +1819,7 @@ header.hidden {
   .main-hero-text {
     margin-top: 0rem;
     margin-bottom: 1.6rem;
+    bottom: 0vh;
   }
 
   .logo-container {
@@ -2169,13 +1828,13 @@ header.hidden {
   }
 
   .hero-message {
-    font-size: 1.2rem;
+    font-size: 1rem;
     margin-bottom: 3.5rem;
     max-width: 93%;
   }
 
   .hero-message-bold {
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 600;
     max-width: 96%;
     margin-top: 0.8rem;
@@ -2217,7 +1876,7 @@ header.hidden {
   }
 
   .about-section .section-title {
-    font-size: 2.3rem;
+    font-size: 2rem;
     text-align: center;
     margin-top: 1.6rem;
   }
@@ -2225,7 +1884,372 @@ header.hidden {
   .about-description {
     width: 100%;
     text-align: center;
-    font-size: 1.59rem;
+    font-size: 1.4rem;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .yearbooks-section .section-title {
+    font-size: 2.2rem;
+    text-align: center;
+    margin-top: 1.6rem;
+  }
+
+  .yearbook-card {
+    width: calc(30% - 1rem);
+    max-width: none;
+    height: auto;
+    margin-bottom: -1rem;
+  }
+
+  .yearbooks-row {
+    padding: 0 1rem;
+    gap: 1rem;
+  }
+
+  .yearbook-title {
+    font-size: 0.7rem;
+    margin-top: 0.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .carousel-subtitle {
+    text-align: center;
+    color: white;
+    font-size: 1rem;
+    margin-bottom: 2.5rem;
+    margin-top: 0.5rem;
+    letter-spacing: 1px;
+    font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
+      BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  }
+
+  .carousel-section .section-title {
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    margin-top: 1.8rem;
+    letter-spacing: 1px;
+    text-shadow: none;
+    font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
+      BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    border-bottom: none;
+    display: block;
+    padding-bottom: 0;
+    text-align: center;
+  }
+
+  @keyframes carousel-scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-1000%);
+    }
+  }
+
+  .carousel-track img {
+    width: 100%;
+    max-width: 430px;
+    height: 100%; /* fills the container height */
+    object-fit: contain; /* keeps full image */
+    border-radius: 12px;
+    margin: 0 1rem;
+    flex-shrink: 0;
+    background: #021326; /* fills gaps */
+  }
+
+  .footer-inner-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 2px solid #0c27be;
+    border-radius: 18px;
+    margin: 0 auto;
+    padding: 1.5rem 2rem;
+    background: #000042;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+  }
+  .footer-logo-img {
+    display: none;
+  }
+}
+
+/* Medium phone */
+@media (max-width: 599px) and (min-width: 480px) {
+  .main-hero {
+    position: relative;
+    width: 100%;
+    min-height: 88vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  header {
+    width: 80%;
+    height: 50px;
+    padding: 0 0.3rem;
+  }
+
+  .logo-img {
+    width: 38px;
+    height: 38px;
+  }
+
+  .logo span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 0.94rem;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .center-nav {
+    display: none;
+  }
+
+  .center-nav a {
+    font-size: 0.8rem;
+    margin: auto;
+  }
+
+  .login-btn {
+    display: none;
+  }
+
+  .hamburger-menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hamburger-menu.active + .center-nav,
+  .center-nav.mobile-active {
+    display: flex;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, #112d4e 0%, #1a237e 100%);
+    flex-direction: column;
+    padding: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    border-radius: 16px;
+    z-index: 1000;
+    transform: translateX(0);
+    animation: slideDown 0.3s ease;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin: 0.5rem;
+  }
+  .center-nav.mobile-active a {
+    padding: 1rem 1.2rem;
+    margin: 0.3rem 0;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    letter-spacing: 0.5px;
+  }
+  .center-nav.mobile-active a::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.1),
+      transparent
+    );
+    transition: left 0.5s ease;
+  }
+  .center-nav.mobile-active a:hover::before {
+    left: 100%;
+  }
+  .center-nav.mobile-active a:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    transform: translateX(8px) scale(1.02);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  .mobile-login-dropdown {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 0.5rem;
+  }
+  .mobile-login-btn {
+    width: 90%;
+    margin: 0.5rem auto 0 auto;
+    padding: 0.8rem 1.5rem;
+    background: none;
+    border: 2px solid #000042;
+    border-radius: 999px;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 12px #112d4e;
+    cursor: pointer;
+    position: relative;
+    z-index: 1100;
+  }
+
+  .mobile-login-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateX(5px);
+  }
+  .mobile-login-dropdown-menu {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    align-self: center;
+    margin: 1.5rem auto 0 auto;
+    background: linear-gradient(135deg, #112d4e 0%, #1a237e 100%);
+    border-radius: 16px;
+    position: relative;
+    z-index: 1100;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .mobile-login-dropdown-item:hover {
+    font-size: 1.1rem;
+    font-weight: 600;
+    transform: none !important;
+  }
+
+  .mobile-login-btn {
+    width: 90%;
+    margin: 0.5rem auto 0 auto;
+    padding: 0.8rem 1.5rem;
+    background: none;
+    border: 2px solid #000042;
+    border-radius: 999px;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 12px #112d4e;
+    cursor: pointer;
+    position: relative;
+    z-index: 1100;
+  }
+
+  .mobile-login-dropdown-item:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    transform: translateX(8px) scale(1.02);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  .main-hero-text .logo-container .logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    margin-top: -3rem;
+  }
+
+  .main-hero-text {
+    margin-top: 0rem;
+    margin-bottom: 1.6rem;
+    bottom: 0vh;
+  }
+
+  .logo-container {
+    width: 330px;
+    height: 330px;
+  }
+
+  .hero-message {
+    font-size: 1rem;
+    margin-bottom: 3.5rem;
+    max-width: 93%;
+  }
+
+  .hero-message-bold {
+    font-size: 1rem;
+    font-weight: 600;
+    max-width: 96%;
+    margin-top: 0.8rem;
+  }
+
+  .hero-btn {
+    background: #000042;
+    color: #fff;
+    padding: 0.85rem 2rem;
+    border: none;
+    border-radius: 999px;
+    font-size: 0.89rem;
+    font-weight: 505;
+    cursor: pointer;
+    text-decoration: none;
+    box-shadow: 0 4px 16px rgba(0, 0, 66, 0.13);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1.5px solid #112d4e;
+    position: relative;
+    width: 195px;
+    height: 50px;
+  }
+
+  .hero-btn-secondary {
+    background: #112d4e;
+    color: white;
+    box-shadow: 0 2px 12px rgba(99, 102, 241, 0.18);
+    border: 1.5px solid #0c27be;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+  }
+
+  .about-image {
+    display: none;
+  }
+
+  .about-section {
+    padding: none;
+  }
+
+  .about-section .section-title {
+    font-size: 2rem;
+    text-align: center;
+    margin-top: 1.6rem;
+  }
+
+  .about-description {
+    width: 100%;
+    text-align: center;
+    font-size: 1.4rem;
     margin-left: 0;
     margin-right: 0;
   }
@@ -2319,6 +2343,16 @@ header.hidden {
 
 /* Small phone */
 @media (max-width: 479px) and (min-width: 320px) {
+  .main-hero {
+    position: relative;
+    width: 100%;
+    min-height: 88vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
   header {
     width: 80%;
     height: 50px;
@@ -2326,8 +2360,8 @@ header.hidden {
   }
 
   .logo-img {
-    width: 40px;
-    height: 40px;
+    width: 38px;
+    height: 38px;
   }
 
   .logo span {
@@ -2515,6 +2549,7 @@ header.hidden {
   .main-hero-text {
     margin-top: 0rem;
     margin-bottom: 1.6rem;
+    bottom: 0vh;
   }
 
   .logo-container {
@@ -2523,13 +2558,13 @@ header.hidden {
   }
 
   .hero-message {
-    font-size: 1.2rem;
+    font-size: 1rem;
     margin-bottom: 3.2rem;
     max-width: 93%;
   }
 
   .hero-message-bold {
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 600;
     max-width: 96%;
     margin-top: 0.8rem;
@@ -2575,7 +2610,7 @@ header.hidden {
   }
 
   .about-section .section-title {
-    font-size: 2.2rem;
+    font-size: 2rem;
     text-align: center;
     margin-top: 1.6rem;
   }
@@ -2583,7 +2618,7 @@ header.hidden {
   .about-description {
     width: 100%;
     text-align: center;
-    font-size: 1.45rem;
+    font-size: 1.2rem;
     margin-left: 0;
     margin-right: 0;
   }
@@ -2721,257 +2756,6 @@ header.hidden {
 /* Large Phone - Landscape */
 @media only screen and (min-width: 600px) and (max-width: 767px) and (orientation: landscape) {
   /* styles for large phones in landscape */
-  header {
-    width: 80%;
-    height: 50px;
-    padding: 0 0.3rem;
-  }
-
-  .logo-img {
-    width: 40px;
-    height: 40px;
-  }
-
-  .logo span {
-    display: none;
-  }
-
-  .center-nav {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transform: translateX(-53%);
-  }
-
-  .center-nav a {
-    font-size: 0.6rem;
-    margin: auto;
-  }
-
-  .center-nav a:hover {
-    transform: translateX(8px) scale(1.02);
-    width: 100%;
-  }
-
-  .login-btn {
-    display: block;
-  }
-
-  .hamburger-menu {
-    display: none;
-  }
-
-  .hamburger-menu.active + .center-nav,
-  .center-nav.mobile-active {
-    display: none;
-  }
-  .center-nav.mobile-active a {
-    display: none;
-  }
-  .center-nav.mobile-active a::before {
-    display: none;
-  }
-  .center-nav.mobile-active a:hover::before {
-    display: none;
-  }
-  .center-nav.mobile-active a:hover {
-    display: none;
-  }
-
-  .mobile-login-dropdown {
-    display: none;
-  }
-  .mobile-login-btn {
-    display: none;
-  }
-
-  .mobile-login-btn:hover {
-    display: none;
-  }
-  .mobile-login-dropdown-menu {
-    display: none;
-  }
-  .mobile-login-dropdown-menu.active {
-    display: none;
-  }
-  .mobile-login-dropdown-item {
-    display: none;
-  }
-  .mobile-login-dropdown-item:hover {
-    display: none;
-  }
-
-  .mobile-login-btn {
-    display: none;
-  }
-
-  .mobile-login-dropdown-item {
-    display: none;
-  }
-
-  .mobile-login-dropdown-item:hover {
-    display: none;
-  }
-
-  @keyframes slideDown {
-    from {
-      opacity: 0;
-      transform: translateY(-20px) scale(0.95);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-  }
-  .main-hero-text .logo-container .logo-img {
-    display: none;
-  }
-
-  .main-hero-text {
-    margin-top: 0rem;
-    margin-bottom: 1.6rem;
-  }
-
-  .logo-container {
-    width: 150px;
-    height: 150px;
-  }
-
-  .hero-message {
-    font-size: 0.6rem;
-    margin-bottom: 3.2rem;
-    max-width: 93%;
-  }
-
-  .hero-message-bold {
-    font-size: 1.2rem;
-    font-weight: 600;
-    max-width: 96%;
-  }
-
-  .hero-buttons {
-    margin-bottom: 3.5rem;
-  }
-
-  .hero-btn {
-    background: #000042;
-    color: #fff;
-    padding: 0.8rem 2rem;
-    border: none;
-    border-radius: 999px;
-    font-size: 0.7rem;
-    font-weight: 505;
-    cursor: pointer;
-    text-decoration: none;
-    box-shadow: 0 4px 16px rgba(0, 0, 66, 0.13);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1.5px solid #112d4e;
-    position: relative;
-    width: 195px;
-    height: 45px;
-  }
-
-  .hero-btn-secondary {
-    background: #112d4e;
-    color: white;
-    box-shadow: 0 2px 12px rgba(99, 102, 241, 0.18);
-    border: 1.5px solid #0c27be;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-  }
-
-  .about-image {
-    display: none;
-  }
-
-  .about-section {
-    padding: none;
-  }
-
-  .about-section .section-title {
-    font-size: 1.8rem;
-    text-align: center;
-    margin-top: 0.7rem;
-  }
-
-  .about-description {
-    width: 100%;
-    text-align: center;
-    font-size: 1.5rem;
-    margin-left: 0;
-    margin-right: 0;
-  }
-
-  .yearbooks-section .section-title {
-    font-size: 1.8rem;
-    text-align: center;
-    margin-top: 1.6rem;
-    margin-bottom: 1rem;
-  }
-
-  .yearbook-card {
-    width: calc(30% - 1rem);
-    max-width: none;
-    height: auto;
-    margin-bottom: -1rem;
-  }
-
-  .yearbooks-row {
-    padding: 0 1rem;
-    gap: 1rem;
-  }
-
-  .yearbook-title {
-    font-size: 0.7rem;
-    margin-top: 0.5rem;
-  }
-
-  .carousel-subtitle {
-    text-align: center;
-    color: white;
-    font-size: 1rem;
-    margin-bottom: 2.5rem;
-    margin-top: 0.5rem;
-    letter-spacing: 1px;
-    font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
-      BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-  }
-
-  .carousel-section .section-title {
-    color: white;
-    font-size: 2rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-    margin-top: 1.8rem;
-    letter-spacing: 1px;
-    text-shadow: none;
-    font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
-      BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-    border-bottom: none;
-    display: block;
-    padding-bottom: 0;
-    text-align: center;
-  }
-
-  @keyframes carousel-scroll {
-    0% {
-      transform: translateX(0);
-    }
-    100% {
-      transform: translateX(-1000%);
-    }
-  }
-
-  .carousel-track img {
-    width: 100%;
-    max-width: 380px;
-    height: 100%; /* fills the container height */
-    object-fit: contain; /* keeps full image */
-    border-radius: 12px;
-    margin: 0 1rem;
-    flex-shrink: 0;
-    background: #021326; /* fills gaps */
-  }
 }
 
 /* Medium Phone - Landscape */
