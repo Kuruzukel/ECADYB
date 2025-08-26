@@ -5,7 +5,7 @@
 }
 
 body {
-  background-image: url("../../../img/ECABG.jpg");
+  background-image: url("https://ECADYB.b-cdn.net/img/ECABG.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -190,7 +190,7 @@ form {
   max-width: 55%;
   max-height: 55%;
   margin-bottom: 0rem;
-  background: url("../../../img/ECALOGO.png");
+  background: url("https://ECADYB.b-cdn.net/img/ECALOGO.png");
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;

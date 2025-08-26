@@ -20,8 +20,8 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'student') {
     <meta property="og:title" content="Graduation Gallery - Exact Colleges of Asia" />
     <meta property="og:description"
         content="Step into your digital yearbook. Every achievement and memory comes alive." />
-    <meta property="og:image" content="https://grad-gallery.up.railway.app/img/PREVIEWLOGO.png" />
-    <meta property="og:image:secure_url" content="https://grad-gallery.up.railway.app/img/PREVIEWLOGO.png" />
+    <meta property="og:image" content="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png" />
+    <meta property="og:image:secure_url" content="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:url" content="https://grad-gallery.up.railway.app" />
@@ -32,11 +32,11 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'student') {
     <meta name="twitter:title" content="Graduation Gallery - Exact Colleges of Asia" />
     <meta name="twitter:description"
         content="Step into your digital yearbook. Every achievement and memory comes alive." />
-    <meta name="twitter:image" content="https://grad-gallery.up.railway.app/img/PREVIEWLOGO.png" />
+    <meta name="twitter:image" content="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png" />
     <meta name="twitter:image:alt" content="Exact Colleges of Asia Graduation Gallery Preview Logo" />
 
     <!-- Favicon -->
-    <link rel="icon" href="https://grad-gallery.up.railway.app/img/PREVIEWLOGO.png" type="image/png" />
+    <link rel="icon" href="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png" type="image/png" />
 
     <!-- Stylesheets -->
     <link rel="stylesheet" href="/Student/assets/css/StudentDashboard.css" />
