@@ -210,15 +210,19 @@
     </div>
     <!-- Notification container -->
     <div id="notification-container"></div>
-    <!-- Upload Modal -->
-    <div class="upload-modal" id="uploadModal">
-        <h2>Uploading...</h2>
-        <p id="uploadText">Please wait while we upload your file</p>
-        <div class="progress-container">
-            <div class="progress-bar" id="progressBar"></div>
+    <!-- Upload Overlay + Modal -->
+    <div class="upload-overlay" id="upload-overlay">
+        <div class="upload-modal" id="uploadModal">
+            <h2>Uploading...</h2>
+            <p id="uploadText">Please wait while we upload your images</p>
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <div class="progress-meta"><span id="progressPercent">0%</span></div>
+            <div class="modal-buttons">
+                <button class="modal-btn cancel" onclick="cancelUpload()">Cancel</button>
+            </div>
         </div>
-        <div class="progress-meta"><span id="progressPercent">0%</span></div>
-        <button class="btn" onclick="cancelUpload()">Cancel</button>
     </div>
     <script src="../Assets/js/BatchTemplates.js"></script>
 </body>

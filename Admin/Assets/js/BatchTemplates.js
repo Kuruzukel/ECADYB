@@ -187,6 +187,9 @@ window.addEventListener("DOMContentLoaded", () => {
   const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
   applyTheme(savedTheme);
 
+  // Track the currently active upload globally so Cancel always aborts it
+  let currentXhr = null;
+
   // Initialize upload boxes (front/back/toggle/delete per box)
   const uploadBoxes = document.querySelectorAll(".upload-box");
   uploadBoxes.forEach((box, index) => {
@@ -288,14 +291,15 @@ window.addEventListener("DOMContentLoaded", () => {
       form.append("side", side);
       form.append("template", String(template));
 
+      const uploadOverlay = document.getElementById("upload-overlay");
       const uploadModal = document.getElementById("uploadModal");
       const progressBar = document.getElementById("progressBar");
       const uploadText = document.getElementById("uploadText");
       const progressPercent = document.getElementById("progressPercent");
 
-      // Show modal
-      if (uploadModal && progressBar && uploadText) {
-        uploadModal.style.display = "block";
+      // Show overlay + modal
+      if (uploadOverlay && progressBar && uploadText) {
+        uploadOverlay.style.display = "flex";
         progressBar.style.width = "0%";
         uploadText.textContent = "Please wait while we upload your file";
         if (progressPercent) progressPercent.textContent = "0%";
@@ -306,6 +310,15 @@ window.addEventListener("DOMContentLoaded", () => {
           if (progressBar) progressBar.style.width = `${percent}%`;
           if (progressPercent) progressPercent.textContent = `${percent}%`;
         });
+
+        // If user canceled, do nothing further
+        if (data && data.aborted) {
+          // Reset UI and exit
+          if (progressBar) progressBar.style.width = "0%";
+          if (progressPercent) progressPercent.textContent = "0%";
+          if (uploadOverlay) uploadOverlay.style.display = "none";
+          return;
+        }
 
         if (!data?.success) {
           showNotification(data?.message || "Upload failed", "error");
@@ -332,19 +345,24 @@ window.addEventListener("DOMContentLoaded", () => {
 
         showNotification("Image uploaded successfully", "success");
       } finally {
-        if (uploadModal) uploadModal.style.display = "none";
+        // Only hide overlay if not actively uploading (i.e., not canceled and no other upload started)
+        if (!currentXhr && uploadOverlay) uploadOverlay.style.display = "none";
       }
     }
 
     function xhrUpload(url, formData, onProgress) {
       return new Promise((resolve) => {
         const xhr = new XMLHttpRequest();
+        currentXhr = xhr;
         xhr.open("POST", url, true);
         xhr.upload.onprogress = (e) => {
           if (e.lengthComputable && typeof onProgress === "function") {
             const percent = Math.round((e.loaded / e.total) * 100);
             onProgress(percent);
           }
+        };
+        xhr.onabort = () => {
+          resolve({ aborted: true });
         };
         xhr.onreadystatechange = () => {
           if (xhr.readyState === 4) {
@@ -353,6 +371,7 @@ window.addEventListener("DOMContentLoaded", () => {
             } catch (_) {
               resolve(null);
             }
+            currentXhr = null;
           }
         };
         xhr.send(formData);
@@ -361,12 +380,17 @@ window.addEventListener("DOMContentLoaded", () => {
 
     // Allow cancel button to abort next uploads: simple UI reset
     window.cancelUpload = function () {
-      const uploadModal = document.getElementById("uploadModal");
+      const uploadOverlay = document.getElementById("upload-overlay");
       const progressBar = document.getElementById("progressBar");
       const uploadText = document.getElementById("uploadText");
       const progressPercent = document.getElementById("progressPercent");
+      if (currentXhr) {
+        try { currentXhr.abort(); } catch (_) {}
+        currentXhr = null;
+        showNotification("Upload canceled", "error");
+      }
       if (progressBar) progressBar.style.width = "0%";
-      if (uploadModal) uploadModal.style.display = "none";
+      if (uploadOverlay) uploadOverlay.style.display = "none";
       if (uploadText) uploadText.textContent = "Please wait while we upload your file";
       if (progressPercent) progressPercent.textContent = "0%";
     };
