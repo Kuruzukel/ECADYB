@@ -75,6 +75,29 @@ function applyTheme(themeName) {
 }
 
 // ----------------------
+// Notifications
+// ----------------------
+function showNotification(message, type = "success") {
+  const container = document.getElementById("notification-container");
+  if (!container) return;
+
+  const notif = document.createElement("div");
+  notif.className = `notification ${type} show`;
+  notif.innerHTML = `
+    <i class="fas ${
+      type === "success" ? "fa-check-circle" : "fa-exclamation-circle"
+    }"></i>
+    <span>${message}</span>
+  `;
+  container.appendChild(notif);
+
+  setTimeout(() => {
+    notif.classList.remove("show");
+    setTimeout(() => notif.remove(), 500);
+  }, 3000);
+}
+
+// ----------------------
 // Delete student modal
 // ----------------------
 const deleteModal = document.getElementById("delete-modal-overlay");
@@ -166,7 +189,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // Initialize upload boxes (front/back/toggle/delete per box)
   const uploadBoxes = document.querySelectorAll(".upload-box");
-  uploadBoxes.forEach((box) => {
+  uploadBoxes.forEach((box, index) => {
     const frontInput = box.querySelector(".frontInput");
     const backInput = box.querySelector(".backInput");
     const deleteBtn = box.querySelector(".delete-btn");
@@ -175,8 +198,16 @@ window.addEventListener("DOMContentLoaded", () => {
     let frontImg = null;
     let backImg = null;
     let showingFront = true;
+    const slot = index + 1; // 1-based slot index
+    const template = 1; // static for now; extend if multiple templates
+    const isBackgroundSlot = slot === 8;
+
+    const UPLOAD_ENDPOINT = `${window.location.origin}/ECADYB/Connection/UploadCover.php`;
+    const FETCH_ENDPOINT = `${window.location.origin}/ECADYB/Connection/FetchCovers.php?template=${template}`;
+    const DELETE_ENDPOINT = `${window.location.origin}/ECADYB/Connection/DeleteCover.php`;
 
     const toggleImages = () => {
+      if (isBackgroundSlot) return; // no toggle for background slot
       showingFront = !showingFront;
       if (frontImg && backImg) {
         if (showingFront) {
@@ -199,78 +230,195 @@ window.addEventListener("DOMContentLoaded", () => {
 
     box.addEventListener("click", (event) => {
       if (event.target === deleteBtn) return;
-
       if (!frontImg) {
         frontInput.click();
-      } else if (!backImg) {
+      } else if (!backImg && !isBackgroundSlot) {
         backInput.click();
       } else {
         toggleImages();
       }
     });
 
-    frontInput.addEventListener("change", (event) => {
+    frontInput.addEventListener("change", async (event) => {
       const file = event.target.files && event.target.files[0];
       if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        frontImg = document.createElement("img");
-        frontImg.src = e.target.result;
-        frontImg.classList.add("front-img");
-
-        box.innerHTML = "";
-        if (plusIcon) plusIcon.remove();
-        ensureChildren();
-        deleteBtn.style.display = "flex";
-        box.classList.add("has-image");
-      };
-      reader.readAsDataURL(file);
+      await uploadToBunny(file, slot, "front");
     });
 
-    backInput.addEventListener("change", (event) => {
+    if (!isBackgroundSlot) backInput.addEventListener("change", async (event) => {
       const file = event.target.files && event.target.files[0];
       if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        backImg = document.createElement("img");
-        backImg.src = e.target.result;
-        backImg.classList.add("back-img");
-
-        box.innerHTML = "";
-        ensureChildren();
-        deleteBtn.style.display = "flex";
-        box.classList.add("has-image");
-        // Always start by showing front if available
-        showingFront = true;
-        if (frontImg) {
-          frontImg.style.opacity = 1;
-          if (backImg) backImg.style.opacity = 0;
-        }
-      };
-      reader.readAsDataURL(file);
+      await uploadToBunny(file, slot, "back");
     });
 
     deleteBtn.addEventListener("click", (event) => {
       event.stopPropagation();
       // Defer actual deletion until modal confirmation
       selectedConfirmAction = () => {
-        frontImg = null;
-        backImg = null;
-        showingFront = true;
-        box.innerHTML = "";
-        // Recreate plus icon
-        const newPlus = document.createElement("span");
-        newPlus.className = "plus-icon";
-        newPlus.textContent = "+";
-        box.appendChild(newPlus);
-        ensureChildren();
-        deleteBtn.style.display = "none";
-        frontInput.value = "";
-        backInput.value = "";
-        box.classList.remove("has-image");
+        // Background slot: delete only front
+        const sides = [];
+        if (frontImg) sides.push("front");
+        if (backImg && !isBackgroundSlot) sides.push("back");
+        if (!sides.length) return;
+        Promise.all(
+          sides.map((side) => deleteCover(slot, side))
+        ).then(() => {
+          frontImg = null;
+          backImg = null;
+          showingFront = true;
+          box.innerHTML = "";
+          const newPlus = document.createElement("span");
+          newPlus.className = "plus-icon";
+          newPlus.textContent = "+";
+          box.appendChild(newPlus);
+          ensureChildren();
+          deleteBtn.style.display = "none";
+          frontInput.value = "";
+          backInput.value = "";
+          box.classList.remove("has-image");
+        });
       };
       openDeleteModal();
     });
+
+    async function uploadToBunny(file, slot, side) {
+      const form = new FormData();
+      form.append("file", file);
+      form.append("slot", String(slot));
+      form.append("side", side);
+      form.append("template", String(template));
+
+      const uploadModal = document.getElementById("uploadModal");
+      const progressBar = document.getElementById("progressBar");
+      const uploadText = document.getElementById("uploadText");
+      const progressPercent = document.getElementById("progressPercent");
+
+      // Show modal
+      if (uploadModal && progressBar && uploadText) {
+        uploadModal.style.display = "block";
+        progressBar.style.width = "0%";
+        uploadText.textContent = "Please wait while we upload your file";
+        if (progressPercent) progressPercent.textContent = "0%";
+      }
+
+      try {
+        const data = await xhrUpload(UPLOAD_ENDPOINT, form, (percent) => {
+          if (progressBar) progressBar.style.width = `${percent}%`;
+          if (progressPercent) progressPercent.textContent = `${percent}%`;
+        });
+
+        if (!data?.success) {
+          showNotification(data?.message || "Upload failed", "error");
+          return;
+        }
+
+        const img = document.createElement("img");
+        img.src = data.url;
+        img.classList.add(side === "front" ? "front-img" : "back-img");
+        if (side === "front") frontImg = img; else backImg = img;
+
+        box.innerHTML = "";
+        if (plusIcon) plusIcon.remove();
+        ensureChildren();
+        deleteBtn.style.display = "flex";
+        box.classList.add("has-image");
+
+        // Show front by default
+        showingFront = true;
+        if (frontImg) {
+          frontImg.style.opacity = 1;
+          if (backImg && !isBackgroundSlot) backImg.style.opacity = 0;
+        }
+
+        showNotification("Image uploaded successfully", "success");
+      } finally {
+        if (uploadModal) uploadModal.style.display = "none";
+      }
+    }
+
+    function xhrUpload(url, formData, onProgress) {
+      return new Promise((resolve) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", url, true);
+        xhr.upload.onprogress = (e) => {
+          if (e.lengthComputable && typeof onProgress === "function") {
+            const percent = Math.round((e.loaded / e.total) * 100);
+            onProgress(percent);
+          }
+        };
+        xhr.onreadystatechange = () => {
+          if (xhr.readyState === 4) {
+            try {
+              resolve(JSON.parse(xhr.responseText));
+            } catch (_) {
+              resolve(null);
+            }
+          }
+        };
+        xhr.send(formData);
+      });
+    }
+
+    // Allow cancel button to abort next uploads: simple UI reset
+    window.cancelUpload = function () {
+      const uploadModal = document.getElementById("uploadModal");
+      const progressBar = document.getElementById("progressBar");
+      const uploadText = document.getElementById("uploadText");
+      const progressPercent = document.getElementById("progressPercent");
+      if (progressBar) progressBar.style.width = "0%";
+      if (uploadModal) uploadModal.style.display = "none";
+      if (uploadText) uploadText.textContent = "Please wait while we upload your file";
+      if (progressPercent) progressPercent.textContent = "0%";
+    };
+
+    async function deleteCover(slot, side) {
+      const form = new FormData();
+      form.append("slot", String(slot));
+      form.append("side", side);
+      form.append("template", String(template));
+      const res = await fetch(DELETE_ENDPOINT, { method: "POST", body: form });
+      const data = await res.json().catch(() => null);
+      if (!data?.success) {
+        showNotification(data?.message || "Delete failed", "error");
+      } else {
+        showNotification("Image deleted", "success");
+      }
+    }
+
+    // Load existing
+    (async function loadExisting() {
+      try {
+        const res = await fetch(FETCH_ENDPOINT);
+        const data = await res.json();
+        if (!data?.success) return;
+        const found = (data.items || []).find((i) => i.slot === slot);
+        if (!found) return;
+        if (found.front_url) {
+          frontImg = document.createElement("img");
+          frontImg.src = found.front_url;
+          frontImg.classList.add("front-img");
+        }
+        if (found.back_url && !isBackgroundSlot) {
+          backImg = document.createElement("img");
+          backImg.src = found.back_url;
+          backImg.classList.add("back-img");
+        }
+        if (frontImg || backImg) {
+          box.innerHTML = "";
+          if (plusIcon) plusIcon.remove();
+          ensureChildren();
+          deleteBtn.style.display = "flex";
+          box.classList.add("has-image");
+          showingFront = true;
+          if (frontImg) {
+            frontImg.style.opacity = 1;
+            if (backImg && !isBackgroundSlot) backImg.style.opacity = 0;
+          }
+        }
+      } catch (e) {
+        // ignore
+      }
+    })();
   });
   
   initializeDeleteModal();

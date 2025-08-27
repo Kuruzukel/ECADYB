@@ -315,3 +315,104 @@ label {
     flex-direction: column;
   }
 }
+
+/* Notification Toast (match StudentList) */
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  min-width: 280px;
+  max-width: 350px;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  transform: translateY(-40px);
+  pointer-events: none;
+  z-index: 9999;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.notification.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.notification.success {
+  background: linear-gradient(135deg, #34d399, #059669);
+}
+
+.notification.error {
+  background: linear-gradient(135deg, #f87171, #b91c1c);
+}
+
+.notification i {
+  font-size: 1.2rem;
+}
+
+/* Upload Modal */
+.upload-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #1e1e2f;
+  padding: 20px 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  width: 350px;
+  display: none;
+  z-index: 2000;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.upload-modal h2 {
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+.progress-container {
+  width: 100%;
+  background: linear-gradient(180deg, #2a2a40, #202036);
+  border-radius: 10px;
+  overflow: hidden;
+  height: 12px;
+  margin: 20px 0;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #34d399, #10b981);
+  transition: width 0.1s linear;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.5);
+}
+
+.upload-modal .btn {
+  background: #ef4444;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.upload-modal .btn:hover {
+  background: #dc2626;
+}
+
+.progress-meta {
+  color: #e5e7eb;
+  font-weight: 600;
+  margin-top: -10px;
+  margin-bottom: 12px;
+  font-family: Arial, Helvetica, sans-serif;
+}
