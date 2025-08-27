@@ -96,8 +96,16 @@ h1 {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: radial-gradient(1200px 600px at 10% -10%, rgba(33, 150, 243, 0.07), transparent),
-    radial-gradient(1200px 600px at 110% 110%, rgba(16, 185, 129, 0.08), transparent),
+  background: radial-gradient(
+      1200px 600px at 10% -10%,
+      rgba(33, 150, 243, 0.07),
+      transparent
+    ),
+    radial-gradient(
+      1200px 600px at 110% 110%,
+      rgba(16, 185, 129, 0.08),
+      transparent
+    ),
     #1e1e2f;
   padding: 24px 28px;
   border-radius: 16px;
@@ -162,7 +170,11 @@ h1 {
 .loader .loading-bar {
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, rgba(34,197,94,0.25), rgba(16,185,129,0.3));
+  background: linear-gradient(
+    90deg,
+    rgba(34, 197, 94, 0.25),
+    rgba(16, 185, 129, 0.3)
+  );
   position: relative;
 }
 .loader .white-bars-container {
@@ -178,15 +190,19 @@ h1 {
   animation: shimmer 1.4s linear infinite;
 }
 .loader .white-bar {
-  background: rgba(255,255,255,0.65);
+  background: rgba(255, 255, 255, 0.65);
   height: 60%;
   align-self: center;
   border-radius: 2px;
 }
 
 @keyframes shimmer {
-  0% { transform: translateX(-50%); }
-  100% { transform: translateX(0); }
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
 
 /* Logo circular upload grid */
@@ -210,7 +226,7 @@ h1 {
   position: relative;
   cursor: pointer;
   overflow: hidden;
-  background: rgba(255,255,255,0.02);
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .upload-box.circle img {
@@ -230,33 +246,30 @@ h1 {
 
 .upload-box.circle .delete-btn {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  top: 20px; /* 👈 move to top-right instead of center */
+  right: 22px;
+  transform: none; /* no centering */
   background: #e63939;
   color: #fff;
   border: none;
-  border-radius: 999px;
-  width: 36px;
-  height: 36px;
-  display: none;
+  border-radius: 50%;
+  display: none; /* hidden by default */
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: background 0.2s ease, transform 0.15s ease;
   z-index: 3;
-  box-shadow: 0 6px 14px rgba(0,0,0,0.25);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
 }
 
 .upload-box.circle .delete-btn:hover {
   background: #dc2626;
-  transform: translate(-50%, -50%) scale(1.04);
+  transform: scale(1.08); /* nice hover effect */
 }
 
-.upload-box.circle:hover .delete-btn { display: flex; }
-
-.upload-box.circle.has-image {
-  border-style: solid;
+/* ✅ Show button when there's an image */
+.upload-box.circle.has-image .delete-btn {
+  display: flex;
 }
 
 .upload-box.circle:hover {
@@ -585,6 +598,55 @@ h1 {
   .modal-buttons {
     flex-direction: column;
   }
+}
+
+/* Notification styles */
+#notification-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.notification {
+  padding: 15px 20px;
+  border-radius: 8px;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateX(120%);
+  transition: transform 0.3s ease-in-out;
+  max-width: 350px;
+  opacity: 0;
+}
+
+.notification.show {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.notification i {
+  font-size: 1.2rem;
+}
+
+.notification.success {
+  background-color: #10b981;
+  border-left: 4px solid #059669;
+}
+
+.notification.error {
+  background-color: #ef4444;
+  border-left: 4px solid #dc2626;
+}
+
+.notification.warning {
+  background-color: #f59e0b;
+  border-left: 4px solid #d97706;
 }
 
 /* Animation for form elements */

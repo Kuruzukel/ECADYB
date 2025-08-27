@@ -1,3 +1,6 @@
+// ----------------------
+// Theme definitions
+// ----------------------
 const themes = {
   "Theme 1": {
     "--primary-bg": "#470a0a",
@@ -66,19 +69,19 @@ const themes = {
   },
 };
 
-let pendingTheme = null; // store selected theme until confirmed
+let pendingTheme = null;
 
+// ----------------------
+// Theme selection
+// ----------------------
 function selectColor(el) {
-  // highlight selected box
   document
     .querySelectorAll(".color-box")
     .forEach((box) => box.classList.remove("selected"));
   el.classList.add("selected");
 
-  // save the theme to apply later
   pendingTheme = el.getAttribute("data-label");
 
-  // show modal
   document.getElementById("modal-overlay").style.display = "flex";
 }
 
@@ -86,25 +89,107 @@ function applyTheme(theme) {
   const root = document.documentElement;
   const selectedTheme = themes[theme] || themes["Default"];
 
-  // Apply theme colors
   for (const [varName, color] of Object.entries(selectedTheme)) {
     root.style.setProperty(varName, color);
   }
 
-  // Always lock modal background to Default theme's section-bg
   const defaultSectionBg = themes["Default"]["--section-bg"];
   const modal = document.querySelector(".modal");
-  if (modal) {
-    modal.style.background = defaultSectionBg;
-  }
+  if (modal) modal.style.background = defaultSectionBg;
 
   localStorage.setItem("dashboard-theme", theme);
 }
 
+// ----------------------
+// Upload overlay helpers
+// ----------------------
+const uploadOverlay = document.getElementById("upload-overlay");
+
+function showUploadOverlay() {
+  if (uploadOverlay) uploadOverlay.style.display = "flex";
+}
+function hideUploadOverlay() {
+  if (uploadOverlay) uploadOverlay.style.display = "none";
+}
+
+// ----------------------
+// Notifications
+// ----------------------
+function showNotification(message, type = "success") {
+  const container = document.getElementById("notification-container");
+  if (!container) return;
+
+  const notif = document.createElement("div");
+  notif.className = `notification ${type} show`;
+  notif.innerHTML = `
+    <i class="fas ${
+      type === "success"
+        ? "fa-check-circle"
+        : type === "warning"
+        ? "fa-exclamation-triangle"
+        : "fa-exclamation-circle"
+    }"></i>
+    <span>${message}</span>
+  `;
+  container.appendChild(notif);
+
+  setTimeout(() => {
+    notif.classList.remove("show");
+    setTimeout(() => notif.remove(), 500);
+  }, 3000);
+}
+
+// ----------------------
+// Upload helper
+// ----------------------
+async function uploadLogoToBunny(file, slot, box, input, deleteBtn) {
+  const form = new FormData();
+  form.append("file", file);
+  form.append("slot", String(slot));
+  form.append("type", "logo_container");
+
+  const uploadText = document.getElementById("uploadText");
+  if (uploadOverlay && uploadText) {
+    uploadOverlay.style.display = "flex";
+    uploadText.textContent = "Please wait while we upload your logo";
+  }
+
+  try {
+    const res = await fetch(UPLOAD_ENDPOINT, { method: "POST", body: form });
+    const data = await res.json();
+
+    if (!data?.success) {
+      showNotification(data?.message || "Upload failed", "error");
+      return;
+    }
+
+    // Insert logo
+    box.innerHTML = "";
+    const img = document.createElement("img");
+    img.src = data.url;
+    img.alt = "Logo";
+    box.appendChild(img);
+    box.appendChild(deleteBtn);
+    box.appendChild(input);
+
+    box.classList.add("has-image");
+    deleteBtn.style.display = "flex";
+
+    showNotification("Logo uploaded successfully", "success");
+  } catch (err) {
+    showNotification(err.message || "Upload failed", "error");
+  } finally {
+    hideUploadOverlay();
+  }
+}
+
+// ----------------------
+// DOM Ready
+// ----------------------
 window.addEventListener("DOMContentLoaded", () => {
-  // load saved theme
   const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
   applyTheme(savedTheme);
+
   const selectedBox = document.querySelector(
     `.color-box[data-label="${savedTheme}"]`
   );
@@ -115,18 +200,19 @@ window.addEventListener("DOMContentLoaded", () => {
   const cancelBtn = document.getElementById("cancel-btn");
   const modalOverlay = document.getElementById("modal-overlay");
 
-  confirmBtn.addEventListener("click", () => {
+  confirmBtn?.addEventListener("click", () => {
     if (pendingTheme) {
       applyTheme(pendingTheme);
+      showNotification("Theme applied successfully");
       pendingTheme = null;
     }
     modalOverlay.style.display = "none";
   });
 
-  cancelBtn.addEventListener("click", () => {
+  cancelBtn?.addEventListener("click", () => {
     pendingTheme = null;
     modalOverlay.style.display = "none";
-    // remove accidental highlight if cancelled
+
     document
       .querySelectorAll(".color-box")
       .forEach((box) => box.classList.remove("selected"));
@@ -137,107 +223,118 @@ window.addEventListener("DOMContentLoaded", () => {
     if (selectedBox) selectedBox.classList.add("selected");
   });
 
-  // Logo circular upload behavior (reusing BatchTemplates logic simplified)
-  const logoBoxes = document.querySelectorAll(".logo-upload-grid .upload-box.circle");
-  const UPLOAD_ENDPOINT = `${window.location.origin}/ECADYB/Connection/UploadLogo.php`;
-  const FETCH_ENDPOINT = `${window.location.origin}/ECADYB/Connection/FetchLogos.php`;
-  const DELETE_ENDPOINT = `${window.location.origin}/ECADYB/Connection/DeleteLogo.php`;
+  // ----------------------
+  // Endpoints (fixed paths)
+  // ----------------------
+  const BASE_PATH = `${window.location.origin}/ECADYB/Connection`;
+  window.UPLOAD_ENDPOINT = `${BASE_PATH}/UploadLogo.php`;
+  const FETCH_ENDPOINT = `${BASE_PATH}/FetchLogos.php`;
+  const DELETE_ENDPOINT = `${BASE_PATH}/DeleteLogo.php`;
 
-  // Upload overlay controls
-  const uploadOverlay = document.getElementById('upload-overlay');
-  const uploadModal = document.getElementById('uploadModal');
-  function showUploadOverlay() { if (uploadOverlay) uploadOverlay.style.display = 'flex'; }
-  function hideUploadOverlay() { if (uploadOverlay) uploadOverlay.style.display = 'none'; }
+  // ----------------------
+  // Logo uploads
+  // ----------------------
+  const logoBoxes = document.querySelectorAll(
+    ".logo-upload-grid .upload-box.circle"
+  );
+
+  // delete modal
+  const deleteModal = document.getElementById("delete-modal-overlay");
+  const confirmDeleteBtn = document.getElementById("confirm-delete-btn");
+  const cancelDeleteBtn = document.getElementById("cancel-delete-btn");
+  let deleteTarget = null;
+
   logoBoxes.forEach((box) => {
-    const input = box.querySelector('.logoInput');
-    const deleteBtn = box.querySelector('.delete-btn');
-    const plusIcon = box.querySelector('.plus-icon');
+    const input = box.querySelector(".logoInput");
+    const deleteBtn = box.querySelector(".delete-btn");
 
-    let imgEl = null;
-
-    box.addEventListener('click', (e) => {
+    box.addEventListener("click", (e) => {
       if (e.target === deleteBtn) return;
-      if (!imgEl) input.click();
+      if (!box.classList.contains("has-image")) input.click();
     });
 
-    input.addEventListener('change', async (e) => {
-      const file = e.target.files && e.target.files[0];
+    input.addEventListener("change", async (e) => {
+      const file = e.target.files?.[0];
       if (!file) return;
-      const slot = Array.from(logoBoxes).indexOf(box) + 1; // 1..9
-      const form = new FormData();
-      form.append('file', file);
-      form.append('slot', String(slot));
-      try {
-        showUploadOverlay();
-        const res = await fetch(UPLOAD_ENDPOINT, { method: 'POST', body: form });
-        const data = await res.json();
-        if (!data?.success) throw new Error(data?.message || 'Upload failed');
-        imgEl = document.createElement('img');
-        imgEl.src = data.url;
-        box.innerHTML = '';
-        box.appendChild(imgEl);
-        box.appendChild(deleteBtn);
-        box.appendChild(input);
-        deleteBtn.style.display = '';
-        box.classList.add('has-image');
-      } catch (err) {
-        alert(err.message || 'Upload failed');
-      } finally {
-        hideUploadOverlay();
-      }
+      const slot = Array.from(logoBoxes).indexOf(box) + 1;
+
+      await uploadLogoToBunny(file, slot, box, input, deleteBtn);
     });
 
-    deleteBtn.addEventListener('click', async (e) => {
+    deleteBtn.addEventListener("click", (e) => {
       e.stopPropagation();
-      const slot = Array.from(logoBoxes).indexOf(box) + 1;
-      try {
-        showUploadOverlay();
-        const form = new FormData();
-        form.append('slot', String(slot));
-        const res = await fetch(DELETE_ENDPOINT, { method: 'POST', body: form });
-        const data = await res.json();
-        if (!data?.success) throw new Error(data?.message || 'Delete failed');
-      } catch (err) {
-        alert(err.message || 'Delete failed');
-        return;
-      } finally {
-        hideUploadOverlay();
-      }
-      imgEl = null;
-      box.innerHTML = '';
-      const newPlus = document.createElement('span');
-      newPlus.className = 'plus-icon';
-      newPlus.textContent = '+';
-      box.appendChild(newPlus);
-      box.appendChild(deleteBtn);
-      box.appendChild(input);
-      deleteBtn.style.display = 'none';
-      input.value = '';
-      box.classList.remove('has-image');
+      deleteTarget = { box, input, deleteBtn };
+      deleteModal.style.display = "flex";
     });
   });
 
+  confirmDeleteBtn.addEventListener("click", async () => {
+    if (!deleteTarget) return;
+    const { box, input, deleteBtn } = deleteTarget;
+    const slot = Array.from(logoBoxes).indexOf(box) + 1;
+
+    try {
+      showUploadOverlay();
+      const form = new FormData();
+      form.append("slot", String(slot));
+      const res = await fetch(DELETE_ENDPOINT, { method: "POST", body: form });
+      const data = await res.json();
+
+      if (!data?.success) throw new Error(data?.message || "Delete failed");
+      showNotification("Logo deleted", "success");
+
+      box.innerHTML = "";
+      const newPlus = document.createElement("span");
+      newPlus.className = "plus-icon";
+      newPlus.textContent = "+";
+      box.appendChild(newPlus);
+      box.appendChild(deleteBtn);
+      box.appendChild(input);
+      deleteBtn.style.display = "none";
+      input.value = "";
+      box.classList.remove("has-image");
+    } catch (err) {
+      showNotification(err.message || "Delete failed", "error");
+    } finally {
+      hideUploadOverlay();
+      deleteModal.style.display = "none";
+      deleteTarget = null;
+    }
+  });
+
+  cancelDeleteBtn.addEventListener("click", () => {
+    deleteTarget = null;
+    deleteModal.style.display = "none";
+  });
+
+  // ----------------------
   // Load existing logos
+  // ----------------------
   (async function loadLogos() {
     try {
       const res = await fetch(FETCH_ENDPOINT);
       const data = await res.json();
       if (!data?.success) return;
-      const bySlot = new Map((data.items || []).map(i => [i.slot, i.url]));
+
+      const bySlot = new Map((data.items || []).map((i) => [i.slot, i.url]));
       logoBoxes.forEach((box, idx) => {
         const url = bySlot.get(idx + 1);
         if (!url) return;
-        const input = box.querySelector('.logoInput');
-        const deleteBtn = box.querySelector('.delete-btn');
-        const img = document.createElement('img');
+
+        const input = box.querySelector(".logoInput");
+        const deleteBtn = box.querySelector(".delete-btn");
+
+        const img = document.createElement("img");
         img.src = url;
-        box.innerHTML = '';
+        box.innerHTML = "";
         box.appendChild(img);
         box.appendChild(deleteBtn);
         box.appendChild(input);
-        deleteBtn.style.display = '';
-        box.classList.add('has-image');
+        deleteBtn.style.display = "flex";
+        box.classList.add("has-image");
       });
-    } catch {}
+    } catch (err) {
+      console.error("Failed to load logos:", err);
+    }
   })();
 });
