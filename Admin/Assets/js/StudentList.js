@@ -410,8 +410,8 @@ async function updateStudentDetails(studentId, fields) {
     const res = await fetch(STUDENT_UPDATE_ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      // Use "student id" (with space) to match MongoDB
-      body: JSON.stringify({ "student id": studentId, ...fields }),
+      // Send original ID separately for lookup; allow new ID in fields
+      body: JSON.stringify({ original_student_id: studentId, ...fields }),
     });
 
     const data = await res.json().catch(() => null);
@@ -459,7 +459,7 @@ function submitStudentForm(studentId) {
     academic_year: "academic year",
     program: "program",
     section: "section",
-    // Remove student_id mapping since we handle it separately
+    // student_id handled explicitly below to allow editing
     motto: "motto",
     honors: "honors",
     milestone: "milestone",
@@ -479,9 +479,16 @@ function submitStudentForm(studentId) {
     }
   }
 
-  // Include the student ID and collection name
-  fields["student id"] = studentId; // Add student ID with space
-  console.log("Student ID field:", studentId);
+  // Capture potentially edited Student ID value
+  const studentIdEl = document.getElementById(`student_id${studentId}`);
+  if (studentIdEl) {
+    const newStudentId = studentIdEl.value.trim();
+    // Send new ID using the normalized key used in MongoDB
+    fields["student id"] = newStudentId;
+    console.log("New Student ID value:", newStudentId);
+  } else {
+    console.warn(`Student ID input not found: student_id${studentId}`);
+  }
 
   const collectionEl = document.getElementById(
     `collection-hidden-${studentId}`

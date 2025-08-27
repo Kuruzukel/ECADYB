@@ -32,13 +32,19 @@ if (!$data) {
 }
 
 // ----------------------
-// Require "student id"
+// IDs: original for lookup, optional new for update
 // ----------------------
-if (!isset($data['student id']) || trim($data['student id']) === '') {
-    respond(false, 'Missing student id.');
+$originalId = $data['original_student_id'] ?? null;
+if (!$originalId || trim($originalId) === '') {
+    respond(false, 'Missing original student id.');
 }
-$studentId = $data['student id'];
-unset($data['student id']); // do NOT allow overwriting ID
+unset($data['original_student_id']);
+
+// Optional new ID provided from the form
+$newStudentId = null;
+if (isset($data['student id'])) {
+    $newStudentId = trim($data['student id']) !== '' ? $data['student id'] : null;
+}
 
 // Determine collection
 $collectionName = $data['collection'] ?? 'students';
@@ -58,8 +64,8 @@ try {
     // Try to find the document first to ensure it exists
     $existingDoc = $collection->findOne([
         '$or' => [
-            ['student id' => $studentId],
-            ['student_id' => $studentId] // Also check underscore version
+            ['student id' => $originalId],
+            ['student_id' => $originalId] // Also check underscore version
         ]
     ]);
 
@@ -69,11 +75,16 @@ try {
 
     // Use the correct field name that exists in the document
     $queryField = isset($existingDoc['student id']) ? 'student id' : 'student_id';
-    
+
+    // If a new student id was provided, include it in the update set using the same field name
+    if ($newStudentId !== null && $newStudentId !== $originalId) {
+        $updateFields[$queryField] = $newStudentId;
+    }
+
     $result = $collection->updateOne(
-        [$queryField => $studentId], // Use the correct field name
+        [$queryField => $originalId], // lookup by original id
         ['$set' => $updateFields],
-        ['upsert' => false] // Never create new documents
+        ['upsert' => false]
     );
 
     if ($result->getModifiedCount() > 0) {
