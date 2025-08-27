@@ -603,7 +603,7 @@ h1 {
 /* Notification styles */
 #notification-container {
   position: fixed;
-  bottom: 20px;
+  top: 20px;
   right: 20px;
   z-index: 9999;
   display: flex;
@@ -619,14 +619,14 @@ h1 {
   align-items: center;
   gap: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transform: translateX(120%);
-  transition: transform 0.3s ease-in-out;
+  transform: translateY(-100px);
+  transition: all 0.3s ease-in-out;
   max-width: 350px;
   opacity: 0;
 }
 
 .notification.show {
-  transform: translateX(0);
+  transform: translateY(0);
   opacity: 1;
 }
 

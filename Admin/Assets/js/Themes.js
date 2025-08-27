@@ -274,14 +274,13 @@ window.addEventListener("DOMContentLoaded", () => {
     const slot = Array.from(logoBoxes).indexOf(box) + 1;
 
     try {
-      showUploadOverlay();
       const form = new FormData();
       form.append("slot", String(slot));
       const res = await fetch(DELETE_ENDPOINT, { method: "POST", body: form });
       const data = await res.json();
 
       if (!data?.success) throw new Error(data?.message || "Delete failed");
-      showNotification("Logo deleted", "success");
+      showNotification("Logo deleted successfully", "success");
 
       box.innerHTML = "";
       const newPlus = document.createElement("span");
