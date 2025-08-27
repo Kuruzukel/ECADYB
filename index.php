@@ -101,9 +101,11 @@ $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $routes = [
     '/LandingPage'        => BASE_PATH . '/LandingPage/LandingPage.html',
     '/Login'   => BASE_PATH . '/Public/Components/Login.php',
+    '/login'   => BASE_PATH . '/Public/Components/Login.php',
     '/Admin'   => BASE_PATH . '/Admin/Components/AdminDashboard.php',
     '/Student' => BASE_PATH . '/Student/Components/StudentDashboard.php',
-    '/'  => BASE_PATH . '/Public/Components/Loader.html',
+    '/Loader'  => BASE_PATH . '/Public/Components/Loader.html',
+    '/'  => BASE_PATH . '/LandingPage/LandingPage.html',
 ];
 
 // ----------------------
@@ -119,28 +121,50 @@ if (array_key_exists($requestUri, $routes)) {
         } else {
             // For HTML, fix asset paths before output
             $htmlContent = file_get_contents($filePath);
-            $htmlContent = str_replace(
-                [
-                    'href="LandingPage.css"',
-                    'src="LandingPage.js"',
-                    'src="../img/',
-                    'src="LandingPageYB/'
-                ],
-                [
-                    'href="' . BASE_URL . 'LandingPage/LandingPage.css"',
-                    'src="' . BASE_URL . 'LandingPage/LandingPage.js"',
-                    'src="' . BASE_URL . 'img/',
-                    'src="' . BASE_URL . 'LandingPage/LandingPageYB/'
-                ],
-                $htmlContent
-            );
+            
+            // Handle different routes for asset paths
+            if ($requestUri === '/') {
+                // Root route - landing page assets
+                $htmlContent = str_replace(
+                    [
+                        'href="LandingPage.css"',
+                        'src="LandingPage.js"',
+                        'src="../img/',
+                        'src="LandingPageYB/'
+                    ],
+                    [
+                        'href="' . BASE_URL . 'LandingPage/LandingPage.css"',
+                        'src="' . BASE_URL . 'LandingPage/LandingPage.js"',
+                        'src="' . BASE_URL . 'img/',
+                        'src="' . BASE_URL . 'LandingPage/LandingPageYB/'
+                    ],
+                    $htmlContent
+                );
+            } else {
+                // Other routes - keep existing logic
+                $htmlContent = str_replace(
+                    [
+                        'href="LandingPage.css"',
+                        'src="LandingPage.js"',
+                        'src="../img/',
+                        'src="LandingPageYB/'
+                    ],
+                    [
+                        'href="' . BASE_URL . 'LandingPage/LandingPage.css"',
+                        'src="' . BASE_URL . 'LandingPage/LandingPage.js"',
+                        'src="' . BASE_URL . 'img/',
+                        'src="' . BASE_URL . 'LandingPage/LandingPageYB/'
+                    ],
+                    $htmlContent
+                );
+            }
 
             // Fix login button redirects
             $htmlContent = str_replace(
                 ['id="loginDropdownBtn"', 'id="mobileLoginDropdownBtn"'],
                 [
-                    'id="loginDropdownBtn" onclick="window.location.href=\'' . BASE_URL . 'login\'"',
-                    'id="mobileLoginDropdownBtn" onclick="window.location.href=\'' . BASE_URL . 'login\'"'
+                    'id="loginDropdownBtn" onclick="window.location.href=\'' . BASE_URL . 'Login\'"',
+                    'id="mobileLoginDropdownBtn" onclick="window.location.href=\'' . BASE_URL . 'Login\'"'
                 ],
                 $htmlContent
             );

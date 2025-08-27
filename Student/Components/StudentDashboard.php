@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'student') {
-    header("Location: /Public/Components/Login.php");
+    header("Location: /Login");
     exit();
 }
 ?>

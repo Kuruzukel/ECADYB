@@ -7,7 +7,7 @@ const urlsToCache = [
   "/", // index.html
   "/LandingPage/LandingPage.css",
   "/LandingPage/LandingPage.js",
-  "/Public/Components/Login.php",
+  "/Login",
   "/Public/Components/Loader.html",
   "/Public/assets/css/Loader.css",
 

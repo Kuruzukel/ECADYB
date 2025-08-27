@@ -158,7 +158,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
             <button type="submit">Login</button>
             <div class="logoContainer"></div>
-            <button type="back" onclick="window.location.href='/LandingPage/LandingPage.html'">
+            <button type="back" onclick="window.location.href='/'">
                 <i class="fas fa-arrow-left"></i> Back to Homepage
             </button>
         </form>

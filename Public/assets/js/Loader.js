@@ -11,7 +11,7 @@
     try {
       const doc = iframe.contentDocument || iframe.contentWindow.document;
       if (doc && allImagesLoaded(doc)) {
-        window.location.replace('/LandingPage/LandingPage.html');
+        window.location.replace('/');
       }
     } catch (_) {}
   }
@@ -21,7 +21,7 @@
     const interval = setInterval(tryRedirect, 300);
     setTimeout(() => {
       clearInterval(interval);
-      window.location.replace('/LandingPage/LandingPage.html');
+      window.location.replace('/');
     }, 10000);
   });
 })();

@@ -3,7 +3,7 @@ session_start();
 
 // Make sure the student is logged in
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'student') {
-    header("Location: /Public/Components/Login.php");
+    header("Location: /Login");
     exit;
 }
 
