@@ -146,7 +146,7 @@
                 <h3>Confirm Delete</h3>
             </div>
             <div class="modal-content">
-                <p>Are you sure you want to delete this image?</p>
+                <p>Are you sure you want to delete this logo?</p>
             </div>
             <div class="modal-buttons">
                 <button class="modal-btn confirm" id="confirm-delete-btn">
