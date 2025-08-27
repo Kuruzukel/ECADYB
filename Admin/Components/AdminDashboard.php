@@ -27,7 +27,7 @@ require $mongoPath;
 
     <main>
         <div class="sidebar">
-            <img src="../../img/ADMINGRALLERYLOGO.png" alt="Logo" class="logoadmin">
+            <img src="https://ECADYB.b-cdn.net/img/ADMINGRALLERYLOGO.png" alt="Logo" class="logoadmin">
             <div class="line"></div>
 
             <div class="menu-items" style="font-family: 'Oxygen', sans-serif;">
