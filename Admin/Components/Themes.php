@@ -61,6 +61,53 @@
                     <div class="section-header">Logo Container</div>
                     <div class="section-content">
                         <div class="file-card">
+                            <div class="logo-upload-grid">
+                                <div class="upload-box circle">
+                                    <span class="plus-icon">+</span>
+                                    <input type="file" class="logoInput" accept="image/*" hidden>
+                                    <button class="delete-btn">&times;</button>
+                                </div>
+                                <div class="upload-box circle">
+                                    <span class="plus-icon">+</span>
+                                    <input type="file" class="logoInput" accept="image/*" hidden>
+                                    <button class="delete-btn">&times;</button>
+                                </div>
+                                <div class="upload-box circle">
+                                    <span class="plus-icon">+</span>
+                                    <input type="file" class="logoInput" accept="image/*" hidden>
+                                    <button class="delete-btn">&times;</button>
+                                </div>
+                                <div class="upload-box circle">
+                                    <span class="plus-icon">+</span>
+                                    <input type="file" class="logoInput" accept="image/*" hidden>
+                                    <button class="delete-btn">&times;</button>
+                                </div>
+                                <div class="upload-box circle">
+                                    <span class="plus-icon">+</span>
+                                    <input type="file" class="logoInput" accept="image/*" hidden>
+                                    <button class="delete-btn">&times;</button>
+                                </div>
+                                <div class="upload-box circle">
+                                    <span class="plus-icon">+</span>
+                                    <input type="file" class="logoInput" accept="image/*" hidden>
+                                    <button class="delete-btn">&times;</button>
+                                </div>
+                                <div class="upload-box circle">
+                                    <span class="plus-icon">+</span>
+                                    <input type="file" class="logoInput" accept="image/*" hidden>
+                                    <button class="delete-btn">&times;</button>
+                                </div>
+                                <div class="upload-box circle">
+                                    <span class="plus-icon">+</span>
+                                    <input type="file" class="logoInput" accept="image/*" hidden>
+                                    <button class="delete-btn">&times;</button>
+                                </div>
+                                <div class="upload-box circle">
+                                    <span class="plus-icon">+</span>
+                                    <input type="file" class="logoInput" accept="image/*" hidden>
+                                    <button class="delete-btn">&times;</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -87,6 +134,38 @@
                     <i class="fas fa-times"></i>
                     Cancel
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification container -->
+    <div id="notification-container"></div>
+
+    <!-- Upload Overlay + Modal (match BatchTemplates) -->
+    <div class="upload-overlay" id="upload-overlay">
+        <div class="upload-modal" id="uploadModal">
+            <h2>Uploading...</h2>
+            <p id="uploadText">Please wait while we upload your file</p>
+            <div class="loader">
+                <div class="loading-bar-background">
+                    <div class="loading-bar">
+                        <div class="white-bars-container">
+                            <div class="white-bar"></div>
+                            <div class="white-bar"></div>
+                            <div class="white-bar"></div>
+                            <div class="white-bar"></div>
+                            <div class="white-bar"></div>
+                            <div class="white-bar"></div>
+                            <div class="white-bar"></div>
+                            <div class="white-bar"></div>
+                            <div class="white-bar"></div>
+                            <div class="white-bar"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-btn cancel" onclick="cancelUpload()">Cancel</button>
             </div>
         </div>
     </div>

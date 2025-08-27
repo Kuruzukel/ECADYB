@@ -75,6 +75,194 @@ h1 {
   align-items: center;
 }
 
+/* Upload overlay/modal (reuse BatchTemplates styles) */
+.upload-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1500;
+  animation: fadeInUp 0.4s ease-out;
+}
+
+.upload-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(1200px 600px at 10% -10%, rgba(33, 150, 243, 0.07), transparent),
+    radial-gradient(1200px 600px at 110% 110%, rgba(16, 185, 129, 0.08), transparent),
+    #1e1e2f;
+  padding: 24px 28px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+  text-align: center;
+  width: 380px;
+  display: block;
+  z-index: 2000;
+  font-family: Arial, Helvetica, sans-serif;
+  animation: slideIn 0.35s ease;
+}
+
+.upload-modal h2 {
+  margin-bottom: 14px;
+  font-size: 20px;
+  color: #e5e7eb;
+  letter-spacing: 0.2px;
+  font-weight: 700;
+}
+
+#uploadText {
+  color: #e5e7eb;
+  opacity: 0.9;
+  margin-top: 0;
+  margin-bottom: 14px;
+  font-weight: 500;
+}
+
+.upload-modal .modal-buttons {
+  display: flex;
+  gap: 0.9rem;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.upload-modal .modal-btn.cancel {
+  background: #ef4444;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  transition: transform 0.15s ease, background 0.2s ease;
+}
+
+.upload-modal .modal-btn.cancel:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+}
+
+/* loader bar */
+.loader .loading-bar-background {
+  width: 100%;
+  height: 16px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.loader .loading-bar {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(34,197,94,0.25), rgba(16,185,129,0.3));
+  position: relative;
+}
+.loader .white-bars-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 200%;
+  display: grid;
+  grid-template-columns: repeat(20, 1fr);
+  gap: 8px;
+  transform: translateX(-50%);
+  animation: shimmer 1.4s linear infinite;
+}
+.loader .white-bar {
+  background: rgba(255,255,255,0.65);
+  height: 60%;
+  align-self: center;
+  border-radius: 2px;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
+/* Logo circular upload grid */
+.logo-upload-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 160px);
+  gap: 30px;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.upload-box.circle {
+  width: 140px;
+  height: 140px;
+  border: 2px dashed #aaa;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  background: rgba(255,255,255,0.02);
+}
+
+.upload-box.circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  position: absolute;
+  inset: 0;
+}
+
+.upload-box.circle .plus-icon {
+  font-size: 34px;
+  color: #cbd5e1;
+  pointer-events: none;
+}
+
+.upload-box.circle .delete-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #e63939;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  width: 36px;
+  height: 36px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+  z-index: 3;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.25);
+}
+
+.upload-box.circle .delete-btn:hover {
+  background: #dc2626;
+  transform: translate(-50%, -50%) scale(1.04);
+}
+
+.upload-box.circle:hover .delete-btn { display: flex; }
+
+.upload-box.circle.has-image {
+  border-style: solid;
+}
+
+.upload-box.circle:hover {
+  border-color: #e2e8f0;
+}
+
 .section-header {
   width: calc(100% + 40px);
   height: 60px;

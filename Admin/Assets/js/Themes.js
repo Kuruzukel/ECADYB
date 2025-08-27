@@ -136,4 +136,108 @@ window.addEventListener("DOMContentLoaded", () => {
     );
     if (selectedBox) selectedBox.classList.add("selected");
   });
+
+  // Logo circular upload behavior (reusing BatchTemplates logic simplified)
+  const logoBoxes = document.querySelectorAll(".logo-upload-grid .upload-box.circle");
+  const UPLOAD_ENDPOINT = `${window.location.origin}/ECADYB/Connection/UploadLogo.php`;
+  const FETCH_ENDPOINT = `${window.location.origin}/ECADYB/Connection/FetchLogos.php`;
+  const DELETE_ENDPOINT = `${window.location.origin}/ECADYB/Connection/DeleteLogo.php`;
+
+  // Upload overlay controls
+  const uploadOverlay = document.getElementById('upload-overlay');
+  const uploadModal = document.getElementById('uploadModal');
+  function showUploadOverlay() { if (uploadOverlay) uploadOverlay.style.display = 'flex'; }
+  function hideUploadOverlay() { if (uploadOverlay) uploadOverlay.style.display = 'none'; }
+  logoBoxes.forEach((box) => {
+    const input = box.querySelector('.logoInput');
+    const deleteBtn = box.querySelector('.delete-btn');
+    const plusIcon = box.querySelector('.plus-icon');
+
+    let imgEl = null;
+
+    box.addEventListener('click', (e) => {
+      if (e.target === deleteBtn) return;
+      if (!imgEl) input.click();
+    });
+
+    input.addEventListener('change', async (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      const slot = Array.from(logoBoxes).indexOf(box) + 1; // 1..9
+      const form = new FormData();
+      form.append('file', file);
+      form.append('slot', String(slot));
+      try {
+        showUploadOverlay();
+        const res = await fetch(UPLOAD_ENDPOINT, { method: 'POST', body: form });
+        const data = await res.json();
+        if (!data?.success) throw new Error(data?.message || 'Upload failed');
+        imgEl = document.createElement('img');
+        imgEl.src = data.url;
+        box.innerHTML = '';
+        box.appendChild(imgEl);
+        box.appendChild(deleteBtn);
+        box.appendChild(input);
+        deleteBtn.style.display = '';
+        box.classList.add('has-image');
+      } catch (err) {
+        alert(err.message || 'Upload failed');
+      } finally {
+        hideUploadOverlay();
+      }
+    });
+
+    deleteBtn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const slot = Array.from(logoBoxes).indexOf(box) + 1;
+      try {
+        showUploadOverlay();
+        const form = new FormData();
+        form.append('slot', String(slot));
+        const res = await fetch(DELETE_ENDPOINT, { method: 'POST', body: form });
+        const data = await res.json();
+        if (!data?.success) throw new Error(data?.message || 'Delete failed');
+      } catch (err) {
+        alert(err.message || 'Delete failed');
+        return;
+      } finally {
+        hideUploadOverlay();
+      }
+      imgEl = null;
+      box.innerHTML = '';
+      const newPlus = document.createElement('span');
+      newPlus.className = 'plus-icon';
+      newPlus.textContent = '+';
+      box.appendChild(newPlus);
+      box.appendChild(deleteBtn);
+      box.appendChild(input);
+      deleteBtn.style.display = 'none';
+      input.value = '';
+      box.classList.remove('has-image');
+    });
+  });
+
+  // Load existing logos
+  (async function loadLogos() {
+    try {
+      const res = await fetch(FETCH_ENDPOINT);
+      const data = await res.json();
+      if (!data?.success) return;
+      const bySlot = new Map((data.items || []).map(i => [i.slot, i.url]));
+      logoBoxes.forEach((box, idx) => {
+        const url = bySlot.get(idx + 1);
+        if (!url) return;
+        const input = box.querySelector('.logoInput');
+        const deleteBtn = box.querySelector('.delete-btn');
+        const img = document.createElement('img');
+        img.src = url;
+        box.innerHTML = '';
+        box.appendChild(img);
+        box.appendChild(deleteBtn);
+        box.appendChild(input);
+        deleteBtn.style.display = '';
+        box.classList.add('has-image');
+      });
+    } catch {}
+  })();
 });
