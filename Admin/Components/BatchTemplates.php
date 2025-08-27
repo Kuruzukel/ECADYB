@@ -215,10 +215,26 @@
         <div class="upload-modal" id="uploadModal">
             <h2>Uploading...</h2>
             <p id="uploadText">Please wait while we upload your images</p>
-            <div class="progress-container">
-                <div class="progress-bar" id="progressBar"></div>
+            <!-- Fancy loader borrowed from Public/Components/Loader.html -->
+            <div class="loader">
+                <div class="loading-bar-background">
+                    <div class="loading-bar">
+                        <div class="white-bars-container">
+                            <div class="white-bar"></div>
+                            <div class="white-bar"></div>
+                            <div class="white-bar"></div>
+                            <div class="white-bar"></div>
+                            <div class="white-bar"></div>
+                            <div class="white-bar"></div>
+                            <div class="white-bar"></div>
+                            <div class="white-bar"></div>
+                            <div class="white-bar"></div>
+                            <div class="white-bar"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="progress-meta"><span id="progressPercent">0%</span></div>
+            
             <div class="modal-buttons">
                 <button class="modal-btn cancel" onclick="cancelUpload()">Cancel</button>
             </div>

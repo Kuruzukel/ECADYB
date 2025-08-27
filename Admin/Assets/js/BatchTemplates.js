@@ -293,29 +293,20 @@ window.addEventListener("DOMContentLoaded", () => {
 
       const uploadOverlay = document.getElementById("upload-overlay");
       const uploadModal = document.getElementById("uploadModal");
-      const progressBar = document.getElementById("progressBar");
       const uploadText = document.getElementById("uploadText");
-      const progressPercent = document.getElementById("progressPercent");
 
       // Show overlay + modal
-      if (uploadOverlay && progressBar && uploadText) {
+      if (uploadOverlay && uploadText) {
         uploadOverlay.style.display = "flex";
-        progressBar.style.width = "0%";
         uploadText.textContent = "Please wait while we upload your file";
-        if (progressPercent) progressPercent.textContent = "0%";
       }
 
       try {
-        const data = await xhrUpload(UPLOAD_ENDPOINT, form, (percent) => {
-          if (progressBar) progressBar.style.width = `${percent}%`;
-          if (progressPercent) progressPercent.textContent = `${percent}%`;
-        });
+        const data = await xhrUpload(UPLOAD_ENDPOINT, form);
 
         // If user canceled, do nothing further
         if (data && data.aborted) {
           // Reset UI and exit
-          if (progressBar) progressBar.style.width = "0%";
-          if (progressPercent) progressPercent.textContent = "0%";
           if (uploadOverlay) uploadOverlay.style.display = "none";
           return;
         }
@@ -355,12 +346,7 @@ window.addEventListener("DOMContentLoaded", () => {
         const xhr = new XMLHttpRequest();
         currentXhr = xhr;
         xhr.open("POST", url, true);
-        xhr.upload.onprogress = (e) => {
-          if (e.lengthComputable && typeof onProgress === "function") {
-            const percent = Math.round((e.loaded / e.total) * 100);
-            onProgress(percent);
-          }
-        };
+        // progress callback removed since progress UI was removed
         xhr.onabort = () => {
           resolve({ aborted: true });
         };
