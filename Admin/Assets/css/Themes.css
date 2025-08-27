@@ -264,7 +264,7 @@ h1 {
 
 .upload-box.circle .delete-btn:hover {
   background: #dc2626;
-  transform: scale(1.08); /* nice hover effect */
+  transform: scale(1.09); /* nice hover effect */
 }
 
 /* ✅ Show button when there's an image */
