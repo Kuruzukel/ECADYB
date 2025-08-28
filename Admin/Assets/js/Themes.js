@@ -224,13 +224,9 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 
   // ----------------------
-  // Endpoints (auto-detect base path)
+  // Endpoints (Railway)
   // ----------------------
-  const BASE_PATH = `${window.location.origin}${
-    window.location.pathname.includes("ECADYB")
-      ? "/ECADYB/Connection"
-      : "/Connection"
-  }`;
+  const BASE_PATH = `${window.location.origin}/Connection`;
 
   window.UPLOAD_ENDPOINT = `${BASE_PATH}/UploadLogo.php`;
   const FETCH_ENDPOINT = `${BASE_PATH}/FetchLogos.php`;
