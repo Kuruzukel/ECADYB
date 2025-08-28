@@ -1,6 +1,7 @@
 <?php
 session_start();
 require __DIR__ . '/../vendor/autoload.php';
+
 use MongoDB\Client;
 
 function respond($success, $message = '', $data = []) {
@@ -10,22 +11,30 @@ function respond($success, $message = '', $data = []) {
 }
 
 $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
+
 try {
     $client = new Client($mongoUrl);
     $db = $client->Departments;
     $collection = $db->DashboardAssets;
 
-    $cursor = $collection->find(['type' => 'logo_container']);
+    // Fetch only necessary fields
+    $cursor = $collection->find(
+        ['type' => 'logo_container'],
+        [
+            'projection' => ['slot' => 1, 'url' => 1],
+            'sort' => ['slot' => 1] // sort logos by slot order
+        ]
+    );
+
     $items = [];
     foreach ($cursor as $doc) {
         $items[] = [
-            'slot' => (int)($doc['slot'] ?? 0),
-            'url'  => (string)($doc['url'] ?? ''),
+            'slot' => isset($doc['slot']) ? (int)$doc['slot'] : 0,
+            'url'  => isset($doc['url']) ? (string)$doc['url'] : ''
         ];
     }
 
-    respond(true, 'OK', ['items' => $items]);
+    respond(true, 'Logos fetched successfully', ['items' => $items]);
 } catch (Exception $e) {
-    respond(false, 'Failed to fetch logos: ' . $e->getMessage());
+    respond(false, 'Failed to fetch logos', ['error' => $e->getMessage()]);
 }
-
