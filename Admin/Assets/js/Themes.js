@@ -186,7 +186,99 @@ async function uploadLogoToBunny(file, slot, box, input, deleteBtn) {
 // ----------------------
 // DOM Ready
 // ----------------------
-window.addEventListener("DOMContentLoaded", () => {
+// Define API endpoints
+const UPLOAD_ENDPOINT = '/ECADYB/Connection/UploadLogo.php';
+const FETCH_ENDPOINT = '/ECADYB/Connection/FetchLogos.php';
+
+// Initialize upload functionality
+function initializeUploads() {
+  const uploadBoxes = document.querySelectorAll('.upload-box');
+  
+  uploadBoxes.forEach((box, index) => {
+    const input = box.querySelector('.logoInput');
+    const deleteBtn = box.querySelector('.delete-btn');
+    const plusIcon = box.querySelector('.plus-icon');
+    const slot = index + 1; // 1-based index for slots
+
+    // Handle file selection
+    input.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      
+      uploadLogoToBunny(file, slot, box, input, deleteBtn);
+    });
+
+    // Handle click on the upload box
+    box.addEventListener('click', (e) => {
+      // Don't trigger file input if clicking the delete button
+      if (e.target === deleteBtn) return;
+      input.click();
+    });
+
+    // Handle delete button click
+    deleteBtn.addEventListener('click', () => {
+      if (confirm('Are you sure you want to delete this logo?')) {
+        deleteLogo(slot, box, input, deleteBtn);
+      }
+    });
+  });
+}
+
+// Delete logo function
+async function deleteLogo(slot, box, input, deleteBtn) {
+  try {
+    const response = await fetch('/ECADYB/Connection/DeleteLogo.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: `slot=${slot}`
+    });
+    
+    const result = await response.json();
+    
+    if (result.success) {
+      // Reset the box
+      box.innerHTML = `
+        <span class="plus-icon">+</span>
+        <input type="file" class="logoInput" accept="image/*" hidden>
+        <button class="delete-btn">&times;</button>
+      `;
+      initializeUploads(); // Re-initialize event listeners
+      showNotification('Logo deleted successfully');
+    } else {
+      showNotification(result.message || 'Failed to delete logo', 'error');
+    }
+  } catch (error) {
+    console.error('Error deleting logo:', error);
+    showNotification('Error deleting logo', 'error');
+  }
+}
+
+// Load existing logos
+async function loadExistingLogos() {
+  try {
+    const response = await fetch(FETCH_ENDPOINT);
+    const data = await response.json();
+    
+    if (data.success && data.logos) {
+      Object.entries(data.logos).forEach(([slot, url]) => {
+        const box = document.querySelector(`.upload-box:nth-child(${slot})`);
+        if (box) {
+          box.innerHTML = `
+            <img src="${url}" alt="Logo ${slot}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+            <input type="file" class="logoInput" accept="image/*" hidden>
+            <button class="delete-btn">&times;</button>
+          `;
+        }
+      });
+    }
+  } catch (error) {
+    console.error('Error loading logos:', error);
+  }
+}
+
+window.addEventListener("DOMContentLoaded", async () => {
   const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
   applyTheme(savedTheme);
 
@@ -194,6 +286,15 @@ window.addEventListener("DOMContentLoaded", () => {
     `.color-box[data-label="${savedTheme}"]`
   );
   if (selectedBox) selectedBox.classList.add("selected");
+
+  // Initialize upload functionality
+  initializeUploads();
+  
+  // Load existing logos
+  await loadExistingLogos();
+  
+  // Re-initialize uploads after loading logos to ensure event listeners are attached
+  initializeUploads();
 
   // modal buttons
   const confirmBtn = document.getElementById("confirm-btn");

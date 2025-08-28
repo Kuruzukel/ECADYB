@@ -223,6 +223,198 @@ function resetCarouselAfterTimeout() {
 startAutoSlide();
 resetCarouselAfterTimeout();
 
+// 3D Carousel Functionality
+document.addEventListener('DOMContentLoaded', function() {
+  const carousel = document.querySelector('.carousel-3d');
+  const items = document.querySelectorAll('.carousel-3d-item');
+  const prevBtn = document.querySelector('.carousel-3d-prev');
+  const nextBtn = document.querySelector('.carousel-3d-next');
+  const pagination = document.querySelector('.carousel-3d-pagination');
+  
+  let currentIndex = 0;
+  const totalItems = items.length;
+  const angle = 360 / totalItems;
+  let isDragging = false;
+  let startPos = 0;
+  let currentTranslate = 0;
+  let prevTranslate = 0;
+  let animationID = 0;
+  
+  // Initialize carousel items
+  function initCarousel() {
+    // Position items in a circle
+    items.forEach((item, index) => {
+      // Calculate rotation for each item
+      const rotation = angle * index;
+      item.style.transform = `rotateY(${rotation}deg) translateZ(500px)`;
+      
+      // Add data-index for reference
+      item.setAttribute('data-index', index);
+    });
+    
+    // Create pagination
+    createPagination();
+    updatePagination();
+    
+    // Add touch and mouse events
+    setupEventListeners();
+  }
+  
+  // Create pagination dots
+  function createPagination() {
+    for (let i = 0; i < totalItems; i++) {
+      const dot = document.createElement('button');
+      dot.addEventListener('click', () => goToSlide(i));
+      pagination.appendChild(dot);
+    }
+  }
+  
+  // Update active pagination dot
+  function updatePagination() {
+    const dots = pagination.querySelectorAll('button');
+    dots.forEach((dot, index) => {
+      dot.classList.toggle('active', index === currentIndex);
+    });
+  }
+  
+  // Go to specific slide
+  function goToSlide(index) {
+    currentIndex = (index + totalItems) % totalItems;
+    rotateCarousel();
+    updatePagination();
+  }
+  
+  // Rotate carousel to current index
+  function rotateCarousel() {
+    const rotation = -angle * currentIndex;
+    carousel.style.transition = 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+    carousel.style.transform = `translateZ(-500px) rotateY(${rotation}deg)`;
+  }
+  
+  // Next slide
+  function nextSlide() {
+    currentIndex = (currentIndex + 1) % totalItems;
+    rotateCarousel();
+    updatePagination();
+  }
+  
+  // Previous slide
+  function prevSlide() {
+    currentIndex = (currentIndex - 1 + totalItems) % totalItems;
+    rotateCarousel();
+    updatePagination();
+  }
+  
+  // Setup event listeners
+  function setupEventListeners() {
+    // Navigation buttons
+    prevBtn.addEventListener('click', prevSlide);
+    nextBtn.addEventListener('click', nextSlide);
+    
+    // Touch events
+    carousel.addEventListener('touchstart', touchStart);
+    carousel.addEventListener('touchend', touchEnd);
+    carousel.addEventListener('touchmove', touchMove);
+    
+    // Mouse events
+    carousel.addEventListener('mousedown', dragStart);
+    carousel.addEventListener('mouseup', dragEnd);
+    carousel.addEventListener('mouseleave', dragEnd);
+    carousel.addEventListener('mousemove', drag);
+    
+    // Prevent image drag
+    const images = document.querySelectorAll('.carousel-3d-item img');
+    images.forEach(img => {
+      img.addEventListener('dragstart', (e) => e.preventDefault());
+    });
+  }
+  
+  // Touch event handlers
+  function touchStart(e) {
+    startPos = e.touches[0].clientX;
+    isDragging = true;
+    carousel.style.transition = 'none';
+    cancelAnimationFrame(animationID);
+  }
+  
+  function touchMove(e) {
+    if (!isDragging) return;
+    const currentPosition = e.touches[0].clientX;
+    const diff = currentPosition - startPos;
+    const rotation = -angle * currentIndex + (diff * 0.5);
+    carousel.style.transform = `translateZ(-500px) rotateY(${rotation}deg)`;
+  }
+  
+  function touchEnd() {
+    if (!isDragging) return;
+    isDragging = false;
+    
+    const threshold = 50;
+    const touchEndX = event.changedTouches[0].clientX;
+    const diff = touchEndX - startPos;
+    
+    if (Math.abs(diff) > threshold) {
+      if (diff > 0) {
+        prevSlide();
+      } else {
+        nextSlide();
+      }
+    } else {
+      rotateCarousel();
+    }
+  }
+  
+  // Mouse drag event handlers
+  function dragStart(e) {
+    e.preventDefault();
+    startPos = e.clientX;
+    isDragging = true;
+    carousel.style.transition = 'none';
+    cancelAnimationFrame(animationID);
+  }
+  
+  function drag(e) {
+    if (!isDragging) return;
+    const currentPosition = e.clientX;
+    const diff = currentPosition - startPos;
+    const rotation = -angle * currentIndex + (diff * 0.5);
+    carousel.style.transform = `translateZ(-500px) rotateY(${rotation}deg)`;
+  }
+  
+  function dragEnd() {
+    if (!isDragging) return;
+    isDragging = false;
+    
+    const threshold = 50;
+    const diff = currentTranslate - prevTranslate;
+    
+    if (Math.abs(diff) > threshold) {
+      if (diff > 0) {
+        prevSlide();
+      } else {
+        nextSlide();
+      }
+    } else {
+      rotateCarousel();
+    }
+  }
+  
+  // Auto-rotate carousel
+  let autoRotate = setInterval(nextSlide, 5000);
+  
+  // Pause auto-rotation on hover
+  carousel.addEventListener('mouseenter', () => {
+    clearInterval(autoRotate);
+  });
+  
+  carousel.addEventListener('mouseleave', () => {
+    autoRotate = setInterval(nextSlide, 5000);
+  });
+  
+  // Initialize the carousel
+  initCarousel();
+});
+
 // Simple scroll spy functionality
 window.addEventListener("scroll", () => {
   const sections = document.querySelectorAll("section, footer");
