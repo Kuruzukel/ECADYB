@@ -99,11 +99,11 @@ $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 // Define clean routes
 $routes = [
-    '/LandingPage'        => BASE_PATH . '/LandingPage/LandingPage.html',
-    '/Login'   => BASE_PATH . '/Public/Components/Login.php',
-    '/Admin'   => BASE_PATH . '/Admin/Components/AdminDashboard.php',
-    '/Student' => BASE_PATH . '/Student/Components/StudentDashboard.php',
-    '/'  => BASE_PATH . '/Public/Components/Loader.html',
+    '/LandingPage' => BASE_PATH . '/LandingPage/LandingPage.html',
+    '/Login'       => BASE_PATH . '/Public/Components/Login.php',
+    '/Admin'       => BASE_PATH . '/Admin/Components/AdminDashboard.php',
+    '/Student'     => BASE_PATH . '/Student/Components/StudentDashboard.php',
+    '/'            => BASE_PATH . '/Public/Components/Loader.html',
 ];
 
 // ----------------------
@@ -151,6 +151,24 @@ if (array_key_exists($requestUri, $routes)) {
     } else {
         http_response_code(404);
         echo "❌ File not found for route: $requestUri";
+        exit;
+    }
+}
+
+// ----------------------
+// Serve API endpoints under /Connection
+// ----------------------
+if (str_starts_with($requestUri, '/Connection/')) {
+    $filePath = BASE_PATH . $requestUri;
+    if (file_exists($filePath)) {
+        include $filePath;
+        exit;
+    } else {
+        http_response_code(404);
+        echo json_encode([
+            'success' => false,
+            'message' => "API not found: $requestUri"
+        ]);
         exit;
     }
 }
