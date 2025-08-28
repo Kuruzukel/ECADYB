@@ -81,7 +81,6 @@ function selectColor(el) {
   el.classList.add("selected");
 
   pendingTheme = el.getAttribute("data-label");
-
   document.getElementById("modal-overlay").style.display = "flex";
 }
 
@@ -187,6 +186,7 @@ async function uploadLogoToBunny(file, slot, box, input, deleteBtn) {
 // DOM Ready
 // ----------------------
 window.addEventListener("DOMContentLoaded", () => {
+  // Apply saved theme
   const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
   applyTheme(savedTheme);
 
@@ -224,9 +224,14 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 
   // ----------------------
-  // Endpoints (fixed paths)
+  // Endpoints (auto-detect base path)
   // ----------------------
-  const BASE_PATH = `${window.location.origin}/ECADYB/Connection`;
+  const BASE_PATH = `${window.location.origin}${
+    window.location.pathname.includes("ECADYB")
+      ? "/ECADYB/Connection"
+      : "/Connection"
+  }`;
+
   window.UPLOAD_ENDPOINT = `${BASE_PATH}/UploadLogo.php`;
   const FETCH_ENDPOINT = `${BASE_PATH}/FetchLogos.php`;
   const DELETE_ENDPOINT = `${BASE_PATH}/DeleteLogo.php`;
