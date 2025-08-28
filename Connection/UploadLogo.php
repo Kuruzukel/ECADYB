@@ -89,4 +89,3 @@ try {
 }
 
 respond(true, 'Logo uploaded', ['url' => $publicUrl, 'slot' => $slot]);
-
