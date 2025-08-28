@@ -127,17 +127,20 @@ async function confirmDeleteStudent() {
   if (confirmDeleteBtn) confirmDeleteBtn.disabled = true;
 
   try {
-    const res = await fetch(
-      `${window.location.origin}/ECADYB/Connection/DeleteStudent.php`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          student_id: selectedStudentId,
-          collection: selectedCollection,
-        }),
-      }
-    );
+    // ✅ Fixed path handling
+    const BASE_PATH =
+      window.location.hostname === "localhost"
+        ? `${window.location.origin}/ECADYB/Connection`
+        : `${window.location.origin}/Connection`;
+
+    const res = await fetch(`${BASE_PATH}/DeleteStudent.php`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        student_id: selectedStudentId,
+        collection: selectedCollection,
+      }),
+    });
 
     const data = await res.json();
     if (typeof showNotification === "function") {
@@ -171,7 +174,6 @@ function initializeDeleteModal() {
     if (e.target === deleteModal) closeDeleteModal();
   });
   confirmDeleteBtn.addEventListener("click", async () => {
-    // Prefer student deletion if ids are set, else run image deletion action
     if (selectedStudentId && selectedCollection) {
       await confirmDeleteStudent();
     } else if (typeof selectedConfirmAction === "function") {
@@ -187,10 +189,8 @@ window.addEventListener("DOMContentLoaded", () => {
   const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
   applyTheme(savedTheme);
 
-  // Track the currently active upload globally so Cancel always aborts it
   let currentXhr = null;
 
-  // Initialize upload boxes (front/back/toggle/delete per box)
   const uploadBoxes = document.querySelectorAll(".upload-box");
   uploadBoxes.forEach((box, index) => {
     const frontInput = box.querySelector(".frontInput");
@@ -201,16 +201,22 @@ window.addEventListener("DOMContentLoaded", () => {
     let frontImg = null;
     let backImg = null;
     let showingFront = true;
-    const slot = index + 1; // 1-based slot index
-    const template = 1; // static for now; extend if multiple templates
+    const slot = index + 1;
+    const template = 1;
     const isBackgroundSlot = slot === 8;
 
-    const UPLOAD_ENDPOINT = `${window.location.origin}/ECADYB/Connection/UploadCover.php`;
-    const FETCH_ENDPOINT = `${window.location.origin}/ECADYB/Connection/FetchCovers.php?template=${template}`;
-    const DELETE_ENDPOINT = `${window.location.origin}/ECADYB/Connection/DeleteCover.php`;
+    // ✅ Fixed path handling
+    const BASE_PATH =
+      window.location.hostname === "localhost"
+        ? `${window.location.origin}/ECADYB/Connection`
+        : `${window.location.origin}/Connection`;
+
+    const UPLOAD_ENDPOINT = `${BASE_PATH}/UploadCover.php`;
+    const FETCH_ENDPOINT = `${BASE_PATH}/FetchCovers.php?template=${template}`;
+    const DELETE_ENDPOINT = `${BASE_PATH}/DeleteCover.php`;
 
     const toggleImages = () => {
-      if (isBackgroundSlot) return; // no toggle for background slot
+      if (isBackgroundSlot) return;
       showingFront = !showingFront;
       if (frontImg && backImg) {
         if (showingFront) {
@@ -248,24 +254,21 @@ window.addEventListener("DOMContentLoaded", () => {
       await uploadToBunny(file, slot, "front");
     });
 
-    if (!isBackgroundSlot) backInput.addEventListener("change", async (event) => {
-      const file = event.target.files && event.target.files[0];
-      if (!file) return;
-      await uploadToBunny(file, slot, "back");
-    });
+    if (!isBackgroundSlot)
+      backInput.addEventListener("change", async (event) => {
+        const file = event.target.files && event.target.files[0];
+        if (!file) return;
+        await uploadToBunny(file, slot, "back");
+      });
 
     deleteBtn.addEventListener("click", (event) => {
       event.stopPropagation();
-      // Defer actual deletion until modal confirmation
       selectedConfirmAction = () => {
-        // Background slot: delete only front
         const sides = [];
         if (frontImg) sides.push("front");
         if (backImg && !isBackgroundSlot) sides.push("back");
         if (!sides.length) return;
-        Promise.all(
-          sides.map((side) => deleteCover(slot, side))
-        ).then(() => {
+        Promise.all(sides.map((side) => deleteCover(slot, side))).then(() => {
           frontImg = null;
           backImg = null;
           showingFront = true;
@@ -292,10 +295,8 @@ window.addEventListener("DOMContentLoaded", () => {
       form.append("template", String(template));
 
       const uploadOverlay = document.getElementById("upload-overlay");
-      const uploadModal = document.getElementById("uploadModal");
       const uploadText = document.getElementById("uploadText");
 
-      // Show overlay + modal
       if (uploadOverlay && uploadText) {
         uploadOverlay.style.display = "flex";
         uploadText.textContent = "Please wait while we upload your file";
@@ -303,14 +304,10 @@ window.addEventListener("DOMContentLoaded", () => {
 
       try {
         const data = await xhrUpload(UPLOAD_ENDPOINT, form);
-
-        // If user canceled, do nothing further
         if (data && data.aborted) {
-          // Reset UI and exit
           if (uploadOverlay) uploadOverlay.style.display = "none";
           return;
         }
-
         if (!data?.success) {
           showNotification(data?.message || "Upload failed", "error");
           return;
@@ -319,7 +316,8 @@ window.addEventListener("DOMContentLoaded", () => {
         const img = document.createElement("img");
         img.src = data.url;
         img.classList.add(side === "front" ? "front-img" : "back-img");
-        if (side === "front") frontImg = img; else backImg = img;
+        if (side === "front") frontImg = img;
+        else backImg = img;
 
         box.innerHTML = "";
         if (plusIcon) plusIcon.remove();
@@ -327,7 +325,6 @@ window.addEventListener("DOMContentLoaded", () => {
         deleteBtn.style.display = "flex";
         box.classList.add("has-image");
 
-        // Show front by default
         showingFront = true;
         if (frontImg) {
           frontImg.style.opacity = 1;
@@ -336,17 +333,15 @@ window.addEventListener("DOMContentLoaded", () => {
 
         showNotification("Image uploaded successfully", "success");
       } finally {
-        // Only hide overlay if not actively uploading (i.e., not canceled and no other upload started)
         if (!currentXhr && uploadOverlay) uploadOverlay.style.display = "none";
       }
     }
 
-    function xhrUpload(url, formData, onProgress) {
+    function xhrUpload(url, formData) {
       return new Promise((resolve) => {
         const xhr = new XMLHttpRequest();
         currentXhr = xhr;
         xhr.open("POST", url, true);
-        // progress callback removed since progress UI was removed
         xhr.onabort = () => {
           resolve({ aborted: true });
         };
@@ -364,20 +359,22 @@ window.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    // Allow cancel button to abort next uploads: simple UI reset
     window.cancelUpload = function () {
       const uploadOverlay = document.getElementById("upload-overlay");
       const progressBar = document.getElementById("progressBar");
       const uploadText = document.getElementById("uploadText");
       const progressPercent = document.getElementById("progressPercent");
       if (currentXhr) {
-        try { currentXhr.abort(); } catch (_) {}
+        try {
+          currentXhr.abort();
+        } catch (_) {}
         currentXhr = null;
         showNotification("Upload canceled", "error");
       }
       if (progressBar) progressBar.style.width = "0%";
       if (uploadOverlay) uploadOverlay.style.display = "none";
-      if (uploadText) uploadText.textContent = "Please wait while we upload your file";
+      if (uploadText)
+        uploadText.textContent = "Please wait while we upload your file";
       if (progressPercent) progressPercent.textContent = "0%";
     };
 
@@ -395,7 +392,6 @@ window.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    // Load existing
     (async function loadExisting() {
       try {
         const res = await fetch(FETCH_ENDPOINT);
@@ -430,6 +426,6 @@ window.addEventListener("DOMContentLoaded", () => {
       }
     })();
   });
-  
+
   initializeDeleteModal();
 });
