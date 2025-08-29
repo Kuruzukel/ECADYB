@@ -4,9 +4,11 @@ require __DIR__ . '/../vendor/autoload.php';
 if (file_exists(__DIR__ . '/BunnyConfig.php')) {
     require __DIR__ . '/BunnyConfig.php';
 }
+
 use MongoDB\Client;
 
-function respond($success, $message = '', $data = []) {
+function respond($success, $message = '', $data = [])
+{
     header('Content-Type: application/json');
     echo json_encode(array_merge(['success' => $success, 'message' => $message], $data));
     exit;
@@ -37,7 +39,7 @@ try {
             $storageUrl = 'https://storage.bunnycdn.com/' . $bunnyStorageZone . '/' . $relative;
             $ch = curl_init($storageUrl);
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
-            curl_setopt($ch, CURLOPT_HTTPHEADER, [ 'AccessKey: ' . $bunnyAccessKey ]);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['AccessKey: ' . $bunnyAccessKey]);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_exec($ch);
             curl_close($ch);

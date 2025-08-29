@@ -4,7 +4,8 @@ require __DIR__ . '/../vendor/autoload.php';
 
 use MongoDB\Client;
 
-function respond($success, $message = '', $data = []) {
+function respond($success, $message = '', $data = [])
+{
     header('Content-Type: application/json');
     echo json_encode(array_merge(['success' => $success, 'message' => $message], $data));
     exit;

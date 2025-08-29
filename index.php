@@ -1,31 +1,18 @@
 <?php
 session_start();
 
-// ======================================================
-// Composer Autoload
-// ======================================================
 require __DIR__ . '/vendor/autoload.php';
 
 use MongoDB\Client;
 
-// ======================================================
-// MongoDB Connection
-// ======================================================
 $mongoPath = __DIR__ . '/Connection/MongoConnect.php';
 if (!file_exists($mongoPath)) {
     die("❌ MongoConnect.php not found at: $mongoPath");
 }
-require $mongoPath; // Provides $client, $departmentsDB, $collections, $adminCollection
-
-// ======================================================
-// Base Paths
-// ======================================================
+require $mongoPath;
 define('BASE_PATH', __DIR__);
-define('BASE_URL', '/'); // Railway deployment root
+define('BASE_URL', '/');
 
-// ======================================================
-// Handle Login POST
-// ======================================================
 $error_message = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['password'])) {
@@ -33,9 +20,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
     $password  = trim($_POST['password']);
 
     try {
-        // ----------------------
-        // Admin Login
-        // ----------------------
         $admin = $adminCollection->findOne([
             'username' => $studentId,
             'password' => $password
@@ -49,9 +33,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
             exit;
         }
 
-        // ----------------------
-        // Student Login
-        // ----------------------
         $foundStudent = false;
 
         foreach ($collections as $collectionName => $departmentName) {
@@ -79,25 +60,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
         if (!$foundStudent) {
             $error_message = "Invalid Student ID or password!";
         }
-
     } catch (Exception $e) {
         $error_message = "Database error: " . $e->getMessage();
     }
 }
 
-// ======================================================
-// Display Login Error (if any)
-// ======================================================
 if (!empty($error_message)) {
     echo "<div style='color:red; font-weight:bold; margin:10px 0;'>$error_message</div>";
 }
 
-// ======================================================
-// Router / Clean URLs
-// ======================================================
 $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-// Define clean routes
 $routes = [
     '/LandingPage'        => BASE_PATH . '/LandingPage/LandingPage.html',
     '/Login'   => BASE_PATH . '/Public/Components/Login.php',
@@ -106,9 +79,6 @@ $routes = [
     '/'  => BASE_PATH . '/Public/Components/Loader.html',
 ];
 
-// ----------------------
-// Serve matched route
-// ----------------------
 if (array_key_exists($requestUri, $routes)) {
     $filePath = $routes[$requestUri];
     if (file_exists($filePath)) {
@@ -117,7 +87,7 @@ if (array_key_exists($requestUri, $routes)) {
         if ($ext === 'php') {
             include $filePath;
         } else {
-            // For HTML, fix asset paths before output
+
             $htmlContent = file_get_contents($filePath);
             $htmlContent = str_replace(
                 [
@@ -135,7 +105,7 @@ if (array_key_exists($requestUri, $routes)) {
                 $htmlContent
             );
 
-            // Fix login button redirects
+
             $htmlContent = str_replace(
                 ['id="loginDropdownBtn"', 'id="mobileLoginDropdownBtn"'],
                 [
@@ -155,9 +125,6 @@ if (array_key_exists($requestUri, $routes)) {
     }
 }
 
-// ----------------------
-// Serve Static Assets
-// ----------------------
 $staticPaths = [
     '/img/'                             => '/img/',
     '/LandingPage/LandingPageYB/pages/' => '/LandingPage/LandingPageYB/pages/',
@@ -188,9 +155,6 @@ foreach ($staticPaths as $uriPrefix => $folder) {
     }
 }
 
-// ======================================================
-// Default Fallback (404)
-// ======================================================
 http_response_code(404);
 echo '<h1>ECADYB Application</h1>';
 echo '<p>Page not found.</p>';
