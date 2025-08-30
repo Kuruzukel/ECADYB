@@ -123,10 +123,11 @@ header {
 
 /* Submenu styles */
 .submenu {
-  padding-left: 2rem;
+  padding-left: 0.91rem; /* Reduced from 2rem to 1.5rem */
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.3s ease-out;
+  margin-left: 0.25rem; /* Added small left margin for better alignment */
 }
 
 .submenu.show {
