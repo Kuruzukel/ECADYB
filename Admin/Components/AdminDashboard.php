@@ -127,7 +127,7 @@ require $mongoPath;
                     <i class="fas fa-key"></i> Change password
                 </a>
 
-                <a href="student_logout.php" class="tab" id="logout-tab">
+                <a href="#" class="tab" id="logout-tab" onclick="showLogoutModal()">
                     <i class="fas fa-sign-out-alt"></i> Logout
                 </a>
 
@@ -252,6 +252,43 @@ require $mongoPath;
 
         // Load logo when page loads
         document.addEventListener('DOMContentLoaded', loadAdminLogo);
+    </script>
+    <!-- Logout Confirmation Modal -->
+    <div class="modal-overlay" id="logout-modal-overlay" style="display: none;">
+        <div class="modal">
+            <div class="modal-header">
+                <i class="fas fa-sign-out-alt modal-icon"></i>
+                <h3>Confirm Logout</h3>
+            </div>
+            <div class="modal-content">
+                <p>Are you sure you want to logout?</p>
+            </div>
+            <div class="modal-buttons">
+                <a href="AdminLogout.php" class="modal-btn confirm">
+                    <i class="fas fa-check"></i> Yes, Logout
+                </a>
+                <button class="modal-btn cancel" onclick="hideLogoutModal()">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showLogoutModal() {
+            document.getElementById('logout-modal-overlay').style.display = 'flex';
+        }
+
+        function hideLogoutModal() {
+            document.getElementById('logout-modal-overlay').style.display = 'none';
+        }
+
+        // Close modal when clicking outside the modal content
+        document.getElementById('logout-modal-overlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                hideLogoutModal();
+            }
+        });
     </script>
 </body>
 
