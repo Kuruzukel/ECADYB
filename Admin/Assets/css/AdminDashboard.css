@@ -37,13 +37,120 @@ header {
   overflow: hidden;
 }
 
-/* UPDATED: menu-container with flex layout & smaller font-size */
+/* Admin logo styles */
+.logoadmin {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.logoadmin:hover {
+  transform: scale(1.05);
+}
+
+/* Modern tab and menu styles */
+.tab {
+  display: flex;
+  align-items: center;
+  padding: 0.8rem 1.5rem;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  border-radius: 8px;
+  margin: 0.3rem 0.5rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+.tab i {
+  margin-right: 12px;
+  width: 20px;
+  text-align: center;
+  font-size: 1.1rem;
+  transition: transform 0.3s ease;
+}
+
+.tab:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  transform: translateX(2px);
+}
+
+.tab:hover i {
+  color: var(--menu-border-active);
+  transform: scale(1.1);
+}
+
+.tab.active {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.05)
+  );
+  color: #ffffff;
+  font-weight: 400;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border-left: 4px solid var(--menu-border-active);
+}
+
+.tab.active::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.03),
+    transparent
+  );
+  transform: translateX(-100%);
+  animation: shine 2s infinite;
+}
+
+@keyframes shine {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Submenu styles */
+.submenu {
+  padding-left: 2rem;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+
+.submenu.show {
+  max-height: 500px; /* Adjust based on your needs */
+}
+
+.submenu .tab {
+  padding: 0.6rem 1.2rem;
+  font-size: 0.9rem;
+  opacity: 0.9;
+  margin: 0.2rem 0.5rem;
+}
+
+.submenu .tab:hover {
+  padding-left: 1.5rem;
+}
+
+/* Menu container */
 .menu-container {
   display: flex;
   align-items: center;
   color: rgb(255, 255, 255);
-  font-size: 18px; /* Reduced from 35px for better fit */
-  gap: 1rem; /* space between menu button and search */
+  font-size: 18px;
+  gap: 1rem;
   padding-right: 1rem;
 }
 

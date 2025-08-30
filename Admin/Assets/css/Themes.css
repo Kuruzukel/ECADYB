@@ -98,15 +98,18 @@ h1 {
   align-items: center;
   margin: 20px 0;
   padding: 20px;
-  background: rgba(255, 255, 255, 0.1);
   border-radius: 8px;
-  border: 2px dashed var(--accent);
 }
 
 .logo-preview img {
-  border-radius: 8px;
+  width: 250x;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 50%;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   transition: transform 0.2s ease;
+  position: relative;
+  display: block;
 }
 
 .logo-preview img:hover {

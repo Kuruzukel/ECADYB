@@ -169,7 +169,7 @@
             <div class="modal-content">
                 <p>Do you want to change the admin dashboard logo to this image?</p>
                 <div class="logo-preview">
-                    <img id="preview-logo" src="" alt="Logo Preview" style="max-width: 100px; max-height: 100px; object-fit: contain;">
+                    <img id="preview-logo" src="" alt="Logo Preview">
                 </div>
             </div>
             <div class="modal-buttons">

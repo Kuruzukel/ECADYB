@@ -66,7 +66,7 @@ require $mongoPath;
                 </div>
 
                 <a class="tab" id="yearbook-tab" onclick="toggleSubmenu('yearbook-submenu')">
-                    <i class="fas fa-book"></i> Digital Year Book
+                    <i class="fas fa-book"></i> Year Book
                     <span class="chevron"><i class="fas fa-chevron-down"></i></span>
                 </a>
 
@@ -124,7 +124,7 @@ require $mongoPath;
 
                 <a href="AdminDashboard.php?page=changepassword" class="tab" id="changepassword-tab"
                     onclick="setTabActive('changepassword-tab');">
-                    <i class="fas fa-key"></i> Change my password
+                    <i class="fas fa-key"></i> Change password
                 </a>
 
                 <a href="student_logout.php" class="tab" id="logout-tab">
