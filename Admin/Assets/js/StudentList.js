@@ -3,6 +3,68 @@
 // ================================
 
 // ----------------------
+// Tab State Management
+// ----------------------
+function updateUrlWithTab(tabName) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('tab', tabName);
+    // Reset to first page when changing tabs
+    url.searchParams.set('page', '1');
+    window.history.pushState({}, '', url);
+    window.location.href = url.toString();
+}
+
+function setActiveTab(tabName) {
+    // Remove active class from all tabs and tab contents
+    document.querySelectorAll('.tab-button').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+    });
+
+    // Add active class to selected tab and its content
+    const activeTab = document.querySelector(`[data-tab="${tabName}"]`);
+    const activeContent = document.getElementById(tabName);
+    
+    if (activeTab) activeTab.classList.add('active');
+    if (activeContent) activeContent.classList.add('active');
+}
+
+// Initialize tabs from URL parameter
+function initializeTabs() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const activeTab = urlParams.get('tab') || 'all'; // Default to 'all' if no tab specified
+    setActiveTab(activeTab);
+
+    // Add click handlers to tab buttons
+    document.querySelectorAll('.tab-button').forEach(button => {
+        button.addEventListener('click', function() {
+            const tabName = this.getAttribute('data-tab');
+            updateUrlWithTab(tabName);
+        });
+    });
+}
+
+// Call initializeTabs when the DOM is fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+    initializeTabs();
+    
+    // Update department filter to preserve tab parameter
+    const deptFilter = document.getElementById("department-filter");
+    if (deptFilter) {
+        deptFilter.addEventListener("change", function() {
+            const dept = this.value;
+            const url = new URL(window.location.href);
+            url.searchParams.set('department', dept);
+            // Reset to first page when changing departments
+            url.searchParams.set('page', '1');
+            window.location.href = url.toString();
+        });
+    }
+});
+
+// ----------------------
 // Themes
 // ----------------------
 const themes = {

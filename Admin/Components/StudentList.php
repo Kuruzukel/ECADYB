@@ -102,7 +102,8 @@ usort($allStudents, function($a, $b) {
 
 // ✅ Pagination setup
 $perPage = 10;
-$page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1; // default: 1
+// Get page number from either 'pageNum' parameter or default to 1
+$page = isset($_GET['pageNum']) ? max(1, (int)$_GET['pageNum']) : 1; // default: 1
 $offset = ($page - 1) * $perPage;
 
 $totalStudents = count($allStudents);
@@ -122,6 +123,7 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
     <title>Add Student Details</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="../Assets/css/StudentList.css">
+    <link rel="stylesheet" href="../Assets/css/tabs.css">
 </head>
 
 <body>
@@ -160,21 +162,40 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
                         </label>
 
                         <!-- Pagination Buttons -->
+                        <input type="hidden" id="current-tab" value="<?php echo htmlspecialchars($_GET['tab'] ?? 'all'); ?>">
                         <div class="pagination-controls"
                             style="margin-top:1em; display:flex; justify-content:center; gap:1em;">
 
-                            <?php if ($page > 1): ?>
-                            <a
-                                href="?department=<?php echo urlencode($selectedDepartment); ?>&page=<?php echo $page - 1; ?>">
+                            <?php 
+                            // Build base URL with page=student-list
+                            $baseUrl = '?page=student-list';
+                            
+                            // Add department if set
+                            if (!empty($selectedDepartment)) {
+                                $baseUrl .= '&department=' . urlencode($selectedDepartment);
+                            }
+                            
+                            // Add tab if set
+                            if (!empty($_GET['tab'])) {
+                                $baseUrl .= '&tab=' . urlencode($_GET['tab']);
+                            }
+                            
+                            // Previous page link
+                            if ($page > 1): 
+                                $prevUrl = $baseUrl . '&pageNum=' . ($page - 1);
+                            ?>
+                            <a href="<?php echo htmlspecialchars($prevUrl); ?>">
                                 <button id="prev-btn">Previous</button>
                             </a>
                             <?php else: ?>
                             <button id="prev-btn" disabled>Previous</button>
                             <?php endif; ?>
 
-                            <?php if ($page < $totalPages): ?>
-                            <a
-                                href="?department=<?php echo urlencode($selectedDepartment); ?>&page=<?php echo $page + 1; ?>">
+                            <?php // Next page link
+                            if ($page < $totalPages): 
+                                $nextUrl = $baseUrl . '&pageNum=' . ($page + 1);
+                            ?>
+                            <a href="<?php echo htmlspecialchars($nextUrl); ?>">
                                 <button id="next-btn">Next</button>
                             </a>
                             <?php else: ?>
@@ -531,11 +552,53 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
     </div>
 
     <script>
-    document.getElementById("department-filter").addEventListener("change", function() {
-        const dept = this.value;
-        if (dept) {
-            window.location.href = "?department=" + encodeURIComponent(dept);
+    // Initialize active tab from URL parameter
+    document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const activeTab = urlParams.get('tab') || 'all';
+        
+        // Set the active tab
+        const tabs = document.querySelectorAll('.tab-button');
+        tabs.forEach(tab => {
+            if (tab.getAttribute('data-tab') === activeTab) {
+                tab.classList.add('active');
+            } else {
+                tab.classList.remove('active');
+            }
+        });
+        
+        // Show the active tab content
+        const tabContents = document.querySelectorAll('.tab-content');
+        tabContents.forEach(content => {
+            if (content.id === activeTab) {
+                content.classList.add('active');
+            } else {
+                content.classList.remove('active');
+            }
+        });
+        
+        // Update department filter to preserve tab state
+        const deptFilter = document.getElementById("department-filter");
+        if (deptFilter) {
+            deptFilter.addEventListener("change", function() {
+                const dept = this.value;
+                const url = new URL(window.location.href);
+                url.searchParams.set('department', dept);
+                url.searchParams.set('page', '1'); // Reset to first page
+                window.location.href = url.toString();
+            });
         }
+        
+        // Add click handlers to tab buttons
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const tabName = this.getAttribute('data-tab');
+                const url = new URL(window.location.href);
+                url.searchParams.set('tab', tabName);
+                url.searchParams.set('page', '1'); // Reset to first page when changing tabs
+                window.location.href = url.toString();
+            });
+        });
     });
 
     function openModal(modalId) {
