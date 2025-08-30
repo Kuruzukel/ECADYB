@@ -129,7 +129,7 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
 <body>
     <div class="container">
         <div class="header-container">
-            <h1>Student List</h1>
+        <h1><i class="fas fa-home"></i> <span class="chevron"><i class="fas fa-chevron-right"></i></span> Student List</h1>
         </div>
 
 

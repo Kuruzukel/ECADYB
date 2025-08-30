@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Change Password</title>
     <script src="https://kit.fontawesome.com/a2e0f5f0b2.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="../Assets/css/ChangePassword.css">
 </head>
 
@@ -14,7 +15,7 @@
     <div class="changepass-container" style=" margin: 0 auto;">
         <div style="font-family: Arial, sans-serif;">
             <div class="changepass-header">
-                <h2>Change Password</h2>
+            <h2><i class="fas fa-key"></i> <span class="chevron"><i class="fas fa-chevron-right"></i></span>Change Password</h2>
             </div>
 
             <div class="changepass-body" style="min-height: 570px;">

@@ -19,7 +19,7 @@ require $mongoPath;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="../Assets/css/AdminDashboard.css" rel="stylesheet">
 </head>
 
@@ -32,7 +32,7 @@ require $mongoPath;
 
             <div class="menu-items" style="font-family: 'Oxygen', sans-serif;">
                 <a class="tab" id="addash-tab" onclick="toggleSubmenu('dashboard-submenu')">
-                    <i class="fas fa-home"></i> Dashboard
+                    <i class="fas fa-home"></i> <span>Dashboard</span>
                     <span class="chevron"><i class="fas fa-chevron-down"></i></span>
                 </a>
 

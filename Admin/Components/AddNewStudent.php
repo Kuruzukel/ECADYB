@@ -140,7 +140,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <body>
     <div class="container" style="font-family: Arial, sans-serif;">
         <div class="header-container" style="width: 100%;">
-            <h1>Add Student Details</h1>
+        <h1><i class="fas fa-home"></i> <span class="chevron"><i class="fas fa-chevron-right"></i></span> Add New Student</h1>
         </div>
 
         <form id="addStudentForm">

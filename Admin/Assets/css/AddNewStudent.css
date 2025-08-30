@@ -50,6 +50,24 @@ h1 {
   text-align: left;
   width: 100%;
   font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+h1 .fa-home {
+  font-size: 20px;
+}
+
+h1 .chevron {
+  display: flex;
+  align-items: center;
+}
+
+h1 .chevron i {
+  font-size: 16px;
+  opacity: 0.8;
+  margin-top: 3px;
 }
 
 .form-content {
