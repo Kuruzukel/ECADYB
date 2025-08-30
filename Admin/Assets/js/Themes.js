@@ -255,11 +255,13 @@ window.addEventListener("DOMContentLoaded", () => {
   window.UPLOAD_ENDPOINT = `${CONNECTION_PATH}/UploadLogo.php`;
   const FETCH_ENDPOINT = `${CONNECTION_PATH}/FetchLogos.php`;
   const DELETE_ENDPOINT = `${CONNECTION_PATH}/DeleteLogo.php`;
+  const UPDATE_ADMIN_LOGO_ENDPOINT = `${CONNECTION_PATH}/UpdateAdminLogo.php`;
 
   console.log("Endpoints configured:", {
     UPLOAD_ENDPOINT: window.UPLOAD_ENDPOINT,
     FETCH_ENDPOINT: FETCH_ENDPOINT,
-    DELETE_ENDPOINT: DELETE_ENDPOINT
+    DELETE_ENDPOINT: DELETE_ENDPOINT,
+    UPDATE_ADMIN_LOGO_ENDPOINT: UPDATE_ADMIN_LOGO_ENDPOINT
   });
 
   // ----------------------
@@ -275,12 +277,42 @@ window.addEventListener("DOMContentLoaded", () => {
   const cancelDeleteBtn = document.getElementById("cancel-delete-btn");
   let deleteTarget = null;
 
+  // change admin logo modal
+  const changeAdminLogoModal = document.getElementById("change-admin-logo-modal");
+  const confirmChangeLogoBtn = document.getElementById("confirm-change-logo-btn");
+  const cancelChangeLogoBtn = document.getElementById("cancel-change-logo-btn");
+  const previewLogo = document.getElementById("preview-logo");
+  let changeLogoTarget = null;
+
   logoBoxes.forEach((box) => {
     const input = box.querySelector(".logoInput");
     const deleteBtn = box.querySelector(".delete-btn");
 
     box.addEventListener("click", (e) => {
       if (e.target === deleteBtn) return;
+      
+      // If logo exists, show change admin logo modal
+      if (box.classList.contains("has-image")) {
+        const logoImg = box.querySelector("img");
+        if (logoImg && logoImg.src) {
+          changeLogoTarget = {
+            box: box,
+            logoUrl: logoImg.src,
+            slot: Array.from(logoBoxes).indexOf(box) + 1
+          };
+          
+          // Set preview image
+          if (previewLogo) {
+            previewLogo.src = logoImg.src;
+          }
+          
+          // Show modal
+          changeAdminLogoModal.style.display = "flex";
+          return;
+        }
+      }
+      
+      // Otherwise, upload new logo
       if (!box.classList.contains("has-image")) input.click();
     });
 
@@ -297,6 +329,60 @@ window.addEventListener("DOMContentLoaded", () => {
       deleteTarget = { box, input, deleteBtn };
       deleteModal.style.display = "flex";
     });
+  });
+
+  // Handle change admin logo confirmation
+  confirmChangeLogoBtn.addEventListener("click", async () => {
+    if (!changeLogoTarget) return;
+    
+    try {
+      const form = new FormData();
+      form.append("logo_url", changeLogoTarget.logoUrl);
+      form.append("slot", String(changeLogoTarget.slot));
+      
+      const res = await fetch(UPDATE_ADMIN_LOGO_ENDPOINT, { 
+        method: "POST", 
+        body: form 
+      });
+      
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+      }
+      
+      const data = await res.json();
+      
+      if (data?.success) {
+        showNotification("Admin dashboard logo changed successfully!", "success");
+        
+        // Update the admin dashboard logo if we're on the same page
+        const adminLogo = document.querySelector('.sidebar .logoadmin');
+        if (adminLogo) {
+          adminLogo.src = changeLogoTarget.logoUrl;
+        }
+      } else {
+        throw new Error(data?.message || "Failed to change admin logo");
+      }
+    } catch (err) {
+      console.error("Change admin logo error:", err);
+      showNotification(err.message || "Failed to change admin logo", "error");
+    } finally {
+      changeAdminLogoModal.style.display = "none";
+      changeLogoTarget = null;
+    }
+  });
+
+  // Handle change admin logo cancellation
+  cancelChangeLogoBtn.addEventListener("click", () => {
+    changeLogoTarget = null;
+    changeAdminLogoModal.style.display = "none";
+  });
+
+  // Close change admin logo modal when clicking outside
+  changeAdminLogoModal.addEventListener("click", (e) => {
+    if (e.target === changeAdminLogoModal) {
+      changeLogoTarget = null;
+      changeAdminLogoModal.style.display = "none";
+    }
   });
 
   confirmDeleteBtn.addEventListener("click", async () => {

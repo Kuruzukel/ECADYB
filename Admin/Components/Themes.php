@@ -159,6 +159,30 @@
         </div>
     </div>
 
+    <!-- Change Admin Logo Modal -->
+    <div class="modal-overlay" id="change-admin-logo-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <i class="fas fa-image modal-icon"></i>
+                <h3>Change Admin Dashboard Logo</h3>
+            </div>
+            <div class="modal-content">
+                <p>Do you want to change the admin dashboard logo to this image?</p>
+                <div class="logo-preview">
+                    <img id="preview-logo" src="" alt="Logo Preview" style="max-width: 100px; max-height: 100px; object-fit: contain;">
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-btn confirm" id="confirm-change-logo-btn">
+                    <i class="fas fa-check"></i> Yes, Change it
+                </button>
+                <button class="modal-btn cancel" id="cancel-change-logo-btn">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Notification container -->
     <div id="notification-container"></div>
 

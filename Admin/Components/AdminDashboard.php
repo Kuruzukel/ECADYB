@@ -27,7 +27,7 @@ require $mongoPath;
 
     <main>
         <div class="sidebar">
-            <img src="https://ECADYB.b-cdn.net/img/ADMINGRALLERYLOGO.png" alt="Logo" class="logoadmin">
+            <img src="https://ECADYB.b-cdn.net/img/ADMINGRALLERYLOGO.png" alt="Logo" class="logoadmin" id="admin-logo">
             <div class="line"></div>
 
             <div class="menu-items" style="font-family: 'Oxygen', sans-serif;">
@@ -224,6 +224,34 @@ require $mongoPath;
     </main>
     <script src="../Assets/js/AdminDashboard.js">
 
+    </script>
+    
+    <script>
+        // Load dynamic admin logo
+        async function loadAdminLogo() {
+            try {
+                const BASE_PATH = window.location.pathname.includes('/Admin/') 
+                    ? window.location.pathname.substring(0, window.location.pathname.indexOf('/Admin/'))
+                    : window.location.origin;
+                const CONNECTION_PATH = `${BASE_PATH}/Connection`;
+                
+                const response = await fetch(`${CONNECTION_PATH}/FetchAdminLogo.php`);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success && data.logo_url) {
+                        const adminLogo = document.getElementById('admin-logo');
+                        if (adminLogo) {
+                            adminLogo.src = data.logo_url;
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to load admin logo:', error);
+            }
+        }
+
+        // Load logo when page loads
+        document.addEventListener('DOMContentLoaded', loadAdminLogo);
     </script>
 </body>
 

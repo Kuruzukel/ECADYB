@@ -91,6 +91,28 @@ h1 {
   animation: fadeInUp 0.4s ease-out;
 }
 
+/* Logo preview in change admin logo modal */
+.logo-preview {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  border: 2px dashed var(--accent);
+}
+
+.logo-preview img {
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease;
+}
+
+.logo-preview img:hover {
+  transform: scale(1.05);
+}
+
 .upload-modal {
   position: fixed;
   top: 50%;
