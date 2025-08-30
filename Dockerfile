@@ -13,8 +13,7 @@ RUN apt-get update && apt-get install -y \
 RUN pecl install mongodb \
     && docker-php-ext-enable mongodb
 
-# Copy custom PHP configuration
-COPY php.ini /usr/local/etc/php/
+
 
 
 # Install Composer
