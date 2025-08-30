@@ -284,98 +284,144 @@ window.addEventListener("DOMContentLoaded", () => {
   const previewLogo = document.getElementById("preview-logo");
   let changeLogoTarget = null;
 
-  logoBoxes.forEach((box) => {
+  // Function to handle file selection
+  const handleFileSelect = (input, box) => {
+    const file = input.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = document.createElement('img');
+      img.src = e.target.result;
+      img.alt = 'Logo Preview';
+      
+      // Clear previous content
+      box.innerHTML = '';
+      box.appendChild(img);
+      box.classList.add('has-image');
+      
+      // Show the delete button
+      const deleteBtn = document.createElement('button');
+      deleteBtn.className = 'delete-btn';
+      deleteBtn.innerHTML = '&times;';
+      box.appendChild(deleteBtn);
+      
+      // Upload the file
+      uploadLogoToBunny(file, box.dataset.slot || '1', box, input, deleteBtn);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // Initialize logo boxes
+  logoBoxes.forEach((box, index) => {
     const input = box.querySelector(".logoInput");
     const deleteBtn = box.querySelector(".delete-btn");
+    
+    // Set data-slot attribute if not already set
+    if (!box.dataset.slot) {
+      box.dataset.slot = (index + 1).toString();
+    }
 
+    // Handle click on the box
     box.addEventListener("click", (e) => {
-      if (e.target === deleteBtn) return;
+      // Don't trigger if clicking on delete button
+      if (e.target === deleteBtn || e.target.classList.contains('delete-btn')) return;
       
       // If logo exists, show change admin logo modal
       if (box.classList.contains("has-image")) {
         const logoImg = box.querySelector("img");
         if (logoImg && logoImg.src) {
+          previewLogo.src = logoImg.src;
+          changeAdminLogoModal.style.display = 'flex';
           changeLogoTarget = {
             box: box,
             logoUrl: logoImg.src,
-            slot: Array.from(logoBoxes).indexOf(box) + 1
+            slot: box.dataset.slot
           };
-          
-          // Set preview image
-          if (previewLogo) {
-            previewLogo.src = logoImg.src;
-          }
-          
-          // Show modal
-          changeAdminLogoModal.style.display = "flex";
           return;
         }
       }
       
-      // Otherwise, upload new logo
-      if (!box.classList.contains("has-image")) input.click();
+      // Otherwise, trigger file input
+      input.click();
     });
 
-    input.addEventListener("change", async (e) => {
+    // Handle file selection
+    input.addEventListener("change", (e) => {
       const file = e.target.files?.[0];
-      if (!file) return;
-      const slot = Array.from(logoBoxes).indexOf(box) + 1;
-
-      await uploadLogoToBunny(file, slot, box, input, deleteBtn);
+      if (file) {
+        handleFileSelect(input, box);
+      }
     });
 
-    deleteBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      deleteTarget = { box, input, deleteBtn };
-      deleteModal.style.display = "flex";
-    });
-  });
-
-  // Handle change admin logo confirmation
-  confirmChangeLogoBtn.addEventListener("click", async () => {
-    if (!changeLogoTarget) return;
-    
-    try {
-      const form = new FormData();
-      form.append("logo_url", changeLogoTarget.logoUrl);
-      form.append("slot", String(changeLogoTarget.slot));
-      
-      const res = await fetch(UPDATE_ADMIN_LOGO_ENDPOINT, { 
-        method: "POST", 
-        body: form 
+    // Handle delete button click
+    if (deleteBtn) {
+      deleteBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        deleteTarget = {
+          box: box,
+          slot: box.dataset.slot,
+          input: input,
+          deleteBtn: deleteBtn
+        };
+        deleteModal.style.display = 'flex';
       });
-      
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status}: ${res.statusText}`);
-      }
-      
-      const data = await res.json();
-      
-      if (data?.success) {
-        showNotification("Admin dashboard logo changed successfully!", "success");
-        
-        // Update the admin dashboard logo if we're on the same page
-        const adminLogo = document.querySelector('.sidebar .logoadmin');
-        if (adminLogo) {
-          adminLogo.src = changeLogoTarget.logoUrl;
-        }
-      } else {
-        throw new Error(data?.message || "Failed to change admin logo");
-      }
-    } catch (err) {
-      console.error("Change admin logo error:", err);
-      showNotification(err.message || "Failed to change admin logo", "error");
-    } finally {
-      changeAdminLogoModal.style.display = "none";
-      changeLogoTarget = null;
     }
   });
 
+  // Handle change admin logo confirmation
+  if (confirmChangeLogoBtn) {
+    confirmChangeLogoBtn.addEventListener("click", async () => {
+      if (!changeLogoTarget) return;
+      
+      try {
+        const form = new FormData();
+        form.append("logo_url", changeLogoTarget.logoUrl);
+        form.append("slot", String(changeLogoTarget.slot));
+        
+        const res = await fetch(UPDATE_ADMIN_LOGO_ENDPOINT, { 
+          method: "POST", 
+          body: form 
+        });
+        
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+        }
+        
+        const data = await res.json();
+        
+        if (data?.success) {
+          showNotification("Admin dashboard logo changed successfully!", "success");
+          
+          // Update the admin dashboard logo if we're on the same page
+          const adminLogo = document.querySelector('.sidebar .logoadmin');
+          if (adminLogo) {
+            adminLogo.src = changeLogoTarget.logoUrl;
+          }
+        } else {
+          throw new Error(data?.message || "Failed to change admin logo");
+        }
+      } catch (err) {
+        console.error("Change admin logo error:", err);
+        showNotification(err.message || "Failed to change admin logo", "error");
+      } finally {
+        if (changeAdminLogoModal) {
+          changeAdminLogoModal.style.display = "none";
+        }
+        changeLogoTarget = null;
+      }
+    });
+  }
+
   // Handle change admin logo cancellation
-  cancelChangeLogoBtn.addEventListener("click", () => {
-    changeLogoTarget = null;
-    changeAdminLogoModal.style.display = "none";
-  });
+  if (cancelChangeLogoBtn) {
+    cancelChangeLogoBtn.addEventListener("click", () => {
+      changeLogoTarget = null;
+      if (changeAdminLogoModal) {
+        changeAdminLogoModal.style.display = "none";
+      }
+    });
+  }
 
   // Close change admin logo modal when clicking outside
   changeAdminLogoModal.addEventListener("click", (e) => {
