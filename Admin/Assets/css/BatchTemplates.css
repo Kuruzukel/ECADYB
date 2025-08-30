@@ -44,7 +44,9 @@ h1 {
   margin: 0;
   color: #ffffff;
   font-size: 24px;
+  text-align: left;
   width: 100%;
+  font-weight: 500;
 }
 
 .form-content {
@@ -383,8 +385,16 @@ label {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: radial-gradient(1200px 600px at 10% -10%, rgba(33, 150, 243, 0.07), transparent),
-    radial-gradient(1200px 600px at 110% 110%, rgba(16, 185, 129, 0.08), transparent),
+  background: radial-gradient(
+      1200px 600px at 10% -10%,
+      rgba(33, 150, 243, 0.07),
+      transparent
+    ),
+    radial-gradient(
+      1200px 600px at 110% 110%,
+      rgba(16, 185, 129, 0.08),
+      transparent
+    ),
     #1e1e2f;
   padding: 24px 28px;
   border-radius: 16px;
@@ -453,13 +463,24 @@ label {
 .upload-modal .loading-text .dot {
   animation: blink 1.4s infinite both;
 }
-.upload-modal .loading-text .dot:nth-child(2) { animation-delay: 0.2s; }
-.upload-modal .loading-text .dot:nth-child(3) { animation-delay: 0.4s; }
+.upload-modal .loading-text .dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.upload-modal .loading-text .dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
 
 @keyframes blink {
-  0%, 20% { opacity: 0; }
-  50% { opacity: 1; }
-  100% { opacity: 0; }
+  0%,
+  20% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 .upload-modal .loading-bar-background {
@@ -473,7 +494,11 @@ label {
 .upload-modal .loading-bar {
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, rgba(34,197,94,0.25), rgba(16,185,129,0.3));
+  background: linear-gradient(
+    90deg,
+    rgba(34, 197, 94, 0.25),
+    rgba(16, 185, 129, 0.3)
+  );
   position: relative;
 }
 .upload-modal .white-bars-container {
@@ -489,15 +514,19 @@ label {
   animation: shimmer 1.4s linear infinite;
 }
 .upload-modal .white-bar {
-  background: rgba(255,255,255,0.65);
+  background: rgba(255, 255, 255, 0.65);
   height: 60%;
   align-self: center;
   border-radius: 2px;
 }
 
 @keyframes shimmer {
-  0% { transform: translateX(-50%); }
-  100% { transform: translateX(0); }
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
 
 .upload-modal .modal-btn.cancel {
