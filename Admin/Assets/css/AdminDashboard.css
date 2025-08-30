@@ -33,7 +33,6 @@ header {
   border-radius: 8px;
   display: flex;
   align-items: center;
-  padding-inline-start: 1.5rem;
   overflow: hidden;
 }
 
@@ -148,7 +147,10 @@ header {
 /* Menu container */
 .menu-container {
   display: flex;
+  justify-content: space-between;
   align-items: center;
+  width: 100%;
+  padding: 0 1rem;
   color: rgb(255, 255, 255);
   font-size: 18px;
   gap: 1rem;
@@ -181,16 +183,15 @@ header {
 .search-container {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  flex-grow: 1; /* Take remaining space */
-  margin: 0;
   background-color: var(--body-bg);
   border-radius: 8px;
   padding: 0.3rem 0.5rem !important;
   gap: 0.5rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-sizing: border-box;
-  min-width: 0; /* Important for flexbox shrinking */
+  min-width: 0;
+  margin-left: auto; /* Push to the right */
+  max-width: 300px; /* Optional: Limit the width */
 }
 
 .search-input {
