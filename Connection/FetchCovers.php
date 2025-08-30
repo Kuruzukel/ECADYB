@@ -1,21 +1,56 @@
 <?php
+// Ensure no output before headers
+ob_start();
+
+// Set proper headers for Railway
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type');
+
+// Handle preflight OPTIONS request
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
 session_start();
-require __DIR__ . '/../vendor/autoload.php';
 
-use MongoDB\Client;
-
+// Error handling function
 function respond($success, $message = '', $data = []) {
+    // Clear any output buffers
+    while (ob_get_level()) {
+        ob_end_clean();
+    }
+    
+    // Set JSON header
     header('Content-Type: application/json');
+    
+    // Return JSON response
     echo json_encode(array_merge(['success' => $success, 'message' => $message], $data));
     exit;
 }
 
-$template = isset($_GET['template']) ? (int)$_GET['template'] : 1;
+// Check if it's a GET request
+if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+    respond(false, 'Invalid request method');
+}
 
-$mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
+// Load dependencies
+require __DIR__ . '/../vendor/autoload.php';
+use MongoDB\Client;
 
 try {
-    $client = new Client($mongoUrl);
+
+    $template = isset($_GET['template']) ? (int)$_GET['template'] : 1;
+
+    $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
+
+    $client = new Client($mongoUrl, [
+        'serverSelectionTimeoutMS' => 5000,
+        'connectTimeoutMS' => 5000,
+        'socketTimeoutMS' => 5000
+    ]);
     $db = $client->Departments;
     $collection = $db->YearbookCovers;
 
@@ -31,8 +66,8 @@ try {
         ];
     }
 
-    respond(true, 'OK', ['items' => $items]);
+    respond(true, 'Covers fetched successfully', ['items' => $items]);
+    
 } catch (Exception $e) {
-    // Important: always return JSON, never raw HTML
     respond(false, 'Failed to fetch covers: ' . $e->getMessage());
 }

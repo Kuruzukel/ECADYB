@@ -139,6 +139,23 @@ function showNotification(message, type = "success") {
 }
 
 // ----------------------
+// Endpoint detection
+// ----------------------
+function getBasePath() {
+  const currentPath = window.location.pathname;
+  
+  // Check if we're on Railway (no /ECADYB in path)
+  if (currentPath.includes('/Admin/')) {
+    // Extract the base path up to /Admin/
+    const adminIndex = currentPath.indexOf('/Admin/');
+    return currentPath.substring(0, adminIndex);
+  }
+  
+  // Fallback for localhost or other setups
+  return window.location.origin;
+}
+
+// ----------------------
 // Upload helper
 // ----------------------
 async function uploadLogoToBunny(file, slot, box, input, deleteBtn) {
@@ -154,7 +171,12 @@ async function uploadLogoToBunny(file, slot, box, input, deleteBtn) {
   }
 
   try {
-    const res = await fetch(UPLOAD_ENDPOINT, { method: "POST", body: form });
+    const res = await fetch(window.UPLOAD_ENDPOINT, { method: "POST", body: form });
+    
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+    }
+    
     const data = await res.json();
 
     if (!data?.success) {
@@ -176,6 +198,7 @@ async function uploadLogoToBunny(file, slot, box, input, deleteBtn) {
 
     showNotification("Logo uploaded successfully", "success");
   } catch (err) {
+    console.error("Upload error:", err);
     showNotification(err.message || "Upload failed", "error");
   } finally {
     hideUploadOverlay();
@@ -224,17 +247,20 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 
   // ----------------------
-  // Endpoints (auto-detect base path)
+  // Endpoints (improved path detection)
   // ----------------------
-  const BASE_PATH = `${window.location.origin}${
-    window.location.pathname.includes("ECADYB")
-      ? "/ECADYB/Connection"
-      : "/Connection"
-  }`;
+  const BASE_PATH = getBasePath();
+  const CONNECTION_PATH = `${BASE_PATH}/Connection`;
 
-  window.UPLOAD_ENDPOINT = `${BASE_PATH}/UploadLogo.php`;
-  const FETCH_ENDPOINT = `${BASE_PATH}/FetchLogos.php`;
-  const DELETE_ENDPOINT = `${BASE_PATH}/DeleteLogo.php`;
+  window.UPLOAD_ENDPOINT = `${CONNECTION_PATH}/UploadLogo.php`;
+  const FETCH_ENDPOINT = `${CONNECTION_PATH}/FetchLogos.php`;
+  const DELETE_ENDPOINT = `${CONNECTION_PATH}/DeleteLogo.php`;
+
+  console.log("Endpoints configured:", {
+    UPLOAD_ENDPOINT: window.UPLOAD_ENDPOINT,
+    FETCH_ENDPOINT: FETCH_ENDPOINT,
+    DELETE_ENDPOINT: DELETE_ENDPOINT
+  });
 
   // ----------------------
   // Logo uploads
@@ -282,6 +308,11 @@ window.addEventListener("DOMContentLoaded", () => {
       const form = new FormData();
       form.append("slot", String(slot));
       const res = await fetch(DELETE_ENDPOINT, { method: "POST", body: form });
+      
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+      }
+      
       const data = await res.json();
 
       if (!data?.success) throw new Error(data?.message || "Delete failed");
@@ -298,6 +329,7 @@ window.addEventListener("DOMContentLoaded", () => {
       input.value = "";
       box.classList.remove("has-image");
     } catch (err) {
+      console.error("Delete error:", err);
       showNotification(err.message || "Delete failed", "error");
     } finally {
       hideUploadOverlay();
@@ -317,8 +349,16 @@ window.addEventListener("DOMContentLoaded", () => {
   (async function loadLogos() {
     try {
       const res = await fetch(FETCH_ENDPOINT);
+      
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+      }
+      
       const data = await res.json();
-      if (!data?.success) return;
+      if (!data?.success) {
+        console.warn("Failed to load logos:", data?.message);
+        return;
+      }
 
       const bySlot = new Map((data.items || []).map((i) => [i.slot, i.url]));
       logoBoxes.forEach((box, idx) => {

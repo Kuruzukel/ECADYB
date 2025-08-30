@@ -98,6 +98,23 @@ function showNotification(message, type = "success") {
 }
 
 // ----------------------
+// Endpoint detection
+// ----------------------
+function getBasePath() {
+  const currentPath = window.location.pathname;
+  
+  // Check if we're on Railway (no /ECADYB in path)
+  if (currentPath.includes('/Admin/')) {
+    // Extract the base path up to /Admin/
+    const adminIndex = currentPath.indexOf('/Admin/');
+    return currentPath.substring(0, adminIndex);
+  }
+  
+  // Fallback for localhost or other setups
+  return window.location.origin;
+}
+
+// ----------------------
 // Delete student modal
 // ----------------------
 const deleteModal = document.getElementById("delete-modal-overlay");
@@ -128,12 +145,10 @@ async function confirmDeleteStudent() {
 
   try {
     // ✅ Fixed path handling
-    const BASE_PATH =
-      window.location.hostname === "localhost"
-        ? `${window.location.origin}/ECADYB/Connection`
-        : `${window.location.origin}/Connection`;
+    const BASE_PATH = getBasePath();
+    const CONNECTION_PATH = `${BASE_PATH}/Connection`;
 
-    const res = await fetch(`${BASE_PATH}/DeleteStudent.php`, {
+    const res = await fetch(`${CONNECTION_PATH}/DeleteStudent.php`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -141,6 +156,10 @@ async function confirmDeleteStudent() {
         collection: selectedCollection,
       }),
     });
+
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+    }
 
     const data = await res.json();
     if (typeof showNotification === "function") {
@@ -206,14 +225,18 @@ window.addEventListener("DOMContentLoaded", () => {
     const isBackgroundSlot = slot === 8;
 
     // ✅ Fixed path handling
-    const BASE_PATH =
-      window.location.hostname === "localhost"
-        ? `${window.location.origin}/ECADYB/Connection`
-        : `${window.location.origin}/Connection`;
+    const BASE_PATH = getBasePath();
+    const CONNECTION_PATH = `${BASE_PATH}/Connection`;
 
-    const UPLOAD_ENDPOINT = `${BASE_PATH}/UploadCover.php`;
-    const FETCH_ENDPOINT = `${BASE_PATH}/FetchCovers.php?template=${template}`;
-    const DELETE_ENDPOINT = `${BASE_PATH}/DeleteCover.php`;
+    const UPLOAD_ENDPOINT = `${CONNECTION_PATH}/UploadCover.php`;
+    const FETCH_ENDPOINT = `${CONNECTION_PATH}/FetchCovers.php?template=${template}`;
+    const DELETE_ENDPOINT = `${CONNECTION_PATH}/DeleteCover.php`;
+
+    console.log("BatchTemplates endpoints configured:", {
+      UPLOAD_ENDPOINT,
+      FETCH_ENDPOINT,
+      DELETE_ENDPOINT
+    });
 
     const toggleImages = () => {
       if (isBackgroundSlot) return;
@@ -332,6 +355,9 @@ window.addEventListener("DOMContentLoaded", () => {
         }
 
         showNotification("Image uploaded successfully", "success");
+      } catch (err) {
+        console.error("Upload error:", err);
+        showNotification(err.message || "Upload failed", "error");
       } finally {
         if (!currentXhr && uploadOverlay) uploadOverlay.style.display = "none";
       }
@@ -348,12 +374,20 @@ window.addEventListener("DOMContentLoaded", () => {
         xhr.onreadystatechange = () => {
           if (xhr.readyState === 4) {
             try {
-              resolve(JSON.parse(xhr.responseText));
-            } catch (_) {
-              resolve(null);
+              if (xhr.status >= 200 && xhr.status < 300) {
+                resolve(JSON.parse(xhr.responseText));
+              } else {
+                resolve({ success: false, message: `HTTP ${xhr.status}: ${xhr.statusText}` });
+              }
+            } catch (e) {
+              resolve({ success: false, message: "Invalid response format" });
             }
             currentXhr = null;
           }
+        };
+        xhr.onerror = () => {
+          resolve({ success: false, message: "Network error" });
+          currentXhr = null;
         };
         xhr.send(formData);
       });
@@ -379,24 +413,44 @@ window.addEventListener("DOMContentLoaded", () => {
     };
 
     async function deleteCover(slot, side) {
-      const form = new FormData();
-      form.append("slot", String(slot));
-      form.append("side", side);
-      form.append("template", String(template));
-      const res = await fetch(DELETE_ENDPOINT, { method: "POST", body: form });
-      const data = await res.json().catch(() => null);
-      if (!data?.success) {
-        showNotification(data?.message || "Delete failed", "error");
-      } else {
-        showNotification("Image deleted", "success");
+      try {
+        const form = new FormData();
+        form.append("slot", String(slot));
+        form.append("side", side);
+        form.append("template", String(template));
+        
+        const res = await fetch(DELETE_ENDPOINT, { method: "POST", body: form });
+        
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+        }
+        
+        const data = await res.json().catch(() => null);
+        if (!data?.success) {
+          showNotification(data?.message || "Delete failed", "error");
+        } else {
+          showNotification("Image deleted", "success");
+        }
+      } catch (err) {
+        console.error("Delete error:", err);
+        showNotification(err.message || "Delete failed", "error");
       }
     }
 
     (async function loadExisting() {
       try {
         const res = await fetch(FETCH_ENDPOINT);
+        
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+        }
+        
         const data = await res.json();
-        if (!data?.success) return;
+        if (!data?.success) {
+          console.warn("Failed to load covers:", data?.message);
+          return;
+        }
+        
         const found = (data.items || []).find((i) => i.slot === slot);
         if (!found) return;
         if (found.front_url) {
@@ -422,7 +476,7 @@ window.addEventListener("DOMContentLoaded", () => {
           }
         }
       } catch (e) {
-        // ignore
+        console.error("Failed to load existing covers:", e);
       }
     })();
   });
