@@ -1,55 +1,78 @@
-// Header show/hide on scroll with smooth transitions
-document.addEventListener("DOMContentLoaded", function () {
-  const header = document.querySelector("header");
+// Direct header hide/show control
+document.addEventListener('DOMContentLoaded', function() {
+  const header = document.querySelector('header');
   if (!header) return;
-
+  
   let lastScroll = 0;
-  let ticking = false;
-  const scrollThreshold = 50; // pixels before header hides
+  const threshold = 50;
   
-  // Add transition class
+  // Set initial styles
+  header.style.position = 'fixed';
+  header.style.top = '1rem';
+  header.style.left = '50%';
+  header.style.transform = 'translateX(-50%)';
   header.style.transition = 'all 0.3s ease-in-out';
+  header.style.zIndex = '1000';
   
-  // Initial check
-  checkScroll();
-
-  // Throttled scroll handler
   window.addEventListener('scroll', function() {
-    if (!ticking) {
-      window.requestAnimationFrame(function() {
-        checkScroll();
-        ticking = false;
-      });
-      ticking = true;
-    }
-  }, { passive: true });
-
-  function checkScroll() {
     const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
     
     // At top of page
-    if (currentScroll <= 0) {
-      header.classList.remove("header-hidden");
+    if (currentScroll <= 10) {
+      header.style.opacity = '1';
+      header.style.visibility = 'visible';
       header.style.transform = 'translateX(-50%)';
-      lastScroll = 0;
+      lastScroll = currentScroll;
       return;
     }
-
-    // Scrolling down and past threshold
-    if (currentScroll > lastScroll && currentScroll > scrollThreshold) {
-      if (!header.classList.contains('header-hidden')) {
-        header.classList.add("header-hidden");
-      }
+    
+    // Scrolling down
+    if (currentScroll > lastScroll && currentScroll > threshold) {
+      header.style.opacity = '0';
+      header.style.visibility = 'hidden';
+      header.style.transform = 'translateX(-50%) translateY(-100%)';
     } 
     // Scrolling up
     else if (currentScroll < lastScroll) {
-      if (header.classList.contains('header-hidden')) {
-        header.classList.remove("header-hidden");
-      }
+      header.style.opacity = '1';
+      header.style.visibility = 'visible';
+      header.style.transform = 'translateX(-50%)';
     }
-
+    
     lastScroll = currentScroll;
-  }
+  }, { passive: true });
+});
+
+// Hamburger menu functionality
+document.addEventListener('DOMContentLoaded', function() {
+  const hamburgerMenu = document.getElementById('hamburgerMenu');
+  const centerNav = document.querySelector('.center-nav');
+  
+  if (!hamburgerMenu || !centerNav) return;
+  
+  // Toggle mobile menu
+  hamburgerMenu.addEventListener('click', function(e) {
+    e.stopPropagation();
+    this.classList.toggle('active');
+    centerNav.classList.toggle('mobile-active');
+  });
+  
+  // Close mobile menu when clicking on a link
+  const navLinks = centerNav.querySelectorAll('a');
+  navLinks.forEach((link) => {
+    link.addEventListener('click', function() {
+      hamburgerMenu.classList.remove('active');
+      centerNav.classList.remove('mobile-active');
+    });
+  });
+  
+  // Close mobile menu when clicking outside
+  document.addEventListener('click', function(event) {
+    if (!hamburgerMenu.contains(event.target) && !centerNav.contains(event.target)) {
+      hamburgerMenu.classList.remove('active');
+      centerNav.classList.remove('mobile-active');
+    }
+  });
 });
 
 // Login dropdown functionality
