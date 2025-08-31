@@ -30,8 +30,18 @@ body::-webkit-scrollbar {
 }
 
 header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
   display: flex;
   justify-content: space-between;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  padding: 1rem 2rem;
+  transform: translateY(0);
+  transition: transform 0.3s ease-in-out;
   align-items: center;
   position: fixed;
   width: 80%;
