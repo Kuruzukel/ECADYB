@@ -1,12 +1,3 @@
-/* Text selection disabled */
-* {
-  -webkit-user-select: none;  
-  -moz-user-select: none;    
-  -ms-user-select: none;     
-  user-select: none;         
-  -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
-.
 body {
   display: flex;
   align-items: center;
@@ -74,7 +65,8 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: url("https://ECADYB.b-cdn.net/img/ECABG.jpg") center center/cover no-repeat;
+  background: url("https://ECADYB.b-cdn.net/img/ECABG.jpg") center center/cover
+    no-repeat;
   pointer-events: none;
   filter: blur(6px);
   transform: scale(1.1);
@@ -166,7 +158,6 @@ body {
     margin-bottom: 3.5rem;
     max-width: 93%;
   }
-  
 }
 
 @media (max-width: 991px) and (min-width: 768px) {
@@ -189,7 +180,6 @@ body {
     margin-bottom: 3.5rem;
     max-width: 93%;
   }
-  
 }
 
 @media (max-width: 767px) and (min-width: 600px) {
@@ -200,7 +190,9 @@ body {
     width: 330px;
     height: 330px;
   }
-  .hero-message { font-size: 1rem; }
+  .hero-message {
+    font-size: 1rem;
+  }
   .hero-message-bold {
     padding: 0.85rem 2rem;
     font-size: 0.89rem;
@@ -217,7 +209,6 @@ body {
     width: 330px;
     height: 330px;
   }
-  
 }
 
 @media (max-width: 479px) and (min-width: 320px) {
@@ -228,7 +219,6 @@ body {
     width: 320px;
     height: 320px;
   }
-  
 }
 
 .loading-bar {
