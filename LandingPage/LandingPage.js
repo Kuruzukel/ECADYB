@@ -8,11 +8,18 @@ document.addEventListener('DOMContentLoaded', function () {
   // Ensure smooth transitions via CSS
   header.classList.add('fading');
 
-  let lastScroll = Math.max(0, window.pageYOffset || document.documentElement.scrollTop || 0);
+  let lastScroll = Math.max(0, getScrollY());
   const threshold = 50; // pixels before we start hiding on downward scroll
   let ticking = false;
   const buffer = 4; // pixels of movement to consider a real direction change
   let headerHidden = false; // track state to avoid redundant DOM writes
+
+  function getScrollY() {
+    return (typeof window.scrollY === 'number'
+      ? window.scrollY
+      : (window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0)
+    );
+  }
 
   function isMobileMenuOpen() {
     return (
@@ -79,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function () {
   function onScroll() {
     if (!ticking) {
       window.requestAnimationFrame(() => {
-        const currentScroll = window.pageYOffset || document.documentElement.scrollTop || 0;
+        const currentScroll = getScrollY();
         applyHeaderState(currentScroll);
         ticking = false;
       });
@@ -89,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Reset baseline on resize/orientation changes
   function onResize() {
-    lastScroll = Math.max(0, window.pageYOffset || document.documentElement.scrollTop || 0);
+    lastScroll = Math.max(0, getScrollY());
     applyHeaderState(lastScroll);
   }
 
@@ -98,6 +105,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Listeners
   window.addEventListener('scroll', onScroll, { passive: true });
+  document.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('touchmove', onScroll, { passive: true });
+  window.addEventListener('wheel', onScroll, { passive: true });
   window.addEventListener('resize', onResize);
   window.addEventListener('orientationchange', onResize);
 });
