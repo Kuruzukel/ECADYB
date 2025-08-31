@@ -1,24 +1,34 @@
-// Direct header hide/show control
+// Direct header hide/show control with debug
 document.addEventListener('DOMContentLoaded', function() {
+  console.log('Header control script loaded');
   const header = document.querySelector('header');
-  if (!header) return;
+  
+  if (!header) {
+    console.error('Header element not found!');
+    return;
+  }
+  
+  console.log('Header element found:', header);
   
   let lastScroll = 0;
   const threshold = 50;
   
-  // Set initial styles
+  // Force set initial styles directly
   header.style.position = 'fixed';
   header.style.top = '1rem';
   header.style.left = '50%';
   header.style.transform = 'translateX(-50%)';
   header.style.transition = 'all 0.3s ease-in-out';
   header.style.zIndex = '1000';
+  header.style.width = '80%';
   
-  window.addEventListener('scroll', function() {
+  function updateHeaderVisibility() {
     const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+    console.log('Scroll position:', currentScroll, 'Last scroll:', lastScroll);
     
     // At top of page
     if (currentScroll <= 10) {
+      console.log('At top - showing header');
       header.style.opacity = '1';
       header.style.visibility = 'visible';
       header.style.transform = 'translateX(-50%)';
@@ -28,19 +38,33 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Scrolling down
     if (currentScroll > lastScroll && currentScroll > threshold) {
+      console.log('Scrolling down - hiding header');
       header.style.opacity = '0';
       header.style.visibility = 'hidden';
       header.style.transform = 'translateX(-50%) translateY(-100%)';
     } 
     // Scrolling up
     else if (currentScroll < lastScroll) {
+      console.log('Scrolling up - showing header');
       header.style.opacity = '1';
       header.style.visibility = 'visible';
       header.style.transform = 'translateX(-50%)';
     }
     
     lastScroll = currentScroll;
+  }
+  
+  // Initial check
+  updateHeaderVisibility();
+  
+  // Throttle scroll events
+  let isScrolling;
+  window.addEventListener('scroll', function() {
+    window.clearTimeout(isScrolling);
+    isScrolling = setTimeout(updateHeaderVisibility, 50);
   }, { passive: true });
+  
+  console.log('Scroll event listener attached');
 });
 
 // Hamburger menu functionality
