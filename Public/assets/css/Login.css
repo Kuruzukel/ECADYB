@@ -1,7 +1,23 @@
+/* Base styles */
 * {
   margin: 0;
   box-sizing: border-box;
   color: white;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+*:focus {
+  outline: none;
+}
+
+*:focus-visible {
+  outline: 2px solid #0d39d9;
+  outline-offset: 2px;
 }
 
 body {
@@ -220,6 +236,7 @@ form {
   cursor: pointer;
   font-size: 0.95rem;
   display: block;
+  text-decoration: none;
   transition: 0.3s;
 }
 
