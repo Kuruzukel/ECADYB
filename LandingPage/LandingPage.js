@@ -1,38 +1,85 @@
 // Header hide/show functionality (class-based)
 document.addEventListener('DOMContentLoaded', function () {
   const header = document.querySelector('header');
+  const hamburgerMenu = document.getElementById('hamburgerMenu');
+  const centerNav = document.querySelector('.center-nav');
   if (!header) return;
 
   // Ensure smooth transitions via CSS
   header.classList.add('fading');
 
-  let lastScroll = window.pageYOffset || document.documentElement.scrollTop || 0;
+  let lastScroll = Math.max(0, window.pageYOffset || document.documentElement.scrollTop || 0);
   const threshold = 50; // pixels before we start hiding on downward scroll
   let ticking = false;
+  const buffer = 4; // pixels of movement to consider a real direction change
+  let headerHidden = false; // track state to avoid redundant DOM writes
 
-  function applyHeaderState(currentScroll) {
-    // At very top: always show
-    if (currentScroll <= 10) {
-      header.classList.remove('header-hidden');
+  function isMobileMenuOpen() {
+    return (
+      (hamburgerMenu && hamburgerMenu.classList.contains('active')) ||
+      (centerNav && centerNav.classList.contains('mobile-active'))
+    );
+  }
+
+  function hideHeader() {
+    if (headerHidden) return;
+    headerHidden = true;
+    header.classList.add('header-hidden');
+    // Inline-style fallback to guarantee hide even if CSS conflicts
+    header.style.opacity = '0';
+    header.style.visibility = 'hidden';
+    header.style.transform = 'translateX(-50%) translateY(-100%)';
+    header.style.pointerEvents = 'none';
+  }
+
+  function showHeader() {
+    if (!headerHidden && !header.classList.contains('header-hidden')) return;
+    headerHidden = false;
+    header.classList.remove('header-hidden');
+    // Clear inline styles to defer to stylesheet
+    header.style.opacity = '';
+    header.style.visibility = '';
+    header.style.transform = '';
+    header.style.pointerEvents = '';
+  }
+
+  function applyHeaderState(rawScroll) {
+    // Guard against negative values on iOS bounce
+    const currentScroll = Math.max(0, rawScroll || 0);
+    const delta = currentScroll - lastScroll;
+
+    // Keep header visible if mobile menu is open
+    if (isMobileMenuOpen()) {
+      showHeader();
       lastScroll = currentScroll;
       return;
     }
 
-    // Downward scroll beyond threshold -> hide
-    if (currentScroll > lastScroll && currentScroll > threshold) {
-      header.classList.add('header-hidden');
-    } else if (currentScroll < lastScroll) {
-      // Upward scroll -> show
-      header.classList.remove('header-hidden');
+    // At very top: always show
+    if (currentScroll <= 10) {
+      showHeader();
+      lastScroll = currentScroll;
+      return;
     }
 
-    lastScroll = currentScroll;
+    // Downward scroll beyond threshold + buffer -> hide; upward with buffer -> show
+    if (delta > buffer && currentScroll > threshold) {
+      hideHeader();
+      lastScroll = currentScroll; // update baseline on state change
+      return;
+    }
+
+    if (delta < -buffer) {
+      showHeader();
+      lastScroll = currentScroll; // update baseline on state change
+      return;
+    }
   }
 
   function onScroll() {
     if (!ticking) {
       window.requestAnimationFrame(() => {
-        const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+        const currentScroll = window.pageYOffset || document.documentElement.scrollTop || 0;
         applyHeaderState(currentScroll);
         ticking = false;
       });
@@ -40,11 +87,19 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
+  // Reset baseline on resize/orientation changes
+  function onResize() {
+    lastScroll = Math.max(0, window.pageYOffset || document.documentElement.scrollTop || 0);
+    applyHeaderState(lastScroll);
+  }
+
   // Initial state
   applyHeaderState(lastScroll);
 
-  // Listen to scroll
+  // Listeners
   window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onResize);
+  window.addEventListener('orientationchange', onResize);
 });
 
 // Hamburger menu functionality
