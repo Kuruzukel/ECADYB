@@ -1,70 +1,50 @@
-// Direct header hide/show control with debug
-document.addEventListener('DOMContentLoaded', function() {
-  console.log('Header control script loaded');
+// Header hide/show functionality (class-based)
+document.addEventListener('DOMContentLoaded', function () {
   const header = document.querySelector('header');
-  
-  if (!header) {
-    console.error('Header element not found!');
-    return;
-  }
-  
-  console.log('Header element found:', header);
-  
-  let lastScroll = 0;
-  const threshold = 50;
-  
-  // Force set initial styles directly
-  header.style.position = 'fixed';
-  header.style.top = '1rem';
-  header.style.left = '50%';
-  header.style.transform = 'translateX(-50%)';
-  header.style.transition = 'all 0.3s ease-in-out';
-  header.style.zIndex = '1000';
-  header.style.width = '80%';
-  
-  function updateHeaderVisibility() {
-    const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
-    console.log('Scroll position:', currentScroll, 'Last scroll:', lastScroll);
-    
-    // At top of page
+  if (!header) return;
+
+  // Ensure smooth transitions via CSS
+  header.classList.add('fading');
+
+  let lastScroll = window.pageYOffset || document.documentElement.scrollTop || 0;
+  const threshold = 50; // pixels before we start hiding on downward scroll
+  let ticking = false;
+
+  function applyHeaderState(currentScroll) {
+    // At very top: always show
     if (currentScroll <= 10) {
-      console.log('At top - showing header');
-      header.style.opacity = '1';
-      header.style.visibility = 'visible';
-      header.style.transform = 'translateX(-50%)';
+      header.classList.remove('header-hidden');
       lastScroll = currentScroll;
       return;
     }
-    
-    // Scrolling down
+
+    // Downward scroll beyond threshold -> hide
     if (currentScroll > lastScroll && currentScroll > threshold) {
-      console.log('Scrolling down - hiding header');
-      header.style.opacity = '0';
-      header.style.visibility = 'hidden';
-      header.style.transform = 'translateX(-50%) translateY(-100%)';
-    } 
-    // Scrolling up
-    else if (currentScroll < lastScroll) {
-      console.log('Scrolling up - showing header');
-      header.style.opacity = '1';
-      header.style.visibility = 'visible';
-      header.style.transform = 'translateX(-50%)';
+      header.classList.add('header-hidden');
+    } else if (currentScroll < lastScroll) {
+      // Upward scroll -> show
+      header.classList.remove('header-hidden');
     }
-    
+
     lastScroll = currentScroll;
   }
-  
-  // Initial check
-  updateHeaderVisibility();
-  
-  // Throttle scroll events
-  let isScrolling;
-  window.addEventListener('scroll', function() {
-    window.clearTimeout(isScrolling);
-    isScrolling = setTimeout(updateHeaderVisibility, 50);
-  }, { passive: true });
-  
-  console.log('Scroll event listener attached');
+
+  function onScroll() {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+        applyHeaderState(currentScroll);
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }
+
+  // Initial state
+  applyHeaderState(lastScroll);
+
+  // Listen to scroll
+  window.addEventListener('scroll', onScroll, { passive: true });
 });
 
 // Hamburger menu functionality
