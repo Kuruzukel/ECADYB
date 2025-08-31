@@ -31,43 +31,30 @@ body::-webkit-scrollbar {
 
 header {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 1000;
   display: flex;
   justify-content: space-between;
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(10px);
-  padding: 1rem 2rem;
-  transform: translateY(0);
-  transition: transform 0.3s ease-in-out;
   align-items: center;
-  position: fixed;
   width: 80%;
-  left: 0;
-  right: 0;
-  top: 1rem;
-  margin-left: auto;
-  margin-right: auto;
   height: 62px;
   padding: 0 0.7rem;
   background: #000042;
   border-radius: 999px;
-  z-index: 10;
-  animation: fadeIn 1s ease forwards;
-  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-    transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid #0c27be;
+  transition: all 0.3s ease-in-out;
   opacity: 1;
   visibility: visible;
-  transform: translateY(0);
-  border: 1px solid #0c27be;
+  pointer-events: auto;
 }
 
 header.header-hidden {
   opacity: 0;
+  visibility: hidden;
+  transform: translateX(-50%) translateY(-100%);
   pointer-events: none;
-  transform: translateY(-100%);
 }
 
 header.fading {
