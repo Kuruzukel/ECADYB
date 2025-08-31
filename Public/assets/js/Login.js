@@ -15,12 +15,37 @@ function limitID() {
   }
 }
 
-// Optional: Automatically fade out error message after a few seconds
+// Handle form submission with fade out animation
 window.addEventListener("DOMContentLoaded", () => {
   const errorMessage = document.getElementById("error-message");
   if (errorMessage && errorMessage.classList.contains("show")) {
     setTimeout(() => {
       errorMessage.classList.remove("show");
     }, 4000); // Hide after 4 seconds
+  }
+
+  // Add form submission handler
+  const loginForm = document.querySelector('form');
+  if (loginForm) {
+    loginForm.addEventListener('submit', function(e) {
+      // Only prevent default if we're handling the animation
+      if (!e.defaultPrevented) {
+        e.preventDefault();
+        
+        // Add the fade-out class to trigger the animation
+        const loginCard = document.querySelector('.loginCard');
+        if (loginCard) {
+          loginCard.classList.add('fade-out');
+          
+          // Submit the form after the animation completes
+          setTimeout(() => {
+            loginForm.submit();
+          }, 500); // Match this with the CSS animation duration
+        } else {
+          // Fallback in case .loginCard is not found
+          loginForm.submit();
+        }
+      }
+    });
   }
 });

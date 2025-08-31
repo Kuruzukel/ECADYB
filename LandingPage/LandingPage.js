@@ -1,12 +1,12 @@
 // Header hide/show functionality (class-based)
-document.addEventListener('DOMContentLoaded', function () {
-  const header = document.querySelector('header');
-  const hamburgerMenu = document.getElementById('hamburgerMenu');
-  const centerNav = document.querySelector('.center-nav');
+document.addEventListener("DOMContentLoaded", function () {
+  const header = document.querySelector("header");
+  const hamburgerMenu = document.getElementById("hamburgerMenu");
+  const centerNav = document.querySelector(".center-nav");
   if (!header) return;
 
   // Ensure smooth transitions via CSS
-  header.classList.add('fading');
+  header.classList.add("fading");
 
   let lastScroll = Math.max(0, getScrollY());
   const threshold = 50; // pixels before we start hiding on downward scroll
@@ -15,39 +15,43 @@ document.addEventListener('DOMContentLoaded', function () {
   let headerHidden = false; // track state to avoid redundant DOM writes
 
   function getScrollY() {
-    return (typeof window.scrollY === 'number'
+    return typeof window.scrollY === "number"
       ? window.scrollY
-      : (window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0)
-    );
+      : window.pageYOffset ||
+          document.documentElement.scrollTop ||
+          document.body.scrollTop ||
+          0;
   }
 
   function isMobileMenuOpen() {
     return (
-      (hamburgerMenu && hamburgerMenu.classList.contains('active')) ||
-      (centerNav && centerNav.classList.contains('mobile-active'))
+      (hamburgerMenu && hamburgerMenu.classList.contains("active")) ||
+      (centerNav && centerNav.classList.contains("mobile-active"))
     );
   }
 
   function hideHeader() {
     if (headerHidden) return;
+    console.log("Hiding header");
     headerHidden = true;
-    header.classList.add('header-hidden');
+    header.classList.add("header-hidden");
     // Inline-style fallback to guarantee hide even if CSS conflicts
-    header.style.opacity = '0';
-    header.style.visibility = 'hidden';
-    header.style.transform = 'translateX(-50%) translateY(-100%)';
-    header.style.pointerEvents = 'none';
+    header.style.opacity = "0";
+    header.style.visibility = "hidden";
+    header.style.transform = "translateX(-50%) translateY(-100%)";
+    header.style.pointerEvents = "none";
   }
 
   function showHeader() {
-    if (!headerHidden && !header.classList.contains('header-hidden')) return;
+    if (!headerHidden && !header.classList.contains("header-hidden")) return;
+    console.log("Showing header");
     headerHidden = false;
-    header.classList.remove('header-hidden');
+    header.classList.remove("header-hidden");
     // Clear inline styles to defer to stylesheet
-    header.style.opacity = '';
-    header.style.visibility = '';
-    header.style.transform = '';
-    header.style.pointerEvents = '';
+    header.style.opacity = "";
+    header.style.visibility = "";
+    header.style.transform = "";
+    header.style.pointerEvents = "";
   }
 
   function applyHeaderState(rawScroll) {
@@ -87,6 +91,14 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!ticking) {
       window.requestAnimationFrame(() => {
         const currentScroll = getScrollY();
+        console.log("Scroll:", {
+          currentScroll,
+          lastScroll,
+          delta: currentScroll - lastScroll,
+          headerHidden,
+          isMobileMenuOpen: isMobileMenuOpen(),
+          headerClass: header.className,
+        });
         applyHeaderState(currentScroll);
         ticking = false;
       });
@@ -103,43 +115,60 @@ document.addEventListener('DOMContentLoaded', function () {
   // Initial state
   applyHeaderState(lastScroll);
 
-  // Listeners
-  window.addEventListener('scroll', onScroll, { passive: true });
-  document.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('touchmove', onScroll, { passive: true });
-  window.addEventListener('wheel', onScroll, { passive: true });
-  window.addEventListener('resize', onResize);
-  window.addEventListener('orientationchange', onResize);
+  // Debug info
+  console.log("Initial scroll setup:", {
+    header: header,
+    hamburgerMenu: !!hamburgerMenu,
+    centerNav: !!centerNav,
+    initialScroll: getScrollY(),
+  });
+
+  // Listeners - use capture phase to catch all scroll events
+  window.addEventListener("scroll", onScroll, { passive: true, capture: true });
+  document.addEventListener("scroll", onScroll, {
+    passive: true,
+    capture: true,
+  });
+  window.addEventListener("touchmove", onScroll, {
+    passive: true,
+    capture: true,
+  });
+  window.addEventListener("wheel", onScroll, { passive: true, capture: true });
+  window.addEventListener("resize", onResize);
+  window.addEventListener("orientationchange", onResize);
 });
 
 // Hamburger menu functionality
-document.addEventListener('DOMContentLoaded', function() {
-  const hamburgerMenu = document.getElementById('hamburgerMenu');
-  const centerNav = document.querySelector('.center-nav');
-  
+document.addEventListener("DOMContentLoaded", function () {
+  const hamburgerMenu = document.getElementById("hamburgerMenu");
+  const centerNav = document.querySelector(".center-nav");
+
   if (!hamburgerMenu || !centerNav) return;
-  
+
   // Toggle mobile menu
-  hamburgerMenu.addEventListener('click', function(e) {
+  hamburgerMenu.addEventListener("click", function (e) {
     e.stopPropagation();
-    this.classList.toggle('active');
-    centerNav.classList.toggle('mobile-active');
+    this.classList.toggle("active");
+    centerNav.classList.toggle("mobile-active");
   });
-  
+
   // Close mobile menu when clicking on a link
-  const navLinks = centerNav.querySelectorAll('a');
+  const navLinks = centerNav.querySelectorAll("a");
   navLinks.forEach((link) => {
-    link.addEventListener('click', function() {
-      hamburgerMenu.classList.remove('active');
-      centerNav.classList.remove('mobile-active');
+    link.addEventListener("click", function () {
+      hamburgerMenu.classList.remove("active");
+      centerNav.classList.remove("mobile-active");
     });
   });
-  
+
   // Close mobile menu when clicking outside
-  document.addEventListener('click', function(event) {
-    if (!hamburgerMenu.contains(event.target) && !centerNav.contains(event.target)) {
-      hamburgerMenu.classList.remove('active');
-      centerNav.classList.remove('mobile-active');
+  document.addEventListener("click", function (event) {
+    if (
+      !hamburgerMenu.contains(event.target) &&
+      !centerNav.contains(event.target)
+    ) {
+      hamburgerMenu.classList.remove("active");
+      centerNav.classList.remove("mobile-active");
     }
   });
 });
@@ -571,21 +600,42 @@ window.addEventListener("scroll", () => {
   });
 });
 
-// Mobile & Desktop login buttons - simple redirect
+// Mobile & Desktop login buttons with fade out animation
 document.addEventListener("DOMContentLoaded", function () {
   const loginBtn = document.getElementById("loginDropdownBtn");
   const mobileLoginBtn = document.getElementById("mobileLoginDropdownBtn");
 
-  if (loginBtn) {
-    loginBtn.addEventListener("click", () => {
+  function handleLoginClick(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Add fade-out class to body
+    document.body.classList.add('fade-out');
+    
+    // Redirect after animation completes
+    setTimeout(() => {
       window.location.href = "/Public/Components/Login.php";
-    });
+    }, 500); // Match this with CSS animation duration
+  }
+
+  if (loginBtn) {
+    // Remove any existing click handlers to avoid duplicates
+    loginBtn.replaceWith(loginBtn.cloneNode(true));
+    const newLoginBtn = document.getElementById("loginDropdownBtn");
+    newLoginBtn.addEventListener("click", handleLoginClick);
+    
+    // Also update the inline onclick handler
+    newLoginBtn.onclick = handleLoginClick;
   }
 
   if (mobileLoginBtn) {
-    mobileLoginBtn.addEventListener("click", () => {
-      window.location.href = "/Public/Components/Login.php";
-    });
+    // Remove any existing click handlers to avoid duplicates
+    mobileLoginBtn.replaceWith(mobileLoginBtn.cloneNode(true));
+    const newMobileBtn = document.getElementById("mobileLoginDropdownBtn");
+    newMobileBtn.addEventListener("click", handleLoginClick);
+    
+    // Also update the inline onclick handler
+    newMobileBtn.onclick = handleLoginClick;
   }
 });
 
