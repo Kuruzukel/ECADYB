@@ -104,6 +104,35 @@ h1 .chevron i {
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+}
+
+/* Checkbox aligned to the right inside section header */
+.template-select {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9em;
+}
+
+.template-select input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #ffffff;
+  cursor: pointer;
+}
+
+.template-select-label {
+  color: #ffffff;
+  opacity: 0.95;
+  cursor: pointer;
+}
+
+/* Selected state of the whole section */
+.section.selected {
+  outline: 2px solid #ffffff;
+  outline-offset: 0;
 }
 
 label {

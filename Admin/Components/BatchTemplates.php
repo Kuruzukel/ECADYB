@@ -12,7 +12,8 @@
 <body>
     <div class="container" style="font-family: Arial, sans-serif;">
         <div class="header-container" style="width: 100%;">
-            <h1><i class="fas fa-sliders-h"></i> <span class="chevron"><i class="fas fa-chevron-right"></i></span>Choose Template</h1>
+            <h1><i class="fas fa-sliders-h"></i> <span class="chevron"><i class="fas fa-chevron-right"></i></span>Choose
+                Template</h1>
         </div>
         <div class="form-content" style="width: 100%;">
 
@@ -235,7 +236,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="modal-buttons">
                 <button class="modal-btn cancel" onclick="cancelUpload()">Cancel</button>
             </div>

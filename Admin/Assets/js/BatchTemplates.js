@@ -102,14 +102,14 @@ function showNotification(message, type = "success") {
 // ----------------------
 function getBasePath() {
   const currentPath = window.location.pathname;
-  
+
   // Check if we're on Railway (no /ECADYB in path)
-  if (currentPath.includes('/Admin/')) {
+  if (currentPath.includes("/Admin/")) {
     // Extract the base path up to /Admin/
-    const adminIndex = currentPath.indexOf('/Admin/');
+    const adminIndex = currentPath.indexOf("/Admin/");
     return currentPath.substring(0, adminIndex);
   }
-  
+
   // Fallback for localhost or other setups
   return window.location.origin;
 }
@@ -211,6 +211,70 @@ window.addEventListener("DOMContentLoaded", () => {
   let currentXhr = null;
 
   const uploadBoxes = document.querySelectorAll(".upload-box");
+
+  // ----------------------
+  // Section selection via header click
+  // ----------------------
+  const sections = document.querySelectorAll(".form-group .section");
+  const sectionHeaders = document.querySelectorAll(
+    ".form-group .section .section-header"
+  );
+
+  function selectSection(section) {
+    sections.forEach((s) => s.classList.remove("selected"));
+    if (section) section.classList.add("selected");
+  }
+
+  // Open modal specifically for selecting a different batch template
+  function openSelectTemplateModal(targetSection, templateLabel) {
+    if (!deleteModal) return;
+
+    const titleEl = deleteModal.querySelector("h3");
+    const iconEl = deleteModal.querySelector(".modal-header .modal-icon");
+    const messageEl = deleteModal.querySelector(".modal-content p");
+    const confirmBtnEl = confirmDeleteBtn;
+    const cancelBtnEl = cancelDeleteBtn;
+
+    const defaultTitle = titleEl ? titleEl.textContent : "";
+    const defaultMsg = messageEl ? messageEl.textContent : "";
+    const defaultIcon = iconEl ? iconEl.className : "";
+    const defaultConfirmText = confirmBtnEl ? confirmBtnEl.textContent : "";
+    const defaultCancelText = cancelBtnEl ? cancelBtnEl.textContent : "";
+
+    if (titleEl) titleEl.textContent = "Select Batch Template";
+    if (messageEl)
+      messageEl.textContent = `Do you want to select ${templateLabel}?`;
+    if (iconEl) iconEl.className = "fas fa-question-circle modal-icon";
+    if (confirmBtnEl) confirmBtnEl.textContent = "Yes, Select";
+    if (cancelBtnEl) cancelBtnEl.textContent = "Cancel";
+
+    selectedConfirmAction = () => {
+      selectSection(targetSection);
+      // restore defaults
+      if (titleEl) titleEl.textContent = defaultTitle;
+      if (messageEl) messageEl.textContent = defaultMsg;
+      if (iconEl) iconEl.className = defaultIcon;
+      if (confirmBtnEl) confirmBtnEl.textContent = defaultConfirmText;
+      if (cancelBtnEl) cancelBtnEl.textContent = defaultCancelText;
+    };
+
+    openDeleteModal();
+  }
+
+  sectionHeaders.forEach((header, idx) => {
+    header.addEventListener("click", (e) => {
+      const section = header.closest(".section");
+      const alreadySelected = section.classList.contains("selected");
+      if (alreadySelected) return;
+      const label = header.textContent?.trim() || `Batch Template ${idx + 1}`;
+      openSelectTemplateModal(section, label);
+    });
+  });
+
+  // Default select Batch Template 1 (first section)
+  if (sections.length > 0) {
+    selectSection(sections[0]);
+  }
   uploadBoxes.forEach((box, index) => {
     const frontInput = box.querySelector(".frontInput");
     const backInput = box.querySelector(".backInput");
@@ -235,7 +299,7 @@ window.addEventListener("DOMContentLoaded", () => {
     console.log("BatchTemplates endpoints configured:", {
       UPLOAD_ENDPOINT,
       FETCH_ENDPOINT,
-      DELETE_ENDPOINT
+      DELETE_ENDPOINT,
     });
 
     const toggleImages = () => {
@@ -377,7 +441,10 @@ window.addEventListener("DOMContentLoaded", () => {
               if (xhr.status >= 200 && xhr.status < 300) {
                 resolve(JSON.parse(xhr.responseText));
               } else {
-                resolve({ success: false, message: `HTTP ${xhr.status}: ${xhr.statusText}` });
+                resolve({
+                  success: false,
+                  message: `HTTP ${xhr.status}: ${xhr.statusText}`,
+                });
               }
             } catch (e) {
               resolve({ success: false, message: "Invalid response format" });
@@ -418,13 +485,16 @@ window.addEventListener("DOMContentLoaded", () => {
         form.append("slot", String(slot));
         form.append("side", side);
         form.append("template", String(template));
-        
-        const res = await fetch(DELETE_ENDPOINT, { method: "POST", body: form });
-        
+
+        const res = await fetch(DELETE_ENDPOINT, {
+          method: "POST",
+          body: form,
+        });
+
         if (!res.ok) {
           throw new Error(`HTTP ${res.status}: ${res.statusText}`);
         }
-        
+
         const data = await res.json().catch(() => null);
         if (!data?.success) {
           showNotification(data?.message || "Delete failed", "error");
@@ -440,17 +510,17 @@ window.addEventListener("DOMContentLoaded", () => {
     (async function loadExisting() {
       try {
         const res = await fetch(FETCH_ENDPOINT);
-        
+
         if (!res.ok) {
           throw new Error(`HTTP ${res.status}: ${res.statusText}`);
         }
-        
+
         const data = await res.json();
         if (!data?.success) {
           console.warn("Failed to load covers:", data?.message);
           return;
         }
-        
+
         const found = (data.items || []).find((i) => i.slot === slot);
         if (!found) return;
         if (found.front_url) {

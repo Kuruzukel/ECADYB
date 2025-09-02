@@ -143,14 +143,14 @@ function showNotification(message, type = "success") {
 // ----------------------
 function getBasePath() {
   const currentPath = window.location.pathname;
-  
+
   // Check if we're on Railway (no /ECADYB in path)
-  if (currentPath.includes('/Admin/')) {
+  if (currentPath.includes("/Admin/")) {
     // Extract the base path up to /Admin/
-    const adminIndex = currentPath.indexOf('/Admin/');
+    const adminIndex = currentPath.indexOf("/Admin/");
     return currentPath.substring(0, adminIndex);
   }
-  
+
   // Fallback for localhost or other setups
   return window.location.origin;
 }
@@ -171,12 +171,15 @@ async function uploadLogoToBunny(file, slot, box, input, deleteBtn) {
   }
 
   try {
-    const res = await fetch(window.UPLOAD_ENDPOINT, { method: "POST", body: form });
-    
+    const res = await fetch(window.UPLOAD_ENDPOINT, {
+      method: "POST",
+      body: form,
+    });
+
     if (!res.ok) {
       throw new Error(`HTTP ${res.status}: ${res.statusText}`);
     }
-    
+
     const data = await res.json();
 
     if (!data?.success) {
@@ -261,7 +264,7 @@ window.addEventListener("DOMContentLoaded", () => {
     UPLOAD_ENDPOINT: window.UPLOAD_ENDPOINT,
     FETCH_ENDPOINT: FETCH_ENDPOINT,
     DELETE_ENDPOINT: DELETE_ENDPOINT,
-    UPDATE_ADMIN_LOGO_ENDPOINT: UPDATE_ADMIN_LOGO_ENDPOINT
+    UPDATE_ADMIN_LOGO_ENDPOINT: UPDATE_ADMIN_LOGO_ENDPOINT,
   });
 
   // ----------------------
@@ -278,8 +281,12 @@ window.addEventListener("DOMContentLoaded", () => {
   let deleteTarget = null;
 
   // change admin logo modal
-  const changeAdminLogoModal = document.getElementById("change-admin-logo-modal");
-  const confirmChangeLogoBtn = document.getElementById("confirm-change-logo-btn");
+  const changeAdminLogoModal = document.getElementById(
+    "change-admin-logo-modal"
+  );
+  const confirmChangeLogoBtn = document.getElementById(
+    "confirm-change-logo-btn"
+  );
   const cancelChangeLogoBtn = document.getElementById("cancel-change-logo-btn");
   const previewLogo = document.getElementById("preview-logo");
   let changeLogoTarget = null;
@@ -291,23 +298,23 @@ window.addEventListener("DOMContentLoaded", () => {
 
     const reader = new FileReader();
     reader.onload = (e) => {
-      const img = document.createElement('img');
+      const img = document.createElement("img");
       img.src = e.target.result;
-      img.alt = 'Logo Preview';
-      
+      img.alt = "Logo Preview";
+
       // Clear previous content
-      box.innerHTML = '';
+      box.innerHTML = "";
       box.appendChild(img);
-      box.classList.add('has-image');
-      
+      box.classList.add("has-image");
+
       // Show the delete button
-      const deleteBtn = document.createElement('button');
-      deleteBtn.className = 'delete-btn';
-      deleteBtn.innerHTML = '&times;';
+      const deleteBtn = document.createElement("button");
+      deleteBtn.className = "delete-btn";
+      deleteBtn.innerHTML = "&times;";
       box.appendChild(deleteBtn);
-      
+
       // Upload the file
-      uploadLogoToBunny(file, box.dataset.slot || '1', box, input, deleteBtn);
+      uploadLogoToBunny(file, box.dataset.slot || "1", box, input, deleteBtn);
     };
     reader.readAsDataURL(file);
   };
@@ -316,7 +323,7 @@ window.addEventListener("DOMContentLoaded", () => {
   logoBoxes.forEach((box, index) => {
     const input = box.querySelector(".logoInput");
     const deleteBtn = box.querySelector(".delete-btn");
-    
+
     // Set data-slot attribute if not already set
     if (!box.dataset.slot) {
       box.dataset.slot = (index + 1).toString();
@@ -325,23 +332,24 @@ window.addEventListener("DOMContentLoaded", () => {
     // Handle click on the box
     box.addEventListener("click", (e) => {
       // Don't trigger if clicking on delete button
-      if (e.target === deleteBtn || e.target.classList.contains('delete-btn')) return;
-      
+      if (e.target === deleteBtn || e.target.classList.contains("delete-btn"))
+        return;
+
       // If logo exists, show change admin logo modal
       if (box.classList.contains("has-image")) {
         const logoImg = box.querySelector("img");
         if (logoImg && logoImg.src) {
           previewLogo.src = logoImg.src;
-          changeAdminLogoModal.style.display = 'flex';
+          changeAdminLogoModal.style.display = "flex";
           changeLogoTarget = {
             box: box,
             logoUrl: logoImg.src,
-            slot: box.dataset.slot
+            slot: box.dataset.slot,
           };
           return;
         }
       }
-      
+
       // Otherwise, trigger file input
       input.click();
     });
@@ -362,9 +370,9 @@ window.addEventListener("DOMContentLoaded", () => {
           box: box,
           slot: box.dataset.slot,
           input: input,
-          deleteBtn: deleteBtn
+          deleteBtn: deleteBtn,
         };
-        deleteModal.style.display = 'flex';
+        deleteModal.style.display = "flex";
       });
     }
   });
@@ -373,28 +381,31 @@ window.addEventListener("DOMContentLoaded", () => {
   if (confirmChangeLogoBtn) {
     confirmChangeLogoBtn.addEventListener("click", async () => {
       if (!changeLogoTarget) return;
-      
+
       try {
         const form = new FormData();
         form.append("logo_url", changeLogoTarget.logoUrl);
         form.append("slot", String(changeLogoTarget.slot));
-        
-        const res = await fetch(UPDATE_ADMIN_LOGO_ENDPOINT, { 
-          method: "POST", 
-          body: form 
+
+        const res = await fetch(UPDATE_ADMIN_LOGO_ENDPOINT, {
+          method: "POST",
+          body: form,
         });
-        
+
         if (!res.ok) {
           throw new Error(`HTTP ${res.status}: ${res.statusText}`);
         }
-        
+
         const data = await res.json();
-        
+
         if (data?.success) {
-          showNotification("Admin dashboard logo changed successfully!", "success");
-          
+          showNotification(
+            "Admin dashboard logo changed successfully!",
+            "success"
+          );
+
           // Update the admin dashboard logo if we're on the same page
-          const adminLogo = document.querySelector('.sidebar .logoadmin');
+          const adminLogo = document.querySelector(".sidebar .logoadmin");
           if (adminLogo) {
             adminLogo.src = changeLogoTarget.logoUrl;
           }
@@ -440,11 +451,11 @@ window.addEventListener("DOMContentLoaded", () => {
       const form = new FormData();
       form.append("slot", String(slot));
       const res = await fetch(DELETE_ENDPOINT, { method: "POST", body: form });
-      
+
       if (!res.ok) {
         throw new Error(`HTTP ${res.status}: ${res.statusText}`);
       }
-      
+
       const data = await res.json();
 
       if (!data?.success) throw new Error(data?.message || "Delete failed");
@@ -481,11 +492,11 @@ window.addEventListener("DOMContentLoaded", () => {
   (async function loadLogos() {
     try {
       const res = await fetch(FETCH_ENDPOINT);
-      
+
       if (!res.ok) {
         throw new Error(`HTTP ${res.status}: ${res.statusText}`);
       }
-      
+
       const data = await res.json();
       if (!data?.success) {
         console.warn("Failed to load logos:", data?.message);
