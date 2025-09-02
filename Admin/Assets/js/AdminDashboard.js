@@ -229,8 +229,21 @@ document.addEventListener('DOMContentLoaded', function() {
         confirmBtn.addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
-            // Use relative path to ensure it works in any environment
-            const logoutPath = '/ECADYB/Admin/Components/AdminLogout.php';
+            
+            // Check if we're in production (Railway)
+            const isProduction = window.location.hostname.includes('railway.app');
+            
+            // Set the appropriate logout path
+            let logoutPath = isProduction 
+                ? '/Admin/Components/AdminLogout.php'  // For Railway
+                : '/ECADYB/Admin/Components/AdminLogout.php';  // For local
+                
+            // For Railway, we need to ensure we're using the correct base path
+            if (isProduction) {
+                const basePath = window.location.pathname.split('/').slice(0, 2).join('/');
+                logoutPath = basePath + '/Admin/Components/AdminLogout.php';
+            }
+            
             window.location.href = logoutPath;
         });
 
