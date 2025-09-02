@@ -195,33 +195,52 @@ function scrollToBottom() {
 // ==========================
 // Logout Modal Functionality
 // ==========================
-const logoutTab = document.getElementById("logout-tab");
-const modalOverlay = document.getElementById("modal-overlay");
-const confirmBtn = document.getElementById("confirm-btn");
-const cancelBtn = document.getElementById("cancel-btn");
+document.addEventListener('DOMContentLoaded', function() {
+    const logoutTab = document.getElementById("logout-tab");
+    const modalOverlay = document.getElementById("modal-overlay");
+    const confirmBtn = document.getElementById("confirm-btn");
+    const cancelBtn = document.getElementById("cancel-btn");
 
-if (logoutTab && modalOverlay && confirmBtn && cancelBtn) {
-  logoutTab.addEventListener("click", (e) => {
-    e.preventDefault();
-    modalOverlay.style.display = "flex";
-  });
+    if (logoutTab && modalOverlay && confirmBtn && cancelBtn) {
+        // Prevent any parent form submission
+        const closestForm = logoutTab.closest('form');
+        if (closestForm) {
+            closestForm.onsubmit = function(e) {
+                if (e.submitter && e.submitter.id === 'logout-tab') {
+                    e.preventDefault();
+                    return false;
+                }
+                return true;
+            };
+        }
 
-  cancelBtn.addEventListener("click", () => {
-    modalOverlay.style.display = "none";
-  });
+        logoutTab.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            modalOverlay.style.display = "flex";
+        });
 
-  confirmBtn.addEventListener("click", (e) => {
-    e.preventDefault(); // Prevent form submission
-    window.location.href = "/ECADYB/Admin/Components/AdminLogout.php"; // Correct logout URL
-  });
+        cancelBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            modalOverlay.style.display = "none";
+        });
 
-  // Optional: close modal when clicking outside
-  modalOverlay.addEventListener("click", (e) => {
-    if (e.target === modalOverlay) {
-      modalOverlay.style.display = "none";
+        confirmBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            // Use full URL to ensure proper redirection
+            window.location.href = window.location.origin + "/ECADYB/Admin/Components/AdminLogout.php";
+        });
+
+        // Close modal when clicking outside
+        modalOverlay.addEventListener("click", (e) => {
+            if (e.target === modalOverlay) {
+                modalOverlay.style.display = "none";
+            }
+        });
     }
-  });
-}
+});
 
 // ==========================
 // On DOM ready, setup active tab and menu
