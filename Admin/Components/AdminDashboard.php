@@ -126,7 +126,6 @@ require $mongoPath;
                     onclick="setTabActive('changepassword-tab');">
                     <i class="fas fa-key"></i> Change password
                 </a>
-
                 <!-- Logout Tab -->
                 <a href="#" class="tab" id="logout-tab">
                     <i class="fas fa-sign-out-alt"></i> Logout
@@ -142,9 +141,6 @@ require $mongoPath;
                         </div>
                     </div>
                 </div>
-
-
-
             </div>
 
         </div>

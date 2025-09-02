@@ -212,7 +212,7 @@ if (logoutTab && modalOverlay && confirmBtn && cancelBtn) {
 
   confirmBtn.addEventListener("click", (e) => {
     e.preventDefault(); // Prevent form submission
-    window.location.href = "/ECADYB/Admin/AdminLogout.php"; // Correct logout URL
+    window.location.href = "/ECADYB/Admin/Components/AdminLogout.php"; // Correct logout URL
   });
 
   // Optional: close modal when clicking outside
