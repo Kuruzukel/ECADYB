@@ -1,9 +1,13 @@
+// ==========================
 // Sidebar toggle buttons
+// ==========================
 const hamburgerIcon = document.querySelector(".hamburger-menu-ico");
 const closeIcon = document.querySelector(".close-ico");
 const sidebar = document.querySelector(".sidebar");
 
+// ==========================
 // Search container toggle buttons
+// ==========================
 const searchIcon = document.querySelector(".search-icon");
 const searchCloseIcon = document.querySelector(".search-close-ico");
 const searchContainer = document.querySelector(".search-container");
@@ -36,7 +40,9 @@ if (searchIcon && searchCloseIcon && searchContainer) {
   });
 }
 
+// ==========================
 // Toggle submenu and chevron rotation
+// ==========================
 function toggleSubmenu(menuId) {
   const currentMenu = document.getElementById(menuId);
   if (!currentMenu) return;
@@ -63,20 +69,18 @@ function toggleSubmenu(menuId) {
       const chevron = document.querySelector(
         `[onclick="toggleSubmenu('${submenu.id}')"] .chevron i`
       );
-      if (chevron) {
-        chevron.classList.remove("rotate-180");
-        const tab = document.querySelector(
-          `[onclick="toggleSubmenu('${submenu.id}')"]`
-        );
-        if (tab) {
-          tab.setAttribute("aria-expanded", "false");
-        }
-      }
+      if (chevron) chevron.classList.remove("rotate-180");
+      const tab = document.querySelector(
+        `[onclick="toggleSubmenu('${submenu.id}')"]`
+      );
+      if (tab) tab.setAttribute("aria-expanded", "false");
     }
   });
 }
 
+// ==========================
 // Activate matching tab/sub-tab based on current page
+// ==========================
 function setActiveTab(currentPage) {
   let activated = false;
 
@@ -96,7 +100,9 @@ function setActiveTab(currentPage) {
   });
 }
 
+// ==========================
 // Expand parent menu if a sub-tab is active
+// ==========================
 function expandParentMenuIfActive() {
   let submenuOpened = false;
 
@@ -126,15 +132,15 @@ function expandParentMenuIfActive() {
         const tab = document.querySelector(
           `[onclick="toggleSubmenu('${submenu.id}')"]`
         );
-        if (tab) {
-          tab.setAttribute("aria-expanded", "true");
-        }
+        if (tab) tab.setAttribute("aria-expanded", "true");
       }
     }
   });
 }
 
+// ==========================
 // Handle main tab clicks that have no href (toggle active)
+// ==========================
 document.querySelectorAll(".tab[onclick]").forEach((tab) => {
   tab.addEventListener("click", function (e) {
     if (this.getAttribute("href")) return; // If href exists, let link work
@@ -147,7 +153,9 @@ document.querySelectorAll(".tab[onclick]").forEach((tab) => {
   });
 });
 
+// ==========================
 // Handle sub-tab clicks
+// ==========================
 document.querySelectorAll(".sub-tab").forEach((tab) => {
   tab.addEventListener("click", function () {
     document
@@ -157,11 +165,15 @@ document.querySelectorAll(".sub-tab").forEach((tab) => {
   });
 });
 
+// ==========================
 // Get current page from URL params
+// ==========================
 const urlParams = new URLSearchParams(window.location.search);
 const page = urlParams.get("page") || "dashboard";
 
+// ==========================
 // Manual activation helper
+// ==========================
 function setTabActive(tabId) {
   document
     .querySelectorAll(".tab, .sub-tab")
@@ -170,7 +182,9 @@ function setTabActive(tabId) {
   if (tab) tab.classList.add("active");
 }
 
+// ==========================
 // Scroll to bottom helper function
+// ==========================
 function scrollToBottom() {
   const container = document.getElementById("scrollContainer");
   if (container) {
@@ -178,7 +192,39 @@ function scrollToBottom() {
   }
 }
 
+// ==========================
+// Logout Modal Functionality
+// ==========================
+const logoutTab = document.getElementById("logout-tab");
+const modalOverlay = document.getElementById("modal-overlay");
+const confirmBtn = document.getElementById("confirm-btn");
+const cancelBtn = document.getElementById("cancel-btn");
+
+if (logoutTab && modalOverlay && confirmBtn && cancelBtn) {
+  logoutTab.addEventListener("click", (e) => {
+    e.preventDefault();
+    modalOverlay.style.display = "flex";
+  });
+
+  cancelBtn.addEventListener("click", () => {
+    modalOverlay.style.display = "none";
+  });
+
+  confirmBtn.addEventListener("click", () => {
+    window.location.href = "/logout"; // Replace with your logout URL
+  });
+
+  // Optional: close modal when clicking outside
+  modalOverlay.addEventListener("click", (e) => {
+    if (e.target === modalOverlay) {
+      modalOverlay.style.display = "none";
+    }
+  });
+}
+
+// ==========================
 // On DOM ready, setup active tab and menu
+// ==========================
 document.addEventListener("DOMContentLoaded", () => {
   const currentPage =
     urlParams.get("page") || window.location.pathname.split("/").pop();

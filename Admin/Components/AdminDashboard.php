@@ -127,9 +127,22 @@ require $mongoPath;
                     <i class="fas fa-key"></i> Change password
                 </a>
 
-                <a href="#" class="tab" id="logout-tab" onclick="showLogoutModal()">
+                <!-- Logout Tab -->
+                <a href="#" class="tab" id="logout-tab">
                     <i class="fas fa-sign-out-alt"></i> Logout
                 </a>
+
+                <!-- Logout Confirmation Modal -->
+                <div class="modal-overlay" id="modal-overlay">
+                    <div class="modal" style="font-family: Arial, sans-serif;">
+                        <h3>Are you sure you want to logout?</h3>
+                        <div class="modal-buttons">
+                            <button class="modal-btn confirm" id="confirm-btn">Yes, Logout</button>
+                            <button class="modal-btn cancel" id="cancel-btn">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+
 
             </div>
 
