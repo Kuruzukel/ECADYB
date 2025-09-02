@@ -18,16 +18,19 @@
         --menu-hover-bg: #1c1c84;
     }
 
+    html,
     body {
         margin: 0;
         padding: 0;
         font-family: Arial, sans-serif;
         width: 100%;
+        height: 100%;
+        overflow: hidden;
         background-color: var(--body-bg);
     }
 
     .container {
-        height: 100%;
+        height: 100vh;
         background-color: var(--content-bg);
         border-radius: 10px 10px 0 0;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
@@ -50,6 +53,8 @@
         position: relative;
         border-radius: 8px;
         background-color: var(--content-bg);
+        max-width: 100vw;
+        max-height: 100vh;
     }
 
     html:fullscreen .catalog-app,
@@ -73,8 +78,8 @@
     <div class="container">
         <div class="catalog-root">
             <div class="catalog-app">
-                <iframe src="http://localhost/ECADYB/Admin/Yearbooks/MaritimeYB/index.html" width="100%" height="100%"
-                    style="border: none;"></iframe>
+                <iframe src="../Yearbooks/MaritimeYB/index.html" width="100%" height="100%"
+                    style="border: none; min-height: 600px;"></iframe>
             </div>
         </div>
 
@@ -132,27 +137,45 @@
             }
         };
         document.querySelector('iframe').addEventListener('load', function() {
-            const iframeDoc = this.contentDocument || this.contentWindow.document;
-            const iframeRoot = iframeDoc.documentElement;
+            try {
+                const iframeDoc = this.contentDocument || this.contentWindow.document;
+                const iframeRoot = iframeDoc && iframeDoc.documentElement;
+                if (!iframeRoot) return;
 
-            const computedStyles = getComputedStyle(document.documentElement);
-            [
-                '--header-bg',
-                '--body-bg',
-                '--sidebar-bg',
-                '--content-bg',
-                '--menu-bg-active',
-                '--menu-border-active',
-                '--menu-hover-bg'
-            ].forEach(varName => {
-                const value = computedStyles.getPropertyValue(varName);
-                iframeRoot.style.setProperty(varName, value);
-            });
+                const computedStyles = getComputedStyle(document.documentElement);
+                [
+                    '--header-bg',
+                    '--body-bg',
+                    '--sidebar-bg',
+                    '--content-bg',
+                    '--menu-bg-active',
+                    '--menu-border-active',
+                    '--menu-hover-bg'
+                ].forEach(varName => {
+                    const value = computedStyles.getPropertyValue(varName);
+                    iframeRoot.style.setProperty(varName, value);
+                });
 
+                const iframeBody = iframeDoc.querySelector('body');
+                if (iframeBody) {
+                    iframeBody.style.backgroundColor = computedStyles.getPropertyValue('--content-bg');
+                    iframeBody.style.overflow = 'hidden';
+                    iframeBody.style.height = '100%';
+                }
 
-            const iframeBody = iframeDoc.querySelector('body');
-            if (iframeBody) {
-                iframeBody.style.backgroundColor = computedStyles.getPropertyValue('--content-bg');
+                // Prevent scrollbars inside the iframe
+                iframeRoot.style.overflow = 'hidden';
+                iframeRoot.style.height = '100%';
+
+                const styleEl = iframeDoc.createElement('style');
+                styleEl.textContent = `
+                    html, body { overflow: hidden !important; height: 100%; }
+                    #canvas { overflow: hidden !important; }
+                    .magazine-viewport { overflow: hidden !important; }
+                `;
+                if (iframeDoc.head) iframeDoc.head.appendChild(styleEl);
+            } catch (e) {
+                // Cross-origin or other access issue; ignore to avoid breaking render
             }
         });
 
