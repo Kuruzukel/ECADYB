@@ -250,6 +250,9 @@ window.addEventListener("DOMContentLoaded", () => {
 
     selectedConfirmAction = () => {
       selectSection(targetSection);
+      if (typeof showNotification === "function") {
+        showNotification(`${templateLabel} selected`, "success");
+      }
       // restore defaults
       if (titleEl) titleEl.textContent = defaultTitle;
       if (messageEl) messageEl.textContent = defaultMsg;
