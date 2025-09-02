@@ -179,16 +179,16 @@ require $mongoPath;
                         break;
                     case 'event-calendar':
                         include('EventCalendar.php');
-                        break;    
-                    case 'batchupload': 
+                        break;
+                    case 'batchupload':
                         include('BatchUpload.php');
                         break;
                     case 'themes':
                         include('Themes.php');
-                        break;    
+                        break;
                     case 'template':
                         include('BatchTemplates.php');
-                        break;        
+                        break;
                     case 'changepassword':
                         include('ChangePassword.php');
                         break;
@@ -200,19 +200,19 @@ require $mongoPath;
                         break;
                     case 'tourism':
                         include('../Departments/Tourism.php');
-                        break;  
-                   case 'education':
+                        break;
+                    case 'education':
                         include('../Departments/Education.php');
-                        break; 
+                        break;
                     case 'nursing':
                         include('../Departments/Nursing.php');
-                        break;   
+                        break;
                     case 'informationsys':
                         include('../Departments/InformationSystem.php');
-                        break;  
+                        break;
                     case 'businessad':
                         include('../Departments/BusinessAdministration.php');
-                        break;                    
+                        break;
                     default:
                         include('StudentList.php');
                         break;
@@ -225,16 +225,16 @@ require $mongoPath;
     <script src="../Assets/js/AdminDashboard.js">
 
     </script>
-    
+
     <script>
         // Load dynamic admin logo
         async function loadAdminLogo() {
             try {
-                const BASE_PATH = window.location.pathname.includes('/Admin/') 
-                    ? window.location.pathname.substring(0, window.location.pathname.indexOf('/Admin/'))
-                    : window.location.origin;
+                const BASE_PATH = window.location.pathname.includes('/Admin/') ?
+                    window.location.pathname.substring(0, window.location.pathname.indexOf('/Admin/')) :
+                    window.location.origin;
                 const CONNECTION_PATH = `${BASE_PATH}/Connection`;
-                
+
                 const response = await fetch(`${CONNECTION_PATH}/FetchAdminLogo.php`);
                 if (response.ok) {
                     const data = await response.json();
@@ -253,26 +253,7 @@ require $mongoPath;
         // Load logo when page loads
         document.addEventListener('DOMContentLoaded', loadAdminLogo);
     </script>
-    <!-- Logout Confirmation Modal -->
-    <div class="modal-overlay" id="logout-modal-overlay" style="display: none;">
-        <div class="modal">
-            <div class="modal-header">
-                <i class="fas fa-sign-out-alt modal-icon"></i>
-                <h3>Confirm Logout</h3>
-            </div>
-            <div class="modal-content">
-                <p>Are you sure you want to logout?</p>
-            </div>
-            <div class="modal-buttons">
-                <a href="AdminLogout.php" class="modal-btn confirm">
-                    <i class="fas fa-check"></i> Yes, Logout
-                </a>
-                <button class="modal-btn cancel" onclick="hideLogoutModal()">
-                    <i class="fas fa-times"></i> Cancel
-                </button>
-            </div>
-        </div>
-    </div>
+
 
     <script>
         function showLogoutModal() {
