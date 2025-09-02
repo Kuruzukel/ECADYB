@@ -10,21 +10,8 @@ if (!file_exists($mongoPath)) {
     die("❌ MongoConnect.php not found at: $mongoPath");
 }
 require $mongoPath;
-// Detect if running on Railway
-$isRailway = getenv('RAILWAY_ENVIRONMENT') === 'production' || 
-              (isset($_SERVER['RAILWAY_STATIC_URL']) || isset($_SERVER['RAILWAY_PUBLIC_DOMAIN']));
-
-// Set base path and URL based on environment
 define('BASE_PATH', __DIR__);
-if ($isRailway) {
-    // For Railway deployment
-    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://';
-    $host = $_SERVER['HTTP_HOST'];
-    define('BASE_URL', $protocol . $host . '/');
-} else {
-    // For local development
-    define('BASE_URL', '/');
-}
+define('BASE_URL', '/');
 
 $error_message = '';
 
@@ -84,28 +71,14 @@ if (!empty($error_message)) {
 
 $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-// Define routes with both prefixed and non-prefixed versions for Railway
 $routes = [
-    // Main routes
     '/LandingPage'        => BASE_PATH . '/LandingPage/LandingPage.html',
-    '/Login'              => BASE_PATH . '/Public/Components/Login.php',
-    '/Admin'              => BASE_PATH . '/Admin/Components/AdminDashboard.php',
-    '/Student'            => BASE_PATH . '/Student/Components/StudentDashboard.php',
-    '/'                   => BASE_PATH . '/Public/Components/Loader.html',
-    
-    // Admin routes
+    '/Login'   => BASE_PATH . '/Public/Components/Login.php',
+    '/Admin'   => BASE_PATH . '/Admin/Components/AdminDashboard.php',
     '/Admin/Components/AdminLogout.php' => BASE_PATH . '/Admin/Components/AdminLogout.php',
-    
-    // Add Railway-specific routes if needed
-    '/ECADYB/Admin/Components/AdminLogout.php' => BASE_PATH . '/Admin/Components/AdminLogout.php',
+    '/Student' => BASE_PATH . '/Student/Components/StudentDashboard.php',
+    '/'  => BASE_PATH . '/Public/Components/Loader.html',
 ];
-
-// Add environment-specific routes
-if ($isRailway) {
-    $routes = array_merge($routes, [
-        // Add any additional Railway-specific routes here
-    ]);
-}
 
 if (array_key_exists($requestUri, $routes)) {
     $filePath = $routes[$requestUri];
