@@ -210,8 +210,9 @@ if (logoutTab && modalOverlay && confirmBtn && cancelBtn) {
     modalOverlay.style.display = "none";
   });
 
-  confirmBtn.addEventListener("click", () => {
-    window.location.href = "/logout"; // Replace with your logout URL
+  confirmBtn.addEventListener("click", (e) => {
+    e.preventDefault(); // Prevent form submission
+    window.location.href = "/ECADYB/Admin/AdminLogout.php"; // Correct logout URL
   });
 
   // Optional: close modal when clicking outside
@@ -243,3 +244,31 @@ document.addEventListener("DOMContentLoaded", () => {
     searchCloseIcon.classList.toggle("hidden", isSearchHidden);
   }
 });
+
+async function loadAdminLogo() {
+  try {
+    const BASE_PATH = window.location.pathname.includes("/Admin/")
+      ? window.location.pathname.substring(
+          0,
+          window.location.pathname.indexOf("/Admin/")
+        )
+      : window.location.origin;
+    const CONNECTION_PATH = `${BASE_PATH}/Connection`;
+
+    const response = await fetch(`${CONNECTION_PATH}/FetchAdminLogo.php`);
+    if (response.ok) {
+      const data = await response.json();
+      if (data.success && data.logo_url) {
+        const adminLogo = document.getElementById("admin-logo");
+        if (adminLogo) {
+          adminLogo.src = data.logo_url;
+        }
+      }
+    }
+  } catch (error) {
+    console.error("Failed to load admin logo:", error);
+  }
+}
+
+// Load logo when page loads
+document.addEventListener("DOMContentLoaded", loadAdminLogo);
