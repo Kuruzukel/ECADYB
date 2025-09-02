@@ -12,8 +12,8 @@ function addPage(page, book) {
   // Add the page to the flipbook
   if (book.turn("addPage", element, page)) {
     // Add the initial HTML
-    // It will contain a loader indicator and a gradient
-    element.html('<div class="gradient"></div><div class="loader"></div>');
+    // Only show a loader indicator; gradient removed
+    element.html('<div class="loader"></div>');
 
     // Load the page
     loadPage(page, element);
