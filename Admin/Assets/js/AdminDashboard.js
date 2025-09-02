@@ -229,8 +229,9 @@ document.addEventListener('DOMContentLoaded', function() {
         confirmBtn.addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
-            // Use full URL to ensure proper redirection
-            window.location.href = window.location.origin + "/ECADYB/Admin/Components/AdminLogout.php";
+            // Use relative path to ensure it works in any environment
+            const logoutPath = '/ECADYB/Admin/Components/AdminLogout.php';
+            window.location.href = logoutPath;
         });
 
         // Close modal when clicking outside

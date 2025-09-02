@@ -29,10 +29,28 @@ if (ob_get_length()) {
     ob_clean();
 }
 
-// Redirect to login page with absolute URL
+// Determine base URL based on environment
+$isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || 
+           (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') ||
+           (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] === 'on');
+$protocol = $isHttps ? 'https://' : 'http://';
+$host = $_SERVER['HTTP_HOST'];
+
+// Get the base path from the current request
+$basePath = dirname(dirname(dirname($_SERVER['SCRIPT_NAME'])));
+
+// Construct the login URL - adjust the path as needed based on your directory structure
+$loginPath = '/Public/Components/Login.php';
+$loginUrl = $protocol . $host . $basePath . $loginPath;
+
+// Ensure URL is properly formatted
+$loginUrl = str_replace('//', '/', $loginUrl);
+$loginUrl = str_replace(':/', '://', $loginUrl);
+
+// Redirect to login page
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
-header("Location: /ECADYB/Public/Components/Login.php");
+header("Location: " . $loginUrl);
 exit();
 ?>
