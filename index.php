@@ -75,6 +75,7 @@ $routes = [
     '/LandingPage'        => BASE_PATH . '/LandingPage/LandingPage.html',
     '/Login'   => BASE_PATH . '/Public/Components/Login.php',
     '/Admin'   => BASE_PATH . '/Admin/Components/AdminDashboard.php',
+    '/Admin/Components/AdminLogout.php' => BASE_PATH . '/Admin/Components/AdminLogout.php',
     '/Student' => BASE_PATH . '/Student/Components/StudentDashboard.php',
     '/'  => BASE_PATH . '/Public/Components/Loader.html',
 ];
