@@ -17,15 +17,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 session_start();
 
 // Error handling function
-function respond($success, $message = '', $data = []) {
+function respond($success, $message = '', $data = [])
+{
     // Clear any output buffers
     while (ob_get_level()) {
         ob_end_clean();
     }
-    
+
     // Set JSON header
     header('Content-Type: application/json');
-    
+
     // Return JSON response
     echo json_encode(array_merge(['success' => $success, 'message' => $message], $data));
     exit;
@@ -124,7 +125,7 @@ try {
     $path = $safeFolder . '/' . $templateFolder . '/' . $filename;
 
     // ----------------------
-    // Upload to Bunny Storage
+    // Upload to Bunny Storage (Main file)
     // ----------------------
     $storageUrl   = "https://storage.bunnycdn.com/{$bunnyStorageZone}/" . str_replace(' ', '%20', $path);
     $fileContents = file_get_contents($fileTmp);
@@ -155,9 +156,38 @@ try {
     }
 
     // ----------------------
-    // Build public CDN URL
+    // Build public CDN URL (Main file)
     // ----------------------
     $publicUrl = rtrim($bunnyCdnHost, '/') . '/' . str_replace(' ', '%20', $path);
+
+    // ----------------------
+    // Upload duplicate Thumbnail file
+    // ----------------------
+    $thumbFilename = ($slot === 8)
+        ? sprintf('BackgroundPage-Thumb-%s.%s', $safeBase, $safeExt)
+        : sprintf('Slot-%d-Thumb-%s-%s.%s', $slot, $sideLabel, $safeBase, $safeExt);
+
+    $thumbPath = $safeFolder . '/' . $templateFolder . '/' . $thumbFilename;
+
+    $thumbStorageUrl = "https://storage.bunnycdn.com/{$bunnyStorageZone}/" . str_replace(' ', '%20', $thumbPath);
+
+    $ch = curl_init($thumbStorageUrl);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'AccessKey: ' . $bunnyAccessKey,
+        'Content-Type: application/octet-stream',
+    ]);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $fileContents);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $thumbResponse = curl_exec($ch);
+    $thumbHttpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    if ($thumbResponse === false || $thumbHttpCode < 200 || $thumbHttpCode >= 300) {
+        respond(false, 'Failed to upload thumbnail to Bunny Storage (HTTP ' . $thumbHttpCode . ')');
+    }
+
+    $thumbUrl = rtrim($bunnyCdnHost, '/') . '/' . str_replace(' ', '%20', $thumbPath);
 
     // ----------------------
     // Update MongoDB
@@ -175,10 +205,11 @@ try {
 
         $update = [
             '$set' => [
-                'template'    => $template,
-                'slot'        => $slot,
-                $side . '_url'=> $publicUrl,
-                'updated_at'  => new MongoDB\BSON\UTCDateTime()
+                'template'              => $template,
+                'slot'                  => $slot,
+                $side . '_url'          => $publicUrl,
+                $side . '_thumb_url'    => $thumbUrl,
+                'updated_at'            => new MongoDB\BSON\UTCDateTime()
             ]
         ];
 
@@ -187,21 +218,23 @@ try {
             $update,
             ['upsert' => true]
         );
-
     } catch (Exception $e) {
-        respond(false, 'Uploaded to CDN, but failed to update MongoDB: ' . $e->getMessage(), ['url' => $publicUrl]);
+        respond(false, 'Uploaded to CDN, but failed to update MongoDB: ' . $e->getMessage(), [
+            'url'       => $publicUrl,
+            'thumb_url' => $thumbUrl
+        ]);
     }
 
     // ----------------------
     // Success response
     // ----------------------
     respond(true, 'Cover updated successfully', [
-        'url'      => $publicUrl,
-        'slot'     => $slot,
-        'side'     => $side,
-        'template' => $template
+        'url'       => $publicUrl,
+        'thumb_url' => $thumbUrl,
+        'slot'      => $slot,
+        'side'      => $side,
+        'template'  => $template
     ]);
-
 } catch (Exception $e) {
     respond(false, 'Unexpected error: ' . $e->getMessage());
 }
