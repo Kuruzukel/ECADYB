@@ -17,15 +17,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 session_start();
 
 // Error handling function
-function respond($success, $message = '', $data = []) {
+function respond($success, $message = '', $data = [])
+{
     // Clear any output buffers
     while (ob_get_level()) {
         ob_end_clean();
     }
-    
+
     // Set JSON header
     header('Content-Type: application/json');
-    
+
     // Return JSON response
     echo json_encode(array_merge(['success' => $success, 'message' => $message], $data));
     exit;
@@ -38,10 +39,10 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 
 // Load dependencies
 require __DIR__ . '/../vendor/autoload.php';
+
 use MongoDB\Client;
 
 try {
-
     $template = isset($_GET['template']) ? (int)$_GET['template'] : 1;
 
     $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
@@ -59,15 +60,16 @@ try {
 
     foreach ($cursor as $doc) {
         $items[] = [
-            'template'   => (int)($doc['template'] ?? 1),
-            'slot'       => (int)($doc['slot'] ?? 0),
-            'front_url'  => isset($doc['front_url']) ? (string)$doc['front_url'] : '',
-            'back_url'   => isset($doc['back_url']) ? (string)$doc['back_url'] : '',
+            'template'          => (int)($doc['template'] ?? 1),
+            'slot'              => (int)($doc['slot'] ?? 0),
+            'front_url'         => isset($doc['front_url']) ? (string)$doc['front_url'] : '',
+            'back_url'          => isset($doc['back_url']) ? (string)$doc['back_url'] : '',
+            'front_thumb_url'   => isset($doc['front_thumb_url']) ? (string)$doc['front_thumb_url'] : '',
+            'back_thumb_url'    => isset($doc['back_thumb_url']) ? (string)$doc['back_thumb_url'] : ''
         ];
     }
 
     respond(true, 'Covers fetched successfully', ['items' => $items]);
-    
 } catch (Exception $e) {
     respond(false, 'Failed to fetch covers: ' . $e->getMessage());
 }
