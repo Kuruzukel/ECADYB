@@ -1,5 +1,12 @@
 <?php
 // Start session
+
+// ================================
+// Force larger upload limits (Railway fix)
+// ================================
+ini_set('upload_max_filesize', '20M');  // allow up to 20MB per file
+ini_set('post_max_size', '25M');        // allow total request up to 25MB
+ini_set('memory_limit', '256M');        // prevent memory errors
 session_start();
 
 require __DIR__ . '/vendor/autoload.php';
