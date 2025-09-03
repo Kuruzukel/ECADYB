@@ -13,9 +13,6 @@ RUN apt-get update && apt-get install -y \
 RUN pecl install mongodb \
     && docker-php-ext-enable mongodb
 
-
-
-
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
@@ -31,6 +28,9 @@ RUN composer install --optimize-autoloader --no-scripts --no-interaction --ignor
 # Copy the rest of the application
 COPY . .
 
+# Copy custom PHP config (upload limits, memory, etc.)
+COPY docker/php.ini /usr/local/etc/php/conf.d/custom.ini
+
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html
 
@@ -42,4 +42,4 @@ COPY docker/apache.conf /etc/apache2/sites-available/000-default.conf
 EXPOSE 80
 
 # Start Apache
-CMD ["apache2-foreground"] 
+CMD ["apache2-foreground"]

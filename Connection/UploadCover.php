@@ -1,9 +1,5 @@
 <?php
 // Ensure no output before headers
-
-ini_set('upload_max_filesize', '20M');
-ini_set('post_max_size', '25M');
-ini_set('memory_limit', '256M');
 ob_start();
 
 // Set proper headers for Railway
