@@ -17,15 +17,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 session_start();
 
 // Error handling function
-function respond($success, $message = '', $data = []) {
+function respond($success, $message = '', $data = [])
+{
     // Clear any output buffers
     while (ob_get_level()) {
         ob_end_clean();
     }
-    
+
     // Set JSON header
     header('Content-Type: application/json');
-    
+
     // Return JSON response
     echo json_encode(array_merge(['success' => $success, 'message' => $message], $data));
     exit;
@@ -51,7 +52,7 @@ try {
     $template = isset($_POST['template']) ? (int)$_POST['template'] : 1;
 
     if ($slot === null || ($side !== 'front' && $side !== 'back')) {
-        respond(false, 'Invalid parameters. Side must be "front" or "back".');
+        respond(false, 'Invalid parameters. Side must be \"front\" or \"back\".');
     }
 
     // 🔑 Load BunnyCDN credentials
@@ -73,46 +74,55 @@ try {
         respond(false, 'Cover not found');
     }
 
+    // Main image + thumbnail fields
     $urlField = $side . '_url';
-    $existingUrl = isset($doc[$urlField]) ? (string)$doc[$urlField] : '';
+    $thumbField = $side . '_thumb_url';
 
-    // 🗑️ Delete from Bunny Storage if exists
-    if ($existingUrl && $bunnyStorageZone && $bunnyAccessKey) {
-        // Extract relative path from CDN URL
-        $parsed = parse_url($existingUrl);
+    $existingUrl = isset($doc[$urlField]) ? (string)$doc[$urlField] : '';
+    $existingThumbUrl = isset($doc[$thumbField]) ? (string)$doc[$thumbField] : '';
+
+    // Function to delete from BunnyCDN
+    function deleteFromBunny($cdnUrl, $zone, $key)
+    {
+        if (!$cdnUrl || !$zone || !$key) return;
+        $parsed = parse_url($cdnUrl);
         if (!empty($parsed['path'])) {
-            // Ensure path starts without leading slash
             $relativePath = ltrim($parsed['path'], '/');
-            $storageUrl = 'https://storage.bunnycdn.com/' . $bunnyStorageZone . '/' . $relativePath;
+            $storageUrl = 'https://storage.bunnycdn.com/' . $zone . '/' . $relativePath;
 
             $ch = curl_init($storageUrl);
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
             curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                'AccessKey: ' . $bunnyAccessKey,
+                'AccessKey: ' . $key,
             ]);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_TIMEOUT, 30);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-            
+
             $response = curl_exec($ch);
             $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
 
-            // Don't fail if BunnyCDN deletion fails - just log it
             if ($httpCode !== 200 && $httpCode !== 404) {
-                error_log("Warning: Failed to delete cover from BunnyCDN. HTTP $httpCode");
+                error_log("Warning: Failed to delete $cdnUrl from BunnyCDN. HTTP $httpCode");
             }
         }
     }
 
+    // 🗑️ Delete both main and thumbnail images
+    deleteFromBunny($existingUrl, $bunnyStorageZone, $bunnyAccessKey);
+    deleteFromBunny($existingThumbUrl, $bunnyStorageZone, $bunnyAccessKey);
+
     // ❌ Remove from MongoDB
     $collection->updateOne(
         ['template' => $template, 'slot' => $slot],
-        ['$unset' => [$urlField => ""], '$set' => ['updated_at' => new MongoDB\BSON\UTCDateTime()]]
+        [
+            '$unset' => [$urlField => "", $thumbField => ""],
+            '$set'   => ['updated_at' => new MongoDB\BSON\UTCDateTime()]
+        ]
     );
 
     respond(true, 'Cover deleted successfully');
-    
 } catch (Exception $e) {
     respond(false, 'Failed to delete cover: ' . $e->getMessage());
 }
