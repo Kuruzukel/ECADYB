@@ -61,7 +61,6 @@
 .magazine-viewport .shadow {
   -webkit-transition: -webkit-box-shadow 0.5s;
   transition: box-shadow 0.5s;
-
   -webkit-box-shadow: 0 0 20px #ccc;
   box-shadow: 0 0 20px #ccc;
 }
