@@ -1,25 +1,37 @@
 <?php
+// Start session
 session_start();
 
 require __DIR__ . '/vendor/autoload.php';
 
 use MongoDB\Client;
 
+// ================================
+// MongoDB Connection
+// ================================
 $mongoPath = __DIR__ . '/Connection/MongoConnect.php';
 if (!file_exists($mongoPath)) {
     die("❌ MongoConnect.php not found at: $mongoPath");
 }
 require $mongoPath;
+
+// ================================
+// Path & Base URL
+// ================================
 define('BASE_PATH', __DIR__);
-define('BASE_URL', '/');
+define('BASE_URL', '/'); // Railway routes from root
 
 $error_message = '';
 
+// ================================
+// Handle Login (Admin & Student)
+// ================================
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['password'])) {
     $studentId = trim($_POST['studentId']);
     $password  = trim($_POST['password']);
 
     try {
+        // 🔑 Check admin login
         $admin = $adminCollection->findOne([
             'username' => $studentId,
             'password' => $password
@@ -33,8 +45,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
             exit;
         }
 
+        // 🔑 Check student login
         $foundStudent = false;
-
         foreach ($collections as $collectionName => $departmentName) {
             $collection = $departmentsDB->{$collectionName};
 
@@ -65,21 +77,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
     }
 }
 
+// ================================
+// Show error if login failed
+// ================================
 if (!empty($error_message)) {
     echo "<div style='color:red; font-weight:bold; margin:10px 0;'>$error_message</div>";
 }
 
+// ================================
+// Routing Logic
+// ================================
 $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
+// Pages mapping
 $routes = [
     '/LandingPage'        => BASE_PATH . '/LandingPage/LandingPage.html',
-    '/Login'   => BASE_PATH . '/Public/Components/Login.php',
-    '/Admin'   => BASE_PATH . '/Admin/Components/AdminDashboard.php',
+    '/Login'              => BASE_PATH . '/Public/Components/Login.php',
+    '/Admin'              => BASE_PATH . '/Admin/Components/AdminDashboard.php',
     '/Admin/Components/AdminLogout.php' => BASE_PATH . '/Admin/Components/AdminLogout.php',
-    '/Student' => BASE_PATH . '/Student/Components/StudentDashboard.php',
-    '/'  => BASE_PATH . '/Public/Components/Loader.html',
+    '/Student'            => BASE_PATH . '/Student/Components/StudentDashboard.php',
+    '/'                   => BASE_PATH . '/Public/Components/Loader.html',
 ];
 
+// Handle main routes
 if (array_key_exists($requestUri, $routes)) {
     $filePath = $routes[$requestUri];
     if (file_exists($filePath)) {
@@ -88,7 +108,7 @@ if (array_key_exists($requestUri, $routes)) {
         if ($ext === 'php') {
             include $filePath;
         } else {
-
+            // Serve HTML & adjust paths for Railway
             $htmlContent = file_get_contents($filePath);
             $htmlContent = str_replace(
                 [
@@ -106,7 +126,7 @@ if (array_key_exists($requestUri, $routes)) {
                 $htmlContent
             );
 
-
+            // Force login button to redirect to /Login
             $htmlContent = str_replace(
                 ['id="loginDropdownBtn"', 'id="mobileLoginDropdownBtn"'],
                 [
@@ -126,6 +146,9 @@ if (array_key_exists($requestUri, $routes)) {
     }
 }
 
+// ================================
+// Static File Serving (CSS, JS, Images)
+// ================================
 $staticPaths = [
     '/img/'                             => '/img/',
     '/LandingPage/LandingPageYB/pages/' => '/LandingPage/LandingPageYB/pages/',
@@ -147,7 +170,8 @@ foreach ($staticPaths as $uriPrefix => $folder) {
                 'webp' => 'image/webp',
                 'css'  => 'text/css',
                 'js'   => 'application/javascript',
-                'svg'  => 'image/svg+xml'
+                'svg'  => 'image/svg+xml',
+                'html' => 'text/html'
             ];
             header('Content-Type: ' . ($mimeTypes[$ext] ?? 'application/octet-stream'));
             readfile($filePath);
@@ -156,6 +180,9 @@ foreach ($staticPaths as $uriPrefix => $folder) {
     }
 }
 
+// ================================
+// 404 Fallback
+// ================================
 http_response_code(404);
 echo '<h1>ECADYB Application</h1>';
 echo '<p>Page not found.</p>';
