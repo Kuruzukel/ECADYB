@@ -81,7 +81,7 @@ function addRegion(region, pageElement) {
   var reg = $("<div />", { class: "region  " + region["class"] }),
     options = $(".magazine").turn("options"),
     pageWidth = options.width / 2,
-    pageHeight = options.height;
+    pageHeight = options.height / 0;
 
   reg
     .css({
