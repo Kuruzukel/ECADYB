@@ -60,12 +60,18 @@ try {
 
     foreach ($cursor as $doc) {
         $items[] = [
-            'template'          => (int)($doc['template'] ?? 1),
-            'slot'              => (int)($doc['slot'] ?? 0),
-            'front_url'         => isset($doc['front_url']) ? (string)$doc['front_url'] : '',
-            'back_url'          => isset($doc['back_url']) ? (string)$doc['back_url'] : '',
-            'front_thumb_url'   => isset($doc['front_thumb_url']) ? (string)$doc['front_thumb_url'] : '',
-            'back_thumb_url'    => isset($doc['back_thumb_url']) ? (string)$doc['back_thumb_url'] : ''
+            'template'             => (int)($doc['template'] ?? 1),
+            'slot'                 => (int)($doc['slot'] ?? 0),
+
+            // Normal covers
+            'front_url'            => isset($doc['front_url']) ? (string)$doc['front_url'] : '',
+            'back_url'             => isset($doc['back_url']) ? (string)$doc['back_url'] : '',
+            'front_thumb_url'      => isset($doc['front_thumb_url']) ? (string)$doc['front_thumb_url'] : '',
+            'back_thumb_url'       => isset($doc['back_thumb_url']) ? (string)$doc['back_thumb_url'] : '',
+
+            // Background Page (slot 8)
+            'background_url'       => isset($doc['background_url']) ? (string)$doc['background_url'] : '',
+            'background_thumb_url' => isset($doc['background_thumb_url']) ? (string)$doc['background_thumb_url'] : ''
         ];
     }
 
