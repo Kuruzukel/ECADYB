@@ -61,7 +61,28 @@ try {
     $db = $client->Departments;
     $collection = $db->YearbookCovers;
 
-    // Ensure BackgroundPage (slot 8) always exists
+    // ===============================
+    // Ensure slots 1–7 and 8 exist
+    // ===============================
+    for ($slot = 1; $slot <= 7; $slot++) {
+        $collection->updateOne(
+            ['template' => $template, 'slot' => $slot],
+            [
+                '$setOnInsert' => [
+                    'template'        => $template,
+                    'slot'            => $slot,
+                    'front_url'       => '',
+                    'back_url'        => '',
+                    'front_thumb_url' => '',
+                    'back_thumb_url'  => '',
+                    'created_at'      => new MongoDB\BSON\UTCDateTime()
+                ]
+            ],
+            ['upsert' => true]
+        );
+    }
+
+    // Ensure BackgroundPage (slot 8)
     $collection->updateOne(
         ['template' => $template, 'slot' => 8],
         [
@@ -76,25 +97,34 @@ try {
         ['upsert' => true]
     );
 
+    // ===============================
     // Fetch all covers for this template
+    // ===============================
     $cursor = $collection->find(['template' => $template]);
     $items = [];
 
     foreach ($cursor as $doc) {
-        $items[] = [
-            'template'             => (int)($doc['template'] ?? 1),
-            'slot'                 => (int)($doc['slot'] ?? 0),
+        $slot = (int)($doc['slot'] ?? 0);
 
-            // Normal covers
-            'front_url'            => isset($doc['front_url']) ? (string)$doc['front_url'] : '',
-            'back_url'             => isset($doc['back_url']) ? (string)$doc['back_url'] : '',
-            'front_thumb_url'      => isset($doc['front_thumb_url']) ? (string)$doc['front_thumb_url'] : '',
-            'back_thumb_url'       => isset($doc['back_thumb_url']) ? (string)$doc['back_thumb_url'] : '',
-
-            // Background Page (slot 8)
-            'background_url'       => isset($doc['background_url']) ? (string)$doc['background_url'] : '',
-            'background_thumb_url' => isset($doc['background_thumb_url']) ? (string)$doc['background_thumb_url'] : ''
-        ];
+        if ($slot >= 1 && $slot <= 7) {
+            // Normal slots
+            $items[] = [
+                'template'        => (int)($doc['template'] ?? 1),
+                'slot'            => $slot,
+                'front_url'       => isset($doc['front_url']) ? (string)$doc['front_url'] : '',
+                'back_url'        => isset($doc['back_url']) ? (string)$doc['back_url'] : '',
+                'front_thumb_url' => isset($doc['front_thumb_url']) ? (string)$doc['front_thumb_url'] : '',
+                'back_thumb_url'  => isset($doc['back_thumb_url']) ? (string)$doc['back_thumb_url'] : ''
+            ];
+        } elseif ($slot === 8) {
+            // Background page
+            $items[] = [
+                'template'             => (int)($doc['template'] ?? 1),
+                'slot'                 => 8,
+                'background_url'       => isset($doc['background_url']) ? (string)$doc['background_url'] : '',
+                'background_thumb_url' => isset($doc['background_thumb_url']) ? (string)$doc['background_thumb_url'] : ''
+            ];
+        }
     }
 
     respond(true, 'Covers fetched successfully', ['items' => $items]);

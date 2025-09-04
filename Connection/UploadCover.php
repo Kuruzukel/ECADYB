@@ -194,24 +194,19 @@ try {
         $db         = $client->Departments;
         $collection = $db->YearbookCovers;
 
-        // Build update fields
+        // Base update (always include background fields)
         $update = [
             '$set' => [
-                'template'   => $template,
-                'slot'       => $slot,
-                'updated_at' => new MongoDB\BSON\UTCDateTime(),
-
-                // Always set background fields
+                'template'             => $template,
+                'slot'                 => $slot,
+                'updated_at'           => new MongoDB\BSON\UTCDateTime(),
                 'background_url'       => $publicUrl,
                 'background_thumb_url' => $thumbUrl
             ]
         ];
 
-        // Slot-specific fields
-        if ($slot === 8) {
-            $update['$set']['background_url']       = $publicUrl;
-            $update['$set']['background_thumb_url'] = $thumbUrl;
-        } else {
+        // Slot-specific (front/back only for 1–7)
+        if ($slot !== 8) {
             $update['$set'][$side . '_url']       = $publicUrl;
             $update['$set'][$side . '_thumb_url'] = $thumbUrl;
         }
