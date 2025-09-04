@@ -194,31 +194,41 @@ try {
         $db         = $client->Departments;
         $collection = $db->YearbookCovers;
 
-        // Base update (always include background fields)
+        // ===============================
+        // Always update this slot
+        // ===============================
         $update = [
             '$set' => [
-                'template'             => $template,
-                'slot'                 => $slot,
-                'updated_at'           => new MongoDB\BSON\UTCDateTime(),
-                'background_url'       => $publicUrl,
-                'background_thumb_url' => $thumbUrl
+                'template'   => $template,
+                'slot'       => $slot,
+                'updated_at' => new MongoDB\BSON\UTCDateTime()
             ]
         ];
 
-        // Slot-specific (front/back only for 1–7)
-        if ($slot !== 8) {
+        // Slot 8 → background only
+        if ($slot === 8) {
+            $update['$set']['background_url']       = $publicUrl;
+            $update['$set']['background_thumb_url'] = $thumbUrl;
+        } else {
+            // Slot 1–7 → normal front/back fields
             $update['$set'][$side . '_url']       = $publicUrl;
             $update['$set'][$side . '_thumb_url'] = $thumbUrl;
+
+            // Fetch background from slot 8 and copy
+            $slot8 = $collection->findOne(['template' => $template, 'slot' => 8]);
+            if ($slot8 && isset($slot8['background_url'], $slot8['background_thumb_url'])) {
+                $update['$set']['background_url']       = $slot8['background_url'];
+                $update['$set']['background_thumb_url'] = $slot8['background_thumb_url'];
+            }
         }
 
-        // Update this slot
         $collection->updateOne(
             ['template' => $template, 'slot' => $slot],
             $update,
             ['upsert' => true]
         );
 
-        // Ensure BackgroundPage slot (slot 8) always exists
+        // Ensure slot 8 exists
         $collection->updateOne(
             ['template' => $template, 'slot' => 8],
             [
