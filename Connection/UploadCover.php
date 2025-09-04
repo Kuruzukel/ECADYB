@@ -3,7 +3,6 @@
 // Yearbook Cover Upload API
 // ===============================
 
-// Start output buffering (avoid header issues)
 ob_start();
 
 // -------------------------------
@@ -77,8 +76,8 @@ try {
     $side     = isset($_POST['side']) ? strtolower(trim($_POST['side'])) : '';
     $template = isset($_POST['template']) ? (int)$_POST['template'] : 1;
 
-    if ($slot === null || ($side !== 'front' && $side !== 'back')) {
-        respond(false, 'Invalid parameters: slot and side (front|back) are required.');
+    if ($slot === null || ($slot !== 8 && ($side !== 'front' && $side !== 'back'))) {
+        respond(false, 'Invalid parameters: slot and side (front|back) are required, unless slot=8 (BackgroundPage).');
     }
 
     if (!isset($_FILES['file']) || $_FILES['file']['error'] !== UPLOAD_ERR_OK) {
@@ -195,19 +194,47 @@ try {
         $db         = $client->Departments;
         $collection = $db->YearbookCovers;
 
+        // Build update fields
         $update = [
             '$set' => [
-                'template'           => $template,
-                'slot'               => $slot,
-                $side . '_url'       => $publicUrl,
-                $side . '_thumb_url' => $thumbUrl,
-                'updated_at'         => new MongoDB\BSON\UTCDateTime()
+                'template'   => $template,
+                'slot'       => $slot,
+                'updated_at' => new MongoDB\BSON\UTCDateTime(),
+
+                // Always set background fields
+                'background_url'       => $publicUrl,
+                'background_thumb_url' => $thumbUrl
             ]
         ];
 
+        // Slot-specific fields
+        if ($slot === 8) {
+            $update['$set']['background_url']       = $publicUrl;
+            $update['$set']['background_thumb_url'] = $thumbUrl;
+        } else {
+            $update['$set'][$side . '_url']       = $publicUrl;
+            $update['$set'][$side . '_thumb_url'] = $thumbUrl;
+        }
+
+        // Update this slot
         $collection->updateOne(
             ['template' => $template, 'slot' => $slot],
             $update,
+            ['upsert' => true]
+        );
+
+        // Ensure BackgroundPage slot (slot 8) always exists
+        $collection->updateOne(
+            ['template' => $template, 'slot' => 8],
+            [
+                '$setOnInsert' => [
+                    'template'             => $template,
+                    'slot'                 => 8,
+                    'background_url'       => '',
+                    'background_thumb_url' => '',
+                    'created_at'           => new MongoDB\BSON\UTCDateTime()
+                ]
+            ],
             ['upsert' => true]
         );
     } catch (Exception $e) {

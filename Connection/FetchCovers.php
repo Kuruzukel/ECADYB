@@ -1,14 +1,19 @@
 <?php
-// Ensure no output before headers
+// ===============================
+// Fetch Yearbook Covers API
+// ===============================
+
 ob_start();
 
-// Set proper headers for Railway
+// -------------------------------
+// Headers (for Railway / CORS)
+// -------------------------------
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
-// Handle preflight OPTIONS request
+// Preflight OPTIONS
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit();
@@ -16,28 +21,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 session_start();
 
-// Error handling function
+// -------------------------------
+// Helper: JSON Response
+// -------------------------------
 function respond($success, $message = '', $data = [])
 {
-    // Clear any output buffers
     while (ob_get_level()) {
         ob_end_clean();
     }
-
-    // Set JSON header
     header('Content-Type: application/json');
-
-    // Return JSON response
     echo json_encode(array_merge(['success' => $success, 'message' => $message], $data));
     exit;
 }
 
-// Check if it's a GET request
+// -------------------------------
+// Request validation
+// -------------------------------
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     respond(false, 'Invalid request method');
 }
 
+// -------------------------------
 // Load dependencies
+// -------------------------------
 require __DIR__ . '/../vendor/autoload.php';
 
 use MongoDB\Client;
@@ -55,6 +61,22 @@ try {
     $db = $client->Departments;
     $collection = $db->YearbookCovers;
 
+    // Ensure BackgroundPage (slot 8) always exists
+    $collection->updateOne(
+        ['template' => $template, 'slot' => 8],
+        [
+            '$setOnInsert' => [
+                'template'             => $template,
+                'slot'                 => 8,
+                'background_url'       => '',
+                'background_thumb_url' => '',
+                'created_at'           => new MongoDB\BSON\UTCDateTime()
+            ]
+        ],
+        ['upsert' => true]
+    );
+
+    // Fetch all covers for this template
     $cursor = $collection->find(['template' => $template]);
     $items = [];
 
