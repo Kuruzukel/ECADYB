@@ -97,9 +97,7 @@ try {
         ['upsert' => true]
     );
 
-    // ===============================
     // Fetch all covers for this template
-    // ===============================
     $cursor = $collection->find(['template' => $template]);
     $items = [];
 
@@ -107,7 +105,7 @@ try {
         $slot = (int)($doc['slot'] ?? 0);
 
         if ($slot >= 1 && $slot <= 7) {
-            
+
             $items[] = [
                 'template'        => (int)($doc['template'] ?? 1),
                 'slot'            => $slot,
