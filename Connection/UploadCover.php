@@ -1,9 +1,13 @@
 <?php
+// ===============================
 // Yearbook Cover Upload API
+// ===============================
 
 ob_start();
 
+// -------------------------------
 // Headers (for Railway / CORS)
+// -------------------------------
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
@@ -17,7 +21,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 session_start();
 
+// -------------------------------
 // Helper: JSON Response
+// -------------------------------
 function respond($success, $message = '', $data = [])
 {
     while (ob_get_level()) {
@@ -31,7 +37,9 @@ function respond($success, $message = '', $data = [])
     exit;
 }
 
+// -------------------------------
 // Request validation
+// -------------------------------
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     respond(false, 'Invalid request method. Use POST.');
 }
@@ -45,7 +53,9 @@ if (file_exists(__DIR__ . '/BunnyConfig.php')) {
 use MongoDB\Client;
 
 try {
+    // -------------------------------
     // BunnyCDN Configuration
+    // -------------------------------
     $bunnyStorageZone = getenv('BUNNY_STORAGE_ZONE')
         ?: (defined('BUNNY_STORAGE_ZONE') ? BUNNY_STORAGE_ZONE : ($GLOBALS['BUNNY_STORAGE_ZONE'] ?? 'ecadyb'));
     $bunnyAccessKey = getenv('BUNNY_ACCESS_KEY')
@@ -57,7 +67,9 @@ try {
         respond(false, 'Bunny configuration missing. Please check environment variables.');
     }
 
+    // -------------------------------
     // Validate input
+    // -------------------------------
     $slot     = isset($_POST['slot']) ? (int)$_POST['slot'] : null;
     $side     = isset($_POST['side']) ? strtolower(trim($_POST['side'])) : '';
     $template = isset($_POST['template']) ? (int)$_POST['template'] : 1;
@@ -80,7 +92,9 @@ try {
         respond(false, $errorMap[$code] ?? 'Upload failed.');
     }
 
+    // -------------------------------
     // File preparation
+    // -------------------------------
     $fileTmp      = $_FILES['file']['tmp_name'];
     $originalName = $_FILES['file']['name'];
     $ext          = pathinfo($originalName, PATHINFO_EXTENSION) ?: 'jpg';
@@ -104,7 +118,9 @@ try {
 
     $path = $safeFolder . '/' . $templateFolder . '/' . $filename;
 
+    // -------------------------------
     // Upload main file to Bunny
+    // -------------------------------
     $storageUrl   = "https://storage.bunnycdn.com/{$bunnyStorageZone}/" . str_replace(' ', '%20', $path);
     $fileContents = file_get_contents($fileTmp);
     if ($fileContents === false) {
@@ -132,7 +148,9 @@ try {
 
     $publicUrl = rtrim($bunnyCdnHost, '/') . '/' . str_replace(' ', '%20', $path);
 
+    // -------------------------------
     // Upload duplicate thumbnail
+    // -------------------------------
     $thumbFilename = ($slot === 8)
         ? sprintf('BackgroundPage-Thumb-%s.%s', $safeBase, $safeExt)
         : sprintf('Slot-%d-Thumb-%s-%s.%s', $slot, $sideLabel, $safeBase, $safeExt);
@@ -157,7 +175,9 @@ try {
 
     $thumbUrl = rtrim($bunnyCdnHost, '/') . '/' . str_replace(' ', '%20', $thumbPath);
 
+    // -------------------------------
     // Update MongoDB
+    // -------------------------------
     $mongoUrl = getenv('MONGO_URL')
         ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 
@@ -184,16 +204,9 @@ try {
             $update['$set']['background_url']       = $publicUrl;
             $update['$set']['background_thumb_url'] = $thumbUrl;
         } else {
-            // Slot 1–7 → normal front/back fields
+            // Slot 1–7 → front/back only
             $update['$set'][$side . '_url']       = $publicUrl;
             $update['$set'][$side . '_thumb_url'] = $thumbUrl;
-
-            // Fetch background from slot 8 and copy
-            $slot8 = $collection->findOne(['template' => $template, 'slot' => 8]);
-            if ($slot8 && isset($slot8['background_url'], $slot8['background_thumb_url'])) {
-                $update['$set']['background_url']       = $slot8['background_url'];
-                $update['$set']['background_thumb_url'] = $slot8['background_thumb_url'];
-            }
         }
 
         $collection->updateOne(
@@ -223,7 +236,9 @@ try {
         ]);
     }
 
+    // -------------------------------
     // Success response
+    // -------------------------------
     respond(true, 'Cover updated successfully', [
         'url'       => $publicUrl,
         'thumb_url' => $thumbUrl,
