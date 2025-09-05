@@ -61,9 +61,7 @@ try {
     $db = $client->Departments;
     $collection = $db->YearbookCovers;
 
-    // ===============================
     // Ensure slots 1–7 and 8 exist
-    // ===============================
     for ($slot = 1; $slot <= 7; $slot++) {
         $collection->updateOne(
             ['template' => $template, 'slot' => $slot],
