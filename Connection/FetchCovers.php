@@ -21,9 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 session_start();
 
-// -------------------------------
 // Helper: JSON Response
-// -------------------------------
 function respond($success, $message = '', $data = [])
 {
     while (ob_get_level()) {
