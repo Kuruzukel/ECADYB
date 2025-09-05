@@ -170,9 +170,7 @@ try {
         $db         = $client->Departments;
         $collection = $db->YearbookCovers;
 
-        // ===============================
         // Always update this slot
-        // ===============================
         $update = [
             '$set' => [
                 'template'   => $template,
