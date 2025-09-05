@@ -89,9 +89,7 @@ try {
     $safeBase     = preg_replace('/[^A-Za-z0-9 _.-]/', '', $baseOriginal) ?: ('image_' . time());
     $safeExt      = preg_replace('/[^A-Za-z0-9]/', '', $ext) ?: 'jpg';
 
-    // ===============================
     // Build storage paths
-    // ===============================
     $safeFolder     = 'Yearbook Covers';
     $templateFolder = sprintf('Batch Template %d', $template);
 
