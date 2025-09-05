@@ -107,7 +107,7 @@ try {
         $slot = (int)($doc['slot'] ?? 0);
 
         if ($slot >= 1 && $slot <= 7) {
-            // Normal slots
+            
             $items[] = [
                 'template'        => (int)($doc['template'] ?? 1),
                 'slot'            => $slot,
