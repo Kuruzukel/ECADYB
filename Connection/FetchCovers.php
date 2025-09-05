@@ -51,7 +51,7 @@ try {
     $db = $client->Departments;
     $collection = $db->YearbookCovers;
 
-    // Ensure slots 1–7 and 8 exist
+    // Ensure slots 1–7 exist
     for ($slot = 1; $slot <= 7; $slot++) {
         $collection->updateOne(
             ['template' => $template, 'slot' => $slot],
@@ -93,7 +93,6 @@ try {
         $slot = (int)($doc['slot'] ?? 0);
 
         if ($slot >= 1 && $slot <= 7) {
-
             $items[] = [
                 'template'        => (int)($doc['template'] ?? 1),
                 'slot'            => $slot,
@@ -103,12 +102,19 @@ try {
                 'back_thumb_url'  => isset($doc['back_thumb_url']) ? (string)$doc['back_thumb_url'] : ''
             ];
         } elseif ($slot === 8) {
-            // Background page
+            // Background page mapped as front so frontend shows it
+            $backgroundUrl = isset($doc['background_url']) ? (string)$doc['background_url'] : '';
+            $backgroundThumb = isset($doc['background_thumb_url']) ? (string)$doc['background_thumb_url'] : '';
+
             $items[] = [
                 'template'             => (int)($doc['template'] ?? 1),
                 'slot'                 => 8,
-                'background_url'       => isset($doc['background_url']) ? (string)$doc['background_url'] : '',
-                'background_thumb_url' => isset($doc['background_thumb_url']) ? (string)$doc['background_thumb_url'] : ''
+                // Mapped for frontend compatibility
+                'front_url'            => $backgroundUrl,
+                'front_thumb_url'      => $backgroundThumb,
+                // Keep originals too
+                'background_url'       => $backgroundUrl,
+                'background_thumb_url' => $backgroundThumb
             ];
         }
     }
