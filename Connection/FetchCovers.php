@@ -34,9 +34,7 @@ function respond($success, $message = '', $data = [])
     exit;
 }
 
-// -------------------------------
 // Request validation
-// -------------------------------
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     respond(false, 'Invalid request method');
 }
