@@ -132,9 +132,7 @@ try {
 
     $publicUrl = rtrim($bunnyCdnHost, '/') . '/' . str_replace(' ', '%20', $path);
 
-    // ===============================
     // Upload duplicate thumbnail
-    // ===============================
     $thumbFilename = ($slot === 8)
         ? sprintf('BackgroundPage-Thumb-%s.%s', $safeBase, $safeExt)
         : sprintf('Slot-%d-Thumb-%s-%s.%s', $slot, $sideLabel, $safeBase, $safeExt);
