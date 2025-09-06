@@ -175,7 +175,6 @@ try {
 
     $thumbUrl = rtrim($bunnyCdnHost, '/') . '/' . str_replace(' ', '%20', $thumbPath);
 
-    // -------------------------------
     // Update MongoDB
     $mongoUrl = getenv('MONGO_URL')
         ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
