@@ -236,7 +236,6 @@ try {
         ]);
     }
 
-    // -------------------------------
     // Success response
     // -------------------------------
     respond(true, 'Cover updated successfully', [
