@@ -19,7 +19,6 @@ define('BASE_URL', '/'); // Railway routes from root
 
 $error_message = '';
 
-// ================================
 // Handle Login (Admin & Student)
 // ================================
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['password'])) {
