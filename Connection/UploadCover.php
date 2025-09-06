@@ -1,7 +1,5 @@
 <?php
-// ===============================
 // Yearbook Cover Upload API
-
 ob_start();
 
 // Headers (for Railway / CORS)
