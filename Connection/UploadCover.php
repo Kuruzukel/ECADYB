@@ -120,7 +120,6 @@ try {
 
     // -------------------------------
     // Upload main file to Bunny
-    // -------------------------------
     $storageUrl   = "https://storage.bunnycdn.com/{$bunnyStorageZone}/" . str_replace(' ', '%20', $path);
     $fileContents = file_get_contents($fileTmp);
     if ($fileContents === false) {
