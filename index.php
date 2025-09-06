@@ -71,7 +71,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
     }
 }
 
-// ================================
 // Show error if login failed
 // ================================
 if (!empty($error_message)) {
