@@ -53,7 +53,6 @@ if (file_exists(__DIR__ . '/BunnyConfig.php')) {
 use MongoDB\Client;
 
 try {
-    // -------------------------------
     // BunnyCDN Configuration
     $bunnyStorageZone = getenv('BUNNY_STORAGE_ZONE')
         ?: (defined('BUNNY_STORAGE_ZONE') ? BUNNY_STORAGE_ZONE : ($GLOBALS['BUNNY_STORAGE_ZONE'] ?? 'ecadyb'));
