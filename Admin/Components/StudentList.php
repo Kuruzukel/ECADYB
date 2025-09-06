@@ -24,35 +24,34 @@ $collections = [
 
 $allStudents = [];
 
+// ✅ Detect selected filter from request
 $selectedDepartment = $_GET['department'] ?? "bsme"; // default: BSME
 
+// ✅ If invalid, reset to default
 if (!array_key_exists($selectedDepartment, $collections)) {
     $selectedDepartment = "bsme";
 }
 
+// 🔐 Password generator function
 function generatePassword($length = 8)
 {
     $upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $lower = 'abcdefghijklmnopqrstuvwxyz';
     $digits = '123456789';
-    $special = '!@#$%&*?';
+    $special = '!@#_';
 
     $password = '';
     $password .= $upper[random_int(0, strlen($upper) - 1)];
-    $password .= $lower[random_int(0, strlen($lower) - 1)];
-    $password .= $digits[random_int(0, strlen($digits) - 1)];
     $password .= $special[random_int(0, strlen($special) - 1)];
 
     $all = $upper . $lower . $digits . $special;
-
-    for ($i = 4; $i < $length; $i++) {
+    for ($i = 2; $i < $length; $i++) {
         $password .= $all[random_int(0, strlen($all) - 1)];
     }
-
     return str_shuffle($password);
 }
 
-//  Fetch students only from the selected department
+// ✅ Fetch students only from the selected department
 try {
     $collection = $db->$selectedDepartment;
     $cursor = $collection->find();
@@ -113,16 +112,7 @@ $totalPages = ceil($totalStudents / $perPage);
 // Slice array for current page
 $allStudents = array_slice($allStudents, $offset, $perPage);
 
-// Optional: return JSON for frontend
-header('Content-Type: application/json');
-echo json_encode([
-    'students' => $allStudents,
-    'totalStudents' => $totalStudents,
-    'totalPages' => $totalPages,
-    'currentPage' => $page
-]);
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
