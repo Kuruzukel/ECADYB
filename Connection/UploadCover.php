@@ -94,7 +94,6 @@ try {
 
     // -------------------------------
     // File preparation
-    // -------------------------------
     $fileTmp      = $_FILES['file']['tmp_name'];
     $originalName = $_FILES['file']['name'];
     $ext          = pathinfo($originalName, PATHINFO_EXTENSION) ?: 'jpg';
