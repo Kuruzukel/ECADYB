@@ -24,23 +24,19 @@ $collections = [
 
 $allStudents = [];
 
-//  Detect selected filter from request
 $selectedDepartment = $_GET['department'] ?? "bsme"; // default: BSME
 
-//  If invalid, reset to default
 if (!array_key_exists($selectedDepartment, $collections)) {
     $selectedDepartment = "bsme";
 }
 
-// 🔐 Improved Password Generator Function
 function generatePassword($length = 8)
 {
     $upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $lower = 'abcdefghijklmnopqrstuvwxyz';
-    $digits = '123456789'; // removed 0
-    $special = '!@#$%&*?'; // simplified special characters
+    $digits = '123456789';
+    $special = '!@#$%&*?';
 
-    // Ensure at least one of each type
     $password = '';
     $password .= $upper[random_int(0, strlen($upper) - 1)];
     $password .= $lower[random_int(0, strlen($lower) - 1)];
