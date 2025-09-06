@@ -77,7 +77,6 @@ if (!empty($error_message)) {
 }
 
 // Routing Logic
-// ================================
 $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 // Pages mapping
