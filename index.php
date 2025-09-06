@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
             exit;
         }
 
-        // 🔑 Check student login
+        //  Check student login
         $foundStudent = false;
         foreach ($collections as $collectionName => $departmentName) {
             $collection = $departmentsDB->{$collectionName};
