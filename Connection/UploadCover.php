@@ -92,7 +92,6 @@ try {
         respond(false, $errorMap[$code] ?? 'Upload failed.');
     }
 
-    // -------------------------------
     // File preparation
     $fileTmp      = $_FILES['file']['tmp_name'];
     $originalName = $_FILES['file']['name'];
