@@ -39,7 +39,6 @@ function respond($success, $message = '', $data = [])
 
 // -------------------------------
 // Request validation
-// -------------------------------
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     respond(false, 'Invalid request method. Use POST.');
 }
