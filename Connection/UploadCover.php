@@ -69,7 +69,6 @@ try {
 
     // -------------------------------
     // Validate input
-    // -------------------------------
     $slot     = isset($_POST['slot']) ? (int)$_POST['slot'] : null;
     $side     = isset($_POST['side']) ? strtolower(trim($_POST['side'])) : '';
     $template = isset($_POST['template']) ? (int)$_POST['template'] : 1;
