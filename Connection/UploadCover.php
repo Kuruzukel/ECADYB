@@ -55,7 +55,6 @@ use MongoDB\Client;
 try {
     // -------------------------------
     // BunnyCDN Configuration
-    // -------------------------------
     $bunnyStorageZone = getenv('BUNNY_STORAGE_ZONE')
         ?: (defined('BUNNY_STORAGE_ZONE') ? BUNNY_STORAGE_ZONE : ($GLOBALS['BUNNY_STORAGE_ZONE'] ?? 'ecadyb'));
     $bunnyAccessKey = getenv('BUNNY_ACCESS_KEY')
