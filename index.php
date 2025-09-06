@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
     $password  = trim($_POST['password']);
 
     try {
-        // 🔑 Check admin login
+        //  Check admin login
         $admin = $adminCollection->findOne([
             'username' => $studentId,
             'password' => $password
