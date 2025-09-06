@@ -13,7 +13,6 @@ if (!file_exists($mongoPath)) {
 }
 require $mongoPath;
 
-// ================================
 // Path & Base URL
 // ================================
 define('BASE_PATH', __DIR__);
