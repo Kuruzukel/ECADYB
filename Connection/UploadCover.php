@@ -23,7 +23,6 @@ session_start();
 
 // -------------------------------
 // Helper: JSON Response
-// -------------------------------
 function respond($success, $message = '', $data = [])
 {
     while (ob_get_level()) {
