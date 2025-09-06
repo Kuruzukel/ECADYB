@@ -237,7 +237,6 @@ try {
     }
 
     // Success response
-    // -------------------------------
     respond(true, 'Cover updated successfully', [
         'url'       => $publicUrl,
         'thumb_url' => $thumbUrl,
