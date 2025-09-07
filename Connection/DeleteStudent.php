@@ -21,7 +21,6 @@ try {
 }
 
 // Read JSON POST data
-// ----------------------
 $data = json_decode(file_get_contents('php://input'), true);
 
 $studentId = isset($data['student_id']) ? trim($data['student_id']) : null;
