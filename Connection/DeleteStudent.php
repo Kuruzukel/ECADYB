@@ -26,7 +26,6 @@ $data = json_decode(file_get_contents('php://input'), true);
 $studentId = isset($data['student_id']) ? trim($data['student_id']) : null;
 $collectionName = isset($data['collection']) ? trim($data['collection']) : null;
 
-// ----------------------
 // Validate parameters
 // ----------------------
 if (!$studentId || !$collectionName) {
