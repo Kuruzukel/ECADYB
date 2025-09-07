@@ -22,7 +22,6 @@ try {
     exit;
 }
 
-// ----------------------
 // Handle POST request
 // ----------------------
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
