@@ -6,9 +6,7 @@ use MongoDB\Client;
 
 header('Content-Type: application/json');
 
-// ----------------------
 // MongoDB connection
-// ----------------------
 $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 
 try {
@@ -98,7 +96,6 @@ try {
             'message' => 'Student could not be deleted.'
         ]);
     }
-
 } catch (Exception $e) {
     echo json_encode([
         'success' => false,
