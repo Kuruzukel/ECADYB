@@ -71,7 +71,7 @@ try {
     $db         = $client->Departments;
     $collection = $db->YearbookCovers;
 
-    // 🔎 Find document
+    //  Find document
     $doc = $collection->findOne(['template' => $template, 'slot' => $slot]);
     if (!$doc) {
         respond(false, 'Cover not found');
