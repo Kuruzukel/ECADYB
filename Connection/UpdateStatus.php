@@ -1,8 +1,8 @@
 <?php
 require __DIR__ . '/../vendor/autoload.php';
+
 use MongoDB\Client;
 
-// ----------------------
 // Headers
 // ----------------------
 header('Content-Type: application/json');
@@ -81,7 +81,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             "matched"    => $result->getMatchedCount(),
             "modified"   => $result->getModifiedCount()
         ]);
-
     } catch (Exception $e) {
         echo json_encode([
             "success" => false,
