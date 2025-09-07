@@ -45,7 +45,6 @@ $collectionName = $data['collection'] ?? 'students';
 unset($data['collection']);
 
 // Update MongoDB document
-// ----------------------
 try {
     $collection = $db->{$collectionName};
 
