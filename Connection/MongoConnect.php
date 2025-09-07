@@ -8,7 +8,6 @@ $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDds
 $client   = new Client($mongoUrl);
 
 // Departments Database
-// ----------------------
 $departmentsDB     = $client->Departments;
 $adminCollection   = $departmentsDB->Admin;
 
