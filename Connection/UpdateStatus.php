@@ -9,7 +9,6 @@ header('Access-Control-Allow-Origin: *'); // optional for fetch
 header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Content-Type');
 
-// ----------------------
 // MongoDB connection
 // ----------------------
 $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
