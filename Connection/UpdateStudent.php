@@ -13,7 +13,6 @@ function respond($success, $message = '', $data = [])
 }
 
 // MongoDB connection
-// ----------------------
 $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 try {
     $client = new Client($mongoUrl);
