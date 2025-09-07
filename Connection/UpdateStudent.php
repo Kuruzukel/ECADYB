@@ -5,7 +5,6 @@ require __DIR__ . '/../vendor/autoload.php';
 use MongoDB\Client;
 
 // Helper: JSON Response
-// ----------------------
 function respond($success, $message = '', $data = [])
 {
     header('Content-Type: application/json');
