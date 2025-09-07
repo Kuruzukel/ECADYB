@@ -7,7 +7,6 @@ use MongoDB\Client;
 $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 $client   = new Client($mongoUrl);
 
-// ----------------------
 // Departments Database
 // ----------------------
 $departmentsDB     = $client->Departments;
