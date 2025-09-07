@@ -38,6 +38,4 @@ $adminDB              = $client->admin;
 // Example collection (replace/remove as needed)
 $adminSampleCollection = $adminDB->AdminSample;
 
-// ----------------------
 // Debug/Test (optional)
-// ----------------------
