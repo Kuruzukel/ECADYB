@@ -28,7 +28,6 @@ if (!$data) {
 }
 
 // IDs: original for lookup, optional new for update
-// ----------------------
 $originalId = $data['original_student_id'] ?? null;
 if (!$originalId || trim($originalId) === '') {
     respond(false, 'Missing original student id.');
