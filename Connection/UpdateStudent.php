@@ -22,7 +22,6 @@ try {
 }
 
 // Get JSON POST data
-// ----------------------
 $data = json_decode(file_get_contents('php://input'), true);
 if (!$data) {
     respond(false, 'No data received.');
