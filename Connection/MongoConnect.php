@@ -25,7 +25,6 @@ $collections = [
     "bse"    => "BS Entrepreneurship"
 ];
 
-// ----------------------
 // Announcement Database
 // ----------------------
 $announcementDB       = $client->Announcement;
