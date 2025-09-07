@@ -27,7 +27,6 @@ if (!$data) {
     respond(false, 'No data received.');
 }
 
-// ----------------------
 // IDs: original for lookup, optional new for update
 // ----------------------
 $originalId = $data['original_student_id'] ?? null;
