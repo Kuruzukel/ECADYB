@@ -1,12 +1,13 @@
 <?php
 session_start();
 require __DIR__ . '/../vendor/autoload.php';
+
 use MongoDB\Client;
 
-// ----------------------
 // Helper: JSON Response
 // ----------------------
-function respond($success, $message = '', $data = []) {
+function respond($success, $message = '', $data = [])
+{
     header('Content-Type: application/json');
     echo json_encode(array_merge(['success' => $success, 'message' => $message], $data));
     exit;
@@ -57,7 +58,7 @@ try {
     $collection = $db->{$collectionName};
 
     // Clean update fields (remove nulls & empties if needed)
-    $updateFields = array_filter($data, function($val) {
+    $updateFields = array_filter($data, function ($val) {
         return $val !== null; // keep empty string if you want to clear values
     });
 
@@ -94,7 +95,6 @@ try {
     } else {
         respond(false, 'Update failed - no documents matched or modified.');
     }
-
 } catch (Exception $e) {
     error_log("[UpdateStudent.php] " . $e->getMessage());
     respond(false, 'Failed to update student. Check server logs.');
