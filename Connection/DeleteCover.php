@@ -77,7 +77,6 @@ try {
         respond(false, 'Cover not found');
     }
 
-    // ===============================
     // Delete from BunnyCDN
     function deleteFromBunny($cdnUrl, $zone, $key)
     {
