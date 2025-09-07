@@ -169,7 +169,6 @@ foreach ($staticPaths as $uriPrefix => $folder) {
 }
 
 // 404 Fallback
-// ================================
 http_response_code(404);
 echo '<h1>ECADYB Application</h1>';
 echo '<p>Page not found.</p>';
