@@ -44,7 +44,6 @@ if (isset($data['student id'])) {
 $collectionName = $data['collection'] ?? 'students';
 unset($data['collection']);
 
-// ----------------------
 // Update MongoDB document
 // ----------------------
 try {
