@@ -48,7 +48,6 @@ if (!in_array($collectionName, $collections)) {
 $collection = $departmentsDB->$collectionName;
 
 // Attempt deletion
-// ----------------------
 try {
     // Use regex array for exact match ignoring case
     $studentIdRegex = [
