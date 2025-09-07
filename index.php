@@ -168,7 +168,6 @@ foreach ($staticPaths as $uriPrefix => $folder) {
     }
 }
 
-// ================================
 // 404 Fallback
 // ================================
 http_response_code(404);
