@@ -30,7 +30,6 @@ $announcementDB       = $client->Announcement;
 $calendarCollection   = $announcementDB->Calendar;
 
 // Top Management Database
-// ----------------------
 $topManagementDB    = $client->Top_Management;
 $messageCollection  = $topManagementDB->message;
 
