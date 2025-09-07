@@ -4,7 +4,6 @@ require __DIR__ . '/../vendor/autoload.php';
 use MongoDB\Client;
 
 // Headers
-// ----------------------
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *'); // optional for fetch
 header('Access-Control-Allow-Methods: POST');
