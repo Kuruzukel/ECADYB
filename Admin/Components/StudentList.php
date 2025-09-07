@@ -24,21 +24,21 @@ $collections = [
 
 $allStudents = [];
 
-// ✅ Detect selected filter from request
+//  Detect selected filter from request
 $selectedDepartment = $_GET['department'] ?? "bsme"; // default: BSME
 
-// ✅ If invalid, reset to default
+//  If invalid, reset to default
 if (!array_key_exists($selectedDepartment, $collections)) {
     $selectedDepartment = "bsme";
 }
 
-// 🔐 Password generator function
+//  Password generator function
 function generatePassword($length = 8)
 {
-    $upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $lower = 'abcdefghijklmnopqrstuvwxyz';
+    $upper = 'ABCDEFGHIJKLMNPQRSTUVWXYZ';
+    $lower = 'abcdefghijkmnopqrstuvwxyz';
     $digits = '123456789';
-    $special = '!@#_';
+    $special = '!@#_$';
 
     $password = '';
     $password .= $upper[random_int(0, strlen($upper) - 1)];
@@ -51,7 +51,7 @@ function generatePassword($length = 8)
     return str_shuffle($password);
 }
 
-// ✅ Fetch students only from the selected department
+//  Fetch students only from the selected department
 try {
     $collection = $db->$selectedDepartment;
     $cursor = $collection->find();
