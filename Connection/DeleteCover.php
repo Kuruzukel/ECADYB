@@ -136,7 +136,6 @@ try {
         ];
     }
 
-    // ===============================
     // Update MongoDB (unset fields but keep slot record)
     $collection->updateOne(
         ['template' => $template, 'slot' => $slot],
