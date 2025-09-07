@@ -12,7 +12,6 @@ function respond($success, $message = '', $data = [])
     exit;
 }
 
-// ----------------------
 // MongoDB connection
 // ----------------------
 $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
