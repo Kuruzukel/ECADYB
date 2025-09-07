@@ -86,7 +86,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-// ----------------------
 // Fallback for non-POST
 // ----------------------
 echo json_encode([
