@@ -26,7 +26,6 @@ $collections = [
 ];
 
 // Announcement Database
-// ----------------------
 $announcementDB       = $client->Announcement;
 $calendarCollection   = $announcementDB->Calendar;
 
