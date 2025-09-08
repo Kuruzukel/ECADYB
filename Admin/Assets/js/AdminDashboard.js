@@ -155,7 +155,6 @@ document.querySelectorAll(".sub-tab").forEach((tab) => {
 const urlParams = new URLSearchParams(window.location.search);
 const page = urlParams.get("page") || "dashboard";
 
-// ==========================
 // Manual activation helper
 // ==========================
 function setTabActive(tabId) {
