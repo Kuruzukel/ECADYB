@@ -129,7 +129,6 @@ function expandParentMenuIfActive() {
 }
 
 // Handle main tab clicks that have no href (toggle active)
-// ==========================
 document.querySelectorAll(".tab[onclick]").forEach((tab) => {
   tab.addEventListener("click", function (e) {
     if (this.getAttribute("href")) return; // If href exists, let link work
