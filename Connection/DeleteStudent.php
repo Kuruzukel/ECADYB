@@ -56,7 +56,13 @@ try {
     ];
 
     // Find student by "student id" (space included)
-    $student = $collection->findOne(['student id' => $studentIdRegex]);
+    $student = $collection->findOne([
+        '$or' => [
+            ['student id' => $studentIdRegex],  // space version
+            ['student_id' => $studentIdRegex],  // underscore version
+        ]
+    ]);
+
 
     if (!$student) {
         // Debug: list all student IDs in collection (optional)
@@ -75,7 +81,13 @@ try {
     }
 
     // Delete the student
-    $deleteResult = $collection->deleteOne(['student id' => $studentIdRegex]);
+    $deleteResult = $collection->deleteOne([
+        '$or' => [
+            ['student id' => $studentIdRegex],
+            ['student_id' => $studentIdRegex],
+        ]
+    ]);
+
 
     if ($deleteResult->getDeletedCount() > 0) {
         echo json_encode([
