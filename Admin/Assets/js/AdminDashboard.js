@@ -152,7 +152,6 @@ document.querySelectorAll(".sub-tab").forEach((tab) => {
 });
 
 // Get current page from URL params
-// ==========================
 const urlParams = new URLSearchParams(window.location.search);
 const page = urlParams.get("page") || "dashboard";
 
