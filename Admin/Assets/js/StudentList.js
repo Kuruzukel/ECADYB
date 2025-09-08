@@ -1,5 +1,4 @@
 // StudentList.js (Railway-ready)
-// ================================
 
 // ----------------------
 // Tab State Management
