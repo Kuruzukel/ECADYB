@@ -283,7 +283,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const template = 1;
     const isBackgroundSlot = slot === 8;
 
-    // ✅ Fixed path handling
+    //  Fixed path handling
     const BASE_PATH = getBasePath();
     const CONNECTION_PATH = `${BASE_PATH}/Connection`;
 
