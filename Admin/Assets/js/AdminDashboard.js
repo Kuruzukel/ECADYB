@@ -172,7 +172,6 @@ function scrollToBottom() {
   }
 }
 
-// ==========================
 // Logout Modal Functionality
 // ==========================
 /*document.addEventListener("DOMContentLoaded", function () {
