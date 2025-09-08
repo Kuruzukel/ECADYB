@@ -37,7 +37,6 @@ if (searchIcon && searchCloseIcon && searchContainer) {
 }
 
 // Toggle submenu and chevron rotation
-// ==========================
 function toggleSubmenu(menuId) {
   const currentMenu = document.getElementById(menuId);
   if (!currentMenu) return;
