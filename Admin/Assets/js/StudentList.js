@@ -1,6 +1,5 @@
 // StudentList.js (Railway-ready)
 
-// ----------------------
 // Tab State Management
 // ----------------------
 function updateUrlWithTab(tabName) {
