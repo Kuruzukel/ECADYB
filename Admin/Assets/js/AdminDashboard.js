@@ -92,7 +92,6 @@ function setActiveTab(currentPage) {
   });
 }
 
-// ==========================
 // Expand parent menu if a sub-tab is active
 // ==========================
 function expandParentMenuIfActive() {
