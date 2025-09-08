@@ -3,7 +3,6 @@ const hamburgerIcon = document.querySelector(".hamburger-menu-ico");
 const closeIcon = document.querySelector(".close-ico");
 const sidebar = document.querySelector(".sidebar");
 
-// ==========================
 // Search container toggle buttons
 // ==========================
 const searchIcon = document.querySelector(".search-icon");
