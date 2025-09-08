@@ -36,7 +36,6 @@ if (searchIcon && searchCloseIcon && searchContainer) {
   });
 }
 
-// ==========================
 // Toggle submenu and chevron rotation
 // ==========================
 function toggleSubmenu(menuId) {
