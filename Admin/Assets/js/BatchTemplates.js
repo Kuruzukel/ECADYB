@@ -138,7 +138,7 @@ async function confirmDeleteStudent() {
   if (confirmDeleteBtn) confirmDeleteBtn.disabled = true;
 
   try {
-    // ✅ Fixed path handling
+    //  Fixed path handling
     const BASE_PATH = getBasePath();
     const CONNECTION_PATH = `${BASE_PATH}/Connection`;
 
