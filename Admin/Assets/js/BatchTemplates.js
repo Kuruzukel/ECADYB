@@ -74,7 +74,6 @@ function applyTheme(themeName) {
   }
 }
 
-// ----------------------
 // Notifications
 // ----------------------
 function showNotification(message, type = "success") {
