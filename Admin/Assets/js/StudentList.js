@@ -1,25 +1,24 @@
 // StudentList.js (Railway-ready)
 
+// ----------------------
 // Tab State Management
+// ----------------------
 function updateUrlWithTab(tabName) {
   const url = new URL(window.location.href);
   url.searchParams.set("tab", tabName);
-  // Reset to first page when changing tabs
-  url.searchParams.set("page", "1");
+  url.searchParams.set("page", "1"); // Reset to first page when changing tabs
   window.history.pushState({}, "", url);
   window.location.href = url.toString();
 }
 
 function setActiveTab(tabName) {
-  // Remove active class from all tabs and tab contents
-  document.querySelectorAll(".tab-button").forEach((btn) => {
-    btn.classList.remove("active");
-  });
-  document.querySelectorAll(".tab-content").forEach((content) => {
-    content.classList.remove("active");
-  });
+  document
+    .querySelectorAll(".tab-button")
+    .forEach((btn) => btn.classList.remove("active"));
+  document
+    .querySelectorAll(".tab-content")
+    .forEach((content) => content.classList.remove("active"));
 
-  // Add active class to selected tab and its content
   const activeTab = document.querySelector(`[data-tab="${tabName}"]`);
   const activeContent = document.getElementById(tabName);
 
@@ -27,13 +26,11 @@ function setActiveTab(tabName) {
   if (activeContent) activeContent.classList.add("active");
 }
 
-// Initialize tabs from URL parameter
 function initializeTabs() {
   const urlParams = new URLSearchParams(window.location.search);
-  const activeTab = urlParams.get("tab") || "all"; // Default to 'all' if no tab specified
+  const activeTab = urlParams.get("tab") || "all";
   setActiveTab(activeTab);
 
-  // Add click handlers to tab buttons
   document.querySelectorAll(".tab-button").forEach((button) => {
     button.addEventListener("click", function () {
       const tabName = this.getAttribute("data-tab");
@@ -42,18 +39,15 @@ function initializeTabs() {
   });
 }
 
-// Call initializeTabs when the DOM is fully loaded
 document.addEventListener("DOMContentLoaded", function () {
   initializeTabs();
 
-  // Update department filter to preserve tab parameter
   const deptFilter = document.getElementById("department-filter");
   if (deptFilter) {
     deptFilter.addEventListener("change", function () {
       const dept = this.value;
       const url = new URL(window.location.href);
       url.searchParams.set("department", dept);
-      // Reset to first page when changing departments
       url.searchParams.set("page", "1");
       window.location.href = url.toString();
     });
@@ -145,21 +139,25 @@ function applyTheme(themeName) {
 const STATUS_ENDPOINT = (() => {
   const origin = window.location.origin;
   const pathSegments = window.location.pathname.split("/").filter(Boolean);
-
-  if (pathSegments[0] !== "ECADYB") {
+  if (pathSegments[0] !== "ECADYB")
     return `${origin}/Connection/UpdateStatus.php`;
-  }
   return `${origin}/ECADYB/Connection/UpdateStatus.php`;
 })();
 
 const STUDENT_UPDATE_ENDPOINT = (() => {
   const origin = window.location.origin;
   const pathSegments = window.location.pathname.split("/").filter(Boolean);
-
-  if (pathSegments[0] !== "ECADYB") {
+  if (pathSegments[0] !== "ECADYB")
     return `${origin}/Connection/UpdateStudent.php`;
-  }
   return `${origin}/ECADYB/Connection/UpdateStudent.php`;
+})();
+
+const DELETE_STUDENT_ENDPOINT = (() => {
+  const origin = window.location.origin;
+  const pathSegments = window.location.pathname.split("/").filter(Boolean);
+  if (pathSegments[0] !== "ECADYB")
+    return `${origin}/Connection/DeleteStudent.php`;
+  return `${origin}/ECADYB/Connection/DeleteStudent.php`;
 })();
 
 // ----------------------
@@ -175,13 +173,6 @@ window.addEventListener("DOMContentLoaded", () => {
   initializeFilters();
   initializeStatusUpdates();
   initializeDeleteModal();
-
-  // Test if submitStudentForm function is available
-  if (typeof submitStudentForm === "function") {
-    console.log("submitStudentForm function is available");
-  } else {
-    console.error("submitStudentForm function is NOT available");
-  }
 });
 
 // ----------------------
@@ -310,32 +301,36 @@ async function confirmDeleteStudent() {
   confirmDeleteBtn.disabled = true;
 
   try {
-    const res = await fetch(
-      `${window.location.origin}/ECADYB/Connection/DeleteStudent.php`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          student_id: selectedStudentId,
-          collection: selectedCollection,
-        }),
-      }
-    );
+    const res = await fetch(DELETE_STUDENT_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        student_id: selectedStudentId,
+        collection: selectedCollection,
+      }),
+    });
 
-    const data = await res.json();
-    showNotification(data.message, data.success ? "success" : "error");
+    if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
 
-    if (data.success) {
+    const data = await res.json().catch(() => null);
+
+    if (data?.success) {
+      showNotification(
+        data.message || "Student deleted successfully",
+        "success"
+      );
       const row = document
         .querySelector(
           `.student-checkbox[data-student-id="${selectedStudentId}"]`
         )
         ?.closest("tr");
       if (row) row.remove();
+    } else {
+      showNotification(data?.message || "Failed to delete student", "error");
     }
   } catch (err) {
     console.error("Error deleting student:", err);
-    showNotification("Error deleting student.", "error");
+    showNotification("Error deleting student. Check console.", "error");
   } finally {
     confirmDeleteBtn.disabled = false;
     closeDeleteModal();
@@ -344,7 +339,6 @@ async function confirmDeleteStudent() {
 
 function initializeDeleteModal() {
   if (!confirmDeleteBtn || !cancelDeleteBtn || !deleteModal) return;
-
   cancelDeleteBtn.addEventListener("click", closeDeleteModal);
   deleteModal.addEventListener("click", (e) => {
     if (e.target === deleteModal) closeDeleteModal();
@@ -452,13 +446,13 @@ function initializeStatusUpdates() {
     });
   });
 }
+
 // ----------------------
 // Update student details
 // ----------------------
 async function updateStudentDetails(studentId, fields) {
   if (!studentId) return;
 
-  // Include hidden collection field
   const collectionEl = document.getElementById(
     `collection-hidden-${studentId}`
   );
@@ -468,7 +462,6 @@ async function updateStudentDetails(studentId, fields) {
     const res = await fetch(STUDENT_UPDATE_ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      // Send original ID separately for lookup; allow new ID in fields
       body: JSON.stringify({ original_student_id: studentId, ...fields }),
     });
 
@@ -479,11 +472,9 @@ async function updateStudentDetails(studentId, fields) {
         data.message || "Student Details Saved Successfully",
         "success"
       );
-
-      // Auto-refresh the page after successful save
       setTimeout(() => {
         window.location.reload();
-      }, 1500); // Wait 1.5 seconds to show the success message
+      }, 1500);
     } else {
       showNotification(
         data?.message || "Failed to save student details",
@@ -507,7 +498,6 @@ function submitStudentForm(studentId) {
   }
 
   const fields = {};
-  // Create a mapping of form field names to MongoDB keys
   const fieldMapping = {
     first_name: "first name",
     middle_name: "middle name",
@@ -517,53 +507,35 @@ function submitStudentForm(studentId) {
     academic_year: "academic year",
     program: "program",
     section: "section",
-    // student_id handled explicitly below to allow editing
     motto: "motto",
     honors: "honors",
     milestone: "milestone",
     batch_name: "batch name",
-    department_section: "department section", // included
-    status: "status", // added for completeness
+    department_section: "department section",
+    status: "status",
   };
 
-  // Iterate over the mapping to collect field values
   for (const [key, mongoKey] of Object.entries(fieldMapping)) {
     const el = document.getElementById(`${key}${studentId}`);
     if (el) {
-      fields[mongoKey] = el.value.trim(); // Use mongoKey for the final object
-      console.log(`Field ${key} (${mongoKey}):`, el.value.trim());
-    } else {
-      console.warn(`Element not found for field: ${key}${studentId}`);
+      fields[mongoKey] = el.value.trim();
     }
   }
 
-  // Capture potentially edited Student ID value
   const studentIdEl = document.getElementById(`student_id${studentId}`);
   if (studentIdEl) {
-    const newStudentId = studentIdEl.value.trim();
-    // Send new ID using the normalized key used in MongoDB
-    fields["student id"] = newStudentId;
-    console.log("New Student ID value:", newStudentId);
-  } else {
-    console.warn(`Student ID input not found: student_id${studentId}`);
+    fields["student id"] = studentIdEl.value.trim();
   }
 
   const collectionEl = document.getElementById(
     `collection-hidden-${studentId}`
   );
   if (collectionEl) {
-    fields["collection"] = collectionEl.value; // Assuming you have a hidden field for collection
-    console.log("Collection field:", collectionEl.value);
+    fields["collection"] = collectionEl.value;
   } else {
-    console.error(
-      `Collection hidden field not found: collection-hidden-${studentId}`
-    );
     return;
   }
 
-  console.log("Final fields object:", fields);
-
-  // Close modal immediately after sending save request
   const modal = document.getElementById(`editModal_${studentId}`);
   if (modal) modal.classList.remove("active");
 
@@ -571,21 +543,8 @@ function submitStudentForm(studentId) {
 }
 
 // ----------------------
-// Test function for debugging
+// Utility validation functions
 // ----------------------
-function testFunction() {
-  console.log("Test function called successfully!");
-  alert(
-    "JavaScript is working! submitStudentForm function: " +
-      (typeof submitStudentForm === "function" ? "Available" : "NOT Available")
-  );
-}
-
-// ----------------------
-// Utility functions for form validation
-// ----------------------
-
-// Allow only alphabet characters and single spaces
 function allowOnlyLetters(input) {
   let sanitized = input.value
     .replace(/[^a-zA-Z\s]/g, "")
@@ -594,25 +553,18 @@ function allowOnlyLetters(input) {
   input.value = sanitized;
 }
 
-// Format academic year as YYYY-YYYY
 function formatAcademicYear(input) {
   let value = input.value.replace(/\D/g, "").slice(0, 8);
-  if (value.length > 4) {
-    value = value.slice(0, 4) + "-" + value.slice(4);
-  }
+  if (value.length > 4) value = value.slice(0, 4) + "-" + value.slice(4);
   input.value = value;
 }
 
-// Format student ID as XXXX-XXXXXX
 function formatStudentID(input) {
   let value = input.value.replace(/\D/g, "").slice(0, 10);
-  if (value.length > 4) {
-    value = value.slice(0, 4) + "-" + value.slice(4);
-  }
+  if (value.length > 4) value = value.slice(0, 4) + "-" + value.slice(4);
   input.value = value;
 }
 
-// Remove spaces from last name, middle name, and email fields on input
 function removeSpaces(input) {
   input.value = input.value.replace(/\s+/g, "");
 }
