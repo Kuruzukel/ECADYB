@@ -173,7 +173,6 @@ function scrollToBottom() {
 }
 
 // Logout Modal Functionality
-// ==========================
 /*document.addEventListener("DOMContentLoaded", function () {
   const logoutTab = document.getElementById("logout-tab");
   const modalOverlay = document.getElementById("modal-overlay");
