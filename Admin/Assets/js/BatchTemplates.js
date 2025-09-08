@@ -110,7 +110,6 @@ function getBasePath() {
   return window.location.origin;
 }
 
-// ----------------------
 // Delete student modal
 // ----------------------
 const deleteModal = document.getElementById("delete-modal-overlay");
