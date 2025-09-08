@@ -72,7 +72,6 @@ function toggleSubmenu(menuId) {
   });
 }
 
-// ==========================
 // Activate matching tab/sub-tab based on current page
 // ==========================
 function setActiveTab(currentPage) {
