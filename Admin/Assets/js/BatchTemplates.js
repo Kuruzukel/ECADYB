@@ -111,7 +111,6 @@ function getBasePath() {
 }
 
 // Delete student modal
-// ----------------------
 const deleteModal = document.getElementById("delete-modal-overlay");
 const confirmDeleteBtn = document.getElementById("confirm-delete-btn");
 const cancelDeleteBtn = document.getElementById("cancel-delete-btn");
