@@ -96,7 +96,6 @@ function showNotification(message, type = "success") {
 }
 
 // Endpoint detection
-// ----------------------
 function getBasePath() {
   const currentPath = window.location.pathname;
 
