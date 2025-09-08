@@ -141,7 +141,6 @@ document.querySelectorAll(".tab[onclick]").forEach((tab) => {
   });
 });
 
-// ==========================
 // Handle sub-tab clicks
 // ==========================
 document.querySelectorAll(".sub-tab").forEach((tab) => {
