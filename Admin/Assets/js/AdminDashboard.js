@@ -237,7 +237,7 @@ function scrollToBottom() {
   }
 });
 */
-// ==========================
+
 // On DOM ready, setup active tab and menu
 // ==========================
 document.addEventListener("DOMContentLoaded", () => {
