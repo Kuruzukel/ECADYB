@@ -128,7 +128,6 @@ function expandParentMenuIfActive() {
   });
 }
 
-// ==========================
 // Handle main tab clicks that have no href (toggle active)
 // ==========================
 document.querySelectorAll(".tab[onclick]").forEach((tab) => {
