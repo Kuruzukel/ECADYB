@@ -1,4 +1,3 @@
-// ==========================
 // Sidebar toggle buttons
 // ==========================
 const hamburgerIcon = document.querySelector(".hamburger-menu-ico");
