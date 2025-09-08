@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
     $password  = trim($_POST['password']);
 
     try {
-        //  Check admin login
+        // ✅ Check admin login
         $admin = $adminCollection->findOne([
             'username' => $studentId,
             'password' => $password
@@ -39,20 +39,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
             exit;
         }
 
-        //  Check student login
+        //  Check student login (support both field types)
         $foundStudent = false;
         foreach ($collections as $collectionName => $departmentName) {
             $collection = $departmentsDB->{$collectionName};
 
             $student = $collection->findOne([
-                'student id' => $studentId,
-                'password'   => $password
+                '$and' => [
+                    [
+                        '$or' => [
+                            ['student id' => $studentId],
+                            ['student_id' => $studentId]
+                        ]
+                    ],
+                    ['password' => $password]
+                ]
             ]);
 
             if ($student) {
                 $_SESSION['role']       = 'student';
-                $_SESSION['student_id'] = $student['student id'];
-                $_SESSION['name']       = trim(($student['first name'] ?? '') . ' ' . ($student['middle name'] ?? '') . ' ' . ($student['last name'] ?? ''));
+
+                //  Store whichever field exists
+                $_SESSION['student_id'] = $student['student id'] ?? $student['student_id'];
+
+                $_SESSION['name']       = trim(
+                    ($student['first name'] ?? '') . ' ' .
+                        ($student['middle name'] ?? '') . ' ' .
+                        ($student['last name'] ?? '')
+                );
                 $_SESSION['department'] = $departmentName;
                 $_SESSION['section']    = $student['department section'] ?? '';
 
