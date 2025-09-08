@@ -49,33 +49,42 @@ $collection = $departmentsDB->$collectionName;
 
 // Attempt deletion
 try {
-    // Use regex array for exact match ignoring case
+    // Regex for case-insensitive exact match
     $studentIdRegex = [
         '$regex' => '^' . preg_quote($studentId) . '$',
         '$options' => 'i'
     ];
 
-    // Find student by "student id" (space included)
+    // Try to find student (either key name)
     $student = $collection->findOne([
         '$or' => [
-            ['student id' => $studentIdRegex],  // space version
-            ['student_id' => $studentIdRegex],  // underscore version
+            ['student id' => $studentIdRegex],
+            ['student_id' => $studentIdRegex],
         ]
     ]);
 
-
     if (!$student) {
-        // Debug: list all student IDs in collection (optional)
-        $allStudents = $collection->find([], ['projection' => ['student id' => 1]]);
+        // Debug: list available IDs with both field formats
+        $allStudents = $collection->find([], [
+            'projection' => ['student id' => 1, 'student_id' => 1]
+        ]);
+
         $ids = [];
         foreach ($allStudents as $s) {
-            $ids[] = $s['student id'];
+            if (isset($s['student id'])) {
+                $ids[] = "[space] " . $s['student id'];
+            }
+            if (isset($s['student_id'])) {
+                $ids[] = "[underscore] " . $s['student_id'];
+            }
         }
-        error_log("Available student IDs in $collectionName: " . implode(', ', $ids));
+
+        error_log("Available IDs in $collectionName: " . implode(', ', $ids));
 
         echo json_encode([
             'success' => false,
-            'message' => "No student found with student_id='$studentId' in collection '$collectionName'."
+            'message' => "No student found with student_id='$studentId' in collection '$collectionName'.",
+            'debug_ids' => $ids // Return to client for debugging
         ]);
         exit;
     }
@@ -87,7 +96,6 @@ try {
             ['student_id' => $studentIdRegex],
         ]
     ]);
-
 
     if ($deleteResult->getDeletedCount() > 0) {
         echo json_encode([
