@@ -1,5 +1,4 @@
 // Sidebar toggle buttons
-// ==========================
 const hamburgerIcon = document.querySelector(".hamburger-menu-ico");
 const closeIcon = document.querySelector(".close-ico");
 const sidebar = document.querySelector(".sidebar");
