@@ -165,7 +165,6 @@ function setTabActive(tabId) {
 }
 
 // Scroll to bottom helper function
-// ==========================
 function scrollToBottom() {
   const container = document.getElementById("scrollContainer");
   if (container) {
