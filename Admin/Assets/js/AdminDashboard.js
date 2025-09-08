@@ -164,7 +164,6 @@ function setTabActive(tabId) {
   if (tab) tab.classList.add("active");
 }
 
-// ==========================
 // Scroll to bottom helper function
 // ==========================
 function scrollToBottom() {
