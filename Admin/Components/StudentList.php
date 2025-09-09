@@ -3,12 +3,12 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 use MongoDB\Client;
 
-// 🔗 Connect to MongoDB
+// Connect to MongoDB
 $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 $client   = new Client($mongoUrl);
 $db = $client->Departments;
 
-//  Define all program collections
+// Define all program collections
 $collections = [
     "bsme"   => "BS Marine Engineering",
     "bsmt"   => "BS Marine Transportation",
