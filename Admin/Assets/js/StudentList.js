@@ -176,7 +176,6 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 // Select all checkboxes
-// ----------------------
 function initializeSelectAll() {
   const selectAllCheckbox = document.getElementById("select-all-header");
   const studentCheckboxes = document.querySelectorAll(".student-checkbox");
