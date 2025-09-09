@@ -175,7 +175,6 @@ window.addEventListener("DOMContentLoaded", () => {
   initializeDeleteModal();
 });
 
-// ----------------------
 // Select all checkboxes
 // ----------------------
 function initializeSelectAll() {
