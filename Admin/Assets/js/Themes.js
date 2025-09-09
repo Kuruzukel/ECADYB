@@ -252,7 +252,6 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 
   // Logo uploads
-  // ----------------------
   const logoBoxes = document.querySelectorAll(
     ".logo-upload-grid .upload-box.circle"
   );
