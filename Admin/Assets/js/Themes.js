@@ -197,7 +197,6 @@ async function uploadLogoToBunny(file, slot, box, input, deleteBtn) {
 }
 
 // DOM Ready
-// ----------------------
 window.addEventListener("DOMContentLoaded", () => {
   // Apply saved theme
   const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
