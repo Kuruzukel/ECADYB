@@ -544,7 +544,6 @@ function submitStudentForm(studentId) {
 
 // ----------------------
 // Utility validation functions
-// ----------------------
 function allowOnlyLetters(input) {
   let sanitized = input.value
     .replace(/[^a-zA-Z\s]/g, "")
