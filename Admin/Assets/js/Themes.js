@@ -469,7 +469,6 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 
   // Load existing logos
-  // ----------------------
   (async function loadLogos() {
     try {
       const res = await fetch(FETCH_ENDPOINT);
