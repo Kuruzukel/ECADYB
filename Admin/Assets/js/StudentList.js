@@ -1,8 +1,6 @@
 // StudentList.js (Railway-ready)
 
-// ----------------------
 // Tab State Management
-// ----------------------
 function updateUrlWithTab(tabName) {
   const url = new URL(window.location.href);
   url.searchParams.set("tab", tabName);
@@ -54,9 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-// ----------------------
 // Themes
-// ----------------------
 const themes = {
   "Theme 1": {
     "--primary-bg": "#470a0a",
@@ -133,9 +129,7 @@ function applyTheme(themeName) {
   }
 }
 
-// ----------------------
 // Global constants
-// ----------------------
 const STATUS_ENDPOINT = (() => {
   const origin = window.location.origin;
   const pathSegments = window.location.pathname.split("/").filter(Boolean);
