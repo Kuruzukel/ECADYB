@@ -95,7 +95,6 @@ function applyTheme(theme) {
   localStorage.setItem("dashboard-theme", theme);
 }
 
-// ----------------------
 // Upload overlay helpers
 // ----------------------
 const uploadOverlay = document.getElementById("upload-overlay");
