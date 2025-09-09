@@ -205,7 +205,6 @@ h1 .chevron i {
   overflow: hidden;
   width: 100%;
   min-height: 435px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .calendar-days {
@@ -502,7 +501,6 @@ h1 .chevron i {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 1px;
-  background: #ffffff;
   border-radius: 8px 8px 0 0;
 }
 
@@ -579,6 +577,7 @@ h1 .chevron i {
 
 .calendar-day.other-month {
   opacity: 0.5;
+  border-radius: 8px;
 }
 
 .calendar-day.today {
