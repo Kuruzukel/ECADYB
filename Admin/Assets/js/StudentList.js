@@ -346,7 +346,6 @@ function initializeDeleteModal() {
   confirmDeleteBtn.addEventListener("click", confirmDeleteStudent);
 }
 
-// ----------------------
 // Toggle password
 // ----------------------
 function togglePass(icon) {
