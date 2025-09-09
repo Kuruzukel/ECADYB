@@ -347,7 +347,6 @@ function initializeDeleteModal() {
 }
 
 // Toggle password
-// ----------------------
 function togglePass(icon) {
   const studentRow = icon.closest(".student-row");
   if (!studentRow) return;
