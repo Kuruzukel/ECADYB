@@ -146,7 +146,6 @@ function getBasePath() {
 }
 
 // Upload helper
-// ----------------------
 async function uploadLogoToBunny(file, slot, box, input, deleteBtn) {
   const form = new FormData();
   form.append("file", file);
