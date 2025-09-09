@@ -96,7 +96,6 @@ function applyTheme(theme) {
 }
 
 // Upload overlay helpers
-// ----------------------
 const uploadOverlay = document.getElementById("upload-overlay");
 
 function showUploadOverlay() {
