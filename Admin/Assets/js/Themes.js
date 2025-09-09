@@ -235,7 +235,6 @@ window.addEventListener("DOMContentLoaded", () => {
     if (selectedBox) selectedBox.classList.add("selected");
   });
 
-  // ----------------------
   // Endpoints (improved path detection)
   // ----------------------
   const BASE_PATH = getBasePath();
