@@ -250,7 +250,6 @@ function applyFilters() {
   });
 }
 
-// ----------------------
 // Notifications
 // ----------------------
 function showNotification(message, type = "success") {
