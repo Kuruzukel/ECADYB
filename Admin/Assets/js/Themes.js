@@ -468,7 +468,6 @@ window.addEventListener("DOMContentLoaded", () => {
     deleteModal.style.display = "none";
   });
 
-  // ----------------------
   // Load existing logos
   // ----------------------
   (async function loadLogos() {
