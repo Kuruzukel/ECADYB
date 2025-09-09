@@ -578,6 +578,7 @@ h1 .chevron i {
 .calendar-day.other-month {
   opacity: 0.5;
   border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .calendar-day.today {
