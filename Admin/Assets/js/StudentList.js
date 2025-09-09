@@ -205,7 +205,6 @@ function initializeSelectAll() {
   });
 }
 
-// ----------------------
 // Filters
 // ----------------------
 function initializeFilters() {
