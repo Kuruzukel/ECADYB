@@ -370,7 +370,6 @@ function togglePass(icon) {
   }
 }
 
-// ----------------------
 // Update status
 // ----------------------
 function initializeStatusUpdates() {
