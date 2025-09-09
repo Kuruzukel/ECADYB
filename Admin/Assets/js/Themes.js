@@ -1,5 +1,4 @@
 // Theme definitions
-// ----------------------
 const themes = {
   "Theme 1": {
     "--primary-bg": "#470a0a",
