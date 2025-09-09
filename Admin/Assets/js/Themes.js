@@ -251,7 +251,6 @@ window.addEventListener("DOMContentLoaded", () => {
     UPDATE_ADMIN_LOGO_ENDPOINT: UPDATE_ADMIN_LOGO_ENDPOINT,
   });
 
-  // ----------------------
   // Logo uploads
   // ----------------------
   const logoBoxes = document.querySelectorAll(
