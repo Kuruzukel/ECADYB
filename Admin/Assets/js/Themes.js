@@ -145,7 +145,6 @@ function getBasePath() {
   return window.location.origin;
 }
 
-// ----------------------
 // Upload helper
 // ----------------------
 async function uploadLogoToBunny(file, slot, box, input, deleteBtn) {
