@@ -51,7 +51,7 @@ function generatePassword($length = 8)
     return str_shuffle($password);
 }
 
-//  Fetch students only from the selected department
+// Fetch students only from the selected department
 try {
     $collection = $db->$selectedDepartment;
     $cursor = $collection->find();
@@ -95,7 +95,7 @@ try {
     $allStudents = [];
 }
 
-// ✅ Sort students by numeric ID
+// Sort students by numeric ID
 usort($allStudents, function ($a, $b) {
     return $a['id'] <=> $b['id'];
 });
