@@ -206,7 +206,6 @@ function initializeSelectAll() {
 }
 
 // Filters
-// ----------------------
 function initializeFilters() {
   const entriesCount = document.getElementById("entries-count");
   const departmentFilter = document.getElementById("department-filter");
