@@ -105,7 +105,6 @@ function hideUploadOverlay() {
   if (uploadOverlay) uploadOverlay.style.display = "none";
 }
 
-// ----------------------
 // Notifications
 // ----------------------
 function showNotification(message, type = "success") {
