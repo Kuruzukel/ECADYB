@@ -449,7 +449,6 @@ function initializeStatusUpdates() {
 
 // ----------------------
 // Update student details
-// ----------------------
 async function updateStudentDetails(studentId, fields) {
   if (!studentId) return;
 
