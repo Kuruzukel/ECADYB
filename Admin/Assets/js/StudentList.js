@@ -162,7 +162,6 @@ const DELETE_STUDENT_ENDPOINT = (() => {
 
 // ----------------------
 // Initialize on page load
-// ----------------------
 window.addEventListener("DOMContentLoaded", () => {
   console.log("StudentList.js loaded successfully");
 
