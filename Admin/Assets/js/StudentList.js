@@ -273,7 +273,6 @@ function showNotification(message, type = "success") {
   }, 3000);
 }
 
-// ----------------------
 // Delete student modal
 // ----------------------
 const deleteModal = document.getElementById("delete-modal-overlay");
