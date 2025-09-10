@@ -524,7 +524,6 @@ td {
   vertical-align: middle;
 }
 
-/* Specific table cell classes for different font sizes */
 td.student-name {
   font-size: 15px; /* Adjust this value as needed */
   font-weight: 500;
