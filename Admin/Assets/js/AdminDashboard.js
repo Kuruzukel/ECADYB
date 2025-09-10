@@ -8,6 +8,7 @@ const searchIcon = document.querySelector(".search-icon");
 const searchCloseIcon = document.querySelector(".search-close-ico");
 const searchContainer = document.querySelector(".search-container");
 
+
 if (hamburgerIcon && closeIcon && sidebar) {
   hamburgerIcon.addEventListener("click", () => {
     sidebar.classList.remove("closed");
@@ -284,4 +285,10 @@ async function loadAdminLogo() {
 }
 
 // Load logo when page loads
-document.addEventListener("DOMContentLoaded", loadAdminLogo);
+document.addEventListener("DOMContentLoaded", () => {
+  loadAdminLogo();
+  
+  // Apply saved theme on page load
+  const savedTheme = localStorage.getItem('dashboard-theme') || 'Default';
+  applyTheme(savedTheme);
+});
