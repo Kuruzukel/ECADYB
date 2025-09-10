@@ -272,6 +272,7 @@ h1 .chevron i {
   cursor: pointer;
   overflow: hidden;
   background: rgba(255, 255, 255, 0.02);
+  transition: all 0.3s ease;
 }
 
 .upload-box.circle img {
@@ -281,12 +282,14 @@ h1 .chevron i {
   border-radius: 50%;
   position: absolute;
   inset: 0;
+  transition: transform 0.3s ease;
 }
 
 .upload-box.circle .plus-icon {
   font-size: 34px;
   color: #cbd5e1;
   pointer-events: none;
+  transition: all 0.3s ease;
 }
 
 .upload-box.circle .delete-btn {
@@ -302,14 +305,15 @@ h1 .chevron i {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.15s ease;
+  transition: all 0.3s ease;
   z-index: 3;
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
 }
 
 .upload-box.circle .delete-btn:hover {
   background: #dc2626;
-  transform: scale(1.08); /* nice hover effect */
+  transform: scale(1.15) translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
 }
 
 /* ✅ Show button when there's an image */
@@ -322,8 +326,26 @@ h1 .chevron i {
   border: none;
 }
 
+/* Enhanced hover effects */
 .upload-box.circle:hover {
   border-color: #e2e8f0;
+  background: rgba(255, 255, 255, 0.05);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.upload-box.circle:hover .plus-icon {
+  color: #f1f5f9;
+  transform: scale(1.1);
+}
+
+.upload-box.circle:hover img {
+  transform: scale(1.05);
+}
+
+.upload-box.circle.has-image:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
 
 .section-header {
