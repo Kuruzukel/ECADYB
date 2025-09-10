@@ -660,7 +660,6 @@ th {
   overflow-y: hidden;
 }
 
-/* Slide animation */
 @keyframes slideIn {
   from {
     transform: translateY(-30px);
