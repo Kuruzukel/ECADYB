@@ -657,7 +657,7 @@ th {
   display: flex;
   flex-direction: column;
   animation: slideIn 0.35s ease;
-  overflow-y: hidden; /* prevent scrollbar */
+  overflow-y: hidden;
 }
 
 /* Slide animation */
