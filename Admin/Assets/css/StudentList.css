@@ -798,9 +798,6 @@ th {
   transform: translateY(-1px);
 }
 
-/* ===========================
-   Close Button
-=========================== */
 .editStudentModal .close-btn {
   position: absolute;
   top: 12px;
