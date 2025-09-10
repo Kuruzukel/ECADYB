@@ -610,7 +610,7 @@ th {
 .pagination-controls span {
   display: flex;
   align-items: center;
-  justify-content: center; /* horizontal center */
+  justify-content: center;
   border-radius: 8px;
   border: 2px solid #34495e;
   background: transparent;
