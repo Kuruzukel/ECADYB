@@ -608,7 +608,7 @@ th {
 }
 
 .pagination-controls span {
-  display: flex; /* enables flexbox */
+  display: flex;
   align-items: center; /* vertical center */
   justify-content: center; /* horizontal center */
   border-radius: 8px;
