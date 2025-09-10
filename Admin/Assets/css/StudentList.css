@@ -561,7 +561,6 @@ th {
   vertical-align: middle;
 }
 
-/* Responsive font sizes */
 @media (max-width: 768px) {
   td {
     font-size: 12px;
