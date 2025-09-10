@@ -624,8 +624,6 @@ th {
   box-sizing: border-box;
 }
 
-/* ===========================
-   // Overlay
 .editStudentModal {
   position: fixed;
   top: 0;
