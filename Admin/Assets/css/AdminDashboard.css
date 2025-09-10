@@ -185,7 +185,7 @@ header {
   align-items: center;
   background-color: var(--body-bg);
   border-radius: 8px;
-  padding: 0.3rem 0.5rem !important;
+  padding: 0.2rem 0.5rem !important;
   gap: 0.5rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-sizing: border-box;
@@ -198,7 +198,7 @@ header {
   flex: 1;
   background: var(--body-bg);
   border: none;
-  color: white;
+  color: white !important;
   font-size: 1rem;
   padding: 0.3rem 0.5rem;
   outline: none;
@@ -215,6 +215,85 @@ header {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Modern search container styling */
+.search-container {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 25px;
+  padding: 8px 16px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+}
+
+.search-container:hover {
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.search-container .search-input {
+  color: white !important;
+  background: transparent !important;
+  border: none;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  width: 100%;
+  outline: none;
+  flex: 1;
+  padding: 0.3rem 0.5rem;
+  min-width: 0;
+}
+
+.search-container .search-button {
+  background: none;
+  border: none;
+  border-radius: 50%;
+  padding: 8px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  margin-left: 8px;
+  color: rgba(255, 255, 255, 0.8);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-container .search-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.05);
+}
+
+.search-container .search-button i {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Light mode search styles */
+body.theme-light-mode .search-container {
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body.theme-light-mode .search-container:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+body.theme-light-mode .search-container .search-input {
+  color: #000000 !important;
+}
+
+body.theme-light-mode .search-container .search-button {
+  color: #64748b !important;
+}
+
+body.theme-light-mode .search-container .search-button i {
+  color: #64748b !important;
 }
 
 .hidden {

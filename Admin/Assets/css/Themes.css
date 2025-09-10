@@ -25,7 +25,6 @@ body {
   height: 100%;
   background-color: var(--content-bg);
   border-radius: 10px 10px 0 0;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .header-container {
@@ -258,6 +257,7 @@ h1 .chevron i {
   justify-content: center;
   align-items: center;
   width: 100%;
+  margin-left: 0.6rem;
 }
 
 .upload-box.circle {
@@ -317,6 +317,11 @@ h1 .chevron i {
   display: flex;
 }
 
+/* Remove dashed border when image is uploaded */
+.upload-box.circle.has-image {
+  border: none;
+}
+
 .upload-box.circle:hover {
   border-color: #e2e8f0;
 }
@@ -347,7 +352,7 @@ h1 .chevron i {
 .color-box {
   width: 100%;
   min-width: 100px;
-  height: 78px;
+  height: 55px;
   border-radius: 8px;
   cursor: pointer;
   transition: transform 0.2s ease;
@@ -367,7 +372,7 @@ h1 .chevron i {
 }
 
 .color-box.selected {
-  border: 3px solid #ffffff;
+  border: 3px solid #fcda15;
   box-shadow: 0 0 5px rgba(255, 255, 255, 0.6);
 }
 
@@ -487,6 +492,46 @@ h1 .chevron i {
   background-color: #14154b;
 }
 
+.color-theme-light .color-bar:nth-child(1) {
+  background-color: #64748b;
+}
+
+.color-theme-light .color-bar:nth-child(2) {
+  background-color: #94a3b8;
+}
+
+.color-theme-light .color-bar:nth-child(3) {
+  background-color: #cbd5e1;
+}
+
+.color-theme-light .color-bar:nth-child(4) {
+  background-color: #e2e8f0;
+}
+
+.color-theme-light .color-bar:nth-child(5) {
+  background-color: #f8fafc;
+}
+
+.color-theme-Dark .color-bar:nth-child(1) {
+  background-color: #0f172a;
+}
+
+.color-theme-Dark .color-bar:nth-child(2) {
+  background-color: #1e293b;
+}
+
+.color-theme-Dark .color-bar:nth-child(3) {
+  background-color: #334155;
+}
+
+.color-theme-Dark .color-bar:nth-child(4) {
+  background-color: #475569;
+}
+
+.color-theme-Dark .color-bar:nth-child(5) {
+  background-color: #64748b;
+}
+
 @media (max-width: 1045px) {
   h1 {
     font-size: 1.8rem;
@@ -520,7 +565,7 @@ h1 .chevron i {
 }
 
 .modal {
-  background: var(--section-bg);
+  background: #34495e !important;
   border-radius: 16px;
   padding: 2rem;
   width: 90%;

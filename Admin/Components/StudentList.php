@@ -300,7 +300,7 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
 
                                             <!-- Modal -->
                                             <div id="editModal_<?php echo $student['student_id']; ?>" class="editStudentModal">
-                                                <div class="modal-content">
+                                                <div class="modal-content" style="background: #34495e;">
 
                                                     <!-- Header -->
                                                     <div class="modal-header">
@@ -518,7 +518,7 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
 
             <!-- Delete Confirmation Modal -->
             <div class="modal-overlay" id="delete-modal-overlay">
-                <div class="modal">
+                <div class="modal" style="background: #34495e;">
                     <div class="modal-header">
                         <i class="fas fa-question-circle modal-icon"></i>
                         <h3>Confirm Delete</h3>

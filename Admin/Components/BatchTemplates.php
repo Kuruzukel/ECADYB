@@ -192,7 +192,7 @@
     </div>
     <!-- Delete Confirmation Modal -->
     <div class="modal-overlay" id="delete-modal-overlay">
-        <div class="modal">
+        <div class="modal" style="background: #34495e;">
             <div class="modal-header">
                 <i class="fas fa-question-circle modal-icon"></i>
                 <h3>Confirm Delete</h3>

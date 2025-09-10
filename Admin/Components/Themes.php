@@ -12,7 +12,8 @@
 <body>
     <div class="container">
         <div class="header-container">
-        <h1><i class="fas fa-sliders-h"></i> <span class="chevron"><i class="fas fa-chevron-right"></i></span>Appearance</h1>
+            <h1><i class="fas fa-sliders-h"></i> <span class="chevron"><i
+                        class="fas fa-chevron-right"></i></span>Appearance</h1>
 
         </div>
         <div class="form-content">
@@ -21,6 +22,21 @@
                     <div class="section-header">Themes</div>
                     <div class="section-content">
                         <div class="color-selector">
+                            <div class="color-box color-theme-light" data-label="Light Mode"
+                                onclick="selectColor(this)">
+                                <div class="color-bar"></div>
+                                <div class="color-bar"></div>
+                                <div class="color-bar"></div>
+                                <div class="color-bar"></div>
+                                <div class="color-bar"></div>
+                            </div>
+                            <div class="color-box color-theme-Dark" data-label="Dark Mode" onclick="selectColor(this)">
+                                <div class="color-bar"></div>
+                                <div class="color-bar"></div>
+                                <div class="color-bar"></div>
+                                <div class="color-bar"></div>
+                                <div class="color-bar"></div>
+                            </div>
                             <div class="color-box color-theme1" data-label="Theme 1" onclick="selectColor(this)">
                                 <div class="color-bar"></div>
                                 <div class="color-bar"></div>
@@ -119,7 +135,7 @@
 
     <!-- Modal -->
     <div class="modal-overlay" id="modal-overlay">
-        <div class="modal" style="font-family: Arial, sans-serif;">
+        <div class="modal" style="font-family: Arial, sans-serif; background: #34495e;">
             <div class="modal-header">
                 <i class="fas fa-question-circle modal-icon"></i>
                 <h3>Confirm Change</h3>
@@ -142,7 +158,7 @@
 
     <!-- Delete Confirmation Modal -->
     <div class="modal-overlay" id="delete-modal-overlay">
-        <div class="modal">
+        <div class="modal" style="background: #34495e;">
             <div class="modal-header">
                 <i class="fas fa-question-circle modal-icon"></i>
                 <h3>Confirm Delete</h3>
@@ -163,7 +179,7 @@
 
     <!-- Change Admin Logo Modal -->
     <div class="modal-overlay" id="change-admin-logo-modal">
-        <div class="modal">
+        <div class="modal" style="background: #34495e;">
             <div class="modal-header">
                 <i class="fas fa-image modal-icon"></i>
                 <h3>Change Admin Dashboard Logo</h3>

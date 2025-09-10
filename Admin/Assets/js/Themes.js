@@ -1,5 +1,31 @@
 // Theme definitions
 const themes = {
+  "Light Mode": {
+    "--primary-bg": "#ffffff",
+    "--header-bg": "#94a3b8",
+    "--accent": "#fcda15",
+    "--section-bg": "#f8fafc",
+    "--section-header": "#cbd5e1",
+    "--body-bg": "#64748b",
+    "--sidebar-bg": "#94a3b8",
+    "--content-bg": "#ffffff",
+    "--menu-bg-active": "#cbd5e1",
+    "--menu-border-active": "#64748b",
+    "--menu-hover-bg": "#e2e8f0",
+  },
+  "Dark Mode": {
+    "--primary-bg": "#0f172a",
+    "--header-bg": "#1e293b",
+    "--accent": "#fcda15",
+    "--section-bg": "#334155",
+    "--section-header": "#475569",
+    "--body-bg": "#0f172a",
+    "--sidebar-bg": "#1e293b",
+    "--content-bg": "#334155",
+    "--menu-bg-active": "#475569",
+    "--menu-border-active": "#334155",
+    "--menu-hover-bg": "#64748b",
+  },
   "Theme 1": {
     "--primary-bg": "#470a0a",
     "--header-bg": "#b21c0e",
@@ -81,18 +107,44 @@ function selectColor(el) {
 }
 
 function applyTheme(theme) {
+  console.log("Applying theme:", theme);
   const root = document.documentElement;
   const selectedTheme = themes[theme] || themes["Default"];
 
+  console.log("Selected theme data:", selectedTheme);
+
+  // Apply CSS custom properties
   for (const [varName, color] of Object.entries(selectedTheme)) {
     root.style.setProperty(varName, color);
   }
 
-  const defaultSectionBg = themes["Default"]["--section-bg"];
+  // Update modal background to match current theme
+  const currentSectionBg =
+    selectedTheme["--section-bg"] || themes["Default"]["--section-bg"];
   const modal = document.querySelector(".modal");
-  if (modal) modal.style.background = defaultSectionBg;
+  if (modal) modal.style.background = currentSectionBg;
 
+  // Add/remove theme-specific CSS classes to body
+  const body = document.body;
+  // Remove all theme classes first
+  body.classList.remove("theme-light-mode", "theme-dark-mode");
+
+  // Add specific theme class
+  if (theme === "Light Mode") {
+    body.classList.add("theme-light-mode");
+  } else if (theme === "Dark Mode") {
+    body.classList.add("theme-dark-mode");
+  }
+
+  // Save theme to localStorage
   localStorage.setItem("dashboard-theme", theme);
+
+  console.log("Theme applied and saved:", theme);
+
+  // Force a style recalculation
+  document.body.style.display = "none";
+  document.body.offsetHeight; // Trigger reflow
+  document.body.style.display = "";
 }
 
 // Upload overlay helpers
