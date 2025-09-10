@@ -597,7 +597,7 @@ th {
 }
 
 .pagination-controls button:hover {
-  background-color: #217ff7; /* Lighter blue on hover */
+  background-color: #217ff7;
   color: #fff;
   border-color: #0c27be;
 }
