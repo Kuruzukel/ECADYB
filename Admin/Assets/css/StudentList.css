@@ -700,9 +700,7 @@ th {
   gap: 25px;
 }
 
-/* ===========================
-=========================== */
-.editStudentModal .section {
+=========================== */ .editStudentModal .section {
   height: 100%;
   width: 32%;
   min-width: 250px;
