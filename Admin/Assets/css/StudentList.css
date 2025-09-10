@@ -838,7 +838,7 @@ th {
     0 10px 10px -5px rgba(0, 0, 0, 0.04);
   border: 1px solid #475569;
   text-align: center;
-  position: relative; /* in case you want a close button */
+  position: relative;
 }
 
 #delete-modal-overlay .modal-header {
