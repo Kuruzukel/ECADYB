@@ -671,9 +671,7 @@ th {
   }
 }
 
-/* ===========================
-=========================== */
-.editStudentModal .modal-header {
+=========================== */ .editStudentModal .modal-header {
   display: flex;
   align-items: center;
   gap: 1rem;
