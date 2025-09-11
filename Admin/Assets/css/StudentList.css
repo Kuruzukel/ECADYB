@@ -966,7 +966,7 @@ th {
 }
 
 .notification.error {
-  background: linear-gradient(135deg, #f87171, #b91c1c); /* red gradient */
+  background: linear-gradient(135deg, #f87171, #b91c1c);
 }
 
 .notification i {
