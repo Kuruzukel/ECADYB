@@ -893,7 +893,7 @@ th {
 }
 
 #delete-modal-overlay .modal-buttons .modal-btn.cancel {
-  background: #ef4444; /* red like editStudentModal */
+  background: #ef4444;
   color: #ffffff;
 }
 
