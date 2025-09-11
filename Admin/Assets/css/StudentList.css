@@ -902,7 +902,6 @@ th {
   transform: translateY(-1px);
 }
 
-/* Optional: Close button for delete modal */
 #delete-modal-overlay .close-btn {
   position: absolute;
   top: 12px;
