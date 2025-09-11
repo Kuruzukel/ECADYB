@@ -1093,13 +1093,13 @@ table td:nth-child(5) {
 
 table td:nth-child(6) {
   /* PASSWORD data */
-  width: 12%;
+  width: 10%;
   min-width: 110px;
 }
 
 table td:nth-child(7) {
   /* ACTIONS data */
-  width: 19%;
+  width: 12%;
   min-width: 180px;
 }
 

@@ -123,7 +123,6 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
     <title>Add Student Details</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="../Assets/css/teststyle.css">
-    <link rel="stylesheet" href="../Assets/css/tabs.css">
 </head>
 
 <body>
