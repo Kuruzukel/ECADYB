@@ -251,35 +251,31 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
                                                 data-password="<?php echo htmlspecialchars($student['password']); ?>">********</span>
                                         </td>
                                         <td>
-                                            <div style="display: flex; align-items: center; gap: 8px; justify-content: flex-start;">
+                                            <div class="actions-container">
                                                 <input type="checkbox" class="student-checkbox"
                                                     data-student-id="<?php echo htmlspecialchars($student['student_id'] ?? $student['student id'] ?? ''); ?>"
                                                     data-collection="<?php echo htmlspecialchars($student['collection'] ?? ''); ?>"
                                                     data-status="<?php echo strtolower($student['status'] ?? 'pending'); ?>"
                                                     <?php echo (strtolower($student['status'] ?? '') === 'active') ? 'checked' : ''; ?>>
 
-                                                <div class="eyeIcon close eyeIcon-list" onclick="togglePass(this)"
-                                                    style="display:flex;align-items:center;cursor:pointer;">
+                                                <div class="eyeIcon close eyeIcon-list" onclick="togglePass(this)">
                                                     <!-- Closed eye SVG -->
-                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                                        style="height: 1.2em; vertical-align: middle;">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                                         <g fill="none" fill-rule="evenodd">
                                                             <path
                                                                 d="M24 0v24H0V0zM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z" />
-                                                            <path fill="#000000"
+                                                            <path fill="#ffffff"
                                                                 d="M2.5 9a1.5 1.5 0 0 1 2.945-.404c1.947 6.502 11.158 6.503 13.109.005a1.5 1.5 0 1 1 2.877.85a10.1 10.1 0 0 1-1.623 3.236l.96.96a1.5 1.5 0 1 1-2.122 2.12l-1.01-1.01a9.6 9.6 0 0 1-1.67.915l.243.906a1.5 1.5 0 0 1-2.897.776l-.251-.935c-.705.073-1.417.073-2.122 0l-.25.935a1.5 1.5 0 0 1-2.898-.776l.242-.907a9.6 9.6 0 0 1-1.669-.914l-1.01 1.01a1.5 1.5 0 1 1-2.122-2.12l.96-.96a10.1 10.1 0 0 1-1.62-3.23A1.5 1.5 0 0 1 2.5 9" />
                                                         </g>
                                                     </svg>
                                                 </div>
-                                                <div class="eyeIcon open eyeIcon-list" onclick="togglePass(this)"
-                                                    style="display:none;align-items:center;cursor:pointer;">
+                                                <div class="eyeIcon open eyeIcon-list" onclick="togglePass(this)" style="display:none;">
                                                     <!-- Open eye SVG -->
-                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                                        style="height: 1.2em; vertical-align: middle;">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                                         <g fill="none">
                                                             <path
                                                                 d="M24 0v24H0V0zM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z" />
-                                                            <path fill="#000000"
+                                                            <path fill="#ffffff"
                                                                 d="M12 5c3.679 0 8.162 2.417 9.73 5.901c.146.328.27.71.27 1.099c0 .388-.123.771-.27 1.099C20.161 16.583 15.678 19 12 19s-8.162-2.417-9.73-5.901C2.124 12.77 2 12.389 2 12c0-.388.123-.771.27-1.099C3.839 7.417 8.322 5 12 5m0 3a4 4 0 1 0 0 8a4 4 0 0 0 0-8m0 2a2 2 0 1 1 0 4a2 2 0 0 1 0-4" />
                                                         </g>
                                                     </svg>
