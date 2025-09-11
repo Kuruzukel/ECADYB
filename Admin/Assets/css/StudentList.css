@@ -335,7 +335,6 @@ tr.student-row:nth-child(even):hover {
   font-weight: 500;
 }
 
-/* Alternative approach using data attributes */
 .student-status[data-checked="false"] {
   color: #ff4444 !important;
   font-weight: 500;
