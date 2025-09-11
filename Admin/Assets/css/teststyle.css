@@ -324,7 +324,6 @@ tr.student-row:nth-child(even):hover {
   font-weight: 500;
 }
 
-/* Status colors based on checkbox state */
 .student-status.status-pending {
   color: #ff4444 !important;
   font-weight: 500;
