@@ -883,7 +883,7 @@ th {
 }
 
 #delete-modal-overlay .modal-buttons .modal-btn.confirm {
-  background: #10b981; /* green like editStudentModal */
+  background: #10b981;
   color: #ffffff;
 }
 
