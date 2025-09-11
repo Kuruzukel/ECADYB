@@ -960,7 +960,6 @@ th {
   pointer-events: auto;
 }
 
-/* Types */
 .notification.success {
   background: linear-gradient(135deg, #34d399, #059669);
 }
