@@ -346,7 +346,6 @@ tr.student-row:nth-child(even):hover {
   font-weight: 500;
 }
 
-/* Force override for any conflicting styles */
 td.student-status.status-active,
 .student-row .student-status.status-active {
   color: #00ff00 !important;
