@@ -240,17 +240,43 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 // Select all checkboxes
+let isSelectAllActive = false; // Flag to track select all operations
+
 function initializeSelectAll() {
   const selectAllCheckbox = document.getElementById("select-all-header");
   if (!selectAllCheckbox) return;
 
+  // Restore select all state from localStorage on page load
+  const savedSelectAllState = localStorage.getItem("selectAllState");
+  if (savedSelectAllState === "true") {
+    selectAllCheckbox.checked = true;
+    isSelectAllActive = true;
+    // Apply the saved state to all visible checkboxes
+    setTimeout(() => {
+      const visibleStudentCheckboxes = getVisibleStudentCheckboxes();
+      visibleStudentCheckboxes.forEach((checkbox) => {
+        if (!checkbox.checked) {
+          checkbox.checked = true;
+          checkbox.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+      });
+    }, 100);
+  }
+
   selectAllCheckbox.addEventListener("change", function () {
     console.log("Select all clicked:", this.checked);
+    
+    // Set the flag to indicate select all is being used
+    isSelectAllActive = this.checked;
+    
+    // Save select all state to localStorage
+    localStorage.setItem("selectAllState", this.checked.toString());
     
     // Get only visible student checkboxes (not filtered out)
     const visibleStudentCheckboxes = getVisibleStudentCheckboxes();
     console.log("Found", visibleStudentCheckboxes.length, "visible checkboxes");
     
+    // Simple toggle: set all visible checkboxes to match select all state
     visibleStudentCheckboxes.forEach((checkbox) => {
       const was = checkbox.checked;
       checkbox.checked = this.checked;
@@ -258,13 +284,6 @@ function initializeSelectAll() {
         checkbox.dispatchEvent(new Event("change", { bubbles: true }));
       }
     });
-  });
-
-  // Update select all state when individual checkboxes change
-  document.addEventListener("change", function(event) {
-    if (event.target && event.target.classList.contains("student-checkbox")) {
-      updateSelectAllState();
-    }
   });
 }
 
@@ -280,23 +299,20 @@ function getVisibleStudentCheckboxes() {
   return visibleRows.map(row => row.querySelector(".student-checkbox")).filter(Boolean);
 }
 
-// Helper function to update select all checkbox state
-function updateSelectAllState() {
-  const selectAllCheckbox = document.getElementById("select-all-header");
-  if (!selectAllCheckbox) return;
-  
-  const visibleStudentCheckboxes = getVisibleStudentCheckboxes();
-  if (visibleStudentCheckboxes.length === 0) {
-    selectAllCheckbox.checked = false;
-    selectAllCheckbox.indeterminate = false;
+// Helper function to clear select all state when individual changes occur
+function clearSelectAllState() {
+  // Don't clear if select all is actively being used
+  if (isSelectAllActive) {
+    console.log("Select all is active, not clearing state");
     return;
   }
   
-  const allChecked = visibleStudentCheckboxes.every(cb => cb.checked);
-  const anyChecked = visibleStudentCheckboxes.some(cb => cb.checked);
-  
-  selectAllCheckbox.checked = allChecked;
-  selectAllCheckbox.indeterminate = anyChecked && !allChecked;
+  console.log("Clearing select all state due to individual change");
+  localStorage.removeItem("selectAllState");
+  const selectAllCheckbox = document.getElementById("select-all-header");
+  if (selectAllCheckbox) {
+    selectAllCheckbox.checked = false;
+  }
 }
 
 // Filters
@@ -321,6 +337,11 @@ function applyFilters() {
   ).trim();
   
   console.log("Applying filters - Department:", deptVal, "Status:", statusVal);
+  
+  // Clear select all state when filters are applied
+  if (deptVal || statusVal) {
+    clearSelectAllState();
+  }
   
   // Get all table rows in tbody, excluding header
   const tableBody = document.querySelector("tbody");
@@ -358,7 +379,7 @@ function applyFilters() {
   });
   
   // Update select all state after filtering
-  updateSelectAllState();
+  // Note: No automatic state update for simple toggle mode
 }
 
 // Notifications
@@ -489,6 +510,11 @@ function initializeStatusUpdates() {
       console.log("Checkbox changed", this.checked);
       console.log("Dataset:", this.dataset);
       
+      // If this change wasn't caused by select all, clear the select all state
+      if (!isSelectAllActive) {
+        clearSelectAllState();
+      }
+      
       if (this.dataset.busy === "1") return;
       this.dataset.busy = "1";
 
@@ -546,7 +572,7 @@ function initializeStatusUpdates() {
             console.log("New status cell className:", statusCell.className);
           }
           applyFilters();
-          updateSelectAllState();
+          // Note: No automatic select all state update for simple toggle mode
           showNotification(
             data.message || "Status updated successfully",
             "success"
@@ -561,6 +587,13 @@ function initializeStatusUpdates() {
         this.checked = !this.checked;
       } finally {
         this.dataset.busy = "0";
+        // Reset the select all flag after status update is complete
+        if (isSelectAllActive) {
+          setTimeout(() => {
+            isSelectAllActive = false;
+            console.log("Select all operation completed, flag reset");
+          }, 100);
+        }
       }
     });
   });
