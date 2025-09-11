@@ -957,10 +957,9 @@ th {
 }
 
 .notification.error {
-  background: linear-gradient(135deg, #f87171, #b91c1c); /* red gradient */
+  background: linear-gradient(135deg, #f87171, #b91c1c);
 }
 
-/* Icon inside */
 .notification i {
   font-size: 1.2rem;
 }
