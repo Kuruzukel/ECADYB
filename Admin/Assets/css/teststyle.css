@@ -517,7 +517,7 @@ table {
 
 /* Table Cell Font Size Controls */
 td {
-  font-size: 14px; /* Default font size - you can adjust this */
+  font-size: 14px;
   line-height: 1.4;
   color: #fff;
   padding: 8px 12px;
