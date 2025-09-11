@@ -161,7 +161,8 @@ require $mongoPath;
                             <div class="close-ico hidden">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                     <path
-                                        d="M6.4 19L5 17.6l5.6-5.6L5 6.4L6.4 5l5.6 5.6L17.6 5L19 6.4L13.4 12l5.6 5.6l-1.4 1.4l-5.6-5.6z" fill="#F8FAFC" />
+                                        d="M6.4 19L5 17.6l5.6-5.6L5 6.4L6.4 5l5.6 5.6L17.6 5L19 6.4L13.4 12l5.6 5.6l-1.4 1.4l-5.6-5.6z"
+                                        fill="#F8FAFC" />
                                 </svg>
                             </div>
                         </div>
@@ -180,7 +181,7 @@ require $mongoPath;
                 switch ($page) {
 
                     case 'student-list':
-                        include('StudentList.php');
+                        include('StudentList copy.php');
                         break;
                     case 'add-new-student':
                         include('AddNewStudent.php');
