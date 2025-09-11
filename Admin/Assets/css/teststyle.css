@@ -917,7 +917,6 @@ th {
   color: #f87171;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   #delete-modal-overlay .modal {
     margin: 1rem;
