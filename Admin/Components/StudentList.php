@@ -120,10 +120,9 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Student Details</title>
+    <title>Student List</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="../Assets/css/StudentList.css">
-    <link rel="stylesheet" href="../Assets/css/tabs.css">
 </head>
 
 <body>
@@ -215,88 +214,87 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
                 <div class="card-datatable">
                     <table style="width:100%; ">
                         <thead>
-                            <tr class="student-row header">
-                                <th class="student-name-header student-name">STUDENT</th>
-                                <th class="student-id-header student-id">ID NUMBER</th>
-                                <th class="student-dept-header student-dept">DEPARTMENT</th>
-                                <th class="student-year-header student-year">ACADEMIC YEAR</th>
-                                <th class="student-status-header student-status">STATUS</th>
-                                <th class="student-password-header student-password">PASSWORD</th>
-                                <th class="student-actions-header student-actions">ACTIONS</th>
-                                <th class="student-checkbox-header">
-                                    <input type="checkbox" id="select-all-header" title="Select All">
-                                </th>
+                            <tr>
+                                <th>STUDENT</th>
+                                <th>ID NUMBER</th>
+                                <th>DEPARTMENT</th>
+                                <th>ACADEMIC YEAR</th>
+                                <th>STATUS</th>
+                                <th>PASSWORD</th>
+                                <th>ACTIONS <input type="checkbox" id="select-all-header" title="Select All"></th>
+
                             </tr>
                         </thead>
                         <tbody>
                             <?php if (empty($allStudents)): ?>
-                                <tr class="no-students">
+                                <tr>
                                     <td colspan="8" style="text-align:center; padding:40px; color:#fff; font-style:italic;">
                                         No students found in this department.</td>
                                 </tr>
                             <?php else: ?>
                                 <?php foreach ($allStudents as $student): ?>
-                                    <tr class="student-row">
-                                        <td class="student-name">
+                                    <tr>
+                                        <td>
                                             <?php
                                             $middleInitial = !empty($student['middle_name']) ? substr($student['middle_name'], 0, 1) . '.' : '';
                                             echo htmlspecialchars($student['last_name'] . ', ' . $student['first_name'] . ' ' . $middleInitial);
                                             ?>
                                         </td>
-                                        <td class="student-id"><?php echo htmlspecialchars($student['student_id']); ?></td>
-                                        <td class="student-dept"><?php echo htmlspecialchars($student['department_section']); ?>
+                                        <td><?php echo htmlspecialchars($student['student_id']); ?></td>
+                                        <td><?php echo htmlspecialchars($student['department_section']); ?>
                                         </td>
-                                        <td class="student-year"><?php echo htmlspecialchars($student['academic_year']); ?></td>
+                                        <td><?php echo htmlspecialchars($student['academic_year']); ?></td>
                                         <td
-                                            class="student-status <?php echo ($student['status'] === 'Active') ? 'status-active' : 'status-pending'; ?>">
-                                            <?php echo htmlspecialchars($student['status']); ?>
-                                        </td>
-                                        <td class="student-password">
+                                            class="student-status <?php echo (strtolower($student['status'] ?? 'pending') === 'active') ? 'status-active' : 'status-pending'; ?>">
+                                            <?php echo htmlspecialchars($student['status']); ?></td>
+                                        <td>
                                             <span class="password-text"
                                                 data-password="<?php echo htmlspecialchars($student['password']); ?>">********</span>
                                         </td>
-                                        <td class="student-actions">
-                                            <input type="checkbox" class="student-checkbox"
-                                                data-student-id="<?php echo htmlspecialchars($student['student_id'] ?? $student['student id'] ?? ''); ?>"
-                                                data-collection="<?php echo htmlspecialchars($student['collection'] ?? ''); ?>"
-                                                data-status="<?php echo strtolower($student['status'] ?? 'pending'); ?>"
-                                                <?php echo (strtolower($student['status'] ?? '') === 'active') ? 'checked' : ''; ?>>
+                                        <td>
+                                            <div class="actions-container">
+                                                <input type="checkbox" class="student-checkbox"
+                                                    data-student-id="<?php echo htmlspecialchars($student['student_id'] ?? $student['student id'] ?? ''); ?>"
+                                                    data-collection="<?php echo htmlspecialchars($student['collection'] ?? ''); ?>"
+                                                    data-status="<?php echo strtolower($student['status'] ?? 'pending'); ?>"
+                                                    <?php echo (strtolower($student['status'] ?? '') === 'active') ? 'checked' : ''; ?>>
 
+                                                <div class="eyeIcon close eyeIcon-list" onclick="togglePass(this)">
+                                                    <!-- Closed eye SVG -->
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                                        <g fill="none" fill-rule="evenodd">
+                                                            <path
+                                                                d="M24 0v24H0V0zM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z" />
+                                                            <path fill="#ffffff"
+                                                                d="M2.5 9a1.5 1.5 0 0 1 2.945-.404c1.947 6.502 11.158 6.503 13.109.005a1.5 1.5 0 1 1 2.877.85a10.1 10.1 0 0 1-1.623 3.236l.96.96a1.5 1.5 0 1 1-2.122 2.12l-1.01-1.01a9.6 9.6 0 0 1-1.67.915l.243.906a1.5 1.5 0 0 1-2.897.776l-.251-.935c-.705.073-1.417.073-2.122 0l-.25.935a1.5 1.5 0 0 1-2.898-.776l.242-.907a9.6 9.6 0 0 1-1.669-.914l-1.01 1.01a1.5 1.5 0 1 1-2.122-2.12l.96-.96a10.1 10.1 0 0 1-1.62-3.23A1.5 1.5 0 0 1 2.5 9" />
+                                                        </g>
+                                                    </svg>
+                                                </div>
+                                                <div class="eyeIcon open eyeIcon-list" onclick="togglePass(this)"
+                                                    style="display:none;">
+                                                    <!-- Open eye SVG -->
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                                        <g fill="none">
+                                                            <path
+                                                                d="M24 0v24H0V0zM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z" />
+                                                            <path fill="#ffffff"
+                                                                d="M12 5c3.679 0 8.162 2.417 9.73 5.901c.146.328.27.71.27 1.099c0 .388-.123.771-.27 1.099C20.161 16.583 15.678 19 12 19s-8.162-2.417-9.73-5.901C2.124 12.77 2 12.389 2 12c0-.388.123-.771.27-1.099C3.839 7.417 8.322 5 12 5m0 3a4 4 0 1 0 0 8a4 4 0 0 0 0-8m0 2a2 2 0 1 1 0 4a2 2 0 0 1 0-4" />
+                                                        </g>
+                                                    </svg>
+                                                </div>
 
+                                                <!-- Edit Button -->
+                                                <button class="action-btn edit-btn"
+                                                    onclick="openModal('editModal_<?php echo $student['student_id']; ?>')">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
 
-                                            <div class="eyeIcon close eyeIcon-list" onclick="togglePass(this)"
-                                                style="margin-right:0.5em;display:flex;align-items:center;cursor:pointer;">
-                                                <!-- Closed eye SVG -->
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                                    style="height: 1.2em; vertical-align: middle;">
-                                                    <g fill="none" fill-rule="evenodd">
-                                                        <path
-                                                            d="M24 0v24H0V0zM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z" />
-                                                        <path fill="#000000"
-                                                            d="M2.5 9a1.5 1.5 0 0 1 2.945-.404c1.947 6.502 11.158 6.503 13.109.005a1.5 1.5 0 1 1 2.877.85a10.1 10.1 0 0 1-1.623 3.236l.96.96a1.5 1.5 0 1 1-2.122 2.12l-1.01-1.01a9.6 9.6 0 0 1-1.67.915l.243.906a1.5 1.5 0 0 1-2.897.776l-.251-.935c-.705.073-1.417.073-2.122 0l-.25.935a1.5 1.5 0 0 1-2.898-.776l.242-.907a9.6 9.6 0 0 1-1.669-.914l-1.01 1.01a1.5 1.5 0 1 1-2.122-2.12l.96-.96a10.1 10.1 0 0 1-1.62-3.23A1.5 1.5 0 0 1 2.5 9" />
-                                                    </g>
-                                                </svg>
+                                                <!-- Delete Button -->
+                                                <button class="action-btn delete-btn"
+                                                    onclick="openDeleteModal('<?php echo htmlspecialchars($student['student_id']); ?>', '<?php echo htmlspecialchars($student['collection']); ?>')">
+                                                    <i class="fa-solid fa-trash-can"></i>
+                                                </button>
                                             </div>
-                                            <div class="eyeIcon open eyeIcon-list" onclick="togglePass(this)"
-                                                style="margin-right:0.5em;display:none;align-items:center;cursor:pointer;">
-                                                <!-- Open eye SVG -->
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                                    style="height: 1.2em; vertical-align: middle;">
-                                                    <g fill="none">
-                                                        <path
-                                                            d="M24 0v24H0V0zM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z" />
-                                                        <path fill="#000000"
-                                                            d="M12 5c3.679 0 8.162 2.417 9.73 5.901c.146.328.27.71.27 1.099c0 .388-.123.771-.27 1.099C20.161 16.583 15.678 19 12 19s-8.162-2.417-9.73-5.901C2.124 12.77 2 12.389 2 12c0-.388.123-.771.27-1.099C3.839 7.417 8.322 5 12 5m0 3a4 4 0 1 0 0 8a4 4 0 0 0 0-8m0 2a2 2 0 1 1 0 4a2 2 0 0 1 0-4" />
-                                                    </g>
-                                                </svg>
-                                            </div>
-
-
-                                            <!-- Edit Button -->
-                                            <button class="action-btn edit-btn"
-                                                onclick="openModal('editModal_<?php echo $student['student_id']; ?>')">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
 
                                             <!-- Modal -->
                                             <div id="editModal_<?php echo $student['student_id']; ?>" class="editStudentModal">
@@ -508,13 +506,14 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
                                                     </div>
                                                 </div>
                                             </div>
-                                            </form>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <button class="action-btn delete-btn"
-                onclick="openDeleteModal('<?php echo htmlspecialchars($student['student_id']); ?>', '<?php echo htmlspecialchars($student['collection']); ?>')">
-                <i class="fa-solid fa-trash-can"></i>
-            </button>
 
             <!-- Delete Confirmation Modal -->
             <div class="modal-overlay" id="delete-modal-overlay">
@@ -540,95 +539,83 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
             <!-- Notification container -->
             <div id="notification-container"></div>
 
+            <script>
+                // Initialize active tab from URL parameter
+                document.addEventListener('DOMContentLoaded', function() {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const activeTab = urlParams.get('tab') || 'all';
 
+                    // Set the active tab
+                    const tabs = document.querySelectorAll('.tab-button');
+                    tabs.forEach(tab => {
+                        if (tab.getAttribute('data-tab') === activeTab) {
+                            tab.classList.add('active');
+                        } else {
+                            tab.classList.remove('active');
+                        }
+                    });
 
+                    // Show the active tab content
+                    const tabContents = document.querySelectorAll('.tab-content');
+                    tabContents.forEach(content => {
+                        if (content.id === activeTab) {
+                            content.classList.add('active');
+                        } else {
+                            content.classList.remove('active');
+                        }
+                    });
 
+                    // Update department filter to preserve tab state
+                    const deptFilter = document.getElementById("department-filter");
+                    if (deptFilter) {
+                        deptFilter.addEventListener("change", function() {
+                            const dept = this.value;
+                            const url = new URL(window.location.href);
+                            url.searchParams.set('department', dept);
+                            url.searchParams.set('page', '1'); // Reset to first page
+                            window.location.href = url.toString();
+                        });
+                    }
 
-            </td>
-            </tr>
-        <?php endforeach; ?>
-    <?php endif; ?>
-    </tbody>
-    </table>
-        </div>
-    </div>
-
-    <script>
-        // Initialize active tab from URL parameter
-        document.addEventListener('DOMContentLoaded', function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const activeTab = urlParams.get('tab') || 'all';
-
-            // Set the active tab
-            const tabs = document.querySelectorAll('.tab-button');
-            tabs.forEach(tab => {
-                if (tab.getAttribute('data-tab') === activeTab) {
-                    tab.classList.add('active');
-                } else {
-                    tab.classList.remove('active');
-                }
-            });
-
-            // Show the active tab content
-            const tabContents = document.querySelectorAll('.tab-content');
-            tabContents.forEach(content => {
-                if (content.id === activeTab) {
-                    content.classList.add('active');
-                } else {
-                    content.classList.remove('active');
-                }
-            });
-
-            // Update department filter to preserve tab state
-            const deptFilter = document.getElementById("department-filter");
-            if (deptFilter) {
-                deptFilter.addEventListener("change", function() {
-                    const dept = this.value;
-                    const url = new URL(window.location.href);
-                    url.searchParams.set('department', dept);
-                    url.searchParams.set('page', '1'); // Reset to first page
-                    window.location.href = url.toString();
+                    // Add click handlers to tab buttons
+                    document.querySelectorAll('.tab-button').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const tabName = this.getAttribute('data-tab');
+                            const url = new URL(window.location.href);
+                            url.searchParams.set('tab', tabName);
+                            url.searchParams.set('page',
+                                '1'); // Reset to first page when changing tabs
+                            window.location.href = url.toString();
+                        });
+                    });
                 });
-            }
 
-            // Add click handlers to tab buttons
-            document.querySelectorAll('.tab-button').forEach(button => {
-                button.addEventListener('click', function() {
-                    const tabName = this.getAttribute('data-tab');
-                    const url = new URL(window.location.href);
-                    url.searchParams.set('tab', tabName);
-                    url.searchParams.set('page', '1'); // Reset to first page when changing tabs
-                    window.location.href = url.toString();
-                });
-            });
-        });
-
-        function openModal(modalId) {
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.classList.add("active");
-            }
-        }
-
-        function closeModal(modalId) {
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.classList.remove("active");
-            }
-        }
-
-        // Optional: close modal if user clicks outside the modal-content
-        window.addEventListener("click", function(event) {
-            const modals = document.querySelectorAll(".editStudentModal");
-            modals.forEach(modal => {
-                if (event.target === modal) {
-                    modal.classList.remove("active");
+                function openModal(modalId) {
+                    const modal = document.getElementById(modalId);
+                    if (modal) {
+                        modal.classList.add("active");
+                    }
                 }
-            });
-        });
-    </script>
 
-    <script src="../Assets/js/StudentList.js"></script>
+                function closeModal(modalId) {
+                    const modal = document.getElementById(modalId);
+                    if (modal) {
+                        modal.classList.remove("active");
+                    }
+                }
+
+                // Optional: close modal if user clicks outside the modal-content
+                window.addEventListener("click", function(event) {
+                    const modals = document.querySelectorAll(".editStudentModal");
+                    modals.forEach(modal => {
+                        if (event.target === modal) {
+                            modal.classList.remove("active");
+                        }
+                    });
+                });
+            </script>
+
+            <script src="../Assets/js/StudentList.js"></script>
 </body>
 
 </html>

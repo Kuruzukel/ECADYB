@@ -242,11 +242,16 @@ window.addEventListener("DOMContentLoaded", () => {
 // Select all checkboxes
 function initializeSelectAll() {
   const selectAllCheckbox = document.getElementById("select-all-header");
-  const studentCheckboxes = document.querySelectorAll(".student-checkbox");
   if (!selectAllCheckbox) return;
 
   selectAllCheckbox.addEventListener("change", function () {
-    studentCheckboxes.forEach((checkbox) => {
+    console.log("Select all clicked:", this.checked);
+    
+    // Get only visible student checkboxes (not filtered out)
+    const visibleStudentCheckboxes = getVisibleStudentCheckboxes();
+    console.log("Found", visibleStudentCheckboxes.length, "visible checkboxes");
+    
+    visibleStudentCheckboxes.forEach((checkbox) => {
       const was = checkbox.checked;
       checkbox.checked = this.checked;
       if (was !== this.checked) {
@@ -255,16 +260,43 @@ function initializeSelectAll() {
     });
   });
 
-  studentCheckboxes.forEach((checkbox) => {
-    checkbox.addEventListener("change", function () {
-      const allChecked = Array.from(studentCheckboxes).every(
-        (cb) => cb.checked
-      );
-      const anyChecked = Array.from(studentCheckboxes).some((cb) => cb.checked);
-      selectAllCheckbox.checked = allChecked;
-      selectAllCheckbox.indeterminate = anyChecked && !allChecked;
-    });
+  // Update select all state when individual checkboxes change
+  document.addEventListener("change", function(event) {
+    if (event.target && event.target.classList.contains("student-checkbox")) {
+      updateSelectAllState();
+    }
   });
+}
+
+// Helper function to get only visible student checkboxes
+function getVisibleStudentCheckboxes() {
+  const tableBody = document.querySelector("tbody");
+  if (!tableBody) return [];
+  
+  const visibleRows = Array.from(tableBody.querySelectorAll("tr")).filter(row => {
+    return row.style.display !== "none" && row.querySelector(".student-checkbox");
+  });
+  
+  return visibleRows.map(row => row.querySelector(".student-checkbox")).filter(Boolean);
+}
+
+// Helper function to update select all checkbox state
+function updateSelectAllState() {
+  const selectAllCheckbox = document.getElementById("select-all-header");
+  if (!selectAllCheckbox) return;
+  
+  const visibleStudentCheckboxes = getVisibleStudentCheckboxes();
+  if (visibleStudentCheckboxes.length === 0) {
+    selectAllCheckbox.checked = false;
+    selectAllCheckbox.indeterminate = false;
+    return;
+  }
+  
+  const allChecked = visibleStudentCheckboxes.every(cb => cb.checked);
+  const anyChecked = visibleStudentCheckboxes.some(cb => cb.checked);
+  
+  selectAllCheckbox.checked = allChecked;
+  selectAllCheckbox.indeterminate = anyChecked && !allChecked;
 }
 
 // Filters
@@ -287,27 +319,46 @@ function applyFilters() {
   const statusVal = (
     document.getElementById("status-filter")?.value || ""
   ).trim();
-  const studentRows = document.querySelectorAll(".student-row");
+  
+  console.log("Applying filters - Department:", deptVal, "Status:", statusVal);
+  
+  // Get all table rows in tbody, excluding header
+  const tableBody = document.querySelector("tbody");
+  if (!tableBody) return;
+  
+  const studentRows = tableBody.querySelectorAll("tr");
+  console.log("Found", studentRows.length, "student rows");
 
-  studentRows.forEach((row) => {
-    if (row.classList.contains("header")) return;
+  studentRows.forEach((row, index) => {
+    // Skip empty rows or rows without student data
+    const checkbox = row.querySelector(".student-checkbox");
+    if (!checkbox) {
+      console.log("Row", index, "has no checkbox, skipping");
+      return;
+    }
 
     let showRow = true;
 
+    // Department filter
     if (deptVal) {
-      const deptValue =
-        row.querySelector(".student-checkbox")?.dataset.collection;
+      const deptValue = checkbox.dataset.collection;
+      console.log("Row", index, "dept check:", deptValue, "vs", deptVal);
       if (deptValue !== deptVal) showRow = false;
     }
 
+    // Status filter
     if (statusVal) {
-      const statusAttr =
-        row.querySelector(".student-checkbox")?.dataset.status || "";
+      const statusAttr = checkbox.dataset.status || "";
+      console.log("Row", index, "status check:", statusAttr, "vs", statusVal);
       if (statusAttr.toLowerCase() !== statusVal.toLowerCase()) showRow = false;
     }
 
+    console.log("Row", index, "will be", showRow ? "shown" : "hidden");
     row.style.display = showRow ? "" : "none";
   });
+  
+  // Update select all state after filtering
+  updateSelectAllState();
 }
 
 // Notifications
@@ -404,20 +455,23 @@ function initializeDeleteModal() {
 
 // Toggle password
 function togglePass(icon) {
-  const studentRow = icon.closest(".student-row");
-  if (!studentRow) return;
+  const tableRow = icon.closest("tr");
+  if (!tableRow) return;
 
-  const passwordText = studentRow.querySelector(".password-text");
-  const eyeOpen = studentRow.querySelector(".eyeIcon.open.eyeIcon-list");
-  const eyeClose = studentRow.querySelector(".eyeIcon.close.eyeIcon-list");
+  const passwordText = tableRow.querySelector(".password-text");
+  const actionsContainer = icon.closest(".actions-container");
+  const eyeOpen = actionsContainer.querySelector(".eyeIcon.open.eyeIcon-list");
+  const eyeClose = actionsContainer.querySelector(".eyeIcon.close.eyeIcon-list");
 
   if (!passwordText) return;
 
   if (eyeClose && eyeClose.style.display !== "none") {
+    // Show password
     passwordText.textContent = passwordText.getAttribute("data-password");
     eyeClose.style.display = "none";
     if (eyeOpen) eyeOpen.style.display = "flex";
   } else {
+    // Hide password
     passwordText.textContent = "********";
     if (eyeClose) eyeClose.style.display = "flex";
     if (eyeOpen) eyeOpen.style.display = "none";
@@ -427,16 +481,24 @@ function togglePass(icon) {
 // Update status
 function initializeStatusUpdates() {
   const studentCheckboxes = document.querySelectorAll(".student-checkbox");
+  console.log("Found", studentCheckboxes.length, "student checkboxes");
   if (!studentCheckboxes.length) return;
 
   studentCheckboxes.forEach((checkbox) => {
     checkbox.addEventListener("change", async function () {
+      console.log("Checkbox changed", this.checked);
+      console.log("Dataset:", this.dataset);
+      
       if (this.dataset.busy === "1") return;
       this.dataset.busy = "1";
 
       const studentId = this.dataset.studentId?.trim();
       const collection = this.dataset.collection?.trim();
       const status = this.checked ? "Active" : "Pending";
+
+      console.log("Student ID:", studentId);
+      console.log("Collection:", collection);
+      console.log("Status:", status);
 
       if (!studentId || !collection) {
         showNotification("Student ID or collection missing", "error");
@@ -468,18 +530,23 @@ function initializeStatusUpdates() {
         }
 
         if (data && data.success) {
+          console.log("Status update successful");
           this.dataset.status = status.toLowerCase();
           const row = this.closest("tr");
           const statusCell = row?.querySelector(".student-status");
+          console.log("Found status cell:", statusCell);
           if (statusCell) {
+            console.log("Updating status cell text to:", status);
             statusCell.textContent = status;
             statusCell.className = `student-status ${
               status.toLowerCase() === "active"
                 ? "status-active"
                 : "status-pending"
             }`;
+            console.log("New status cell className:", statusCell.className);
           }
           applyFilters();
+          updateSelectAllState();
           showNotification(
             data.message || "Status updated successfully",
             "success"

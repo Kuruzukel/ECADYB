@@ -181,7 +181,7 @@ require $mongoPath;
                 switch ($page) {
 
                     case 'student-list':
-                        include('StudentList copy.php');
+                        include('StudentList.php');
                         break;
                     case 'add-new-student':
                         include('AddNewStudent.php');

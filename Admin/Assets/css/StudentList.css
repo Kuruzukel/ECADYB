@@ -153,347 +153,12 @@ label {
   color: #fff;
 }
 
-.select-all-label {
-  display: flex;
-  align-items: center;
-  color: rgb(255, 255, 255);
-  margin-left: auto;
-  height: 20px;
-}
-
-.select-all-checkbox {
-  margin-right: 8px;
-  accent-color: #217ff7;
-}
-
 .card-datatable {
   padding: 8px;
   min-height: 200px;
   color: #b0b0b0;
   width: 100%;
   box-sizing: border-box;
-}
-
-.student-row {
-  display: flex;
-  align-items: center;
-  padding: 12px 20px;
-  border-bottom: 1px solid #34495e;
-  background-color: rgba(255, 255, 255, 0.05);
-  transition: background-color 0.3s ease;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.student-row:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-.student-row:nth-child(odd) {
-  background-color: rgba(255, 255, 255, 0.04);
-}
-
-.student-row:nth-child(even) {
-  background-color: rgba(255, 255, 255, 0.07);
-}
-
-.student-row:nth-child(odd):hover {
-  background-color: rgba(255, 255, 255, 0.09);
-}
-
-.student-row:nth-child(even):hover {
-  background-color: rgba(255, 255, 255, 0.16);
-}
-
-.student-row.header {
-  background-color: rgba(255, 255, 255, 0.16);
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-  height: 3.2rem;
-}
-
-tr.student-row:nth-child(even):hover {
-  background-color: rgba(255, 255, 255, 0.16);
-}
-.student-checkbox {
-  height: 18px;
-  width: 18px;
-  accent-color: rgb(0, 255, 13);
-}
-
-.student-name {
-  flex: 1;
-  font-weight: 500;
-  color: #fff;
-  text-align: left;
-  justify-content: flex-start;
-  display: flex;
-  align-items: center;
-  padding-right: 5rem;
-}
-
-.student-header-text {
-  margin-left: 25px;
-  text-align: right;
-  justify-content: flex-end;
-  display: flex;
-  align-items: center;
-  color: #fff;
-}
-
-.student-dept {
-  flex: 1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-left: -2rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #fff;
-}
-
-.student-year {
-  flex: 1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #fff;
-}
-
-.student-status {
-  flex: 1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #fff;
-  padding-right: 3em;
-  margin-right: -11rem;
-}
-
-.student-actions {
-  flex: 0 0 120px;
-  max-width: 120px;
-  min-width: 100px;
-  justify-content: left;
-  text-align: left;
-  gap: 5px;
-}
-
-.action-btn {
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 12px;
-  transition: all 0.3s ease;
-}
-
-.edit-btn {
-  background: transparent !important;
-  color: #217ff7;
-  border: none;
-  cursor: pointer;
-  font-size: 18px;
-  transition: color 0.3s ease;
-  display: flex;
-}
-
-.delete-btn {
-  background: transparent !important;
-  color: #e74c3c;
-  border: none;
-  cursor: pointer;
-  font-size: 18px;
-  transition: all 0.3s ease;
-  display: flex;
-}
-
-.status-active {
-  color: rgb(0, 255, 13) !important;
-  font-weight: 500;
-}
-
-.status-pending {
-  color: #f39c12;
-  font-weight: 500;
-}
-
-.student-status.status-pending {
-  color: #ff4444 !important;
-  font-weight: 500;
-}
-
-.student-status.status-active {
-  color: #00ff00 !important;
-  font-weight: 500;
-}
-
-.student-status[data-checked="false"] {
-  color: #ff4444 !important;
-  font-weight: 500;
-}
-
-.student-status[data-checked="true"] {
-  color: #00ff00 !important;
-  font-weight: 500;
-}
-
-td.student-status.status-active,
-.student-row .student-status.status-active {
-  color: #00ff00 !important;
-  font-weight: 500;
-}
-
-td.student-status.status-pending,
-.student-row .student-status.status-pending {
-  color: #ff4444 !important;
-  font-weight: 500;
-}
-
-.no-students {
-  text-align: center;
-  padding: 40px;
-  color: #fff;
-  font-style: italic;
-}
-
-.eyeIcon-list {
-  margin-left: 0.5em;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}
-
-.password-text {
-  color: #fff;
-  font-size: 14px;
-  text-align: left;
-}
-
-.eyeIcon-list svg path[fill="#000000"] {
-  fill: #ffffff !important;
-}
-
-.student-id,
-.student-dept,
-.student-year,
-.student-status,
-.student-password,
-.student-actions {
-  flex: 1;
-  text-align: left;
-  justify-content: flex-start;
-  display: flex;
-  align-items: center;
-  padding: 0;
-  color: #fff;
-}
-
-.student-name-header,
-.student-id-header,
-.student-dept-header,
-.student-year-header,
-.student-status-header,
-.student-password-header,
-.student-actions-header {
-  text-align: left !important;
-  justify-content: flex-start !important;
-  height: 25px !important;
-}
-
-.student-name-header {
-  flex: 1;
-  font-weight: bold;
-  color: #fff;
-  text-align: center;
-  justify-content: center;
-  display: flex;
-  align-items: center;
-  padding-right: 4.8rem;
-}
-
-.student-id-header {
-  flex: 1;
-  font-weight: bold;
-  color: #fff;
-  text-align: center;
-  justify-content: center;
-  display: flex;
-  align-items: center;
-}
-
-.student-dept-header {
-  flex: 1;
-  font-weight: bold;
-  color: #fff;
-  text-align: left;
-  justify-content: flex-start;
-  display: flex;
-  align-items: center;
-}
-
-.student-year-header {
-  flex: 1;
-  font-weight: bold;
-  color: #fff;
-  text-align: left;
-  justify-content: flex-start;
-  display: flex;
-  align-items: center;
-}
-
-.student-status-header {
-  flex: 1;
-  font-weight: bold;
-  color: #fff;
-  text-align: left;
-  justify-content: flex-start;
-  display: flex;
-  align-items: center;
-}
-
-.student-password-header,
-.student-password {
-  flex: 1;
-  display: flex;
-  align-items: center;
-}
-
-.student-password-header {
-  flex: 1;
-  font-weight: bold;
-  color: #fff;
-  text-align: left;
-  justify-content: flex-start;
-  display: flex;
-  align-items: center;
-}
-
-.student-password-header.student-password {
-  margin-left: 0;
-  padding-left: 7em;
-}
-
-.student-password {
-  padding-left: 7em;
-}
-
-.student-actions-header {
-  flex: 0 0 120px;
-  max-width: 120px;
-  min-width: 100px;
-  justify-content: left;
-  text-align: left;
-}
-
-.student-actions-header.student-actions {
-  padding-left: 0;
 }
 
 tr.student-row {
@@ -510,6 +175,14 @@ tr.student-row {
 table {
   table-layout: fixed;
   width: 100%;
+  max-width: 100%;
+  border-collapse: collapse;
+  margin-top: 2px;
+  background: transparent;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 20px;
 }
 
 td {
@@ -553,8 +226,16 @@ th {
   font-size: 15px;
   font-weight: bold;
   color: #fff;
-  padding: 10px 12px;
+  padding: 15px 12px;
   vertical-align: middle;
+  height: auto !important;
+  min-height: 50px !important;
+  align-items: center;
+  border-bottom: 1px solid #34495e;
+  background-color: rgba(255, 255, 255, 0.05);
+  transition: background-color 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 @media (max-width: 768px) {
@@ -913,7 +594,6 @@ th {
   color: #f87171;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   #delete-modal-overlay .modal {
     margin: 1rem;
@@ -964,3 +644,289 @@ th {
 .notification i {
   font-size: 1.2rem;
 }
+
+table td {
+  border-left: 1px solid #c4c4c4;
+}
+table th {
+  border-left: 1px solid #4b3c7f;
+  text-align: left;
+}
+table td:first-child,
+table th:first-child {
+  border-left: none;
+}
+td {
+  padding: 8.5px 15px;
+  text-align: left;
+  word-break: break-word;
+}
+
+tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+tr:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+td a {
+  color: #0044cc;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+td a:hover {
+  background-color: rgba(128, 134, 193, 0.597);
+  padding: 5px 5px;
+  border-radius: 7px;
+}
+
+/* Table Column Width Controls */
+table th:nth-child(1) {
+  /* STUDENT column */
+  width: 20%;
+  min-width: 180px;
+}
+
+table th:nth-child(2) {
+  /* ID NUMBER column */
+  width: 12%;
+  min-width: 120px;
+}
+
+table th:nth-child(3) {
+  /* DEPARTMENT column */
+  width: 15%;
+  min-width: 140px;
+}
+
+table th:nth-child(4) {
+  /* ACADEMIC YEAR column */
+  width: 12%;
+  min-width: 120px;
+}
+
+table th:nth-child(5) {
+  /* STATUS column */
+  width: 10%;
+  min-width: 100px;
+}
+
+table th:nth-child(6) {
+  /* PASSWORD column */
+  width: 12%;
+  min-width: 110px;
+}
+
+table th:nth-child(7) {
+  /* ACTIONS column */
+  width: 12%;
+  min-width: 180px;
+}
+
+/* Table Data Column Width Controls */
+table td:nth-child(1) {
+  /* STUDENT data */
+  width: 20%;
+  min-width: 180px;
+}
+
+table td:nth-child(2) {
+  /* ID NUMBER data */
+  width: 12%;
+  min-width: 120px;
+}
+
+table td:nth-child(3) {
+  /* DEPARTMENT data */
+  width: 15%;
+  min-width: 140px;
+}
+
+table td:nth-child(4) {
+  /* ACADEMIC YEAR data */
+  width: 12%;
+  min-width: 120px;
+}
+
+table td:nth-child(5) {
+  /* STATUS data */
+  width: 10%;
+  min-width: 100px;
+}
+
+table td:nth-child(6) {
+  /* PASSWORD data */
+  width: 10%;
+  min-width: 110px;
+}
+
+table td:nth-child(7) {
+  /* ACTIONS data */
+  width: 12%;
+  min-width: 180px;
+}
+
+/* Select All Checkbox for table header */
+table th:nth-child(7) #select-all-header {
+  position: relative;
+  left: 45px;
+  margin-left: 0px;
+  margin-bottom: 3px;
+  display: inline-block;
+  height: 15px;
+  width: 15px;
+  accent-color: rgb(0, 255, 13);
+  vertical-align: middle;
+}
+
+/* Horizontal Action Buttons Container */
+.actions-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
+  width: 100%;
+}
+
+/* Action Buttons Styling */
+.actions-container .student-checkbox {
+  height: 15px;
+  width: 15px;
+  flex-shrink: 0;
+  margin: 0;
+}
+
+/* Student Checkbox Status-based Styling */
+.actions-container .student-checkbox[data-status="pending"] {
+  accent-color: #ff4444;
+  border-color: #ff4444;
+}
+
+.actions-container .student-checkbox[data-status="active"] {
+  accent-color: rgb(0, 255, 13);
+  border-color: rgb(0, 255, 13);
+}
+
+.actions-container .student-checkbox[data-status="pending"]:checked {
+  background-color: #ff4444;
+  border-color: #ff4444;
+}
+
+.actions-container .student-checkbox[data-status="active"]:checked {
+  background-color: rgb(0, 255, 13);
+  border-color: rgb(0, 255, 13);
+}
+
+.actions-container .eyeIcon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.actions-container .eyeIcon:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.actions-container .eyeIcon svg {
+  height: 18px;
+  width: 18px;
+}
+
+.actions-container .action-btn {
+  padding: 6px 8px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+}
+
+.actions-container .edit-btn {
+  background: rgba(33, 127, 247, 0.1);
+  color: #217ff7;
+  border: 1px solid rgba(33, 127, 247, 0.3);
+}
+
+.actions-container .edit-btn:hover {
+  background: rgba(33, 127, 247, 0.2);
+  border-color: #217ff7;
+  transform: translateY(-1px);
+}
+
+.actions-container .delete-btn {
+  background: rgba(231, 76, 60, 0.1);
+  color: #e74c3c;
+  border: 1px solid rgba(231, 76, 60, 0.3);
+}
+
+.actions-container .delete-btn:hover {
+  background: rgba(231, 76, 60, 0.2);
+  border-color: #e74c3c;
+  transform: translateY(-1px);
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 1200px) {
+  .actions-container {
+    gap: 6px;
+  }
+
+  .actions-container .action-btn {
+    min-width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+
+  .actions-container .eyeIcon svg {
+    height: 16px;
+    width: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .actions-container {
+    gap: 4px;
+  }
+
+  .actions-container .action-btn {
+    min-width: 24px;
+    height: 24px;
+    font-size: 11px;
+    padding: 4px 6px;
+  }
+
+  .actions-container .eyeIcon svg {
+    height: 14px;
+    width: 14px;
+  }
+
+  .actions-container .student-checkbox {
+    height: 14px;
+    width: 14px;
+  }
+}
+
+/* Status Text Color Styling */
+.status-active {
+  color: rgb(0, 255, 13) !important;
+  font-weight: 500;
+}
+
+.status-pending {
+  color: #ff4444 !important;
+  font-weight: 500;
+}
+
