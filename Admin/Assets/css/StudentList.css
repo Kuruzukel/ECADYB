@@ -953,7 +953,6 @@ th {
   gap: 0.5rem;
 }
 
-/* Show animation */
 .notification.show {
   opacity: 1;
   transform: translateY(0);
