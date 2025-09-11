@@ -902,7 +902,6 @@ th {
   transform: translateY(-1px);
 }
 
-/* Optional: Close button for delete modal */
 #delete-modal-overlay .close-btn {
   position: absolute;
   top: 12px;
@@ -1028,73 +1027,87 @@ td a {
 } */
 
 /* Table Column Width Controls */
-table th:nth-child(1) { /* STUDENT column */
+table th:nth-child(1) {
+  /* STUDENT column */
   width: 20%;
   min-width: 180px;
 }
 
-table th:nth-child(2) { /* ID NUMBER column */
+table th:nth-child(2) {
+  /* ID NUMBER column */
   width: 12%;
   min-width: 120px;
 }
 
-table th:nth-child(3) { /* DEPARTMENT column */
+table th:nth-child(3) {
+  /* DEPARTMENT column */
   width: 15%;
   min-width: 140px;
 }
 
-table th:nth-child(4) { /* ACADEMIC YEAR column */
+table th:nth-child(4) {
+  /* ACADEMIC YEAR column */
   width: 12%;
   min-width: 120px;
 }
 
-table th:nth-child(5) { /* STATUS column */
+table th:nth-child(5) {
+  /* STATUS column */
   width: 10%;
   min-width: 100px;
 }
 
-table th:nth-child(6) { /* PASSWORD column */
+table th:nth-child(6) {
+  /* PASSWORD column */
   width: 12%;
   min-width: 110px;
 }
 
-table th:nth-child(7) { /* ACTIONS column */
+table th:nth-child(7) {
+  /* ACTIONS column */
   width: 19%;
   min-width: 180px;
 }
 
 /* Table Data Column Width Controls */
-table td:nth-child(1) { /* STUDENT data */
+table td:nth-child(1) {
+  /* STUDENT data */
   width: 20%;
   min-width: 180px;
 }
 
-table td:nth-child(2) { /* ID NUMBER data */
+table td:nth-child(2) {
+  /* ID NUMBER data */
   width: 12%;
   min-width: 120px;
 }
 
-table td:nth-child(3) { /* DEPARTMENT data */
+table td:nth-child(3) {
+  /* DEPARTMENT data */
   width: 15%;
   min-width: 140px;
 }
 
-table td:nth-child(4) { /* ACADEMIC YEAR data */
+table td:nth-child(4) {
+  /* ACADEMIC YEAR data */
   width: 12%;
   min-width: 120px;
 }
 
-table td:nth-child(5) { /* STATUS data */
+table td:nth-child(5) {
+  /* STATUS data */
   width: 10%;
   min-width: 100px;
 }
 
-table td:nth-child(6) { /* PASSWORD data */
+table td:nth-child(6) {
+  /* PASSWORD data */
   width: 12%;
   min-width: 110px;
 }
 
-table td:nth-child(7) { /* ACTIONS data */
+table td:nth-child(7) {
+  /* ACTIONS data */
   width: 19%;
   min-width: 180px;
 }
@@ -1181,13 +1194,13 @@ table td:nth-child(7) { /* ACTIONS data */
   .actions-container {
     gap: 6px;
   }
-  
+
   .actions-container .action-btn {
     min-width: 28px;
     height: 28px;
     font-size: 12px;
   }
-  
+
   .actions-container .eyeIcon svg {
     height: 16px;
     width: 16px;
@@ -1198,19 +1211,19 @@ table td:nth-child(7) { /* ACTIONS data */
   .actions-container {
     gap: 4px;
   }
-  
+
   .actions-container .action-btn {
     min-width: 24px;
     height: 24px;
     font-size: 11px;
     padding: 4px 6px;
   }
-  
+
   .actions-container .eyeIcon svg {
     height: 14px;
     width: 14px;
   }
-  
+
   .actions-container .student-checkbox {
     height: 14px;
     width: 14px;
