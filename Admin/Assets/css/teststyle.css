@@ -342,7 +342,7 @@ tr.student-row:nth-child(even):hover {
 }
 
 .student-status[data-checked="true"] {
-  color: #00ff00 !important; /* Green when checked */
+  color: #00ff00 !important;
   font-weight: 500;
 }
 
