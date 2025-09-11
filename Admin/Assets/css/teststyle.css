@@ -953,7 +953,7 @@ th {
 }
 
 .notification.success {
-  background: linear-gradient(135deg, #34d399, #059669); /* green gradient */
+  background: linear-gradient(135deg, #34d399, #059669);
 }
 
 .notification.error {
