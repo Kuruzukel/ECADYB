@@ -864,7 +864,7 @@ th {
 #delete-modal-overlay .modal-buttons {
   display: flex;
   gap: 1rem;
-  justify-content: flex-end; /* matches editStudentModal */
+  justify-content: flex-end;
   margin-top: auto;
 }
 
