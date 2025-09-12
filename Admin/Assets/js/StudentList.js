@@ -1,4 +1,3 @@
-// Tab State Management
 function updateUrlWithTab(tabName) {
   const url = new URL(window.location.href);
   url.searchParams.set("tab", tabName);
