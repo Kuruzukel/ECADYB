@@ -345,7 +345,6 @@ function applyFilters() {
       if (deptValue !== deptVal) showRow = false;
     }
 
-    // Status filter
     if (statusVal) {
       const statusAttr = checkbox.dataset.status || "";
       console.log("Row", index, "status check:", statusAttr, "vs", statusVal);
@@ -355,9 +354,6 @@ function applyFilters() {
     console.log("Row", index, "will be", showRow ? "shown" : "hidden");
     row.style.display = showRow ? "" : "none";
   });
-
-  // Update select all state after filtering
-  // Note: No automatic state update for simple toggle mode
 }
 
 // Notifications
