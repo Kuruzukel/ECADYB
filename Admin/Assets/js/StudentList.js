@@ -235,7 +235,7 @@ function initializeSelectAll() {
   if (savedSelectAllState === "true") {
     selectAllCheckbox.checked = true;
     isSelectAllActive = true;
-    // Apply the saved state to all visible checkboxes
+
     setTimeout(() => {
       const visibleStudentCheckboxes = getVisibleStudentCheckboxes();
       visibleStudentCheckboxes.forEach((checkbox) => {
