@@ -180,7 +180,6 @@ function applyTheme(theme) {
     body.classList.add("theme-dark-mode");
   }
 
-  // Save theme to localStorage
   localStorage.setItem("dashboard-theme", theme);
 
   console.log("Theme applied and saved:", theme);
