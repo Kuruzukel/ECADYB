@@ -1,7 +1,7 @@
 function updateUrlWithTab(tabName) {
   const url = new URL(window.location.href);
   url.searchParams.set("tab", tabName);
-  url.searchParams.set("page", "1"); // Reset to first page when changing tabs
+  url.searchParams.set("page", "1");
   window.history.pushState({}, "", url);
   window.location.href = url.toString();
 }
