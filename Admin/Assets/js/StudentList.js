@@ -331,7 +331,6 @@ function applyFilters() {
   console.log("Found", studentRows.length, "student rows");
 
   studentRows.forEach((row, index) => {
-    // Skip empty rows or rows without student data
     const checkbox = row.querySelector(".student-checkbox");
     if (!checkbox) {
       console.log("Row", index, "has no checkbox, skipping");
@@ -340,7 +339,6 @@ function applyFilters() {
 
     let showRow = true;
 
-    // Department filter
     if (deptVal) {
       const deptValue = checkbox.dataset.collection;
       console.log("Row", index, "dept check:", deptValue, "vs", deptVal);
