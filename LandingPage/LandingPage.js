@@ -500,30 +500,7 @@ document.addEventListener("DOMContentLoaded", function () {
   
   document.addEventListener('click', activate, false);
   
-  // Auto-rotate functionality
-  let autoRotateInterval = setInterval(() => {
-    const items = document.querySelectorAll('.yearbook-item');
-    if (items.length > 0) {
-      slider.append(items[0]);
-    }
-  }, 4000);
-  
-  // Pause auto-rotation on hover
-  const sliderMain = document.querySelector('.yearbook-slider-main');
-  if (sliderMain) {
-    sliderMain.addEventListener('mouseenter', () => {
-      clearInterval(autoRotateInterval);
-    });
-    
-    sliderMain.addEventListener('mouseleave', () => {
-      autoRotateInterval = setInterval(() => {
-        const items = document.querySelectorAll('.yearbook-item');
-        if (items.length > 0) {
-          slider.append(items[0]);
-        }
-      }, 4000);
-    });
-  }
+  // Auto-rotate functionality removed per user request
 });
 
 // Yearbook Background Display Functionality
@@ -543,11 +520,7 @@ function showYearbookBackground(clickedItem, imageUrl) {
   sliderMain.style.backgroundImage = `url('${imageUrl}')`;
   sliderMain.classList.add('show-yearbook-bg');
   
-  // Pause auto-rotation when in full view
-  const slider = document.querySelector('.yearbook-slider');
-  if (slider && slider.autoRotateInterval) {
-    clearInterval(slider.autoRotateInterval);
-  }
+  // Auto-rotation functionality removed
 }
 
 function closeYearbookView() {
@@ -563,16 +536,7 @@ function closeYearbookView() {
   // Remove active class from all items
   allItems.forEach(item => item.classList.remove('active'));
   
-  // Resume auto-rotation
-  const slider = document.querySelector('.yearbook-slider');
-  if (slider) {
-    slider.autoRotateInterval = setInterval(() => {
-      const items = document.querySelectorAll('.yearbook-item');
-      if (items.length > 0) {
-        slider.append(items[0]);
-      }
-    }, 4000);
-  }
+  // Auto-rotation functionality removed
 }
 
 // Keyboard support for closing yearbook view
