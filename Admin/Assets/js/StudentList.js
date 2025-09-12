@@ -213,7 +213,6 @@ const DELETE_STUDENT_ENDPOINT = (() => {
   return `${origin}/ECADYB/Connection/DeleteStudent.php`;
 })();
 
-// Initialize on page load
 window.addEventListener("DOMContentLoaded", () => {
   console.log("StudentList.js loaded successfully");
 
