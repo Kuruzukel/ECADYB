@@ -446,7 +446,7 @@ document.addEventListener("DOMContentLoaded", function () {
     
     // Redirect after animation completes
     setTimeout(() => {
-      window.location.href = "/Public/Components/Login.php";
+      window.location.href = "../Public/Components/Login.php";
     }, 1000); // Match this with CSS animation duration
   }
 

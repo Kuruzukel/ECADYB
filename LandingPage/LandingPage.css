@@ -22,6 +22,29 @@
   }
 }
 
+@keyframes headerTransitionOut {
+  0% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+    filter: blur(0px) brightness(1);
+  }
+  30% {
+    opacity: 0.9;
+    transform: translateX(-50%) scale(1.02);
+    filter: blur(1px) brightness(1.05);
+  }
+  60% {
+    opacity: 0.6;
+    transform: translateX(-50%) scale(1.05);
+    filter: blur(3px) brightness(1.1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) scale(1.08);
+    filter: blur(8px) brightness(1.2);
+  }
+}
+
 @keyframes shimmerEffect {
   0% {
     background-position: -300% 0;
@@ -101,8 +124,14 @@
 
 /* Enhanced transition for individual elements */
 .page-transition-out header {
-  animation: modernPageOut 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: headerTransitionOut 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   animation-delay: 0.1s;
+  /* Ensure header stays in correct position during transition */
+  position: fixed !important;
+  top: 1rem !important;
+  left: 50% !important;
+  z-index: 10000 !important;
+  transform-origin: center center;
 }
 
 .page-transition-out .main-hero {
