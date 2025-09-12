@@ -1,4 +1,114 @@
 /* Base styles */
+/* Error Popup Modal - GitHub-style */
+.error-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.error-modal.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.error-modal-content {
+  background: #ffffff;
+  border: 1px solid #d73a49;
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 400px;
+  width: 90%;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 12px 24px rgba(215, 58, 73, 0.15),
+              0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: scale(0.9) translateY(-20px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: errorModalSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.error-modal.show .error-modal-content {
+  transform: scale(1) translateY(0);
+}
+
+.error-icon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.error-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.error-text {
+  flex: 1;
+}
+
+.error-text p {
+  margin: 0;
+  color: #24292e;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.4;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+}
+
+@keyframes errorModalSlideIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes errorModalSlideOut {
+  0% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+}
+
+.error-modal.hide .error-modal-content {
+  animation: errorModalSlideOut 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Responsive design for mobile */
+@media (max-width: 480px) {
+  .error-modal-content {
+    max-width: 320px;
+    padding: 20px;
+    margin: 0 16px;
+  }
+  
+  .error-text p {
+    font-size: 14px;
+  }
+}
+
 * {
   margin: 0;
   box-sizing: border-box;
@@ -18,6 +128,24 @@
 *:focus-visible {
   outline: 2px solid #0d39d9;
   outline-offset: 2px;
+}
+
+/* Page entrance animation */
+@keyframes pageIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+    filter: blur(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0px);
+  }
+}
+
+.page-transition-in {
+  animation: pageIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 /* Modern Page Transitions */

@@ -36,7 +36,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = trim($_POST['studentId']);
     $password = trim($_POST['password']);
 
-    if (strlen($password) > 8) {
+    // Check for empty fields
+    if (empty($username) || empty($password)) {
+        $error_message = "Please fill in all fields.";
+    } elseif (strlen($password) > 8) {
         $error_message = "Password must not exceed 8 characters.";
     } else {
         // ----- ADMIN LOGIN -----
@@ -105,13 +108,26 @@ if (isset($_SESSION['login_success']) && isset($_SESSION['redirect_to'])) {
     unset($_SESSION['login_success']);
     unset($_SESSION['redirect_to']);
 }
+// Add error message for JavaScript
+if (!empty($error_message)) {
+    echo ' data-error-message="' . htmlspecialchars($error_message) . '"';
+}
 ?>>
-    <div class="loginCard">
-        <?php if (!empty($error_message)): ?>
-        <div id="error-message" class="error-message">
-            <?php echo htmlspecialchars($error_message); ?>
+    <!-- Error Popup Modal -->
+    <div id="errorModal" class="error-modal">
+        <div class="error-modal-content">
+            <div class="error-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path fill="#dc3545" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zM13 17h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                </svg>
+            </div>
+            <div class="error-text">
+                <p id="errorMessage"></p>
+            </div>
         </div>
-        <?php endif; ?>
+    </div>
+    
+    <div class="loginCard">
         <form method="POST" action="">
             <p class="title">GRADUATION GALLERY</p>
             <div class="user field">
@@ -127,7 +143,7 @@ if (isset($_SESSION['login_success']) && isset($_SESSION['redirect_to'])) {
                     <p>Username / Student ID:</p>
                 </div>
                 <input name="studentId" id="idInput" type="text" placeholder="Username / Student ID" maxlength="11"
-                    autocomplete="off" required oninput="limitID()" />
+                    autocomplete="off" oninput="limitID()" />
             </div>
             <div class="pass field">
                 <div class="handle">

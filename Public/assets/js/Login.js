@@ -15,16 +15,56 @@ function limitID() {
   }
 }
 
+// Error Modal Functions
+function showErrorModal(message) {
+  const errorModal = document.getElementById('errorModal');
+  const errorMessage = document.getElementById('errorMessage');
+  
+  errorMessage.textContent = message;
+  errorModal.classList.add('show');
+  
+  // Auto-hide after 3 seconds
+  setTimeout(() => {
+    hideErrorModal();
+  }, 3000);
+}
+
+function hideErrorModal() {
+  const errorModal = document.getElementById('errorModal');
+  errorModal.classList.add('hide');
+  
+  setTimeout(() => {
+    errorModal.classList.remove('show', 'hide');
+  }, 300);
+}
+
+// Client-side form validation
+function validateForm() {
+  const username = document.getElementById('idInput').value.trim();
+  const password = document.getElementById('loginPass').value.trim();
+  
+  if (!username || !password) {
+    showErrorModal('Please fill in all fields.');
+    return false;
+  }
+  
+  if (password.length > 8) {
+    showErrorModal('Password must not exceed 8 characters.');
+    return false;
+  }
+  
+  return true;
+}
+
 // Handle form submission with modern page transition
 window.addEventListener("DOMContentLoaded", () => {
   // Add entrance animation to body when page loads
   document.body.classList.add('page-transition-in');
   
-  const errorMessage = document.getElementById("error-message");
-  if (errorMessage && errorMessage.classList.contains("show")) {
-    setTimeout(() => {
-      errorMessage.classList.remove("show");
-    }, 4000); // Hide after 4 seconds
+  // Check for server-side error message
+  const errorMessage = document.body.getAttribute('data-error-message');
+  if (errorMessage) {
+    showErrorModal(errorMessage);
   }
 
   // Check if login was successful and trigger transition
@@ -41,12 +81,28 @@ window.addEventListener("DOMContentLoaded", () => {
     }, 1000); // Match this with the CSS animation duration
   }
 
-  // Add form submission handler for normal form submission
+  // Add form submission handler
   const loginForm = document.querySelector('form');
   if (loginForm) {
     loginForm.addEventListener('submit', function(e) {
+      // Validate form before submission
+      if (!validateForm()) {
+        e.preventDefault();
+        return false;
+      }
+      
       // Let the form submit normally to process login
       // The transition will be handled after successful login detection
+    });
+  }
+  
+  // Close modal when clicking outside
+  const errorModal = document.getElementById('errorModal');
+  if (errorModal) {
+    errorModal.addEventListener('click', function(e) {
+      if (e.target === errorModal) {
+        hideErrorModal();
+      }
     });
   }
 });
