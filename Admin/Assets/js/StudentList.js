@@ -225,7 +225,6 @@ window.addEventListener("DOMContentLoaded", () => {
   initializeDeleteModal();
 });
 
-// Select all checkboxes
 let isSelectAllActive = false; // Flag to track select all operations
 
 function initializeSelectAll() {
