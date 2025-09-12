@@ -285,7 +285,6 @@ function getVisibleStudentCheckboxes() {
 }
 
 function clearSelectAllState() {
-  // Don't clear if select all is actively being used
   if (isSelectAllActive) {
     console.log("Select all is active, not clearing state");
     return;
@@ -299,7 +298,6 @@ function clearSelectAllState() {
   }
 }
 
-// Filters
 function initializeFilters() {
   const entriesCount = document.getElementById("entries-count");
   const departmentFilter = document.getElementById("department-filter");
@@ -322,12 +320,10 @@ function applyFilters() {
 
   console.log("Applying filters - Department:", deptVal, "Status:", statusVal);
 
-  // Clear select all state when filters are applied
   if (deptVal || statusVal) {
     clearSelectAllState();
   }
 
-  // Get all table rows in tbody, excluding header
   const tableBody = document.querySelector("tbody");
   if (!tableBody) return;
 
