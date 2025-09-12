@@ -257,7 +257,6 @@ function initializeSelectAll() {
     const visibleStudentCheckboxes = getVisibleStudentCheckboxes();
     console.log("Found", visibleStudentCheckboxes.length, "visible checkboxes");
 
-    // Simple toggle: set all visible checkboxes to match select all state
     visibleStudentCheckboxes.forEach((checkbox) => {
       const was = checkbox.checked;
       checkbox.checked = this.checked;
