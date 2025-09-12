@@ -1,128 +1,215 @@
 // service-worker.js
 
-// const CACHE_NAME = "grad-gallery-cache-v3";
+const CACHE_NAME = "ecadyb-yearbook-cache-v4";
+const STATIC_CACHE = "ecadyb-static-v4";
+const DYNAMIC_CACHE = "ecadyb-dynamic-v4";
 
-// // Files you want to cache for offline use
-// const urlsToCache = [
-//   "/", // index.html
-//   "/LandingPage/LandingPage.css",
-//   "/LandingPage/LandingPage.js",
-//   "/Public/Components/Login.php",
-//   "/Public/Components/Loader.html",
-//   "/Public/assets/css/Loader.css",
+// Critical files to cache for offline functionality
+const STATIC_ASSETS = [
+  "/",
+  "/index.php",
+  "/LandingPage/LandingPage.html",
+  "/LandingPage/LandingPage.css",
+  "/LandingPage/LandingPage.js",
+  "/Public/Components/Login.html",
+  "/Public/Components/Login.php",
+  "/Public/Components/Loader.html",
+  "/Public/assets/css/Login.css",
+  "/Public/assets/css/Loader.css",
+  "/Public/assets/js/Login.js",
+  "/Public/assets/js/Loader.js"
+];
 
-//   // Logos
-//   "https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png",
-//   "https://ECADYB.b-cdn.net/img/ECALOGO.png",
-//   "https://ECADYB.b-cdn.net/img/GRALLERYLOGO4.0.png",
-//   "https://ECADYB.b-cdn.net/img/ABOUTIMG.png",
+// CDN assets that should be cached
+const CDN_ASSETS = [
+  // Core logos
+  "https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png",
+  "https://ECADYB.b-cdn.net/img/ECALOGO.png",
+  "https://ECADYB.b-cdn.net/img/GRALLERYLOGO4.0.png",
+  "https://ECADYB.b-cdn.net/img/ABOUTIMG.png",
 
-//   // Yearbook Covers
-//   "https://ECADYB.b-cdn.net/img/YB COVER/MaritimeEducation.png",
-//   "https://ECADYB.b-cdn.net/img/YB COVER/TourismManagement.png",
-//   "https://ECADYB.b-cdn.net/img/YB COVER/CriminalJusticeEducation.png",
-//   "https://ECADYB.b-cdn.net/img/YB COVER/InformationSystem.png",
-//   "https://ECADYB.b-cdn.net/img/YB COVER/BusinessAdministration.png",
-//   "https://ECADYB.b-cdn.net/img/YB COVER/Education.png",
-//   "https://ECADYB.b-cdn.net/img/YB COVER/Nursing.png",
+  // Yearbook covers
+  "https://ECADYB.b-cdn.net/img/YB COVER/MaritimeEducation.png",
+  "https://ECADYB.b-cdn.net/img/YB COVER/TourismManagement.png",
+  "https://ECADYB.b-cdn.net/img/YB COVER/CriminalJusticeEducation.png",
+  "https://ECADYB.b-cdn.net/img/YB COVER/InformationSystem.png",
+  "https://ECADYB.b-cdn.net/img/YB COVER/BusinessAdministration.png",
+  "https://ECADYB.b-cdn.net/img/YB COVER/Education.png",
+  "https://ECADYB.b-cdn.net/img/YB COVER/Nursing.png"
+];
 
-//   // Carousel images
-//   "https://ECADYB.b-cdn.net/img/CAROUSEL/sample1.jpg",
-//   "https://ECADYB.b-cdn.net/img/CAROUSEL/sample2.jpg",
-//   "https://ECADYB.b-cdn.net/img/CAROUSEL/sample3.jpg",
-//   "https://ECADYB.b-cdn.net/img/CAROUSEL/sample4.jpg",
-//   "https://ECADYB.b-cdn.net/img/CAROUSEL/sample5.jpg",
-//   "https://ECADYB.b-cdn.net/img/CAROUSEL/sample6.jpg",
-//   "https://ECADYB.b-cdn.net/img/CAROUSEL/sample7.jpg",
-//   "https://ECADYB.b-cdn.net/img/CAROUSEL/sample8.jpg",
-//   "https://ECADYB.b-cdn.net/img/CAROUSEL/sample9.jpg",
-//   "https://ECADYB.b-cdn.net/img/CAROUSEL/sample10.jpg",
-//   "https://ECADYB.b-cdn.net/img/CAROUSEL/sample11.jpg",
-//   "https://ECADYB.b-cdn.net/img/CAROUSEL/sample12.jpg",
-//   "https://ECADYB.b-cdn.net/img/CAROUSEL/sample13.jpg",
-//   "https://ECADYB.b-cdn.net/img/CAROUSEL/sample14.jpg",
-//   "https://ECADYB.b-cdn.net/img/CAROUSEL/sample15.jpg",
-// ];
+// Install event - cache critical resources
+self.addEventListener("install", (event) => {
+  console.log("[ServiceWorker] Installing version 4...");
+  
+  event.waitUntil(
+    Promise.all([
+      // Cache static assets
+      caches.open(STATIC_CACHE).then((cache) => {
+        console.log("[ServiceWorker] Caching static assets");
+        return Promise.allSettled(
+          STATIC_ASSETS.map((url) =>
+            cache.add(url).catch((err) => {
+              console.warn(`[ServiceWorker] Failed to cache static asset: ${url}`, err);
+            })
+          )
+        );
+      }),
+      
+      // Cache CDN assets
+      caches.open(DYNAMIC_CACHE).then((cache) => {
+        console.log("[ServiceWorker] Caching CDN assets");
+        return Promise.allSettled(
+          CDN_ASSETS.map((url) =>
+            cache.add(url).catch((err) => {
+              console.warn(`[ServiceWorker] Failed to cache CDN asset: ${url}`, err);
+            })
+          )
+        );
+      })
+    ])
+  );
+  
+  // Force activation of new service worker
+  self.skipWaiting();
+});
 
-// // Install: cache files
-// self.addEventListener("install", (event) => {
-//   console.log("[ServiceWorker] Installing…");
-//   event.waitUntil(
-//     caches.open(CACHE_NAME).then((cache) => {
-//       return Promise.all(
-//         urlsToCache.map((url) =>
-//           cache.add(url).catch((err) => {
-//             console.warn("[ServiceWorker] Failed to cache:", url, err);
-//           })
-//         )
-//       );
-//     })
-//   );
-//   self.skipWaiting();
-// });
+// Activate event - clean up old caches
+self.addEventListener("activate", (event) => {
+  console.log("[ServiceWorker] Activating new service worker...");
+  
+  const cacheWhitelist = [STATIC_CACHE, DYNAMIC_CACHE];
+  
+  event.waitUntil(
+    Promise.all([
+      // Clean up old caches
+      caches.keys().then((cacheNames) =>
+        Promise.all(
+          cacheNames.map((cacheName) => {
+            if (!cacheWhitelist.includes(cacheName)) {
+              console.log(`[ServiceWorker] Deleting old cache: ${cacheName}`);
+              return caches.delete(cacheName);
+            }
+          })
+        )
+      ),
+      
+      // Take control of all clients
+      self.clients.claim()
+    ])
+  );
+});
 
-// // Fetch: use cache first, then network
-// self.addEventListener("fetch", (event) => {
-//   const { request } = event;
+// Fetch event - implement caching strategies
+self.addEventListener("fetch", (event) => {
+  const { request } = event;
+  const url = new URL(request.url);
+  
+  // Skip non-GET requests
+  if (request.method !== "GET") {
+    return;
+  }
+  
+  // Skip Chrome extension requests
+  if (url.protocol === "chrome-extension:") {
+    return;
+  }
+  
+  // Strategy 1: Network-first for API calls and dynamic content
+  if (url.pathname.includes("/Connection/") || 
+      url.pathname.includes("/Components/") ||
+      url.pathname.endsWith(".php")) {
+    event.respondWith(networkFirst(request));
+    return;
+  }
+  
+  // Strategy 2: Cache-first for static assets and images
+  if (request.destination === "image" || 
+      request.destination === "style" ||
+      request.destination === "script" ||
+      url.hostname === "ecadyb.b-cdn.net") {
+    event.respondWith(cacheFirst(request));
+    return;
+  }
+  
+  // Strategy 3: Stale-while-revalidate for HTML and other content
+  event.respondWith(staleWhileRevalidate(request));
+});
 
-//   // Network-first strategy for CSS to always get the latest styles
-//   if (request.destination === "style" || request.url.endsWith(".css")) {
-//     event.respondWith(
-//       fetch(new Request(request, { cache: "no-store" }))
-//         .then((networkResponse) => {
-//           if (networkResponse && networkResponse.status === 200) {
-//             const responseClone = networkResponse.clone();
-//             caches
-//               .open(CACHE_NAME)
-//               .then((cache) => cache.put(request, responseClone));
-//           }
-//           return networkResponse;
-//         })
-//         .catch(() => caches.match(request))
-//     );
-//     return;
-//   }
+// Cache-first strategy
+async function cacheFirst(request) {
+  try {
+    const cachedResponse = await caches.match(request);
+    if (cachedResponse) {
+      return cachedResponse;
+    }
+    
+    const networkResponse = await fetch(request);
+    if (networkResponse && networkResponse.status === 200) {
+      const cache = await caches.open(DYNAMIC_CACHE);
+      cache.put(request, networkResponse.clone());
+    }
+    return networkResponse;
+  } catch (error) {
+    console.warn(`[ServiceWorker] Cache-first failed for: ${request.url}`, error);
+    // Try to return cached version as fallback
+    return caches.match(request) || new Response("Offline content unavailable", {
+      status: 503,
+      statusText: "Service Unavailable"
+    });
+  }
+}
 
-//   // Default: cache-first with network update
-//   event.respondWith(
-//     caches.match(request).then((cachedResponse) => {
-//       if (cachedResponse) {
-//         return cachedResponse;
-//       }
-//       return fetch(request)
-//         .then((response) => {
-//           if (!response || response.status !== 200) {
-//             return response;
-//           }
-//           const responseClone = response.clone();
-//           caches
-//             .open(CACHE_NAME)
-//             .then((cache) => cache.put(request, responseClone));
-//           return response;
-//         })
-//         .catch((error) => {
-//           console.warn("[ServiceWorker] Fetch failed for:", request.url, error);
-//           throw error;
-//         });
-//     })
-//   );
-// });
+// Network-first strategy
+async function networkFirst(request) {
+  try {
+    const networkResponse = await fetch(request);
+    if (networkResponse && networkResponse.status === 200) {
+      const cache = await caches.open(DYNAMIC_CACHE);
+      cache.put(request, networkResponse.clone());
+    }
+    return networkResponse;
+  } catch (error) {
+    console.warn(`[ServiceWorker] Network-first failed for: ${request.url}`, error);
+    const cachedResponse = await caches.match(request);
+    return cachedResponse || new Response("Offline - content unavailable", {
+      status: 503,
+      statusText: "Service Unavailable"
+    });
+  }
+}
 
-// // Activate: clear old caches
-// self.addEventListener("activate", (event) => {
-//   console.log("[ServiceWorker] Activating new service worker…");
-//   const cacheWhitelist = [CACHE_NAME];
-//   event.waitUntil(
-//     caches.keys().then((cacheNames) =>
-//       Promise.all(
-//         cacheNames.map((cacheName) => {
-//           if (!cacheWhitelist.includes(cacheName)) {
-//             console.log("[ServiceWorker] Deleting old cache:", cacheName);
-//             return caches.delete(cacheName);
-//           }
-//         })
-//       )
-//     )
-//   );
-//   self.clients.claim();
-// });
+// Stale-while-revalidate strategy
+async function staleWhileRevalidate(request) {
+  const cachedResponse = await caches.match(request);
+  
+  const fetchPromise = fetch(request).then((networkResponse) => {
+    if (networkResponse && networkResponse.status === 200) {
+      const cache = caches.open(STATIC_CACHE);
+      cache.then(c => c.put(request, networkResponse.clone()));
+    }
+    return networkResponse;
+  }).catch((error) => {
+    console.warn(`[ServiceWorker] Stale-while-revalidate fetch failed for: ${request.url}`, error);
+  });
+  
+  return cachedResponse || fetchPromise;
+}
+
+// Message event for manual cache updates
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
+  
+  if (event.data && event.data.type === "CLEAR_CACHE") {
+    event.waitUntil(
+      caches.keys().then((cacheNames) =>
+        Promise.all(cacheNames.map((cacheName) => caches.delete(cacheName)))
+      ).then(() => {
+        console.log("[ServiceWorker] All caches cleared");
+        event.ports[0].postMessage({ success: true });
+      })
+    );
+  }
+});
