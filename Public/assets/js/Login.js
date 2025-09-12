@@ -152,6 +152,22 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   }
   
+  // Add modern page transition to back button
+  const backButton = document.querySelector('button[type="back"]');
+  if (backButton) {
+    backButton.addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      // Add page transition
+      document.body.classList.add('page-transition-out');
+      
+      // Navigate after animation
+      setTimeout(() => {
+        window.location.href = '../../LandingPage/LandingPage.html';
+      }, 1000);
+    });
+  }
+  
   // Close modal when clicking outside
   const errorModal = document.getElementById('errorModal');
   if (errorModal) {

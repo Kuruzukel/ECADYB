@@ -187,7 +187,7 @@ if (!empty($error_message)) {
             </div>
             <button type="submit">Login</button>
             <div class="logoContainer"></div>
-            <button type="back" onclick="window.location.href='../../LandingPage/LandingPage.html'">
+            <button type="back">
                 <i class="fas fa-arrow-left"></i> Back to Homepage
             </button>
         </form>
