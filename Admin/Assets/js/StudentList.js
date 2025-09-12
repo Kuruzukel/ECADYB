@@ -267,7 +267,6 @@ function initializeSelectAll() {
   });
 }
 
-// Helper function to get only visible student checkboxes
 function getVisibleStudentCheckboxes() {
   const tableBody = document.querySelector("tbody");
   if (!tableBody) return [];
@@ -285,7 +284,6 @@ function getVisibleStudentCheckboxes() {
     .filter(Boolean);
 }
 
-// Helper function to clear select all state when individual changes occur
 function clearSelectAllState() {
   // Don't clear if select all is actively being used
   if (isSelectAllActive) {
