@@ -1,29 +1,156 @@
-// Toggle password visibility for a specific input
-function togglePass(id) {
-  const input = document.getElementById(id);
-  const passField = input.parentElement; // .passwordField div
+function togglePass(fieldId) {
+  const passField = document.querySelector(`#${fieldId}`).closest('.passwordField');
+  const input = document.getElementById(fieldId);
   const isVisible = passField.getAttribute("data-isvisible") === "true";
 
-  input.type = isVisible ? "password" : "text";
   passField.setAttribute("data-isvisible", !isVisible);
+  input.type = isVisible ? "password" : "text";
 }
 
-// Limit input length for an ID field
-function limitID() {
-  const input = document.getElementById("idInput");
-  if (!input) return;
-  const maxLength = parseInt(input.getAttribute("maxlength"), 10);
-  if (input.value.length > maxLength) {
-    input.value = input.value.slice(0, maxLength);
+// Enhanced Error Modal Functions
+function showErrorModal(message, type = 'error') {
+  const errorModal = document.getElementById('errorModal');
+  const errorMessage = document.getElementById('errorMessage');
+  
+  // Set modal type for styling
+  errorModal.className = `error-modal ${type === 'success' ? 'success-modal' : ''}`;
+  
+  errorMessage.textContent = message;
+  errorModal.classList.add('show');
+  
+  // Add entrance animation delay
+  setTimeout(() => {
+    errorModal.querySelector('.error-modal-content').style.animation = 
+      'errorModalSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards';
+  }, 50);
+  
+  // Auto-hide after 3.5 seconds with smooth transition
+  setTimeout(() => {
+    hideErrorModal();
+  }, 3500);
+}
+
+function hideErrorModal() {
+  const errorModal = document.getElementById('errorModal');
+  errorModal.classList.add('hide');
+  
+  setTimeout(() => {
+    errorModal.classList.remove('show', 'hide');
+    errorModal.className = 'error-modal'; // Reset to default
+  }, 400);
+}
+
+// Enhanced client-side form validation
+function validateForm() {
+  const newPassword = document.getElementById('currrentpassword').value.trim();
+  const confirmPassword = document.getElementById('newpassword').value.trim();
+  
+  // Clear any existing highlights
+  clearFieldHighlights();
+  
+  if (!newPassword && !confirmPassword) {
+    showErrorModal('Please fill in all required fields.');
+    highlightField('currrentpassword');
+    highlightField('newpassword');
+    return false;
+  }
+  
+  if (!newPassword) {
+    showErrorModal('Please enter your new password.');
+    highlightField('currrentpassword');
+    return false;
+  }
+  
+  if (!confirmPassword) {
+    showErrorModal('Please confirm your password.');
+    highlightField('newpassword');
+    return false;
+  }
+  
+  if (newPassword.length > 8) {
+    showErrorModal('Password must not exceed 8 characters.');
+    highlightField('currrentpassword');
+    return false;
+  }
+  
+  if (newPassword.length < 3) {
+    showErrorModal('Password must be at least 3 characters long.');
+    highlightField('currrentpassword');
+    return false;
+  }
+  
+  if (newPassword !== confirmPassword) {
+    showErrorModal('Passwords do not match. Please try again.');
+    highlightField('currrentpassword');
+    highlightField('newpassword');
+    return false;
+  }
+  
+  return true;
+}
+
+// Field highlighting functions
+function highlightField(fieldId) {
+  const field = document.getElementById(fieldId);
+  if (field) {
+    field.style.borderColor = '#dc3545';
+    field.style.boxShadow = '0 0 0 3px rgba(220, 53, 69, 0.2)';
+    field.style.transition = 'all 0.3s ease';
+    
+    // Remove highlight after 3 seconds
+    setTimeout(() => {
+      clearFieldHighlight(fieldId);
+    }, 3000);
   }
 }
 
-// Auto fade out error message after a few seconds
+function clearFieldHighlight(fieldId) {
+  const field = document.getElementById(fieldId);
+  if (field) {
+    field.style.borderColor = '';
+    field.style.boxShadow = '';
+  }
+}
+
+function clearFieldHighlights() {
+  clearFieldHighlight('currrentpassword');
+  clearFieldHighlight('newpassword');
+}
+
+// Handle form submission with modern page transition
 window.addEventListener("DOMContentLoaded", () => {
-  const errorMessage = document.getElementById("error-message");
-  if (errorMessage && errorMessage.classList.contains("show")) {
-    setTimeout(() => {
-      errorMessage.classList.remove("show");
-    }, 4000); // Hide after 4 seconds
+  // Add entrance animation to body when page loads
+  document.body.classList.add('page-transition-in');
+
+  // Add form submission handler
+  const form = document.querySelector('form');
+  if (form) {
+    form.addEventListener('submit', function(e) {
+      // Validate form before submission
+      if (!validateForm()) {
+        e.preventDefault();
+        return false;
+      }
+      
+      // Add page transition for successful submission
+      e.preventDefault();
+      document.body.classList.add('page-transition-out');
+      
+      // Show success message and redirect after animation
+      showErrorModal('Password changed successfully!', 'success');
+      setTimeout(() => {
+        window.location.href = '../Components/Login.php';
+      }, 2000);
+    });
+  }
+  
+  // Close modal when clicking outside
+  const errorModal = document.getElementById('errorModal');
+  if (errorModal) {
+    errorModal.addEventListener('click', function(e) {
+      if (e.target === errorModal) {
+        hideErrorModal();
+      }
+    });
   }
 });
