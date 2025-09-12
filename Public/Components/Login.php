@@ -116,6 +116,7 @@ if (!empty($error_message)) {
     <!-- Error Popup Modal -->
     <div id="errorModal" class="error-modal">
         <div class="error-modal-content">
+            <button class="error-modal-close" onclick="hideErrorModal()">&times;</button>
             <div class="error-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24">
                     <path fill="white" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zM13 17h-2v-2h2v2zm0-4h-2V7h2v6z"/>
