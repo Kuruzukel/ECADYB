@@ -55,32 +55,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['login_success'] = 'admin';
             $_SESSION['redirect_to'] = '../../Admin/Components/AdminDashboard.php';
             // Don't redirect immediately, let JavaScript handle the transition
-        }
+        } else {
+            // ----- STUDENT LOGIN -----
+            $loginFound = false;
+            foreach ($collections as $collectionName => $course) {
+                $collection = $departmentsDB->{$collectionName};
 
-        // ----- STUDENT LOGIN -----
-        foreach ($collections as $collectionName => $course) {
-            $collection = $departmentsDB->{$collectionName};
+                $student = $collection->findOne([
+                    'student id' => $username,
+                    'password'   => $password
+                ]);
 
-            $student = $collection->findOne([
-                'student id' => $username,
-                'password'   => $password
-            ]);
-
-            if ($student) {
-                $_SESSION['role']       = 'student';
-                $_SESSION['student_id'] = $student['student id'];
-                $_SESSION['name']       = trim(($student['first name'] ?? '') . ' ' . ($student['middle name'] ?? '') . ' ' . ($student['last name'] ?? ''));
-                $_SESSION['department'] = $course;
-                $_SESSION['section']    = $student['department section'] ?? '';
-                // Set session variable to trigger transition
-                $_SESSION['login_success'] = 'student';
-                $_SESSION['redirect_to'] = '../../Student/Components/StudentDashboard.php';
-                // Don't redirect immediately, let JavaScript handle the transition
-                break;
+                if ($student) {
+                    $_SESSION['role']       = 'student';
+                    $_SESSION['student_id'] = $student['student id'];
+                    $_SESSION['name']       = trim(($student['first name'] ?? '') . ' ' . ($student['middle name'] ?? '') . ' ' . ($student['last name'] ?? ''));
+                    $_SESSION['department'] = $course;
+                    $_SESSION['section']    = $student['department section'] ?? '';
+                    // Set session variable to trigger transition
+                    $_SESSION['login_success'] = 'student';
+                    $_SESSION['redirect_to'] = '../../Student/Components/StudentDashboard.php';
+                    // Don't redirect immediately, let JavaScript handle the transition
+                    $loginFound = true;
+                    break;
+                }
+            }
+            
+            // Only set error message if no login was found
+            if (!$loginFound) {
+                $error_message = "Invalid student ID or password!";
             }
         }
-
-        $error_message = "Invalid student ID or password!";
     }
 }
 ?>

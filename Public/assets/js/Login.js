@@ -117,17 +117,12 @@ window.addEventListener("DOMContentLoaded", () => {
   // Add entrance animation to body when page loads
   document.body.classList.add('page-transition-in');
   
-  // Check for server-side error message
-  const errorMessage = document.body.getAttribute('data-error-message');
-  if (errorMessage) {
-    showErrorModal(errorMessage);
-  }
-
   // Check if login was successful and trigger transition
   const loginSuccess = document.body.getAttribute('data-login-success');
   const redirectTo = document.body.getAttribute('data-redirect-to');
   
   if (loginSuccess && redirectTo) {
+    // If login was successful, don't show any error messages
     // Add the modern page transition class to body
     document.body.classList.add('page-transition-out');
     
@@ -135,6 +130,13 @@ window.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
       window.location.href = redirectTo;
     }, 1000); // Match this with the CSS animation duration
+    return; // Exit early to prevent error message processing
+  }
+  
+  // Only check for server-side error message if login was NOT successful
+  const errorMessage = document.body.getAttribute('data-error-message');
+  if (errorMessage && !loginSuccess) {
+    showErrorModal(errorMessage);
   }
 
   // Add form submission handler
