@@ -252,10 +252,8 @@ function initializeSelectAll() {
 
     isSelectAllActive = this.checked;
 
-    // Save select all state to localStorage
     localStorage.setItem("selectAllState", this.checked.toString());
 
-    // Get only visible student checkboxes (not filtered out)
     const visibleStudentCheckboxes = getVisibleStudentCheckboxes();
     console.log("Found", visibleStudentCheckboxes.length, "visible checkboxes");
 
