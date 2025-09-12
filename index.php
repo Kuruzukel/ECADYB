@@ -114,6 +114,65 @@ if (array_key_exists($requestUri, $routes)) {
         } else {
             // Serve HTML & adjust paths for Railway
             $htmlContent = file_get_contents($filePath);
+            
+            // Inject Open Graph meta tags if not already present
+            if (strpos($htmlContent, 'og:title') === false) {
+                $metaTags = '
+    <!-- Open Graph / Facebook -->
+    <meta property="fb:app_id" content="1767810860531321" />
+    <meta property="og:locale" content="en_US" />
+    <meta
+      property="og:title"
+      content="Graduation Gallery - Exact Colleges of Asia"
+    />
+    <meta
+      property="og:description"
+      content="Step into your digital yearbook. Every achievement and memory comes alive."
+    />
+    <meta
+      property="og:image"
+      content="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png"
+    />
+    <meta
+      property="og:image:secure_url"
+      content="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:url" content="https://grad-gallery.up.railway.app" />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Graduation Gallery - Exact Colleges of Asia"
+    />
+    <meta
+      name="twitter:description"
+      content="Step into your digital yearbook. Every achievement and memory comes alive."
+    />
+    <meta
+      name="twitter:image"
+      content="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png"
+    />
+    <meta
+      name="twitter:image:alt"
+      content="Exact Colleges of Asia Graduation Gallery Preview Logo"
+    />
+
+    <!-- Favicon -->
+    <link
+      rel="icon"
+      href="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png"
+      type="image/png"
+    />
+';
+                
+                // Insert meta tags before </head>
+                $htmlContent = str_replace('</head>', $metaTags . '</head>', $htmlContent);
+            }
+            
             $htmlContent = str_replace(
                 [
                     'href="LandingPage.css"',
