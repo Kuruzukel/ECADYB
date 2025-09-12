@@ -695,7 +695,7 @@ header.fading {
 /* Yearbook Detail Display Styles */
 .yearbook-detail-display {
   position: absolute;
-  top: 50%;
+  top: 41%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 5;
@@ -710,10 +710,10 @@ header.fading {
 .yearbook-detail-container {
   display: flex;
   align-items: center;
-  gap: 3rem;
+  gap: 2.5rem;
   background: rgba(0, 0, 0, 0.3);
   border-radius: 20px;
-  padding: 2rem;
+  padding: 0.8rem;
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
@@ -749,7 +749,7 @@ header.fading {
   box-shadow: 0 4px 20px rgba(99, 102, 241, 0.25),
     0 0 0 2px rgba(252, 218, 21, 0.3);
   border: 2px solid #fcda15;
-  transform: scale(1.05);
+  transform: scale(1.1);
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -765,12 +765,8 @@ header.fading {
 }
 
 .yearbook-cover-image {
-  width: 300px;
-  height: 400px;
-  object-fit: cover;
-  border-radius: 15px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-  border: 3px solid rgba(252, 218, 21, 0.3);
+  width: 250px;
+  height: 380px;
 }
 
 .yearbook-info {
@@ -812,34 +808,34 @@ header.fading {
   .yearbook-detail-container {
     flex-direction: column;
     text-align: center;
-    gap: 2rem;
+    gap: 1.5rem;
   }
-  
+
   .yearbook-detail-close-btn {
     top: 0.75rem;
     right: 0.75rem;
     width: 36px;
     height: 36px;
   }
-  
+
   .yearbook-detail-close-btn svg {
     width: 18px;
     height: 18px;
   }
-  
+
   .yearbook-cover-image {
-    width: 250px;
-    height: 330px;
+    width: 200px;
+    height: 260px;
   }
-  
+
   .yearbook-detail-title {
     font-size: 2rem;
   }
-  
+
   .yearbook-detail-subtitle {
     font-size: 1.3rem;
   }
-  
+
   .yearbook-detail-description {
     font-size: 1rem;
   }
@@ -849,36 +845,36 @@ header.fading {
   .yearbook-detail-display {
     padding: 1rem;
   }
-  
+
   .yearbook-detail-container {
     padding: 1.5rem;
   }
-  
+
   .yearbook-detail-close-btn {
     top: 0.5rem;
     right: 0.5rem;
     width: 32px;
     height: 32px;
   }
-  
+
   .yearbook-detail-close-btn svg {
     width: 16px;
     height: 16px;
   }
-  
+
   .yearbook-cover-image {
     width: 200px;
     height: 260px;
   }
-  
+
   .yearbook-detail-title {
     font-size: 1.8rem;
   }
-  
+
   .yearbook-detail-subtitle {
     font-size: 1.2rem;
   }
-  
+
   .yearbook-detail-description {
     font-size: 0.9rem;
   }
@@ -897,7 +893,7 @@ header.fading {
 
 .yearbook-slider-main.show-yearbook-bg .yearbook-item.active {
   opacity: 1;
-  transform: translateY(-29px) scale(1.1);
+  transform: translateY(-15px) scale(0.95);
 }
 
 /* Yearbook Items Container - Easy gap control */
