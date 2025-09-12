@@ -482,61 +482,116 @@ if ("serviceWorker" in navigator) {
 
 // Yearbook Slider Functionality
 document.addEventListener("DOMContentLoaded", function () {
-  const slider = document.querySelector('.yearbook-slider');
+  // Initialize yearbook items with proper event handling
+  setTimeout(() => {
+    initializeYearbookItems();
+  }, 100); // Small delay to ensure DOM is fully loaded
+});
+
+// Initialize yearbook items with event delegation
+function initializeYearbookItems() {
+  const itemsContainer = document.querySelector('.yearbook-items-container');
+  const sliderMain = document.querySelector('.yearbook-slider-main');
   
-  if (!slider) return;
-  
-  function activate(e) {
-    const items = document.querySelectorAll('.yearbook-item');
-    
-    if (e.target.matches('.yearbook-next') && items.length > 0) {
-      slider.append(items[0]);
-    }
-    
-    if (e.target.matches('.yearbook-prev') && items.length > 0) {
-      slider.prepend(items[items.length - 1]);
-    }
+  if (!itemsContainer || !sliderMain) {
+    console.warn('Required yearbook elements not found, retrying...');
+    // Retry after a short delay if elements aren't ready
+    setTimeout(initializeYearbookItems, 200);
+    return;
   }
   
-  document.addEventListener('click', activate, false);
+  // Remove any existing event listeners to prevent duplicates
+  const existingListener = itemsContainer.getAttribute('data-listener');
+  if (existingListener) {
+    return; // Already initialized
+  }
   
-  // Auto-rotate functionality removed per user request
-});
+  // Mark as initialized
+  itemsContainer.setAttribute('data-listener', 'true');
+  
+  // Add event delegation for yearbook items (click)
+  itemsContainer.addEventListener('click', function(e) {
+    const clickedItem = e.target.closest('.yearbook-item');
+    if (clickedItem) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      // Get image URL from inline style
+      const styleAttr = clickedItem.getAttribute('style');
+      if (styleAttr) {
+        const imageUrlMatch = styleAttr.match(/background-image:\s*url\(['"]?([^'"\)]+)['"]?\)/);
+        if (imageUrlMatch && imageUrlMatch[1]) {
+          showYearbookBackground(clickedItem, imageUrlMatch[1]);
+        }
+      }
+    }
+  });
+  
+  console.log('Yearbook items initialized successfully');
+}
 
 // Yearbook Background Display Functionality
 function showYearbookBackground(clickedItem, imageUrl) {
-  const sliderMain = document.querySelector('.yearbook-slider-main');
-  const allItems = document.querySelectorAll('.yearbook-item');
-  
-  if (!sliderMain) return;
-  
-  // Remove active class from all items
-  allItems.forEach(item => item.classList.remove('active'));
-  
-  // Add active class to clicked item
-  clickedItem.classList.add('active');
-  
-  // Set background image and show full background view
-  sliderMain.style.backgroundImage = `url('${imageUrl}')`;
-  sliderMain.classList.add('show-yearbook-bg');
-  
-  // Auto-rotation functionality removed
+  try {
+    if (!clickedItem || !imageUrl) {
+      console.error('Missing required parameters for showYearbookBackground');
+      return;
+    }
+    
+    const sliderMain = document.querySelector('.yearbook-slider-main');
+    if (!sliderMain) {
+      console.error('Yearbook slider main container not found');
+      return;
+    }
+    
+    const allItems = document.querySelectorAll('.yearbook-item');
+    
+    // Remove active class from all items
+    allItems.forEach(item => {
+      if (item && item.classList) {
+        item.classList.remove('active');
+      }
+    });
+    
+    // Add active class to clicked item
+    if (clickedItem.classList) {
+      clickedItem.classList.add('active');
+    }
+    
+    // Set background image and show full background view
+    sliderMain.style.backgroundImage = `url('${imageUrl}')`;
+    sliderMain.classList.add('show-yearbook-bg');
+    
+    console.log('Background set successfully:', imageUrl);
+    
+  } catch (error) {
+    console.error('Error in showYearbookBackground:', error);
+  }
 }
 
 function closeYearbookView() {
-  const sliderMain = document.querySelector('.yearbook-slider-main');
-  const allItems = document.querySelectorAll('.yearbook-item');
-  
-  if (!sliderMain) return;
-  
-  // Remove background and full view class
-  sliderMain.style.backgroundImage = '';
-  sliderMain.classList.remove('show-yearbook-bg');
-  
-  // Remove active class from all items
-  allItems.forEach(item => item.classList.remove('active'));
-  
-  // Auto-rotation functionality removed
+  try {
+    const sliderMain = document.querySelector('.yearbook-slider-main');
+    const allItems = document.querySelectorAll('.yearbook-item');
+    
+    if (!sliderMain) {
+      console.error('Yearbook slider main container not found');
+      return;
+    }
+    
+    // Remove background and full view class
+    sliderMain.style.backgroundImage = '';
+    sliderMain.classList.remove('show-yearbook-bg', 'background-loaded');
+    
+    // Remove active class from all items and reset z-index
+    allItems.forEach(item => {
+      item.classList.remove('active');
+      item.style.zIndex = '';
+    });
+    
+  } catch (error) {
+    console.error('Error in closeYearbookView:', error);
+  }
 }
 
 // Keyboard support for closing yearbook view
@@ -553,14 +608,16 @@ document.addEventListener('keydown', function(e) {
 document.addEventListener('click', function(e) {
   const sliderMain = document.querySelector('.yearbook-slider-main');
   const closeBtn = document.querySelector('.yearbook-close-btn');
-  const items = document.querySelectorAll('.yearbook-item');
+  const itemsContainer = document.querySelector('.yearbook-items-container');
   
   if (sliderMain && sliderMain.classList.contains('show-yearbook-bg')) {
-    // Check if click is outside yearbook items and not on close button
-    const clickedItem = Array.from(items).some(item => item.contains(e.target));
+    // Check if click is outside yearbook items container and not on close button
+    const clickedInContainer = itemsContainer && itemsContainer.contains(e.target);
     const clickedCloseBtn = closeBtn && closeBtn.contains(e.target);
+    const clickedIntroContent = e.target.closest('.yearbook-intro-content');
     
-    if (!clickedItem && !clickedCloseBtn && sliderMain.contains(e.target)) {
+    // Only close if clicked in the background area (not on items, close button, or intro content)
+    if (!clickedInContainer && !clickedCloseBtn && !clickedIntroContent && sliderMain.contains(e.target)) {
       closeYearbookView();
     }
   }
