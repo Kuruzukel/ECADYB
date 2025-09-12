@@ -231,7 +231,6 @@ function initializeSelectAll() {
   const selectAllCheckbox = document.getElementById("select-all-header");
   if (!selectAllCheckbox) return;
 
-  // Restore select all state from localStorage on page load
   const savedSelectAllState = localStorage.getItem("selectAllState");
   if (savedSelectAllState === "true") {
     selectAllCheckbox.checked = true;
