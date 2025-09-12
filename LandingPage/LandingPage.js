@@ -479,3 +479,49 @@ if ("serviceWorker" in navigator) {
       .catch((err) => console.log("❌ Service Worker failed:", err));
   });
 }
+
+// Yearbook Slider Functionality
+document.addEventListener("DOMContentLoaded", function () {
+  const slider = document.querySelector('.yearbook-slider');
+  
+  if (!slider) return;
+  
+  function activate(e) {
+    const items = document.querySelectorAll('.yearbook-item');
+    
+    if (e.target.matches('.yearbook-next') && items.length > 0) {
+      slider.append(items[0]);
+    }
+    
+    if (e.target.matches('.yearbook-prev') && items.length > 0) {
+      slider.prepend(items[items.length - 1]);
+    }
+  }
+  
+  document.addEventListener('click', activate, false);
+  
+  // Auto-rotate functionality
+  let autoRotateInterval = setInterval(() => {
+    const items = document.querySelectorAll('.yearbook-item');
+    if (items.length > 0) {
+      slider.append(items[0]);
+    }
+  }, 4000);
+  
+  // Pause auto-rotation on hover
+  const sliderMain = document.querySelector('.yearbook-slider-main');
+  if (sliderMain) {
+    sliderMain.addEventListener('mouseenter', () => {
+      clearInterval(autoRotateInterval);
+    });
+    
+    sliderMain.addEventListener('mouseleave', () => {
+      autoRotateInterval = setInterval(() => {
+        const items = document.querySelectorAll('.yearbook-item');
+        if (items.length > 0) {
+          slider.append(items[0]);
+        }
+      }, 4000);
+    });
+  }
+});

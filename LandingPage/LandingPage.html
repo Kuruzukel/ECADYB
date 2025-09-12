@@ -239,118 +239,163 @@
     <section
       class="yearbooks-section"
       id="yearbooks"
-      style="position: relative; overflow: hidden"
+      style="position: relative; overflow: hidden; min-height: 100vh"
     >
       <div class="yearbooks-background"></div>
-      <div class="main-hero-lower-curl">
-        <svg
-          viewBox="0 0 1440 120"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          preserveAspectRatio="none"
-          style="display: block; width: 100%; height: 60px"
-        >
-          <!-- Back wave -->
-          <path
-            d="M0,60 Q180,20 360,60 T720,60 T1080,60 T1440,60 L1440,0 L0,0 Z"
-            fill="#1a237e"
-            opacity="0.4"
-          />
-          <!-- Middle wave -->
-          <path
-            d="M0,40 Q180,80 360,40 T720,40 T1080,40 T1440,40 L1440,0 L0,0 Z"
-            fill="#112d4e"
-            opacity="0.7"
-          />
-          <!-- Front wave -->
-          <path
-            d="M0,20 Q180,60 360,20 T720,20 T1080,20 T1440,20 L1440,0 L0,0 Z"
-            fill="#021326"
-          />
-        </svg>
-      </div>
-      <h2 class="section-title">Digital Yearbooks</h2>
-      <div class="yearbooks-row">
-        <div class="yearbook-card">
-          <img
-            src="https://ECADYB.b-cdn.net/img/YB COVER/MaritimeEducation.png"
-            class="yearbook-cover"
-          />
-          <div class="yearbook-title">COLLEGE OF MARITIME EDUCATION</div>
-        </div>
-        <div class="yearbook-card">
-          <img
-            src="https://ECADYB.b-cdn.net/img/YB COVER/TourismManagement.png"
-            class="yearbook-cover"
-          />
-          <div class="yearbook-title">COLLEGE OF TOURISM MANAGEMENT</div>
-        </div>
-        <div class="yearbook-card">
-          <img
-            src="https://ECADYB.b-cdn.net/img/YB COVER/CriminalJusticeEducation.png"
-            class="yearbook-cover"
-          />
-          <div class="yearbook-title">
-            COLLEGE OF CRIMINAL JUSTICE EDUCATION
-          </div>
-        </div>
-        <div class="yearbook-card">
-          <img
-            src="https://ECADYB.b-cdn.net/img/YB COVER/InformationSystem.png"
-            class="yearbook-cover"
-          />
-          <div class="yearbook-title">COLLEGE OF INFORMATION SYSTEM</div>
-        </div>
-        <div class="yearbook-card">
-          <img
-            src="https://ECADYB.b-cdn.net/img/YB COVER/BusinessAdministration.png"
-            class="yearbook-cover"
-          />
-          <div class="yearbook-title">COLLEGE OF BUSINESS ADMINISTRATION</div>
-        </div>
-        <div class="yearbook-card">
-          <img
-            src="https://ECADYB.b-cdn.net/img/YB COVER/Education.png"
-            class="yearbook-cover"
-          />
-          <div class="yearbook-title">COLLEGE OF EDUCATION</div>
-        </div>
-        <div class="yearbook-card">
-          <img
-            src="https://ECADYB.b-cdn.net/img/YB COVER/Nursing.png"
-            class="yearbook-cover"
-          />
-          <div class="yearbook-title">COLLEGE OF NURSING</div>
-        </div>
-      </div>
 
-      <div class="yearbook-lower-curl">
-        <svg
-          viewBox="0 0 1440 120"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          preserveAspectRatio="none"
-          style="display: block; width: 100%; height: 60px"
-        >
-          <!-- Back wave -->
-          <path
-            d="M0,60 Q180,100 360,60 T720,60 T1080,60 T1440,60 L1440,120 L0,120 Z"
-            fill="#1a237e"
-            opacity="0.4"
-          />
-          <!-- Middle wave -->
-          <path
-            d="M0,80 Q180,40 360,80 T720,80 T1080,80 T1440,80 L1440,120 L0,120 Z"
-            fill="#112d4e"
-            opacity="0.7"
-          />
-          <!-- Front wave -->
-          <path
-            d="M0,100 Q180,60 360,100 T720,100 T1080,100 T1440,100 L1440,120 L0,120 Z"
-            fill="#021326"
-          />
-        </svg>
-      </div>
+      <main class="yearbook-slider-main">
+        <div class="main-hero-lower-curl">
+          <svg
+            viewBox="0 0 1440 120"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="none"
+            style="display: block; width: 100%; height: 60px"
+          >
+            <!-- Back wave -->
+            <path
+              d="M0,60 Q180,20 360,60 T720,60 T1080,60 T1440,60 L1440,0 L0,0 Z"
+              fill="#1a237e"
+              opacity="0.4"
+            />
+            <!-- Middle wave -->
+            <path
+              d="M0,40 Q180,80 360,40 T720,40 T1080,40 T1440,40 L1440,0 L0,0 Z"
+              fill="#112d4e"
+              opacity="0.7"
+            />
+            <!-- Front wave -->
+            <path
+              d="M0,20 Q180,60 360,20 T720,20 T1080,20 T1440,20 L1440,0 L0,0 Z"
+              fill="#021326"
+            />
+          </svg>
+        </div>
+        <ul class="yearbook-slider">
+          <li
+            class="yearbook-item"
+            style="
+              background-image: url('https://ECADYB.b-cdn.net/img/BGGRALLERY.png');
+            "
+          >
+            <div class="yearbook-content">
+              <h2 class="yearbook-title">"College Memories"</h2>
+              <p class="yearbook-description">
+                Discover the journey of academic excellence and personal growth
+                through our digital yearbook collection.
+              </p>
+              <button class="yearbook-btn">Explore Now</button>
+            </div>
+          </li>
+          <li
+            class="yearbook-item"
+            style="
+              background-image: url('https://ECADYB.b-cdn.net/img/BGGRALLERY.png');
+            "
+          >
+            <div class="yearbook-content">
+              <h2 class="yearbook-title">"Maritime Adventures"</h2>
+              <p class="yearbook-description">
+                Navigate through the memories of our Maritime Education program
+                and oceanic discoveries.
+              </p>
+              <button class="yearbook-btn">View Gallery</button>
+            </div>
+          </li>
+          <li
+            class="yearbook-item"
+            style="
+              background-image: url('https://ECADYB.b-cdn.net/img/BGGRALLERY.png');
+            "
+          >
+            <div class="yearbook-content">
+              <h2 class="yearbook-title">"Academic Excellence"</h2>
+              <p class="yearbook-description">
+                Celebrate the achievements and milestones of our diverse
+                academic programs.
+              </p>
+              <button class="yearbook-btn">Discover More</button>
+            </div>
+          </li>
+          <li
+            class="yearbook-item"
+            style="
+              background-image: url('https://ECADYB.b-cdn.net/img/BGGRALLERY.png');
+            "
+          >
+            <div class="yearbook-content">
+              <h2 class="yearbook-title">"Future Leaders"</h2>
+              <p class="yearbook-description">
+                Meet the graduates who are shaping tomorrow through innovation
+                and dedication.
+              </p>
+              <button class="yearbook-btn">Meet Graduates</button>
+            </div>
+          </li>
+          <li
+            class="yearbook-item"
+            style="
+              background-image: url('https://ECADYB.b-cdn.net/img/BGGRALLERY.png');
+            "
+          >
+            <div class="yearbook-content">
+              <h2 class="yearbook-title">"Campus Life"</h2>
+              <p class="yearbook-description">
+                Experience the vibrant campus culture and unforgettable moments
+                of student life.
+              </p>
+              <button class="yearbook-btn">View Moments</button>
+            </div>
+          </li>
+          <li
+            class="yearbook-item"
+            style="
+              background-image: url('https://ECADYB.b-cdn.net/img/BGGRALLERY.png');
+            "
+          >
+            <div class="yearbook-content">
+              <h2 class="yearbook-title">"Graduation Glory"</h2>
+              <p class="yearbook-description">
+                Witness the culmination of years of hard work and the beginning
+                of new adventures.
+              </p>
+              <button class="yearbook-btn">See Graduates</button>
+            </div>
+          </li>
+        </ul>
+        <nav class="yearbook-nav">
+          <i class="fas fa-chevron-left yearbook-btn-nav yearbook-prev"></i>
+          <i class="fas fa-chevron-right yearbook-btn-nav yearbook-next"></i>
+        </nav>
+
+        <div class="yearbook-lower-curl">
+          <svg
+            viewBox="0 0 1440 120"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="none"
+            style="display: block; width: 100%; height: 60px"
+          >
+            <!-- Back wave -->
+            <path
+              d="M0,60 Q180,100 360,60 T720,60 T1080,60 T1440,60 L1440,120 L0,120 Z"
+              fill="#1a237e"
+              opacity="0.4"
+            />
+            <!-- Middle wave -->
+            <path
+              d="M0,80 Q180,40 360,80 T720,80 T1080,80 T1440,80 L1440,120 L0,120 Z"
+              fill="#112d4e"
+              opacity="0.7"
+            />
+            <!-- Front wave -->
+            <path
+              d="M0,100 Q180,60 360,100 T720,100 T1080,100 T1440,100 L1440,120 L0,120 Z"
+              fill="#021326"
+            />
+          </svg>
+        </div>
+      </main>
     </section>
 
     <!-- Carousel Section -->
