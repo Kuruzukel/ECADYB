@@ -189,7 +189,6 @@ function applyTheme(theme) {
   document.body.style.display = "";
 }
 
-// Global constants
 const STATUS_ENDPOINT = (() => {
   const origin = window.location.origin;
   const pathSegments = window.location.pathname.split("/").filter(Boolean);
