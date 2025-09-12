@@ -141,14 +141,16 @@ window.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.querySelector('form');
   if (loginForm) {
     loginForm.addEventListener('submit', function(e) {
-      // Validate form before submission
-      if (!validateForm()) {
+      // Only validate on client-side, don't prevent server submission
+      // The server will handle authentication and redirects
+      const isValid = validateForm();
+      if (!isValid) {
         e.preventDefault();
         return false;
       }
       
-      // Let the form submit normally to process login
-      // The transition will be handled after successful login detection
+      // If validation passes, let the form submit normally to server
+      // Server will handle authentication and set redirect attributes
     });
   }
   
