@@ -48,8 +48,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($admin) {
             $_SESSION['role']     = 'admin';
             $_SESSION['username'] = $username;
-            header("Location: ../../Admin/Components/AdminDashboard.php");
-            exit();
+            // Set session variable to trigger transition
+            $_SESSION['login_success'] = 'admin';
+            $_SESSION['redirect_to'] = '../../Admin/Components/AdminDashboard.php';
+            // Don't redirect immediately, let JavaScript handle the transition
         }
 
         // ----- STUDENT LOGIN -----
@@ -67,9 +69,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['name']       = trim(($student['first name'] ?? '') . ' ' . ($student['middle name'] ?? '') . ' ' . ($student['last name'] ?? ''));
                 $_SESSION['department'] = $course;
                 $_SESSION['section']    = $student['department section'] ?? '';
-
-                header("Location: ../../Student/Components/StudentDashboard.php");
-                exit();
+                // Set session variable to trigger transition
+                $_SESSION['login_success'] = 'student';
+                $_SESSION['redirect_to'] = '../../Student/Components/StudentDashboard.php';
+                // Don't redirect immediately, let JavaScript handle the transition
+                break;
             }
         }
 

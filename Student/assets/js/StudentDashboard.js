@@ -1,3 +1,45 @@
+// Modern Page Transition Functions
+function initializePageTransitions() {
+  // Add transition to all navigation links
+  const navLinks = document.querySelectorAll('a[href]:not([href="#"])');
+  
+  navLinks.forEach(link => {
+    link.addEventListener('click', function(e) {
+      const href = this.getAttribute('href');
+      
+      // Skip if it's a hash link or external link
+      if (href.startsWith('#') || href.startsWith('http') || href.startsWith('mailto')) {
+        return;
+      }
+      
+      e.preventDefault();
+      
+      // Add page transition class
+      document.body.classList.add('page-transition-out');
+      
+      // Navigate after animation
+      setTimeout(() => {
+        window.location.href = href;
+      }, 1000);
+    });
+  });
+}
+
+// Logout with transition
+function logoutWithTransition() {
+  document.body.classList.add('page-transition-out');
+  
+  setTimeout(() => {
+    // Determine the correct logout path
+    const isLocalhost = window.location.hostname === 'localhost';
+    const logoutPath = isLocalhost 
+      ? '../../Public/Components/Login.php' 
+      : '/Public/Components/Login.php';
+    
+    window.location.href = logoutPath;
+  }, 1000);
+}
+
 // Profile dropdown functionality
 const profileBtn = document.getElementById("profileDropdownBtn");
 const profileMenu = document.getElementById("profileDropdownMenu");
@@ -253,18 +295,32 @@ window.addEventListener("scroll", () => {
 
 // Mobile & Desktop login buttons - simple redirect
 document.addEventListener("DOMContentLoaded", function () {
+  // Initialize page transitions
+  initializePageTransitions();
+  
+  // Add entrance animation to body
+  document.body.classList.add('page-transition-in');
+  
   const loginBtn = document.getElementById("loginDropdownBtn");
   const mobileLoginBtn = document.getElementById("mobileLoginDropdownBtn");
 
   if (loginBtn) {
     loginBtn.addEventListener("click", () => {
-      window.location.href = "/Public/Login.php";
+      // Use transition for login redirect
+      document.body.classList.add('page-transition-out');
+      setTimeout(() => {
+        window.location.href = "/Public/Login.php";
+      }, 1000);
     });
   }
 
   if (mobileLoginBtn) {
     mobileLoginBtn.addEventListener("click", () => {
-      window.location.href = "/Public/Login.php";
+      // Use transition for login redirect
+      document.body.classList.add('page-transition-out');
+      setTimeout(() => {
+        window.location.href = "/Public/Login.php";
+      }, 1000);
     });
   }
 });

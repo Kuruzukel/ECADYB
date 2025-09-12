@@ -1,3 +1,45 @@
+// Modern Page Transition Functions
+function initializePageTransitions() {
+  // Add transition to all navigation links
+  const navLinks = document.querySelectorAll('a[href]:not([href="#"])');
+  
+  navLinks.forEach(link => {
+    link.addEventListener('click', function(e) {
+      const href = this.getAttribute('href');
+      
+      // Skip if it's a hash link or external link
+      if (href.startsWith('#') || href.startsWith('http') || href.startsWith('mailto')) {
+        return;
+      }
+      
+      e.preventDefault();
+      
+      // Add page transition class
+      document.body.classList.add('page-transition-out');
+      
+      // Navigate after animation
+      setTimeout(() => {
+        window.location.href = href;
+      }, 1000);
+    });
+  });
+}
+
+// Logout with transition
+function logoutWithTransition() {
+  document.body.classList.add('page-transition-out');
+  
+  setTimeout(() => {
+    // Determine the correct logout path
+    const isLocalhost = window.location.hostname === 'localhost';
+    const logoutPath = isLocalhost 
+      ? '../../Public/Components/Login.php' 
+      : '/Public/Components/Login.php';
+    
+    window.location.href = logoutPath;
+  }, 1000);
+}
+
 // Sidebar toggle buttons
 const hamburgerIcon = document.querySelector(".hamburger-menu-ico");
 const closeIcon = document.querySelector(".close-ico");
@@ -291,4 +333,16 @@ document.addEventListener("DOMContentLoaded", () => {
   // Apply saved theme on page load
   const savedTheme = localStorage.getItem('dashboard-theme') || 'Default';
   applyTheme(savedTheme);
+  
+  // Initialize page transitions
+  initializePageTransitions();
+  
+  // Add logout functionality with transition
+  const logoutTab = document.getElementById('logout-tab');
+  if (logoutTab) {
+    logoutTab.addEventListener('click', function(e) {
+      e.preventDefault();
+      logoutWithTransition();
+    });
+  }
 });
