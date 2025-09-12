@@ -621,97 +621,179 @@ header.fading {
   pointer-events: auto;
 }
 
-.yearbook-item {
-  width: 200px;
-  height: 300px;
-  list-style-type: none;
+/* Yearbook Introduction Content */
+.yearbook-intro-content {
   position: absolute;
   top: 50%;
-  transform: translateY(-50%);
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+  z-index: 4;
+  max-width: 800px;
+  padding: 2rem;
+}
+
+.yearbook-main-title {
+  font-size: 3.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
+  font-family: 'arial-black', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.yearbook-subtitle {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+  color: #fcda15;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.yearbook-intro-content .yearbook-description {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  color: #e0e7ff;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.yearbook-item {
+  width: 150px;
+  height: 200px;
+  list-style-type: none;
+  position: absolute;
+  bottom: 80px;
   z-index: 1;
   background-position: center;
   background-size: cover;
-  box-shadow: 0 20px 30px rgba(255,255,255,0.3) inset;
-  transition: transform 0.1s, left 0.75s, top 0.75s, width 0.75s, height 0.75s;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
 }
 
-.yearbook-item:nth-child(1),
-.yearbook-item:nth-child(2) {
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  transform: none;
-  box-shadow: none;
+.yearbook-item:hover {
+  transform: translateY(-10px) scale(1.05);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+}
+
+.yearbook-item.active {
+  transform: scale(0.9);
+  opacity: 0.8;
+}
+
+/* Full background display for selected yearbook */
+.yearbook-slider-main.show-yearbook-bg {
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  transition: background-image 0.5s ease;
+}
+
+.yearbook-slider-main.show-yearbook-bg .yearbook-intro-content {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.9);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+}
+
+.yearbook-slider-main.show-yearbook-bg .yearbook-item {
+  opacity: 0.7;
+  transform: translateY(-10px) scale(0.8);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.yearbook-slider-main.show-yearbook-bg .yearbook-item.active {
   opacity: 1;
+  transform: translateY(-10px) scale(1.1);
+  box-shadow: 0 20px 40px rgba(252, 218, 21, 0.4);
+  border: 3px solid #fcda15;
 }
 
-.yearbook-item:nth-child(3) { left: 50%; }
-.yearbook-item:nth-child(4) { left: calc(50% + 220px); }
-.yearbook-item:nth-child(5) { left: calc(50% + 440px); }
-.yearbook-item:nth-child(6) { left: calc(50% + 660px); opacity: 0; }
+/* Close button for full background view */
+.yearbook-close-btn {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  border: 2px solid #fcda15;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.5rem;
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+
+.yearbook-close-btn:hover {
+  background: rgba(252, 218, 21, 0.9);
+  color: #000;
+  transform: scale(1.1);
+}
+
+.yearbook-slider-main.show-yearbook-bg .yearbook-close-btn {
+  display: flex;
+}
+
+/* Position all 7 yearbook items at the bottom */
+.yearbook-item:nth-child(1) { left: calc(50% - 525px); }
+.yearbook-item:nth-child(2) { left: calc(50% - 375px); }
+.yearbook-item:nth-child(3) { left: calc(50% - 225px); }
+.yearbook-item:nth-child(4) { left: calc(50% - 75px); }
+.yearbook-item:nth-child(5) { left: calc(50% + 75px); }
+.yearbook-item:nth-child(6) { left: calc(50% + 225px); }
+.yearbook-item:nth-child(7) { left: calc(50% + 375px); }
 
 .yearbook-content {
-  width: min(30vw, 400px);
+  width: 100%;
+  height: 100%;
   position: absolute;
-  top: 50%;
-  left: 3rem;
-  transform: translateY(-50%);
-  font: 400 0.85rem helvetica, sans-serif;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  text-align: center;
+  padding: 1rem 0.5rem;
+  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);
+  border-radius: 15px;
   color: white;
-  text-shadow: 0 3px 8px rgba(0,0,0,0.5);
-  opacity: 0;
-  display: none;
+  opacity: 1;
 }
 
 .yearbook-content .yearbook-title {
   font-family: 'arial-black';
   text-transform: uppercase;
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
 }
 
 .yearbook-content .yearbook-description {
-  line-height: 1.7;
-  margin: 1rem 0 1.5rem;
-  font-size: 0.9rem;
+  display: none;
 }
 
 .yearbook-content .yearbook-btn {
-  width: fit-content;
-  background-color: rgba(0,0,0,0.1);
-  color: white;
-  border: 2px solid white;
-  border-radius: 0.25rem;
-  padding: 0.75rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  display: none;
 }
 
-.yearbook-content .yearbook-btn:hover {
-  background-color: rgba(255,255,255,0.2);
-  transform: translateY(-2px);
-}
 
-.yearbook-item:nth-of-type(2) .yearbook-content {
-  display: block;
-  animation: yearbook-show 0.75s ease-in-out 0.3s forwards;
-}
-
-@keyframes yearbook-show {
-  0% {
-    filter: blur(5px);
-    transform: translateY(calc(-50% + 75px));
-  }
-  100% {
-    opacity: 1;
-    filter: blur(0);
-  }
-}
 
 .yearbook-nav {
   position: absolute;
-  bottom: 2rem;
+  bottom: 300px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 5;
@@ -742,45 +824,81 @@ header.fading {
 
 /* Responsive Design for Yearbook Slider */
 @media (width > 650px) and (width < 900px) {
-  .yearbook-content .yearbook-title { font-size: 1.2rem; }
-  .yearbook-content .yearbook-description { font-size: 0.8rem; }
-  .yearbook-content .yearbook-btn { font-size: 0.8rem; }
-  
-  .yearbook-item {
-    width: 160px;
-    height: 270px;
+  .yearbook-main-title {
+    font-size: 2.8rem;
   }
   
-  .yearbook-item:nth-child(3) { left: 50%; }
-  .yearbook-item:nth-child(4) { left: calc(50% + 170px); }
-  .yearbook-item:nth-child(5) { left: calc(50% + 340px); }
-  .yearbook-item:nth-child(6) { left: calc(50% + 510px); opacity: 0; }
+  .yearbook-subtitle {
+    font-size: 1.6rem;
+  }
+  
+  .yearbook-intro-content .yearbook-description {
+    font-size: 1rem;
+  }
+  
+  .yearbook-item {
+    width: 120px;
+    height: 160px;
+    bottom: 60px;
+  }
+  
+  .yearbook-item:nth-child(1) { left: calc(50% - 420px); }
+  .yearbook-item:nth-child(2) { left: calc(50% - 300px); }
+  .yearbook-item:nth-child(3) { left: calc(50% - 180px); }
+  .yearbook-item:nth-child(4) { left: calc(50% - 60px); }
+  .yearbook-item:nth-child(5) { left: calc(50% + 60px); }
+  .yearbook-item:nth-child(6) { left: calc(50% + 180px); }
+  .yearbook-item:nth-child(7) { left: calc(50% + 300px); }
+  
+  .yearbook-content .yearbook-title { font-size: 0.8rem; }
 }
 
 @media (width < 650px) {
-  .yearbook-content {
-    left: 1.5rem;
-    width: min(40vw, 300px);
+  .yearbook-intro-content {
+    padding: 1rem;
+    max-width: 90%;
   }
   
-  .yearbook-content .yearbook-title { font-size: 1rem; }
-  .yearbook-content .yearbook-description { font-size: 0.75rem; }
-  .yearbook-content .yearbook-btn { font-size: 0.75rem; }
+  .yearbook-main-title {
+    font-size: 2.2rem;
+  }
+  
+  .yearbook-subtitle {
+    font-size: 1.3rem;
+  }
+  
+  .yearbook-intro-content .yearbook-description {
+    font-size: 0.9rem;
+  }
   
   .yearbook-item {
-    width: 130px;
-    height: 220px;
+    width: 100px;
+    height: 130px;
+    bottom: 40px;
   }
   
-  .yearbook-item:nth-child(3) { left: 50%; }
-  .yearbook-item:nth-child(4) { left: calc(50% + 140px); }
-  .yearbook-item:nth-child(5) { left: calc(50% + 280px); }
-  .yearbook-item:nth-child(6) { left: calc(50% + 420px); opacity: 0; }
+  .yearbook-item:nth-child(1) { left: calc(50% - 350px); }
+  .yearbook-item:nth-child(2) { left: calc(50% - 250px); }
+  .yearbook-item:nth-child(3) { left: calc(50% - 150px); }
+  .yearbook-item:nth-child(4) { left: calc(50% - 50px); }
+  .yearbook-item:nth-child(5) { left: calc(50% + 50px); }
+  .yearbook-item:nth-child(6) { left: calc(50% + 150px); }
+  .yearbook-item:nth-child(7) { left: calc(50% + 250px); }
+  
+  .yearbook-content .yearbook-title { font-size: 0.7rem; }
   
   .yearbook-btn-nav {
     width: 40px;
     height: 40px;
     padding: 0.5rem;
+  }
+  
+  .yearbook-close-btn {
+    top: 1rem;
+    right: 1rem;
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
   }
 }
 
