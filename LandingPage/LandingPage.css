@@ -741,6 +741,8 @@ header.fading {
   justify-content: center;
   gap: 20px; /* Change this value to adjust gaps between all items */
   z-index: 2;
+  will-change: auto;
+  backface-visibility: hidden;
 }
 
 .yearbook-slider {
@@ -749,20 +751,24 @@ header.fading {
   list-style: none;
   margin: 0;
   padding: 0;
+  will-change: auto;
+  backface-visibility: hidden;
 }
 
 .yearbook-item {
   width: 150px;
   height: 200px;
-  position: static; /* Remove absolute positioning */
+  position: static;
   background-position: center;
   background-size: cover;
   border-radius: 15px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
   cursor: pointer;
   list-style-type: none;
   transform-origin: center center;
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
 .yearbook-content {
@@ -803,12 +809,26 @@ header.fading {
 .yearbook-item:hover {
   transform: translateY(-10px) scale(1.05);
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  z-index: 100;
 }
 
 /* Prevent hover conflicts when in full background mode */
 .yearbook-slider-main.show-yearbook-bg .yearbook-item:hover {
   transform: translateY(-10px) scale(0.8);
+}
+
+/* Fix for stable hover states */
+.yearbook-item {
+  transform: translateZ(0);
+}
+
+.yearbook-item:not(.active):hover {
+  transform: translateY(-10px) scale(1.05) translateZ(0);
+}
+
+/* Ensure active items don't conflict with hover */
+.yearbook-item.active:hover {
+  transform: scale(0.9) translateZ(0);
 }
 
 .yearbook-item.active {

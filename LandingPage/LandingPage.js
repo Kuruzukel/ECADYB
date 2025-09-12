@@ -222,6 +222,12 @@ document.addEventListener("DOMContentLoaded", function () {
   const nextBtn = document.querySelector(".carousel-3d-next");
   const pagination = document.querySelector(".carousel-3d-pagination");
 
+  // Early return if 3D carousel elements don't exist
+  if (!carousel || !items.length || !pagination) {
+    console.log('3D carousel elements not found - skipping 3D carousel initialization');
+    return;
+  }
+
   let currentIndex = 0;
   const totalItems = items.length;
   const angle = 360 / totalItems;
@@ -233,174 +239,260 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Initialize carousel items
   function initCarousel() {
-    // Position items in a circle
-    items.forEach((item, index) => {
-      // Calculate rotation for each item
-      const rotation = angle * index;
-      item.style.transform = `rotateY(${rotation}deg) translateZ(500px)`;
+    try {
+      // Position items in a circle
+      items.forEach((item, index) => {
+        // Calculate rotation for each item
+        const rotation = angle * index;
+        item.style.transform = `rotateY(${rotation}deg) translateZ(500px)`;
 
-      // Add data-index for reference
-      item.setAttribute("data-index", index);
-    });
+        // Add data-index for reference
+        item.setAttribute("data-index", index);
+      });
 
-    // Create pagination
-    createPagination();
-    updatePagination();
+      // Create pagination
+      createPagination();
+      updatePagination();
 
-    // Add touch and mouse events
-    setupEventListeners();
+      // Add touch and mouse events
+      setupEventListeners();
+    } catch (error) {
+      console.error('Error initializing 3D carousel:', error);
+    }
   }
 
   // Create pagination dots
   function createPagination() {
-    for (let i = 0; i < totalItems; i++) {
-      const dot = document.createElement("button");
-      dot.addEventListener("click", () => goToSlide(i));
-      pagination.appendChild(dot);
+    if (!pagination) return;
+    
+    try {
+      for (let i = 0; i < totalItems; i++) {
+        const dot = document.createElement("button");
+        dot.addEventListener("click", () => goToSlide(i));
+        pagination.appendChild(dot);
+      }
+    } catch (error) {
+      console.error('Error creating pagination:', error);
     }
   }
 
   // Update active pagination dot
   function updatePagination() {
-    const dots = pagination.querySelectorAll("button");
-    dots.forEach((dot, index) => {
-      dot.classList.toggle("active", index === currentIndex);
-    });
+    if (!pagination) return;
+    
+    try {
+      const dots = pagination.querySelectorAll("button");
+      dots.forEach((dot, index) => {
+        dot.classList.toggle("active", index === currentIndex);
+      });
+    } catch (error) {
+      console.error('Error updating pagination:', error);
+    }
   }
 
   // Go to specific slide
   function goToSlide(index) {
-    currentIndex = (index + totalItems) % totalItems;
-    rotateCarousel();
-    updatePagination();
+    try {
+      currentIndex = (index + totalItems) % totalItems;
+      rotateCarousel();
+      updatePagination();
+    } catch (error) {
+      console.error('Error going to slide:', error);
+    }
   }
 
   // Rotate carousel to current index
   function rotateCarousel() {
-    const rotation = -angle * currentIndex;
-    carousel.style.transition = "transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)";
-    carousel.style.transform = `translateZ(-500px) rotateY(${rotation}deg)`;
+    if (!carousel) {
+      console.warn('Carousel element not found');
+      return;
+    }
+    
+    try {
+      const rotation = -angle * currentIndex;
+      carousel.style.transition = "transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)";
+      carousel.style.transform = `translateZ(-500px) rotateY(${rotation}deg)`;
+    } catch (error) {
+      console.error('Error rotating carousel:', error);
+    }
   }
 
   // Next slide
   function nextSlide() {
-    currentIndex = (currentIndex + 1) % totalItems;
-    rotateCarousel();
-    updatePagination();
+    try {
+      currentIndex = (currentIndex + 1) % totalItems;
+      rotateCarousel();
+      updatePagination();
+    } catch (error) {
+      console.error('Error moving to next slide:', error);
+    }
   }
 
   // Previous slide
   function prevSlide() {
-    currentIndex = (currentIndex - 1 + totalItems) % totalItems;
-    rotateCarousel();
-    updatePagination();
+    try {
+      currentIndex = (currentIndex - 1 + totalItems) % totalItems;
+      rotateCarousel();
+      updatePagination();
+    } catch (error) {
+      console.error('Error moving to previous slide:', error);
+    }
   }
 
   // Setup event listeners
   function setupEventListeners() {
-    // Navigation buttons
-    prevBtn.addEventListener("click", prevSlide);
-    nextBtn.addEventListener("click", nextSlide);
+    try {
+      // Navigation buttons (only if they exist)
+      if (prevBtn) {
+        prevBtn.addEventListener("click", prevSlide);
+      }
+      if (nextBtn) {
+        nextBtn.addEventListener("click", nextSlide);
+      }
 
-    // Touch events
-    carousel.addEventListener("touchstart", touchStart);
-    carousel.addEventListener("touchend", touchEnd);
-    carousel.addEventListener("touchmove", touchMove);
+      // Touch and mouse events (only if carousel exists)
+      if (carousel) {
+        // Touch events
+        carousel.addEventListener("touchstart", touchStart);
+        carousel.addEventListener("touchend", touchEnd);
+        carousel.addEventListener("touchmove", touchMove);
 
-    // Mouse events
-    carousel.addEventListener("mousedown", dragStart);
-    carousel.addEventListener("mouseup", dragEnd);
-    carousel.addEventListener("mouseleave", dragEnd);
-    carousel.addEventListener("mousemove", drag);
+        // Mouse events
+        carousel.addEventListener("mousedown", dragStart);
+        carousel.addEventListener("mouseup", dragEnd);
+        carousel.addEventListener("mouseleave", dragEnd);
+        carousel.addEventListener("mousemove", drag);
+      }
 
-    // Prevent image drag
-    const images = document.querySelectorAll(".carousel-3d-item img");
-    images.forEach((img) => {
-      img.addEventListener("dragstart", (e) => e.preventDefault());
-    });
+      // Prevent image drag
+      const images = document.querySelectorAll(".carousel-3d-item img");
+      images.forEach((img) => {
+        img.addEventListener("dragstart", (e) => e.preventDefault());
+      });
+    } catch (error) {
+      console.error('Error setting up event listeners:', error);
+    }
   }
 
   // Touch event handlers
   function touchStart(e) {
-    startPos = e.touches[0].clientX;
-    isDragging = true;
-    carousel.style.transition = "none";
-    cancelAnimationFrame(animationID);
+    if (!carousel) return;
+    
+    try {
+      startPos = e.touches[0].clientX;
+      isDragging = true;
+      carousel.style.transition = "none";
+      cancelAnimationFrame(animationID);
+    } catch (error) {
+      console.error('Error in touchStart:', error);
+    }
   }
 
   function touchMove(e) {
-    if (!isDragging) return;
-    const currentPosition = e.touches[0].clientX;
-    const diff = currentPosition - startPos;
-    const rotation = -angle * currentIndex + diff * 0.5;
-    carousel.style.transform = `translateZ(-500px) rotateY(${rotation}deg)`;
+    if (!isDragging || !carousel) return;
+    
+    try {
+      const currentPosition = e.touches[0].clientX;
+      const diff = currentPosition - startPos;
+      const rotation = -angle * currentIndex + diff * 0.5;
+      carousel.style.transform = `translateZ(-500px) rotateY(${rotation}deg)`;
+    } catch (error) {
+      console.error('Error in touchMove:', error);
+    }
   }
 
   function touchEnd() {
     if (!isDragging) return;
-    isDragging = false;
+    
+    try {
+      isDragging = false;
+      const threshold = 50;
+      const touchEndX = event.changedTouches[0].clientX;
+      const diff = touchEndX - startPos;
 
-    const threshold = 50;
-    const touchEndX = event.changedTouches[0].clientX;
-    const diff = touchEndX - startPos;
-
-    if (Math.abs(diff) > threshold) {
-      if (diff > 0) {
-        prevSlide();
+      if (Math.abs(diff) > threshold) {
+        if (diff > 0) {
+          prevSlide();
+        } else {
+          nextSlide();
+        }
       } else {
-        nextSlide();
+        rotateCarousel();
       }
-    } else {
-      rotateCarousel();
+    } catch (error) {
+      console.error('Error in touchEnd:', error);
     }
   }
 
   // Mouse drag event handlers
   function dragStart(e) {
-    e.preventDefault();
-    startPos = e.clientX;
-    isDragging = true;
-    carousel.style.transition = "none";
-    cancelAnimationFrame(animationID);
+    if (!carousel) return;
+    
+    try {
+      e.preventDefault();
+      startPos = e.clientX;
+      isDragging = true;
+      carousel.style.transition = "none";
+      cancelAnimationFrame(animationID);
+    } catch (error) {
+      console.error('Error in dragStart:', error);
+    }
   }
 
   function drag(e) {
-    if (!isDragging) return;
-    const currentPosition = e.clientX;
-    const diff = currentPosition - startPos;
-    const rotation = -angle * currentIndex + diff * 0.5;
-    carousel.style.transform = `translateZ(-500px) rotateY(${rotation}deg)`;
+    if (!isDragging || !carousel) return;
+    
+    try {
+      const currentPosition = e.clientX;
+      const diff = currentPosition - startPos;
+      const rotation = -angle * currentIndex + diff * 0.5;
+      carousel.style.transform = `translateZ(-500px) rotateY(${rotation}deg)`;
+    } catch (error) {
+      console.error('Error in drag:', error);
+    }
   }
 
   function dragEnd() {
     if (!isDragging) return;
-    isDragging = false;
+    
+    try {
+      isDragging = false;
+      const threshold = 50;
+      const diff = currentTranslate - prevTranslate;
 
-    const threshold = 50;
-    const diff = currentTranslate - prevTranslate;
-
-    if (Math.abs(diff) > threshold) {
-      if (diff > 0) {
-        prevSlide();
+      if (Math.abs(diff) > threshold) {
+        if (diff > 0) {
+          prevSlide();
+        } else {
+          nextSlide();
+        }
       } else {
-        nextSlide();
+        rotateCarousel();
       }
-    } else {
-      rotateCarousel();
+    } catch (error) {
+      console.error('Error in dragEnd:', error);
     }
   }
 
-  // Auto-rotate carousel
-  let autoRotate = setInterval(nextSlide, 5000);
-
-  // Pause auto-rotation on hover
-  carousel.addEventListener("mouseenter", () => {
-    clearInterval(autoRotate);
-  });
-
-  carousel.addEventListener("mouseleave", () => {
+  // Auto-rotate carousel (only if carousel exists)
+  let autoRotate = null;
+  if (carousel) {
     autoRotate = setInterval(nextSlide, 5000);
-  });
+
+    // Pause auto-rotation on hover
+    carousel.addEventListener("mouseenter", () => {
+      if (autoRotate) {
+        clearInterval(autoRotate);
+      }
+    });
+
+    carousel.addEventListener("mouseleave", () => {
+      if (autoRotate) {
+        clearInterval(autoRotate);
+      }
+      autoRotate = setInterval(nextSlide, 5000);
+    });
+  }
 
   // Initialize the carousel
   initCarousel();
@@ -509,25 +601,23 @@ function initializeYearbookItems() {
   // Mark as initialized
   itemsContainer.setAttribute('data-listener', 'true');
   
-  // Add event delegation for yearbook items (click)
-  itemsContainer.addEventListener('click', function(e) {
-    const clickedItem = e.target.closest('.yearbook-item');
-    if (clickedItem) {
-      e.preventDefault();
-      e.stopPropagation();
+  // Add stable hover handling to prevent jiggling
+  const yearBookItems = document.querySelectorAll('.yearbook-item');
+  yearBookItems.forEach(item => {
+    if (item) {
+      // Remove any existing transform to ensure clean state
+      item.style.transform = '';
       
-      // Get image URL from inline style
-      const styleAttr = clickedItem.getAttribute('style');
-      if (styleAttr) {
-        const imageUrlMatch = styleAttr.match(/background-image:\s*url\(['"]?([^'"\)]+)['"]?\)/);
-        if (imageUrlMatch && imageUrlMatch[1]) {
-          showYearbookBackground(clickedItem, imageUrlMatch[1]);
-        }
-      }
+      // Ensure proper CSS properties for stable hover
+      item.style.willChange = 'transform';
+      item.style.backfaceVisibility = 'hidden';
     }
   });
   
-  console.log('Yearbook items initialized successfully');
+  console.log('Yearbook items initialized successfully - hover should work smoothly now');
+  
+  // The onclick handlers in HTML will handle the click events
+  // This just ensures the containers are properly set up for CSS hover
 }
 
 // Yearbook Background Display Functionality
@@ -572,22 +662,25 @@ function showYearbookBackground(clickedItem, imageUrl) {
 function closeYearbookView() {
   try {
     const sliderMain = document.querySelector('.yearbook-slider-main');
-    const allItems = document.querySelectorAll('.yearbook-item');
-    
     if (!sliderMain) {
       console.error('Yearbook slider main container not found');
       return;
     }
     
+    const allItems = document.querySelectorAll('.yearbook-item');
+    
     // Remove background and full view class
     sliderMain.style.backgroundImage = '';
     sliderMain.classList.remove('show-yearbook-bg', 'background-loaded');
     
-    // Remove active class from all items and reset z-index
+    // Remove active class from all items
     allItems.forEach(item => {
-      item.classList.remove('active');
-      item.style.zIndex = '';
+      if (item && item.classList) {
+        item.classList.remove('active');
+      }
     });
+    
+    console.log('Yearbook view closed successfully');
     
   } catch (error) {
     console.error('Error in closeYearbookView:', error);
@@ -596,21 +689,29 @@ function closeYearbookView() {
 
 // Keyboard support for closing yearbook view
 document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') {
-    const sliderMain = document.querySelector('.yearbook-slider-main');
-    if (sliderMain && sliderMain.classList.contains('show-yearbook-bg')) {
-      closeYearbookView();
+  try {
+    if (e.key === 'Escape') {
+      const sliderMain = document.querySelector('.yearbook-slider-main');
+      if (sliderMain && sliderMain.classList && sliderMain.classList.contains('show-yearbook-bg')) {
+        closeYearbookView();
+      }
     }
+  } catch (error) {
+    console.error('Error in keyboard handler:', error);
   }
 });
 
 // Click outside to close yearbook view
 document.addEventListener('click', function(e) {
-  const sliderMain = document.querySelector('.yearbook-slider-main');
-  const closeBtn = document.querySelector('.yearbook-close-btn');
-  const itemsContainer = document.querySelector('.yearbook-items-container');
-  
-  if (sliderMain && sliderMain.classList.contains('show-yearbook-bg')) {
+  try {
+    const sliderMain = document.querySelector('.yearbook-slider-main');
+    if (!sliderMain || !sliderMain.classList || !sliderMain.classList.contains('show-yearbook-bg')) {
+      return;
+    }
+    
+    const closeBtn = document.querySelector('.yearbook-close-btn');
+    const itemsContainer = document.querySelector('.yearbook-items-container');
+    
     // Check if click is outside yearbook items container and not on close button
     const clickedInContainer = itemsContainer && itemsContainer.contains(e.target);
     const clickedCloseBtn = closeBtn && closeBtn.contains(e.target);
@@ -620,5 +721,7 @@ document.addEventListener('click', function(e) {
     if (!clickedInContainer && !clickedCloseBtn && !clickedIntroContent && sliderMain.contains(e.target)) {
       closeYearbookView();
     }
+  } catch (error) {
+    console.error('Error in click outside handler:', error);
   }
 });
