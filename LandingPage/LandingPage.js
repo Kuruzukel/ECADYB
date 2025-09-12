@@ -709,16 +709,14 @@ document.addEventListener('click', function(e) {
       return;
     }
     
-    const closeBtn = document.querySelector('.yearbook-close-btn');
     const itemsContainer = document.querySelector('.yearbook-items-container');
     
-    // Check if click is outside yearbook items container and not on close button
+    // Check if click is outside yearbook items container
     const clickedInContainer = itemsContainer && itemsContainer.contains(e.target);
-    const clickedCloseBtn = closeBtn && closeBtn.contains(e.target);
     const clickedIntroContent = e.target.closest('.yearbook-intro-content');
     
-    // Only close if clicked in the background area (not on items, close button, or intro content)
-    if (!clickedInContainer && !clickedCloseBtn && !clickedIntroContent && sliderMain.contains(e.target)) {
+    // Only close if clicked in the background area (not on items or intro content)
+    if (!clickedInContainer && !clickedIntroContent && sliderMain.contains(e.target)) {
       closeYearbookView();
     }
   } catch (error) {
