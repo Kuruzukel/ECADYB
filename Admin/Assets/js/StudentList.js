@@ -49,7 +49,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-// Theme definitions
 const themes = {
   "Light Mode": {
     "--primary-bg": "#ffffff",
