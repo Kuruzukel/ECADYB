@@ -663,8 +663,6 @@ header.fading {
   font-family: "Segoe UI", sans-serif;
 }
 
-
-
 /* Full background display for selected yearbook */
 .yearbook-slider-main.show-yearbook-bg {
   background-position: center;
@@ -685,6 +683,11 @@ header.fading {
   pointer-events: none;
 }
 
+.yearbook-slider-main.show-yearbook-bg .yearbook-items-container {
+  bottom: 40px; /* Move items lower when active */
+  gap: 10px; /* Reduce gaps between items when active */
+}
+
 .yearbook-slider-main.show-yearbook-bg .yearbook-item {
   opacity: 0.7;
   transform: translateY(-10px) scale(0.8);
@@ -693,9 +696,7 @@ header.fading {
 
 .yearbook-slider-main.show-yearbook-bg .yearbook-item.active {
   opacity: 1;
-  transform: translateY(-10px) scale(1.1);
-  box-shadow: 0 20px 40px rgba(252, 218, 21, 0.4);
-  border: 3px solid #fcda15;
+  transform: translateY(-29px) scale(1.1);
 }
 
 /* Close button for full background view */
@@ -728,8 +729,6 @@ header.fading {
   display: flex;
 }
 
-
-
 /* Yearbook Items Container - Easy gap control */
 .yearbook-items-container {
   position: absolute;
@@ -756,14 +755,12 @@ header.fading {
 }
 
 .yearbook-item {
-  width: 150px;
-  height: 200px;
+  width: 120px;
+  height: 180px;
   position: static;
   background-position: center;
   background-size: cover;
-  border-radius: 15px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-  transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+  transition: transform 0.3s ease-out;
   cursor: pointer;
   list-style-type: none;
   transform-origin: center center;
@@ -783,8 +780,6 @@ header.fading {
   align-items: center;
   text-align: center;
   padding: 1rem 0.5rem;
- 
-  border-radius: 15px;
   color: white;
   opacity: 1;
 }
@@ -808,7 +803,6 @@ header.fading {
 
 .yearbook-item:hover {
   transform: translateY(-10px) scale(1.05);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
   z-index: 100;
 }
 
@@ -855,6 +849,12 @@ header.fading {
     bottom: 50px;
   }
 
+  /* Active state adjustments for tablet */
+  .yearbook-slider-main.show-yearbook-bg .yearbook-items-container {
+    bottom: 35px;
+    gap: 8px;
+  }
+
   .yearbook-item {
     width: 120px;
     height: 160px;
@@ -887,6 +887,12 @@ header.fading {
   .yearbook-items-container {
     gap: 10px; /* Smaller gap for mobile */
     bottom: 30px;
+  }
+
+  /* Active state adjustments for mobile */
+  .yearbook-slider-main.show-yearbook-bg .yearbook-items-container {
+    bottom: 20px;
+    gap: 5px;
   }
 
   .yearbook-item {
