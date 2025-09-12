@@ -166,7 +166,6 @@ function applyTheme(theme) {
     root.style.setProperty(varName, color);
   }
 
-  // Update modal background to match current theme
   const currentSectionBg =
     selectedTheme["--section-bg"] || themes["Default"]["--section-bg"];
   const modal = document.querySelector(".modal");
