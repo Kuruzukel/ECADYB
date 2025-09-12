@@ -1,3 +1,5 @@
+
+
 // Theme definitions
 const themes = {
   "Light Mode": {
@@ -556,4 +558,5 @@ window.addEventListener("DOMContentLoaded", () => {
       console.error("Failed to load logos:", err);
     }
   })();
+
 });
