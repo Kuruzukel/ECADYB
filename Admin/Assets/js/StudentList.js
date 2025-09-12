@@ -145,7 +145,6 @@ const themes = {
 
 let pendingTheme = null;
 
-// Theme selection
 function selectColor(el) {
   document
     .querySelectorAll(".color-box")
