@@ -1,142 +1,4 @@
-// Header hide/show functionality (class-based)
-document.addEventListener("DOMContentLoaded", function () {
-  const header = document.querySelector("header");
-  const hamburgerMenu = document.getElementById("hamburgerMenu");
-  const centerNav = document.querySelector(".center-nav");
-  if (!header) return;
 
-  // Ensure smooth transitions via CSS
-  header.classList.add("fading");
-
-  let lastScroll = Math.max(0, getScrollY());
-  const threshold = 50; // pixels before we start hiding on downward scroll
-  let ticking = false;
-  const buffer = 4; // pixels of movement to consider a real direction change
-  let headerHidden = false; // track state to avoid redundant DOM writes
-
-  function getScrollY() {
-    return typeof window.scrollY === "number"
-      ? window.scrollY
-      : window.pageYOffset ||
-          document.documentElement.scrollTop ||
-          document.body.scrollTop ||
-          0;
-  }
-
-  function isMobileMenuOpen() {
-    return (
-      (hamburgerMenu && hamburgerMenu.classList.contains("active")) ||
-      (centerNav && centerNav.classList.contains("mobile-active"))
-    );
-  }
-
-  function hideHeader() {
-    if (headerHidden) return;
-    console.log("Hiding header");
-    headerHidden = true;
-    header.classList.add("header-hidden");
-    // Inline-style fallback to guarantee hide even if CSS conflicts
-    header.style.opacity = "0";
-    header.style.visibility = "hidden";
-    header.style.transform = "translateX(-50%) translateY(-100%)";
-    header.style.pointerEvents = "none";
-  }
-
-  function showHeader() {
-    if (!headerHidden && !header.classList.contains("header-hidden")) return;
-    console.log("Showing header");
-    headerHidden = false;
-    header.classList.remove("header-hidden");
-    // Clear inline styles to defer to stylesheet
-    header.style.opacity = "";
-    header.style.visibility = "";
-    header.style.transform = "";
-    header.style.pointerEvents = "";
-  }
-
-  function applyHeaderState(rawScroll) {
-    // Guard against negative values on iOS bounce
-    const currentScroll = Math.max(0, rawScroll || 0);
-    const delta = currentScroll - lastScroll;
-
-    // Keep header visible if mobile menu is open
-    if (isMobileMenuOpen()) {
-      showHeader();
-      lastScroll = currentScroll;
-      return;
-    }
-
-    // At very top: always show
-    if (currentScroll <= 10) {
-      showHeader();
-      lastScroll = currentScroll;
-      return;
-    }
-
-    // Downward scroll beyond threshold + buffer -> hide; upward with buffer -> show
-    if (delta > buffer && currentScroll > threshold) {
-      hideHeader();
-      lastScroll = currentScroll; // update baseline on state change
-      return;
-    }
-
-    if (delta < -buffer) {
-      showHeader();
-      lastScroll = currentScroll; // update baseline on state change
-      return;
-    }
-  }
-
-  function onScroll() {
-    if (!ticking) {
-      window.requestAnimationFrame(() => {
-        const currentScroll = getScrollY();
-        console.log("Scroll:", {
-          currentScroll,
-          lastScroll,
-          delta: currentScroll - lastScroll,
-          headerHidden,
-          isMobileMenuOpen: isMobileMenuOpen(),
-          headerClass: header.className,
-        });
-        applyHeaderState(currentScroll);
-        ticking = false;
-      });
-      ticking = true;
-    }
-  }
-
-  // Reset baseline on resize/orientation changes
-  function onResize() {
-    lastScroll = Math.max(0, getScrollY());
-    applyHeaderState(lastScroll);
-  }
-
-  // Initial state
-  applyHeaderState(lastScroll);
-
-  // Debug info
-  console.log("Initial scroll setup:", {
-    header: header,
-    hamburgerMenu: !!hamburgerMenu,
-    centerNav: !!centerNav,
-    initialScroll: getScrollY(),
-  });
-
-  // Listeners - use capture phase to catch all scroll events
-  window.addEventListener("scroll", onScroll, { passive: true, capture: true });
-  document.addEventListener("scroll", onScroll, {
-    passive: true,
-    capture: true,
-  });
-  window.addEventListener("touchmove", onScroll, {
-    passive: true,
-    capture: true,
-  });
-  window.addEventListener("wheel", onScroll, { passive: true, capture: true });
-  window.addEventListener("resize", onResize);
-  window.addEventListener("orientationchange", onResize);
-});
 
 // Hamburger menu functionality
 document.addEventListener("DOMContentLoaded", function () {
@@ -171,36 +33,6 @@ document.addEventListener("DOMContentLoaded", function () {
       centerNav.classList.remove("mobile-active");
     }
   });
-});
-
-// Login dropdown functionality
-const loginBtn = document.getElementById("loginDropdownBtn");
-const loginMenu = document.getElementById("loginDropdownMenu");
-
-// Add click behavior for login button
-if (loginBtn) {
-  loginBtn.addEventListener("click", function () {
-    // Toggle clicked class for visual feedback
-    this.classList.toggle("clicked");
-
-    // Toggle dropdown menu
-    loginMenu.style.display =
-      loginMenu.style.display === "block" ? "none" : "block";
-  });
-}
-
-document.addEventListener("click", function (e) {
-  if (loginBtn && loginBtn.contains(e.target)) {
-    // Click handled by the button's own event listener
-  } else {
-    if (loginMenu) {
-      loginMenu.style.display = "none";
-    }
-    // Remove clicked class when clicking outside
-    if (loginBtn) {
-      loginBtn.classList.remove("clicked");
-    }
-  }
 });
 
 // Smooth scrolling functionality
@@ -600,7 +432,7 @@ window.addEventListener("scroll", () => {
   });
 });
 
-// Mobile & Desktop login buttons with fade out animation
+// Mobile & Desktop login buttons with modern page transition
 document.addEventListener("DOMContentLoaded", function () {
   const loginBtn = document.getElementById("loginDropdownBtn");
   const mobileLoginBtn = document.getElementById("mobileLoginDropdownBtn");
@@ -609,13 +441,13 @@ document.addEventListener("DOMContentLoaded", function () {
     e.preventDefault();
     e.stopPropagation();
     
-    // Add fade-out class to body
-    document.body.classList.add('fade-out');
+    // Add modern page transition class to body
+    document.body.classList.add('page-transition-out');
     
     // Redirect after animation completes
     setTimeout(() => {
       window.location.href = "/Public/Components/Login.php";
-    }, 500); // Match this with CSS animation duration
+    }, 1000); // Match this with CSS animation duration
   }
 
   if (loginBtn) {
