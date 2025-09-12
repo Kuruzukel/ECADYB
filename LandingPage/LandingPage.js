@@ -635,6 +635,11 @@ function showYearbookBackground(clickedItem, imageUrl) {
     }
     
     const allItems = document.querySelectorAll('.yearbook-item');
+    const introContent = document.querySelector('.yearbook-intro-content');
+    const detailDisplay = document.querySelector('.yearbook-detail-display');
+    const coverImage = document.querySelector('.yearbook-cover-image');
+    const detailTitle = document.querySelector('.yearbook-detail-title');
+    const detailDescription = document.querySelector('.yearbook-detail-description');
     
     // Remove active class from all items
     allItems.forEach(item => {
@@ -648,15 +653,85 @@ function showYearbookBackground(clickedItem, imageUrl) {
       clickedItem.classList.add('active');
     }
     
+    // Extract yearbook cover image URL from clicked item's style
+    const clickedItemStyle = clickedItem.getAttribute('style');
+    const coverImageMatch = clickedItemStyle.match(/background-image:\s*url\(['\"]?([^'\"\)]+)['\"]?\)/);
+    const coverImageUrl = coverImageMatch ? coverImageMatch[1] : '';
+    
+    // Get department info based on the cover image URL
+    const departmentInfo = getDepartmentInfo(coverImageUrl);
+    
     // Set background image and show full background view
     sliderMain.style.backgroundImage = `url('${imageUrl}')`;
     sliderMain.classList.add('show-yearbook-bg');
     
+    // Hide intro content and show detail display
+    if (introContent) {
+      introContent.style.display = 'none';
+    }
+    
+    if (detailDisplay && coverImage && detailTitle && detailDescription) {
+      // Set the yearbook cover image
+      coverImage.src = coverImageUrl;
+      coverImage.alt = departmentInfo.title + ' Yearbook Cover';
+      
+      // Set the title and description
+      detailTitle.textContent = departmentInfo.title;
+      detailDescription.textContent = departmentInfo.description;
+      
+      // Show the detail display
+      detailDisplay.style.display = 'flex';
+    }
+    
     console.log('Background set successfully:', imageUrl);
+    console.log('Department info:', departmentInfo);
     
   } catch (error) {
     console.error('Error in showYearbookBackground:', error);
   }
+}
+
+// Function to get department information based on cover image URL
+function getDepartmentInfo(coverImageUrl) {
+  const departmentMap = {
+    'MaritimeEducation.png': {
+      title: 'College of Maritime Education',
+      description: 'Dedicated to the seafarers who embraced discipline, courage, and determination. This yearbook captures the proud tradition of alumni who are now prepared to navigate not only the seas but also the challenges of life with strength and honor.'
+    },
+    'TourismManagement.png': {
+      title: 'College of Tourism Management',
+      description: 'This section honors the dreamers and storytellers of culture and travel. Alumni from this department will forever be remembered for their passion for hospitality, their creativity in connecting people, and their ability to make the world feel closer.'
+    },
+    'CriminalJusticeEducation.png': {
+      title: 'College of Criminal Justice and Education',
+      description: 'A tribute to the men and women who stood for justice, discipline, and service. Their journey reflects resilience and integrity, and as alumni, they carry forward the values of fairness, leadership, and lifelong learning.'
+    },
+    'InformationSystem.png': {
+      title: 'College of Information System',
+      description: 'This yearbook celebrates the innovators and problem-solvers who turned codes into solutions and ideas into systems. Alumni of this department leave behind a legacy of creativity and technological advancement, ready to shape the digital future.'
+    },
+    'Education.png': {
+      title: 'College of Education',
+      description: 'A heartfelt tribute to those who chose the noble path of teaching. Alumni of this college carry with them the memories of inspiration and hard work, ready to ignite curiosity and shape the minds of future generations.'
+    },
+    'BusinessAdministration.png': {
+      title: 'College of Business Administration',
+      description: 'A celebration of leaders, thinkers, and trailblazers in the making. Alumni of this college leave behind a legacy of ambition and innovation, ready to build businesses, inspire change, and create opportunities for the future.'
+    },
+    'Nursing.png': {
+      title: 'College of Nursing',
+      description: 'This yearbook honors the compassionate hearts and steady hands of those who trained to serve. Alumni from this department will always be remembered for their dedication to care, their selflessness, and their unwavering commitment to saving lives.'
+    }
+  };
+  
+  // Extract filename from URL
+  const filename = coverImageUrl.split('/').pop();
+  
+  // Return department info or default
+  return departmentMap[filename] || {
+    title: 'Department Yearbook',
+    description: 'Explore memories, achievements, and milestones from our academic programs. A collection of moments that showcase the dedication, growth, and success of our students and faculty members.'
+  };
 }
 
 function closeYearbookView() {
@@ -668,6 +743,8 @@ function closeYearbookView() {
     }
     
     const allItems = document.querySelectorAll('.yearbook-item');
+    const introContent = document.querySelector('.yearbook-intro-content');
+    const detailDisplay = document.querySelector('.yearbook-detail-display');
     
     // Remove background and full view class
     sliderMain.style.backgroundImage = '';
@@ -679,6 +756,15 @@ function closeYearbookView() {
         item.classList.remove('active');
       }
     });
+    
+    // Show intro content and hide detail display
+    if (introContent) {
+      introContent.style.display = 'block';
+    }
+    
+    if (detailDisplay) {
+      detailDisplay.style.display = 'none';
+    }
     
     console.log('Yearbook view closed successfully');
     
@@ -710,13 +796,15 @@ document.addEventListener('click', function(e) {
     }
     
     const itemsContainer = document.querySelector('.yearbook-items-container');
+    const detailDisplay = document.querySelector('.yearbook-detail-display');
     
-    // Check if click is outside yearbook items container
+    // Check if click is outside yearbook items container and detail display
     const clickedInContainer = itemsContainer && itemsContainer.contains(e.target);
+    const clickedInDetail = detailDisplay && detailDisplay.contains(e.target);
     const clickedIntroContent = e.target.closest('.yearbook-intro-content');
     
-    // Only close if clicked in the background area (not on items or intro content)
-    if (!clickedInContainer && !clickedIntroContent && sliderMain.contains(e.target)) {
+    // Only close if clicked in the background area (not on items, intro content, or detail display)
+    if (!clickedInContainer && !clickedInDetail && !clickedIntroContent && sliderMain.contains(e.target)) {
       closeYearbookView();
     }
   } catch (error) {

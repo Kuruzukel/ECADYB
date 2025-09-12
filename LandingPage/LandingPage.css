@@ -350,24 +350,29 @@ header.fading {
 .hero-category {
   font-size: 1.1rem;
   letter-spacing: 2px;
-  color: #e0e7ff;
+  color: #fcda15;
   margin-bottom: 1.2rem;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", sans-serif;
+  font-weight: 600;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
   opacity: 0.85;
 }
 .hero-heading {
   font-size: 3.2rem;
-  font-family: "Georgia", "Times New Roman", serif;
+  font-family: "arial-black", sans-serif;
   font-weight: bold;
   line-height: 1.1;
   margin-bottom: 1.2rem;
-  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 2px;
 }
 .hero-publish-date {
   font-size: 1.1rem;
   color: #e0e7ff;
   opacity: 0.8;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", sans-serif;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 .hero-welcome-text {
   font-size: 1.25rem;
@@ -375,6 +380,8 @@ header.fading {
   color: #e0e7ff;
   opacity: 0.95;
   max-width: 600px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  font-family: "Segoe UI", sans-serif;
 }
 .hero-buttons {
   display: flex;
@@ -471,8 +478,10 @@ header.fading {
   text-align: center;
   margin-bottom: 5rem;
   color: #ffffff;
-  font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
-    BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  font-family: "arial-black", sans-serif;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 2px;
 }
 
 @keyframes fadeIn {
@@ -683,6 +692,198 @@ header.fading {
   pointer-events: none;
 }
 
+/* Yearbook Detail Display Styles */
+.yearbook-detail-display {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  width: 90%;
+  max-width: 1000px;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.yearbook-detail-container {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 20px;
+  padding: 2rem;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.yearbook-detail-close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background-color: #112d4e;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 12px rgba(99, 102, 241, 0.18);
+  border: 1px solid #0c27be;
+  z-index: 10;
+}
+
+.yearbook-detail-close-btn:hover {
+  background: linear-gradient(135deg, #0d39d9 0%, #112d4e 100%);
+  color: #ffffff !important;
+  border-radius: 50%;
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.25),
+    0 0 0 2px rgba(252, 218, 21, 0.3);
+  border: 2px solid #fcda15;
+  transform: scale(1.05);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.yearbook-detail-close-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2;
+}
+
+.yearbook-cover-large {
+  flex-shrink: 0;
+}
+
+.yearbook-cover-image {
+  width: 300px;
+  height: 400px;
+  object-fit: cover;
+  border-radius: 15px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  border: 3px solid rgba(252, 218, 21, 0.3);
+}
+
+.yearbook-info {
+  flex: 1;
+  color: white;
+  text-align: left;
+}
+
+.yearbook-detail-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
+  font-family: "arial-black", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #ffffff;
+}
+
+.yearbook-detail-subtitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+  color: #fcda15;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.yearbook-detail-description {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  color: #e0e7ff;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* Responsive Design for Yearbook Detail Display */
+@media (width < 900px) {
+  .yearbook-detail-container {
+    flex-direction: column;
+    text-align: center;
+    gap: 2rem;
+  }
+  
+  .yearbook-detail-close-btn {
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 36px;
+    height: 36px;
+  }
+  
+  .yearbook-detail-close-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .yearbook-cover-image {
+    width: 250px;
+    height: 330px;
+  }
+  
+  .yearbook-detail-title {
+    font-size: 2rem;
+  }
+  
+  .yearbook-detail-subtitle {
+    font-size: 1.3rem;
+  }
+  
+  .yearbook-detail-description {
+    font-size: 1rem;
+  }
+}
+
+@media (width < 650px) {
+  .yearbook-detail-display {
+    padding: 1rem;
+  }
+  
+  .yearbook-detail-container {
+    padding: 1.5rem;
+  }
+  
+  .yearbook-detail-close-btn {
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 32px;
+    height: 32px;
+  }
+  
+  .yearbook-detail-close-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .yearbook-cover-image {
+    width: 200px;
+    height: 260px;
+  }
+  
+  .yearbook-detail-title {
+    font-size: 1.8rem;
+  }
+  
+  .yearbook-detail-subtitle {
+    font-size: 1.2rem;
+  }
+  
+  .yearbook-detail-description {
+    font-size: 0.9rem;
+  }
+}
+
 .yearbook-slider-main.show-yearbook-bg .yearbook-items-container {
   bottom: 20px; /* Move items lower when active */
   gap: 30px; /* Reduce gaps between items when active */
@@ -885,6 +1086,8 @@ header.fading {
   line-height: 1.3;
   max-width: 1000px;
   width: 100%;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  font-family: "Segoe UI", sans-serif;
 }
 .hero-message div {
   margin-bottom: 0.15em;
@@ -893,9 +1096,13 @@ header.fading {
   margin-bottom: 0;
 }
 .hero-message-bold {
-  font-weight: 700;
+  font-weight: bold;
   color: #fff;
   font-size: 1.5rem;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
+  font-family: "arial-black", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 2px;
 }
 
 .grid-overlay {
@@ -1017,9 +1224,11 @@ header.fading {
   font-size: 1.6rem;
   margin: 0 auto;
   line-height: 1.7;
-  color: white;
+  color: #e0e7ff;
   margin-left: 5.1rem;
   margin-right: 5.1rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  font-family: "Segoe UI", sans-serif;
 }
 
 .about-blur-vignette {
@@ -1063,12 +1272,6 @@ header.fading {
   display: block;
   width: 100%;
   height: 100%;
-}
-
-.about-section .section-title,
-.yearbooks-section .section-title {
-  font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
-    BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
 }
 
 .carousel-section {
@@ -1118,13 +1321,14 @@ header.fading {
 }
 
 .carousel-subtitle {
-  color: white;
+  color: #fcda15;
   font-size: 1.3rem;
   margin-bottom: 2.5rem;
   margin-top: 0.5rem;
   letter-spacing: 1px;
-  font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
-    BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  font-family: "Segoe UI", sans-serif;
+  font-weight: 600;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
 }
 
 .carousel-section .section-title {
@@ -1133,10 +1337,10 @@ header.fading {
   font-weight: bold;
   margin-bottom: 0.5rem;
   margin-top: 3.5rem;
-  letter-spacing: 1px;
-  text-shadow: none;
-  font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
-    BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  letter-spacing: 2px;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
+  font-family: "arial-black", sans-serif;
+  text-transform: uppercase;
   border-bottom: none;
   display: block;
   padding-bottom: 0;
