@@ -58,20 +58,30 @@ header {
   text-decoration: none;
   border-radius: 8px;
   margin: 0.3rem 0.5rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
   position: relative;
   overflow: hidden;
   font-size: 0.95rem;
   font-weight: 500;
   letter-spacing: 0.3px;
 }
+/* Smooth transition for submenu */
+.submenu {
+    transition: max-height 0.3s ease, opacity 0.2s ease;
+}
 
+/* Ensure active sub-tab is always visible */
+.submenu.show {
+    max-height: 500px;
+    opacity: 1;
+    z-index: 1;
+}
 .tab i {
   margin-right: 12px;
   width: 20px;
   text-align: center;
   font-size: 1.1rem;
-  transition: transform 0.3s ease;
+  transition: transform 0.2s ease, color 0.2s ease;
 }
 
 .tab:hover {
@@ -122,15 +132,17 @@ header {
 
 /* Submenu styles */
 .submenu {
-  padding-left: 0.91rem; /* Reduced from 2rem to 1.5rem */
+  padding-left: 0.91rem;
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.3s ease-out;
-  margin-left: 0.25rem; /* Added small left margin for better alignment */
+  transition: max-height 0.25s ease-out, opacity 0.2s ease;
+  margin-left: 0.25rem;
+  opacity: 0;
 }
 
 .submenu.show {
-  max-height: 500px; /* Adjust based on your needs */
+  max-height: 500px;
+  opacity: 1;
 }
 
 .submenu .tab {
@@ -321,7 +333,7 @@ main {
   width: 15rem;
   background: var(--sidebar-bg);
   border-radius: 8px;
-  transition: 300ms;
+  transition: width 0.3s ease, min-width 0.3s ease, margin-right 0.3s ease;
   margin-right: 10px;
   display: flex;
   flex-direction: column;
@@ -370,7 +382,7 @@ main {
 .sidebar .logoadmin {
   padding: 1rem;
   align-self: center;
-  transition: 300ms;
+  transition: opacity 0.2s ease, left 0.2s ease;
   margin-left: -6px;
 }
 
@@ -454,7 +466,7 @@ main {
 
 /* Chevron transition */
 .chevron i {
-  transition: transform 0.3s ease;
+  transition: transform 0.2s ease;
 }
 
 /* When rotated */
@@ -462,11 +474,18 @@ main {
   transform: rotate(180deg);
 }
 
+/* Prevent layout shift and glitching */
 .contents {
   height: 100vh;
   width: 100%;
   border-radius: 8px;
   overflow: hidden;
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}
+
+.contents.loading {
+  opacity: 0.9;
 }
 
 .scroll-container {

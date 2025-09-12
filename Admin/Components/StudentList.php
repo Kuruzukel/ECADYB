@@ -572,7 +572,7 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
                             const dept = this.value;
                             const url = new URL(window.location.href);
                             url.searchParams.set('department', dept);
-                            url.searchParams.set('page', '1'); // Reset to first page
+                            url.searchParams.set('pageNum', '1'); // Reset to first page
                             window.location.href = url.toString();
                         });
                     }
@@ -583,7 +583,7 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
                             const tabName = this.getAttribute('data-tab');
                             const url = new URL(window.location.href);
                             url.searchParams.set('tab', tabName);
-                            url.searchParams.set('page',
+                            url.searchParams.set('pageNum',
                                 '1'); // Reset to first page when changing tabs
                             window.location.href = url.toString();
                         });

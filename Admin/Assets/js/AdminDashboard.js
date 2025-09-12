@@ -43,6 +43,23 @@ function toggleSubmenu(menuId) {
   if (!currentMenu) return;
 
   const isShown = currentMenu.classList.contains("show");
+  
+  // Close other submenus first
+  document.querySelectorAll(".submenu").forEach((submenu) => {
+    if (submenu.id !== menuId && submenu.classList.contains("show")) {
+      submenu.classList.remove("show");
+      const chevron = document.querySelector(
+        `[onclick="toggleSubmenu('${submenu.id}')"] .chevron i`
+      );
+      if (chevron) chevron.classList.remove("rotate-180");
+      const tab = document.querySelector(
+        `[onclick="toggleSubmenu('${submenu.id}')"]`
+      );
+      if (tab) tab.setAttribute("aria-expanded", "false");
+    }
+  });
+
+  // Toggle current menu
   currentMenu.classList.toggle("show", !isShown);
 
   const currentTab = document.querySelector(
@@ -56,21 +73,6 @@ function toggleSubmenu(menuId) {
   if (currentChevron) {
     currentChevron.classList.toggle("rotate-180", !isShown);
   }
-
-  // Close other submenus
-  document.querySelectorAll(".submenu").forEach((submenu) => {
-    if (submenu.id !== menuId) {
-      submenu.classList.remove("show");
-      const chevron = document.querySelector(
-        `[onclick="toggleSubmenu('${submenu.id}')"] .chevron i`
-      );
-      if (chevron) chevron.classList.remove("rotate-180");
-      const tab = document.querySelector(
-        `[onclick="toggleSubmenu('${submenu.id}')"]`
-      );
-      if (tab) tab.setAttribute("aria-expanded", "false");
-    }
-  });
 }
 
 // Activate matching tab/sub-tab based on current page
@@ -91,6 +93,14 @@ function setActiveTab(currentPage) {
       }
     }
   });
+
+  // If no tab was activated and we're on student-list, activate the Student List tab
+  if (!activated && currentPage === 'student-list') {
+    const studentListTab = document.querySelector('a[href*="student-list"]');
+    if (studentListTab) {
+      studentListTab.classList.add('active');
+    }
+  }
 }
 
 // Expand parent menu if a sub-tab is active
@@ -129,28 +139,35 @@ function expandParentMenuIfActive() {
   });
 }
 
+// Prevent multiple event listeners on tabs
+let tabListenersAdded = false;
+
 // Handle main tab clicks that have no href (toggle active)
-document.querySelectorAll(".tab[onclick]").forEach((tab) => {
-  tab.addEventListener("click", function (e) {
-    if (this.getAttribute("href")) return; // If href exists, let link work
-    e.preventDefault();
+if (!tabListenersAdded) {
+  document.querySelectorAll(".tab[onclick]").forEach((tab) => {
+    tab.addEventListener("click", function (e) {
+      if (this.getAttribute("href")) return; // If href exists, let link work
+      e.preventDefault();
 
-    document
-      .querySelectorAll(".tab")
-      .forEach((t) => t.classList.remove("active"));
-    this.classList.add("active");
+      document
+        .querySelectorAll(".tab")
+        .forEach((t) => t.classList.remove("active"));
+      this.classList.add("active");
+    });
   });
-});
 
-// Handle sub-tab clicks
-document.querySelectorAll(".sub-tab").forEach((tab) => {
-  tab.addEventListener("click", function () {
-    document
-      .querySelectorAll(".tab, .sub-tab")
-      .forEach((t) => t.classList.remove("active"));
-    this.classList.add("active");
+  // Handle sub-tab clicks
+  document.querySelectorAll(".sub-tab").forEach((tab) => {
+    tab.addEventListener("click", function () {
+      document
+        .querySelectorAll(".tab, .sub-tab")
+        .forEach((t) => t.classList.remove("active"));
+      this.classList.add("active");
+    });
   });
-});
+  
+  tabListenersAdded = true;
+}
 
 // Get current page from URL params
 const urlParams = new URLSearchParams(window.location.search);
@@ -247,9 +264,11 @@ document.addEventListener("DOMContentLoaded", () => {
   expandParentMenuIfActive();
 
   // Set icon visibility based on sidebar state
-  const isSidebarClosed = sidebar.classList.contains("closed");
-  hamburgerIcon.classList.toggle("hidden", !isSidebarClosed);
-  closeIcon.classList.toggle("hidden", isSidebarClosed);
+  if (sidebar && hamburgerIcon && closeIcon) {
+    const isSidebarClosed = sidebar.classList.contains("closed");
+    hamburgerIcon.classList.toggle("hidden", !isSidebarClosed);
+    closeIcon.classList.toggle("hidden", isSidebarClosed);
+  }
 
   // Set search icons initial visibility
   if (searchContainer && searchIcon && searchCloseIcon) {
@@ -288,22 +307,26 @@ async function loadAdminLogo() {
 document.addEventListener("DOMContentLoaded", () => {
   loadAdminLogo();
   
-  // Apply saved theme on page load
+  // Apply saved theme on page load (prevent flash)
   const savedTheme = localStorage.getItem('dashboard-theme') || 'Default';
-  applyTheme(savedTheme);
+  if (savedTheme) {
+    applyTheme(savedTheme);
+  }
   
   // Add logout functionality without transition
   const logoutTab = document.getElementById('logout-tab');
   if (logoutTab) {
     logoutTab.addEventListener('click', function(e) {
       e.preventDefault();
+      e.stopPropagation();
       // Determine the correct logout path
       const isLocalhost = window.location.hostname === 'localhost';
       const logoutPath = isLocalhost 
         ? '../../Public/Components/Login.php' 
         : '/Public/Components/Login.php';
       
-      window.location.href = logoutPath;
+      // Use replace to prevent back button issues
+      window.location.replace(logoutPath);
     });
   }
 });

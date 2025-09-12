@@ -1,52 +1,49 @@
-function updateUrlWithTab(tabName) {
-  const url = new URL(window.location.href);
-  url.searchParams.set("tab", tabName);
-  url.searchParams.set("page", "1");
-  window.history.pushState({}, "", url);
-  window.location.href = url.toString();
-}
-
-function setActiveTab(tabName) {
-  document
-    .querySelectorAll(".tab-button")
-    .forEach((btn) => btn.classList.remove("active"));
-  document
-    .querySelectorAll(".tab-content")
-    .forEach((content) => content.classList.remove("active"));
-
-  const activeTab = document.querySelector(`[data-tab="${tabName}"]`);
-  const activeContent = document.getElementById(tabName);
-
-  if (activeTab) activeTab.classList.add("active");
-  if (activeContent) activeContent.classList.add("active");
-}
-
-function initializeTabs() {
+document.addEventListener("DOMContentLoaded", function () {
   const urlParams = new URLSearchParams(window.location.search);
   const activeTab = urlParams.get("tab") || "all";
-  setActiveTab(activeTab);
 
-  document.querySelectorAll(".tab-button").forEach((button) => {
-    button.addEventListener("click", function () {
-      const tabName = this.getAttribute("data-tab");
-      updateUrlWithTab(tabName);
-    });
+  // Set the active tab
+  const tabs = document.querySelectorAll(".tab-button");
+  tabs.forEach((tab) => {
+    if (tab.getAttribute("data-tab") === activeTab) {
+      tab.classList.add("active");
+    } else {
+      tab.classList.remove("active");
+    }
   });
-}
 
-document.addEventListener("DOMContentLoaded", function () {
-  initializeTabs();
+  // Show the active tab content
+  const tabContents = document.querySelectorAll(".tab-content");
+  tabContents.forEach((content) => {
+    if (content.id === activeTab) {
+      content.classList.add("active");
+    } else {
+      content.classList.remove("active");
+    }
+  });
 
+  // Update department filter to preserve tab state
   const deptFilter = document.getElementById("department-filter");
   if (deptFilter) {
     deptFilter.addEventListener("change", function () {
       const dept = this.value;
       const url = new URL(window.location.href);
       url.searchParams.set("department", dept);
-      url.searchParams.set("page", "1");
+      url.searchParams.set("pageNum", "1"); // Reset to first page
       window.location.href = url.toString();
     });
   }
+
+  // Add click handlers to tab buttons
+  document.querySelectorAll(".tab-button").forEach((button) => {
+    button.addEventListener("click", function () {
+      const tabName = this.getAttribute("data-tab");
+      const url = new URL(window.location.href);
+      url.searchParams.set("tab", tabName);
+      url.searchParams.set("pageNum", "1"); // Reset to first page when changing tabs
+      window.location.href = url.toString();
+    });
+  });
 });
 
 const themes = {
@@ -183,10 +180,6 @@ function applyTheme(theme) {
   localStorage.setItem("dashboard-theme", theme);
 
   console.log("Theme applied and saved:", theme);
-
-  document.body.style.display = "none";
-  document.body.offsetHeight;
-  document.body.style.display = "";
 }
 
 const STATUS_ENDPOINT = (() => {
@@ -216,9 +209,13 @@ const DELETE_STUDENT_ENDPOINT = (() => {
 window.addEventListener("DOMContentLoaded", () => {
   console.log("StudentList.js loaded successfully");
 
+  // Apply theme only once on load
   const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
-  applyTheme(savedTheme);
+  if (savedTheme) {
+    applyTheme(savedTheme);
+  }
 
+  // Initialize components
   initializeSelectAll();
   initializeFilters();
   initializeStatusUpdates();
