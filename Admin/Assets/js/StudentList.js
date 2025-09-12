@@ -250,7 +250,6 @@ function initializeSelectAll() {
   selectAllCheckbox.addEventListener("change", function () {
     console.log("Select all clicked:", this.checked);
 
-    // Set the flag to indicate select all is being used
     isSelectAllActive = this.checked;
 
     // Save select all state to localStorage
