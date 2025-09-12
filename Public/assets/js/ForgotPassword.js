@@ -1,18 +1,10 @@
-function togglePass() {
-  const passField = document.querySelector(".passwordField");
-  const input = document.getElementById("loginPass");
+function togglePass(fieldId) {
+  const passField = document.querySelector(`#${fieldId}`).closest('.passwordField');
+  const input = document.getElementById(fieldId);
   const isVisible = passField.getAttribute("data-isvisible") === "true";
 
   passField.setAttribute("data-isvisible", !isVisible);
   input.type = isVisible ? "password" : "text";
-}
-
-function limitID() {
-  const input = document.getElementById("idInput");
-  const maxLength = parseInt(input.getAttribute("maxlength"), 10);
-  if (input.value.length > maxLength) {
-    input.value = input.value.slice(0, maxLength);
-  }
 }
 
 // Enhanced Error Modal Functions
@@ -50,34 +42,48 @@ function hideErrorModal() {
 
 // Enhanced client-side form validation
 function validateForm() {
-  const username = document.getElementById('idInput').value.trim();
-  const password = document.getElementById('loginPass').value.trim();
+  const email = document.getElementById('emailaddress').value.trim();
+  const password = document.getElementById('newpassword').value.trim();
   
   // Clear any existing highlights
   clearFieldHighlights();
   
-  if (!username && !password) {
+  if (!email && !password) {
     showErrorModal('Please fill in all required fields.');
-    highlightField('idInput');
-    highlightField('loginPass');
+    highlightField('emailaddress');
+    highlightField('newpassword');
     return false;
   }
   
-  if (!username) {
-    showErrorModal('Please enter your username or student ID.');
-    highlightField('idInput');
+  if (!email) {
+    showErrorModal('Please enter your email address.');
+    highlightField('emailaddress');
+    return false;
+  }
+  
+  // Basic email validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    showErrorModal('Please enter a valid email address.');
+    highlightField('emailaddress');
     return false;
   }
   
   if (!password) {
-    showErrorModal('Please enter your password.');
-    highlightField('loginPass');
+    showErrorModal('Please enter your new password.');
+    highlightField('newpassword');
     return false;
   }
   
   if (password.length > 8) {
     showErrorModal('Password must not exceed 8 characters.');
-    highlightField('loginPass');
+    highlightField('newpassword');
+    return false;
+  }
+  
+  if (password.length < 3) {
+    showErrorModal('Password must be at least 3 characters long.');
+    highlightField('newpassword');
     return false;
   }
   
@@ -108,47 +114,34 @@ function clearFieldHighlight(fieldId) {
 }
 
 function clearFieldHighlights() {
-  clearFieldHighlight('idInput');
-  clearFieldHighlight('loginPass');
+  clearFieldHighlight('emailaddress');
+  clearFieldHighlight('newpassword');
 }
 
 // Handle form submission with modern page transition
 window.addEventListener("DOMContentLoaded", () => {
   // Add entrance animation to body when page loads
   document.body.classList.add('page-transition-in');
-  
-  // Check for server-side error message
-  const errorMessage = document.body.getAttribute('data-error-message');
-  if (errorMessage) {
-    showErrorModal(errorMessage);
-  }
-
-  // Check if login was successful and trigger transition
-  const loginSuccess = document.body.getAttribute('data-login-success');
-  const redirectTo = document.body.getAttribute('data-redirect-to');
-  
-  if (loginSuccess && redirectTo) {
-    // Add the modern page transition class to body
-    document.body.classList.add('page-transition-out');
-    
-    // Redirect after the animation completes
-    setTimeout(() => {
-      window.location.href = redirectTo;
-    }, 1000); // Match this with the CSS animation duration
-  }
 
   // Add form submission handler
-  const loginForm = document.querySelector('form');
-  if (loginForm) {
-    loginForm.addEventListener('submit', function(e) {
+  const form = document.querySelector('form');
+  if (form) {
+    form.addEventListener('submit', function(e) {
       // Validate form before submission
       if (!validateForm()) {
         e.preventDefault();
         return false;
       }
       
-      // Let the form submit normally to process login
-      // The transition will be handled after successful login detection
+      // Add page transition for successful submission
+      e.preventDefault();
+      document.body.classList.add('page-transition-out');
+      
+      // Show success message and redirect after animation
+      showErrorModal('Password reset request submitted successfully!', 'success');
+      setTimeout(() => {
+        window.location.href = 'Login.php';
+      }, 2000);
     });
   }
   

@@ -117,8 +117,8 @@ if (!empty($error_message)) {
     <div id="errorModal" class="error-modal">
         <div class="error-modal-content">
             <div class="error-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                    <path fill="#dc3545" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zM13 17h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24">
+                    <path fill="white" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zM13 17h-2v-2h2v2zm0-4h-2V7h2v6z"/>
                 </svg>
             </div>
             <div class="error-text">
@@ -159,7 +159,7 @@ if (!empty($error_message)) {
                 </div>
                 <div class="passwordField" data-isvisible="false">
                     <input name="password" id="loginPass" type="password" placeholder="Password" maxlength="8"
-                        autocomplete="off" required />
+                        autocomplete="off" />
                     <div class="eyeIcon open" onclick="togglePass()">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                             <g fill="none">
