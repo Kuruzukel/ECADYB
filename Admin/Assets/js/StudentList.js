@@ -1,5 +1,3 @@
-// StudentList.js (Railway-ready)
-
 // Tab State Management
 function updateUrlWithTab(tabName) {
   const url = new URL(window.location.href);
@@ -265,17 +263,17 @@ function initializeSelectAll() {
 
   selectAllCheckbox.addEventListener("change", function () {
     console.log("Select all clicked:", this.checked);
-    
+
     // Set the flag to indicate select all is being used
     isSelectAllActive = this.checked;
-    
+
     // Save select all state to localStorage
     localStorage.setItem("selectAllState", this.checked.toString());
-    
+
     // Get only visible student checkboxes (not filtered out)
     const visibleStudentCheckboxes = getVisibleStudentCheckboxes();
     console.log("Found", visibleStudentCheckboxes.length, "visible checkboxes");
-    
+
     // Simple toggle: set all visible checkboxes to match select all state
     visibleStudentCheckboxes.forEach((checkbox) => {
       const was = checkbox.checked;
@@ -291,12 +289,18 @@ function initializeSelectAll() {
 function getVisibleStudentCheckboxes() {
   const tableBody = document.querySelector("tbody");
   if (!tableBody) return [];
-  
-  const visibleRows = Array.from(tableBody.querySelectorAll("tr")).filter(row => {
-    return row.style.display !== "none" && row.querySelector(".student-checkbox");
-  });
-  
-  return visibleRows.map(row => row.querySelector(".student-checkbox")).filter(Boolean);
+
+  const visibleRows = Array.from(tableBody.querySelectorAll("tr")).filter(
+    (row) => {
+      return (
+        row.style.display !== "none" && row.querySelector(".student-checkbox")
+      );
+    }
+  );
+
+  return visibleRows
+    .map((row) => row.querySelector(".student-checkbox"))
+    .filter(Boolean);
 }
 
 // Helper function to clear select all state when individual changes occur
@@ -306,7 +310,7 @@ function clearSelectAllState() {
     console.log("Select all is active, not clearing state");
     return;
   }
-  
+
   console.log("Clearing select all state due to individual change");
   localStorage.removeItem("selectAllState");
   const selectAllCheckbox = document.getElementById("select-all-header");
@@ -335,18 +339,18 @@ function applyFilters() {
   const statusVal = (
     document.getElementById("status-filter")?.value || ""
   ).trim();
-  
+
   console.log("Applying filters - Department:", deptVal, "Status:", statusVal);
-  
+
   // Clear select all state when filters are applied
   if (deptVal || statusVal) {
     clearSelectAllState();
   }
-  
+
   // Get all table rows in tbody, excluding header
   const tableBody = document.querySelector("tbody");
   if (!tableBody) return;
-  
+
   const studentRows = tableBody.querySelectorAll("tr");
   console.log("Found", studentRows.length, "student rows");
 
@@ -377,7 +381,7 @@ function applyFilters() {
     console.log("Row", index, "will be", showRow ? "shown" : "hidden");
     row.style.display = showRow ? "" : "none";
   });
-  
+
   // Update select all state after filtering
   // Note: No automatic state update for simple toggle mode
 }
@@ -482,7 +486,9 @@ function togglePass(icon) {
   const passwordText = tableRow.querySelector(".password-text");
   const actionsContainer = icon.closest(".actions-container");
   const eyeOpen = actionsContainer.querySelector(".eyeIcon.open.eyeIcon-list");
-  const eyeClose = actionsContainer.querySelector(".eyeIcon.close.eyeIcon-list");
+  const eyeClose = actionsContainer.querySelector(
+    ".eyeIcon.close.eyeIcon-list"
+  );
 
   if (!passwordText) return;
 
@@ -509,12 +515,12 @@ function initializeStatusUpdates() {
     checkbox.addEventListener("change", async function () {
       console.log("Checkbox changed", this.checked);
       console.log("Dataset:", this.dataset);
-      
+
       // If this change wasn't caused by select all, clear the select all state
       if (!isSelectAllActive) {
         clearSelectAllState();
       }
-      
+
       if (this.dataset.busy === "1") return;
       this.dataset.busy = "1";
 
