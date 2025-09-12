@@ -17,6 +17,9 @@ function limitID() {
 
 // Handle form submission with modern page transition
 window.addEventListener("DOMContentLoaded", () => {
+  // Add entrance animation to body when page loads
+  document.body.classList.add('page-transition-in');
+  
   const errorMessage = document.getElementById("error-message");
   if (errorMessage && errorMessage.classList.contains("show")) {
     setTimeout(() => {
@@ -24,22 +27,26 @@ window.addEventListener("DOMContentLoaded", () => {
     }, 4000); // Hide after 4 seconds
   }
 
-  // Add form submission handler
+  // Check if login was successful and trigger transition
+  const loginSuccess = document.body.getAttribute('data-login-success');
+  const redirectTo = document.body.getAttribute('data-redirect-to');
+  
+  if (loginSuccess && redirectTo) {
+    // Add the modern page transition class to body
+    document.body.classList.add('page-transition-out');
+    
+    // Redirect after the animation completes
+    setTimeout(() => {
+      window.location.href = redirectTo;
+    }, 1000); // Match this with the CSS animation duration
+  }
+
+  // Add form submission handler for normal form submission
   const loginForm = document.querySelector('form');
   if (loginForm) {
     loginForm.addEventListener('submit', function(e) {
-      // Only prevent default if we're handling the animation
-      if (!e.defaultPrevented) {
-        e.preventDefault();
-        
-        // Add the modern page transition class to body
-        document.body.classList.add('page-transition-out');
-        
-        // Submit the form after the animation completes
-        setTimeout(() => {
-          loginForm.submit();
-        }, 1000); // Match this with the CSS animation duration
-      }
+      // Let the form submit normally to process login
+      // The transition will be handled after successful login detection
     });
   }
 });

@@ -96,7 +96,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 
-<body>
+<body<?php 
+// Add data attributes if login was successful
+if (isset($_SESSION['login_success']) && isset($_SESSION['redirect_to'])) {
+    echo ' data-login-success="' . htmlspecialchars($_SESSION['login_success']) . '"';
+    echo ' data-redirect-to="' . htmlspecialchars($_SESSION['redirect_to']) . '"';
+    // Clear the session variables after use
+    unset($_SESSION['login_success']);
+    unset($_SESSION['redirect_to']);
+}
+?>>
     <div class="loginCard">
         <?php if (!empty($error_message)): ?>
         <div id="error-message" class="error-message">

@@ -283,6 +283,12 @@ function scrollToBottom() {
 
 // On DOM ready, setup active tab and menu
 document.addEventListener("DOMContentLoaded", () => {
+  // Initialize page transitions
+  initializePageTransitions();
+  
+  // Add entrance animation to body when page loads
+  document.body.classList.add('page-transition-in');
+  
   const currentPage =
     urlParams.get("page") || window.location.pathname.split("/").pop();
   setActiveTab(currentPage);
