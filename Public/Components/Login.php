@@ -48,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($admin) {
             $_SESSION['role']     = 'admin';
             $_SESSION['username'] = $username;
-            header("Location: /Admin/Components/AdminDashboard.php");
+            header("Location: ../../Admin/Components/AdminDashboard.php");
             exit();
         }
 
@@ -68,7 +68,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['department'] = $course;
                 $_SESSION['section']    = $student['department section'] ?? '';
 
-                header("Location: /Student/Components/StudentDashboard.php");
+                header("Location: ../../Student/Components/StudentDashboard.php");
                 exit();
             }
         }
@@ -88,7 +88,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login Page</title>
-    <link href="/Public/assets/css/Login.css" rel="stylesheet" />
+    <link href="../assets/css/Login.css?v=2025012" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 
@@ -153,17 +153,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
                 </div>
                 <div class="forgot-password">
-                    <a href="/Public/Components/ForgotPassword.html">Forgot Password?</a>
+                    <a href="ForgotPassword.html">Forgot Password?</a>
                 </div>
             </div>
             <button type="submit">Login</button>
             <div class="logoContainer"></div>
-            <button type="back" onclick="window.location.href='/LandingPage/LandingPage.html'">
+            <button type="back" onclick="window.location.href='../../LandingPage/LandingPage.html'">
                 <i class="fas fa-arrow-left"></i> Back to Homepage
             </button>
         </form>
     </div>
 </body>
-<script src="/Public/assets/js/Login.js"></script>
+<script src="../assets/js/Login.js?v=2025012"></script>
 
 </html>
