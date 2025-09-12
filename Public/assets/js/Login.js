@@ -15,7 +15,7 @@ function limitID() {
   }
 }
 
-// Handle form submission with fade out animation
+// Handle form submission with modern page transition
 window.addEventListener("DOMContentLoaded", () => {
   const errorMessage = document.getElementById("error-message");
   if (errorMessage && errorMessage.classList.contains("show")) {
@@ -32,19 +32,13 @@ window.addEventListener("DOMContentLoaded", () => {
       if (!e.defaultPrevented) {
         e.preventDefault();
         
-        // Add the fade-out class to trigger the animation
-        const loginCard = document.querySelector('.loginCard');
-        if (loginCard) {
-          loginCard.classList.add('fade-out');
-          
-          // Submit the form after the animation completes
-          setTimeout(() => {
-            loginForm.submit();
-          }, 500); // Match this with the CSS animation duration
-        } else {
-          // Fallback in case .loginCard is not found
+        // Add the modern page transition class to body
+        document.body.classList.add('page-transition-out');
+        
+        // Submit the form after the animation completes
+        setTimeout(() => {
           loginForm.submit();
-        }
+        }, 1000); // Match this with the CSS animation duration
       }
     });
   }
