@@ -582,7 +582,6 @@ header.fading {
   z-index: 2;
 }
 
-/* Override for yearbook slider to maintain absolute positioning */
 .yearbook-slider-main {
   position: absolute !important;
   top: 0 !important;
