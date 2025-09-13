@@ -117,7 +117,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
     setTimeout(() => {
       window.location.href = redirectTo;
-    }, 1000); // Match this with the CSS animation duration
+    }, 1000);
     return; // Exit early to prevent error message processing
   }
 
