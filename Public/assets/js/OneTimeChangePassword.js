@@ -147,7 +147,6 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Close modal when clicking outside
   const errorModal = document.getElementById("errorModal");
   if (errorModal) {
     errorModal.addEventListener("click", function (e) {
