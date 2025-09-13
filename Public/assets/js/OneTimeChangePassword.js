@@ -124,7 +124,6 @@ window.addEventListener("DOMContentLoaded", () => {
         return false;
       }
 
-      // Add page transition for successful submission
       e.preventDefault();
       document.body.classList.add("page-transition-out");
 
