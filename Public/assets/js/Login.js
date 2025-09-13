@@ -129,7 +129,6 @@ window.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.querySelector("form");
   if (loginForm) {
     loginForm.addEventListener("submit", function (e) {
-      // Only validate on client-side, don't prevent server submission
       // The server will handle authentication and redirects
       const isValid = validateForm();
       if (!isValid) {
