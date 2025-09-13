@@ -113,7 +113,6 @@ window.addEventListener("DOMContentLoaded", () => {
   const redirectTo = document.body.getAttribute("data-redirect-to");
 
   if (loginSuccess && redirectTo) {
-    // Add the modern page transition class to body
     document.body.classList.add("page-transition-out");
 
     // Redirect after the animation completes
