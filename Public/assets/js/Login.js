@@ -15,7 +15,6 @@ function limitID() {
   }
 }
 
-// Enhanced Error Modal Functions
 function showErrorModal(message, type = "error") {
   const errorModal = document.getElementById("errorModal");
   const errorMessage = document.getElementById("errorMessage");
