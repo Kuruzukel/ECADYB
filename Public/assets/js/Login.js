@@ -109,7 +109,6 @@ function clearFieldHighlights() {
 window.addEventListener("DOMContentLoaded", () => {
   document.body.classList.add("page-transition-in");
 
-  // Check if login was successful and trigger transition
   const loginSuccess = document.body.getAttribute("data-login-success");
   const redirectTo = document.body.getAttribute("data-redirect-to");
 
