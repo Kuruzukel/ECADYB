@@ -42,7 +42,7 @@ function hideErrorModal() {
 
   setTimeout(() => {
     errorModal.classList.remove("show", "hide");
-    errorModal.className = "error-modal"; // Reset to default
+    errorModal.className = "error-modal";
   }, 400);
 }
 
