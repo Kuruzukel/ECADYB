@@ -115,7 +115,6 @@ window.addEventListener("DOMContentLoaded", () => {
   if (loginSuccess && redirectTo) {
     document.body.classList.add("page-transition-out");
 
-    // Redirect after the animation completes
     setTimeout(() => {
       window.location.href = redirectTo;
     }, 1000); // Match this with the CSS animation duration
