@@ -118,7 +118,7 @@ window.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
       window.location.href = redirectTo;
     }, 1000);
-    return; // Exit early to prevent error message processing
+    return;
   }
 
   // Only check for server-side error message if login was NOT successful
