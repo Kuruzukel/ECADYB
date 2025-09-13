@@ -119,7 +119,6 @@ window.addEventListener("DOMContentLoaded", () => {
   const form = document.querySelector("form");
   if (form) {
     form.addEventListener("submit", function (e) {
-      // Validate form before submission
       if (!validateForm()) {
         e.preventDefault();
         return false;
