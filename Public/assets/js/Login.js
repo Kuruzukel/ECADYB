@@ -46,7 +46,6 @@ function hideErrorModal() {
   }, 400);
 }
 
-// Enhanced client-side form validation
 function validateForm() {
   const username = document.getElementById("idInput").value.trim();
   const password = document.getElementById("loginPass").value.trim();
