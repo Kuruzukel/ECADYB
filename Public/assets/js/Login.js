@@ -27,7 +27,6 @@ function showErrorModal(message, type = "error") {
   errorMessage.textContent = message;
   errorModal.classList.add("show");
 
-  // Add entrance animation delay
   setTimeout(() => {
     errorModal.querySelector(".error-modal-content").style.animation =
       "errorModalSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards";
