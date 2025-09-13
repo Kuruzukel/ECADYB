@@ -1,8 +1,8 @@
 // service-worker.js
 
-const CACHE_NAME = "ecadyb-yearbook-cache-v4";
-const STATIC_CACHE = "ecadyb-static-v4";
-const DYNAMIC_CACHE = "ecadyb-dynamic-v4";
+const CACHE_NAME = "ecadyb-yearbook-cache-v5";
+const STATIC_CACHE = "ecadyb-static-v5";
+const DYNAMIC_CACHE = "ecadyb-dynamic-v5";
 
 // Critical files to cache for offline functionality
 const STATIC_ASSETS = [
@@ -14,10 +14,13 @@ const STATIC_ASSETS = [
   "/Public/Components/Login.html",
   "/Public/Components/Login.php",
   "/Public/Components/Loader.html",
+  "/Public/Components/ForgotPassword.html",
   "/Public/assets/css/Login.css",
   "/Public/assets/css/Loader.css",
+  "/Public/assets/css/ForgotPassword.css",
   "/Public/assets/js/Login.js",
-  "/Public/assets/js/Loader.js"
+  "/Public/assets/js/Loader.js",
+  "/Public/assets/js/ForgotPassword.js"
 ];
 
 // CDN assets that should be cached
