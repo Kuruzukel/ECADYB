@@ -139,7 +139,6 @@ window.addEventListener("DOMContentLoaded", () => {
     backButton.addEventListener("click", function (e) {
       e.preventDefault();
 
-      // Add page transition
       document.body.classList.add("page-transition-out");
 
       // Navigate after animation
