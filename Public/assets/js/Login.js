@@ -134,8 +134,6 @@ window.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
         return false;
       }
-
-      // Don't show error popup for valid forms
     });
   }
 
