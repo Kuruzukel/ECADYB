@@ -137,7 +137,6 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Add modern page transition to back button
   const backButton = document.querySelector('button[type="back"]');
   if (backButton) {
     backButton.addEventListener("click", function (e) {
