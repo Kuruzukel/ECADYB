@@ -116,7 +116,6 @@ function clearFieldHighlights() {
 window.addEventListener("DOMContentLoaded", () => {
   document.body.classList.add("page-transition-in");
 
-  // Add form submission handler
   const form = document.querySelector("form");
   if (form) {
     form.addEventListener("submit", function (e) {
