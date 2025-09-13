@@ -672,7 +672,6 @@ header.fading {
   font-family: "Segoe UI", sans-serif;
 }
 
-/* Full background display for selected yearbook */
 .yearbook-slider-main.show-yearbook-bg {
   background-position: center;
   background-size: cover;
