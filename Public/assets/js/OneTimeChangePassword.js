@@ -25,7 +25,6 @@ function showErrorModal(message, type = "error") {
       "errorModalSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards";
   }, 50);
 
-  // Auto-hide after 3.5 seconds with smooth transition
   setTimeout(() => {
     hideErrorModal();
   }, 3500);
