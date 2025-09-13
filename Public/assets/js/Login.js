@@ -144,7 +144,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
       document.body.classList.add("page-transition-out");
 
-      // Navigate after animation
       setTimeout(() => {
         window.location.href = "../../LandingPage/LandingPage.html";
       }, 1000);
