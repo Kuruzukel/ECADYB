@@ -87,7 +87,6 @@ function highlightField(fieldId) {
     field.style.boxShadow = "0 0 0 3px rgba(220, 53, 69, 0.2)";
     field.style.transition = "all 0.3s ease";
 
-    // Remove highlight after 3 seconds
     setTimeout(() => {
       clearFieldHighlight(fieldId);
     }, 3000);
