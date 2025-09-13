@@ -121,7 +121,6 @@
   animation: particleFloat 1s ease-out;
 }
 
-/* Enhanced transition for individual elements */
 .page-transition-out header {
   animation: headerTransitionOut 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   animation-delay: 0.1s;
