@@ -121,7 +121,6 @@ window.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  // Only check for server-side error message if login was NOT successful
   const errorMessage = document.body.getAttribute("data-error-message");
   if (errorMessage && !loginSuccess) {
     showErrorModal(errorMessage);
