@@ -44,7 +44,6 @@ function validateForm() {
   const newPassword = document.getElementById("currrentpassword").value.trim();
   const confirmPassword = document.getElementById("newpassword").value.trim();
 
-  // Clear any existing highlights
   clearFieldHighlights();
 
   if (!newPassword && !confirmPassword) {
