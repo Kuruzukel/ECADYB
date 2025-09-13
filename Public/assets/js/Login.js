@@ -50,7 +50,6 @@ function validateForm() {
   const username = document.getElementById("idInput").value.trim();
   const password = document.getElementById("loginPass").value.trim();
 
-  // Clear any existing highlights
   clearFieldHighlights();
 
   if (!username && !password) {
