@@ -135,7 +135,6 @@ window.addEventListener("DOMContentLoaded", () => {
         return false;
       }
 
-      // Server will handle authentication and set redirect attributes
       // Don't show error popup for valid forms
     });
   }
