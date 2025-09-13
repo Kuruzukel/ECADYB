@@ -141,7 +141,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
       document.body.classList.add("page-transition-out");
 
-      // Navigate after animation
       setTimeout(() => {
         window.location.href = "../Components/Login.php";
       }, 1000);
