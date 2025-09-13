@@ -87,7 +87,6 @@ function validateForm() {
   return true;
 }
 
-// Field highlighting functions
 function highlightField(fieldId) {
   const field = document.getElementById(fieldId);
   if (field) {
