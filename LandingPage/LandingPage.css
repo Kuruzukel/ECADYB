@@ -124,7 +124,6 @@
 .page-transition-out header {
   animation: headerTransitionOut 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   animation-delay: 0.1s;
-  /* Ensure header stays in correct position during transition */
   position: fixed !important;
   top: 1rem !important;
   left: 50% !important;
