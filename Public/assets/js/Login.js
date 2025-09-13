@@ -126,7 +126,6 @@ window.addEventListener("DOMContentLoaded", () => {
     showErrorModal(errorMessage);
   }
 
-  // Add form submission handler
   const loginForm = document.querySelector("form");
   if (loginForm) {
     loginForm.addEventListener("submit", function (e) {
