@@ -134,7 +134,6 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Add transition to back button
   const backButton = document.querySelector('button[type="back"]');
   if (backButton) {
     backButton.addEventListener("click", function (e) {
