@@ -680,7 +680,6 @@ header.fading {
   transition: background-image 0.5s ease;
 }
 
-/* Add smooth loading transition */
 .yearbook-slider-main.background-loaded {
   transition: background-image 0.3s ease-in-out;
 }
