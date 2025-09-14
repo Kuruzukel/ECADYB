@@ -44,7 +44,6 @@ function validateForm() {
   const email = document.getElementById("emailaddress").value.trim();
   const password = document.getElementById("newpassword").value.trim();
 
-  // Clear any existing highlights
   clearFieldHighlights();
 
   if (!email && !password) {
