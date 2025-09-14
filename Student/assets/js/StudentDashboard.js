@@ -1,5 +1,4 @@
 function initializePageTransitions() {
-  // Add transition to all navigation links
   const navLinks = document.querySelectorAll('a[href]:not([href="#"])');
 
   navLinks.forEach((link) => {
