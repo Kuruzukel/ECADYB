@@ -139,7 +139,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
   const backButton = document.querySelector('button[type="back"]');
   if (backButton) {
-    // No need to add custom event listener since we're using inline onclick
   }
 
   // Close modal when clicking outside
