@@ -21,6 +21,6 @@ window.addEventListener("DOMContentLoaded", () => {
   if (errorMessage && errorMessage.classList.contains("show")) {
     setTimeout(() => {
       errorMessage.classList.remove("show");
-    }, 4000); // Hide after 4 seconds
+    }, 4000);
   }
 });
