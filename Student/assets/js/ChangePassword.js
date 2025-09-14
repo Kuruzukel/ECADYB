@@ -1,4 +1,3 @@
-// Toggle password visibility for a specific input
 function togglePass(id) {
   const input = document.getElementById(id);
   const passField = input.parentElement; // .passwordField div
