@@ -7,7 +7,6 @@ function togglePass(id) {
   passField.setAttribute("data-isvisible", !isVisible);
 }
 
-// Limit input length for an ID field
 function limitID() {
   const input = document.getElementById("idInput");
   if (!input) return;
