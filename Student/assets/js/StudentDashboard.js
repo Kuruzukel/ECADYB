@@ -42,7 +42,7 @@ const profileMenu = document.getElementById("profileDropdownMenu");
 
 if (profileBtn) {
   profileBtn.addEventListener("click", function (e) {
-    e.stopPropagation(); // Prevent triggering the document click event
+    e.stopPropagation();
     // Toggle clicked class for visual feedback (optional)
     this.classList.toggle("clicked");
 
