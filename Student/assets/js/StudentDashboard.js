@@ -45,7 +45,6 @@ if (profileBtn) {
     e.stopPropagation();
     this.classList.toggle("clicked");
 
-    // Toggle dropdown menu
     profileMenu.style.display =
       profileMenu.style.display === "flex" ? "none" : "flex";
   });
