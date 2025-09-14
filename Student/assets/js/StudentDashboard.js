@@ -24,7 +24,6 @@ function initializePageTransitions() {
   });
 }
 
-// Logout with transition
 function logoutWithTransition() {
   document.body.classList.add("page-transition-out");
 
