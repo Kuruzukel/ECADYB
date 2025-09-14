@@ -28,7 +28,6 @@ function logoutWithTransition() {
   document.body.classList.add("page-transition-out");
 
   setTimeout(() => {
-    // Determine the correct logout path
     const isLocalhost = window.location.hostname === "localhost";
     const logoutPath = isLocalhost
       ? "../../Public/Components/Login.php"
