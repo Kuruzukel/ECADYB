@@ -5,7 +5,6 @@ function initializePageTransitions() {
     link.addEventListener("click", function (e) {
       const href = this.getAttribute("href");
 
-      // Skip if it's a hash link or external link
       if (
         href.startsWith("#") ||
         href.startsWith("http") ||
