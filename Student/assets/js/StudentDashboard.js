@@ -52,7 +52,6 @@ if (profileBtn) {
 
 document.addEventListener("click", function (e) {
   if (profileBtn && profileBtn.contains(e.target)) {
-    // Click handled by the button's own event listener
   } else {
     if (profileMenu) {
       profileMenu.style.display = "none";
