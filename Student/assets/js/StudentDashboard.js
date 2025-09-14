@@ -37,7 +37,6 @@ function logoutWithTransition() {
   }, 1000);
 }
 
-// Profile dropdown functionality
 const profileBtn = document.getElementById("profileDropdownBtn");
 const profileMenu = document.getElementById("profileDropdownMenu");
 
