@@ -137,7 +137,6 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Add transition to back button - using old/simple transition
   const backButton = document.querySelector('button[type="back"]');
   if (backButton) {
     // Remove the onclick handler added by HTML and let the inline handler work
