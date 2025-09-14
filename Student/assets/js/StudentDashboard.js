@@ -17,7 +17,6 @@ function initializePageTransitions() {
 
       document.body.classList.add("page-transition-out");
 
-      // Navigate after animation
       setTimeout(() => {
         window.location.href = href;
       }, 1000);
