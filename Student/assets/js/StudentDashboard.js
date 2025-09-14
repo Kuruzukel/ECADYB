@@ -91,7 +91,6 @@ document.addEventListener("DOMContentLoaded", function () {
     button.addEventListener("click", function (e) {
       e.preventDefault();
 
-      // Add clicked class for visual feedback
       this.classList.add("clicked");
 
       // Remove clicked class after animation
