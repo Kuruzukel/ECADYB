@@ -1,6 +1,6 @@
 function togglePass(id) {
   const input = document.getElementById(id);
-  const passField = input.parentElement; // .passwordField div
+  const passField = input.parentElement;
   const isVisible = passField.getAttribute("data-isvisible") === "true";
 
   input.type = isVisible ? "password" : "text";
