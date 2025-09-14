@@ -114,7 +114,6 @@ function clearFieldHighlights() {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  // Add entrance animation to body when page loads
   document.body.classList.add("page-transition-in");
 
   // Add form submission handler
