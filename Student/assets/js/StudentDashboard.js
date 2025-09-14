@@ -50,7 +50,6 @@ if (profileBtn) {
   });
 }
 
-// Close dropdown when clicking outside
 document.addEventListener("click", function (e) {
   if (profileBtn && profileBtn.contains(e.target)) {
     // Click handled by the button's own event listener
