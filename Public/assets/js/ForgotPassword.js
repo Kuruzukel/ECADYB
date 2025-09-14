@@ -13,7 +13,6 @@ function showErrorModal(message, type = "error") {
   const errorModal = document.getElementById("errorModal");
   const errorMessage = document.getElementById("errorMessage");
 
-  // Set modal type for styling
   errorModal.className = `error-modal ${
     type === "success" ? "success-modal" : ""
   }`;
