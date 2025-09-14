@@ -62,7 +62,6 @@ document.addEventListener("click", function (e) {
   }
 });
 
-// Smooth scrolling functionality
 document.addEventListener("DOMContentLoaded", function () {
   const navLinks = document.querySelectorAll(".center-nav a");
   const heroButtons = document.querySelectorAll(
