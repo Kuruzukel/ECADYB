@@ -1,22 +1,25 @@
-// Modern Page Transition Functions
 function initializePageTransitions() {
   // Add transition to all navigation links
   const navLinks = document.querySelectorAll('a[href]:not([href="#"])');
-  
-  navLinks.forEach(link => {
-    link.addEventListener('click', function(e) {
-      const href = this.getAttribute('href');
-      
+
+  navLinks.forEach((link) => {
+    link.addEventListener("click", function (e) {
+      const href = this.getAttribute("href");
+
       // Skip if it's a hash link or external link
-      if (href.startsWith('#') || href.startsWith('http') || href.startsWith('mailto')) {
+      if (
+        href.startsWith("#") ||
+        href.startsWith("http") ||
+        href.startsWith("mailto")
+      ) {
         return;
       }
-      
+
       e.preventDefault();
-      
+
       // Add page transition class
-      document.body.classList.add('page-transition-out');
-      
+      document.body.classList.add("page-transition-out");
+
       // Navigate after animation
       setTimeout(() => {
         window.location.href = href;
@@ -27,15 +30,15 @@ function initializePageTransitions() {
 
 // Logout with transition
 function logoutWithTransition() {
-  document.body.classList.add('page-transition-out');
-  
+  document.body.classList.add("page-transition-out");
+
   setTimeout(() => {
     // Determine the correct logout path
-    const isLocalhost = window.location.hostname === 'localhost';
-    const logoutPath = isLocalhost 
-      ? '../../Public/Components/Login.php' 
-      : '/Public/Components/Login.php';
-    
+    const isLocalhost = window.location.hostname === "localhost";
+    const logoutPath = isLocalhost
+      ? "../../Public/Components/Login.php"
+      : "/Public/Components/Login.php";
+
     window.location.href = logoutPath;
   }, 1000);
 }
@@ -297,17 +300,17 @@ window.addEventListener("scroll", () => {
 document.addEventListener("DOMContentLoaded", function () {
   // Initialize page transitions
   initializePageTransitions();
-  
+
   // Add entrance animation to body
-  document.body.classList.add('page-transition-in');
-  
+  document.body.classList.add("page-transition-in");
+
   const loginBtn = document.getElementById("loginDropdownBtn");
   const mobileLoginBtn = document.getElementById("mobileLoginDropdownBtn");
 
   if (loginBtn) {
     loginBtn.addEventListener("click", () => {
       // Use transition for login redirect
-      document.body.classList.add('page-transition-out');
+      document.body.classList.add("page-transition-out");
       setTimeout(() => {
         window.location.href = "/Public/Login.php";
       }, 1000);
@@ -317,7 +320,7 @@ document.addEventListener("DOMContentLoaded", function () {
   if (mobileLoginBtn) {
     mobileLoginBtn.addEventListener("click", () => {
       // Use transition for login redirect
-      document.body.classList.add('page-transition-out');
+      document.body.classList.add("page-transition-out");
       setTimeout(() => {
         window.location.href = "/Public/Login.php";
       }, 1000);
