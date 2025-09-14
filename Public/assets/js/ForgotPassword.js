@@ -127,7 +127,6 @@ window.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       document.body.classList.add("page-transition-out");
 
-      // Show success message and redirect after animation
       showErrorModal(
         "Password reset request submitted successfully!",
         "success"
