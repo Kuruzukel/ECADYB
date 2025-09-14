@@ -59,7 +59,6 @@ function validateForm() {
     return false;
   }
 
-  // Basic email validation
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
     showErrorModal("Please enter a valid email address.");
