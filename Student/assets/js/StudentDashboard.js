@@ -74,7 +74,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
       navLinks.forEach((navLink) => navLink.classList.remove("clicked"));
 
-      // Add clicked class to the current link
       this.classList.add("clicked");
 
       const targetId = this.getAttribute("href");
