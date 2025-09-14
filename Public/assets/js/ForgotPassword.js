@@ -40,7 +40,6 @@ function hideErrorModal() {
   }, 400);
 }
 
-// Enhanced client-side form validation
 function validateForm() {
   const email = document.getElementById("emailaddress").value.trim();
   const password = document.getElementById("newpassword").value.trim();
