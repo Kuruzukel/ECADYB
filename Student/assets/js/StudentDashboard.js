@@ -68,7 +68,6 @@ document.addEventListener("DOMContentLoaded", function () {
     ".hero-btn, .hero-btn-secondary"
   );
 
-  // Add smooth scrolling to all nav links
   navLinks.forEach((link) => {
     link.addEventListener("click", function (e) {
       e.preventDefault();
