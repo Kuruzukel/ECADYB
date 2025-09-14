@@ -56,7 +56,6 @@ document.addEventListener("click", function (e) {
     if (profileMenu) {
       profileMenu.style.display = "none";
     }
-    // Remove clicked class when clicking outside
     if (profileBtn) {
       profileBtn.classList.remove("clicked");
     }
