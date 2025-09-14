@@ -93,7 +93,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
       this.classList.add("clicked");
 
-      // Remove clicked class after animation
       setTimeout(() => {
         this.classList.remove("clicked");
       }, 300);
