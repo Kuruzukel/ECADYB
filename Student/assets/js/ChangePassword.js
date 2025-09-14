@@ -16,7 +16,6 @@ function limitID() {
   }
 }
 
-// Auto fade out error message after a few seconds
 window.addEventListener("DOMContentLoaded", () => {
   const errorMessage = document.getElementById("error-message");
   if (errorMessage && errorMessage.classList.contains("show")) {
