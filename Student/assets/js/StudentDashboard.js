@@ -72,7 +72,6 @@ document.addEventListener("DOMContentLoaded", function () {
     link.addEventListener("click", function (e) {
       e.preventDefault();
 
-      // Remove clicked class from all nav links
       navLinks.forEach((navLink) => navLink.classList.remove("clicked"));
 
       // Add clicked class to the current link
