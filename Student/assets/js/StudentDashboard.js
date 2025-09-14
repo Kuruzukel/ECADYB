@@ -87,7 +87,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // Add smooth scrolling to hero buttons
   heroButtons.forEach((button) => {
     button.addEventListener("click", function (e) {
       e.preventDefault();
