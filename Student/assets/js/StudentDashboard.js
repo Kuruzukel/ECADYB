@@ -40,7 +40,6 @@ function logoutWithTransition() {
 const profileBtn = document.getElementById("profileDropdownBtn");
 const profileMenu = document.getElementById("profileDropdownMenu");
 
-// Add click behavior for profile button
 if (profileBtn) {
   profileBtn.addEventListener("click", function (e) {
     e.stopPropagation(); // Prevent triggering the document click event
