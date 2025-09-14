@@ -15,7 +15,6 @@ function initializePageTransitions() {
 
       e.preventDefault();
 
-      // Add page transition class
       document.body.classList.add("page-transition-out");
 
       // Navigate after animation
