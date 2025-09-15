@@ -158,7 +158,6 @@ function moveToIndex(index) {
 }
 
 function handleTransitionEnd() {
-  // Loop logic
   if (currentIndex < 0) {
     currentIndex = carouselImages.length - 1;
     track.style.transition = "none";
