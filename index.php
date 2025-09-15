@@ -94,7 +94,6 @@ if (!empty($error_message)) {
 $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 // Pages mapping
-// Routes mapping with proper asset handling
 $routes = [
     '/LandingPage'        => BASE_PATH . '/LandingPage/LandingPage.html',
     '/Login'              => BASE_PATH . '/Public/Components/Login.php',
@@ -102,10 +101,6 @@ $routes = [
     '/Admin/Components/AdminLogout.php' => BASE_PATH . '/Admin/Components/AdminLogout.php',
     '/Student'            => BASE_PATH . '/Student/Components/StudentDashboard.php',
     '/'                   => BASE_PATH . '/Public/Components/Loader.html',
-    
-    // Static assets for Loader component
-    '/assets/css/Loader.css' => BASE_PATH . '/Public/assets/css/Loader.css',
-    '/assets/js/Loader.js'  => BASE_PATH . '/Public/assets/js/Loader.js',
 ];
 
 // Handle main routes
@@ -116,15 +111,6 @@ if (array_key_exists($requestUri, $routes)) {
 
         if ($ext === 'php') {
             include $filePath;
-        } elseif (in_array($ext, ['css', 'js'])) {
-            // Set proper headers for CSS and JS files
-            if ($ext === 'css') {
-                header('Content-Type: text/css');
-            } elseif ($ext === 'js') {
-                header('Content-Type: application/javascript');
-            }
-            readfile($filePath);
-            exit;
         } else {
             // Serve HTML & adjust paths for Railway
             $htmlContent = file_get_contents($filePath);
