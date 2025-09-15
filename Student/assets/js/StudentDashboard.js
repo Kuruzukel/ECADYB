@@ -268,7 +268,6 @@ window.addEventListener("scroll", () => {
 document.addEventListener("DOMContentLoaded", function () {
   initializePageTransitions();
 
-  // Add entrance animation to body
   document.body.classList.add("page-transition-in");
 
   const loginBtn = document.getElementById("loginDropdownBtn");
