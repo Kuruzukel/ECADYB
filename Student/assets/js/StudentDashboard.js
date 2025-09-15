@@ -240,7 +240,6 @@ function resetCarouselAfterTimeout() {
 startAutoSlide();
 resetCarouselAfterTimeout();
 
-// Simple scroll spy functionality
 window.addEventListener("scroll", () => {
   const sections = document.querySelectorAll("section, footer");
   const navLinks = document.querySelectorAll(".center-nav a");
