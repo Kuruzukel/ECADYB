@@ -139,7 +139,6 @@ label {
   color: #e0e0e0;
 }
 
-/* Upload grid and boxes */
 .upload-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
