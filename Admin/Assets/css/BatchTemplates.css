@@ -128,7 +128,6 @@ h1 .chevron i {
   cursor: pointer;
 }
 
-/* Selected state of the whole section */
 .section.selected {
   outline: 2px solid #ffffff;
   outline-offset: 0;
