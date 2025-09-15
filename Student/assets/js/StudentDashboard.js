@@ -116,7 +116,6 @@ document.addEventListener("DOMContentLoaded", function () {
     if (window.scrollY > lastScrollY && window.scrollY > 50) {
       header.classList.add("header-hidden");
     } else {
-      // Scrolling up or at top
       header.classList.remove("header-hidden");
     }
     lastScrollY = window.scrollY;
