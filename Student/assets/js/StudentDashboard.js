@@ -146,7 +146,6 @@ function renderImages() {
 
   carouselImageElements = Array.from(track.querySelectorAll(".carousel-img"));
 
-  // Set initial position to the first real image
   track.style.transition = "none";
   track.style.transform = `translateX(-100%)`;
   currentIndex = 0;
