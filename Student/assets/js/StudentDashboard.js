@@ -211,7 +211,6 @@ track.addEventListener("touchend", (e) => {
 
 renderImages();
 
-// Auto-slide
 let autoSlideInterval = null;
 let timeoutId = null;
 
