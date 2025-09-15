@@ -266,7 +266,6 @@ window.addEventListener("scroll", () => {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-  // Initialize page transitions
   initializePageTransitions();
 
   // Add entrance animation to body
