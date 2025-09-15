@@ -130,7 +130,7 @@ let currentIndex = 0;
 
 function renderImages() {
   const images = [
-    carouselImages[carouselImages.length - 1], // last
+    carouselImages[carouselImages.length - 1],
     ...carouselImages,
     carouselImages[0], // first
   ];
