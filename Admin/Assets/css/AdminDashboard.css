@@ -678,7 +678,6 @@ header h3 {
   }
 }
 
-/* Fade in animation */
 @keyframes fadeInUp {
   0% {
     opacity: 0;
