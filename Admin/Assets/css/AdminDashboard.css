@@ -652,7 +652,6 @@ header h3 {
   transform: translateY(-1px);
 }
 
-/* Optional Close Button */
 .close-btn {
   position: absolute;
   top: 12px;
