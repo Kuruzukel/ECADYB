@@ -209,7 +209,6 @@ track.addEventListener("touchend", (e) => {
   }
 });
 
-// Initialize
 renderImages();
 
 // Auto-slide
