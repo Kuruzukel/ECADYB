@@ -457,7 +457,6 @@ main {
   text-align: center;
 }
 
-/* Chevron transition */
 .chevron i {
   transition: transform 0.2s ease;
 }
