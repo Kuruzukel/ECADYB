@@ -158,7 +158,6 @@ label {
   overflow: hidden;
 }
 
-/* Hover effect like Themes circular upload boxes */
 .upload-box:hover {
   border-color: #e2e8f0;
 }
