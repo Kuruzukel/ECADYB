@@ -132,7 +132,7 @@ function renderImages() {
   const images = [
     carouselImages[carouselImages.length - 1],
     ...carouselImages,
-    carouselImages[0], // first
+    carouselImages[0],
   ];
 
   track.innerHTML = images
