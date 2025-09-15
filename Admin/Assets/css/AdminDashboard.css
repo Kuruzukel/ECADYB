@@ -63,7 +63,7 @@ header {
   font-weight: 500;
   letter-spacing: 0.3px;
 }
-/* Smooth transition for submenu */
+
 .submenu {
   transition: max-height 0.3s ease, opacity 0.2s ease;
 }
