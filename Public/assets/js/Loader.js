@@ -18,7 +18,8 @@
     
     // Wait for the animation to complete before redirecting
     setTimeout(() => {
-      window.location.href = '/LandingPage/LandingPage.html';
+      // Use the correct path for Railway deployment
+      window.location.href = '/LandingPage';
     }, 1000); // Match this with the animation duration (1s)
   }
 
