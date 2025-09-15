@@ -187,7 +187,6 @@ header {
   width: 100%;
 }
 
-/* UPDATED: search-container to flex-grow and min-width 0 to prevent overflow */
 .search-container {
   display: flex;
   align-items: center;
