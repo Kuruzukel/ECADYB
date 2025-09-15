@@ -48,7 +48,6 @@ header {
   transform: scale(1.05);
 }
 
-/* Modern tab and menu styles */
 .tab {
   display: flex;
   align-items: center;
