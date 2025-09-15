@@ -129,7 +129,6 @@ let carouselImages = carouselImageElements.map((img) => img.src);
 let currentIndex = 0;
 
 function renderImages() {
-  // For infinite effect, clone last and first images
   const images = [
     carouselImages[carouselImages.length - 1], // last
     ...carouselImages,
