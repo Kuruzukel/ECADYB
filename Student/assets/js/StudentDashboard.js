@@ -114,7 +114,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const header = document.querySelector("header");
   window.addEventListener("scroll", function () {
     if (window.scrollY > lastScrollY && window.scrollY > 50) {
-      // Scrolling down
       header.classList.add("header-hidden");
     } else {
       // Scrolling up or at top
