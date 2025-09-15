@@ -109,7 +109,6 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-// Header hide on scroll animation
 document.addEventListener("DOMContentLoaded", function () {
   let lastScrollY = window.scrollY;
   const header = document.querySelector("header");
