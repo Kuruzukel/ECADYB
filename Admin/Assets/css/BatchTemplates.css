@@ -361,7 +361,6 @@ label {
   }
 }
 
-/* Notification Toast (match StudentList) */
 .notification {
   position: fixed;
   top: 20px;
