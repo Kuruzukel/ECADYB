@@ -275,7 +275,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if (loginBtn) {
     loginBtn.addEventListener("click", () => {
-      // Use transition for login redirect
       document.body.classList.add("page-transition-out");
       setTimeout(() => {
         window.location.href = "/Public/Login.php";
