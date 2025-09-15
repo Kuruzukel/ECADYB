@@ -1,3 +1,156 @@
+/* ===== Page Zoom Out Transition ===== */
+@keyframes zoomPageOut {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0px) brightness(1) saturate(1);
+  }
+  30% {
+    opacity: 0.9;
+    transform: scale(1.05);
+    filter: blur(1px) brightness(1.05) saturate(1.1);
+  }
+  60% {
+    opacity: 0.6;
+    transform: scale(1.1);
+    filter: blur(4px) brightness(1.15) saturate(1.3);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
+    filter: blur(12px) brightness(1.4) saturate(1.6);
+  }
+}
+
+/* ===== Header Transition (Zoom Only, No Slant) ===== */
+@keyframes zoomHeaderOut {
+  0% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+    filter: blur(0px) brightness(1);
+  }
+  30% {
+    opacity: 0.9;
+    transform: translateX(-50%) scale(1.05);
+    filter: blur(1px) brightness(1.05);
+  }
+  60% {
+    opacity: 0.6;
+    transform: translateX(-50%) scale(1.1);
+    filter: blur(3px) brightness(1.1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) scale(1.15);
+    filter: blur(8px) brightness(1.2);
+  }
+}
+
+/* ===== Shimmer Effect ===== */
+@keyframes shimmerEffect {
+  0% {
+    background-position: -300% 0;
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    background-position: 300% 0;
+    opacity: 0;
+  }
+}
+
+/* ===== Particle Float (still rising effect) ===== */
+@keyframes particleFloat {
+  0% {
+    transform: translateY(100vh) translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh) translateX(50px);
+    opacity: 0;
+  }
+}
+
+/* ===== Page Transition Container ===== */
+.page-transition-out {
+  animation: zoomPageOut 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  pointer-events: none;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ===== Shimmer Overlay ===== */
+.page-transition-out::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.03) 25%,
+    rgba(99, 102, 241, 0.1) 50%,
+    rgba(255, 255, 255, 0.03) 75%,
+    transparent 100%
+  );
+  background-size: 400% 100%;
+  animation: shimmerEffect 1s ease-out;
+  z-index: 9998;
+  pointer-events: none;
+}
+
+/* ===== Particle Overlay ===== */
+.page-transition-out::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(
+    circle at center,
+    rgba(99, 102, 241, 0.1) 0%,
+    rgba(112, 44, 180, 0.05) 30%,
+    transparent 70%
+  );
+  z-index: 9999;
+  pointer-events: none;
+  animation: particleFloat 1s ease-out;
+}
+
+/* ===== Header Animation ===== */
+.page-transition-out header {
+  animation: zoomHeaderOut 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation-delay: 0.1s;
+  position: fixed !important;
+  top: 1rem !important;
+  left: 50% !important;
+  z-index: 10000 !important;
+  transform-origin: center center;
+}
+
+/* ===== Hero Section ===== */
+.page-transition-out .main-hero {
+  animation: zoomPageOut 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation-delay: 0.05s;
+}
+
+/* ===== Other Sections ===== */
+.page-transition-out .section {
+  animation: zoomPageOut 0.9s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation-delay: 0.15s;
+}
+
 body {
   display: flex;
   align-items: center;

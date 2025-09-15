@@ -1,8 +1,8 @@
 // service-worker.js
 
-const CACHE_NAME = "ecadyb-yearbook-cache-v5";
-const STATIC_CACHE = "ecadyb-static-v5";
-const DYNAMIC_CACHE = "ecadyb-dynamic-v5";
+const CACHE_NAME = "ecadyb-yearbook-cache-v6";
+const STATIC_CACHE = "ecadyb-static-v6";
+const DYNAMIC_CACHE = "ecadyb-dynamic-v6";
 
 // Critical files to cache for offline functionality
 const STATIC_ASSETS = [
@@ -20,7 +20,8 @@ const STATIC_ASSETS = [
   "/Public/assets/css/ForgotPassword.css",
   "/Public/assets/js/Login.js",
   "/Public/assets/js/Loader.js",
-  "/Public/assets/js/ForgotPassword.js"
+  "/Public/assets/js/ForgotPassword.js",
+  "/Public/assets/css/Loader.css"
 ];
 
 // CDN assets that should be cached
@@ -38,7 +39,9 @@ const CDN_ASSETS = [
   "https://ECADYB.b-cdn.net/img/YB COVER/InformationSystem.png",
   "https://ECADYB.b-cdn.net/img/YB COVER/BusinessAdministration.png",
   "https://ECADYB.b-cdn.net/img/YB COVER/Education.png",
-  "https://ECADYB.b-cdn.net/img/YB COVER/Nursing.png"
+  "https://ECADYB.b-cdn.net/img/YB COVER/Nursing.png",
+  "https://ECADYB.b-cdn.net/img/ECABG.jpg",
+  "https://ECADYB.b-cdn.net/img/ADMINGRALLERYLOGO.png"
 ];
 
 // Install event - cache critical resources
