@@ -265,7 +265,6 @@ window.addEventListener("scroll", () => {
   });
 });
 
-// Mobile & Desktop login buttons - simple redirect
 document.addEventListener("DOMContentLoaded", function () {
   // Initialize page transitions
   initializePageTransitions();
