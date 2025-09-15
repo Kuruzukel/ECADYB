@@ -667,7 +667,6 @@ header h3 {
   color: #f87171;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .modal {
     margin: 1rem;
