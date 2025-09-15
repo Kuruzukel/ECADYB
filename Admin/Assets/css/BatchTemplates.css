@@ -107,7 +107,6 @@ h1 .chevron i {
   cursor: pointer;
 }
 
-/* Checkbox aligned to the right inside section header */
 .template-select {
   margin-left: auto;
   display: inline-flex;
