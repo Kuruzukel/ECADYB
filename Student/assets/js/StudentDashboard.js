@@ -122,7 +122,6 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-// Carousel logic using images from HTML
 const track = document.getElementById("carousel-track");
 let carouselImageElements = Array.from(track.querySelectorAll(".carousel-img"));
 let carouselImages = carouselImageElements.map((img) => img.src);
