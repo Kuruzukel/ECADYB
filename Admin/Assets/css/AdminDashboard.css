@@ -465,7 +465,6 @@ main {
   transform: rotate(180deg);
 }
 
-/* Prevent layout shift and glitching */
 .contents {
   height: 100vh;
   width: 100%;
