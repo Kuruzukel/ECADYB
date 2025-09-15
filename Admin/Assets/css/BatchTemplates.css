@@ -272,7 +272,6 @@ label {
   font-family: Arial, sans-serif;
 }
 
-/* Match StudentList modal-content container spacing */
 #delete-modal-overlay .modal-content {
   background: var(--section-bg, #2d2f3a);
   border-radius: 16px;
