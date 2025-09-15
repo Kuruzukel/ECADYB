@@ -144,7 +144,6 @@ function renderImages() {
     )
     .join("");
 
-  // Update carouselImageElements after rendering
   carouselImageElements = Array.from(track.querySelectorAll(".carousel-img"));
 
   // Set initial position to the first real image
