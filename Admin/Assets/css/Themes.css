@@ -94,7 +94,6 @@ h1 .chevron i {
   align-items: center;
 }
 
-/* Upload overlay/modal (reuse BatchTemplates styles) */
 .upload-overlay {
   position: fixed;
   top: 0;
