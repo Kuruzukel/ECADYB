@@ -688,7 +688,6 @@ table th:nth-child(1) {
 }
 
 table th:nth-child(2) {
-  /* ID NUMBER column */
   width: 12%;
   min-width: 120px;
 }
