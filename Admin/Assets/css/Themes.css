@@ -290,7 +290,7 @@ h1 .chevron i {
 
 .upload-box.circle .delete-btn {
   position: absolute;
-  top: 20px; /* 👈 move to top-right instead of center */
+  top: 20px;
   right: 22px;
   transform: none; /* no centering */
   background: #e63939;
