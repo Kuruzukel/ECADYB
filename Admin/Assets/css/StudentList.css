@@ -717,7 +717,6 @@ table th:nth-child(7) {
   min-width: 180px;
 }
 
-/* Table Data Column Width Controls */
 table td:nth-child(1) {
   /* STUDENT data */
   width: 20%;
