@@ -849,7 +849,6 @@ h1 .chevron i {
   line-height: 1.5;
 }
 
-/* Notification Styles */
 @keyframes slideInRight {
   from {
     transform: translateX(100%);
