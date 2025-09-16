@@ -627,7 +627,6 @@ h1 .chevron i {
   border-left: 4px solid var(--accent);
 }
 
-/* Horizontal event preview styles */
 .events-preview-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
