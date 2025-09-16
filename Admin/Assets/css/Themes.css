@@ -109,7 +109,6 @@ h1 .chevron i {
   animation: fadeInUp 0.4s ease-out;
 }
 
-/* Logo preview in change admin logo modal */
 .logo-preview {
   display: flex;
   justify-content: center;
