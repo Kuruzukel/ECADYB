@@ -752,7 +752,6 @@ table td:nth-child(7) {
   min-width: 180px;
 }
 
-/* Select All Checkbox for table header */
 table th:nth-child(7) #select-all-header {
   position: relative;
   left: 45px;
