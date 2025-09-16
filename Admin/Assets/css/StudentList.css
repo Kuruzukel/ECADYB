@@ -723,7 +723,6 @@ table td:nth-child(1) {
 }
 
 table td:nth-child(2) {
-  /* ID NUMBER data */
   width: 12%;
   min-width: 120px;
 }
