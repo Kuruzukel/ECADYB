@@ -316,7 +316,6 @@ h1 .chevron i {
   display: flex;
 }
 
-/* Remove dashed border when image is uploaded */
 .upload-box.circle.has-image {
   border: none;
 }
