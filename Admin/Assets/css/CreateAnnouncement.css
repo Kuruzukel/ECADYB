@@ -321,7 +321,6 @@ textarea {
   transform: translateY(-1px);
 }
 
-/* Responsive design */
 @media (max-width: 1045px) {
   .container {
     width: 95%;
