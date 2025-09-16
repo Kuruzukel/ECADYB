@@ -713,7 +713,6 @@ table th:nth-child(6) {
 }
 
 table th:nth-child(7) {
-  /* ACTIONS column */
   width: 12%;
   min-width: 180px;
 }
