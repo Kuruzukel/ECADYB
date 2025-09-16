@@ -733,7 +733,6 @@ table td:nth-child(3) {
 }
 
 table td:nth-child(4) {
-  /* ACADEMIC YEAR data */
   width: 12%;
   min-width: 120px;
 }
