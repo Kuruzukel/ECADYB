@@ -292,7 +292,7 @@ h1 .chevron i {
   position: absolute;
   top: 20px;
   right: 22px;
-  transform: none; /* no centering */
+  transform: none;
   background: #e63939;
   color: #fff;
   border: none;
