@@ -114,7 +114,6 @@ textarea {
   box-sizing: border-box;
 }
 
-/* Date and time inputs specific styling */
 input[type="date"],
 input[type="time"] {
   color: var(--text-secondary);
