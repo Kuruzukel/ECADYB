@@ -312,7 +312,6 @@ h1 .chevron i {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
 }
 
-/* ✅ Show button when there's an image */
 .upload-box.circle.has-image .delete-btn {
   display: flex;
 }
