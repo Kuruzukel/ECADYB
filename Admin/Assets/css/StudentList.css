@@ -764,7 +764,6 @@ table th:nth-child(7) #select-all-header {
   vertical-align: middle;
 }
 
-/* Horizontal Action Buttons Container */
 .actions-container {
   display: flex;
   align-items: center;
