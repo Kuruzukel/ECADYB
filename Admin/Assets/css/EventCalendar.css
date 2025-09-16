@@ -1177,7 +1177,6 @@ h1 .chevron i {
   padding: 2rem;
 }
 
-/* Refresh Button Styles */
 .refresh-btn {
   background: var(--accent) !important;
   color: white !important;
