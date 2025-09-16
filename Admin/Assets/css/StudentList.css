@@ -748,7 +748,6 @@ table td:nth-child(6) {
 }
 
 table td:nth-child(7) {
-  /* ACTIONS data */
   width: 12%;
   min-width: 180px;
 }
