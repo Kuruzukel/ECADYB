@@ -246,7 +246,6 @@ h1 .chevron i {
   }
 }
 
-/* Logo circular upload grid */
 .logo-upload-grid {
   display: grid;
   grid-template-columns: repeat(3, 160px);
