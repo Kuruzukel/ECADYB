@@ -492,7 +492,6 @@ h1 .chevron i {
   animation: fadeInUp 0.6s ease-out;
 }
 
-/* Calendar Grid Styles */
 .calendar-weekdays {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
