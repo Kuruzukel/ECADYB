@@ -683,7 +683,6 @@ td a:hover {
 }
 
 table th:nth-child(1) {
-  /* STUDENT column */
   width: 20%;
   min-width: 180px;
 }
