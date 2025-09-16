@@ -728,7 +728,6 @@ table td:nth-child(2) {
 }
 
 table td:nth-child(3) {
-  /* DEPARTMENT data */
   width: 15%;
   min-width: 140px;
 }
