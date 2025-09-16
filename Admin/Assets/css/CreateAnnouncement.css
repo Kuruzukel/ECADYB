@@ -131,7 +131,6 @@ textarea:focus {
   background: var(--input-bg);
 }
 
-/* Specific styling for title and message inputs when being used */
 #title:focus,
 #message:focus {
   border-color: var(--input-focus);
