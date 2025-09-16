@@ -167,7 +167,6 @@ textarea {
   color: var(--text-secondary);
 }
 
-/* Button styles */
 .form-actions {
   display: flex;
   gap: 1rem;
