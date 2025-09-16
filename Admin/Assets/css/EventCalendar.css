@@ -477,7 +477,6 @@ h1 .chevron i {
   }
 }
 
-/* Animation for form elements */
 @keyframes fadeInUp {
   from {
     opacity: 0;
