@@ -297,7 +297,7 @@ h1 .chevron i {
   color: #fff;
   border: none;
   border-radius: 50%;
-  display: none; /* hidden by default */
+  display: none;
   align-items: center;
   justify-content: center;
   cursor: pointer;
