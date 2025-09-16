@@ -898,7 +898,6 @@ table th:nth-child(7) #select-all-header {
   }
 }
 
-/* Status Text Color Styling */
 .status-active {
   color: rgb(0, 255, 13) !important;
   font-weight: 500;
