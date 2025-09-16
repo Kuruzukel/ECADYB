@@ -2232,6 +2232,47 @@ header.fading {
 
 /* Large phone */
 @media (max-width: 767px) and (min-width: 600px) {
+  /* Yearbook Section */
+  .yearbook-slider-main {
+    padding: 1.5rem 0;
+  }
+
+  .yearbook-intro-content {
+    padding: 0 1.5rem;
+    text-align: center;
+  }
+
+  .yearbook-main-title {
+    font-size: 2.2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .yearbook-subtitle {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+  }
+
+  .yearbook-description {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    max-width: 90%;
+    margin: 0 auto 1.5rem;
+  }
+
+  .yearbook-items-container {
+    padding: 1rem 0.5rem;
+  }
+
+  .yearbook-item {
+    width: 100px;
+    height: 150px;
+    margin: 0 0.5rem;
+  }
+
+  .yearbook-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
   .main-hero {
     position: relative;
     width: 100%;
@@ -2606,6 +2647,42 @@ header.fading {
 
 /* Medium phone */
 @media (max-width: 599px) and (min-width: 480px) {
+  /* Yearbook Section */
+  .yearbook-slider-main {
+    padding: 1.2rem 0;
+  }
+
+  .yearbook-main-title {
+    font-size: 2rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .yearbook-subtitle {
+    font-size: 1.2rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .yearbook-description {
+    font-size: 0.9rem;
+    line-height: 1.4;
+    max-width: 95%;
+    margin: 0 auto 1.2rem;
+  }
+
+  .yearbook-items-container {
+    padding: 0.8rem 0.3rem;
+  }
+
+  .yearbook-item {
+    width: 90px;
+    height: 140px;
+    margin: 0 0.4rem;
+  }
+
+  .yearbook-btn {
+    padding: 0.35rem 0.7rem;
+    font-size: 0.75rem;
+  }
   .main-hero {
     position: relative;
     width: 100%;
@@ -3021,6 +3098,58 @@ header.fading {
 
 /* Small phone */
 @media (max-width: 479px) and (min-width: 320px) {
+  /* Yearbook Section */
+  .yearbook-slider-main {
+    padding: 1rem 0;
+  }
+
+  .yearbook-intro-content {
+    padding: 0 1rem;
+    width: 90%;
+    margin-top: -4rem;
+  }
+
+  .yearbook-main-title {
+    font-size: 1.8rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .yearbook-subtitle {
+    font-size: 1.1rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .yearbook-description {
+    font-size: 0.85rem;
+    line-height: 1.3;
+    margin: 0 auto 1rem;
+  }
+
+  .yearbook-items-container {
+    padding: 0.5rem 0.2rem;
+  }
+
+  .yearbook-item {
+    width: 80px;
+    height: 130px;
+    margin: 0 0.3rem;
+  }
+
+  .yearbook-btn {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.7rem;
+  }
+
+  .yearbook-detail-container {
+    width: 90%;
+    padding: 1rem;
+  }
+
+  .yearbook-cover-large {
+    width: 100%;
+    height: auto;
+    margin-bottom: 1rem;
+  }
   .main-hero {
     position: relative;
     width: 100%;
