@@ -682,7 +682,6 @@ td a:hover {
   border-radius: 7px;
 }
 
-/* Table Column Width Controls */
 table th:nth-child(1) {
   /* STUDENT column */
   width: 20%;
@@ -929,4 +928,3 @@ table th:nth-child(7) #select-all-header {
   color: #ff4444 !important;
   font-weight: 500;
 }
-
