@@ -858,7 +858,6 @@ table th:nth-child(7) #select-all-header {
   transform: translateY(-1px);
 }
 
-/* Responsive adjustments for smaller screens */
 @media (max-width: 1200px) {
   .actions-container {
     gap: 6px;
