@@ -708,7 +708,6 @@ table th:nth-child(5) {
 }
 
 table th:nth-child(6) {
-  /* PASSWORD column */
   width: 12%;
   min-width: 110px;
 }
