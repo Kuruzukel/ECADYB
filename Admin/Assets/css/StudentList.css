@@ -780,7 +780,6 @@ table th:nth-child(7) #select-all-header {
   margin: 0;
 }
 
-/* Student Checkbox Status-based Styling */
 .actions-container .student-checkbox[data-status="pending"] {
   accent-color: #ff4444;
   border-color: #ff4444;
