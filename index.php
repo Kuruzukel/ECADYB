@@ -104,7 +104,6 @@ if (array_key_exists($requestUri, $routes)) {
         } else {
             $htmlContent = file_get_contents($filePath);
 
-            // Inject Open Graph meta tags if not already present
             if (strpos($htmlContent, 'og:title') === false) {
                 $metaTags = '
     <!-- Open Graph / Facebook -->
