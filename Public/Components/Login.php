@@ -103,18 +103,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="twitter:image" content="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png" />
     <meta name="twitter:image:alt" content="Exact Colleges of Asia Graduation Gallery Preview Logo" />
 
-    <!-- Favicon -->
     <link rel="icon" href="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png" type="image/png" />
     <link href="../assets/css/Login.css?v=2025012" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 
 <body<?php
-        // Add data attributes if login was successful
         if (isset($_SESSION['login_success']) && isset($_SESSION['redirect_to'])) {
             echo ' data-login-success="' . htmlspecialchars($_SESSION['login_success']) . '"';
             echo ' data-redirect-to="' . htmlspecialchars($_SESSION['redirect_to']) . '"';
-            // Clear the session variables after use
             unset($_SESSION['login_success']);
             unset($_SESSION['redirect_to']);
         }
