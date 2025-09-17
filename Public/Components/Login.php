@@ -40,12 +40,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($admin) {
             $_SESSION['role']     = 'admin';
             $_SESSION['username'] = $username;
-            // Set session variable to trigger transition
             $_SESSION['login_success'] = 'admin';
             $_SESSION['redirect_to'] = '../../Admin/Components/AdminDashboard.php';
-            // Don't redirect immediately, let JavaScript handle the transition
         } else {
-            // ----- STUDENT LOGIN -----
             $loginFound = false;
             foreach ($collections as $collectionName => $course) {
                 $collection = $departmentsDB->{$collectionName};
@@ -61,10 +58,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $_SESSION['name']       = trim(($student['first name'] ?? '') . ' ' . ($student['middle name'] ?? '') . ' ' . ($student['last name'] ?? ''));
                     $_SESSION['department'] = $course;
                     $_SESSION['section']    = $student['department section'] ?? '';
-                    // Set session variable to trigger transition
                     $_SESSION['login_success'] = 'student';
                     $_SESSION['redirect_to'] = '../../Student/Components/StudentDashboard.php';
-                    // Don't redirect immediately, let JavaScript handle the transition
                     $loginFound = true;
                     break;
                 }
