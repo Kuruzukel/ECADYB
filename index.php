@@ -176,7 +176,6 @@ if (array_key_exists($requestUri, $routes)) {
                 $htmlContent
             );
 
-            // Force login button to redirect to /Login
             $htmlContent = str_replace(
                 ['id="loginDropdownBtn"', 'id="mobileLoginDropdownBtn"'],
                 [
