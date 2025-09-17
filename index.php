@@ -83,7 +83,6 @@ if (!empty($error_message)) {
     echo "<div style='color:red; font-weight:bold; margin:10px 0;'>$error_message</div>";
 }
 
-// Routing Logic
 $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 // Pages mapping
