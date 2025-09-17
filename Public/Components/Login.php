@@ -115,7 +115,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             unset($_SESSION['login_success']);
             unset($_SESSION['redirect_to']);
         }
-        // Add error message for JavaScript
         if (!empty($error_message)) {
             echo ' data-error-message="' . htmlspecialchars($error_message) . '"';
         }
