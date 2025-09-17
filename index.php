@@ -85,7 +85,6 @@ if (!empty($error_message)) {
 
 $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-// Pages mapping
 $routes = [
     '/LandingPage'        => BASE_PATH . '/LandingPage/LandingPage.html',
     '/Login'              => BASE_PATH . '/Public/Components/Login.php',
