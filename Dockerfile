@@ -17,7 +17,6 @@ WORKDIR /var/www/html
 
 COPY composer.json composer.lock ./
 
-# Install PHP dependencies (ignore platform requirements for ext-mongodb)
 RUN composer install --optimize-autoloader --no-scripts --no-interaction --ignore-platform-reqs
 
 # Copy the rest of the application
