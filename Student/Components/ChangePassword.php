@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// Make sure the student is logged in
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'student') {
     header("Location: /Public/Components/Login.php");
     exit;
@@ -49,26 +48,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Change Password - Graduation Gallery</title>
-    
+
     <!-- Open Graph / Facebook -->
     <meta property="fb:app_id" content="1767810860531321" />
     <meta property="og:locale" content="en_US" />
-    <meta
-      property="og:title"
-      content="Graduation Gallery - Exact Colleges of Asia"
-    />
-    <meta
-      property="og:description"
-      content="Step into your digital yearbook. Every achievement and memory comes alive."
-    />
-    <meta
-      property="og:image"
-      content="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png"
-    />
-    <meta
-      property="og:image:secure_url"
-      content="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png"
-    />
+    <meta property="og:title" content="Graduation Gallery - Exact Colleges of Asia" />
+    <meta property="og:description"
+        content="Step into your digital yearbook. Every achievement and memory comes alive." />
+    <meta property="og:image" content="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png" />
+    <meta property="og:image:secure_url" content="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:url" content="https://grad-gallery.up.railway.app" />
@@ -76,29 +64,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta
-      name="twitter:title"
-      content="Graduation Gallery - Exact Colleges of Asia"
-    />
-    <meta
-      name="twitter:description"
-      content="Step into your digital yearbook. Every achievement and memory comes alive."
-    />
-    <meta
-      name="twitter:image"
-      content="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png"
-    />
-    <meta
-      name="twitter:image:alt"
-      content="Exact Colleges of Asia Graduation Gallery Preview Logo"
-    />
+    <meta name="twitter:title" content="Graduation Gallery - Exact Colleges of Asia" />
+    <meta name="twitter:description"
+        content="Step into your digital yearbook. Every achievement and memory comes alive." />
+    <meta name="twitter:image" content="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png" />
+    <meta name="twitter:image:alt" content="Exact Colleges of Asia Graduation Gallery Preview Logo" />
 
     <!-- Favicon -->
-    <link
-      rel="icon"
-      href="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png"
-      type="image/png"
-    />
+    <link rel="icon" href="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png" type="image/png" />
     <link href="/Student/assets/css/ChangePassword.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
@@ -106,9 +79,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <div class="loginCard">
         <?php if (!empty($error_message)): ?>
-        <div id="error-message" class="error-message">
-            <?php echo htmlspecialchars($error_message); ?>
-        </div>
+            <div id="error-message" class="error-message">
+                <?php echo htmlspecialchars($error_message); ?>
+            </div>
         <?php endif; ?>
         <form method="POST" action="">
             <p class="title">CHANGE PASSWORD</p>
