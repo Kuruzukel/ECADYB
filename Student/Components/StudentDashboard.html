@@ -506,11 +506,10 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'student') {
         const profileBtn = document.getElementById("profileDropdownBtn");
         const profileMenu = document.getElementById("profileDropdownMenu");
 
-        // Toggle dropdown on profile click
         profileBtn.addEventListener("click", function (e) {
-          e.stopPropagation(); // Prevent closing immediately
-          profileBtn.classList.toggle("active"); // optional visual feedback
-          profileMenu.classList.toggle("show"); // uses CSS 'show' for animation
+          e.stopPropagation();
+          profileBtn.classList.toggle("active");
+          profileMenu.classList.toggle("show");
         });
 
         // Close dropdown when clicking on any dropdown item
