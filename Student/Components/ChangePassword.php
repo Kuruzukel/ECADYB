@@ -9,7 +9,6 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'student') {
 $error_message = '';
 $success_message = '';
 
-// ✅ Include your MongoDB connection
 require __DIR__ . '/../../Connection/MongoConnect.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
