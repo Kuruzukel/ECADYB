@@ -8,9 +8,6 @@ $client = new Client("mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline
 $departmentsDB = $client->Departments;
 $adminCollection = $departmentsDB->Admin;
 
-// =============================
-// Department Collections
-// =============================
 $collections = [
     "bsme"   => "BS Marine Engineering",
     "bsmt"   => "BS Marine Transportation",
