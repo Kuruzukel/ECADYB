@@ -520,7 +520,6 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'student') {
           });
         });
 
-        // Close dropdown when clicking outside
         document.addEventListener("click", function (event) {
           if (
             !profileBtn.contains(event.target) &&
