@@ -27,13 +27,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = trim($_POST['studentId']);
     $password = trim($_POST['password']);
 
-    // Check for empty fields
     if (empty($username) || empty($password)) {
         $error_message = "Please fill in all fields.";
     } elseif (strlen($password) > 8) {
         $error_message = "Password must not exceed 8 characters.";
     } else {
-        // ----- ADMIN LOGIN -----
         $admin = $adminCollection->findOne([
             'username' => $username,
             'password' => $password
