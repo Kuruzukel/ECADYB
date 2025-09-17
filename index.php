@@ -157,7 +157,6 @@ if (array_key_exists($requestUri, $routes)) {
     />
 ';
 
-                // Insert meta tags before </head>
                 $htmlContent = str_replace('</head>', $metaTags . '</head>', $htmlContent);
             }
 
