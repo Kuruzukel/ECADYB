@@ -4,12 +4,9 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 use MongoDB\Client;
 
-// =============================
-// MongoDB Connection
-// =============================
 $client = new Client("mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957/");
-$departmentsDB = $client->Departments;     
-$adminCollection = $departmentsDB->Admin;  // Admin collection
+$departmentsDB = $client->Departments;
+$adminCollection = $departmentsDB->Admin;
 
 // =============================
 // Department Collections
@@ -80,7 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     break;
                 }
             }
-            
+
             // Only set error message if no login was found
             if (!$loginFound) {
                 $error_message = "Invalid student ID or password!";
@@ -100,26 +97,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login - Graduation Gallery</title>
-    
+
     <!-- Open Graph / Facebook -->
     <meta property="fb:app_id" content="1767810860531321" />
     <meta property="og:locale" content="en_US" />
-    <meta
-      property="og:title"
-      content="Graduation Gallery - Exact Colleges of Asia"
-    />
-    <meta
-      property="og:description"
-      content="Step into your digital yearbook. Every achievement and memory comes alive."
-    />
-    <meta
-      property="og:image"
-      content="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png"
-    />
-    <meta
-      property="og:image:secure_url"
-      content="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png"
-    />
+    <meta property="og:title" content="Graduation Gallery - Exact Colleges of Asia" />
+    <meta property="og:description"
+        content="Step into your digital yearbook. Every achievement and memory comes alive." />
+    <meta property="og:image" content="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png" />
+    <meta property="og:image:secure_url" content="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:url" content="https://grad-gallery.up.railway.app" />
@@ -127,54 +113,40 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta
-      name="twitter:title"
-      content="Graduation Gallery - Exact Colleges of Asia"
-    />
-    <meta
-      name="twitter:description"
-      content="Step into your digital yearbook. Every achievement and memory comes alive."
-    />
-    <meta
-      name="twitter:image"
-      content="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png"
-    />
-    <meta
-      name="twitter:image:alt"
-      content="Exact Colleges of Asia Graduation Gallery Preview Logo"
-    />
+    <meta name="twitter:title" content="Graduation Gallery - Exact Colleges of Asia" />
+    <meta name="twitter:description"
+        content="Step into your digital yearbook. Every achievement and memory comes alive." />
+    <meta name="twitter:image" content="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png" />
+    <meta name="twitter:image:alt" content="Exact Colleges of Asia Graduation Gallery Preview Logo" />
 
     <!-- Favicon -->
-    <link
-      rel="icon"
-      href="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png"
-      type="image/png"
-    />
+    <link rel="icon" href="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png" type="image/png" />
     <link href="../assets/css/Login.css?v=2025012" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 
-<body<?php 
-// Add data attributes if login was successful
-if (isset($_SESSION['login_success']) && isset($_SESSION['redirect_to'])) {
-    echo ' data-login-success="' . htmlspecialchars($_SESSION['login_success']) . '"';
-    echo ' data-redirect-to="' . htmlspecialchars($_SESSION['redirect_to']) . '"';
-    // Clear the session variables after use
-    unset($_SESSION['login_success']);
-    unset($_SESSION['redirect_to']);
-}
-// Add error message for JavaScript
-if (!empty($error_message)) {
-    echo ' data-error-message="' . htmlspecialchars($error_message) . '"';
-}
-?>>
+<body<?php
+        // Add data attributes if login was successful
+        if (isset($_SESSION['login_success']) && isset($_SESSION['redirect_to'])) {
+            echo ' data-login-success="' . htmlspecialchars($_SESSION['login_success']) . '"';
+            echo ' data-redirect-to="' . htmlspecialchars($_SESSION['redirect_to']) . '"';
+            // Clear the session variables after use
+            unset($_SESSION['login_success']);
+            unset($_SESSION['redirect_to']);
+        }
+        // Add error message for JavaScript
+        if (!empty($error_message)) {
+            echo ' data-error-message="' . htmlspecialchars($error_message) . '"';
+        }
+        ?>>
     <!-- Error Popup Modal -->
     <div id="errorModal" class="error-modal">
         <div class="error-modal-content">
             <button class="error-modal-close" onclick="hideErrorModal()">&times;</button>
             <div class="error-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24">
-                    <path fill="white" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zM13 17h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                    <path fill="white"
+                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zM13 17h-2v-2h2v2zm0-4h-2V7h2v6z" />
                 </svg>
             </div>
             <div class="error-text">
@@ -182,7 +154,7 @@ if (!empty($error_message)) {
             </div>
         </div>
     </div>
-    
+
     <div class="loginCard">
         <form method="POST" action="">
             <p class="title">GRADUATION GALLERY</p>
@@ -248,7 +220,7 @@ if (!empty($error_message)) {
             </button>
         </form>
     </div>
-</body>
-<script src="../assets/js/Login.js?v=2025012"></script>
+    </body>
+    <script src="../assets/js/Login.js?v=2025012"></script>
 
 </html>
