@@ -195,7 +195,6 @@ if (array_key_exists($requestUri, $routes)) {
     }
 }
 
-// Static File Serving (CSS, JS, Images)
 $staticPaths = [
     '/img/'                             => '/img/',
     '/LandingPage/LandingPageYB/pages/' => '/LandingPage/LandingPageYB/pages/',
