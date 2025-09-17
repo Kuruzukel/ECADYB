@@ -13,7 +13,6 @@ RUN pecl install mongodb \
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Set working directory
 WORKDIR /var/www/html
 
 # Copy composer files first for better caching
