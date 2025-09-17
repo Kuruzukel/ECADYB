@@ -21,7 +21,6 @@ RUN composer install --optimize-autoloader --no-scripts --no-interaction --ignor
 
 COPY . .
 
-# Copy custom PHP config (upload limits, memory, etc.)
 COPY docker/php.ini /usr/local/etc/php/conf.d/custom.ini
 
 # Set permissions
