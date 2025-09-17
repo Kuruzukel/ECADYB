@@ -102,7 +102,6 @@ if (array_key_exists($requestUri, $routes)) {
         if ($ext === 'php') {
             include $filePath;
         } else {
-            // Serve HTML & adjust paths for Railway
             $htmlContent = file_get_contents($filePath);
 
             // Inject Open Graph meta tags if not already present
