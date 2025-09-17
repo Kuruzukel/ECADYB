@@ -94,7 +94,6 @@ $routes = [
     '/'                   => BASE_PATH . '/Public/Components/Loader.html',
 ];
 
-// Handle main routes
 if (array_key_exists($requestUri, $routes)) {
     $filePath = $routes[$requestUri];
     if (file_exists($filePath)) {
