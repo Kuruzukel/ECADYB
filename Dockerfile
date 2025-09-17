@@ -23,7 +23,6 @@ COPY . .
 
 COPY docker/php.ini /usr/local/etc/php/conf.d/custom.ini
 
-# Set permissions
 RUN chown -R www-data:www-data /var/www/html
 
 # Configure Apache
