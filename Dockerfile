@@ -8,7 +8,6 @@ RUN apt-get update && apt-get install -y \
     unzip \
     && rm -rf /var/lib/apt/lists/*
 
-# Install MongoDB extension
 RUN pecl install mongodb \
     && docker-php-ext-enable mongodb
 
