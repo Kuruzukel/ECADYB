@@ -512,7 +512,6 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'student') {
           profileMenu.classList.toggle("show");
         });
 
-        // Close dropdown when clicking on any dropdown item
         const dropdownItems = profileMenu.querySelectorAll(".dropdown-item");
         dropdownItems.forEach((item) => {
           item.addEventListener("click", function () {
