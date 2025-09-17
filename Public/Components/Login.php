@@ -119,7 +119,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo ' data-error-message="' . htmlspecialchars($error_message) . '"';
         }
         ?>>
-    <!-- Error Popup Modal -->
     <div id="errorModal" class="error-modal">
         <div class="error-modal-content">
             <button class="error-modal-close" onclick="hideErrorModal()">&times;</button>
