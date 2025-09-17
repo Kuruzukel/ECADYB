@@ -6,7 +6,6 @@ require __DIR__ . '/vendor/autoload.php';
 
 use MongoDB\Client;
 
-// MongoDB Connection
 $mongoPath = __DIR__ . '/Connection/MongoConnect.php';
 if (!file_exists($mongoPath)) {
     die("❌ MongoConnect.php not found at: $mongoPath");
