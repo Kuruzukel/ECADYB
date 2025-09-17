@@ -15,7 +15,7 @@ require $mongoPath;
 
 // Path & Base URL
 define('BASE_PATH', __DIR__);
-define('BASE_URL', '/'); // Railway routes from root
+define('BASE_URL', '/');
 
 $error_message = '';
 
@@ -114,7 +114,7 @@ if (array_key_exists($requestUri, $routes)) {
         } else {
             // Serve HTML & adjust paths for Railway
             $htmlContent = file_get_contents($filePath);
-            
+
             // Inject Open Graph meta tags if not already present
             if (strpos($htmlContent, 'og:title') === false) {
                 $metaTags = '
@@ -168,11 +168,11 @@ if (array_key_exists($requestUri, $routes)) {
       type="image/png"
     />
 ';
-                
+
                 // Insert meta tags before </head>
                 $htmlContent = str_replace('</head>', $metaTags . '</head>', $htmlContent);
             }
-            
+
             $htmlContent = str_replace(
                 [
                     'href="LandingPage.css"',
