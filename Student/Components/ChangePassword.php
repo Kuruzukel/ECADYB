@@ -26,7 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]);
 
         if ($student) {
-            // Update password
             $collection->updateOne(
                 ['student id' => $_SESSION['student_id']],
                 ['$set' => ['password' => $newPassword]]
