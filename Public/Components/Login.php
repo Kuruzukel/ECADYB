@@ -23,9 +23,6 @@ $collections = [
 
 $error_message = '';
 
-// =============================
-// Handle Login
-// =============================
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = trim($_POST['studentId']);
     $password = trim($_POST['password']);
