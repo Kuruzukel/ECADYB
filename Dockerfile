@@ -15,7 +15,6 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
-# Copy composer files first for better caching
 COPY composer.json composer.lock ./
 
 # Install PHP dependencies (ignore platform requirements for ext-mongodb)
