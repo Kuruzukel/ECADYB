@@ -65,7 +65,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
             }
 
-            // Only set error message if no login was found
             if (!$loginFound) {
                 $error_message = "Invalid student ID or password!";
             }
@@ -85,7 +84,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login - Graduation Gallery</title>
 
-    <!-- Open Graph / Facebook -->
     <meta property="fb:app_id" content="1767810860531321" />
     <meta property="og:locale" content="en_US" />
     <meta property="og:title" content="Graduation Gallery - Exact Colleges of Asia" />
@@ -98,7 +96,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta property="og:url" content="https://grad-gallery.up.railway.app" />
     <meta property="og:type" content="website" />
 
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Graduation Gallery - Exact Colleges of Asia" />
     <meta name="twitter:description"
