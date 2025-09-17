@@ -19,7 +19,6 @@ COPY composer.json composer.lock ./
 
 RUN composer install --optimize-autoloader --no-scripts --no-interaction --ignore-platform-reqs
 
-# Copy the rest of the application
 COPY . .
 
 # Copy custom PHP config (upload limits, memory, etc.)
