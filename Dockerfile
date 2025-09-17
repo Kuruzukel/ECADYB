@@ -30,5 +30,4 @@ COPY docker/apache.conf /etc/apache2/sites-available/000-default.conf
 
 EXPOSE 80
 
-# Start Apache
 CMD ["apache2-foreground"]
