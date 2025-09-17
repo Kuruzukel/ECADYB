@@ -54,7 +54,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
             if ($student) {
                 $_SESSION['role']       = 'student';
 
-                //  Store whichever field exists
                 $_SESSION['student_id'] = $student['student id'] ?? $student['student_id'];
 
                 $_SESSION['name']       = trim(
