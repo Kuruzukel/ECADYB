@@ -2,7 +2,6 @@ const hamburgerIcon = document.querySelector(".hamburger-menu-ico");
 const closeIcon = document.querySelector(".close-ico");
 const sidebar = document.querySelector(".sidebar");
 
-// Search container toggle buttons
 const searchIcon = document.querySelector(".search-icon");
 const searchCloseIcon = document.querySelector(".search-close-ico");
 const searchContainer = document.querySelector(".search-container");
