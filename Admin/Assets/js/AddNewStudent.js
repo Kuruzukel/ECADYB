@@ -171,7 +171,6 @@ function removeSpaces(input) {
   input.value = input.value.replace(/\s+/g, "");
 }
 
-// Validate required fields (Academic Year and Student ID) before submission.
 // Ignore optional fields: motto, honors, milestone, batch-name
 function validateForm() {
   let isValid = true;
