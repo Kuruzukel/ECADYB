@@ -187,7 +187,6 @@ function validateForm() {
     }
   });
 
-  // Check for unselected program
   const programSelect = document.getElementById("program");
   programSelect.classList.remove("input-error");
   if (!programSelect.value) {
