@@ -123,7 +123,6 @@ function applyTheme(theme) {
   const body = document.body;
   body.classList.remove("theme-light-mode", "theme-dark-mode");
 
-  // Add specific theme class
   if (theme === "Light Mode") {
     body.classList.add("theme-light-mode");
   } else if (theme === "Dark Mode") {
