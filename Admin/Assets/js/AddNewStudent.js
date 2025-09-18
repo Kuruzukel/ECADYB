@@ -204,7 +204,6 @@ function validateForm() {
     isValid = false;
   }
 
-  // Expected Student ID pattern: XXXX-XXXXXX (4 digits, a hyphen, 6 digits)
   const studentIDPattern = /^\d{4}-\d{6}$/;
   if (!studentIDPattern.test(studentIDInput.value)) {
     studentIDInput.classList.add("input-error");
