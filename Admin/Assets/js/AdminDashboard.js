@@ -283,7 +283,6 @@ async function loadAdminLogo() {
   }
 }
 
-// Load logo when page loads
 document.addEventListener("DOMContentLoaded", () => {
   loadAdminLogo();
 
