@@ -235,7 +235,6 @@ cancelBtn.addEventListener("click", () => {
 
 confirmBtn.addEventListener("click", () => {
   if (!validateForm()) {
-    // Just close the modal, do not show any text
     modalOverlay.style.display = "none";
     return;
   }
