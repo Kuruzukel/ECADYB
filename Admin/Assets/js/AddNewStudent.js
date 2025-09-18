@@ -234,7 +234,6 @@ cancelBtn.addEventListener("click", () => {
 });
 
 confirmBtn.addEventListener("click", () => {
-  // First validate required fields before submitting
   if (!validateForm()) {
     // Just close the modal, do not show any text
     modalOverlay.style.display = "none";
