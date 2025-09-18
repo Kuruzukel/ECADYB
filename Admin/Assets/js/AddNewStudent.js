@@ -198,7 +198,6 @@ function validateForm() {
   const studentIDInput = document.getElementById("student-id");
   const emailInput = document.getElementById("email");
 
-  // Expected Academic Year pattern: YYYY-YYYY
   const academicYearPattern = /^\d{4}-\d{4}$/;
   if (!academicYearPattern.test(academicYearInput.value)) {
     academicYearInput.classList.add("input-error");
