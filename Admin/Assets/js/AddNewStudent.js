@@ -143,7 +143,6 @@ window.addEventListener("DOMContentLoaded", () => {
   applyTheme(savedTheme);
 });
 
-// Allow only alphabet characters and single spaces
 function allowOnlyLetters(input) {
   let sanitized = input.value
     .replace(/[^a-zA-Z\s]/g, "")
