@@ -252,7 +252,7 @@ confirmBtn.addEventListener("click", () => {
         responseMessage.textContent = data.message;
         responseMessage.style.color = "green";
         responseMessage.style.animation = "none";
-        responseMessage.offsetHeight; // Trigger reflow
+        responseMessage.offsetHeight;
         responseMessage.style.animation = "fadeOut 3s forwards";
         responseMessage.style.animationDelay = "2s";
         form.reset();
