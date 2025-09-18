@@ -159,7 +159,6 @@ function formatAcademicYear(input) {
   input.value = value;
 }
 
-// Format student ID as XXXX-XXXXXX
 function formatStudentID(input) {
   let value = input.value.replace(/\D/g, "").slice(0, 10);
   if (value.length > 4) {
