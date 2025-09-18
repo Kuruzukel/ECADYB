@@ -239,7 +239,6 @@ function scrollToBottom() {
 });
 */
 
-// On DOM ready, setup active tab and menu
 document.addEventListener("DOMContentLoaded", () => {
   const currentPage =
     urlParams.get("page") || window.location.pathname.split("/").pop();
