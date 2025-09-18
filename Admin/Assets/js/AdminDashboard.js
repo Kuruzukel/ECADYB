@@ -143,7 +143,6 @@ if (!tabListenersAdded) {
     });
   });
 
-  // Handle sub-tab clicks
   document.querySelectorAll(".sub-tab").forEach((tab) => {
     tab.addEventListener("click", function () {
       document
