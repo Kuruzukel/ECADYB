@@ -151,7 +151,6 @@ function allowOnlyLetters(input) {
   input.value = sanitized;
 }
 
-// Format academic year as YYYY-YYYY
 function formatAcademicYear(input) {
   let value = input.value.replace(/\D/g, "").slice(0, 8);
   if (value.length > 4) {
