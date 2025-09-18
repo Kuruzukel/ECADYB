@@ -1,4 +1,3 @@
-// Theme definitions
 const themes = {
   "Light Mode": {
     "--primary-bg": "#ffffff",
