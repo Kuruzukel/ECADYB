@@ -106,7 +106,6 @@ function expandParentMenuIfActive() {
     if (chevron) chevron.classList.remove("rotate-180");
   });
 
-  // Open submenu of the active sub-tab
   document.querySelectorAll(".sub-tab.active").forEach((activeSubTab) => {
     if (submenuOpened) return;
 
