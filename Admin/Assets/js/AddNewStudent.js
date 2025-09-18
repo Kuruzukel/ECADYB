@@ -104,7 +104,6 @@ function selectColor(el) {
   document.getElementById("modal-overlay").style.display = "flex";
 }
 
-// Apply selected theme
 function applyTheme(theme) {
   console.log("Applying theme:", theme);
   const root = document.documentElement;
