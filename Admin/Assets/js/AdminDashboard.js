@@ -98,7 +98,6 @@ function setActiveTab(currentPage) {
 function expandParentMenuIfActive() {
   let submenuOpened = false;
 
-  // Close all submenus first
   document.querySelectorAll(".submenu").forEach((submenu) => {
     submenu.classList.remove("show");
     const chevron = document.querySelector(
