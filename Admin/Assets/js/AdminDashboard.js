@@ -286,7 +286,6 @@ async function loadAdminLogo() {
 document.addEventListener("DOMContentLoaded", () => {
   loadAdminLogo();
 
-  // Apply saved theme on page load (prevent flash)
   const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
   if (savedTheme) {
     applyTheme(savedTheme);
