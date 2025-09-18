@@ -245,7 +245,6 @@ document.addEventListener("DOMContentLoaded", () => {
   setActiveTab(currentPage);
   expandParentMenuIfActive();
 
-  // Set icon visibility based on sidebar state
   if (sidebar && hamburgerIcon && closeIcon) {
     const isSidebarClosed = sidebar.classList.contains("closed");
     hamburgerIcon.classList.toggle("hidden", !isSidebarClosed);
