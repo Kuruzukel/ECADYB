@@ -178,7 +178,6 @@ function validateForm() {
     "#addStudentForm input:not(#motto):not(#honors):not(#milestone):not(#batch-name)"
   );
 
-  // Remove previous error styling
   requiredInputs.forEach((input) => input.classList.remove("input-error"));
 
   // Check for empty fields
