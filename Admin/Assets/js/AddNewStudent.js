@@ -171,7 +171,6 @@ function removeSpaces(input) {
   input.value = input.value.replace(/\s+/g, "");
 }
 
-// Ignore optional fields: motto, honors, milestone, batch-name
 function validateForm() {
   let isValid = true;
 
