@@ -251,7 +251,6 @@ document.addEventListener("DOMContentLoaded", () => {
     closeIcon.classList.toggle("hidden", isSidebarClosed);
   }
 
-  // Set search icons initial visibility
   if (searchContainer && searchIcon && searchCloseIcon) {
     const isSearchHidden = searchContainer.classList.contains("hidden");
     searchIcon.classList.toggle("hidden", !isSearchHidden);
