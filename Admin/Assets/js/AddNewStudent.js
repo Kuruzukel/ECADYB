@@ -210,7 +210,6 @@ function validateForm() {
     isValid = false;
   }
 
-  // Email must contain '@'
   if (!emailInput.value.includes("@")) {
     emailInput.classList.add("input-error");
     isValid = false;
