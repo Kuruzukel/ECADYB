@@ -296,7 +296,6 @@ document.addEventListener("DOMContentLoaded", () => {
     logoutTab.addEventListener("click", function (e) {
       e.preventDefault();
       e.stopPropagation();
-      // Determine the correct logout path
       const isLocalhost = window.location.hostname === "localhost";
       const logoutPath = isLocalhost
         ? "../../Public/Components/Login.php"
