@@ -180,7 +180,6 @@ function validateForm() {
 
   requiredInputs.forEach((input) => input.classList.remove("input-error"));
 
-  // Check for empty fields
   requiredInputs.forEach((input) => {
     if (!input.value.trim()) {
       input.classList.add("input-error");
