@@ -1,4 +1,3 @@
-// Sidebar toggle buttons
 const hamburgerIcon = document.querySelector(".hamburger-menu-ico");
 const closeIcon = document.querySelector(".close-ico");
 const sidebar = document.querySelector(".sidebar");
@@ -7,7 +6,6 @@ const sidebar = document.querySelector(".sidebar");
 const searchIcon = document.querySelector(".search-icon");
 const searchCloseIcon = document.querySelector(".search-close-ico");
 const searchContainer = document.querySelector(".search-container");
-
 
 if (hamburgerIcon && closeIcon && sidebar) {
   hamburgerIcon.addEventListener("click", () => {
@@ -43,7 +41,7 @@ function toggleSubmenu(menuId) {
   if (!currentMenu) return;
 
   const isShown = currentMenu.classList.contains("show");
-  
+
   // Close other submenus first
   document.querySelectorAll(".submenu").forEach((submenu) => {
     if (submenu.id !== menuId && submenu.classList.contains("show")) {
@@ -95,10 +93,10 @@ function setActiveTab(currentPage) {
   });
 
   // If no tab was activated and we're on student-list, activate the Student List tab
-  if (!activated && currentPage === 'student-list') {
+  if (!activated && currentPage === "student-list") {
     const studentListTab = document.querySelector('a[href*="student-list"]');
     if (studentListTab) {
-      studentListTab.classList.add('active');
+      studentListTab.classList.add("active");
     }
   }
 }
@@ -165,7 +163,7 @@ if (!tabListenersAdded) {
       this.classList.add("active");
     });
   });
-  
+
   tabListenersAdded = true;
 }
 
@@ -306,25 +304,25 @@ async function loadAdminLogo() {
 // Load logo when page loads
 document.addEventListener("DOMContentLoaded", () => {
   loadAdminLogo();
-  
+
   // Apply saved theme on page load (prevent flash)
-  const savedTheme = localStorage.getItem('dashboard-theme') || 'Default';
+  const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
   if (savedTheme) {
     applyTheme(savedTheme);
   }
-  
+
   // Add logout functionality without transition
-  const logoutTab = document.getElementById('logout-tab');
+  const logoutTab = document.getElementById("logout-tab");
   if (logoutTab) {
-    logoutTab.addEventListener('click', function(e) {
+    logoutTab.addEventListener("click", function (e) {
       e.preventDefault();
       e.stopPropagation();
       // Determine the correct logout path
-      const isLocalhost = window.location.hostname === 'localhost';
-      const logoutPath = isLocalhost 
-        ? '../../Public/Components/Login.php' 
-        : '/Public/Components/Login.php';
-      
+      const isLocalhost = window.location.hostname === "localhost";
+      const logoutPath = isLocalhost
+        ? "../../Public/Components/Login.php"
+        : "/Public/Components/Login.php";
+
       // Use replace to prevent back button issues
       window.location.replace(logoutPath);
     });
