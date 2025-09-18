@@ -87,7 +87,6 @@ function setActiveTab(currentPage) {
     }
   });
 
-  // If no tab was activated and we're on student-list, activate the Student List tab
   if (!activated && currentPage === "student-list") {
     const studentListTab = document.querySelector('a[href*="student-list"]');
     if (studentListTab) {
