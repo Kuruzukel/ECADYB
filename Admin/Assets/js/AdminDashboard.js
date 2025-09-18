@@ -40,7 +40,6 @@ function toggleSubmenu(menuId) {
 
   const isShown = currentMenu.classList.contains("show");
 
-  // Close other submenus first
   document.querySelectorAll(".submenu").forEach((submenu) => {
     if (submenu.id !== menuId && submenu.classList.contains("show")) {
       submenu.classList.remove("show");
