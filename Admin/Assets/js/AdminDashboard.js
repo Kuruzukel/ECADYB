@@ -291,7 +291,6 @@ document.addEventListener("DOMContentLoaded", () => {
     applyTheme(savedTheme);
   }
 
-  // Add logout functionality without transition
   const logoutTab = document.getElementById("logout-tab");
   if (logoutTab) {
     logoutTab.addEventListener("click", function (e) {
