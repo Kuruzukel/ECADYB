@@ -174,7 +174,6 @@ function removeSpaces(input) {
 function validateForm() {
   let isValid = true;
 
-  // Required input fields only (exclude optional ones)
   const requiredInputs = document.querySelectorAll(
     "#addStudentForm input:not(#motto):not(#honors):not(#milestone):not(#batch-name)"
   );
