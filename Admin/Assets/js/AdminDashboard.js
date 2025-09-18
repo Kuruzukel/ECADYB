@@ -133,7 +133,7 @@ let tabListenersAdded = false;
 if (!tabListenersAdded) {
   document.querySelectorAll(".tab[onclick]").forEach((tab) => {
     tab.addEventListener("click", function (e) {
-      if (this.getAttribute("href")) return; // If href exists, let link work
+      if (this.getAttribute("href")) return;
       e.preventDefault();
 
       document
