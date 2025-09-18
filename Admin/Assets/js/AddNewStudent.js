@@ -167,7 +167,6 @@ function formatStudentID(input) {
   input.value = value;
 }
 
-// Remove spaces from last name, middle name, and email fields on input
 function removeSpaces(input) {
   input.value = input.value.replace(/\s+/g, "");
 }
