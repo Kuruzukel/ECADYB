@@ -138,7 +138,6 @@ function applyTheme(theme) {
   document.body.style.display = "";
 }
 
-// Load saved theme on page load
 window.addEventListener("DOMContentLoaded", () => {
   const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
   applyTheme(savedTheme);
