@@ -218,7 +218,6 @@ function validateForm() {
   return isValid;
 }
 
-// Handle modal behavior and form submission
 const modalOverlay = document.getElementById("modal-overlay");
 const confirmBtn = document.getElementById("confirm-btn");
 const cancelBtn = document.getElementById("cancel-btn");
