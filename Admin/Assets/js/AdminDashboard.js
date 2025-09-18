@@ -301,7 +301,6 @@ document.addEventListener("DOMContentLoaded", () => {
         ? "../../Public/Components/Login.php"
         : "/Public/Components/Login.php";
 
-      // Use replace to prevent back button issues
       window.location.replace(logoutPath);
     });
   }
