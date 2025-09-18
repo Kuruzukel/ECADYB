@@ -158,7 +158,6 @@ if (!tabListenersAdded) {
 const urlParams = new URLSearchParams(window.location.search);
 const page = urlParams.get("page") || "dashboard";
 
-// Manual activation helper
 function setTabActive(tabId) {
   document
     .querySelectorAll(".tab, .sub-tab")
