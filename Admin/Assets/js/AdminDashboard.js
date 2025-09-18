@@ -54,7 +54,6 @@ function toggleSubmenu(menuId) {
     }
   });
 
-  // Toggle current menu
   currentMenu.classList.toggle("show", !isShown);
 
   const currentTab = document.querySelector(
