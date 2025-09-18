@@ -128,7 +128,6 @@ function expandParentMenuIfActive() {
   });
 }
 
-// Prevent multiple event listeners on tabs
 let tabListenersAdded = false;
 
 // Handle main tab clicks that have no href (toggle active)
