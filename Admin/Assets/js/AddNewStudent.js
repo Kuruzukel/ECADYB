@@ -194,7 +194,6 @@ function validateForm() {
     isValid = false;
   }
 
-  // Specific validations
   const academicYearInput = document.getElementById("academic-year");
   const studentIDInput = document.getElementById("student-id");
   const emailInput = document.getElementById("email");
