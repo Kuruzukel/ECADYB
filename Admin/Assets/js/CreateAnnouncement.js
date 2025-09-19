@@ -148,7 +148,6 @@ let isPreviewMode = false;
 let modalState = "confirm";
 
 document.addEventListener("DOMContentLoaded", function () {
-  // Initialize current date
   displayCurrentDate();
 
   // Initialize character counter
