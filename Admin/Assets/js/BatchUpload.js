@@ -133,7 +133,6 @@ function applyTheme(theme) {
 
   console.log("Theme applied and saved:", theme);
 
-  // Force a style recalculation
   document.body.style.display = "none";
   document.body.offsetHeight; // Trigger reflow
   document.body.style.display = "";
