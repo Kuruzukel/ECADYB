@@ -184,7 +184,6 @@ function initializeCharacterCounter() {
       const currentLength = this.value.length;
       charCountElement.textContent = currentLength;
 
-      // Add visual feedback based on length
       if (currentLength > 500) {
         charCountElement.style.color = "#ef4444"; // Red for long text
       } else if (currentLength > 300) {
