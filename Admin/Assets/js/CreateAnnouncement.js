@@ -158,7 +158,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   initializePreview();
 
-  // Initialize date status checking
   initializeDateStatusCheck();
 });
 
