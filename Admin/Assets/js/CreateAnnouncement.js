@@ -187,7 +187,7 @@ function initializeCharacterCounter() {
       if (currentLength > 500) {
         charCountElement.style.color = "#ef4444";
       } else if (currentLength > 300) {
-        charCountElement.style.color = "#f59e0b"; // Orange for medium text
+        charCountElement.style.color = "#f59e0b";
       } else {
         charCountElement.style.color = "#94a3b8"; // Default color
       }
