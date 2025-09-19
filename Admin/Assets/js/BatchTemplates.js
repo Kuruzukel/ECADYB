@@ -263,7 +263,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
   const uploadBoxes = document.querySelectorAll(".upload-box");
 
-  // Section selection via header click
   const sections = document.querySelectorAll(".form-group .section");
   const sectionHeaders = document.querySelectorAll(
     ".form-group .section .section-header"
