@@ -161,7 +161,6 @@ document.addEventListener("DOMContentLoaded", function () {
   initializeDateStatusCheck();
 });
 
-// Display current date in header
 function displayCurrentDate() {
   const currentDateElement = document.getElementById("current-date");
   if (currentDateElement) {
