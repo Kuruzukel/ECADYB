@@ -175,7 +175,6 @@ function displayCurrentDate() {
   }
 }
 
-// Character counter for message textarea
 function initializeCharacterCounter() {
   const messageTextarea = document.getElementById("message");
   const charCountElement = document.getElementById("char-count");
