@@ -233,7 +233,6 @@ function initializeFormValidation() {
   }
 }
 
-// Field validation helper
 function validateField(field, errorMessage) {
   const isValid = field.value.trim().length > 0;
 
