@@ -134,7 +134,7 @@ function applyTheme(theme) {
   console.log("Theme applied and saved:", theme);
 
   document.body.style.display = "none";
-  document.body.offsetHeight; // Trigger reflow
+  document.body.offsetHeight;
   document.body.style.display = "";
 }
 
