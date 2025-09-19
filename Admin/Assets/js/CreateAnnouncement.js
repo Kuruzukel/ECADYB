@@ -154,7 +154,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   initializeFormValidation();
 
-  // Initialize modal functionality
   initializeModal();
 
   // Initialize preview functionality
