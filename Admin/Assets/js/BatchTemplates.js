@@ -320,7 +320,6 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Default select Batch Template 1 (first section)
   if (sections.length > 0) {
     selectSection(sections[0]);
   }
