@@ -189,7 +189,7 @@ function initializeCharacterCounter() {
       } else if (currentLength > 300) {
         charCountElement.style.color = "#f59e0b";
       } else {
-        charCountElement.style.color = "#94a3b8"; // Default color
+        charCountElement.style.color = "#94a3b8";
       }
     });
   }
