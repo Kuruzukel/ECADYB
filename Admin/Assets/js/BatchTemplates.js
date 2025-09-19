@@ -138,7 +138,6 @@ function applyTheme(theme) {
   document.body.style.display = "";
 }
 
-// Notifications
 function showNotification(message, type = "success") {
   const container = document.getElementById("notification-container");
   if (!container) return;
