@@ -143,7 +143,6 @@ window.addEventListener("DOMContentLoaded", () => {
   applyTheme(savedTheme);
 });
 
-// Global variable to store original modal content
 let originalModalContent = null;
 let isPreviewMode = false;
 let modalState = "confirm"; // 'confirm' or 'preview'
