@@ -152,7 +152,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   initializeCharacterCounter();
 
-  // Initialize form validation
   initializeFormValidation();
 
   // Initialize modal functionality
