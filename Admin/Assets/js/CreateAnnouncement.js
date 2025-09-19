@@ -145,7 +145,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
 let originalModalContent = null;
 let isPreviewMode = false;
-let modalState = "confirm"; // 'confirm' or 'preview'
+let modalState = "confirm";
 
 // Modern Announcement Form JavaScript
 document.addEventListener("DOMContentLoaded", function () {
