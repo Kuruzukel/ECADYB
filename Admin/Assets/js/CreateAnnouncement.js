@@ -195,7 +195,6 @@ function initializeCharacterCounter() {
   }
 }
 
-// Form validation
 function initializeFormValidation() {
   const form = document.getElementById("announcementForm");
   const titleInput = document.getElementById("title");
