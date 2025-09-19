@@ -273,7 +273,6 @@ window.addEventListener("DOMContentLoaded", () => {
     if (section) section.classList.add("selected");
   }
 
-  // Open modal specifically for selecting a different batch template
   function openSelectTemplateModal(targetSection, templateLabel) {
     if (!deleteModal) return;
 
