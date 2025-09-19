@@ -120,7 +120,6 @@ function applyTheme(theme) {
   const modal = document.querySelector(".modal");
   if (modal) modal.style.background = currentSectionBg;
 
-  // Add/remove theme-specific CSS classes to body
   const body = document.body;
   // Remove all theme classes first
   body.classList.remove("theme-light-mode", "theme-dark-mode");
