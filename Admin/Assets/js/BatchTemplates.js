@@ -256,7 +256,6 @@ function initializeDeleteModal() {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  // Apply saved theme on page load
   const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
   applyTheme(savedTheme);
 
