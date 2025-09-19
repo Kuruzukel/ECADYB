@@ -156,7 +156,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   initializeModal();
 
-  // Initialize preview functionality
   initializePreview();
 
   // Initialize date status checking
