@@ -161,7 +161,6 @@ function showNotification(message, type = "success") {
 function getBasePath() {
   const currentPath = window.location.pathname;
 
-  // Check if we're on Railway (no /ECADYB in path)
   if (currentPath.includes("/Admin/")) {
     // Extract the base path up to /Admin/
     const adminIndex = currentPath.indexOf("/Admin/");
