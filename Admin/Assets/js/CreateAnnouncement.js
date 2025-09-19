@@ -216,7 +216,6 @@ function initializeFormValidation() {
         return;
       }
 
-      // If validation passes, show confirmation modal
       showModal();
     });
   }
