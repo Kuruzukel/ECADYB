@@ -204,7 +204,6 @@ function initializeFormValidation() {
     form.addEventListener("submit", function (e) {
       e.preventDefault();
 
-      // Basic validation
       if (!titleInput.value.trim()) {
         showNotification("Please enter a title", "error");
         titleInput.focus();
