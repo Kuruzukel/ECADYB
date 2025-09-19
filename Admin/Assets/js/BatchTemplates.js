@@ -158,7 +158,6 @@ function showNotification(message, type = "success") {
   }, 3000);
 }
 
-// Endpoint detection
 function getBasePath() {
   const currentPath = window.location.pathname;
 
