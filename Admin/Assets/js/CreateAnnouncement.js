@@ -150,7 +150,6 @@ let modalState = "confirm";
 document.addEventListener("DOMContentLoaded", function () {
   displayCurrentDate();
 
-  // Initialize character counter
   initializeCharacterCounter();
 
   // Initialize form validation
