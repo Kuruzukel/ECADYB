@@ -185,7 +185,7 @@ function initializeCharacterCounter() {
       charCountElement.textContent = currentLength;
 
       if (currentLength > 500) {
-        charCountElement.style.color = "#ef4444"; // Red for long text
+        charCountElement.style.color = "#ef4444";
       } else if (currentLength > 300) {
         charCountElement.style.color = "#f59e0b"; // Orange for medium text
       } else {
