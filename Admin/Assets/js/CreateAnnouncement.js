@@ -147,7 +147,6 @@ let originalModalContent = null;
 let isPreviewMode = false;
 let modalState = "confirm";
 
-// Modern Announcement Form JavaScript
 document.addEventListener("DOMContentLoaded", function () {
   // Initialize current date
   displayCurrentDate();
