@@ -175,7 +175,7 @@ const cancelDeleteBtn = document.getElementById("cancel-delete-btn");
 
 let selectedStudentId = null;
 let selectedCollection = null;
-let selectedConfirmAction = null; // for image deletion in BatchTemplates
+let selectedConfirmAction = null;
 
 function openDeleteModal(studentId, collection) {
   selectedStudentId = studentId?.trim();
