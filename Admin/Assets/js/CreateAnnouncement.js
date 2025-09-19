@@ -220,7 +220,6 @@ function initializeFormValidation() {
     });
   }
 
-  // Real-time validation feedback
   if (titleInput) {
     titleInput.addEventListener("input", function () {
       validateField(this, "Title is required");
