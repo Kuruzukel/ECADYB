@@ -322,7 +322,6 @@ function submitForm() {
         formData.set("date", today);
       }
 
-      // Submit via AJAX
       fetch("../../Connection/SubmitAnnouncement.php", {
         method: "POST",
         body: formData,
