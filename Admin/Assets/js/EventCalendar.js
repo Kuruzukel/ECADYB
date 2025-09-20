@@ -686,7 +686,6 @@ class EventCalendar {
 
       deleteBtn.addEventListener("click", () => closeModal(true));
 
-      // Close on overlay click
       overlay.addEventListener("click", (e) => {
         if (e.target === overlay) {
           closeModal(false);
