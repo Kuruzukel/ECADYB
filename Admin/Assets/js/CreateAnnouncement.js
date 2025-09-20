@@ -298,7 +298,6 @@ function hideModal() {
         if (modal && originalModalContent) {
           modal.innerHTML = originalModalContent;
         }
-        // Reset modal state
         modalState = "confirm";
       }
     }, 300);
