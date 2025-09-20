@@ -516,7 +516,6 @@ class EventCalendar {
 
     grid.innerHTML = html;
 
-    // Ensure the list view is scrollable and scroll to top
     const listView = grid.querySelector(".list-view");
     if (listView) {
       listView.scrollTop = 0;
