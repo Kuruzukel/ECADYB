@@ -246,7 +246,6 @@ class EventCalendar {
   setView(view) {
     this.currentView = view;
 
-    // Update active button
     document.querySelectorAll(".view-btn").forEach((btn) => {
       btn.classList.remove("active");
     });
