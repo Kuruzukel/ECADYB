@@ -769,18 +769,14 @@ class EventCalendar {
   }
 }
 
-// Global variable to access the calendar instance
 let eventCalendar;
 
-// Initialize calendar when DOM is loaded
 document.addEventListener("DOMContentLoaded", () => {
   const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
   applyTheme(savedTheme);
 
-  // Create and store the calendar instance globally
   eventCalendar = new EventCalendar();
 
-  // Setup modal close functionality
   const modal = document.getElementById("event-modal-overlay");
   const cancelBtn = document.getElementById("cancel-event-btn");
 
