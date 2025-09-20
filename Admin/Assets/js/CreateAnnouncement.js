@@ -350,7 +350,6 @@ function submitForm() {
               checkDateStatus();
             }, 500);
 
-            // Stay on the same page after successful submission
             // The announcement will be available in the Event Calendar when you visit it
           } else {
             showNotification(data.message, "error");
