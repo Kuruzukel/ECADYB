@@ -255,7 +255,6 @@ function initializeModal() {
 
     modalOverlay.addEventListener("click", function (e) {
       if (e.target === modalOverlay) {
-        // Just hide the modal - don't restore content to prevent confirm modal from showing
         hideModal();
       }
     });
