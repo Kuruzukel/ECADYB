@@ -395,7 +395,6 @@ function showPreviewModal(title, message) {
   const modalOverlay = document.getElementById("modal-overlay");
   const modal = modalOverlay.querySelector(".modal");
 
-  // Set modal state to preview
   modalState = "preview";
 
   // Create preview content
