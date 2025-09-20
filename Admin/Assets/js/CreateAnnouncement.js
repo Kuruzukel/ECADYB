@@ -307,7 +307,6 @@ function hideModal() {
 function submitForm() {
   const form = document.getElementById("announcementForm");
   if (form) {
-    // Show loading state
     const submitBtn = document.getElementById("post-announcement-btn");
     if (submitBtn) {
       const originalText = submitBtn.innerHTML;
