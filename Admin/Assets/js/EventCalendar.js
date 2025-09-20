@@ -651,7 +651,6 @@ class EventCalendar {
 
   showConfirmationModal(title, message) {
     return new Promise((resolve) => {
-      // Create modal overlay
       const overlay = document.createElement("div");
       overlay.className = "confirmation-modal-overlay";
 
