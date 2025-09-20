@@ -138,7 +138,6 @@ function applyTheme(theme) {
   document.body.style.display = "";
 }
 
-// Event Calendar Class
 class EventCalendar {
   constructor() {
     this.currentDate = new Date();
