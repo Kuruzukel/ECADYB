@@ -684,7 +684,6 @@ class EventCalendar {
 
       cancelBtn.addEventListener("click", () => closeModal(false));
 
-      // Delete button
       deleteBtn.addEventListener("click", () => closeModal(true));
 
       // Close on overlay click
