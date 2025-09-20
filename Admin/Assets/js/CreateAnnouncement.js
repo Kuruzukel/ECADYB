@@ -340,7 +340,6 @@ function submitForm() {
               charCountElement.textContent = "0";
             }
 
-            // Reset date input to current date and update status
             const dateInput = document.getElementById("date");
             if (dateInput) {
               const today = new Date().toISOString().split("T")[0];
