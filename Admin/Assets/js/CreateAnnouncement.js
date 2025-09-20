@@ -304,7 +304,6 @@ function hideModal() {
   }
 }
 
-// Submit form
 function submitForm() {
   const form = document.getElementById("announcementForm");
   if (form) {
