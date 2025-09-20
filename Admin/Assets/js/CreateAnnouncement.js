@@ -368,7 +368,6 @@ function submitForm() {
   }
 }
 
-// Preview functionality
 function initializePreview() {
   const previewBtn = document.getElementById("preview-btn");
   const titleInput = document.getElementById("title");
