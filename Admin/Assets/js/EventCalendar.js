@@ -525,7 +525,6 @@ class EventCalendar {
   getEventsForDate(date) {
     const dateStr = this.formatDate(date);
     const events = this.events.filter((event) => event.date === dateStr);
-    // Limit to 5 announcements per day
     return events.slice(0, 5);
   }
 
