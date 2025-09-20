@@ -369,7 +369,6 @@ class EventCalendar {
     html += "</div>";
     grid.innerHTML = html;
 
-    // Add click listeners to days
     grid.querySelectorAll(".calendar-day").forEach((day) => {
       day.addEventListener("click", () => {
         const date = day.dataset.date;
