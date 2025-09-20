@@ -259,7 +259,6 @@ function initializeModal() {
       }
     });
 
-    // Close modal with Escape key
     document.addEventListener("keydown", function (e) {
       if (e.key === "Escape" && modalOverlay.style.display === "flex") {
         // Just hide the modal - don't restore content to prevent confirm modal from showing
