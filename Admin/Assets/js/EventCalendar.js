@@ -259,7 +259,7 @@ class EventCalendar {
           top: document.body.scrollHeight,
           behavior: "smooth",
         });
-      }, 100); // Small delay to ensure content is rendered
+      }, 100);
     }
   }
 
