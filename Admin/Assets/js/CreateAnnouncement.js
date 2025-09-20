@@ -397,7 +397,6 @@ function showPreviewModal(title, message) {
 
   modalState = "preview";
 
-  // Create preview content
   const previewContent = `
         <div class="modal-header">
             <i class="fas fa-eye modal-icon"></i>
