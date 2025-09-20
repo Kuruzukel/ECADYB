@@ -486,7 +486,6 @@ function initializeDateStatusCheck() {
   const dateStatus = document.getElementById("date-status");
 
   if (dateInput && dateStatus) {
-    // Check status on page load
     checkDateStatus();
 
     // Check status when date changes
