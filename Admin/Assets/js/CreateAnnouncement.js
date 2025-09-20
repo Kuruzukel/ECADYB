@@ -361,7 +361,6 @@ function submitForm() {
           );
         })
         .finally(() => {
-          // Restore button state
           submitBtn.innerHTML = originalText;
           submitBtn.disabled = false;
         });
