@@ -253,7 +253,6 @@ function initializeModal() {
   if (modalOverlay && modal) {
     originalModalContent = modal.innerHTML;
 
-    // Close modal when clicking overlay
     modalOverlay.addEventListener("click", function (e) {
       if (e.target === modalOverlay) {
         // Just hide the modal - don't restore content to prevent confirm modal from showing
