@@ -692,7 +692,6 @@ class EventCalendar {
         }
       });
 
-      // Close on Escape key
       const handleEscape = (e) => {
         if (e.key === "Escape") {
           document.removeEventListener("keydown", handleEscape);
