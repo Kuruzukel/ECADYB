@@ -227,7 +227,6 @@ class EventCalendar {
       this.navigateMonth(1);
     });
 
-    // View buttons
     document.querySelectorAll(".view-btn").forEach((btn) => {
       btn.addEventListener("click", (e) => {
         if (btn.id === "refresh-calendar") {
