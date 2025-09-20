@@ -334,7 +334,6 @@ function submitForm() {
           console.log("Response data:", data);
           if (data.success) {
             showNotification(data.message, "success");
-            // Reset form
             form.reset();
             // Reset character counter
             const charCountElement = document.getElementById("char-count");
