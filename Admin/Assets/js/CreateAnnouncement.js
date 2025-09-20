@@ -346,7 +346,6 @@ function submitForm() {
               dateInput.value = today;
             }
 
-            // Update date status after successful submission
             setTimeout(() => {
               checkDateStatus();
             }, 500);
