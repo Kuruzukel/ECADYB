@@ -461,7 +461,6 @@ function showNotification(message, type = "info") {
   }, 3000);
 }
 
-// Helper functions for notifications
 function getNotificationIcon(type) {
   const icons = {
     success: "check-circle",
