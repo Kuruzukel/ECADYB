@@ -313,7 +313,6 @@ function submitForm() {
       submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Posting...';
       submitBtn.disabled = true;
 
-      // Get form data
       const formData = new FormData(form);
 
       // Set default date to today if no date is provided
