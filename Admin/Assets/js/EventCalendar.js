@@ -682,7 +682,6 @@ class EventCalendar {
         }, 300);
       };
 
-      // Cancel button
       cancelBtn.addEventListener("click", () => closeModal(false));
 
       // Delete button
