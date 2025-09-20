@@ -744,7 +744,6 @@ class EventCalendar {
       console.log("Delete response:", result);
 
       if (result.success) {
-        // Success notification with more details
         this.showNotification("Announcement deleted successfully!", "success");
 
         // Refresh the calendar data
