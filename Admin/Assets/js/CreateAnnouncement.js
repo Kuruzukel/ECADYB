@@ -423,7 +423,6 @@ function showPreviewModal(title, message) {
   modalOverlay.style.display = "flex";
 }
 
-// Notification system
 function showNotification(message, type = "info") {
   // Create notification element
   const notification = document.createElement("div");
