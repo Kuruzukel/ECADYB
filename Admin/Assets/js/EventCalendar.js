@@ -219,7 +219,6 @@ class EventCalendar {
   }
 
   setupEventListeners() {
-    // Navigation buttons
     document.getElementById("prev-month")?.addEventListener("click", () => {
       this.navigateMonth(-1);
     });
