@@ -749,7 +749,6 @@ class EventCalendar {
         await this.loadEvents();
         this.renderCalendar();
 
-        // Close the modal if it's open
         const modal = document.getElementById("event-modal-overlay");
         if (modal) {
           modal.style.display = "none";
