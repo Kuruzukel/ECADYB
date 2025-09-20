@@ -281,7 +281,6 @@ function initializeModal() {
 function showModal() {
   const modalOverlay = document.getElementById("modal-overlay");
   if (modalOverlay) {
-    // Set modal state to confirm
     modalState = "confirm";
     modalOverlay.style.display = "flex";
     modalOverlay.style.animation = "fadeIn 0.3s ease-out";
