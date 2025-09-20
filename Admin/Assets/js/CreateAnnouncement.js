@@ -251,7 +251,6 @@ function initializeModal() {
   const form = document.getElementById("announcementForm");
 
   if (modalOverlay && modal) {
-    // Store original modal content
     originalModalContent = modal.innerHTML;
 
     // Close modal when clicking overlay
