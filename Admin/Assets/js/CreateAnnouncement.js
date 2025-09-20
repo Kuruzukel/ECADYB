@@ -596,7 +596,6 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-// Initialize theme on page load
 document.addEventListener("DOMContentLoaded", () => {
   // Apply saved theme
   const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
