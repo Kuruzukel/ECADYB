@@ -391,7 +391,6 @@ function initializePreview() {
   }
 }
 
-// Show preview modal
 function showPreviewModal(title, message) {
   const modalOverlay = document.getElementById("modal-overlay");
   const modal = modalOverlay.querySelector(".modal");
