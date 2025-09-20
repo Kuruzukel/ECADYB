@@ -287,7 +287,6 @@ function showModal() {
   }
 }
 
-// Hide modal
 function hideModal() {
   const modalOverlay = document.getElementById("modal-overlay");
   if (modalOverlay) {
