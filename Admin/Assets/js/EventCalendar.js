@@ -713,7 +713,6 @@ class EventCalendar {
       return;
     }
 
-    // Show loading notification
     this.showNotification("Deleting announcement...", "info");
 
     try {
