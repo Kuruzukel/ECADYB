@@ -1,4 +1,3 @@
-// Theme definitions
 const themes = {
   "Light Mode": {
     "--primary-bg": "#ffffff",
@@ -806,8 +805,6 @@ let eventCalendar;
 document.addEventListener("DOMContentLoaded", () => {
   const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
   applyTheme(savedTheme);
-  
-
 
   // Create and store the calendar instance globally
   eventCalendar = new EventCalendar();
