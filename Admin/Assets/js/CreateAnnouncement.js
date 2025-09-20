@@ -278,7 +278,6 @@ function initializeModal() {
   }
 }
 
-// Show modal
 function showModal() {
   const modalOverlay = document.getElementById("modal-overlay");
   if (modalOverlay) {
