@@ -746,7 +746,6 @@ class EventCalendar {
       if (result.success) {
         this.showNotification("Announcement deleted successfully!", "success");
 
-        // Refresh the calendar data
         await this.loadEvents();
         this.renderCalendar();
 
