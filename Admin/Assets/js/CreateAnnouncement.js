@@ -245,7 +245,6 @@ function validateField(field, errorMessage) {
   }
 }
 
-// Modal functionality
 function initializeModal() {
   const modalOverlay = document.getElementById("modal-overlay");
   const modal = modalOverlay.querySelector(".modal");
