@@ -668,7 +668,6 @@ class EventCalendar {
       overlay.appendChild(modal);
       document.body.appendChild(overlay);
 
-      // Add event listeners
       const cancelBtn = modal.querySelector(".confirmation-btn.cancel");
       const deleteBtn = modal.querySelector(".confirmation-btn.delete");
 
