@@ -597,7 +597,6 @@ style.textContent = `
 document.head.appendChild(style);
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Apply saved theme
   const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
   applyTheme(savedTheme);
 });
