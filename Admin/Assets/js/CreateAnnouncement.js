@@ -431,7 +431,6 @@ function showNotification(message, type = "info") {
         <span>${message}</span>
     `;
 
-  // Add styles
   notification.style.cssText = `
         position: fixed;
         top: 20px;
