@@ -293,7 +293,6 @@ function hideModal() {
     modalOverlay.style.animation = "fadeOut 0.3s ease-out";
     setTimeout(() => {
       modalOverlay.style.display = "none";
-      // Only restore original modal content if we were in preview mode
       if (modalState === "preview") {
         const modal = modalOverlay.querySelector(".modal");
         if (modal && originalModalContent) {
