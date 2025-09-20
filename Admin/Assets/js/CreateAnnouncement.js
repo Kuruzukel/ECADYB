@@ -265,7 +265,6 @@ function initializeModal() {
       }
     });
 
-    // Handle all modal buttons dynamically
     modalOverlay.addEventListener("click", function (e) {
       if (e.target.id === "confirm-btn") {
         hideModal();
