@@ -654,7 +654,6 @@ class EventCalendar {
       const overlay = document.createElement("div");
       overlay.className = "confirmation-modal-overlay";
 
-      // Create modal content
       const modal = document.createElement("div");
       modal.className = "confirmation-modal";
       modal.innerHTML = `
