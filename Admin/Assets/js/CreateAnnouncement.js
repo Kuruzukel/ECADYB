@@ -349,8 +349,6 @@ function submitForm() {
             setTimeout(() => {
               checkDateStatus();
             }, 500);
-
-            // The announcement will be available in the Event Calendar when you visit it
           } else {
             showNotification(data.message, "error");
           }
