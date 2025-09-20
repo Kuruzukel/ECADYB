@@ -424,7 +424,6 @@ function showPreviewModal(title, message) {
 }
 
 function showNotification(message, type = "info") {
-  // Create notification element
   const notification = document.createElement("div");
   notification.className = `notification notification-${type}`;
   notification.innerHTML = `
