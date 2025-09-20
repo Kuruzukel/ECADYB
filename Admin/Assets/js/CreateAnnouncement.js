@@ -315,7 +315,6 @@ function submitForm() {
 
       const formData = new FormData(form);
 
-      // Set default date to today if no date is provided
       const dateInput = document.getElementById("date");
       if (dateInput && !dateInput.value) {
         const today = new Date().toISOString().split("T")[0];
