@@ -488,7 +488,6 @@ function initializeDateStatusCheck() {
   if (dateInput && dateStatus) {
     checkDateStatus();
 
-    // Check status when date changes
     dateInput.addEventListener("change", checkDateStatus);
   }
 }
