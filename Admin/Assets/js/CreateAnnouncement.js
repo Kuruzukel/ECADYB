@@ -537,7 +537,6 @@ async function checkDateStatus() {
   }
 }
 
-// Add CSS animations
 const style = document.createElement("style");
 style.textContent = `
     @keyframes fadeIn {
