@@ -481,7 +481,6 @@ function getNotificationColor(type) {
   return colors[type] || "#8b5cf6";
 }
 
-// Date status checking functionality
 function initializeDateStatusCheck() {
   const dateInput = document.getElementById("date");
   const dateStatus = document.getElementById("date-status");
