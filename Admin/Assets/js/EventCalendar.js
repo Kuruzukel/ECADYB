@@ -253,7 +253,6 @@ class EventCalendar {
 
     this.renderCalendar();
 
-    // Scroll to bottom for week and list views only
     if (view === "week" || view === "list") {
       setTimeout(() => {
         window.scrollTo({
