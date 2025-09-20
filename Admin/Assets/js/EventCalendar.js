@@ -703,7 +703,6 @@ class EventCalendar {
   }
 
   async deleteEvent(eventId, eventDate) {
-    // Show custom confirmation modal
     const confirmed = await this.showConfirmationModal(
       " Delete Announcement",
       "Are you sure you want to delete this announcement?"
