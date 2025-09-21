@@ -337,7 +337,6 @@ window.addEventListener("DOMContentLoaded", () => {
       if (e.target === deleteBtn || e.target.classList.contains("delete-btn"))
         return;
 
-      // If logo exists, show change admin logo modal
       if (box.classList.contains("has-image")) {
         const logoImg = box.querySelector("img");
         if (logoImg && logoImg.src) {
