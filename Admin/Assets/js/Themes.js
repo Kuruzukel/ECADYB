@@ -315,7 +315,6 @@ window.addEventListener("DOMContentLoaded", () => {
       box.appendChild(img);
       box.classList.add("has-image");
 
-      // Show the delete button
       const deleteBtn = document.createElement("button");
       deleteBtn.className = "delete-btn";
       deleteBtn.innerHTML = "&times;";
