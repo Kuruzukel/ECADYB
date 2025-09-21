@@ -175,7 +175,6 @@ function getBasePath() {
   const currentPath = window.location.pathname;
 
   if (currentPath.includes("/Admin/")) {
-    // Extract the base path up to /Admin/
     const adminIndex = currentPath.indexOf("/Admin/");
     return currentPath.substring(0, adminIndex);
   }
