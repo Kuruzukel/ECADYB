@@ -471,7 +471,6 @@ function initializeStatusUpdates() {
       console.log("Checkbox changed", this.checked);
       console.log("Dataset:", this.dataset);
 
-      // If this change wasn't caused by select all, clear the select all state
       if (!isSelectAllActive) {
         clearSelectAllState();
       }
