@@ -429,7 +429,6 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Close change admin logo modal when clicking outside
   changeAdminLogoModal.addEventListener("click", (e) => {
     if (e.target === changeAdminLogoModal) {
       changeLogoTarget = null;
