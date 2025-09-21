@@ -311,7 +311,6 @@ window.addEventListener("DOMContentLoaded", () => {
       img.src = e.target.result;
       img.alt = "Logo Preview";
 
-      // Clear previous content
       box.innerHTML = "";
       box.appendChild(img);
       box.classList.add("has-image");
