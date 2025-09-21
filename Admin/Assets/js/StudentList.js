@@ -347,7 +347,6 @@ function applyFilters() {
   });
 }
 
-// Notifications
 function showNotification(message, type = "success") {
   const container = document.getElementById("notification-container");
   if (!container) return;
