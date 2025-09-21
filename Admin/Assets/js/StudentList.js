@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const tabName = this.getAttribute("data-tab");
       const url = new URL(window.location.href);
       url.searchParams.set("tab", tabName);
-      url.searchParams.set("pageNum", "1"); // Reset to first page when changing tabs
+      url.searchParams.set("pageNum", "1");
       window.location.href = url.toString();
     });
   });
