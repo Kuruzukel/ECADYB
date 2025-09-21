@@ -401,7 +401,6 @@ window.addEventListener("DOMContentLoaded", () => {
             "success"
           );
 
-          // Update the admin dashboard logo if we're on the same page
           const adminLogo = document.querySelector(".sidebar .logoadmin");
           if (adminLogo) {
             adminLogo.src = changeLogoTarget.logoUrl;
