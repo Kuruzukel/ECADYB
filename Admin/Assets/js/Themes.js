@@ -420,7 +420,6 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Handle change admin logo cancellation
   if (cancelChangeLogoBtn) {
     cancelChangeLogoBtn.addEventListener("click", () => {
       changeLogoTarget = null;
