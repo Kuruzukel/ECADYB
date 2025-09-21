@@ -329,7 +329,6 @@ window.addEventListener("DOMContentLoaded", () => {
     const input = box.querySelector(".logoInput");
     const deleteBtn = box.querySelector(".delete-btn");
 
-    // Set data-slot attribute if not already set
     if (!box.dataset.slot) {
       box.dataset.slot = (index + 1).toString();
     }
