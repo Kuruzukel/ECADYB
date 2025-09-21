@@ -593,7 +593,6 @@ async function updateStudentDetails(studentId, fields) {
   }
 }
 
-// Submit student form
 function submitStudentForm(studentId) {
   console.log("submitStudentForm called with studentId:", studentId);
 
