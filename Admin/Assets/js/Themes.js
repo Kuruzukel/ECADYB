@@ -211,7 +211,6 @@ async function uploadLogoToBunny(file, slot, box, input, deleteBtn) {
       return;
     }
 
-    // Insert logo
     box.innerHTML = "";
     const img = document.createElement("img");
     img.src = data.url;
