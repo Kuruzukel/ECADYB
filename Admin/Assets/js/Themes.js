@@ -325,7 +325,6 @@ window.addEventListener("DOMContentLoaded", () => {
     reader.readAsDataURL(file);
   };
 
-  // Initialize logo boxes
   logoBoxes.forEach((box, index) => {
     const input = box.querySelector(".logoInput");
     const deleteBtn = box.querySelector(".delete-btn");
