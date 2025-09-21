@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const urlParams = new URLSearchParams(window.location.search);
   const activeTab = urlParams.get("tab") || "all";
 
-  // Set the active tab
   const tabs = document.querySelectorAll(".tab-button");
   tabs.forEach((tab) => {
     if (tab.getAttribute("data-tab") === activeTab) {
