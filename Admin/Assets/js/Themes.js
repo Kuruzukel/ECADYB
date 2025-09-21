@@ -179,7 +179,6 @@ function getBasePath() {
     return currentPath.substring(0, adminIndex);
   }
 
-  // Fallback for localhost or other setups
   return window.location.origin;
 }
 
