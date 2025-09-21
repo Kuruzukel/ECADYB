@@ -375,7 +375,6 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Handle change admin logo confirmation
   if (confirmChangeLogoBtn) {
     confirmChangeLogoBtn.addEventListener("click", async () => {
       if (!changeLogoTarget) return;
