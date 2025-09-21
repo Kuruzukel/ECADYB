@@ -20,7 +20,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Update department filter to preserve tab state
   const deptFilter = document.getElementById("department-filter");
   if (deptFilter) {
     deptFilter.addEventListener("change", function () {
