@@ -361,7 +361,6 @@ window.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    // Handle delete button click
     if (deleteBtn) {
       deleteBtn.addEventListener("click", (e) => {
         e.stopPropagation();
