@@ -210,7 +210,6 @@ window.addEventListener("DOMContentLoaded", () => {
     applyTheme(savedTheme);
   }
 
-  // Initialize components
   initializeSelectAll();
   initializeFilters();
   initializeStatusUpdates();
