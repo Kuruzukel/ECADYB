@@ -301,7 +301,6 @@ window.addEventListener("DOMContentLoaded", () => {
   const previewLogo = document.getElementById("preview-logo");
   let changeLogoTarget = null;
 
-  // Function to handle file selection
   const handleFileSelect = (input, box) => {
     const file = input.files[0];
     if (!file) return;
