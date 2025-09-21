@@ -31,7 +31,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Add click handlers to tab buttons
   document.querySelectorAll(".tab-button").forEach((button) => {
     button.addEventListener("click", function () {
       const tabName = this.getAttribute("data-tab");
