@@ -291,7 +291,6 @@ window.addEventListener("DOMContentLoaded", () => {
   const cancelDeleteBtn = document.getElementById("cancel-delete-btn");
   let deleteTarget = null;
 
-  // change admin logo modal
   const changeAdminLogoModal = document.getElementById(
     "change-admin-logo-modal"
   );
