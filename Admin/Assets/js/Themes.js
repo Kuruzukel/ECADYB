@@ -354,7 +354,6 @@ window.addEventListener("DOMContentLoaded", () => {
       input.click();
     });
 
-    // Handle file selection
     input.addEventListener("change", (e) => {
       const file = e.target.files?.[0];
       if (file) {
