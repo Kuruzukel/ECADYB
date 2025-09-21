@@ -367,7 +367,6 @@ function showNotification(message, type = "success") {
   }, 3000);
 }
 
-// Delete student modal
 const deleteModal = document.getElementById("delete-modal-overlay");
 const confirmDeleteBtn = document.getElementById("confirm-delete-btn");
 const cancelDeleteBtn = document.getElementById("cancel-delete-btn");
