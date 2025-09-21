@@ -532,7 +532,6 @@ function initializeStatusUpdates() {
             console.log("New status cell className:", statusCell.className);
           }
           applyFilters();
-          // Note: No automatic select all state update for simple toggle mode
           showNotification(
             data.message || "Status updated successfully",
             "success"
