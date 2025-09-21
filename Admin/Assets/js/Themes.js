@@ -351,7 +351,6 @@ window.addEventListener("DOMContentLoaded", () => {
         }
       }
 
-      // Otherwise, trigger file input
       input.click();
     });
 
