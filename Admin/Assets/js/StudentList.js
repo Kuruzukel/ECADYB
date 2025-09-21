@@ -461,7 +461,6 @@ function togglePass(icon) {
   }
 }
 
-// Update status
 function initializeStatusUpdates() {
   const studentCheckboxes = document.querySelectorAll(".student-checkbox");
   console.log("Found", studentCheckboxes.length, "student checkboxes");
