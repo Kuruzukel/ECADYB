@@ -205,7 +205,6 @@ const DELETE_STUDENT_ENDPOINT = (() => {
 window.addEventListener("DOMContentLoaded", () => {
   console.log("StudentList.js loaded successfully");
 
-  // Apply theme only once on load
   const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
   if (savedTheme) {
     applyTheme(savedTheme);
