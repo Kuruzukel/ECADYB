@@ -437,7 +437,6 @@ function initializeDeleteModal() {
   confirmDeleteBtn.addEventListener("click", confirmDeleteStudent);
 }
 
-// Toggle password
 function togglePass(icon) {
   const tableRow = icon.closest("tr");
   if (!tableRow) return;
