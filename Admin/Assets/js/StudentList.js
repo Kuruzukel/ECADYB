@@ -11,7 +11,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Show the active tab content
   const tabContents = document.querySelectorAll(".tab-content");
   tabContents.forEach((content) => {
     if (content.id === activeTab) {
