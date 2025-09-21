@@ -1,6 +1,3 @@
-
-
-// Theme definitions
 const themes = {
   "Light Mode": {
     "--primary-bg": "#ffffff",
@@ -558,5 +555,4 @@ window.addEventListener("DOMContentLoaded", () => {
       console.error("Failed to load logos:", err);
     }
   })();
-
 });
