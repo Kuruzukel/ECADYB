@@ -334,7 +334,6 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 
     box.addEventListener("click", (e) => {
-      // Don't trigger if clicking on delete button
       if (e.target === deleteBtn || e.target.classList.contains("delete-btn"))
         return;
 
