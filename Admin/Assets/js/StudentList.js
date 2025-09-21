@@ -547,7 +547,6 @@ function initializeStatusUpdates() {
         this.checked = !this.checked;
       } finally {
         this.dataset.busy = "0";
-        // Reset the select all flag after status update is complete
         if (isSelectAllActive) {
           setTimeout(() => {
             isSelectAllActive = false;
