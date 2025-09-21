@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const dept = this.value;
       const url = new URL(window.location.href);
       url.searchParams.set("department", dept);
-      url.searchParams.set("pageNum", "1"); // Reset to first page
+      url.searchParams.set("pageNum", "1");
       window.location.href = url.toString();
     });
   }
