@@ -480,7 +480,6 @@ window.addEventListener("DOMContentLoaded", () => {
     deleteModal.style.display = "none";
   });
 
-  // Load existing logos
   (async function loadLogos() {
     try {
       const res = await fetch(FETCH_ENDPOINT);
