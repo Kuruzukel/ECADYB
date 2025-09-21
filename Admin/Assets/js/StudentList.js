@@ -451,7 +451,6 @@ function togglePass(icon) {
   if (!passwordText) return;
 
   if (eyeClose && eyeClose.style.display !== "none") {
-    // Show password
     passwordText.textContent = passwordText.getAttribute("data-password");
     eyeClose.style.display = "none";
     if (eyeOpen) eyeOpen.style.display = "flex";
