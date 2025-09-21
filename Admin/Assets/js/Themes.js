@@ -240,7 +240,6 @@ window.addEventListener("DOMContentLoaded", () => {
   );
   if (selectedBox) selectedBox.classList.add("selected");
 
-  // modal buttons
   const confirmBtn = document.getElementById("confirm-btn");
   const cancelBtn = document.getElementById("cancel-btn");
   const modalOverlay = document.getElementById("modal-overlay");
