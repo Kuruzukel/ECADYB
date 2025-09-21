@@ -333,7 +333,6 @@ window.addEventListener("DOMContentLoaded", () => {
       box.dataset.slot = (index + 1).toString();
     }
 
-    // Handle click on the box
     box.addEventListener("click", (e) => {
       // Don't trigger if clicking on delete button
       if (e.target === deleteBtn || e.target.classList.contains("delete-btn"))
