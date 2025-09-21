@@ -320,7 +320,6 @@ window.addEventListener("DOMContentLoaded", () => {
       deleteBtn.innerHTML = "&times;";
       box.appendChild(deleteBtn);
 
-      // Upload the file
       uploadLogoToBunny(file, box.dataset.slot || "1", box, input, deleteBtn);
     };
     reader.readAsDataURL(file);
