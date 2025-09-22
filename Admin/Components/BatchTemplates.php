@@ -212,12 +212,11 @@
     </div>
 
     <div id="notification-container"></div>
-    <!-- Upload Overlay + Modal -->
+
     <div class="upload-overlay" id="upload-overlay">
         <div class="upload-modal" id="uploadModal">
             <h2>Uploading...</h2>
             <p id="uploadText">Please wait while we upload your images</p>
-            <!-- Fancy loader borrowed from Public/Components/Loader.html -->
             <div class="loader">
                 <div class="loading-bar-background">
                     <div class="loading-bar">
