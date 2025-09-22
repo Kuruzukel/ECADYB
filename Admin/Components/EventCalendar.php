@@ -19,7 +19,6 @@
 
         <div class="form-content">
             <div class="form-group">
-                <!-- Calendar Section -->
                 <div class="section">
 
 
