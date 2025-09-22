@@ -13,7 +13,8 @@
 <body>
     <div class="container" style="font-family: Arial;">
         <div class="header-container" style="width: 100%;">
-        <h1><i class="fas fa-bullhorn"></i> <span class="chevron"><i class="fas fa-chevron-right"></i></span>Create Announcement</h1>
+            <h1><i class="fas fa-bullhorn"></i> <span class="chevron"><i class="fas fa-chevron-right"></i></span>Create
+                Announcement</h1>
         </div>
 
         <div class="form-content">
@@ -49,7 +50,6 @@
             </form>
         </div>
 
-        <!-- Modal -->
         <div class="modal-overlay" id="modal-overlay">
             <div class="modal" style="font-family: Arial, sans-serif;">
                 <div class="modal-header">
