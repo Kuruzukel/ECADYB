@@ -261,13 +261,11 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
                                                     </svg>
                                                 </div>
 
-                                                <!-- Edit Button -->
                                                 <button class="action-btn edit-btn"
                                                     onclick="openModal('editModal_<?php echo $student['student_id']; ?>')">
                                                     <i class="fas fa-edit"></i>
                                                 </button>
 
-                                                <!-- Delete Button -->
                                                 <button class="action-btn delete-btn"
                                                     onclick="openDeleteModal('<?php echo htmlspecialchars($student['student_id']); ?>', '<?php echo htmlspecialchars($student['collection']); ?>')">
                                                     <i class="fa-solid fa-trash-can"></i>
