@@ -1,5 +1,4 @@
 <?php
-// Ensure no output before headers
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -33,12 +32,12 @@ if (ob_get_length()) {
 if (isset($_SERVER['RAILWAY_STATIC_URL'])) {
     $baseUrl = rtrim($_SERVER['RAILWAY_STATIC_URL'], '/');
     $loginUrl = $baseUrl . '/Public/Components/Login.php';
-} 
+}
 // For local environment
 else {
-    $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || 
-               (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') ||
-               (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] === 'on');
+    $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ||
+        (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') ||
+        (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] === 'on');
     $protocol = $isHttps ? 'https://' : 'http://';
     $host = $_SERVER['HTTP_HOST'];
     $basePath = dirname(dirname(dirname($_SERVER['SCRIPT_NAME'])));
@@ -58,4 +57,3 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 header("Location: " . $loginUrl, true, 302);
 exit();
-?>
