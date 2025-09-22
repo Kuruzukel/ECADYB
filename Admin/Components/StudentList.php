@@ -127,7 +127,6 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
                 <div class="card-header">
                     <div class="filter-bar">
 
-                        <!-- Department Filter -->
                         <label for="department-filter" class="filter-label">
                             <select id="department-filter" class="filter-select">
                                 <option value="" disabled>Select Department</option>
@@ -140,7 +139,6 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
                             </select>
                         </label>
 
-                        <!-- Status Filter -->
                         <label for="status-filter" class="filter-label">
                             <select id="status-filter" class="filter-select">
                                 <option value="" disabled selected>Select Status</option>
@@ -149,27 +147,22 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
                             </select>
                         </label>
 
-                        <!-- Pagination Buttons -->
                         <input type="hidden" id="current-tab"
                             value="<?php echo htmlspecialchars($_GET['tab'] ?? 'all'); ?>">
                         <div class="pagination-controls"
                             style="margin-top:1em; display:flex; justify-content:center; gap:1em;">
 
                             <?php
-                            // Build base URL with page=student-list
                             $baseUrl = '?page=student-list';
 
-                            // Add department if set
                             if (!empty($selectedDepartment)) {
                                 $baseUrl .= '&department=' . urlencode($selectedDepartment);
                             }
 
-                            // Add tab if set
                             if (!empty($_GET['tab'])) {
                                 $baseUrl .= '&tab=' . urlencode($_GET['tab']);
                             }
 
-                            // Previous page link
                             if ($page > 1):
                                 $prevUrl = $baseUrl . '&pageNum=' . ($page - 1);
                             ?>
@@ -180,7 +173,7 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
                                 <button id="prev-btn" disabled>Previous</button>
                             <?php endif; ?>
 
-                            <?php // Next page link
+                            <?php
                             if ($page < $totalPages):
                                 $nextUrl = $baseUrl . '&pageNum=' . ($page + 1);
                             ?>
@@ -198,7 +191,6 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
                     </div>
                 </div>
 
-                <!-- Student Data Section -->
                 <div class="card-datatable">
                     <table style="width:100%; ">
                         <thead>
@@ -248,7 +240,6 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
                                                     <?php echo (strtolower($student['status'] ?? '') === 'active') ? 'checked' : ''; ?>>
 
                                                 <div class="eyeIcon close eyeIcon-list" onclick="togglePass(this)">
-                                                    <!-- Closed eye SVG -->
                                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                                         <g fill="none" fill-rule="evenodd">
                                                             <path
@@ -260,7 +251,6 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
                                                 </div>
                                                 <div class="eyeIcon open eyeIcon-list" onclick="togglePass(this)"
                                                     style="display:none;">
-                                                    <!-- Open eye SVG -->
                                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                                         <g fill="none">
                                                             <path
