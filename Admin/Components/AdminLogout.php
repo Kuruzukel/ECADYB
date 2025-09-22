@@ -28,9 +28,7 @@ if (ob_get_length()) {
 if (isset($_SERVER['RAILWAY_STATIC_URL'])) {
     $baseUrl = rtrim($_SERVER['RAILWAY_STATIC_URL'], '/');
     $loginUrl = $baseUrl . '/Public/Components/Login.php';
-}
-// For local environment
-else {
+} else {
     $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ||
         (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') ||
         (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] === 'on');
