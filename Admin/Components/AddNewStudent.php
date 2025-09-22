@@ -74,7 +74,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
     }
 
-    // ----------------------
     try {
         $collection = $db->$programKey;
 
