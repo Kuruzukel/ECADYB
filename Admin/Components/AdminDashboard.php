@@ -11,7 +11,6 @@ require $mongoPath;
 ?>
 
 
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -19,26 +18,15 @@ require $mongoPath;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Graduation Gallery</title>
-    
+
     <!-- Open Graph / Facebook -->
     <meta property="fb:app_id" content="1767810860531321" />
     <meta property="og:locale" content="en_US" />
-    <meta
-      property="og:title"
-      content="Graduation Gallery - Exact Colleges of Asia"
-    />
-    <meta
-      property="og:description"
-      content="Step into your digital yearbook. Every achievement and memory comes alive."
-    />
-    <meta
-      property="og:image"
-      content="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png"
-    />
-    <meta
-      property="og:image:secure_url"
-      content="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png"
-    />
+    <meta property="og:title" content="Graduation Gallery - Exact Colleges of Asia" />
+    <meta property="og:description"
+        content="Step into your digital yearbook. Every achievement and memory comes alive." />
+    <meta property="og:image" content="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png" />
+    <meta property="og:image:secure_url" content="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:url" content="https://grad-gallery.up.railway.app" />
@@ -46,29 +34,14 @@ require $mongoPath;
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta
-      name="twitter:title"
-      content="Graduation Gallery - Exact Colleges of Asia"
-    />
-    <meta
-      name="twitter:description"
-      content="Step into your digital yearbook. Every achievement and memory comes alive."
-    />
-    <meta
-      name="twitter:image"
-      content="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png"
-    />
-    <meta
-      name="twitter:image:alt"
-      content="Exact Colleges of Asia Graduation Gallery Preview Logo"
-    />
+    <meta name="twitter:title" content="Graduation Gallery - Exact Colleges of Asia" />
+    <meta name="twitter:description"
+        content="Step into your digital yearbook. Every achievement and memory comes alive." />
+    <meta name="twitter:image" content="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png" />
+    <meta name="twitter:image:alt" content="Exact Colleges of Asia Graduation Gallery Preview Logo" />
 
     <!-- Favicon -->
-    <link
-      rel="icon"
-      href="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png"
-      type="image/png"
-    />
+    <link rel="icon" href="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png" type="image/png" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="../Assets/css/AdminDashboard.css" rel="stylesheet">
 </head>
