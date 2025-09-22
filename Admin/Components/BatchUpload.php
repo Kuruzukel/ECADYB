@@ -193,7 +193,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                     </div>
 
-                    <!-- Image Upload (future use) -->
                     <div class="section">
                         <div class="section-header">Student and Top Management Images</div>
                         <div class="file-card">
