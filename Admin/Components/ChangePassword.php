@@ -15,7 +15,8 @@
     <div class="changepass-container" style=" margin: 0 auto;">
         <div style="font-family: Arial, sans-serif;">
             <div class="changepass-header">
-            <h2><i class="fas fa-key"></i> <span class="chevron"><i class="fas fa-chevron-right"></i></span>Change Password</h2>
+                <h2><i class="fas fa-key"></i> <span class="chevron"><i class="fas fa-chevron-right"></i></span>Change
+                    Password</h2>
             </div>
 
             <div class="changepass-body" style="min-height: 570px;">
@@ -130,7 +131,6 @@
             </div>
         </div>
 
-        <!-- Modal -->
         <div class="modal-overlay" id="modal-overlay">
             <div class="modal" style="font-family: Arial, sans-serif;">
                 <h3>Are you sure you want to change your password?</h3>
