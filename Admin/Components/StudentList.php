@@ -272,27 +272,22 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
                                                 </button>
                                             </div>
 
-                                            <!-- Modal -->
                                             <div id="editModal_<?php echo $student['student_id']; ?>" class="editStudentModal">
                                                 <div class="modal-content" style="background: #34495e;">
 
-                                                    <!-- Header -->
                                                     <div class="modal-header">
                                                         <i class="fas fa-user-edit modal-icon"></i>
                                                         <h3>Edit Student</h3>
                                                     </div>
 
-                                                    <!-- Body -->
                                                     <div class="modal-body">
                                                         <form id="edit-student-form-<?php echo $student['student_id']; ?>">
-                                                            <!-- Hidden collection field for JavaScript -->
                                                             <input type="hidden"
                                                                 id="collection-hidden-<?php echo $student['student_id']; ?>"
                                                                 value="<?php echo htmlspecialchars($student['collection'] ?? 'students'); ?>">
 
                                                             <div class="form-group">
 
-                                                                <!-- Personal Information Section -->
                                                                 <div class="section">
                                                                     <div class="section-header">Personal Information</div>
 
@@ -347,7 +342,6 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
                                                                         placeholder="Password">
                                                                 </div>
 
-                                                                <!-- Academic Information Section -->
                                                                 <div class="section">
                                                                     <div class="section-header">Academic Information</div>
 
@@ -419,7 +413,6 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
                                                                         oninput="formatStudentID(this)">
                                                                 </div>
 
-                                                                <!-- Additional / Optional Section -->
                                                                 <div class="section">
                                                                     <div class="section-header">Additional Information /
                                                                         Optional</div>
@@ -463,7 +456,6 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
 
 
 
-                                                                    <!-- Buttons -->
                                                                     <div class="modal-buttons">
                                                                         <button type="button" class="modal-btn confirm"
                                                                             onclick="submitStudentForm('<?php echo $student['student_id']; ?>')">Save</button>
@@ -473,12 +465,6 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
                                                                 </div>
                                                             </div>
                                                         </form>
-
-
-
-
-
-
                                                     </div>
                                                 </div>
                                             </div>
