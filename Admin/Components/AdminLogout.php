@@ -19,7 +19,6 @@ if (ini_get("session.use_cookies")) {
     );
 }
 
-// Destroy the session
 session_destroy();
 
 // Clear any existing output buffer
