@@ -31,7 +31,6 @@ require $mongoPath;
     <meta property="og:url" content="https://grad-gallery.up.railway.app" />
     <meta property="og:type" content="website" />
 
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Graduation Gallery - Exact Colleges of Asia" />
     <meta name="twitter:description"
