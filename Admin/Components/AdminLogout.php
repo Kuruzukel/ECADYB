@@ -3,7 +3,6 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Unset all session variables
 $_SESSION = array();
 
 // Delete the session cookie
