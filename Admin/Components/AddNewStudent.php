@@ -1,8 +1,8 @@
 <?php
 require __DIR__ . '/../../vendor/autoload.php';
+
 use MongoDB\Client;
 
-// ----------------------
 // Program mapping (for HTML and POST)
 // ----------------------
 $programMap = [
@@ -140,7 +140,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <body>
     <div class="container" style="font-family: Arial, sans-serif;">
         <div class="header-container" style="width: 100%;">
-        <h1><i class="fas fa-home"></i> <span class="chevron"><i class="fas fa-chevron-right"></i></span> Add New Student</h1>
+            <h1><i class="fas fa-home"></i> <span class="chevron"><i class="fas fa-chevron-right"></i></span> Add New
+                Student</h1>
         </div>
 
         <form id="addStudentForm">
@@ -171,7 +172,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         <select id="program" name="program">
                             <option value="" disabled selected>Select a program</option>
                             <?php foreach ($programMap as $key => $name) : ?>
-                            <option value="<?= $key ?>"><?= $name ?></option>
+                                <option value="<?= $key ?>"><?= $name ?></option>
                             <?php endforeach; ?>
                         </select>
 
