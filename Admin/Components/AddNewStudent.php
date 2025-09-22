@@ -54,7 +54,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         exit;
     }
 
-    // ----------------------
     $student = [
         "first name" => trim($_POST["first_name"]),
         "middle name" => trim($_POST["middle_name"] ?? ''),
