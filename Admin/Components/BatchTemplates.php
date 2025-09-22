@@ -217,6 +217,7 @@
         <div class="upload-modal" id="uploadModal">
             <h2>Uploading...</h2>
             <p id="uploadText">Please wait while we upload your images</p>
+
             <div class="loader">
                 <div class="loading-bar-background">
                     <div class="loading-bar">
