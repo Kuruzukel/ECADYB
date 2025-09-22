@@ -51,7 +51,6 @@ try {
     $cursor = $collection->find();
 
     foreach ($cursor as $student) {
-        // Ensure password exists
         if (empty($student['password'])) {
             $password = generatePassword(8);
             $collection->updateOne(
