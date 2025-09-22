@@ -7,7 +7,6 @@ $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDds
 $client   = new Client($mongoUrl);
 $db = $client->Departments;
 
-// Define all program collections
 $collections = [
     "bsme"   => "BS Marine Engineering",
     "bsmt"   => "BS Marine Transportation",
