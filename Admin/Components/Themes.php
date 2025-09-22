@@ -175,7 +175,6 @@
         </div>
     </div>
 
-    <!-- Change Admin Logo Modal -->
     <div class="modal-overlay" id="change-admin-logo-modal">
         <div class="modal" style="background: #34495e;">
             <div class="modal-header">
@@ -199,7 +198,6 @@
         </div>
     </div>
 
-    <!-- Notification container -->
     <div id="notification-container"></div>
 
     <!-- Upload Overlay + Modal (match BatchTemplates) -->
