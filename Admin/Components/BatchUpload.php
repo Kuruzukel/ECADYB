@@ -174,7 +174,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <form method="POST" enctype="multipart/form-data">
             <div class="form-content">
                 <div class="form-group">
-                    <!-- Top Message Upload -->
                     <div class="section">
                         <div class="section-header">Top Management Message</div>
                         <div
