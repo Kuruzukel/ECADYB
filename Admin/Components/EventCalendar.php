@@ -45,7 +45,6 @@
                         </div>
 
                         <div class="calendar-grid" id="calendar-grid">
-                            <!-- Calendar will be populated by JavaScript -->
                         </div>
                     </div>
                 </div>
