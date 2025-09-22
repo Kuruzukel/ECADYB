@@ -92,14 +92,12 @@ usort($allStudents, function ($a, $b) {
 });
 
 $perPage = 10;
-// Get page number from either 'pageNum' parameter or default to 1
-$page = isset($_GET['pageNum']) ? max(1, (int)$_GET['pageNum']) : 1; // default: 1
+$page = isset($_GET['pageNum']) ? max(1, (int)$_GET['pageNum']) : 1;
 $offset = ($page - 1) * $perPage;
 
 $totalStudents = count($allStudents);
 $totalPages = ceil($totalStudents / $perPage);
 
-// Slice array for current page
 $allStudents = array_slice($allStudents, $offset, $perPage);
 
 ?>
