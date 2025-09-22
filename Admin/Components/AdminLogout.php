@@ -38,7 +38,6 @@ if (isset($_SERVER['RAILWAY_STATIC_URL'])) {
     $loginUrl = $protocol . $host . $basePath . '/Public/Components/Login.php';
 }
 
-// Ensure URL is properly formatted
 $loginUrl = str_replace('//', '/', $loginUrl);
 $loginUrl = str_replace(':/', '://', $loginUrl);
 
