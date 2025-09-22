@@ -155,7 +155,6 @@
         </div>
     </div>
 
-    <!-- Delete Confirmation Modal -->
     <div class="modal-overlay" id="delete-modal-overlay">
         <div class="modal" style="background: #34495e;">
             <div class="modal-header">
