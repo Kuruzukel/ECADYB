@@ -477,7 +477,6 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
                 </div>
             </div>
 
-            <!-- Delete Confirmation Modal -->
             <div class="modal-overlay" id="delete-modal-overlay">
                 <div class="modal" style="background: #34495e;">
                     <div class="modal-header">
@@ -498,16 +497,13 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
                 </div>
             </div>
 
-            <!-- Notification container -->
             <div id="notification-container"></div>
 
             <script>
-                // Initialize active tab from URL parameter
                 document.addEventListener('DOMContentLoaded', function() {
                     const urlParams = new URLSearchParams(window.location.search);
                     const activeTab = urlParams.get('tab') || 'all';
 
-                    // Set the active tab
                     const tabs = document.querySelectorAll('.tab-button');
                     tabs.forEach(tab => {
                         if (tab.getAttribute('data-tab') === activeTab) {
@@ -517,7 +513,6 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
                         }
                     });
 
-                    // Show the active tab content
                     const tabContents = document.querySelectorAll('.tab-content');
                     tabContents.forEach(content => {
                         if (content.id === activeTab) {
@@ -527,26 +522,24 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
                         }
                     });
 
-                    // Update department filter to preserve tab state
                     const deptFilter = document.getElementById("department-filter");
                     if (deptFilter) {
                         deptFilter.addEventListener("change", function() {
                             const dept = this.value;
                             const url = new URL(window.location.href);
                             url.searchParams.set('department', dept);
-                            url.searchParams.set('pageNum', '1'); // Reset to first page
+                            url.searchParams.set('pageNum', '1');
                             window.location.href = url.toString();
                         });
                     }
 
-                    // Add click handlers to tab buttons
                     document.querySelectorAll('.tab-button').forEach(button => {
                         button.addEventListener('click', function() {
                             const tabName = this.getAttribute('data-tab');
                             const url = new URL(window.location.href);
                             url.searchParams.set('tab', tabName);
                             url.searchParams.set('pageNum',
-                                '1'); // Reset to first page when changing tabs
+                                '1');
                             window.location.href = url.toString();
                         });
                     });
@@ -566,7 +559,6 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
                     }
                 }
 
-                // Optional: close modal if user clicks outside the modal-content
                 window.addEventListener("click", function(event) {
                     const modals = document.querySelectorAll(".editStudentModal");
                     modals.forEach(modal => {
