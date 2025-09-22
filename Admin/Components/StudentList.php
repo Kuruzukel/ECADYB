@@ -91,7 +91,6 @@ usort($allStudents, function ($a, $b) {
     return $a['id'] <=> $b['id'];
 });
 
-// Pagination setup
 $perPage = 10;
 // Get page number from either 'pageNum' parameter or default to 1
 $page = isset($_GET['pageNum']) ? max(1, (int)$_GET['pageNum']) : 1; // default: 1
