@@ -16,7 +16,6 @@ $programMap = [
     "bse" => "BS Entrepreneurship"
 ];
 
-// ----------------------
 // Handle POST request (add student)
 // ----------------------
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
