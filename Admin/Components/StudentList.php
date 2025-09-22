@@ -22,7 +22,6 @@ $collections = [
 
 $allStudents = [];
 
-// Detect selected filter from request
 $selectedDepartment = $_GET['department'] ?? "bsme"; // default: BSME
 
 // If invalid, reset to default
