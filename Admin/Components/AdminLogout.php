@@ -25,7 +25,6 @@ if (ob_get_length()) {
     ob_clean();
 }
 
-// For production environment on Railway
 if (isset($_SERVER['RAILWAY_STATIC_URL'])) {
     $baseUrl = rtrim($_SERVER['RAILWAY_STATIC_URL'], '/');
     $loginUrl = $baseUrl . '/Public/Components/Login.php';
