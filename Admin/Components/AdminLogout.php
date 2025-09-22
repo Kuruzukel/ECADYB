@@ -41,7 +41,6 @@ if (isset($_SERVER['RAILWAY_STATIC_URL'])) {
 $loginUrl = str_replace('//', '/', $loginUrl);
 $loginUrl = str_replace(':/', '://', $loginUrl);
 
-// error_log("Redirecting to: " . $loginUrl);
 
 // Redirect to login page
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
