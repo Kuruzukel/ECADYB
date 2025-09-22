@@ -35,7 +35,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $programName = $programMap[$programKey] ?? 'Unknown';
     $section = trim($_POST["section"] ?? '');
 
-    // ----------------------
     // Validate required fields
     // ----------------------
     $requiredFields = ['first_name', 'last_name', 'email', 'academic_year', 'student_id'];
