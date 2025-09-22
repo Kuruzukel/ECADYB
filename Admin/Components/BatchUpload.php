@@ -184,7 +184,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                     </div>
 
-                    <!-- Student Info Upload -->
                     <div class="section">
                         <div class="section-header">Student Information</div>
                         <div
