@@ -8,7 +8,8 @@ $uploadStatus = [
     'student_info' => null
 ];
 
-function isValidCSV($fileTmpName) {
+function isValidCSV($fileTmpName)
+{
     $finfo = finfo_open(FILEINFO_MIME_TYPE);
     $mimeType = finfo_file($finfo, $fileTmpName);
     finfo_close($finfo);
@@ -21,13 +22,15 @@ function isValidCSV($fileTmpName) {
     ]);
 }
 
-function cleanHeader($col) {
-    $col = preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $col); 
-    $col = str_replace(["\xEF\xBB\xBF"], '', $col); 
-    return strtolower(preg_replace('/[\s_]+/', '', trim($col))); 
+function cleanHeader($col)
+{
+    $col = preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $col);
+    $col = str_replace(["\xEF\xBB\xBF"], '', $col);
+    return strtolower(preg_replace('/[\s_]+/', '', trim($col)));
 }
 
-function importCSVToMongoByDepartment($tmpName, $departmentsDB) {
+function importCSVToMongoByDepartment($tmpName, $departmentsDB)
+{
     if (!isValidCSV($tmpName)) return false;
 
     $header = null;
@@ -37,8 +40,8 @@ function importCSVToMongoByDepartment($tmpName, $departmentsDB) {
         while (($row = fgetcsv($handle, 1000, ',')) !== false) {
             $row = array_map('trim', $row);
             if (!$header) {
-                $header = array_map(function($col) {
-                    return match(cleanHeader($col)) {
+                $header = array_map(function ($col) {
+                    return match (cleanHeader($col)) {
                         'id' => 'id',
                         'academicyear' => 'academic year',
                         'departmentsection', 'departamentsection' => 'department section',
@@ -79,7 +82,8 @@ function importCSVToMongoByDepartment($tmpName, $departmentsDB) {
     return false;
 }
 
-function importCSVByMessage($tmpName, $collection) {
+function importCSVByMessage($tmpName, $collection)
+{
     if (!isValidCSV($tmpName)) return false;
 
     $header = null;
@@ -106,15 +110,14 @@ function importCSVByMessage($tmpName, $collection) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Get MongoDB connection string from environment variable
-        $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
-        $client = new Client($mongoUrl);
+    $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
+    $client = new Client($mongoUrl);
 
 
     if (!empty($_FILES['top_management_message']['tmp_name'])) {
         $tmpName = $_FILES['top_management_message']['tmp_name'];
 
-        $validTopManagementHeaders = ['name', 'message','batch_name', 'academic_year'];
+        $validTopManagementHeaders = ['name', 'message', 'batch_name', 'academic_year'];
         $validTopManagementHeaders = array_map('cleanHeader', $validTopManagementHeaders);
         $actualHeaders = [];
 
@@ -165,7 +168,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <div class="container">
         <div class="header-container">
-        <h1><i class="fas fa-cloud-upload-alt"></i> <span class="chevron"><i class="fas fa-chevron-right"></i></span>Batch Upload</h1>
+            <h1><i class="fas fa-cloud-upload-alt"></i> <span class="chevron"><i
+                        class="fas fa-chevron-right"></i></span>Batch Upload</h1>
         </div>
         <form method="POST" enctype="multipart/form-data">
             <div class="form-content">
@@ -202,10 +206,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
 
                 <?php if (!empty($resultMsg)): ?>
-                <?php
+                    <?php
                     $popupClass = in_array(true, $uploadStatus, true) ? 'popup-success' : 'popup-failure';
-                ?>
-                <div class="popup-message <?= $popupClass ?>"><?= $resultMsg ?></div>
+                    ?>
+                    <div class="popup-message <?= $popupClass ?>"><?= $resultMsg ?></div>
                 <?php endif; ?>
             </div>
         </form>
