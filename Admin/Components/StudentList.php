@@ -28,7 +28,6 @@ if (!array_key_exists($selectedDepartment, $collections)) {
     $selectedDepartment = "bsme";
 }
 
-// Password generator function
 function generatePassword($length = 8)
 {
     $upper = 'ABCDEFGHIJKLMNPQRSTUVWXYZ';
