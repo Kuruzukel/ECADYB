@@ -77,7 +77,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     try {
         $collection = $db->$programKey;
 
-        // Auto-increment ID based on collection count
         $student["id"] = $collection->countDocuments() + 1;
 
         $insertResult = $collection->insertOne($student);
