@@ -51,7 +51,6 @@
             </div>
         </div>
 
-        <!-- Event Preview Modal -->
         <div class="modal-overlay" id="event-modal-overlay">
             <div class="modal" style="font-family: Arial, sans-serif;">
                 <div class="modal-header">
