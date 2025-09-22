@@ -62,7 +62,6 @@ try {
             $password = $student['password'];
         }
 
-        // Ensure numeric ID for sorting
         $studentIdNum = isset($student['id']) ? (int)$student['id'] : 0;
 
         $allStudents[] = [
