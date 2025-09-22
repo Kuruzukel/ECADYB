@@ -59,7 +59,6 @@
                 </div>
                 <div class="modal-content">
                     <div id="event-preview-content">
-                        <!-- Event preview will be populated by JavaScript -->
                     </div>
                 </div>
                 <div class="modal-buttons">
