@@ -87,7 +87,6 @@ try {
     $allStudents = [];
 }
 
-// Sort students by numeric ID
 usort($allStudents, function ($a, $b) {
     return $a['id'] <=> $b['id'];
 });
