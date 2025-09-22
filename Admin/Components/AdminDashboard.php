@@ -19,7 +19,6 @@ require $mongoPath;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Graduation Gallery</title>
 
-    <!-- Open Graph / Facebook -->
     <meta property="fb:app_id" content="1767810860531321" />
     <meta property="og:locale" content="en_US" />
     <meta property="og:title" content="Graduation Gallery - Exact Colleges of Asia" />
