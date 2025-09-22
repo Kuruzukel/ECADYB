@@ -200,7 +200,6 @@
 
     <div id="notification-container"></div>
 
-    <!-- Upload Overlay + Modal (match BatchTemplates) -->
     <div class="upload-overlay" id="upload-overlay">
         <div class="upload-modal" id="uploadModal">
             <h2>Uploading...</h2>
