@@ -210,7 +210,7 @@
             </div>
         </div>
     </div>
-    <!-- Notification container -->
+
     <div id="notification-container"></div>
     <!-- Upload Overlay + Modal -->
     <div class="upload-overlay" id="upload-overlay">
