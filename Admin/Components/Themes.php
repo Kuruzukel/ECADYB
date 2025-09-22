@@ -133,7 +133,6 @@
         </div>
     </div>
 
-    <!-- Modal -->
     <div class="modal-overlay" id="modal-overlay">
         <div class="modal" style="font-family: Arial, sans-serif; background: #34495e;">
             <div class="modal-header">
