@@ -66,7 +66,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         "department section" => strtoupper($programKey) . ' - ' . strtoupper($section),
     ];
 
-    // Optional fields
     $optionalFields = ["motto", "honors", "milestone", "batch_name"];
     foreach ($optionalFields as $field) {
         if (!empty(trim($_POST[$field] ?? ''))) {
