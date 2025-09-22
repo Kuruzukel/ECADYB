@@ -149,7 +149,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         <select id="program" name="program">
                             <option value="" disabled selected>Select a program</option>
                             <?php foreach ($programMap as $key => $name) : ?>
-                                <option value="<?= $key ?>"><?= $name ?></option>
+                            <option value="<?= $key ?>"><?= $name ?></option>
                             <?php endforeach; ?>
                         </select>
 
@@ -182,7 +182,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             </div>
         </form>
 
-        <!-- Modal -->
         <div class="modal-overlay" id="modal-overlay" style="display: none;">
             <div class="modal" style="font-family: Arial, sans-serif;">
                 <h2>Are you sure you want to add this student?</h2>
