@@ -74,7 +74,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
     }
 
-    // ----------------------
     // Insert into MongoDB
     // ----------------------
     try {
