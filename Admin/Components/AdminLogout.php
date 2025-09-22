@@ -21,7 +21,6 @@ if (ini_get("session.use_cookies")) {
 
 session_destroy();
 
-// Clear any existing output buffer
 if (ob_get_length()) {
     ob_clean();
 }
