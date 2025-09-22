@@ -46,7 +46,6 @@ function generatePassword($length = 8)
     return str_shuffle($password);
 }
 
-// Fetch students only from the selected department
 try {
     $collection = $db->$selectedDepartment;
     $cursor = $collection->find();
