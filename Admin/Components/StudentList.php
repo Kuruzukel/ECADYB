@@ -24,7 +24,6 @@ $allStudents = [];
 
 $selectedDepartment = $_GET['department'] ?? "bsme";
 
-// If invalid, reset to default
 if (!array_key_exists($selectedDepartment, $collections)) {
     $selectedDepartment = "bsme";
 }
