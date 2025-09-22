@@ -3,7 +3,6 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 use MongoDB\Client;
 
-// ----------------------
 $programMap = [
     "bsme" => "BS Marine Engineering",
     "bsmt" => "BS Marine Transportation",
