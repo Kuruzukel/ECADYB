@@ -155,7 +155,9 @@ class EventCalendar {
   async loadEvents() {
     try {
       console.log("Loading events from fetch_announcements.php...");
-      const response = await fetch("../../Connection/Announcement/FetchAnnouncement.php");
+      const response = await fetch(
+        "../../Connection/Announcement/FetchAnnouncement.php"
+      );
       console.log("Response status:", response.status);
 
       if (!response.ok) {
@@ -319,7 +321,6 @@ class EventCalendar {
           </div>
         </div>
       `;
-
     }
 
     html += "</div>";
@@ -419,16 +420,19 @@ class EventCalendar {
         eventDate
       );
 
-      const response = await fetch("../../Connection/Announcement/DeleteAnnouncement.php", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: eventId,
-          date: eventDate,
-        }),
-      });
+      const response = await fetch(
+        "../../Connection/Announcement/DeleteAnnouncement.php",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: eventId,
+            date: eventDate,
+          }),
+        }
+      );
 
       console.log("Delete response status:", response.status);
 
@@ -447,17 +451,18 @@ class EventCalendar {
         if (modal) {
           modal.style.display = "none";
         }
-        
-        // Show success notification
+
         showNotification("Announcement deleted successfully!", "success");
       }
     } catch (error) {
       console.error("Error deleting announcement:", error);
-      // Show error notification
-      showNotification("Failed to delete announcement. Please try again.", "error");
+      showNotification(
+        "Failed to delete announcement. Please try again.",
+        "error"
+      );
     }
   }
-  
+
   showConfirmationModal(title, message) {
     return new Promise((resolve) => {
       const overlay = document.createElement("div");

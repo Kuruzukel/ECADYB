@@ -140,15 +140,10 @@ function applyTheme(theme) {
 
 const uploadOverlay = document.getElementById("upload-overlay");
 
-// Variable to store the current upload request
 let currentUploadRequest = null;
-// Variable to store upload completion status
 let uploadCompleted = false;
-// Variable to store the slot of the current upload
 let currentUploadSlot = null;
-// Variable to store pending upload data
 let pendingUploadData = null;
-// Variable to track if upload should be cancelled
 let cancelPendingUpload = false;
 
 function showUploadOverlay() {
@@ -160,18 +155,14 @@ function hideUploadOverlay() {
 }
 
 async function cancelUpload() {
-  // Set flag to cancel pending upload
   cancelPendingUpload = true;
-  
-  // Cancel the ongoing upload request if exists
+
   if (currentUploadRequest) {
     currentUploadRequest.abort();
     currentUploadRequest = null;
   }
-  
-  // If we have pending upload data, clear it
+
   if (pendingUploadData) {
-    // Reset the box to its original state
     const { box, input, deleteBtn } = pendingUploadData;
     box.innerHTML = "";
     const newPlus = document.createElement("span");
@@ -183,37 +174,30 @@ async function cancelUpload() {
     deleteBtn.style.display = "none";
     input.value = "";
     box.classList.remove("has-image");
-    
+
     pendingUploadData = null;
   }
-  
-  // If we have a current upload slot, try to delete any uploaded file
+
   if (currentUploadSlot) {
     try {
-      // Send request to delete the uploaded file
       const form = new FormData();
       form.append("slot", String(currentUploadSlot));
-      
-      // We don't need to wait for this to complete, just fire and forget
+
       fetch(window.DELETE_ENDPOINT, {
         method: "POST",
-        body: form
-      }).catch(err => {
-        // Ignore errors in deletion since this is a best-effort cleanup
+        body: form,
+      }).catch((err) => {
         console.warn("Failed to delete uploaded file:", err);
       });
     } catch (err) {
       console.warn("Error preparing deletion request:", err);
     }
   }
-  
-  // Small delay to ensure the deletion request is sent
-  await new Promise(resolve => setTimeout(resolve, 100));
-  
-  // Show notification
+
+  await new Promise((resolve) => setTimeout(resolve, 100));
+
   showNotification("Upload cancelled", "warning");
-  
-  // Reset variables
+
   uploadCompleted = false;
   currentUploadSlot = null;
   cancelPendingUpload = false;
@@ -256,9 +240,7 @@ function getBasePath() {
 }
 
 async function uploadLogoToBunny(file, slot, box, input, deleteBtn) {
-  // Check if upload should be cancelled before starting
   if (cancelPendingUpload) {
-    // Reset the box to its original state
     box.innerHTML = "";
     const newPlus = document.createElement("span");
     newPlus.className = "plus-icon";
@@ -269,8 +251,7 @@ async function uploadLogoToBunny(file, slot, box, input, deleteBtn) {
     deleteBtn.style.display = "none";
     input.value = "";
     box.classList.remove("has-image");
-    
-    // Reset variables
+
     pendingUploadData = null;
     cancelPendingUpload = false;
     showNotification("Upload cancelled", "warning");
@@ -288,11 +269,9 @@ async function uploadLogoToBunny(file, slot, box, input, deleteBtn) {
     uploadText.textContent = "Please wait while we upload your logo";
   }
 
-  // Reset upload status
   uploadCompleted = false;
   currentUploadSlot = slot;
 
-  // Create AbortController for cancellation
   const controller = new AbortController();
   currentUploadRequest = controller;
 
@@ -300,20 +279,17 @@ async function uploadLogoToBunny(file, slot, box, input, deleteBtn) {
     const res = await fetch(window.UPLOAD_ENDPOINT, {
       method: "POST",
       body: form,
-      signal: controller.signal // Pass the abort signal
+      signal: controller.signal,
     });
 
-    // Clear the current request reference
     currentUploadRequest = null;
 
-    // Check if the request was aborted
     if (controller.signal.aborted) {
-      throw new Error('Upload aborted');
+      throw new Error("Upload aborted");
     }
 
-    // Check if upload should be cancelled
     if (cancelPendingUpload) {
-      throw new Error('Upload cancelled');
+      throw new Error("Upload cancelled");
     }
 
     if (!res.ok) {
@@ -327,10 +303,8 @@ async function uploadLogoToBunny(file, slot, box, input, deleteBtn) {
       return;
     }
 
-    // Mark upload as completed
     uploadCompleted = true;
 
-    // Only show the image after successful upload
     box.innerHTML = "";
     const img = document.createElement("img");
     img.src = data.url;
@@ -344,13 +318,16 @@ async function uploadLogoToBunny(file, slot, box, input, deleteBtn) {
 
     showNotification("Logo uploaded successfully", "success");
   } catch (err) {
-    // Clear the current request reference
     currentUploadRequest = null;
-    
-    // Check if the error is due to aborting the request or cancellation
-    if (err.name === 'AbortError' || err.message === 'Upload aborted' || err.message === 'Upload cancelled' || controller.signal.aborted || cancelPendingUpload) {
+
+    if (
+      err.name === "AbortError" ||
+      err.message === "Upload aborted" ||
+      err.message === "Upload cancelled" ||
+      controller.signal.aborted ||
+      cancelPendingUpload
+    ) {
       showNotification("Upload cancelled", "warning");
-      // Reset the box to its original state
       box.innerHTML = "";
       const newPlus = document.createElement("span");
       newPlus.className = "plus-icon";
@@ -361,16 +338,14 @@ async function uploadLogoToBunny(file, slot, box, input, deleteBtn) {
       deleteBtn.style.display = "none";
       input.value = "";
       box.classList.remove("has-image");
-      
-      // Reset upload status
+
       uploadCompleted = false;
       currentUploadSlot = null;
       cancelPendingUpload = false;
     } else {
       console.error("Upload error:", err);
       showNotification(err.message || "Upload failed", "error");
-      
-      // Reset the box to its original state on error
+
       box.innerHTML = "";
       const newPlus = document.createElement("span");
       newPlus.className = "plus-icon";
@@ -381,15 +356,13 @@ async function uploadLogoToBunny(file, slot, box, input, deleteBtn) {
       deleteBtn.style.display = "none";
       input.value = "";
       box.classList.remove("has-image");
-      
-      // Reset upload status on error
+
       uploadCompleted = false;
       currentUploadSlot = null;
       cancelPendingUpload = false;
     }
   } finally {
     currentUploadRequest = null;
-    // Always hide the overlay
     hideUploadOverlay();
     pendingUploadData = null;
   }
@@ -469,15 +442,12 @@ window.addEventListener("DOMContentLoaded", () => {
     const file = input.files[0];
     if (!file) return;
 
-    // Show upload overlay immediately
     showUploadOverlay();
-    
-    // Create delete button first
+
     const deleteBtn = document.createElement("button");
     deleteBtn.className = "delete-btn";
     deleteBtn.innerHTML = "&times;";
-    
-    // Attach event listener to the new delete button
+
     deleteBtn.addEventListener("click", (e) => {
       e.stopPropagation();
       deleteTarget = {
@@ -489,18 +459,15 @@ window.addEventListener("DOMContentLoaded", () => {
       deleteModal.style.display = "flex";
     });
 
-    // Store the upload data for later
     pendingUploadData = {
       file: file,
       slot: box.dataset.slot || "1",
       box: box,
       input: input,
-      deleteBtn: deleteBtn
+      deleteBtn: deleteBtn,
     };
 
-    // Check if upload should be cancelled
     if (cancelPendingUpload) {
-      // Reset the box to its original state
       box.innerHTML = "";
       const newPlus = document.createElement("span");
       newPlus.className = "plus-icon";
@@ -511,13 +478,12 @@ window.addEventListener("DOMContentLoaded", () => {
       deleteBtn.style.display = "none";
       input.value = "";
       box.classList.remove("has-image");
-      
+
       pendingUploadData = null;
       cancelPendingUpload = false;
       return;
     }
 
-    // Start the upload immediately (but with ability to cancel)
     uploadLogoToBunny(file, box.dataset.slot || "1", box, input, deleteBtn);
   };
 
@@ -635,14 +601,11 @@ window.addEventListener("DOMContentLoaded", () => {
   confirmDeleteBtn.addEventListener("click", async () => {
     if (!deleteTarget) return;
     const { box, input, deleteBtn } = deleteTarget;
-    // Use the slot from the box dataset instead of calculating from index
     const slot = box.dataset.slot;
 
-    // Close the modal immediately
     deleteModal.style.display = "none";
     hideUploadOverlay();
-    
-    // Update the UI to remove the logo immediately
+
     box.innerHTML = "";
     const newPlus = document.createElement("span");
     newPlus.className = "plus-icon";
@@ -653,30 +616,28 @@ window.addEventListener("DOMContentLoaded", () => {
     deleteBtn.style.display = "none";
     input.value = "";
     box.classList.remove("has-image");
-    
-    // Show notification immediately when button is clicked
+
     showNotification("Logo deleted successfully", "success");
-    
+
     try {
-      // Send the deletion request to the server in background
       const form = new FormData();
       form.append("slot", String(slot));
-      const res = await fetch(window.DELETE_ENDPOINT, { method: "POST", body: form });
+      const res = await fetch(window.DELETE_ENDPOINT, {
+        method: "POST",
+        body: form,
+      });
 
       if (!res.ok) {
         console.error(`HTTP ${res.status}: ${res.statusText}`);
-        // We could show an error notification here if needed, but the UI change is already done
       }
 
       const data = await res.json();
 
       if (!data?.success) {
         console.error(data?.message || "Delete failed");
-        // We could show an error notification here if needed, but the UI change is already done
       }
     } catch (err) {
       console.error("Delete error:", err);
-      // Even if server fails, the UI change is already done and success notification was shown
     } finally {
       deleteTarget = null;
     }
@@ -717,8 +678,7 @@ window.addEventListener("DOMContentLoaded", () => {
         box.appendChild(input);
         deleteBtn.style.display = "flex";
         box.classList.add("has-image");
-        
-        // Attach event listener to the existing delete button
+
         if (deleteBtn) {
           deleteBtn.addEventListener("click", (e) => {
             e.stopPropagation();

@@ -245,7 +245,6 @@ function initializeModal() {
   const form = document.getElementById("announcementForm");
 
   if (modalOverlay && modal) {
-
     modalOverlay.addEventListener("click", function (e) {
       if (e.target === modalOverlay) {
         hideModal();
@@ -260,7 +259,6 @@ function initializeModal() {
 
     modalOverlay.addEventListener("click", function (e) {
       if (e.target.id === "confirm-btn") {
-        // Don't hide the modal immediately, let submitForm handle it
         submitForm();
       } else if (e.target.id === "cancel-btn") {
         hideModal();
@@ -293,17 +291,17 @@ function submitForm() {
     const submitBtn = document.getElementById("post-announcement-btn");
     const modalOverlay = document.getElementById("modal-overlay");
     const dateStatus = document.getElementById("date-status");
-    
-    // Check if the maximum announcements warning is displayed
-    if (dateStatus && dateStatus.innerHTML.includes("Maximum announcements reached")) {
-      // Show error notification
+
+    if (
+      dateStatus &&
+      dateStatus.innerHTML.includes("Maximum announcements reached")
+    ) {
       showNotification("Maximum announcements reached (5/5).", "error");
-      
-      // Hide modal
+
       hideModal();
       return;
     }
-    
+
     if (submitBtn) {
       const originalText = submitBtn.innerHTML;
       submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Posting...';
@@ -344,22 +342,21 @@ function submitForm() {
             setTimeout(() => {
               checkDateStatus();
             }, 500);
-            
-            // Show success notification
+
             showNotification("Announcement posted successfully!", "success");
           }
-          
-          // Hide modal immediately after form submission is complete
+
           hideModal();
         })
 
         .catch((error) => {
           console.error("Network error:", error);
-          
-          // Show error notification
-          showNotification("Failed to post announcement. Please try again.", "error");
-          
-          // Hide modal immediately even if there's an error
+
+          showNotification(
+            "Failed to post announcement. Please try again.",
+            "error"
+          );
+
           hideModal();
         })
         .finally(() => {
@@ -394,7 +391,9 @@ async function checkDateStatus() {
   }
 
   try {
-    const response = await fetch("../../Connection/Announcement/FetchAnnouncement.php");
+    const response = await fetch(
+      "../../Connection/Announcement/FetchAnnouncement.php"
+    );
     const data = await response.json();
 
     if (data.success) {
