@@ -27,7 +27,7 @@ try {
     }
 
     $eventId = $input['id'];
-    $eventDate = $input['date'] ?? null; // date is optional
+    $eventDate = $input['date'] ?? null;
 
     error_log("Attempting to delete announcement with ID: $eventId, Date: " . ($eventDate ?? 'N/A'));
 
