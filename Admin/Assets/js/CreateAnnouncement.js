@@ -205,13 +205,11 @@ function initializeFormValidation() {
       e.preventDefault();
 
       if (!titleInput.value.trim()) {
-        showNotification("Please enter a title", "error");
         titleInput.focus();
         return;
       }
 
       if (!messageTextarea.value.trim()) {
-        showNotification("Please enter a message", "error");
         messageTextarea.focus();
         return;
       }
@@ -267,7 +265,7 @@ function initializeModal() {
 
     modalOverlay.addEventListener("click", function (e) {
       if (e.target.id === "confirm-btn") {
-        hideModal();
+        // Don't hide the modal immediately, let submitForm handle it
         submitForm();
       } else if (e.target.id === "cancel-btn") {
         hideModal();
@@ -308,6 +306,8 @@ function submitForm() {
   const form = document.getElementById("announcementForm");
   if (form) {
     const submitBtn = document.getElementById("post-announcement-btn");
+    const modalOverlay = document.getElementById("modal-overlay");
+    
     if (submitBtn) {
       const originalText = submitBtn.innerHTML;
       submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Posting...';
@@ -333,7 +333,6 @@ function submitForm() {
         .then((data) => {
           console.log("Response data:", data);
           if (data.success) {
-            showNotification(data.message, "success");
             form.reset();
             const charCountElement = document.getElementById("char-count");
             if (charCountElement) {
@@ -349,16 +348,17 @@ function submitForm() {
             setTimeout(() => {
               checkDateStatus();
             }, 500);
-          } else {
-            showNotification(data.message, "error");
           }
+          
+          // Hide modal immediately after form submission is complete
+          hideModal();
         })
+
         .catch((error) => {
           console.error("Network error:", error);
-          showNotification(
-            "An error occurred while posting the announcement. Please check your connection and try again.",
-            "error"
-          );
+          
+          // Hide modal immediately even if there's an error
+          hideModal();
         })
         .finally(() => {
           submitBtn.innerHTML = originalText;
@@ -379,10 +379,6 @@ function initializePreview() {
       const message = messageTextarea.value.trim();
 
       if (!title || !message) {
-        showNotification(
-          "Please fill in both title and message to preview",
-          "warning"
-        );
         return;
       }
 
@@ -421,64 +417,6 @@ function showPreviewModal(title, message) {
 
   modal.innerHTML = previewContent;
   modalOverlay.style.display = "flex";
-}
-
-function showNotification(message, type = "info") {
-  const notification = document.createElement("div");
-  notification.className = `notification notification-${type}`;
-  notification.innerHTML = `
-        <i class="fas fa-${getNotificationIcon(type)}"></i>
-        <span>${message}</span>
-    `;
-
-  notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: ${getNotificationColor(type)};
-        color: white;
-        padding: 1rem 1.5rem;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        z-index: 1001;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-size: 0.875rem;
-        font-weight: 500;
-        animation: slideInRight 0.3s ease-out;
-    `;
-
-  document.body.appendChild(notification);
-
-  setTimeout(() => {
-    notification.style.animation = "slideOutRight 0.3s ease-out";
-    setTimeout(() => {
-      if (notification.parentNode) {
-        notification.parentNode.removeChild(notification);
-      }
-    }, 300);
-  }, 5000);
-}
-
-function getNotificationIcon(type) {
-  const icons = {
-    success: "check-circle",
-    error: "exclamation-circle",
-    warning: "exclamation-triangle",
-    info: "info-circle",
-  };
-  return icons[type] || "info-circle";
-}
-
-function getNotificationColor(type) {
-  const colors = {
-    success: "#10b981",
-    error: "#ef4444",
-    warning: "#f59e0b",
-    info: "#8b5cf6",
-  };
-  return colors[type] || "#8b5cf6";
 }
 
 function initializeDateStatusCheck() {
@@ -557,41 +495,6 @@ style.textContent = `
     @keyframes slideOutRight {
         from { transform: translateX(0); opacity: 1; }
         to { transform: translateX(100%); opacity: 0; }
-    }
-    
-    .preview-announcement {
-        background: var(--input-bg);
-        border-radius: 12px;
-        padding: 1.5rem;
-        border: 1px solid var(--border-color);
-    }
-    
-    .preview-title {
-        color: var(--text-primary);
-        font-size: 1.25rem;
-        font-weight: 600;
-        margin-bottom: 1rem;
-    }
-    
-    .preview-message {
-        color: var(--text-secondary);
-        line-height: 1.6;
-        margin-bottom: 1rem;
-    }
-    
-    .preview-meta {
-        font-size: 0.875rem;
-        color: var(--text-muted);
-    }
-    
-    .modal-btn.secondary {
-        background: var(--border-color);
-        color: var(--text-secondary);
-    }
-    
-    .modal-btn.secondary:hover {
-        background: var(--input-border);
-        color: var(--text-primary);
     }
 `;
 document.head.appendChild(style);

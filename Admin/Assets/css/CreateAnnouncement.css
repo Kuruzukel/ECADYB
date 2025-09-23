@@ -83,7 +83,7 @@ h1 .chevron i {
   padding: 25px;
   box-sizing: border-box;
   background-color: var(--section-bg);
-  margin: 20px;
+  margin: 10px;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   min-height: 520px;
@@ -319,6 +319,127 @@ textarea {
 .modal-btn.cancel:hover {
   background: #dc2626;
   transform: translateY(-1px);
+}
+
+@keyframes slideInRight {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideOutRight {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(100%); opacity: 0; }
+}
+
+/* Notification Styles */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1001;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    animation: slideInRight 0.3s ease-out;
+    cursor: pointer;
+    min-width: 300px;
+    max-width: 400px;
+}
+
+.notification-success {
+    background: #10b981;
+    color: white;
+}
+
+.notification-error {
+    background: #ef4444;
+    color: white;
+}
+
+.notification-warning {
+    background: #f59e0b;
+    color: white;
+}
+
+.notification-info {
+    background: #8b5cf6;
+    color: white;
+}
+
+.notification-close-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+}
+
+.notification-close-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.notification-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 0 0 8px 8px;
+    width: 100%;
+    transform-origin: left;
+    transform: scaleX(1);
+    transition: transform 0.1s linear;
+}
+
+/* Preview Styles */
+.preview-announcement {
+    background: var(--input-bg);
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid var(--border-color);
+}
+
+.preview-title {
+    color: var(--text-primary);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.preview-message {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.preview-meta {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+.modal-btn.secondary {
+    background: var(--border-color);
+    color: var(--text-secondary);
+}
+
+.modal-btn.secondary:hover {
+    background: var(--input-border);
+    color: var(--text-primary);
 }
 
 @media (max-width: 1045px) {

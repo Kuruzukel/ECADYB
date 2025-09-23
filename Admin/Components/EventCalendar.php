@@ -38,10 +38,6 @@
                             <button class="view-btn" data-view="week">Week</button>
                             <button class="view-btn" data-view="day">Day</button>
                             <button class="view-btn" data-view="list">List</button>
-                            <button class="view-btn refresh-btn" id="refresh-calendar">
-                                <i class="fas fa-sync-alt"></i>
-                                Refresh
-                            </button>
                         </div>
 
                         <div class="calendar-grid" id="calendar-grid">

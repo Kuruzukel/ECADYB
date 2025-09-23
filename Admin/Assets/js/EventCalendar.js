@@ -187,34 +187,9 @@ class EventCalendar {
         this.renderCalendar();
       } else {
         console.error("Failed to load events:", data.message);
-        this.showNotification(
-          "Failed to load events: " + data.message,
-          "error"
-        );
       }
     } catch (error) {
       console.error("Error loading events:", error);
-      this.showNotification("Error loading events: " + error.message, "error");
-    }
-  }
-
-  async refreshCalendar() {
-    const refreshBtn = document.getElementById("refresh-calendar");
-    if (refreshBtn) {
-      const originalText = refreshBtn.innerHTML;
-      refreshBtn.innerHTML =
-        '<i class="fas fa-spinner fa-spin"></i> Refreshing...';
-      refreshBtn.disabled = true;
-
-      try {
-        await this.loadEvents();
-        this.showNotification("Calendar refreshed successfully", "success");
-      } catch (error) {
-        this.showNotification("Failed to refresh calendar", "error");
-      } finally {
-        refreshBtn.innerHTML = originalText;
-        refreshBtn.disabled = false;
-      }
     }
   }
 
@@ -229,11 +204,7 @@ class EventCalendar {
 
     document.querySelectorAll(".view-btn").forEach((btn) => {
       btn.addEventListener("click", (e) => {
-        if (btn.id === "refresh-calendar") {
-          this.refreshCalendar();
-        } else {
-          this.setView(e.target.dataset.view);
-        }
+        this.setView(e.target.dataset.view);
       });
     });
   }
@@ -532,7 +503,6 @@ class EventCalendar {
     const events = this.getEventsForDate(new Date(date));
 
     if (events.length === 0) {
-      this.showNotification("No events for this day", "info");
       return;
     }
 
@@ -591,64 +561,58 @@ class EventCalendar {
     return `${year}-${month}-${day}`;
   }
 
-  showNotification(message, type = "info") {
-    const notification = document.createElement("div");
-    notification.className = `notification notification-${type}`;
-    notification.innerHTML = `
-      <i class="fas fa-${this.getNotificationIcon(type)}"></i>
-      <span>${message}</span>
-    `;
+  async deleteEvent(eventId, eventDate) {
+    const confirmed = await this.showConfirmationModal(
+      " Delete Announcement",
+      "Are you sure you want to delete this announcement?"
+    );
 
-    notification.style.cssText = `
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: ${this.getNotificationColor(type)};
-      color: white;
-      padding: 1rem 1.5rem;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      z-index: 1001;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.875rem;
-      font-weight: 500;
-      animation: slideInRight 0.3s ease-out;
-    `;
+    if (!confirmed) {
+      return;
+    }
 
-    document.body.appendChild(notification);
+    try {
+      console.log(
+        "Deleting announcement with ID:",
+        eventId,
+        "Date:",
+        eventDate
+      );
 
-    setTimeout(() => {
-      notification.style.animation = "slideOutRight 0.3s ease-out";
-      setTimeout(() => {
-        if (notification.parentNode) {
-          notification.parentNode.removeChild(notification);
+      const response = await fetch("../../Connection/Announcement/DeleteAnnouncement.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: eventId,
+          date: eventDate,
+        }),
+      });
+
+      console.log("Delete response status:", response.status);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log("Delete response:", result);
+
+      if (result.success) {
+        await this.loadEvents();
+        this.renderCalendar();
+
+        const modal = document.getElementById("event-modal-overlay");
+        if (modal) {
+          modal.style.display = "none";
         }
-      }, 300);
-    }, 5000);
+      }
+    } catch (error) {
+      console.error("Error deleting announcement:", error);
+    }
   }
-
-  getNotificationIcon(type) {
-    const icons = {
-      success: "check-circle",
-      error: "exclamation-circle",
-      warning: "exclamation-triangle",
-      info: "info-circle",
-    };
-    return icons[type] || "info-circle";
-  }
-
-  getNotificationColor(type) {
-    const colors = {
-      success: "#10b981",
-      error: "#ef4444",
-      warning: "#f59e0b",
-      info: "#8b5cf6",
-    };
-    return colors[type] || "#8b5cf6";
-  }
-
+  
   showConfirmationModal(title, message) {
     return new Promise((resolve) => {
       const overlay = document.createElement("div");
@@ -700,72 +664,6 @@ class EventCalendar {
       };
       document.addEventListener("keydown", handleEscape);
     });
-  }
-
-  async deleteEvent(eventId, eventDate) {
-    const confirmed = await this.showConfirmationModal(
-      " Delete Announcement",
-      "Are you sure you want to delete this announcement?"
-    );
-
-    if (!confirmed) {
-      this.showNotification("Deletion cancelled", "info");
-      return;
-    }
-
-    this.showNotification("Deleting announcement...", "info");
-
-    try {
-      console.log(
-        "Deleting announcement with ID:",
-        eventId,
-        "Date:",
-        eventDate
-      );
-
-      const response = await fetch("../../Connection/Announcement/DeleteAnnouncement.php", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: eventId,
-          date: eventDate,
-        }),
-      });
-
-      console.log("Delete response status:", response.status);
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const result = await response.json();
-      console.log("Delete response:", result);
-
-      if (result.success) {
-        this.showNotification("Announcement deleted successfully!", "success");
-
-        await this.loadEvents();
-        this.renderCalendar();
-
-        const modal = document.getElementById("event-modal-overlay");
-        if (modal) {
-          modal.style.display = "none";
-        }
-      } else {
-        this.showNotification(
-          `❌ Failed to delete: ${result.message || "Unknown error"}`,
-          "error"
-        );
-      }
-    } catch (error) {
-      console.error("Error deleting announcement:", error);
-      this.showNotification(
-        `❌ Error deleting announcement: ${error.message}`,
-        "error"
-      );
-    }
   }
 }
 
