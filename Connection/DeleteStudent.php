@@ -44,7 +44,6 @@ if (!in_array($collectionName, $collections)) {
 $collection = $departmentsDB->$collectionName;
 
 try {
-    // Regex for case-insensitive exact match
     $studentIdRegex = [
         '$regex' => '^' . preg_quote($studentId) . '$',
         '$options' => 'i'
