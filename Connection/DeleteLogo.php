@@ -25,7 +25,6 @@ function respond($success, $message = '', $data = [])
     exit;
 }
 
-// Check if it's a POST request
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     respond(false, 'Invalid request method');
 }
