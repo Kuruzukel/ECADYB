@@ -93,7 +93,6 @@ try {
     $unsetFields = [];
 
     if ($slot === 8) {
-        // Background page
         $existingUrl      = isset($doc['background_url']) ? (string)$doc['background_url'] : '';
         $existingThumbUrl = isset($doc['background_thumb_url']) ? (string)$doc['background_thumb_url'] : '';
 
