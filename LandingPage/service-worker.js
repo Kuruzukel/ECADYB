@@ -1,5 +1,6 @@
 // service-worker.js
 
+/*
 const CACHE_VERSION = "v7";
 const CACHE_PREFIX = "ecadyb";
 const STATIC_CACHE = `${CACHE_PREFIX}-static-${CACHE_VERSION}`;
@@ -356,3 +357,4 @@ self.addEventListener("message", (event) => {
     );
   }
 });
+*/

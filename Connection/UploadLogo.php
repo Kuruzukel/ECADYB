@@ -46,6 +46,10 @@ if (file_exists(__DIR__ . '/BunnyConfig.php')) {
 use MongoDB\Client;
 
 try {
+    // Check if client is still connected periodically
+    if (connection_aborted()) {
+        respond(false, 'Client disconnected');
+    }
 
     $bunnyStorageZone = getenv('BUNNY_STORAGE_ZONE') ?: (defined('BUNNY_STORAGE_ZONE') ? BUNNY_STORAGE_ZONE : ($GLOBALS['BUNNY_STORAGE_ZONE'] ?? 'ecadyb'));
     $bunnyAccessKey = getenv('BUNNY_ACCESS_KEY') ?: (defined('BUNNY_ACCESS_KEY') ? BUNNY_ACCESS_KEY : ($GLOBALS['BUNNY_ACCESS_KEY'] ?? null));
@@ -90,6 +94,11 @@ try {
         respond(false, $errorMsg);
     }
 
+    // Check if client is still connected
+    if (connection_aborted()) {
+        respond(false, 'Client disconnected');
+    }
+
     $fileTmp = $_FILES['file']['tmp_name'];
     $originalName = $_FILES['file']['name'];
     $ext = pathinfo($originalName, PATHINFO_EXTENSION) ?: 'png';
@@ -109,6 +118,11 @@ try {
         respond(false, 'Failed to read uploaded file.');
     }
 
+    // Check if client is still connected before uploading to BunnyCDN
+    if (connection_aborted()) {
+        respond(false, 'Client disconnected');
+    }
+
     $ch = curl_init($storageUrl);
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
@@ -126,11 +140,41 @@ try {
     $curlErr = curl_error($ch);
     curl_close($ch);
 
+    // Check if client is still connected after uploading to BunnyCDN
+    if (connection_aborted()) {
+        // Try to delete the uploaded file since client disconnected
+        $deleteCh = curl_init($storageUrl);
+        curl_setopt($deleteCh, CURLOPT_CUSTOMREQUEST, 'DELETE');
+        curl_setopt($deleteCh, CURLOPT_HTTPHEADER, ['AccessKey: ' . $bunnyAccessKey]);
+        curl_setopt($deleteCh, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($deleteCh, CURLOPT_TIMEOUT, 30);
+        curl_setopt($deleteCh, CURLOPT_SSL_VERIFYPEER, true);
+        curl_exec($deleteCh);
+        curl_close($deleteCh);
+        
+        respond(false, 'Client disconnected');
+    }
+
     if ($response === false || $httpCode < 200 || $httpCode >= 300) {
         respond(false, 'Failed to upload to Bunny Storage: ' . ($curlErr ?: ('HTTP ' . $httpCode)));
     }
 
     $publicUrl = rtrim($bunnyCdnHost, '/') . '/' . str_replace(' ', '%20', $path);
+
+    // Check if client is still connected before saving to MongoDB
+    if (connection_aborted()) {
+        // Try to delete the uploaded file since client disconnected
+        $deleteCh = curl_init($storageUrl);
+        curl_setopt($deleteCh, CURLOPT_CUSTOMREQUEST, 'DELETE');
+        curl_setopt($deleteCh, CURLOPT_HTTPHEADER, ['AccessKey: ' . $bunnyAccessKey]);
+        curl_setopt($deleteCh, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($deleteCh, CURLOPT_TIMEOUT, 30);
+        curl_setopt($deleteCh, CURLOPT_SSL_VERIFYPEER, true);
+        curl_exec($deleteCh);
+        curl_close($deleteCh);
+        
+        respond(false, 'Client disconnected');
+    }
 
     $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
     
