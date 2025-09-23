@@ -9,7 +9,6 @@ use MongoDB\BSON\ObjectId;
 
 date_default_timezone_set('Asia/Manila');
 
-// Only allow POST requests
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode([
