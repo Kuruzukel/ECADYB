@@ -19,7 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 try {
-    // Get JSON input
     $input = json_decode(file_get_contents('php://input'), true);
     error_log("Delete announcement input: " . json_encode($input));
 
