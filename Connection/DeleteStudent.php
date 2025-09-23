@@ -57,7 +57,6 @@ try {
     ]);
 
     if (!$student) {
-        // Debug: list available IDs with both field formats
         $allStudents = $collection->find([], [
             'projection' => ['student id' => 1, 'student_id' => 1]
         ]);
