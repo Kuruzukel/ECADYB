@@ -42,7 +42,6 @@ try {
         'announcements' => $announcements
     ]);
 } catch (Exception $e) {
-    // Log error for debugging
     error_log("Fetch announcements error: " . $e->getMessage());
 
     echo json_encode([
