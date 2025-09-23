@@ -21,7 +21,6 @@ function respond($success, $message = '', $data = [])
 
     header('Content-Type: application/json');
 
-    // Return JSON response
     echo json_encode(array_merge(['success' => $success, 'message' => $message], $data));
     exit;
 }
