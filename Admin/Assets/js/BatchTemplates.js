@@ -199,7 +199,7 @@ async function confirmDeleteStudent() {
     const BASE_PATH = getBasePath();
     const CONNECTION_PATH = `${BASE_PATH}/Connection`;
 
-    const res = await fetch(`${CONNECTION_PATH}/DeleteStudent.php`, {
+    const res = await fetch(`${CONNECTION_PATH}/Student/DeleteStudent.php`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -339,9 +339,9 @@ window.addEventListener("DOMContentLoaded", () => {
     const BASE_PATH = getBasePath();
     const CONNECTION_PATH = `${BASE_PATH}/Connection`;
 
-    const UPLOAD_ENDPOINT = `${CONNECTION_PATH}/UploadCover.php`;
-    const FETCH_ENDPOINT = `${CONNECTION_PATH}/FetchCovers.php?template=${template}`;
-    const DELETE_ENDPOINT = `${CONNECTION_PATH}/DeleteCover.php`;
+    const UPLOAD_ENDPOINT = `${CONNECTION_PATH}/Cover/UploadCover.php`;
+    const FETCH_ENDPOINT = `${CONNECTION_PATH}/Cover/FetchCovers.php?template=${template}`;
+    const DELETE_ENDPOINT = `${CONNECTION_PATH}/Cover/DeleteCover.php`;
 
     console.log("BatchTemplates endpoints configured:", {
       UPLOAD_ENDPOINT,

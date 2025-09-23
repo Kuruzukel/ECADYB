@@ -322,7 +322,7 @@ function submitForm() {
         formData.set("date", today);
       }
 
-      fetch("../../Connection/SubmitAnnouncement.php", {
+      fetch("../../../Connection/Announcement/SubmitAnnouncement.php", {
         method: "POST",
         body: formData,
       })
@@ -505,7 +505,7 @@ async function checkDateStatus() {
   }
 
   try {
-    const response = await fetch("../../Connection/FetchAnnouncement.php");
+    const response = await fetch("../../../Connection/Announcement/FetchAnnouncement.php");
     const data = await response.json();
 
     if (data.success) {

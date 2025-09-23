@@ -268,7 +268,7 @@ async function loadAdminLogo() {
       : window.location.origin;
     const CONNECTION_PATH = `${BASE_PATH}/Connection`;
 
-    const response = await fetch(`${CONNECTION_PATH}/FetchAdminLogo.php`);
+    const response = await fetch(`${CONNECTION_PATH}/Logo/FetchAdminLogo.php`);
     if (response.ok) {
       const data = await response.json();
       if (data.success && data.logo_url) {

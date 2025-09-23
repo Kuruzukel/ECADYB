@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 }
 
 // Load dependencies
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/../../vendor/autoload.php';
 use MongoDB\Client;
 
 try {

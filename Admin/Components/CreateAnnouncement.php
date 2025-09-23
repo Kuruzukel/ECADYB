@@ -18,7 +18,7 @@
         </div>
 
         <div class="form-content">
-            <form id="announcementForm" action="../../Connection/SubmitAnnouncement.php" method="post">
+            <form id="announcementForm" action="../../../Connection/Announcement/SubmitAnnouncement.php" method="post">
                 <label for="title">Title</label>
                 <input type="text" id="title" name="title" placeholder="Enter announcement title" required />
 

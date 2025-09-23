@@ -13,7 +13,15 @@ if (!file_exists($mongoPath)) {
 require $mongoPath;
 
 define('BASE_PATH', __DIR__);
-define('BASE_URL', '/');
+
+// Configure base URL for different environments
+if (getenv('RAILWAY_PUBLIC_URL')) {
+    // Railway deployment
+    define('BASE_URL', '/');
+} else {
+    // Local development
+    define('BASE_URL', '/ECADYB/');
+}
 
 $error_message = '';
 
@@ -31,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
             $_SESSION['role']     = 'admin';
             $_SESSION['username'] = $studentId;
 
-            header("Location: " . BASE_URL . "admin");
+            header("Location: " . BASE_URL . "Admin");
             exit;
         }
 
@@ -66,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
 
                 $foundStudent = true;
 
-                header("Location: " . BASE_URL . "student");
+                header("Location: " . BASE_URL . "Student");
                 exit;
             }
         }

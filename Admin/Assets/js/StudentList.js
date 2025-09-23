@@ -182,24 +182,24 @@ const STATUS_ENDPOINT = (() => {
   const origin = window.location.origin;
   const pathSegments = window.location.pathname.split("/").filter(Boolean);
   if (pathSegments[0] !== "ECADYB")
-    return `${origin}/Connection/UpdateStatus.php`;
-  return `${origin}/ECADYB/Connection/UpdateStatus.php`;
+    return `${origin}/Connection/Student/UpdateStatus.php`;
+  return `${origin}/ECADYB/Connection/Student/UpdateStatus.php`;
 })();
 
 const STUDENT_UPDATE_ENDPOINT = (() => {
   const origin = window.location.origin;
   const pathSegments = window.location.pathname.split("/").filter(Boolean);
   if (pathSegments[0] !== "ECADYB")
-    return `${origin}/Connection/UpdateStudent.php`;
-  return `${origin}/ECADYB/Connection/UpdateStudent.php`;
+    return `${origin}/Connection/Student/UpdateStudent.php`;
+  return `${origin}/ECADYB/Connection/Student/UpdateStudent.php`;
 })();
 
 const DELETE_STUDENT_ENDPOINT = (() => {
   const origin = window.location.origin;
   const pathSegments = window.location.pathname.split("/").filter(Boolean);
   if (pathSegments[0] !== "ECADYB")
-    return `${origin}/Connection/DeleteStudent.php`;
-  return `${origin}/ECADYB/Connection/DeleteStudent.php`;
+    return `${origin}/Connection/Student/DeleteStudent.php`;
+  return `${origin}/ECADYB/Connection/Student/DeleteStudent.php`;
 })();
 
 window.addEventListener("DOMContentLoaded", () => {

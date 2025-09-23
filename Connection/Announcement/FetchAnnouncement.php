@@ -4,7 +4,7 @@ ini_set('display_errors', 1);
 
 date_default_timezone_set('Asia/Manila');
 
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/../../vendor/autoload.php';
 
 use MongoDB\Client;
 

@@ -28,9 +28,9 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     respond(false, 'Invalid request method');
 }
 
-require __DIR__ . '/../vendor/autoload.php';
-if (file_exists(__DIR__ . '/BunnyConfig.php')) {
-    require __DIR__ . '/BunnyConfig.php';
+require __DIR__ . '/../../vendor/autoload.php';
+if (file_exists(__DIR__ . '/../Configuration/BunnyConfig.php')) {
+    require __DIR__ . '/../Configuration/BunnyConfig.php';
 }
 
 use MongoDB\Client;

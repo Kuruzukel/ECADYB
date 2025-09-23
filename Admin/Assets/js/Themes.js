@@ -434,10 +434,10 @@ window.addEventListener("DOMContentLoaded", () => {
   const BASE_PATH = getBasePath();
   const CONNECTION_PATH = `${BASE_PATH}/Connection`;
 
-  window.UPLOAD_ENDPOINT = `${CONNECTION_PATH}/UploadLogo.php`;
-  window.FETCH_ENDPOINT = `${CONNECTION_PATH}/FetchLogos.php`;
-  window.DELETE_ENDPOINT = `${CONNECTION_PATH}/DeleteLogo.php`;
-  window.UPDATE_ADMIN_LOGO_ENDPOINT = `${CONNECTION_PATH}/UpdateAdminLogo.php`;
+  window.UPLOAD_ENDPOINT = `${CONNECTION_PATH}/Logo/UploadLogo.php`;
+  window.FETCH_ENDPOINT = `${CONNECTION_PATH}/Logo/FetchLogos.php`;
+  window.DELETE_ENDPOINT = `${CONNECTION_PATH}/Logo/DeleteLogo.php`;
+  window.UPDATE_ADMIN_LOGO_ENDPOINT = `${CONNECTION_PATH}/Logo/UpdateAdminLogo.php`;
 
   console.log("Endpoints configured:", {
     UPLOAD_ENDPOINT: window.UPLOAD_ENDPOINT,
