@@ -270,13 +270,14 @@ function submitForm() {
     const modalOverlay = document.getElementById("modal-overlay");
     const dateStatus = document.getElementById("date-status");
 
+    // Hide the modal immediately when submitting
+    hideModal();
+
     if (
       dateStatus &&
       dateStatus.innerHTML.includes("Maximum announcements reached")
     ) {
       showNotification("Maximum announcements reached (5/5).", "error");
-
-      hideModal();
       return;
     }
 
@@ -329,8 +330,6 @@ function submitForm() {
             "Failed to post announcement. Please try again.",
             "error"
           );
-
-          hideModal();
         })
         .finally(() => {
           submitBtn.innerHTML = originalText;
