@@ -223,29 +223,11 @@ class EventCalendar {
     document.querySelector(`[data-view="${view}"]`)?.classList.add("active");
 
     this.renderCalendar();
-
-    if (view === "week" || view === "list") {
-      setTimeout(() => {
-        window.scrollTo({
-          top: document.body.scrollHeight,
-          behavior: "smooth",
-        });
-      }, 100);
-    }
   }
 
   renderCalendar() {
     this.updateHeader();
-
-    if (this.currentView === "month") {
-      this.renderMonthView();
-    } else if (this.currentView === "week") {
-      this.renderWeekView();
-    } else if (this.currentView === "day") {
-      this.renderDayView();
-    } else if (this.currentView === "list") {
-      this.renderListView();
-    }
+    this.renderMonthView();
   }
 
   updateHeader() {
@@ -298,43 +280,46 @@ class EventCalendar {
 
       html += `
         <div class="${dayClass}" data-date="${this.formatDate(currentDate)}">
-          <div class="day-number">${currentDate.getDate()}</div>
-          ${
-            dayEvents.length > 0
-              ? `
-            <div class="event-dots-container">
-              ${dayEvents
-                .map(
-                  (event) => `
-                <div class="event-dot" title="${
-                  event.title
-                } - ${event.description.substring(0, 50)}${
-                    event.description.length > 50 ? "..." : ""
-                  }"></div>
-              `
-                )
-                .join("")}
-              ${
-                this.events.filter(
-                  (event) =>
-                    this.formatDate(new Date(event.date)) ===
-                    this.formatDate(currentDate)
-                ).length > 5
-                  ? `<div class="more-events-indicator" title="More events available">+${
-                      this.events.filter(
-                        (event) =>
-                          this.formatDate(new Date(event.date)) ===
-                          this.formatDate(currentDate)
-                      ).length - 5
-                    }</div>`
-                  : ""
-              }
-            </div>
-          `
-              : ""
-          }
+          <div class="day-header-container">
+            <div class="day-number">${currentDate.getDate()}</div>
+            ${
+              dayEvents.length > 0
+                ? `
+              <div class="event-dots-container">
+                ${dayEvents
+                  .map(
+                    (event) => `
+                  <div class="event-dot" title="${
+                    event.title
+                  } - ${event.description.substring(0, 50)}${
+                      event.description.length > 50 ? "..." : ""
+                    }"></div>
+                `
+                  )
+                  .join("")}
+                ${
+                  this.events.filter(
+                    (event) =>
+                      this.formatDate(new Date(event.date)) ===
+                      this.formatDate(currentDate)
+                  ).length > 5
+                    ? `<div class="more-events-indicator" title="More events available">+${
+                        this.events.filter(
+                          (event) =>
+                            this.formatDate(new Date(event.date)) ===
+                            this.formatDate(currentDate)
+                        ).length - 5
+                      }</div>`
+                    : ""
+                }
+              </div>
+            `
+                : ""
+            }
+          </div>
         </div>
       `;
+
     }
 
     html += "</div>";
@@ -346,151 +331,6 @@ class EventCalendar {
         this.showDayEvents(date);
       });
     });
-  }
-
-  renderWeekView() {
-    const grid = document.getElementById("calendar-grid");
-    if (!grid) return;
-
-    const weekStart = this.getWeekStart(this.currentDate);
-    let html = '<div class="week-view">';
-
-    for (let i = 0; i < 7; i++) {
-      const currentDate = new Date(weekStart);
-      currentDate.setDate(weekStart.getDate() + i);
-
-      const dayEvents = this.getEventsForDate(currentDate);
-      const isToday = this.isToday(currentDate);
-
-      html += `
-        <div class="week-day ${isToday ? "today" : ""}">
-          <div class="day-header">
-            <div class="day-name">${currentDate.toLocaleDateString("en-US", {
-              weekday: "short",
-            })}</div>
-            <div class="day-number">${currentDate.getDate()}</div>
-          </div>
-          <div class="day-events">
-            ${dayEvents
-              .map(
-                (event) => `
-              <div class="week-event" style="border-left: 3px solid ${
-                event.color
-              }">
-                <div class="event-title">${event.title}</div>
-                ${
-                  event.time
-                    ? `<div class="event-time">${event.time}</div>`
-                    : ""
-                }
-              </div>
-            `
-              )
-              .join("")}
-          </div>
-        </div>
-      `;
-    }
-
-    html += "</div>";
-    grid.innerHTML = html;
-  }
-
-  renderDayView() {
-    const grid = document.getElementById("calendar-grid");
-    if (!grid) return;
-
-    const dayEvents = this.getEventsForDate(this.currentDate);
-
-    let html = `
-      <div class="day-view">
-        <div class="day-header">
-          <h3>${this.currentDate.toLocaleDateString("en-US", {
-            weekday: "long",
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}</h3>
-        </div>
-        <div class="day-events">
-          ${
-            dayEvents.length > 0
-              ? dayEvents
-                  .map(
-                    (event) => `
-            <div class="day-event" style="border-left: 4px solid ${
-              event.color
-            }">
-              <div class="event-header">
-                <h4 class="event-title">${event.title}</h4>
-                ${
-                  event.time
-                    ? `<span class="event-time">${event.time}</span>`
-                    : ""
-                }
-              </div>
-              <div class="event-description">${event.description}</div>
-            </div>
-          `
-                  )
-                  .join("")
-              : '<div class="no-events">No events for this day</div>'
-          }
-        </div>
-      </div>
-    `;
-
-    grid.innerHTML = html;
-  }
-
-  renderListView() {
-    const grid = document.getElementById("calendar-grid");
-    if (!grid) return;
-
-    const sortedEvents = [...this.events].sort(
-      (a, b) => new Date(a.date) - new Date(b.date)
-    );
-
-    let html = `
-      <div class="list-view">
-        <h3>All Events</h3>
-        <div class="events-list">
-          ${
-            sortedEvents.length > 0
-              ? sortedEvents
-                  .map(
-                    (event) => `
-            <div class="list-event" style="border-left: 4px solid ${
-              event.color
-            }">
-              <div class="event-date">${this.formatDate(
-                new Date(event.date)
-              )}</div>
-              <div class="event-content">
-                <h4 class="event-title">${event.title}</h4>
-                <div class="event-description">${event.description}</div>
-                ${
-                  event.time
-                    ? `<div class="event-time">${event.time}</div>`
-                    : ""
-                }
-              </div>
-            </div>
-          `
-                  )
-                  .join("")
-              : '<div class="no-events">No events scheduled</div>'
-          }
-        </div>
-      </div>
-    `;
-
-    grid.innerHTML = html;
-
-    const listView = grid.querySelector(".list-view");
-    if (listView) {
-      listView.scrollTop = 0;
-    }
   }
 
   getEventsForDate(date) {

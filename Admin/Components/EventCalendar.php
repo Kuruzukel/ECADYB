@@ -35,9 +35,6 @@
 
                         <div class="calendar-view-controls">
                             <button class="view-btn active" data-view="month">Month</button>
-                            <button class="view-btn" data-view="week">Week</button>
-                            <button class="view-btn" data-view="day">Day</button>
-                            <button class="view-btn" data-view="list">List</button>
                         </div>
 
                         <div class="calendar-grid" id="calendar-grid">

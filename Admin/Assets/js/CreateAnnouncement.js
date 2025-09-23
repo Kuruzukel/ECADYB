@@ -292,6 +292,17 @@ function submitForm() {
   if (form) {
     const submitBtn = document.getElementById("post-announcement-btn");
     const modalOverlay = document.getElementById("modal-overlay");
+    const dateStatus = document.getElementById("date-status");
+    
+    // Check if the maximum announcements warning is displayed
+    if (dateStatus && dateStatus.innerHTML.includes("Maximum announcements reached")) {
+      // Show error notification
+      showNotification("Maximum announcements reached (5/5).", "error");
+      
+      // Hide modal
+      hideModal();
+      return;
+    }
     
     if (submitBtn) {
       const originalText = submitBtn.innerHTML;
