@@ -66,6 +66,9 @@
             </div>
         </div>
     </div>
+    
+    <div id="notification-container"></div>
+    
     <script src="../Assets/js/EventCalendar.js"></script>
 </body>
 

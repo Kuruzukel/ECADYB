@@ -143,9 +143,7 @@ window.addEventListener("DOMContentLoaded", () => {
   applyTheme(savedTheme);
 });
 
-let originalModalContent = null;
 let isPreviewMode = false;
-let modalState = "confirm";
 
 document.addEventListener("DOMContentLoaded", function () {
   displayCurrentDate();
@@ -155,8 +153,6 @@ document.addEventListener("DOMContentLoaded", function () {
   initializeFormValidation();
 
   initializeModal();
-
-  initializePreview();
 
   initializeDateStatusCheck();
 });
@@ -249,7 +245,6 @@ function initializeModal() {
   const form = document.getElementById("announcementForm");
 
   if (modalOverlay && modal) {
-    originalModalContent = modal.innerHTML;
 
     modalOverlay.addEventListener("click", function (e) {
       if (e.target === modalOverlay) {
@@ -269,8 +264,6 @@ function initializeModal() {
         submitForm();
       } else if (e.target.id === "cancel-btn") {
         hideModal();
-      } else if (e.target.id === "close-preview-btn") {
-        hideModal();
       }
     });
   }
@@ -279,7 +272,6 @@ function initializeModal() {
 function showModal() {
   const modalOverlay = document.getElementById("modal-overlay");
   if (modalOverlay) {
-    modalState = "confirm";
     modalOverlay.style.display = "flex";
     modalOverlay.style.animation = "fadeIn 0.3s ease-out";
   }
@@ -291,13 +283,6 @@ function hideModal() {
     modalOverlay.style.animation = "fadeOut 0.3s ease-out";
     setTimeout(() => {
       modalOverlay.style.display = "none";
-      if (modalState === "preview") {
-        const modal = modalOverlay.querySelector(".modal");
-        if (modal && originalModalContent) {
-          modal.innerHTML = originalModalContent;
-        }
-        modalState = "confirm";
-      }
     }, 300);
   }
 }
@@ -348,6 +333,9 @@ function submitForm() {
             setTimeout(() => {
               checkDateStatus();
             }, 500);
+            
+            // Show success notification
+            showNotification("Announcement posted successfully!", "success");
           }
           
           // Hide modal immediately after form submission is complete
@@ -356,6 +344,9 @@ function submitForm() {
 
         .catch((error) => {
           console.error("Network error:", error);
+          
+          // Show error notification
+          showNotification("Failed to post announcement. Please try again.", "error");
           
           // Hide modal immediately even if there's an error
           hideModal();
@@ -366,57 +357,6 @@ function submitForm() {
         });
     }
   }
-}
-
-function initializePreview() {
-  const previewBtn = document.getElementById("preview-btn");
-  const titleInput = document.getElementById("title");
-  const messageTextarea = document.getElementById("message");
-
-  if (previewBtn) {
-    previewBtn.addEventListener("click", function () {
-      const title = titleInput.value.trim();
-      const message = messageTextarea.value.trim();
-
-      if (!title || !message) {
-        return;
-      }
-
-      showPreviewModal(title, message);
-    });
-  }
-}
-
-function showPreviewModal(title, message) {
-  const modalOverlay = document.getElementById("modal-overlay");
-  const modal = modalOverlay.querySelector(".modal");
-
-  modalState = "preview";
-
-  const previewContent = `
-        <div class="modal-header">
-            <i class="fas fa-eye modal-icon"></i>
-            <h3>Preview Announcement</h3>
-        </div>
-        <div class="modal-content">
-            <div class="preview-announcement">
-                <h4 class="preview-title">${title}</h4>
-                <p class="preview-message">${message}</p>
-                <div class="preview-meta">
-                    <span class="preview-date">${new Date().toLocaleDateString()}</span>
-                </div>
-            </div>
-        </div>
-        <div class="modal-buttons">
-            <button class="modal-btn secondary" id="close-preview-btn">
-                <i class="fas fa-times"></i>
-                Close Preview
-            </button>
-        </div>
-    `;
-
-  modal.innerHTML = previewContent;
-  modalOverlay.style.display = "flex";
 }
 
 function initializeDateStatusCheck() {
@@ -503,3 +443,27 @@ document.addEventListener("DOMContentLoaded", () => {
   const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
   applyTheme(savedTheme);
 });
+
+function showNotification(message, type = "success") {
+  const container = document.getElementById("notification-container");
+  if (!container) return;
+
+  const notif = document.createElement("div");
+  notif.className = `notification ${type} show`;
+  notif.innerHTML = `
+    <i class="fas ${
+      type === "success"
+        ? "fa-check-circle"
+        : type === "warning"
+        ? "fa-exclamation-triangle"
+        : "fa-exclamation-circle"
+    }"></i>
+    <span>${message}</span>
+  `;
+  container.appendChild(notif);
+
+  setTimeout(() => {
+    notif.classList.remove("show");
+    setTimeout(() => notif.remove(), 500);
+  }, 3000);
+}

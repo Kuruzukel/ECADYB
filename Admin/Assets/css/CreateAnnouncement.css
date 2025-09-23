@@ -406,40 +406,53 @@ textarea {
     transition: transform 0.1s linear;
 }
 
-/* Preview Styles */
-.preview-announcement {
-    background: var(--input-bg);
-    border-radius: 12px;
-    padding: 1.5rem;
-    border: 1px solid var(--border-color);
+/* Notification Container */
+#notification-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.preview-title {
-    color: var(--text-primary);
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
+.notification {
+  padding: 15px 20px;
+  border-radius: 8px;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-100px);
+  transition: all 0.3s ease-in-out;
+  max-width: 350px;
+  opacity: 0;
 }
 
-.preview-message {
-    color: var(--text-secondary);
-    line-height: 1.6;
-    margin-bottom: 1rem;
+.notification.show {
+  transform: translateY(0);
+  opacity: 1;
 }
 
-.preview-meta {
-    font-size: 0.875rem;
-    color: var(--text-muted);
+.notification i {
+  font-size: 1.2rem;
 }
 
-.modal-btn.secondary {
-    background: var(--border-color);
-    color: var(--text-secondary);
+.notification.success {
+  background-color: #10b981;
+  border-left: 4px solid #059669;
 }
 
-.modal-btn.secondary:hover {
-    background: var(--input-border);
-    color: var(--text-primary);
+.notification.error {
+  background-color: #ef4444;
+  border-left: 4px solid #dc2626;
+}
+
+.notification.warning {
+  background-color: #f59e0b;
+  border-left: 4px solid #d97706;
 }
 
 @media (max-width: 1045px) {

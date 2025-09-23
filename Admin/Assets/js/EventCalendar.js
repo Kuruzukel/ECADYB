@@ -607,9 +607,14 @@ class EventCalendar {
         if (modal) {
           modal.style.display = "none";
         }
+        
+        // Show success notification
+        showNotification("Announcement deleted successfully!", "success");
       }
     } catch (error) {
       console.error("Error deleting announcement:", error);
+      // Show error notification
+      showNotification("Failed to delete announcement. Please try again.", "error");
     }
   }
   
@@ -665,6 +670,30 @@ class EventCalendar {
       document.addEventListener("keydown", handleEscape);
     });
   }
+}
+
+function showNotification(message, type = "success") {
+  const container = document.getElementById("notification-container");
+  if (!container) return;
+
+  const notif = document.createElement("div");
+  notif.className = `notification ${type} show`;
+  notif.innerHTML = `
+    <i class="fas ${
+      type === "success"
+        ? "fa-check-circle"
+        : type === "warning"
+        ? "fa-exclamation-triangle"
+        : "fa-exclamation-circle"
+    }"></i>
+    <span>${message}</span>
+  `;
+  container.appendChild(notif);
+
+  setTimeout(() => {
+    notif.classList.remove("show");
+    setTimeout(() => notif.remove(), 500);
+  }, 3000);
 }
 
 let eventCalendar;

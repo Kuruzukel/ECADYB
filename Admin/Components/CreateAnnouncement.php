@@ -38,10 +38,6 @@
                 <input type="time" id="time" name="time" />
 
                 <div class="form-actions">
-                    <button type="button" class="btn-secondary" id="preview-btn">
-                        <i class="fas fa-eye"></i>
-                        Preview
-                    </button>
                     <button type="submit" class="btn-primary" id="post-announcement-btn">
                         <i class="fas fa-paper-plane"></i>
                         Post Announcement
@@ -71,6 +67,9 @@
                 </div>
             </div>
         </div>
+        
+        <div id="notification-container"></div>
+        
     </div>
     <script src="../Assets/js/CreateAnnouncement.js"></script>
 </body>
