@@ -7,7 +7,6 @@ require __DIR__ . '/../vendor/autoload.php';
 use MongoDB\Client;
 use MongoDB\BSON\ObjectId;
 
-// Set timezone
 date_default_timezone_set('Asia/Manila');
 
 // Only allow POST requests
@@ -70,7 +69,6 @@ try {
             'message' => 'Announcement not found or already deleted'
         ]);
     }
-
 } catch (Exception $e) {
     error_log("Delete announcement error: " . $e->getMessage());
     http_response_code(500);
