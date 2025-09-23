@@ -22,7 +22,6 @@ try {
     $input = json_decode(file_get_contents('php://input'), true);
     error_log("Delete announcement input: " . json_encode($input));
 
-    // Validate required parameters
     if (empty($input['id'])) {
         throw new Exception('Missing required parameter: id');
     }
