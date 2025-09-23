@@ -46,7 +46,6 @@ try {
     $db = $client->Departments;
     $collection = $db->AdminSettings;
 
-    // Fetch the current admin logo setting
     $adminLogo = $collection->findOne(['setting_type' => 'admin_logo']);
 
     if ($adminLogo) {
