@@ -41,7 +41,6 @@ try {
     $client = new Client($mongoUrl);
     $collection = $client->Announcement->Calendar;
 
-    // Build delete filter
     $deleteFilter = ['_id' => $objectId];
     if ($eventDate !== null) {
         $deleteFilter['date'] = $eventDate;
