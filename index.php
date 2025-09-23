@@ -172,15 +172,27 @@ if (array_key_exists($requestUri, $routes)) {
             $htmlContent = str_replace(
                 [
                     'href="style.css"',
+                    'href="style.css?v=',
                     'src="script.js"',
+                    'src="script.js?v=',
                     'src="../img/',
-                    'src="LandingPageYB/'
+                    'src="LandingPageYB/',
+                    'href="../assets/css/Login.css"',
+                    'href="../assets/css/Login.css?v=',
+                    'src="../assets/js/Login.js"',
+                    'src="../assets/js/Login.js?v='
                 ],
                 [
                     'href="' . BASE_URL . 'LandingPage/style.css"',
+                    'href="' . BASE_URL . 'LandingPage/style.css?v=',
                     'src="' . BASE_URL . 'LandingPage/script.js"',
+                    'src="' . BASE_URL . 'LandingPage/script.js?v=',
                     'src="' . BASE_URL . 'img/',
-                    'src="' . BASE_URL . 'LandingPage/LandingPageYB/'
+                    'src="' . BASE_URL . 'LandingPage/LandingPageYB/',
+                    'href="' . BASE_URL . 'Public/assets/css/Login.css"',
+                    'href="' . BASE_URL . 'Public/assets/css/Login.css?v=',
+                    'src="' . BASE_URL . 'Public/assets/js/Login.js"',
+                    'src="' . BASE_URL . 'Public/assets/js/Login.js?v='
                 ],
                 $htmlContent
             );
