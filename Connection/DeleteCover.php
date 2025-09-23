@@ -104,7 +104,6 @@ try {
             'background_thumb_url' => ""
         ];
     } else {
-        // Normal front/back slots
         $urlField   = $side . '_url';
         $thumbField = $side . '_thumb_url';
 
