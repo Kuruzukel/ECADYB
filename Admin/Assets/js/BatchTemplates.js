@@ -440,6 +440,8 @@ window.addEventListener("DOMContentLoaded", () => {
         const data = await xhrUpload(UPLOAD_ENDPOINT, form);
         if (data && data.aborted) {
           if (uploadOverlay) uploadOverlay.style.display = "none";
+          // Show notification for canceled upload
+          showNotification("Upload canceled by user", "error");
           return;
         }
         if (!data?.success) {
@@ -517,7 +519,7 @@ window.addEventListener("DOMContentLoaded", () => {
           currentXhr.abort();
         } catch (_) {}
         currentXhr = null;
-        showNotification("Upload canceled", "error");
+        showNotification("Upload has been canceled", "error");
       }
       if (progressBar) progressBar.style.width = "0%";
       if (uploadOverlay) uploadOverlay.style.display = "none";

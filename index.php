@@ -95,6 +95,7 @@ $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 $routes = [
     '/LandingPage'        => BASE_PATH . '/LandingPage/index.html',
+    '/login'              => BASE_PATH . '/Public/Components/Login.php',
     '/Login'              => BASE_PATH . '/Public/Components/Login.php',
     '/Admin'              => BASE_PATH . '/Admin/Components/AdminDashboard.php',
     '/Admin/Components/AdminLogout.php' => BASE_PATH . '/Admin/Components/AdminLogout.php',
@@ -205,7 +206,6 @@ if (array_key_exists($requestUri, $routes)) {
 
 $staticPaths = [
     '/img/'                             => '/img/',
-    '/LandingPage/LandingPageYB/pages/' => '/LandingPage/LandingPageYB/pages/',
     '/LandingPage/'                     => '/LandingPage/',
     '/Public/assets/css/'               => '/Public/assets/css/',
     '/Public/assets/js/'                => '/Public/assets/js/'
