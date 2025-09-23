@@ -94,7 +94,7 @@ if (!empty($error_message)) {
 $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 $routes = [
-    '/LandingPage'        => BASE_PATH . '/LandingPage/LandingPage.html',
+    '/LandingPage'        => BASE_PATH . '/LandingPage/index.html',
     '/Login'              => BASE_PATH . '/Public/Components/Login.php',
     '/Admin'              => BASE_PATH . '/Admin/Components/AdminDashboard.php',
     '/Admin/Components/AdminLogout.php' => BASE_PATH . '/Admin/Components/AdminLogout.php',
@@ -170,14 +170,14 @@ if (array_key_exists($requestUri, $routes)) {
 
             $htmlContent = str_replace(
                 [
-                    'href="LandingPage.css"',
-                    'src="LandingPage.js"',
+                    'href="style.css"',
+                    'src="script.js"',
                     'src="../img/',
                     'src="LandingPageYB/'
                 ],
                 [
-                    'href="' . BASE_URL . 'LandingPage/LandingPage.css"',
-                    'src="' . BASE_URL . 'LandingPage/LandingPage.js"',
+                    'href="' . BASE_URL . 'LandingPage/style.css"',
+                    'src="' . BASE_URL . 'LandingPage/script.js"',
                     'src="' . BASE_URL . 'img/',
                     'src="' . BASE_URL . 'LandingPage/LandingPageYB/'
                 ],
