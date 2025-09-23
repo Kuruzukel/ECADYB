@@ -49,7 +49,6 @@ try {
         '$options' => 'i'
     ];
 
-    // Try to find student (either key name)
     $student = $collection->findOne([
         '$or' => [
             ['student id' => $studentIdRegex],
