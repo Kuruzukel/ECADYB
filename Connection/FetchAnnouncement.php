@@ -24,7 +24,6 @@ try {
     $announcements = [];
 
     foreach ($cursor as $document) {
-        // Debug: Log the date being retrieved
         error_log("Retrieved announcement date: " . $document['date']);
 
         $announcements[] = [
