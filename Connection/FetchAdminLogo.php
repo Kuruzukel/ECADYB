@@ -1,5 +1,4 @@
 <?php
-// Ensure no output before headers
 ob_start();
 
 // Set proper headers for Railway
@@ -17,15 +16,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 session_start();
 
 // Error handling function
-function respond($success, $message = '', $data = []) {
+function respond($success, $message = '', $data = [])
+{
     // Clear any output buffers
     while (ob_get_level()) {
         ob_end_clean();
     }
-    
+
     // Set JSON header
     header('Content-Type: application/json');
-    
+
     // Return JSON response
     echo json_encode(array_merge(['success' => $success, 'message' => $message], $data));
     exit;
@@ -38,6 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 
 // Load dependencies
 require __DIR__ . '/../vendor/autoload.php';
+
 use MongoDB\Client;
 
 try {
@@ -49,7 +50,7 @@ try {
         'connectTimeoutMS' => 5000,
         'socketTimeoutMS' => 5000
     ]);
-    
+
     $db = $client->Departments;
     $collection = $db->AdminSettings;
 
@@ -70,7 +71,6 @@ try {
             'updated_at' => null
         ]);
     }
-
 } catch (Exception $e) {
     respond(false, 'Failed to fetch admin logo: ' . $e->getMessage());
 }
