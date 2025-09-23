@@ -2,7 +2,6 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Set timezone to ensure consistent date handling
 date_default_timezone_set('Asia/Manila');
 
 require __DIR__ . '/../vendor/autoload.php';
@@ -46,7 +45,6 @@ try {
         'success' => true,
         'announcements' => $announcements
     ]);
-
 } catch (Exception $e) {
     // Log error for debugging
     error_log("Fetch announcements error: " . $e->getMessage());
