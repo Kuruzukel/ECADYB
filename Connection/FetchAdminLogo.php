@@ -55,7 +55,6 @@ try {
             'updated_at' => $adminLogo['updated_at'] ?? null
         ]);
     } else {
-        // Return default logo if none is set
         respond(true, 'No custom admin logo set, using default', [
             'logo_url' => 'https://ECADYB.b-cdn.net/img/ADMINGRALLERYLOGO.png',
             'slot' => null,
