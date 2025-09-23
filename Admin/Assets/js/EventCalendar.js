@@ -155,7 +155,7 @@ class EventCalendar {
   async loadEvents() {
     try {
       console.log("Loading events from fetch_announcements.php...");
-      const response = await fetch("../../../Connection/Announcement/FetchAnnouncement.php");
+      const response = await fetch("../../Connection/Announcement/FetchAnnouncement.php");
       console.log("Response status:", response.status);
 
       if (!response.ok) {
@@ -626,7 +626,7 @@ class EventCalendar {
           notification.parentNode.removeChild(notification);
         }
       }, 300);
-    }, 3000);
+    }, 5000);
   }
 
   getNotificationIcon(type) {
@@ -723,7 +723,7 @@ class EventCalendar {
         eventDate
       );
 
-      const response = await fetch("../../../Connection/Announcement/DeleteAnnouncement.php", {
+      const response = await fetch("../../Connection/Announcement/DeleteAnnouncement.php", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

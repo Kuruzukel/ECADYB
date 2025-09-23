@@ -322,7 +322,7 @@ function submitForm() {
         formData.set("date", today);
       }
 
-      fetch("../../../Connection/Announcement/SubmitAnnouncement.php", {
+      fetch("../../Connection/Announcement/SubmitAnnouncement.php", {
         method: "POST",
         body: formData,
       })
@@ -458,7 +458,7 @@ function showNotification(message, type = "info") {
         notification.parentNode.removeChild(notification);
       }
     }, 300);
-  }, 3000);
+  }, 5000);
 }
 
 function getNotificationIcon(type) {
@@ -505,7 +505,7 @@ async function checkDateStatus() {
   }
 
   try {
-    const response = await fetch("../../../Connection/Announcement/FetchAnnouncement.php");
+    const response = await fetch("../../Connection/Announcement/FetchAnnouncement.php");
     const data = await response.json();
 
     if (data.success) {
