@@ -2,10 +2,39 @@
 require __DIR__ . '/../../vendor/autoload.php';
 
 use MongoDB\Client;
+use MongoDB\BSON\ObjectId;
+
+// Set error reporting for development
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
+// Start output buffering
+ob_start();
+
+// Set default timezone
+date_default_timezone_set('Asia/Manila');
 
 $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
-$client   = new Client($mongoUrl);
-$db = $client->Departments;
+
+// Get the selected batch template (default to 1)
+$selectedTemplate = isset($_GET['template']) ? (int)$_GET['template'] : 1;
+// Validate template number
+if ($selectedTemplate < 1 || $selectedTemplate > 3) {
+    $selectedTemplate = 1;
+}
+
+// Create database name based on selected template
+$dbName = "BatchTemplate" . $selectedTemplate;
+
+// Add connection options for better performance
+$client = new Client($mongoUrl, [
+    'connectTimeoutMS' => 5000,
+    'socketTimeoutMS' => 30000,
+    'serverSelectionTimeoutMS' => 5000,
+    'readPreference' => 'primaryPreferred'
+]);
+
+$db = $client->$dbName;
 
 $collections = [
     "bsme"   => "BS Marine Engineering",
@@ -20,51 +49,64 @@ $collections = [
     "bse"    => "BS Entrepreneurship"
 ];
 
-$allStudents = [];
-
+// Get selected department from URL
 $selectedDepartment = $_GET['department'] ?? "bsme";
-
 if (!array_key_exists($selectedDepartment, $collections)) {
     $selectedDepartment = "bsme";
 }
 
-function generatePassword($length = 8)
-{
-    $upper = 'ABCDEFGHIJKLMNPQRSTUVWXYZ';
-    $lower = 'abcdefghijkmnopqrstuvwxyz';
-    $digits = '123456789';
-    $special = '!@#_$';
+// Pagination settings
+$perPage = 10;
+$page = isset($_GET['pageNum']) ? max(1, (int)$_GET['pageNum']) : 1;
+$skip = ($page - 1) * $perPage;
 
-    $password = '';
-    $password .= $upper[random_int(0, strlen($upper) - 1)];
-    $password .= $special[random_int(0, strlen($special) - 1)];
-
-    $all = $upper . $lower . $digits . $special;
-    for ($i = 2; $i < $length; $i++) {
-        $password .= $all[random_int(0, strlen($all) - 1)];
-    }
-    return str_shuffle($password);
-}
+// Initialize variables
+$allStudents = [];
+$totalStudents = 0;
 
 try {
     $collection = $db->$selectedDepartment;
-    $cursor = $collection->find();
+    
+    // Create indexes if they don't exist (run this once, maybe in an admin section)
+    // $collection->createIndex(['id' => 1]);
+    // $collection->createIndex(['status' => 1]);
+    
+    // Get total count for pagination
+    $totalStudents = $collection->countDocuments();
+    $totalPages = ceil($totalStudents / $perPage);
+    
+    // Query with pagination and only necessary fields
+    $cursor = $collection->find(
+        [],
+        [
+            'projection' => [
+                'id' => 1,
+                'student id' => 1,
+                'first name' => 1,
+                'middle name' => 1,
+                'last name' => 1,
+                'email' => 1,
+                'academic year' => 1,
+                'program' => 1,
+                'section' => 1,
+                'department section' => 1,
+                'motto' => 1,
+                'honors' => 1,
+                'milestone' => 1,
+                'batch name' => 1,
+                'status' => 1,
+                'password' => 1
+            ],
+            'skip' => $skip,
+            'limit' => $perPage,
+            'sort' => ['id' => 1]  // Sort by ID in ascending order
+        ]
+    );
 
+    // Process results
     foreach ($cursor as $student) {
-        if (empty($student['password'])) {
-            $password = generatePassword(8);
-            $collection->updateOne(
-                ['_id' => $student['_id']],
-                ['$set' => ['password' => $password]]
-            );
-        } else {
-            $password = $student['password'];
-        }
-
-        $studentIdNum = isset($student['id']) ? (int)$student['id'] : 0;
-
         $allStudents[] = [
-            'id' => $studentIdNum,
+            'id' => $student['id'] ?? 0,
             'student_id' => $student['student id'] ?? '',
             'first_name' => $student['first name'] ?? '',
             'middle_name' => $student['middle name'] ?? '',
@@ -80,25 +122,14 @@ try {
             'batch_name' => $student['batch name'] ?? '',
             'status' => $student['status'] ?? 'Pending',
             'collection' => $selectedDepartment,
-            'password' => $password
+            'password' => $student['password'] ?? ''
         ];
     }
 } catch (Exception $e) {
+    error_log("Database error: " . $e->getMessage());
     $allStudents = [];
+    $totalPages = 1;
 }
-
-usort($allStudents, function ($a, $b) {
-    return $a['id'] <=> $b['id'];
-});
-
-$perPage = 10;
-$page = isset($_GET['pageNum']) ? max(1, (int)$_GET['pageNum']) : 1;
-$offset = ($page - 1) * $perPage;
-
-$totalStudents = count($allStudents);
-$totalPages = ceil($totalStudents / $perPage);
-
-$allStudents = array_slice($allStudents, $offset, $perPage);
 
 ?>
 
@@ -120,12 +151,25 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
                 List</h1>
         </div>
 
-
-
         <div class="form-content">
             <div class="card">
                 <div class="card-header">
                     <div class="filter-bar">
+                        <!-- Batch Template Selector -->
+                        <label for="template-filter" class="filter-label">
+                            <select id="template-filter" class="filter-select">
+                                <option value="" disabled>Select Batch Template</option>
+                                <option value="1" <?php if ($selectedTemplate == 1) echo "selected"; ?>>
+                                    Batch Template 1
+                                </option>
+                                <option value="2" <?php if ($selectedTemplate == 2) echo "selected"; ?>>
+                                    Batch Template 2
+                                </option>
+                                <option value="3" <?php if ($selectedTemplate == 3) echo "selected"; ?>>
+                                    Batch Template 3
+                                </option>
+                            </select>
+                        </label>
 
                         <label for="department-filter" class="filter-label">
                             <select id="department-filter" class="filter-select">
@@ -154,6 +198,10 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
 
                             <?php
                             $baseUrl = '?page=student-list';
+
+                            if (!empty($selectedTemplate)) {
+                                $baseUrl .= '&template=' . urlencode($selectedTemplate);
+                            }
 
                             if (!empty($selectedDepartment)) {
                                 $baseUrl .= '&department=' . urlencode($selectedDepartment);
@@ -186,13 +234,12 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
 
                             <span>Page <?php echo $page; ?> of <?php echo $totalPages; ?></span>
                         </div>
-
-
                     </div>
                 </div>
 
                 <div class="card-datatable">
-                    <table style="width:100%; ">
+                    <table style="width:100%;">
+                        <?php if (!empty($allStudents)): ?>
                         <thead>
                             <tr>
                                 <th>STUDENT</th>
@@ -202,14 +249,18 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
                                 <th>STATUS</th>
                                 <th>PASSWORD</th>
                                 <th>ACTIONS <input type="checkbox" id="select-all-header" title="Select All"></th>
-
                             </tr>
                         </thead>
+                        <?php endif; ?>
                         <tbody>
                             <?php if (empty($allStudents)): ?>
                                 <tr>
-                                    <td colspan="8" style="text-align:center; padding:40px; color:#fff; font-style:italic;">
-                                        No students found in this department.</td>
+                                    <td colspan="7" class="no-students-message">
+                                        <div class="no-students-content">
+                                            
+                                            <p>No students found in this department for Batch Template <strong><?php echo htmlspecialchars($selectedTemplate); ?></strong>.</p>
+                                        </div>
+                                    </td>
                                 </tr>
                             <?php else: ?>
                                 <?php foreach ($allStudents as $student): ?>
@@ -522,6 +573,19 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
                         }
                     });
 
+                    // Batch Template filter
+                    const templateFilter = document.getElementById("template-filter");
+                    if (templateFilter) {
+                        templateFilter.addEventListener("change", function() {
+                            const template = this.value;
+                            const url = new URL(window.location.href);
+                            url.searchParams.set('template', template);
+                            url.searchParams.set('pageNum', '1');
+                            window.location.href = url.toString();
+                        });
+                    }
+
+                    // Department filter
                     const deptFilter = document.getElementById("department-filter");
                     if (deptFilter) {
                         deptFilter.addEventListener("change", function() {
@@ -529,6 +593,13 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
                             const url = new URL(window.location.href);
                             url.searchParams.set('department', dept);
                             url.searchParams.set('pageNum', '1');
+                            
+                            // Preserve template parameter
+                            const templateFilter = document.getElementById("template-filter");
+                            if (templateFilter) {
+                                url.searchParams.set('template', templateFilter.value);
+                            }
+                            
                             window.location.href = url.toString();
                         });
                     }
@@ -538,8 +609,14 @@ $allStudents = array_slice($allStudents, $offset, $perPage);
                             const tabName = this.getAttribute('data-tab');
                             const url = new URL(window.location.href);
                             url.searchParams.set('tab', tabName);
-                            url.searchParams.set('pageNum',
-                                '1');
+                            url.searchParams.set('pageNum', '1');
+                            
+                            // Preserve template parameter
+                            const templateFilter = document.getElementById("template-filter");
+                            if (templateFilter) {
+                                url.searchParams.set('template', templateFilter.value);
+                            }
+                            
                             window.location.href = url.toString();
                         });
                     });
