@@ -145,7 +145,7 @@ window.addEventListener("DOMContentLoaded", () => {
       document.body.classList.add("page-transition-out");
 
       setTimeout(() => {
-        window.location.href = "../../LandingPage/index.html";
+        window.location.href = "../../LandingPage/";
       }, 1000);
     });
   }
