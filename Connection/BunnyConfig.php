@@ -1,5 +1,4 @@
 <?php
-// Local Bunny configuration (do not commit this file publicly)
 
 // As constants (preferred)
 if (!defined('BUNNY_STORAGE_ZONE')) define('BUNNY_STORAGE_ZONE', 'ecadyb');
@@ -10,6 +9,3 @@ if (!defined('BUNNY_CDN_HOST')) define('BUNNY_CDN_HOST', 'https://ECADYB.b-cdn.n
 $GLOBALS['BUNNY_STORAGE_ZONE'] = BUNNY_STORAGE_ZONE;
 $GLOBALS['BUNNY_ACCESS_KEY'] = BUNNY_ACCESS_KEY;
 $GLOBALS['BUNNY_CDN_HOST'] = BUNNY_CDN_HOST;
-?>
-
-
