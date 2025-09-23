@@ -31,7 +31,6 @@ try {
 
     error_log("Attempting to delete announcement with ID: $eventId, Date: " . ($eventDate ?? 'N/A'));
 
-    // Validate ObjectId format
     if (!preg_match('/^[a-f\d]{24}$/i', $eventId)) {
         throw new Exception('Invalid ObjectId format: ' . $eventId);
     }
