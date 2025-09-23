@@ -37,7 +37,6 @@ try {
 
     $objectId = new ObjectId($eventId);
 
-    // Connect to MongoDB
     $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
     $client = new Client($mongoUrl);
     $collection = $client->Announcement->Calendar;
