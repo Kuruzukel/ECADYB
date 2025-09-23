@@ -6,7 +6,7 @@ use MongoDB\Client;
 
 $client = new Client("mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957/");
 $departmentsDB = $client->Departments;
-$adminDB = $client->Admin;
+$adminDB = $client->admin;
 $adminCollection = $adminDB->accounts;
 
 $collections = [
