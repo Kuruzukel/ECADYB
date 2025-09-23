@@ -32,7 +32,6 @@ if (!$studentId || !$collectionName) {
     exit;
 }
 
-// Validate collection exists
 $collections = iterator_to_array($departmentsDB->listCollectionNames());
 if (!in_array($collectionName, $collections)) {
     echo json_encode([
