@@ -78,7 +78,6 @@ try {
             $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
 
-            // Don't fail if BunnyCDN deletion fails - just log it
             if ($httpCode !== 200 && $httpCode !== 404) {
                 error_log("Warning: Failed to delete logo from BunnyCDN. HTTP $httpCode");
             }
