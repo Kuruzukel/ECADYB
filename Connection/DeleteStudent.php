@@ -81,7 +81,6 @@ try {
         exit;
     }
 
-    // Delete the student
     $deleteResult = $collection->deleteOne([
         '$or' => [
             ['student id' => $studentIdRegex],
