@@ -1,5 +1,4 @@
 <?php
-// Delete Yearbook Cover API
 
 ob_start();
 
