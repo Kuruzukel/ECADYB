@@ -48,7 +48,6 @@ try {
 
     error_log("Delete filter: " . json_encode($deleteFilter));
 
-    // Perform deletion
     $result = $collection->deleteOne($deleteFilter);
     error_log("Delete result - deleted count: " . $result->getDeletedCount());
 
