@@ -63,7 +63,6 @@ try {
         );
     }
 
-    // Ensure BackgroundPage (slot 8)
     $collection->updateOne(
         ['template' => $template, 'slot' => 8],
         [
@@ -78,7 +77,6 @@ try {
         ['upsert' => true]
     );
 
-    // Fetch all covers for this template
     $cursor = $collection->find(['template' => $template]);
     $items = [];
 
@@ -95,17 +93,14 @@ try {
                 'back_thumb_url'  => isset($doc['back_thumb_url']) ? (string)$doc['back_thumb_url'] : ''
             ];
         } elseif ($slot === 8) {
-            // Background page mapped as front so frontend shows it
             $backgroundUrl = isset($doc['background_url']) ? (string)$doc['background_url'] : '';
             $backgroundThumb = isset($doc['background_thumb_url']) ? (string)$doc['background_thumb_url'] : '';
 
             $items[] = [
                 'template'             => (int)($doc['template'] ?? 1),
                 'slot'                 => 8,
-                // Mapped for frontend compatibility
                 'front_url'            => $backgroundUrl,
                 'front_thumb_url'      => $backgroundThumb,
-                // Keep originals too
                 'background_url'       => $backgroundUrl,
                 'background_thumb_url' => $backgroundThumb
             ];
