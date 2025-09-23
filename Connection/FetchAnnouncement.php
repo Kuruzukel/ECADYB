@@ -16,7 +16,6 @@ try {
     $client = new Client($mongoUrl);
     $collection = $client->Announcement->Calendar;
 
-    // Get all active announcements, sorted by creation date (newest first)
     $cursor = $collection->find(
         ['status' => 'active'],
         ['sort' => ['created_at' => -1]]
