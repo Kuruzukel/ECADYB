@@ -13,7 +13,6 @@ header('Content-Type: application/json');
 try {
     $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 
-    // Connect to MongoDB
     $client = new Client($mongoUrl);
     $collection = $client->Announcement->Calendar;
 
