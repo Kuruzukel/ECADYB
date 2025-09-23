@@ -15,7 +15,6 @@ session_start();
 
 function respond($success, $message = '', $data = [])
 {
-    // Clear any output buffers
     while (ob_get_level()) {
         ob_end_clean();
     }
