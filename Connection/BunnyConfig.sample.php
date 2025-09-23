@@ -1,5 +1,4 @@
 <?php
-// These override environment variables.
 
 $GLOBALS['BUNNY_STORAGE_ZONE'] = 'ecadyb';
 $GLOBALS['BUNNY_ACCESS_KEY'] = 'YOUR_STORAGE_ACCESS_KEY_HERE';
