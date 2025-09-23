@@ -76,7 +76,7 @@ try {
         echo json_encode([
             'success' => false,
             'message' => "No student found with student_id='$studentId' in collection '$collectionName'.",
-            'debug_ids' => $ids // Return to client for debugging
+            'debug_ids' => $ids
         ]);
         exit;
     }
