@@ -1,5 +1,4 @@
 <?php
-// Ensure no output before headers
 ob_start();
 
 // Set proper headers for Railway
@@ -17,15 +16,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 session_start();
 
 // Error handling function
-function respond($success, $message = '', $data = []) {
+function respond($success, $message = '', $data = [])
+{
     // Clear any output buffers
     while (ob_get_level()) {
         ob_end_clean();
     }
-    
+
     // Set JSON header
     header('Content-Type: application/json');
-    
+
     // Return JSON response
     echo json_encode(array_merge(['success' => $success, 'message' => $message], $data));
     exit;
@@ -74,18 +74,18 @@ try {
         if ($pathStart !== false) {
             $relative = substr($url, $pathStart + 1);
             $storageUrl = 'https://storage.bunnycdn.com/' . $bunnyStorageZone . '/' . $relative;
-            
+
             $ch = curl_init($storageUrl);
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
             curl_setopt($ch, CURLOPT_HTTPHEADER, ['AccessKey: ' . $bunnyAccessKey]);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_TIMEOUT, 30);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-            
+
             $response = curl_exec($ch);
             $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
-            
+
             // Don't fail if BunnyCDN deletion fails - just log it
             if ($httpCode !== 200 && $httpCode !== 404) {
                 error_log("Warning: Failed to delete logo from BunnyCDN. HTTP $httpCode");
@@ -95,7 +95,6 @@ try {
 
     $collection->deleteOne(['type' => 'logo_container', 'slot' => $slot]);
     respond(true, 'Logo deleted successfully');
-    
 } catch (Exception $e) {
     respond(false, 'Failed to delete logo: ' . $e->getMessage());
 }
