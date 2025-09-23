@@ -61,8 +61,8 @@ try {
         'socketTimeoutMS' => 5000
     ]);
     
-    $db = $client->Departments;
-    $collection = $db->AdminSettings;
+    $db = $client->admin;
+    $collection = $db->selectedlogo;
 
     // Update or insert the admin logo setting
     $result = $collection->updateOne(

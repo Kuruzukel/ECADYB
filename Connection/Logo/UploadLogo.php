@@ -184,8 +184,9 @@ try {
             'connectTimeoutMS' => 5000,
             'socketTimeoutMS' => 5000
         ]);
-        $db = $client->Departments;
-        $collection = $db->DashboardAssets;
+        // Change from Departments database to Admin database
+        $db = $client->admin;
+        $collection = $db->logo;
 
         $collection->updateOne(
             ['type' => 'logo_container', 'slot' => $slot],

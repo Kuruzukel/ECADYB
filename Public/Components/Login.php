@@ -6,7 +6,8 @@ use MongoDB\Client;
 
 $client = new Client("mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957/");
 $departmentsDB = $client->Departments;
-$adminCollection = $departmentsDB->Admin;
+$adminDB = $client->Admin;
+$adminCollection = $adminDB->accounts;
 
 $collections = [
     "bsme"   => "BS Marine Engineering",
@@ -72,10 +73,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
-
-
-
-
 <!DOCTYPE html>
 <html>
 
@@ -201,4 +198,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
     <script src="../assets/js/Login.js"></script>
 
+</body>
 </html>

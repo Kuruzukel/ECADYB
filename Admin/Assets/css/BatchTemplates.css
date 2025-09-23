@@ -133,6 +133,12 @@ h1 .chevron i {
   outline-offset: 0;
 }
 
+.section.selected .section-header {
+  background-color: #fcda15;
+  color: #000000;
+  font-weight: bold;
+}
+
 label {
   display: block;
   margin: 12px 0 6px;
@@ -160,6 +166,15 @@ label {
 
 .upload-box:hover {
   border-color: #e2e8f0;
+}
+
+.upload-box.disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.upload-box.disabled .plus-icon {
+  color: #666;
 }
 
 .upload-box img {

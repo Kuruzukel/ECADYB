@@ -40,6 +40,14 @@ try {
     $side     = isset($_POST['side']) ? strtolower(trim($_POST['side'])) : '';
     $template = isset($_POST['template']) ? (int)$_POST['template'] : 1;
 
+    // Debug: Log the received parameters
+    error_log("DeleteCover.php received parameters: slot=$slot, side=$side, template=$template");
+
+    // Validate template parameter
+    if ($template < 1 || $template > 3) {
+        respond(false, 'Invalid template parameter. Must be 1, 2, or 3.');
+    }
+
     if ($slot === null) {
         respond(false, 'Missing slot parameter.');
     }
@@ -57,8 +65,38 @@ try {
         'connectTimeoutMS'         => 5000,
         'socketTimeoutMS'          => 5000
     ]);
-    $db         = $client->Departments;
+    
+    // Create database name based on selected template
+    $dbName = "BatchTemplate" . $template;
+    $db = $client->$dbName;
     $collection = $db->YearbookCovers;
+
+    // Debug: Log the database and collection being used
+    error_log("DeleteCover.php using database: $dbName, collection: YearbookCovers");
+    
+    // Debug: Check if the database exists and list collections
+    try {
+        $databases = $client->listDatabases();
+        $dbExists = false;
+        foreach ($databases as $database) {
+            if ($database->getName() === $dbName) {
+                $dbExists = true;
+                break;
+            }
+        }
+        error_log("DeleteCover.php database $dbName exists: " . ($dbExists ? "true" : "false"));
+        
+        if ($dbExists) {
+            $collections = $db->listCollections();
+            $collectionNames = [];
+            foreach ($collections as $collectionInfo) {
+                $collectionNames[] = $collectionInfo->getName();
+            }
+            error_log("DeleteCover.php collections in $dbName: " . json_encode($collectionNames));
+        }
+    } catch (Exception $e) {
+        error_log("DeleteCover.php error checking databases: " . $e->getMessage());
+    }
 
     $doc = $collection->findOne(['template' => $template, 'slot' => $slot]);
     if (!$doc) {
@@ -73,6 +111,9 @@ try {
             $relativePath = ltrim($parsed['path'], '/');
             $storageUrl   = 'https://storage.bunnycdn.com/' . $zone . '/' . $relativePath;
 
+            // Debug: Log the deletion attempt
+            error_log("DeleteCover.php attempting to delete from BunnyCDN: $storageUrl");
+
             $ch = curl_init($storageUrl);
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
             curl_setopt($ch, CURLOPT_HTTPHEADER, ['AccessKey: ' . $key]);
@@ -86,6 +127,8 @@ try {
 
             if ($httpCode !== 200 && $httpCode !== 404) {
                 error_log("Warning: Failed to delete $cdnUrl from BunnyCDN. HTTP $httpCode");
+            } else {
+                error_log("DeleteCover.php successfully deleted from BunnyCDN. HTTP $httpCode");
             }
         }
     }
@@ -110,6 +153,9 @@ try {
         $existingUrl      = isset($doc[$urlField]) ? (string)$doc[$urlField] : '';
         $existingThumbUrl = isset($doc[$thumbField]) ? (string)$doc[$thumbField] : '';
 
+        // Debug: Log the URLs being deleted
+        error_log("DeleteCover.php deleting URLs - main: $existingUrl, thumb: $existingThumbUrl");
+
         deleteFromBunny($existingUrl, $bunnyStorageZone, $bunnyAccessKey);
         deleteFromBunny($existingThumbUrl, $bunnyStorageZone, $bunnyAccessKey);
 
@@ -119,13 +165,18 @@ try {
         ];
     }
 
-    $collection->updateOne(
+    // Debug: Log the fields being unset
+    error_log("DeleteCover.php unsetting fields: " . json_encode($unsetFields));
+
+    $result = $collection->updateOne(
         ['template' => $template, 'slot' => $slot],
         [
             '$unset' => $unsetFields,
             '$set'   => ['updated_at' => new MongoDB\BSON\UTCDateTime()]
         ]
     );
+    
+    error_log("DeleteCover.php update result: matched=" . $result->getMatchedCount() . ", modified=" . $result->getModifiedCount());
 
     respond(true, 'Cover deleted successfully');
 } catch (Exception $e) {

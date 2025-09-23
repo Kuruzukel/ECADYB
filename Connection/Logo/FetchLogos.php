@@ -49,8 +49,8 @@ try {
         'connectTimeoutMS' => 5000,
         'socketTimeoutMS' => 5000
     ]);
-    $db = $client->Departments;
-    $collection = $db->DashboardAssets;
+    $db = $client->admin;
+    $collection = $db->logo;
 
     // Fetch only necessary fields
     $cursor = $collection->find(

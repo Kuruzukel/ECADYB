@@ -61,6 +61,14 @@ try {
     $side     = isset($_POST['side']) ? strtolower(trim($_POST['side'])) : '';
     $template = isset($_POST['template']) ? (int)$_POST['template'] : 1;
 
+    // Debug: Log the received parameters
+    error_log("UploadCover.php received parameters: slot=$slot, side=$side, template=$template");
+
+    // Validate template parameter
+    if ($template < 1 || $template > 3) {
+        respond(false, 'Invalid template parameter. Must be 1, 2, or 3.');
+    }
+
     if ($slot === null || ($slot !== 8 && ($side !== 'front' && $side !== 'back'))) {
         respond(false, 'Invalid parameters: slot and side (front|back) are required, unless slot=8 (BackgroundPage).');
     }
@@ -103,12 +111,18 @@ try {
 
     $path = $safeFolder . '/' . $templateFolder . '/' . $filename;
 
+    // Debug: Log the constructed path
+    error_log("UploadCover.php constructed path: $path");
+
     // Upload main file to Bunny
     $storageUrl   = "https://storage.bunnycdn.com/{$bunnyStorageZone}/" . str_replace(' ', '%20', $path);
     $fileContents = file_get_contents($fileTmp);
     if ($fileContents === false) {
         respond(false, 'Failed to read uploaded file.');
     }
+
+    // Debug: Log the storage URL
+    error_log("UploadCover.php storage URL: $storageUrl");
 
     $ch = curl_init($storageUrl);
     curl_setopt_array($ch, [
@@ -131,6 +145,9 @@ try {
 
     $publicUrl = rtrim($bunnyCdnHost, '/') . '/' . str_replace(' ', '%20', $path);
 
+    // Debug: Log the public URL
+    error_log("UploadCover.php public URL: $publicUrl");
+
     // Upload duplicate thumbnail
     $thumbFilename = ($slot === 8)
         ? sprintf('BackgroundPage-Thumb-%s.%s', $safeBase, $safeExt)
@@ -138,6 +155,9 @@ try {
 
     $thumbPath       = $safeFolder . '/' . $templateFolder . '/' . $thumbFilename;
     $thumbStorageUrl = "https://storage.bunnycdn.com/{$bunnyStorageZone}/" . str_replace(' ', '%20', $thumbPath);
+
+    // Debug: Log the thumbnail storage URL
+    error_log("UploadCover.php thumbnail storage URL: $thumbStorageUrl");
 
     $ch = curl_init($thumbStorageUrl);
     curl_setopt_array($ch, [
@@ -156,18 +176,51 @@ try {
 
     $thumbUrl = rtrim($bunnyCdnHost, '/') . '/' . str_replace(' ', '%20', $thumbPath);
 
-    // Update MongoDB
+    // Debug: Log the thumbnail URL
+    error_log("UploadCover.php thumbnail URL: $thumbUrl");
+
+    // Update MongoDB - Use the selected template database instead of generic Departments
     $mongoUrl = getenv('MONGO_URL')
         ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 
     try {
-        $client     = new Client($mongoUrl, [
+        $client = new Client($mongoUrl, [
             'serverSelectionTimeoutMS' => 5000,
             'connectTimeoutMS'         => 5000,
             'socketTimeoutMS'          => 5000
         ]);
-        $db         = $client->Departments;
+        
+        // Create database name based on selected template
+        $dbName = "BatchTemplate" . $template;
+        $db = $client->$dbName;
         $collection = $db->YearbookCovers;
+
+        // Debug: Log the database and collection being used
+        error_log("UploadCover.php using database: $dbName, collection: YearbookCovers");
+        
+        // Debug: Check if the database exists and list collections
+        try {
+            $databases = $client->listDatabases();
+            $dbExists = false;
+            foreach ($databases as $database) {
+                if ($database->getName() === $dbName) {
+                    $dbExists = true;
+                    break;
+                }
+            }
+            error_log("UploadCover.php database $dbName exists: " . ($dbExists ? "true" : "false"));
+            
+            if ($dbExists) {
+                $collections = $db->listCollections();
+                $collectionNames = [];
+                foreach ($collections as $collectionInfo) {
+                    $collectionNames[] = $collectionInfo->getName();
+                }
+                error_log("UploadCover.php collections in $dbName: " . json_encode($collectionNames));
+            }
+        } catch (Exception $e) {
+            error_log("UploadCover.php error checking databases: " . $e->getMessage());
+        }
 
         // Always update this slot
         $update = [
@@ -188,14 +241,20 @@ try {
             $update['$set'][$side . '_thumb_url'] = $thumbUrl;
         }
 
-        $collection->updateOne(
+        // Debug: Log the update operation
+        error_log("UploadCover.php updating document with filter: template=$template, slot=$slot");
+        error_log("UploadCover.php update data: " . json_encode($update));
+        
+        $result = $collection->updateOne(
             ['template' => $template, 'slot' => $slot],
             $update,
             ['upsert' => true]
         );
+        
+        error_log("UploadCover.php update result: matched=" . $result->getMatchedCount() . ", modified=" . $result->getModifiedCount() . ", upserted=" . $result->getUpsertedCount());
 
         // Ensure slot 8 exists
-        $collection->updateOne(
+        $result8 = $collection->updateOne(
             ['template' => $template, 'slot' => 8],
             [
                 '$setOnInsert' => [
@@ -208,6 +267,8 @@ try {
             ],
             ['upsert' => true]
         );
+        
+        error_log("UploadCover.php slot 8 update result: matched=" . $result8->getMatchedCount() . ", modified=" . $result8->getModifiedCount() . ", upserted=" . $result8->getUpsertedCount());
     } catch (Exception $e) {
         respond(false, 'Uploaded to CDN, but failed to update MongoDB: ' . $e->getMessage(), [
             'url'       => $publicUrl,

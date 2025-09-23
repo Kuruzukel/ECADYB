@@ -35,6 +35,14 @@ use MongoDB\Client;
 try {
     $template = isset($_GET['template']) ? (int)$_GET['template'] : 1;
 
+    // Debug: Log the received template parameter
+    error_log("FetchCovers.php received template parameter: $template");
+
+    // Validate template parameter
+    if ($template < 1 || $template > 3) {
+        respond(false, 'Invalid template parameter. Must be 1, 2, or 3.');
+    }
+
     $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 
     $client = new Client($mongoUrl, [
@@ -42,11 +50,41 @@ try {
         'connectTimeoutMS' => 5000,
         'socketTimeoutMS' => 5000
     ]);
-    $db = $client->Departments;
+    
+    // Create database name based on selected template
+    $dbName = "BatchTemplate" . $template;
+    $db = $client->$dbName;
     $collection = $db->YearbookCovers;
 
+    // Debug: Log the database and collection being used
+    error_log("FetchCovers.php using database: $dbName, collection: YearbookCovers");
+    
+    // Debug: Check if the database exists and list collections
+    try {
+        $databases = $client->listDatabases();
+        $dbExists = false;
+        foreach ($databases as $database) {
+            if ($database->getName() === $dbName) {
+                $dbExists = true;
+                break;
+            }
+        }
+        error_log("FetchCovers.php database $dbName exists: " . ($dbExists ? "true" : "false"));
+        
+        if ($dbExists) {
+            $collections = $db->listCollections();
+            $collectionNames = [];
+            foreach ($collections as $collectionInfo) {
+                $collectionNames[] = $collectionInfo->getName();
+            }
+            error_log("FetchCovers.php collections in $dbName: " . json_encode($collectionNames));
+        }
+    } catch (Exception $e) {
+        error_log("FetchCovers.php error checking databases: " . $e->getMessage());
+    }
+
     for ($slot = 1; $slot <= 7; $slot++) {
-        $collection->updateOne(
+        $result = $collection->updateOne(
             ['template' => $template, 'slot' => $slot],
             [
                 '$setOnInsert' => [
@@ -61,9 +99,11 @@ try {
             ],
             ['upsert' => true]
         );
+        
+        error_log("FetchCovers.php slot $slot upsert result: matched=" . $result->getMatchedCount() . ", modified=" . $result->getModifiedCount() . ", upserted=" . $result->getUpsertedCount());
     }
 
-    $collection->updateOne(
+    $result8 = $collection->updateOne(
         ['template' => $template, 'slot' => 8],
         [
             '$setOnInsert' => [
@@ -76,6 +116,8 @@ try {
         ],
         ['upsert' => true]
     );
+    
+    error_log("FetchCovers.php slot 8 upsert result: matched=" . $result8->getMatchedCount() . ", modified=" . $result8->getModifiedCount() . ", upserted=" . $result8->getUpsertedCount());
 
     $cursor = $collection->find(['template' => $template]);
     $items = [];
@@ -106,6 +148,12 @@ try {
             ];
         }
     }
+
+    // Debug: Log the number of items found
+    error_log("FetchCovers.php found " . count($items) . " items for template $template");
+    
+    // Debug: Log the items found
+    error_log("FetchCovers.php items: " . json_encode($items));
 
     respond(true, 'Covers fetched successfully', ['items' => $items]);
 } catch (Exception $e) {

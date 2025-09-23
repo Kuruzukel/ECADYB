@@ -261,8 +261,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
   let currentXhr = null;
 
-  const uploadBoxes = document.querySelectorAll(".upload-box");
-
   const sections = document.querySelectorAll(".form-group .section");
   const sectionHeaders = document.querySelectorAll(
     ".form-group .section .section-header"
@@ -271,6 +269,38 @@ window.addEventListener("DOMContentLoaded", () => {
   function selectSection(section) {
     sections.forEach((s) => s.classList.remove("selected"));
     if (section) section.classList.add("selected");
+    
+    // Store selected template in localStorage
+    if (section) {
+      const templateName = section.querySelector('.section-header').textContent.trim();
+      localStorage.setItem('selectedBatchTemplate', templateName);
+    }
+    
+    // Disable upload boxes for non-selected templates
+    updateUploadBoxStates();
+  }
+
+  function updateUploadBoxStates() {
+    // Get the currently selected template
+    const selectedTemplate = document.querySelector('.section.selected');
+    
+    // Enable/disable upload boxes based on template selection
+    sections.forEach(section => {
+      const uploadBoxes = section.querySelectorAll('.upload-box');
+      const isSelected = section === selectedTemplate;
+      
+      uploadBoxes.forEach(box => {
+        if (isSelected) {
+          // Enable upload boxes for selected template
+          box.classList.remove('disabled');
+          box.style.pointerEvents = 'auto';
+        } else {
+          // Disable upload boxes for non-selected templates
+          box.classList.add('disabled');
+          box.style.pointerEvents = 'none';
+        }
+      });
+    });
   }
 
   function openSelectTemplateModal(targetSection, templateLabel) {
@@ -320,284 +350,338 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  // Set initial selected template
   if (sections.length > 0) {
-    selectSection(sections[0]);
-  }
-  uploadBoxes.forEach((box, index) => {
-    const frontInput = box.querySelector(".frontInput");
-    const backInput = box.querySelector(".backInput");
-    const deleteBtn = box.querySelector(".delete-btn");
-    const plusIcon = box.querySelector(".plus-icon");
-
-    let frontImg = null;
-    let backImg = null;
-    let showingFront = true;
-    const slot = index + 1;
-    const template = 1;
-    const isBackgroundSlot = slot === 8;
-
-    const BASE_PATH = getBasePath();
-    const CONNECTION_PATH = `${BASE_PATH}/Connection`;
-
-    const UPLOAD_ENDPOINT = `${CONNECTION_PATH}/Cover/UploadCover.php`;
-    const FETCH_ENDPOINT = `${CONNECTION_PATH}/Cover/FetchCovers.php?template=${template}`;
-    const DELETE_ENDPOINT = `${CONNECTION_PATH}/Cover/DeleteCover.php`;
-
-    console.log("BatchTemplates endpoints configured:", {
-      UPLOAD_ENDPOINT,
-      FETCH_ENDPOINT,
-      DELETE_ENDPOINT,
-    });
-
-    const toggleImages = () => {
-      if (isBackgroundSlot) return;
-      showingFront = !showingFront;
-      if (frontImg && backImg) {
-        if (showingFront) {
-          frontImg.style.opacity = 1;
-          backImg.style.opacity = 0;
-        } else {
-          frontImg.style.opacity = 0;
-          backImg.style.opacity = 1;
+    // Check if there's already a selected template in localStorage
+    const savedTemplate = localStorage.getItem('selectedBatchTemplate');
+    let selectedSection = null;
+    
+    if (savedTemplate) {
+      // Find the section that matches the saved template
+      sections.forEach(section => {
+        const headerText = section.querySelector('.section-header').textContent.trim();
+        if (headerText === savedTemplate) {
+          selectedSection = section;
         }
-      }
-    };
+      });
+    }
+    
+    // If no saved template or not found, select the first one
+    if (!selectedSection) {
+      selectedSection = sections[0];
+    }
+    
+    selectSection(selectedSection);
+  } else {
+    // If no sections, still update upload box states
+    updateUploadBoxStates();
+  }
 
-    const ensureChildren = () => {
-      if (frontImg) box.appendChild(frontImg);
-      if (backImg) box.appendChild(backImg);
-      box.appendChild(deleteBtn);
-      box.appendChild(frontInput);
-      box.appendChild(backInput);
-    };
+  // Process upload boxes for each section separately
+  sections.forEach(section => {
+    const sectionUploadBoxes = section.querySelectorAll(".upload-box");
+    const sectionHeader = section.querySelector('.section-header').textContent.trim();
+    // Extract template number more robustly
+    let template = 1;
+    const templateMatch = sectionHeader.match(/Batch Template (\d+)/);
+    if (templateMatch && templateMatch[1]) {
+      template = parseInt(templateMatch[1]);
+    }
+    
+    // Debug: Log the section header and extracted template
+    console.log("Section header:", sectionHeader);
+    console.log("Extracted template:", template);
+    
+    sectionUploadBoxes.forEach((box, index) => {
+      const frontInput = box.querySelector(".frontInput");
+      const backInput = box.querySelector(".backInput");
+      const deleteBtn = box.querySelector(".delete-btn");
+      const plusIcon = box.querySelector(".plus-icon");
 
-    box.addEventListener("click", (event) => {
-      if (event.target === deleteBtn) return;
-      if (!frontImg) {
-        frontInput.click();
-      } else if (!backImg && !isBackgroundSlot) {
-        backInput.click();
-      } else {
-        toggleImages();
-      }
-    });
+      let frontImg = null;
+      let backImg = null;
+      let showingFront = true;
+      const slot = index + 1;
+      const isBackgroundSlot = slot === 8;
 
-    frontInput.addEventListener("change", async (event) => {
-      const file = event.target.files && event.target.files[0];
-      if (!file) return;
-      await uploadToBunny(file, slot, "front");
-    });
+      const BASE_PATH = getBasePath();
+      const CONNECTION_PATH = `${BASE_PATH}/Connection`;
 
-    if (!isBackgroundSlot)
-      backInput.addEventListener("change", async (event) => {
+      const UPLOAD_ENDPOINT = `${CONNECTION_PATH}/Cover/UploadCover.php`;
+      const FETCH_ENDPOINT = `${CONNECTION_PATH}/Cover/FetchCovers.php?template=${template}`;
+      const DELETE_ENDPOINT = `${CONNECTION_PATH}/Cover/DeleteCover.php`;
+
+      console.log("BatchTemplates endpoints configured:", {
+        UPLOAD_ENDPOINT,
+        FETCH_ENDPOINT,
+        DELETE_ENDPOINT,
+        template,
+        slot
+      });
+
+      const toggleImages = () => {
+        if (isBackgroundSlot) return;
+        showingFront = !showingFront;
+        if (frontImg && backImg) {
+          if (showingFront) {
+            frontImg.style.opacity = 1;
+            backImg.style.opacity = 0;
+          } else {
+            frontImg.style.opacity = 0;
+            backImg.style.opacity = 1;
+          }
+        }
+      };
+
+      const ensureChildren = () => {
+        if (frontImg) box.appendChild(frontImg);
+        if (backImg) box.appendChild(backImg);
+        box.appendChild(deleteBtn);
+        box.appendChild(frontInput);
+        box.appendChild(backInput);
+      };
+
+      box.addEventListener("click", (event) => {
+        if (event.target === deleteBtn) return;
+        if (!frontImg) {
+          frontInput.click();
+        } else if (!backImg && !isBackgroundSlot) {
+          backInput.click();
+        } else {
+          toggleImages();
+        }
+      });
+
+      frontInput.addEventListener("change", async (event) => {
         const file = event.target.files && event.target.files[0];
         if (!file) return;
-        await uploadToBunny(file, slot, "back");
+        await uploadToBunny(file, slot, "front");
       });
 
-    deleteBtn.addEventListener("click", (event) => {
-      event.stopPropagation();
-      selectedConfirmAction = () => {
-        const sides = [];
-        if (frontImg) sides.push("front");
-        if (backImg && !isBackgroundSlot) sides.push("back");
-        if (!sides.length) return;
-        Promise.all(sides.map((side) => deleteCover(slot, side))).then(() => {
-          frontImg = null;
-          backImg = null;
-          showingFront = true;
-          box.innerHTML = "";
-          const newPlus = document.createElement("span");
-          newPlus.className = "plus-icon";
-          newPlus.textContent = "+";
-          box.appendChild(newPlus);
-          ensureChildren();
-          deleteBtn.style.display = "none";
-          frontInput.value = "";
-          backInput.value = "";
-          box.classList.remove("has-image");
+      if (!isBackgroundSlot)
+        backInput.addEventListener("change", async (event) => {
+          const file = event.target.files && event.target.files[0];
+          if (!file) return;
+          await uploadToBunny(file, slot, "back");
         });
-      };
-      openDeleteModal();
-    });
 
-    async function uploadToBunny(file, slot, side) {
-      const form = new FormData();
-      form.append("file", file);
-      form.append("slot", String(slot));
-      form.append("side", side);
-      form.append("template", String(template));
-
-      const uploadOverlay = document.getElementById("upload-overlay");
-      const uploadText = document.getElementById("uploadText");
-
-      if (uploadOverlay && uploadText) {
-        uploadOverlay.style.display = "flex";
-        uploadText.textContent = "Please wait while we upload your file";
-      }
-
-      try {
-        const data = await xhrUpload(UPLOAD_ENDPOINT, form);
-        if (data && data.aborted) {
-          if (uploadOverlay) uploadOverlay.style.display = "none";
-          // Show notification for canceled upload
-          showNotification("Upload canceled by user", "error");
-          return;
-        }
-        if (!data?.success) {
-          showNotification(data?.message || "Upload failed", "error");
-          return;
-        }
-
-        const img = document.createElement("img");
-        img.src = data.url;
-        img.classList.add(side === "front" ? "front-img" : "back-img");
-        if (side === "front") frontImg = img;
-        else backImg = img;
-
-        box.innerHTML = "";
-        if (plusIcon) plusIcon.remove();
-        ensureChildren();
-        deleteBtn.style.display = "flex";
-        box.classList.add("has-image");
-
-        showingFront = true;
-        if (frontImg) {
-          frontImg.style.opacity = 1;
-          if (backImg && !isBackgroundSlot) backImg.style.opacity = 0;
-        }
-
-        showNotification("Image uploaded successfully", "success");
-      } catch (err) {
-        console.error("Upload error:", err);
-        showNotification(err.message || "Upload failed", "error");
-      } finally {
-        if (!currentXhr && uploadOverlay) uploadOverlay.style.display = "none";
-      }
-    }
-
-    function xhrUpload(url, formData) {
-      return new Promise((resolve) => {
-        const xhr = new XMLHttpRequest();
-        currentXhr = xhr;
-        xhr.open("POST", url, true);
-        xhr.onabort = () => {
-          resolve({ aborted: true });
+      deleteBtn.addEventListener("click", (event) => {
+        event.stopPropagation();
+        selectedConfirmAction = () => {
+          const sides = [];
+          if (frontImg) sides.push("front");
+          if (backImg && !isBackgroundSlot) sides.push("back");
+          if (!sides.length) return;
+          Promise.all(sides.map((side) => deleteCover(slot, side))).then(() => {
+            frontImg = null;
+            backImg = null;
+            showingFront = true;
+            box.innerHTML = "";
+            const newPlus = document.createElement("span");
+            newPlus.className = "plus-icon";
+            newPlus.textContent = "+";
+            box.appendChild(newPlus);
+            ensureChildren();
+            deleteBtn.style.display = "none";
+            frontInput.value = "";
+            backInput.value = "";
+            box.classList.remove("has-image");
+          });
         };
-        xhr.onreadystatechange = () => {
-          if (xhr.readyState === 4) {
-            try {
-              if (xhr.status >= 200 && xhr.status < 300) {
-                resolve(JSON.parse(xhr.responseText));
-              } else {
-                resolve({
-                  success: false,
-                  message: `HTTP ${xhr.status}: ${xhr.statusText}`,
-                });
-              }
-            } catch (e) {
-              resolve({ success: false, message: "Invalid response format" });
-            }
-            currentXhr = null;
-          }
-        };
-        xhr.onerror = () => {
-          resolve({ success: false, message: "Network error" });
-          currentXhr = null;
-        };
-        xhr.send(formData);
+        openDeleteModal();
       });
-    }
 
-    window.cancelUpload = function () {
-      const uploadOverlay = document.getElementById("upload-overlay");
-      const progressBar = document.getElementById("progressBar");
-      const uploadText = document.getElementById("uploadText");
-      const progressPercent = document.getElementById("progressPercent");
-      if (currentXhr) {
-        try {
-          currentXhr.abort();
-        } catch (_) {}
-        currentXhr = null;
-        showNotification("Upload has been canceled", "error");
-      }
-      if (progressBar) progressBar.style.width = "0%";
-      if (uploadOverlay) uploadOverlay.style.display = "none";
-      if (uploadText)
-        uploadText.textContent = "Please wait while we upload your file";
-      if (progressPercent) progressPercent.textContent = "0%";
-    };
-
-    async function deleteCover(slot, side) {
-      try {
+      async function uploadToBunny(file, slot, side) {
         const form = new FormData();
+        form.append("file", file);
         form.append("slot", String(slot));
         form.append("side", side);
         form.append("template", String(template));
 
-        const res = await fetch(DELETE_ENDPOINT, {
-          method: "POST",
-          body: form,
-        });
-
-        if (!res.ok) {
-          throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+        // Debug: Log the form data being sent
+        console.log("Sending upload request with template:", template);
+        for (let [key, value] of form.entries()) {
+          console.log(key, value);
         }
 
-        const data = await res.json().catch(() => null);
-        if (!data?.success) {
-          showNotification(data?.message || "Delete failed", "error");
-        } else {
-          showNotification("Image deleted", "success");
-        }
-      } catch (err) {
-        console.error("Delete error:", err);
-        showNotification(err.message || "Delete failed", "error");
-      }
-    }
+        const uploadOverlay = document.getElementById("upload-overlay");
+        const uploadText = document.getElementById("uploadText");
 
-    (async function loadExisting() {
-      try {
-        const res = await fetch(FETCH_ENDPOINT);
-
-        if (!res.ok) {
-          throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+        if (uploadOverlay && uploadText) {
+          uploadOverlay.style.display = "flex";
+          uploadText.textContent = "Please wait while we upload your file";
         }
 
-        const data = await res.json();
-        if (!data?.success) {
-          console.warn("Failed to load covers:", data?.message);
-          return;
-        }
+        try {
+          const data = await xhrUpload(UPLOAD_ENDPOINT, form);
+          if (data && data.aborted) {
+            if (uploadOverlay) uploadOverlay.style.display = "none";
+            // Show notification for canceled upload
+            showNotification("Upload canceled by user", "error");
+            return;
+          }
+          if (!data?.success) {
+            showNotification(data?.message || "Upload failed", "error");
+            return;
+          }
 
-        const found = (data.items || []).find((i) => i.slot === slot);
-        if (!found) return;
-        if (found.front_url) {
-          frontImg = document.createElement("img");
-          frontImg.src = found.front_url;
-          frontImg.classList.add("front-img");
-        }
-        if (found.back_url && !isBackgroundSlot) {
-          backImg = document.createElement("img");
-          backImg.src = found.back_url;
-          backImg.classList.add("back-img");
-        }
-        if (frontImg || backImg) {
+          const img = document.createElement("img");
+          img.src = data.url;
+          img.classList.add(side === "front" ? "front-img" : "back-img");
+          if (side === "front") frontImg = img;
+          else backImg = img;
+
           box.innerHTML = "";
           if (plusIcon) plusIcon.remove();
           ensureChildren();
           deleteBtn.style.display = "flex";
           box.classList.add("has-image");
+
           showingFront = true;
           if (frontImg) {
             frontImg.style.opacity = 1;
             if (backImg && !isBackgroundSlot) backImg.style.opacity = 0;
           }
+
+          showNotification("Image uploaded successfully", "success");
+        } catch (err) {
+          console.error("Upload error:", err);
+          showNotification(err.message || "Upload failed", "error");
+        } finally {
+          if (!currentXhr && uploadOverlay) uploadOverlay.style.display = "none";
         }
-      } catch (e) {
-        console.error("Failed to load existing covers:", e);
       }
-    })();
+
+      function xhrUpload(url, formData) {
+        return new Promise((resolve) => {
+          const xhr = new XMLHttpRequest();
+          currentXhr = xhr;
+          xhr.open("POST", url, true);
+          xhr.onabort = () => {
+            resolve({ aborted: true });
+          };
+          xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+              try {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                  resolve(JSON.parse(xhr.responseText));
+                } else {
+                  resolve({
+                    success: false,
+                    message: `HTTP ${xhr.status}: ${xhr.statusText}`,
+                  });
+                }
+              } catch (e) {
+                resolve({ success: false, message: "Invalid response format" });
+              }
+              currentXhr = null;
+            }
+          };
+          xhr.onerror = () => {
+            resolve({ success: false, message: "Network error" });
+            currentXhr = null;
+          };
+          xhr.send(formData);
+        });
+      }
+
+      window.cancelUpload = function () {
+        const uploadOverlay = document.getElementById("upload-overlay");
+        const progressBar = document.getElementById("progressBar");
+        const uploadText = document.getElementById("uploadText");
+        const progressPercent = document.getElementById("progressPercent");
+        if (currentXhr) {
+          try {
+            currentXhr.abort();
+          } catch (_) {}
+          currentXhr = null;
+          showNotification("Upload has been canceled", "error");
+        }
+        if (progressBar) progressBar.style.width = "0%";
+        if (uploadOverlay) uploadOverlay.style.display = "none";
+        if (uploadText)
+          uploadText.textContent = "Please wait while we upload your file";
+        if (progressPercent) progressPercent.textContent = "0%";
+      };
+
+      async function deleteCover(slot, side) {
+        try {
+          const form = new FormData();
+          form.append("slot", String(slot));
+          form.append("side", side);
+          form.append("template", String(template));
+
+          // Debug: Log the form data being sent
+          console.log("Sending delete request with template:", template);
+          for (let [key, value] of form.entries()) {
+            console.log(key, value);
+          }
+
+          const res = await fetch(DELETE_ENDPOINT, {
+            method: "POST",
+            body: form,
+          });
+
+          if (!res.ok) {
+            throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+          }
+
+          const data = await res.json().catch(() => null);
+          if (!data?.success) {
+            showNotification(data?.message || "Delete failed", "error");
+          } else {
+            showNotification("Image deleted", "success");
+          }
+        } catch (err) {
+          console.error("Delete error:", err);
+          showNotification(err.message || "Delete failed", "error");
+        }
+      }
+
+      (async function loadExisting() {
+        try {
+          // Use the template-specific endpoint
+          const res = await fetch(`${CONNECTION_PATH}/Cover/FetchCovers.php?template=${template}`);
+
+          if (!res.ok) {
+            throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+          }
+
+          const data = await res.json();
+          if (!data?.success) {
+            console.warn("Failed to load covers:", data?.message);
+            return;
+          }
+
+          const found = (data.items || []).find((i) => i.slot === slot);
+          if (!found) return;
+          if (found.front_url) {
+            frontImg = document.createElement("img");
+            frontImg.src = found.front_url;
+            frontImg.classList.add("front-img");
+          }
+          if (found.back_url && !isBackgroundSlot) {
+            backImg = document.createElement("img");
+            backImg.src = found.back_url;
+            backImg.classList.add("back-img");
+          }
+          if (frontImg || backImg) {
+            box.innerHTML = "";
+            if (plusIcon) plusIcon.remove();
+            ensureChildren();
+            deleteBtn.style.display = "flex";
+            box.classList.add("has-image");
+            showingFront = true;
+            if (frontImg) {
+              frontImg.style.opacity = 1;
+              if (backImg && !isBackgroundSlot) backImg.style.opacity = 0;
+            }
+          }
+        } catch (e) {
+          console.error("Failed to load existing covers:", e);
+        }
+      })();
+    });
   });
 
   initializeDeleteModal();

@@ -43,8 +43,8 @@ try {
         'socketTimeoutMS' => 5000
     ]);
 
-    $db = $client->Departments;
-    $collection = $db->AdminSettings;
+    $db = $client->admin;
+    $collection = $db->selectedlogo;
 
     $adminLogo = $collection->findOne(['setting_type' => 'admin_logo']);
 

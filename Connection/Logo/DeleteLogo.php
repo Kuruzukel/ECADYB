@@ -52,8 +52,8 @@ try {
         'connectTimeoutMS' => 5000,
         'socketTimeoutMS' => 5000
     ]);
-    $db = $client->Departments;
-    $collection = $db->DashboardAssets;
+    $db = $client->amin;
+    $collection = $db->logo;
 
     $doc = $collection->findOne(['type' => 'logo_container', 'slot' => $slot]);
     if (!$doc) {
