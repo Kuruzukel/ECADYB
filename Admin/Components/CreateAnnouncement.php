@@ -24,9 +24,6 @@
 
                 <label for="message">Message</label>
                 <textarea id="message" name="message" placeholder="Write your announcement here..." required></textarea>
-                <div class="char-counter">
-                    <span id="char-count">0</span> characters
-                </div>
 
                 <label for="date">Date (optional)</label>
                 <input type="date" id="date" name="date"

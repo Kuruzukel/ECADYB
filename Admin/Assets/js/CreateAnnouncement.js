@@ -148,8 +148,6 @@ let isPreviewMode = false;
 document.addEventListener("DOMContentLoaded", function () {
   displayCurrentDate();
 
-  initializeCharacterCounter();
-
   initializeFormValidation();
 
   initializeModal();
@@ -168,26 +166,6 @@ function displayCurrentDate() {
       day: "numeric",
     };
     currentDateElement.textContent = now.toLocaleDateString("en-US", options);
-  }
-}
-
-function initializeCharacterCounter() {
-  const messageTextarea = document.getElementById("message");
-  const charCountElement = document.getElementById("char-count");
-
-  if (messageTextarea && charCountElement) {
-    messageTextarea.addEventListener("input", function () {
-      const currentLength = this.value.length;
-      charCountElement.textContent = currentLength;
-
-      if (currentLength > 500) {
-        charCountElement.style.color = "#ef4444";
-      } else if (currentLength > 300) {
-        charCountElement.style.color = "#f59e0b";
-      } else {
-        charCountElement.style.color = "#94a3b8";
-      }
-    });
   }
 }
 
@@ -328,10 +306,6 @@ function submitForm() {
           console.log("Response data:", data);
           if (data.success) {
             form.reset();
-            const charCountElement = document.getElementById("char-count");
-            if (charCountElement) {
-              charCountElement.textContent = "0";
-            }
 
             const dateInput = document.getElementById("date");
             if (dateInput) {
@@ -342,11 +316,10 @@ function submitForm() {
             setTimeout(() => {
               checkDateStatus();
             }, 500);
-
+            
+            // Show success notification
             showNotification("Announcement posted successfully!", "success");
           }
-
-          hideModal();
         })
 
         .catch((error) => {

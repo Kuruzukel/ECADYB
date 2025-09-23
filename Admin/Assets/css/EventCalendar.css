@@ -12,7 +12,6 @@
   --menu-border-active: #fcda15;
   --menu-hover-bg: #1c1c84;
 
-  /* Input styling variables */
   --input-bg: #1e293b;
   --input-border: #475569;
   --input-focus: #0c27be;
@@ -435,8 +434,6 @@ h1 .chevron i {
   transform: translateY(-1px);
 }
 
-
-
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -721,40 +718,39 @@ h1 .chevron i {
   background: #c82333;
 }
 
-/* Notification Styles */
 .notification {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 1rem 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    z-index: 1001;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    animation: slideInRight 0.3s ease-out;
-    min-width: 300px;
-    max-width: 400px;
-    word-wrap: break-word;
-    border-left: 4px solid rgba(255, 255, 255, 0.3);
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  animation: slideInRight 0.3s ease-out;
+  min-width: 300px;
+  max-width: 400px;
+  word-wrap: break-word;
+  border-left: 4px solid rgba(255, 255, 255, 0.3);
 }
 
 .notification-success {
-    background: #10b981;
-    color: white;
+  background: #10b981;
+  color: white;
 }
 
 .notification-error {
-    background: #ef4444;
-    color: white;
+  background: #ef4444;
+  color: white;
 }
 
 .notification-warning {
-    background: #f59e0b;
-    color: white;
+  background: #f59e0b;
+  color: white;
 }
 
 #notification-container {
@@ -805,224 +801,221 @@ h1 .chevron i {
   border-left: 4px solid #d97706;
 }
 
-/* Confirmation Modal Styles */
 .confirmation-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2000;
-    animation: fadeIn 0.3s ease-out;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.3s ease-out;
 }
 
 .confirmation-modal {
-    background: #ffffff;
-    border-radius: 12px;
-    padding: 2rem;
-    max-width: 400px;
-    width: 90%;
-    text-align: center;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    animation: slideInUp 0.3s ease-out;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  animation: slideInUp 0.3s ease-out;
 }
 
 .confirmation-modal h3 {
-    color: #dc3545;
-    margin-bottom: 1rem;
-    font-size: 1.25rem;
-    font-weight: 600;
+  color: #dc3545;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  font-weight: 600;
 }
 
 .confirmation-modal p {
-    color: #6c757d;
-    margin-bottom: 2rem;
-    line-height: 1.6;
+  color: #6c757d;
+  margin-bottom: 2rem;
+  line-height: 1.6;
 }
 
 .confirmation-modal-buttons {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
 }
 
 .confirmation-btn {
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    min-width: 100px;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 100px;
 }
 
 .confirmation-btn.cancel {
-    background: #6c757d;
-    color: white;
+  background: #6c757d;
+  color: white;
 }
 
 .confirmation-btn.cancel:hover {
-    background: #5a6268;
+  background: #5a6268;
 }
 
 .confirmation-btn.delete {
-    background: #dc3545;
-    color: white;
+  background: #dc3545;
+  color: white;
 }
 
 .confirmation-btn.delete:hover {
-    background: #c82333;
+  background: #c82333;
 }
 
-/* Event Preview Card Styles */
 .events-preview-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1rem;
-    margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
 }
 
 .event-preview-card {
-    background: #ffffff;
-    border-radius: 8px;
-    padding: 1.5rem;
-    border-left: 4px solid #0c27be;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease;
-    position: relative;
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  border-left: 4px solid #0c27be;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+  position: relative;
 }
 
 .event-preview-card .delete-btn {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    background: #dc3545;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 12px;
-    font-weight: bold;
-    transition: all 0.2s ease;
-    z-index: 10;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: bold;
+  transition: all 0.2s ease;
+  z-index: 10;
 }
 
 .event-preview-card .delete-btn:hover {
-    background: #c82333;
-    transform: scale(1.1);
-    box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3);
+  background: #c82333;
+  transform: scale(1.1);
+  box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3);
 }
 
 .event-preview-card .delete-btn:active {
-    transform: scale(0.95);
-    background: #a71e2a;
+  transform: scale(0.95);
+  background: #a71e2a;
 }
 
 .event-preview-card .delete-btn.loading {
-    background: #6c757d;
-    cursor: not-allowed;
-    animation: pulse 1s infinite;
+  background: #6c757d;
+  cursor: not-allowed;
+  animation: pulse 1s infinite;
 }
 
 @keyframes pulse {
-    0% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.5;
-    }
-    100% {
-        opacity: 1;
-    }
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 .event-preview-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .event-preview-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #1a202c;
-    margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1a202c;
+  margin-bottom: 0.5rem;
 }
 
 .event-preview-message {
-    color: #4a5568;
-    line-height: 1.5;
-    margin-bottom: 0.75rem;
+  color: #4a5568;
+  line-height: 1.5;
+  margin-bottom: 0.75rem;
 }
 
 .event-preview-meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.875rem;
-    color: #718096;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+  color: #718096;
 }
 
 .event-preview-date {
-    font-weight: 500;
+  font-weight: 500;
 }
 
 .event-preview-time {
-    background: #e2e8f0;
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-    font-weight: 500;
+  background: #e2e8f0;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 500;
 }
 
-/* Animations */
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes slideInRight {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 @keyframes slideOutRight {
-    from {
-        transform: translateX(0);
-        opacity: 1;
-    }
-    to {
-        transform: translateX(100%);
-        opacity: 0;
-    }
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
 }
 
 @keyframes shimmer {
