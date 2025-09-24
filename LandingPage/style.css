@@ -3075,7 +3075,6 @@ header.fading {
 }
 
 @media (max-width: 479px) and (min-width: 320px) {
-  /* Yearbook Section */
   .yearbook-slider-main {
     padding: 1rem 0;
   }
