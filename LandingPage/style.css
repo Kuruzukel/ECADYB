@@ -1,4 +1,3 @@
-/* ===== Page Zoom Out Transition ===== */
 @keyframes zoomPageOut {
   0% {
     opacity: 1;
@@ -22,7 +21,6 @@
   }
 }
 
-/* ===== Header Transition (Zoom Only, No Slant) ===== */
 @keyframes zoomHeaderOut {
   0% {
     opacity: 1;
