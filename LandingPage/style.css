@@ -44,7 +44,6 @@
   }
 }
 
-/* ===== Shimmer Effect ===== */
 @keyframes shimmerEffect {
   0% {
     background-position: -300% 0;
