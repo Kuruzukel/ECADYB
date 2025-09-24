@@ -983,7 +983,6 @@ header.fading {
   opacity: 0.8;
 }
 
-/* Responsive Design for Yearbook Slider */
 @media (width > 650px) and (width < 900px) {
   .yearbook-main-title {
     font-size: 2.8rem;
