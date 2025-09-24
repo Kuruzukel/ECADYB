@@ -1940,22 +1940,13 @@ header.fading {
     width: 88%;
   }
 
-  .yearbook-card {
-    width: calc(30% - 1rem);
-    max-width: none;
-    height: auto;
-    margin-bottom: -1rem;
-  }
-
-  .yearbooks-row {
-    padding: 0 1rem;
-    gap: 1rem;
-  }
-
-  .yearbook-title {
-    font-size: 1.5rem;
-    margin-top: 1rem;
-    margin-bottom: 3rem;
+  .yearbook-intro-content {
+    font-size: 1rem;
+    width: 80%;
+    margin: 0 auto;
+    color: white;
+    margin-left: 5.1rem;
+    margin-right: 5.1rem;
   }
 
   .carousel-subtitle {
