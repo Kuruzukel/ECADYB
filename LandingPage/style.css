@@ -2589,44 +2589,7 @@ header.fading {
   }
 }
 
-/* Medium phone */
 @media (max-width: 599px) and (min-width: 480px) {
-  /* Yearbook Section */
-  .yearbook-slider-main {
-    padding: 1.2rem 0;
-  }
-
-  .yearbook-main-title {
-    font-size: 2rem;
-    margin-bottom: 0.4rem;
-  }
-
-  .yearbook-subtitle {
-    font-size: 1.2rem;
-    margin-bottom: 0.8rem;
-  }
-
-  .yearbook-description {
-    font-size: 0.9rem;
-    line-height: 1.4;
-    max-width: 95%;
-    margin: 0 auto 1.2rem;
-  }
-
-  .yearbook-items-container {
-    padding: 0.8rem 0.3rem;
-  }
-
-  .yearbook-item {
-    width: 90px;
-    height: 140px;
-    margin: 0 0.4rem;
-  }
-
-  .yearbook-btn {
-    padding: 0.35rem 0.7rem;
-    font-size: 0.75rem;
-  }
   .main-hero {
     position: relative;
     width: 100%;
@@ -2903,28 +2866,30 @@ header.fading {
     margin-right: 0;
   }
 
-  .yearbooks-section .section-title {
-    font-size: 2.2rem;
-    text-align: center;
-    margin-top: 1.6rem;
+  .yearbook-intro-content {
+    font-size: 1rem;
+    width: 80%;
+    margin: 0 auto;
+    color: white;
   }
 
-  .yearbook-card {
-    width: calc(30% - 1rem);
-    max-width: none;
-    height: auto;
-    margin-bottom: -1rem;
+  .yearbook-items-container {
+    padding: 1rem 1rem;
+    gap: 10px;
   }
 
-  .yearbooks-row {
-    padding: 0 1rem;
-    gap: 1rem;
-  }
-
-  .yearbook-title {
-    font-size: 0.7rem;
-    margin-top: 0.5rem;
-    margin-bottom: 3rem;
+  .yearbook-item {
+    width: 65px;
+    height: 95px;
+    position: static;
+    background-position: center;
+    background-size: cover;
+    transition: transform 0.3s ease-out;
+    cursor: pointer;
+    list-style-type: none;
+    transform-origin: center center;
+    will-change: transform;
+    backface-visibility: hidden;
   }
 
   .carousel-subtitle {
