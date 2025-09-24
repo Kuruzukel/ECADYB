@@ -1035,8 +1035,8 @@ header.fading {
   }
 
   .yearbook-items-container {
-    gap: 10px;
-    bottom: 30px;
+    gap: 1px;
+    bottom: 5rem;
   }
 
   .yearbook-slider-main.show-yearbook-bg .yearbook-items-container {
@@ -2189,8 +2189,8 @@ header.fading {
   .carousel-track img {
     width: 100%;
     max-width: 550px;
-    height: 100%; /* fills the container height */
-    object-fit: contain; /* keeps full image */
+    height: 100%;
+    object-fit: contain;
     border-radius: 12px;
     margin: 0 1rem;
     flex-shrink: 0;
