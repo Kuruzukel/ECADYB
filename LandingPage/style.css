@@ -131,7 +131,6 @@
   transform-origin: center center;
 }
 
-/* ===== Hero Section ===== */
 .page-transition-out .main-hero {
   animation: zoomPageOut 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   animation-delay: 0.05s;
