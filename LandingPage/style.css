@@ -2010,7 +2010,6 @@ header.fading {
   }
 }
 
-/* Tablet */
 @media (max-width: 991px) and (min-width: 768px) {
   #mobileLoginDropdownBtn,
   #mobileLoginDropdownMenu {
