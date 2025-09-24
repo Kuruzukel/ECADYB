@@ -1001,7 +1001,6 @@ header.fading {
     bottom: 50px;
   }
 
-  /* Active state adjustments for tablet */
   .yearbook-slider-main.show-yearbook-bg .yearbook-items-container {
     bottom: 35px;
     gap: 8px;
