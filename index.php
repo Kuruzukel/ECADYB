@@ -97,7 +97,6 @@ $routes = [
     '/LandingPage'        => BASE_PATH . '/LandingPage/index.html',
     '/login'              => BASE_PATH . '/Public/Components/Login.php',
     '/Login'              => BASE_PATH . '/Public/Components/Login.php',
-    '/reset-password'     => BASE_PATH . '/Public/Components/ResetPassword.html',
     '/Admin'              => BASE_PATH . '/Admin/Components/AdminDashboard.php',
     '/Admin/Components/AdminLogout.php' => BASE_PATH . '/Admin/Components/AdminLogout.php',
     '/Student'            => BASE_PATH . '/Student/Components/StudentDashboard.php',
@@ -229,10 +228,7 @@ $staticPaths = [
     '/img/'                             => '/img/',
     '/LandingPage/'                     => '/LandingPage/',
     '/Public/assets/css/'               => '/Public/assets/css/',
-    '/Public/assets/js/'                => '/Public/assets/js/',
-    '/Public/Components/ResetPassword.html' => '/Public/Components/ResetPassword.html',
-    '/Public/assets/css/ResetPassword.css' => '/Public/assets/css/ResetPassword.css',
-    '/Public/assets/js/ResetPassword.js' => '/Public/assets/js/ResetPassword.js'
+    '/Public/assets/js/'                => '/Public/assets/js/'
 ];
 
 foreach ($staticPaths as $uriPrefix => $folder) {

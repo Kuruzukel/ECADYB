@@ -186,7 +186,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
                 </div>
                 <div class="forgot-password">
-                    <a href="/reset-password">Forgot Password?</a>
+                    <a href="/ECADYB/Public/Components/ResetPassword.html">Forgot Password?</a>
                 </div>
             </div>
             <button type="submit">Login</button>
@@ -198,5 +198,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
     <script src="../assets/js/Login.js"></script>
 
-</body>
+    </body>
+
 </html>

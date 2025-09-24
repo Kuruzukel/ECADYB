@@ -145,7 +145,7 @@ window.addEventListener("DOMContentLoaded", () => {
       document.body.classList.add("page-transition-out");
 
       setTimeout(() => {
-        window.location.href = "/login";
+        window.location.href = "/ECADYB/Public/Components/Login.php";
       }, 1000);
     });
   }
