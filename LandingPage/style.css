@@ -661,9 +661,8 @@ header.fading {
   font-size: 1.2rem;
   line-height: 1.6;
   margin-bottom: 2rem;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-  color: #e0e7ff;
   font-family: "Segoe UI", sans-serif;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
 }
 
 .yearbook-slider-main.show-yearbook-bg {
