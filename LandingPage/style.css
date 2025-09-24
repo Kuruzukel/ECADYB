@@ -2116,28 +2116,22 @@ header.fading {
     width: 88%;
   }
 
-  .yearbooks-section .section-title {
-    font-size: 2.2rem;
-    text-align: center;
-    margin-top: 1.6rem;
+  .yearbook-items-container {
+    padding: 1rem 1rem;
   }
 
-  .yearbook-card {
-    width: calc(28% - 1rem);
-    max-width: none;
-    height: auto;
-    margin-bottom: -1rem;
-  }
-
-  .yearbooks-row {
-    padding: 0 1rem;
-    gap: 1rem;
-  }
-
-  .yearbook-title {
-    font-size: 1rem;
-    margin-top: 0.5rem;
-    margin-bottom: 3rem;
+  .yearbook-item {
+    width: 100px;
+    height: 155px;
+    position: static;
+    background-position: center;
+    background-size: cover;
+    transition: transform 0.3s ease-out;
+    cursor: pointer;
+    list-style-type: none;
+    transform-origin: center center;
+    will-change: transform;
+    backface-visibility: hidden;
   }
 
   .carousel-subtitle {
