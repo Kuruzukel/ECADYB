@@ -870,7 +870,7 @@ header.fading {
 }
 
 .yearbook-slider-main.show-yearbook-bg .yearbook-items-container {
-  bottom: 20px;
+  bottom: 5rem;
   gap: 30px;
 }
 
@@ -887,7 +887,7 @@ header.fading {
 
 .yearbook-items-container {
   position: absolute;
-  bottom: 60px;
+  bottom: 5rem;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -997,11 +997,11 @@ header.fading {
 
   .yearbook-items-container {
     gap: 15px;
-    bottom: 50px;
+    bottom: 5rem;
   }
 
   .yearbook-slider-main.show-yearbook-bg .yearbook-items-container {
-    bottom: 35px;
+    bottom: 5rem;
     gap: 8px;
   }
 
@@ -1039,7 +1039,7 @@ header.fading {
   }
 
   .yearbook-slider-main.show-yearbook-bg .yearbook-items-container {
-    bottom: 20px;
+    bottom: 5rem;
     gap: 5px;
   }
 
@@ -2138,6 +2138,7 @@ header.fading {
 
   .yearbook-items-container {
     padding: 1rem 1rem;
+    bottom: 5rem;
   }
 
   .yearbook-item {
@@ -2214,7 +2215,7 @@ header.fading {
   }
 }
 
-@media (max-width: 767px) and (min-width: 600px) {
+@media (max-width: 768px) and (min-width: 600px) {
   .main-hero {
     position: relative;
     width: 100%;
@@ -2501,6 +2502,7 @@ header.fading {
   .yearbook-items-container {
     padding: 1rem 1rem;
     gap: 10px;
+    bottom: 5rem;
   }
 
   .yearbook-item {
@@ -2589,7 +2591,7 @@ header.fading {
   }
 }
 
-@media (max-width: 599px) and (min-width: 480px) {
+@media (max-width: 600px) and (min-width: 480px) {
   .main-hero {
     position: relative;
     width: 100%;
@@ -2876,11 +2878,12 @@ header.fading {
   .yearbook-items-container {
     padding: 1rem 1rem;
     gap: 10px;
+    bottom: 5rem;
   }
 
   .yearbook-item {
-    width: 65px;
-    height: 95px;
+    width: 50px;
+    height: 75px;
     position: static;
     background-position: center;
     background-size: cover;
@@ -3034,6 +3037,7 @@ header.fading {
 
   .yearbook-items-container {
     padding: 0.5rem 0.2rem;
+    bottom: 5rem;
   }
 
   .yearbook-item {
