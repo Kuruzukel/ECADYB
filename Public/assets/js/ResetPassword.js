@@ -1,12 +1,18 @@
-function togglePass(fieldId) {
-  const passField = document
-    .querySelector(`#${fieldId}`)
-    .closest(".passwordField");
-  const input = document.getElementById(fieldId);
+function togglePass() {
+  const passField = document.querySelector(".passwordField");
+  const input = document.getElementById("loginPass");
   const isVisible = passField.getAttribute("data-isvisible") === "true";
 
   passField.setAttribute("data-isvisible", !isVisible);
   input.type = isVisible ? "password" : "text";
+}
+
+function limitID() {
+  const input = document.getElementById("idInput");
+  const maxLength = parseInt(input.getAttribute("maxlength"), 10);
+  if (input.value.length > maxLength) {
+    input.value = input.value.slice(0, maxLength);
+  }
 }
 
 function showErrorModal(message, type = "error") {
@@ -41,46 +47,33 @@ function hideErrorModal() {
 }
 
 function validateForm() {
-  const newPassword = document.getElementById("currrentpassword").value.trim();
-  const confirmPassword = document.getElementById("newpassword").value.trim();
+  const username = document.getElementById("idInput").value.trim();
+  const password = document.getElementById("loginPass").value.trim();
 
   clearFieldHighlights();
 
-  if (!newPassword && !confirmPassword) {
+  if (!username && !password) {
     showErrorModal("Please fill in all required fields.");
-    highlightField("currrentpassword");
-    highlightField("newpassword");
+    highlightField("idInput");
+    highlightField("loginPass");
     return false;
   }
 
-  if (!newPassword) {
-    showErrorModal("Please enter your new password.");
-    highlightField("currrentpassword");
+  if (!username) {
+    showErrorModal("Please enter your username or student ID.");
+    highlightField("idInput");
     return false;
   }
 
-  if (!confirmPassword) {
-    showErrorModal("Please confirm your password.");
-    highlightField("newpassword");
+  if (!password) {
+    showErrorModal("Please enter your password.");
+    highlightField("loginPass");
     return false;
   }
 
-  if (newPassword.length > 8) {
+  if (password.length > 8) {
     showErrorModal("Password must not exceed 8 characters.");
-    highlightField("currrentpassword");
-    return false;
-  }
-
-  if (newPassword.length < 3) {
-    showErrorModal("Password must be at least 3 characters long.");
-    highlightField("currrentpassword");
-    return false;
-  }
-
-  if (newPassword !== confirmPassword) {
-    showErrorModal("Passwords do not match. Please try again.");
-    highlightField("currrentpassword");
-    highlightField("newpassword");
+    highlightField("loginPass");
     return false;
   }
 
@@ -109,28 +102,38 @@ function clearFieldHighlight(fieldId) {
 }
 
 function clearFieldHighlights() {
-  clearFieldHighlight("currrentpassword");
-  clearFieldHighlight("newpassword");
+  clearFieldHighlight("idInput");
+  clearFieldHighlight("loginPass");
 }
 
 window.addEventListener("DOMContentLoaded", () => {
   document.body.classList.add("page-transition-in");
 
-  const form = document.querySelector("form");
-  if (form) {
-    form.addEventListener("submit", function (e) {
-      if (!validateForm()) {
+  const loginSuccess = document.body.getAttribute("data-login-success");
+  const redirectTo = document.body.getAttribute("data-redirect-to");
+
+  if (loginSuccess && redirectTo) {
+    document.body.classList.add("page-transition-out");
+
+    setTimeout(() => {
+      window.location.href = redirectTo;
+    }, 1000);
+    return;
+  }
+
+  const errorMessage = document.body.getAttribute("data-error-message");
+  if (errorMessage && !loginSuccess) {
+    showErrorModal(errorMessage);
+  }
+
+  const loginForm = document.querySelector("form");
+  if (loginForm) {
+    loginForm.addEventListener("submit", function (e) {
+      const isValid = validateForm();
+      if (!isValid) {
         e.preventDefault();
         return false;
       }
-
-      e.preventDefault();
-      document.body.classList.add("page-transition-out");
-
-      showErrorModal("Password changed successfully!", "success");
-      setTimeout(() => {
-        window.location.href = "../Components/Login.php";
-      }, 2000);
     });
   }
 
@@ -142,7 +145,7 @@ window.addEventListener("DOMContentLoaded", () => {
       document.body.classList.add("page-transition-out");
 
       setTimeout(() => {
-        window.location.href = "../Components/Login.php";
+        window.location.href = "/login";
       }, 1000);
     });
   }

@@ -481,6 +481,10 @@ label {
 
 .field {
   width: 20rem;
+  margin: 2rem auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .user.field {
@@ -501,6 +505,12 @@ label {
 
 .passwordField {
   position: relative;
+  border-radius: 2rem;
+  width: 20rem;
+}
+
+.passwordField:hover {
+  border-radius: 2rem;
 }
 
 .eyeIcon {
@@ -512,19 +522,19 @@ label {
   cursor: pointer;
 }
 
-.passwordField[data-isVisible="false"] .eyeIcon.open {
+.passwordField[data-isvisible="false"] .eyeIcon.open {
   display: none;
 }
 
-.passwordField[data-isVisible="false"] .eyeIcon.close {
+.passwordField[data-isvisible="false"] .eyeIcon.close {
   display: block;
 }
 
-.passwordField[data-isVisible="true"] .eyeIcon.close {
+.passwordField[data-isvisible="true"] .eyeIcon.close {
   display: none;
 }
 
-.passwordField[data-isVisible="true"] .eyeIcon.open {
+.passwordField[data-isvisible="true"] .eyeIcon.open {
   display: block;
 }
 
@@ -534,14 +544,16 @@ input {
   color: #2c3e50;
   border: 2px solid rgba(255, 255, 255, 0.3);
   outline: none;
-  width: 100%;
-  height: 2.8rem;
-  border-radius: 15px;
+  width: 20rem;
+  height: 2.5rem;
+  border-radius: 2rem;
   padding-inline: 1.2rem;
   font-size: 16px;
   font-weight: 500;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  /* Add padding to the right to make space for the eye icon */
+  padding-right: 2.5rem;
 }
 
 input:focus {
@@ -554,6 +566,7 @@ input:hover {
   border-color: rgba(99, 102, 241, 0.4);
   transform: translateY(-1px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  border-radius: 2rem;
 }
 
 input::-webkit-outer-spin-button,
@@ -577,9 +590,9 @@ button[type="submit"] {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   background-color: black;
   height: 2.5rem;
-  width: 38%;
+  width: 50%;
   color: white;
-  border-radius: 1rem;
+  border-radius: 2rem;
   outline: none;
   border: none;
   margin-top: 1rem;
@@ -732,6 +745,26 @@ button[type="back"]:hover {
   }
 }
 
+@media (max-width: 768px) {
+  input {
+    background-color: rgb(255, 255, 255);
+    color: black;
+    border: none;
+    outline: none;
+    width: 20rem;
+    height: 2.5rem;
+    border-radius: 2rem;
+    padding-inline: 1rem;
+    font-size: 1rem;
+    /* Add padding to the right to make space for the eye icon */
+    padding-right: 2.5rem;
+  }
+  
+  .passwordField {
+    width: 20rem;
+  }
+}
+
 @media screen and (max-width: 550px) {
   .title {
     font-size: 3rem;
@@ -745,78 +778,35 @@ button[type="back"]:hover {
     margin-top: 2rem;
   }
 
-  .input {
+  .field {
     width: 80%;
   }
 
   button[type="submit"] {
     width: 87%;
   }
-}
-
-.field {
-  width: 15rem;
-}
-
-.user.field {
-  margin-top: 2rem;
-}
-
-.pass.field {
-  margin-top: 2rem;
-}
-
-.error-message {
-  color: white;
-  font-size: 1rem;
-  margin-top: 5px;
-  margin-bottom: -20px;
-  text-align: center;
-  background-color: rgba(250, 0, 0, 0.2);
-  padding: 10px;
-  border-radius: 5px;
-  border: 3px darkred solid;
-  opacity: 0;
-  transition: opacity 1s ease-in-out;
-  visibility: hidden;
-}
-
-.error-message.show {
-  opacity: 1;
-  visibility: visible;
-}
-
-@media (max-width: 768px) {
+  
+  .passwordField {
+    width: 80%;
+  }
+  
   input {
-    background-color: rgb(255, 255, 255);
-    color: black;
-    border: none;
-    outline: none;
-    width: 100%;
-    height: 2.5rem;
-    border-radius: 1rem;
-    padding-inline: 1rem;
-    font-size: 1rem;
+    width: 80%;
+    /* Adjust padding for smaller screens */
+    padding-right: 2.5rem;
+  }
+  
+  .eyeIcon {
+    height: 1.5rem;
+    width: 1.5rem;
+    position: absolute;
+    top: 0.6rem;
+    right: 1rem;
+    cursor: pointer;
   }
 }
 
-@media (max-width: 549px) {
-  .title {
-    font-size: 1.5rem;
-  }
-
-  .logoContainer {
-    height: 8rem;
-    width: 8rem;
-    max-width: 55%;
-    max-height: 55%;
-  }
-  button[type="submit"] {
-    width: 83%;
-  }
-}
-
-@media (max-width: 480px) {
+@media screen and (max-width: 480px) {
   .book {
     padding: 1rem;
   }
@@ -838,6 +828,29 @@ button[type="back"]:hover {
     width: 8rem;
     max-width: 55%;
     max-height: 55%;
+  }
+  
+  .field {
+    width: 80%;
+  }
+  
+  .passwordField {
+    width: 80%;
+  }
+  
+  input {
+    width: 80%;
+    /* Adjust padding for smaller screens */
+    padding-right: 2.5rem;
+  }
+  
+  .eyeIcon {
+    height: 1.5rem;
+    width: 1.5rem;
+    position: absolute;
+    top: 0.6rem;
+    right: 1rem;
+    cursor: pointer;
   }
 }
 
@@ -876,7 +889,7 @@ button[type="back"]:hover {
   }
 
   .field {
-    width: 15rem;
+    width: 80%;
   }
 
   .user.field {
@@ -885,6 +898,25 @@ button[type="back"]:hover {
 
   .pass.field {
     margin-top: 2rem;
+  }
+  
+  .passwordField {
+    width: 80%;
+  }
+  
+  input {
+    width: 80%;
+    /* Adjust padding for smaller screens */
+    padding-right: 2.5rem;
+  }
+  
+  .eyeIcon {
+    height: 1.5rem;
+    width: 1.5rem;
+    position: absolute;
+    top: 0.6rem;
+    right: 1rem;
+    cursor: pointer;
   }
 }
 
