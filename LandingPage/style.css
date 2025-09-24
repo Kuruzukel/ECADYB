@@ -58,7 +58,6 @@
   }
 }
 
-/* ===== Particle Float (still rising effect) ===== */
 @keyframes particleFloat {
   0% {
     transform: translateY(100vh) translateX(0);
