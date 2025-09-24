@@ -3074,7 +3074,6 @@ header.fading {
   }
 }
 
-/* Small phone */
 @media (max-width: 479px) and (min-width: 320px) {
   /* Yearbook Section */
   .yearbook-slider-main {
