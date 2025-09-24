@@ -894,7 +894,7 @@ header.fading {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 20px; /* Change this value to adjust gaps between all items */
+  gap: 20px;
   z-index: 2;
   will-change: auto;
   backface-visibility: hidden;
