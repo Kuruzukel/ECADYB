@@ -962,7 +962,6 @@ header.fading {
   z-index: 100;
 }
 
-/* Prevent hover conflicts when in full background mode */
 .yearbook-slider-main.show-yearbook-bg .yearbook-item:hover {
   transform: translateY(-10px) scale(0.8);
 }
