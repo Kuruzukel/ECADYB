@@ -1988,7 +1988,7 @@ header.fading {
   .carousel-track img {
     width: 100%;
     max-width: 600px;
-    height: 100%; /* fills the container height */
+    height: 100%;
     object-fit: contain; /* keeps full image */
     border-radius: 12px;
     margin: 0 1rem;
