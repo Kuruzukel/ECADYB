@@ -82,7 +82,6 @@
   overflow: hidden;
 }
 
-/* ===== Shimmer Overlay ===== */
 .page-transition-out::before {
   content: "";
   position: fixed;
