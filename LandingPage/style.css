@@ -1035,8 +1035,8 @@ header.fading {
   }
 
   .yearbook-items-container {
-    gap: 10px; /* Smaller gap for mobile */
-    bottom: 30px;
+    gap: 10px;
+    /bottom: 30px;
   }
 
   /* Active state adjustments for mobile */
