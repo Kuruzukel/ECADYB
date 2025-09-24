@@ -1009,7 +1009,6 @@ header.fading {
   .yearbook-item {
     width: 120px;
     height: 160px;
-    /* Inherit transition from parent rule */
   }
 
   .yearbook-content .yearbook-title {
