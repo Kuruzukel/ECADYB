@@ -2557,7 +2557,7 @@ header.fading {
     width: 100%;
     max-width: 430px;
     height: 100%;
-    object-fit: contain; /* keeps full image */
+    object-fit: contain;
     border-radius: 12px;
     margin: 0 1rem;
     flex-shrink: 0;
