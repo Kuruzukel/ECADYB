@@ -1677,7 +1677,6 @@ header.fading {
   }
 }
 
-/* Small laptop / Large tablet */
 @media (max-width: 1199px) and (min-width: 1120px) {
   #mobileLoginDropdownBtn,
   #mobileLoginDropdownMenu {
@@ -2114,6 +2113,13 @@ header.fading {
     margin-left: 3rem;
     margin-right: 0;
     width: 88%;
+  }
+
+  .yearbook-intro-content {
+    font-size: 1rem;
+    width: 80%;
+    margin: 0 auto;
+    color: white;
   }
 
   .yearbook-items-container {
