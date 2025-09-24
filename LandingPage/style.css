@@ -1036,7 +1036,7 @@ header.fading {
 
   .yearbook-items-container {
     gap: 10px;
-    /bottom: 30px;
+    bottom: 30px;
   }
 
   .yearbook-slider-main.show-yearbook-bg .yearbook-items-container {
