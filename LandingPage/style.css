@@ -1993,7 +1993,7 @@ header.fading {
     border-radius: 12px;
     margin: 0 1rem;
     flex-shrink: 0;
-    background: #021326; /* fills gaps */
+    background: #021326;
   }
 
   .footer-inner-container {
