@@ -902,7 +902,7 @@ header.fading {
 
 .yearbook-slider {
   display: flex;
-  gap: inherit; /* Inherits the gap from parent container */
+  gap: inherit;
   list-style: none;
   margin: 0;
   padding: 0;
