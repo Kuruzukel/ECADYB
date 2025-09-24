@@ -794,7 +794,6 @@ header.fading {
   font-family: "Segoe UI", sans-serif;
 }
 
-/* Responsive Design for Yearbook Detail Display */
 @media (width < 900px) {
   .yearbook-detail-container {
     flex-direction: column;
