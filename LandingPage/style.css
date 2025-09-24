@@ -103,7 +103,6 @@
   pointer-events: none;
 }
 
-/* ===== Particle Overlay ===== */
 .page-transition-out::after {
   content: "";
   position: fixed;
