@@ -871,7 +871,7 @@ header.fading {
 }
 
 .yearbook-slider-main.show-yearbook-bg .yearbook-items-container {
-  bottom: 20px; /* Move items lower when active */
+  bottom: 20px;
   gap: 30px; /* Reduce gaps between items when active */
 }
 
