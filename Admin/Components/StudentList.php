@@ -88,7 +88,6 @@ try {
         ]
     );
 
-    // Process results
     foreach ($cursor as $student) {
         $allStudents[] = [
             'id' => $student['id'] ?? 0,
