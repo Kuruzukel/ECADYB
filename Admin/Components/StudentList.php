@@ -42,7 +42,6 @@ $collections = [
     "bse"    => "BS Entrepreneurship"
 ];
 
-// Get selected department from URL
 $selectedDepartment = $_GET['department'] ?? "bsme";
 if (!array_key_exists($selectedDepartment, $collections)) {
     $selectedDepartment = "bsme";
