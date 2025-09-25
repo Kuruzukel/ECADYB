@@ -134,7 +134,6 @@ function importCSVToTemplateDepartments($tmpName, $templateDB, $programMap)
             try {
                 $collection = $templateDB->$deptCode;
 
-                // Clear existing data and insert new records
                 $collection->drop();
                 $collection->insertMany($records);
             } catch (Exception $e) {
