@@ -177,7 +177,6 @@ function getSelectedTemplateDatabase($client)
 {
     $selectedTemplate = !empty($_POST['selected_template']) ? $_POST['selected_template'] : 'Batch Template 1';
 
-    // Validate and sanitize the template name
     $selectedTemplate = trim($selectedTemplate);
 
     // Create database name by removing spaces and ensuring valid format
