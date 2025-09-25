@@ -1,5 +1,4 @@
 <?php
-// Yearbook Cover Upload API
 ob_start();
 
 // Headers (for Railway / CORS)
@@ -189,7 +188,7 @@ try {
             'connectTimeoutMS'         => 5000,
             'socketTimeoutMS'          => 5000
         ]);
-        
+
         // Create database name based on selected template
         $dbName = "BatchTemplate" . $template;
         $db = $client->$dbName;
@@ -197,7 +196,7 @@ try {
 
         // Debug: Log the database and collection being used
         error_log("UploadCover.php using database: $dbName, collection: YearbookCovers");
-        
+
         // Debug: Check if the database exists and list collections
         try {
             $databases = $client->listDatabases();
@@ -209,7 +208,7 @@ try {
                 }
             }
             error_log("UploadCover.php database $dbName exists: " . ($dbExists ? "true" : "false"));
-            
+
             if ($dbExists) {
                 $collections = $db->listCollections();
                 $collectionNames = [];
@@ -244,13 +243,13 @@ try {
         // Debug: Log the update operation
         error_log("UploadCover.php updating document with filter: template=$template, slot=$slot");
         error_log("UploadCover.php update data: " . json_encode($update));
-        
+
         $result = $collection->updateOne(
             ['template' => $template, 'slot' => $slot],
             $update,
             ['upsert' => true]
         );
-        
+
         error_log("UploadCover.php update result: matched=" . $result->getMatchedCount() . ", modified=" . $result->getModifiedCount() . ", upserted=" . $result->getUpsertedCount());
 
         // Ensure slot 8 exists
@@ -267,7 +266,7 @@ try {
             ],
             ['upsert' => true]
         );
-        
+
         error_log("UploadCover.php slot 8 update result: matched=" . $result8->getMatchedCount() . ", modified=" . $result8->getModifiedCount() . ", upserted=" . $result8->getUpsertedCount());
     } catch (Exception $e) {
         respond(false, 'Uploaded to CDN, but failed to update MongoDB: ' . $e->getMessage(), [
