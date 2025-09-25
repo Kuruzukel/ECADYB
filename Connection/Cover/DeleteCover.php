@@ -40,7 +40,6 @@ try {
     $side     = isset($_POST['side']) ? strtolower(trim($_POST['side'])) : '';
     $template = isset($_POST['template']) ? (int)$_POST['template'] : 1;
 
-    // Debug: Log the received parameters
     error_log("DeleteCover.php received parameters: slot=$slot, side=$side, template=$template");
 
     // Validate template parameter
@@ -65,7 +64,7 @@ try {
         'connectTimeoutMS'         => 5000,
         'socketTimeoutMS'          => 5000
     ]);
-    
+
     // Create database name based on selected template
     $dbName = "BatchTemplate" . $template;
     $db = $client->$dbName;
@@ -73,7 +72,7 @@ try {
 
     // Debug: Log the database and collection being used
     error_log("DeleteCover.php using database: $dbName, collection: YearbookCovers");
-    
+
     // Debug: Check if the database exists and list collections
     try {
         $databases = $client->listDatabases();
@@ -85,7 +84,7 @@ try {
             }
         }
         error_log("DeleteCover.php database $dbName exists: " . ($dbExists ? "true" : "false"));
-        
+
         if ($dbExists) {
             $collections = $db->listCollections();
             $collectionNames = [];
@@ -175,7 +174,7 @@ try {
             '$set'   => ['updated_at' => new MongoDB\BSON\UTCDateTime()]
         ]
     );
-    
+
     error_log("DeleteCover.php update result: matched=" . $result->getMatchedCount() . ", modified=" . $result->getModifiedCount());
 
     respond(true, 'Cover deleted successfully');
