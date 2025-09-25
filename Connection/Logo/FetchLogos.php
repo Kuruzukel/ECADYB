@@ -17,15 +17,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 session_start();
 
 // Error handling function
-function respond($success, $message = '', $data = []) {
+function respond($success, $message = '', $data = [])
+{
     // Clear any output buffers
     while (ob_get_level()) {
         ob_end_clean();
     }
-    
+
     // Set JSON header
     header('Content-Type: application/json');
-    
+
     // Return JSON response
     echo json_encode(array_merge(['success' => $success, 'message' => $message], $data));
     exit;
@@ -38,6 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 
 // Load dependencies
 require __DIR__ . '/../../vendor/autoload.php';
+
 use MongoDB\Client;
 
 try {
@@ -52,12 +54,11 @@ try {
     $db = $client->admin;
     $collection = $db->logo;
 
-    // Fetch only necessary fields
     $cursor = $collection->find(
         ['type' => 'logo_container'],
         [
             'projection' => ['slot' => 1, 'url' => 1],
-            'sort' => ['slot' => 1] // sort logos by slot order
+            'sort' => ['slot' => 1]
         ]
     );
 
@@ -70,7 +71,6 @@ try {
     }
 
     respond(true, 'Logos fetched successfully', ['items' => $items]);
-    
 } catch (Exception $e) {
     respond(false, 'Failed to fetch logos: ' . $e->getMessage());
 }

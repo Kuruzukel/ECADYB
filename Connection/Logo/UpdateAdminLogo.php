@@ -1,14 +1,11 @@
 <?php
-// Ensure no output before headers
 ob_start();
 
-// Set proper headers for Railway
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
-// Handle preflight OPTIONS request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit();
@@ -16,28 +13,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 session_start();
 
-// Error handling function
-function respond($success, $message = '', $data = []) {
-    // Clear any output buffers
+function respond($success, $message = '', $data = [])
+{
     while (ob_get_level()) {
         ob_end_clean();
     }
-    
-    // Set JSON header
+
     header('Content-Type: application/json');
-    
-    // Return JSON response
+
     echo json_encode(array_merge(['success' => $success, 'message' => $message], $data));
     exit;
 }
 
-// Check if it's a POST request
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     respond(false, 'Invalid request method');
 }
 
-// Load dependencies
 require __DIR__ . '/../../vendor/autoload.php';
+
 use MongoDB\Client;
 
 try {
@@ -60,11 +53,10 @@ try {
         'connectTimeoutMS' => 5000,
         'socketTimeoutMS' => 5000
     ]);
-    
+
     $db = $client->admin;
     $collection = $db->selectedlogo;
 
-    // Update or insert the admin logo setting
     $result = $collection->updateOne(
         ['setting_type' => 'admin_logo'],
         [
@@ -86,7 +78,6 @@ try {
     } else {
         respond(false, 'Failed to update admin logo');
     }
-
 } catch (Exception $e) {
     respond(false, 'Failed to update admin logo: ' . $e->getMessage());
 }

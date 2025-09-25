@@ -3,13 +3,11 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 use MongoDB\Client;
 
-// Headers
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *'); // optional for fetch
+header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Content-Type');
 
-// MongoDB connection
 $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 try {
     $client = new Client($mongoUrl);
@@ -22,10 +20,8 @@ try {
     exit;
 }
 
-// Handle POST request
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // Read JSON input
     $inputRaw = file_get_contents('php://input');
     $input = json_decode($inputRaw, true);
 
@@ -54,7 +50,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $coll = $db->$collection;
 
-        // Match either "student_id" or "student id"
         $filter = [
             '$or' => [
                 ['student_id' => $studentId],
@@ -86,7 +81,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-// Fallback for non-POST
 echo json_encode([
     "success" => false,
     "message" => "Invalid request method"

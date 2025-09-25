@@ -1,18 +1,15 @@
-// Hamburger menu functionality
 document.addEventListener("DOMContentLoaded", function () {
   const hamburgerMenu = document.getElementById("hamburgerMenu");
   const centerNav = document.querySelector(".center-nav");
 
   if (!hamburgerMenu || !centerNav) return;
 
-  // Toggle mobile menu
   hamburgerMenu.addEventListener("click", function (e) {
     e.stopPropagation();
     this.classList.toggle("active");
     centerNav.classList.toggle("mobile-active");
   });
 
-  // Close mobile menu when clicking on a link
   const navLinks = centerNav.querySelectorAll("a");
   navLinks.forEach((link) => {
     link.addEventListener("click", function () {
@@ -21,7 +18,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // Close mobile menu when clicking outside
   document.addEventListener("click", function (event) {
     if (
       !hamburgerMenu.contains(event.target) &&
@@ -33,22 +29,18 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-// Smooth scrolling functionality
 document.addEventListener("DOMContentLoaded", function () {
   const navLinks = document.querySelectorAll(".center-nav a");
   const heroButtons = document.querySelectorAll(
     ".hero-btn, .hero-btn-secondary"
   );
 
-  // Add smooth scrolling to all nav links
   navLinks.forEach((link) => {
     link.addEventListener("click", function (e) {
       e.preventDefault();
 
-      // Remove clicked class from all nav links
       navLinks.forEach((navLink) => navLink.classList.remove("clicked"));
 
-      // Add clicked class to the current link
       this.classList.add("clicked");
 
       const targetId = this.getAttribute("href");
@@ -62,15 +54,12 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // Add smooth scrolling to hero buttons
   heroButtons.forEach((button) => {
     button.addEventListener("click", function (e) {
       e.preventDefault();
 
-      // Add clicked class for visual feedback
       this.classList.add("clicked");
 
-      // Remove clicked class after animation
       setTimeout(() => {
         this.classList.remove("clicked");
       }, 300);
@@ -87,7 +76,6 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-// Carousel logic using images from HTML
 const track = document.getElementById("carousel-track");
 let carouselImageElements = Array.from(track.querySelectorAll(".carousel-img"));
 let carouselImages = carouselImageElements.map((img) => img.src);
@@ -95,11 +83,10 @@ let carouselImages = carouselImageElements.map((img) => img.src);
 let currentIndex = 0;
 
 function renderImages() {
-  // For infinite effect, clone last and first images
   const images = [
-    carouselImages[carouselImages.length - 1], // last
+    carouselImages[carouselImages.length - 1],
     ...carouselImages,
-    carouselImages[0], // first
+    carouselImages[0],
   ];
 
   track.innerHTML = images
@@ -111,10 +98,8 @@ function renderImages() {
     )
     .join("");
 
-  // Update carouselImageElements after rendering
   carouselImageElements = Array.from(track.querySelectorAll(".carousel-img"));
 
-  // Set initial position to the first real image
   track.style.transition = "none";
   track.style.transform = `translateX(-100%)`;
   currentIndex = 0;
@@ -127,7 +112,6 @@ function moveToIndex(index) {
 }
 
 function handleTransitionEnd() {
-  // Loop logic
   if (currentIndex < 0) {
     currentIndex = carouselImages.length - 1;
     track.style.transition = "none";
@@ -149,7 +133,6 @@ function prevImage() {
 
 track.addEventListener("transitionend", handleTransitionEnd);
 
-// Touch support
 let startX = 0;
 let isDragging = false;
 
@@ -179,10 +162,8 @@ track.addEventListener("touchend", (e) => {
   }
 });
 
-// Initialize
 renderImages();
 
-// Auto-slide
 let autoSlideInterval = null;
 let timeoutId = null;
 
@@ -212,7 +193,6 @@ function resetCarouselAfterTimeout() {
 startAutoSlide();
 resetCarouselAfterTimeout();
 
-// 3D Carousel Functionality
 document.addEventListener("DOMContentLoaded", function () {
   const carousel = document.querySelector(".carousel-3d");
   const items = document.querySelectorAll(".carousel-3d-item");
@@ -220,7 +200,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const nextBtn = document.querySelector(".carousel-3d-next");
   const pagination = document.querySelector(".carousel-3d-pagination");
 
-  // Early return if 3D carousel elements don't exist
   if (!carousel || !items.length || !pagination) {
     console.log(
       "3D carousel elements not found - skipping 3D carousel initialization"
@@ -237,31 +216,24 @@ document.addEventListener("DOMContentLoaded", function () {
   let prevTranslate = 0;
   let animationID = 0;
 
-  // Initialize carousel items
   function initCarousel() {
     try {
-      // Position items in a circle
       items.forEach((item, index) => {
-        // Calculate rotation for each item
         const rotation = angle * index;
         item.style.transform = `rotateY(${rotation}deg) translateZ(500px)`;
 
-        // Add data-index for reference
         item.setAttribute("data-index", index);
       });
 
-      // Create pagination
       createPagination();
       updatePagination();
 
-      // Add touch and mouse events
       setupEventListeners();
     } catch (error) {
       console.error("Error initializing 3D carousel:", error);
     }
   }
 
-  // Create pagination dots
   function createPagination() {
     if (!pagination) return;
 
@@ -276,7 +248,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Update active pagination dot
   function updatePagination() {
     if (!pagination) return;
 
@@ -290,7 +261,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Go to specific slide
   function goToSlide(index) {
     try {
       currentIndex = (index + totalItems) % totalItems;
@@ -301,7 +271,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Rotate carousel to current index
   function rotateCarousel() {
     if (!carousel) {
       console.warn("Carousel element not found");
@@ -317,7 +286,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Next slide
   function nextSlide() {
     try {
       currentIndex = (currentIndex + 1) % totalItems;
@@ -328,7 +296,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Previous slide
   function prevSlide() {
     try {
       currentIndex = (currentIndex - 1 + totalItems) % totalItems;
@@ -339,10 +306,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Setup event listeners
   function setupEventListeners() {
     try {
-      // Navigation buttons (only if they exist)
       if (prevBtn) {
         prevBtn.addEventListener("click", prevSlide);
       }
@@ -350,21 +315,17 @@ document.addEventListener("DOMContentLoaded", function () {
         nextBtn.addEventListener("click", nextSlide);
       }
 
-      // Touch and mouse events (only if carousel exists)
       if (carousel) {
-        // Touch events
         carousel.addEventListener("touchstart", touchStart);
         carousel.addEventListener("touchend", touchEnd);
         carousel.addEventListener("touchmove", touchMove);
 
-        // Mouse events
         carousel.addEventListener("mousedown", dragStart);
         carousel.addEventListener("mouseup", dragEnd);
         carousel.addEventListener("mouseleave", dragEnd);
         carousel.addEventListener("mousemove", drag);
       }
 
-      // Prevent image drag
       const images = document.querySelectorAll(".carousel-3d-item img");
       images.forEach((img) => {
         img.addEventListener("dragstart", (e) => e.preventDefault());
@@ -374,7 +335,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Touch event handlers
   function touchStart(e) {
     if (!carousel) return;
 
@@ -424,7 +384,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Mouse drag event handlers
   function dragStart(e) {
     if (!carousel) return;
 
@@ -474,12 +433,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Auto-rotate carousel (only if carousel exists)
   let autoRotate = null;
   if (carousel) {
     autoRotate = setInterval(nextSlide, 5000);
 
-    // Pause auto-rotation on hover
     carousel.addEventListener("mouseenter", () => {
       if (autoRotate) {
         clearInterval(autoRotate);
@@ -494,11 +451,9 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Initialize the carousel
   initCarousel();
 });
 
-// Simple scroll spy functionality
 window.addEventListener("scroll", () => {
   const sections = document.querySelectorAll("section, footer");
   const navLinks = document.querySelectorAll(".center-nav a");
@@ -524,7 +479,6 @@ window.addEventListener("scroll", () => {
   });
 });
 
-// Mobile & Desktop login buttons with modern page transition
 document.addEventListener("DOMContentLoaded", function () {
   const loginBtn = document.getElementById("loginDropdownBtn");
   const mobileLoginBtn = document.getElementById("mobileLoginDropdownBtn");
@@ -533,32 +487,26 @@ document.addEventListener("DOMContentLoaded", function () {
     e.preventDefault();
     e.stopPropagation();
 
-    // Add modern page transition class to body
     document.body.classList.add("page-transition-out");
 
-    // Redirect after animation completes
     setTimeout(() => {
       window.location.href = "../Public/Components/Login.php";
-    }, 1000); // Match this with CSS animation duration
+    }, 1000);
   }
 
   if (loginBtn) {
-    // Remove any existing click handlers to avoid duplicates
     loginBtn.replaceWith(loginBtn.cloneNode(true));
     const newLoginBtn = document.getElementById("loginDropdownBtn");
     newLoginBtn.addEventListener("click", handleLoginClick);
 
-    // Also update the inline onclick handler
     newLoginBtn.onclick = handleLoginClick;
   }
 
   if (mobileLoginBtn) {
-    // Remove any existing click handlers to avoid duplicates
     mobileLoginBtn.replaceWith(mobileLoginBtn.cloneNode(true));
     const newMobileBtn = document.getElementById("mobileLoginDropdownBtn");
     newMobileBtn.addEventListener("click", handleLoginClick);
 
-    // Also update the inline onclick handler
     newMobileBtn.onclick = handleLoginClick;
   }
 });
@@ -572,43 +520,34 @@ if ("serviceWorker" in navigator) {
   });
 }
 
-// Yearbook Slider Functionality
 document.addEventListener("DOMContentLoaded", function () {
-  // Initialize yearbook items with proper event handling
   setTimeout(() => {
     initializeYearbookItems();
-  }, 100); // Small delay to ensure DOM is fully loaded
+  }, 100);
 });
 
-// Initialize yearbook items with event delegation
 function initializeYearbookItems() {
   const itemsContainer = document.querySelector(".yearbook-items-container");
   const sliderMain = document.querySelector(".yearbook-slider-main");
 
   if (!itemsContainer || !sliderMain) {
     console.warn("Required yearbook elements not found, retrying...");
-    // Retry after a short delay if elements aren't ready
     setTimeout(initializeYearbookItems, 200);
     return;
   }
 
-  // Remove any existing event listeners to prevent duplicates
   const existingListener = itemsContainer.getAttribute("data-listener");
   if (existingListener) {
-    return; // Already initialized
+    return;
   }
 
-  // Mark as initialized
   itemsContainer.setAttribute("data-listener", "true");
 
-  // Add stable hover handling to prevent jiggling
   const yearBookItems = document.querySelectorAll(".yearbook-item");
   yearBookItems.forEach((item) => {
     if (item) {
-      // Remove any existing transform to ensure clean state
       item.style.transform = "";
 
-      // Ensure proper CSS properties for stable hover
       item.style.willChange = "transform";
       item.style.backfaceVisibility = "hidden";
     }
@@ -617,12 +556,8 @@ function initializeYearbookItems() {
   console.log(
     "Yearbook items initialized successfully - hover should work smoothly now"
   );
-
-  // The onclick handlers in HTML will handle the click events
-  // This just ensures the containers are properly set up for CSS hover
 }
 
-// Yearbook Background Display Functionality
 function showYearbookBackground(clickedItem, imageUrl) {
   try {
     if (!clickedItem || !imageUrl) {
@@ -645,47 +580,38 @@ function showYearbookBackground(clickedItem, imageUrl) {
       ".yearbook-detail-description"
     );
 
-    // Remove active class from all items
     allItems.forEach((item) => {
       if (item && item.classList) {
         item.classList.remove("active");
       }
     });
 
-    // Add active class to clicked item
     if (clickedItem.classList) {
       clickedItem.classList.add("active");
     }
 
-    // Extract yearbook cover image URL from clicked item's style
     const clickedItemStyle = clickedItem.getAttribute("style");
     const coverImageMatch = clickedItemStyle.match(
       /background-image:\s*url\(['\"]?([^'\"\)]+)['\"]?\)/
     );
     const coverImageUrl = coverImageMatch ? coverImageMatch[1] : "";
 
-    // Get department info based on the cover image URL
     const departmentInfo = getDepartmentInfo(coverImageUrl);
 
-    // Set background image and show full background view
     sliderMain.style.backgroundImage = `url('${imageUrl}')`;
     sliderMain.classList.add("show-yearbook-bg");
 
-    // Hide intro content and show detail display
     if (introContent) {
       introContent.style.display = "none";
     }
 
     if (detailDisplay && coverImage && detailTitle && detailDescription) {
-      // Set the yearbook cover image
       coverImage.src = coverImageUrl;
       coverImage.alt = departmentInfo.title + " Yearbook Cover";
 
-      // Set the title and description
       detailTitle.textContent = departmentInfo.title;
       detailDescription.textContent = departmentInfo.description;
 
-      // Show the detail display
       detailDisplay.style.display = "flex";
     }
 
@@ -696,7 +622,6 @@ function showYearbookBackground(clickedItem, imageUrl) {
   }
 }
 
-// Function to get department information based on cover image URL
 function getDepartmentInfo(coverImageUrl) {
   const departmentMap = {
     "MaritimeEducation.png": {
@@ -736,10 +661,8 @@ function getDepartmentInfo(coverImageUrl) {
     },
   };
 
-  // Extract filename from URL
   const filename = coverImageUrl.split("/").pop();
 
-  // Return department info or default
   return (
     departmentMap[filename] || {
       title: "Department Yearbook",
@@ -761,18 +684,15 @@ function closeYearbookView() {
     const introContent = document.querySelector(".yearbook-intro-content");
     const detailDisplay = document.querySelector(".yearbook-detail-display");
 
-    // Remove background and full view class
     sliderMain.style.backgroundImage = "";
     sliderMain.classList.remove("show-yearbook-bg", "background-loaded");
 
-    // Remove active class from all items
     allItems.forEach((item) => {
       if (item && item.classList) {
         item.classList.remove("active");
       }
     });
 
-    // Show intro content and hide detail display
     if (introContent) {
       introContent.style.display = "block";
     }
@@ -787,7 +707,6 @@ function closeYearbookView() {
   }
 }
 
-// Keyboard support for closing yearbook view
 document.addEventListener("keydown", function (e) {
   try {
     if (e.key === "Escape") {
@@ -805,7 +724,6 @@ document.addEventListener("keydown", function (e) {
   }
 });
 
-// Click outside to close yearbook view
 document.addEventListener("click", function (e) {
   try {
     const sliderMain = document.querySelector(".yearbook-slider-main");
@@ -820,13 +738,11 @@ document.addEventListener("click", function (e) {
     const itemsContainer = document.querySelector(".yearbook-items-container");
     const detailDisplay = document.querySelector(".yearbook-detail-display");
 
-    // Check if click is outside yearbook items container and detail display
     const clickedInContainer =
       itemsContainer && itemsContainer.contains(e.target);
     const clickedInDetail = detailDisplay && detailDisplay.contains(e.target);
     const clickedIntroContent = e.target.closest(".yearbook-intro-content");
 
-    // Only close if clicked in the background area (not on items, intro content, or detail display)
     if (
       !clickedInContainer &&
       !clickedInDetail &&

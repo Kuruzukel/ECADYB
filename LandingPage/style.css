@@ -1178,7 +1178,6 @@ header.fading {
   overflow: hidden;
 }
 
-/* Top wave divider in yearbooks section */
 .yearbooks-section .main-hero-lower-curl {
   top: 0;
   bottom: auto;
@@ -1377,7 +1376,6 @@ header.fading {
   word-break: break-word;
 }
 
-/* Hamburger Menu Icon */
 .hamburger-menu {
   display: none;
   background: none;
@@ -1401,7 +1399,6 @@ header.fading {
   transition: all 0.3s ease;
 }
 
-/* Hamburger lines */
 .hamburger-line {
   transition: all 0.3s ease;
   transform-origin: center;
@@ -1452,9 +1449,6 @@ header.fading {
   }
 }
 
-/* MEDIA QUERIES */
-
-/* Large desktop */
 @media (min-width: 1440px) {
   #mobileLoginDropdownBtn,
   #mobileLoginDropdownMenu {
@@ -1462,7 +1456,6 @@ header.fading {
   }
 }
 
-/* Desktop / Laptop */
 @media (max-width: 1439px) and (min-width: 1200px) {
   #mobileLoginDropdownBtn,
   #mobileLoginDropdownMenu {
@@ -3309,12 +3302,12 @@ header.fading {
   .carousel-track img {
     width: 100%;
     max-width: 380px;
-    height: 100%; /* fills the container height */
-    object-fit: contain; /* keeps full image */
+    height: 100%;
+    object-fit: contain;
     border-radius: 12px;
     margin: 0 1rem;
     flex-shrink: 0;
-    background: #021326; /* fills gaps */
+    background: #021326;
   }
 
   .footer-logo-img {
@@ -3384,22 +3377,14 @@ header.fading {
   }
 }
 
-/* Tablet - Landscape */
 @media only screen and (min-width: 768px) and (max-width: 1280px) and (orientation: landscape) {
-  /* styles for tablets in landscape */
 }
 
-/* Large Phone - Landscape */
 @media only screen and (min-width: 600px) and (max-width: 767px) and (orientation: landscape) {
-  /* styles for large phones in landscape */
 }
 
-/* Medium Phone - Landscape */
 @media only screen and (min-width: 480px) and (max-width: 599px) and (orientation: landscape) {
-  /* styles for medium phones in landscape */
 }
 
-/* Small Phone - Landscape */
 @media only screen and (min-width: 320px) and (max-width: 479px) and (orientation: landscape) {
-  /* styles for small phones in landscape */
 }

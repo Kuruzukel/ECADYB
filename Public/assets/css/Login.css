@@ -171,7 +171,6 @@
   animation: errorModalSlideOut 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-/* Enhanced responsive design */
 @media (max-width: 768px) {
   .error-modal-content {
     max-width: 350px;
@@ -219,7 +218,6 @@
   }
 }
 
-/* Success Modal Variant */
 .success-modal .error-modal-content {
   border: 1px solid rgba(40, 167, 69, 0.2);
   box-shadow: 0 20px 40px rgba(40, 167, 69, 0.15), 0 8px 16px rgba(0, 0, 0, 0.1),
@@ -268,7 +266,6 @@
   outline-offset: 2px;
 }
 
-/* Page entrance animation */
 @keyframes pageIn {
   0% {
     opacity: 0;
@@ -286,7 +283,6 @@
   animation: pageIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-/* Modern Page Transitions */
 @keyframes zoomPageOut {
   0% {
     opacity: 1;
@@ -410,7 +406,6 @@
   animation: particleFloat 1s ease-out;
 }
 
-/* Enhanced transition for login card */
 .page-transition-out .loginCard {
   animation: zoomPageOut 0.9s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   animation-delay: 0.1s;
@@ -431,7 +426,6 @@ body {
   overflow: hidden;
 }
 
-/* Enhanced LoginCard without Glass Morphism - Original Size */
 .loginCard {
   width: 50rem;
   background: rgba(0, 0, 0, 0.45);
@@ -538,7 +532,6 @@ label {
   display: block;
 }
 
-/* Enhanced Input Field Styling without Glass Morphism */
 input {
   background: rgba(255, 255, 255, 0.95);
   color: #2c3e50;
@@ -552,7 +545,6 @@ input {
   font-weight: 500;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  /* Add padding to the right to make space for the eye icon */
   padding-right: 2.5rem;
 }
 
@@ -585,7 +577,6 @@ input::placeholder {
   font-weight: 400;
 }
 
-/* Enhanced Submit Button - Original Colors */
 button[type="submit"] {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   background-color: black;
@@ -639,7 +630,6 @@ button[type="submit"]:hover::before {
   left: 100%;
 }
 
-/* Enhanced Back Button - Original Style */
 button[type="back"] {
   background: none;
   border: none;
@@ -756,10 +746,9 @@ button[type="back"]:hover {
     border-radius: 2rem;
     padding-inline: 1rem;
     font-size: 1rem;
-    /* Add padding to the right to make space for the eye icon */
     padding-right: 2.5rem;
   }
-  
+
   .passwordField {
     width: 20rem;
   }
@@ -785,17 +774,16 @@ button[type="back"]:hover {
   button[type="submit"] {
     width: 87%;
   }
-  
+
   .passwordField {
     width: 80%;
   }
-  
+
   input {
     width: 80%;
-    /* Adjust padding for smaller screens */
     padding-right: 2.5rem;
   }
-  
+
   .eyeIcon {
     height: 1.5rem;
     width: 1.5rem;
@@ -829,21 +817,20 @@ button[type="back"]:hover {
     max-width: 55%;
     max-height: 55%;
   }
-  
+
   .field {
     width: 80%;
   }
-  
+
   .passwordField {
     width: 80%;
   }
-  
+
   input {
     width: 80%;
-    /* Adjust padding for smaller screens */
     padding-right: 2.5rem;
   }
-  
+
   .eyeIcon {
     height: 1.5rem;
     width: 1.5rem;
@@ -899,17 +886,16 @@ button[type="back"]:hover {
   .pass.field {
     margin-top: 2rem;
   }
-  
+
   .passwordField {
     width: 80%;
   }
-  
+
   input {
     width: 80%;
-    /* Adjust padding for smaller screens */
     padding-right: 2.5rem;
   }
-  
+
   .eyeIcon {
     height: 1.5rem;
     width: 1.5rem;

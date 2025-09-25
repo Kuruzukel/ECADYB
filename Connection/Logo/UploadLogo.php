@@ -1,14 +1,11 @@
 <?php
-// Ensure no output before headers
 ob_start();
 
-// Set proper headers for Railway
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
-// Handle preflight OPTIONS request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit();
@@ -16,27 +13,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 session_start();
 
-// Error handling function
-function respond($success, $message = '', $data = []) {
-    // Clear any output buffers
+function respond($success, $message = '', $data = [])
+{
     while (ob_get_level()) {
         ob_end_clean();
     }
-    
-    // Set JSON header
+
     header('Content-Type: application/json');
-    
-    // Return JSON response
+
     echo json_encode(array_merge(['success' => $success, 'message' => $message], $data));
     exit;
 }
 
-// Check if it's a POST request
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     respond(false, 'Invalid request method');
 }
 
-// Load dependencies
 require __DIR__ . '/../../vendor/autoload.php';
 
 if (file_exists(__DIR__ . '/../Configuration/BunnyConfig.php')) {
@@ -46,7 +38,6 @@ if (file_exists(__DIR__ . '/../Configuration/BunnyConfig.php')) {
 use MongoDB\Client;
 
 try {
-    // Check if client is still connected periodically
     if (connection_aborted()) {
         respond(false, 'Client disconnected');
     }
@@ -94,7 +85,6 @@ try {
         respond(false, $errorMsg);
     }
 
-    // Check if client is still connected
     if (connection_aborted()) {
         respond(false, 'Client disconnected');
     }
@@ -106,7 +96,6 @@ try {
     $safeBase = preg_replace('/[^A-Za-z0-9 _.-]/', '', $baseOriginal) ?: ('logo_' . time());
     $safeExt = preg_replace('/[^A-Za-z0-9]/', '', $ext) ?: 'png';
 
-    // Path: Logo Container/Slot{n}-{OriginalName}.{ext}
     $folder = 'Logo Container';
     $fileName = sprintf('Slot%d-%s.%s', $slot, $safeBase, $safeExt);
     $path = $folder . '/' . $fileName;
@@ -118,7 +107,6 @@ try {
         respond(false, 'Failed to read uploaded file.');
     }
 
-    // Check if client is still connected before uploading to BunnyCDN
     if (connection_aborted()) {
         respond(false, 'Client disconnected');
     }
@@ -134,15 +122,13 @@ try {
     curl_setopt($ch, CURLOPT_HEADER, true);
     curl_setopt($ch, CURLOPT_TIMEOUT, 30);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-    
+
     $response = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $curlErr = curl_error($ch);
     curl_close($ch);
 
-    // Check if client is still connected after uploading to BunnyCDN
     if (connection_aborted()) {
-        // Try to delete the uploaded file since client disconnected
         $deleteCh = curl_init($storageUrl);
         curl_setopt($deleteCh, CURLOPT_CUSTOMREQUEST, 'DELETE');
         curl_setopt($deleteCh, CURLOPT_HTTPHEADER, ['AccessKey: ' . $bunnyAccessKey]);
@@ -151,7 +137,7 @@ try {
         curl_setopt($deleteCh, CURLOPT_SSL_VERIFYPEER, true);
         curl_exec($deleteCh);
         curl_close($deleteCh);
-        
+
         respond(false, 'Client disconnected');
     }
 
@@ -161,9 +147,7 @@ try {
 
     $publicUrl = rtrim($bunnyCdnHost, '/') . '/' . str_replace(' ', '%20', $path);
 
-    // Check if client is still connected before saving to MongoDB
     if (connection_aborted()) {
-        // Try to delete the uploaded file since client disconnected
         $deleteCh = curl_init($storageUrl);
         curl_setopt($deleteCh, CURLOPT_CUSTOMREQUEST, 'DELETE');
         curl_setopt($deleteCh, CURLOPT_HTTPHEADER, ['AccessKey: ' . $bunnyAccessKey]);
@@ -172,19 +156,18 @@ try {
         curl_setopt($deleteCh, CURLOPT_SSL_VERIFYPEER, true);
         curl_exec($deleteCh);
         curl_close($deleteCh);
-        
+
         respond(false, 'Client disconnected');
     }
 
     $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
-    
+
     try {
         $client = new Client($mongoUrl, [
             'serverSelectionTimeoutMS' => 5000,
             'connectTimeoutMS' => 5000,
             'socketTimeoutMS' => 5000
         ]);
-        // Change from Departments database to Admin database
         $db = $client->admin;
         $collection = $db->logo;
 
@@ -203,7 +186,6 @@ try {
     }
 
     respond(true, 'Logo uploaded successfully', ['url' => $publicUrl, 'slot' => $slot]);
-
 } catch (Exception $e) {
     respond(false, 'Unexpected error: ' . $e->getMessage());
 }

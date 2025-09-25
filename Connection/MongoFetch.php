@@ -7,16 +7,12 @@ require __DIR__ . '/../vendor/autoload.php';
 use MongoDB\Client;
 
 try {
-    // Get MongoDB connection string from environment variable
     $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
-    
-    // Connect to MongoDB
+
     $client = new Client($mongoUrl);
 
-    // Correct database and collection
     $collection = $client->mydb->users;
 
-    // Query all documents
     $cursor = $collection->find();
 
     foreach ($cursor as $document) {
