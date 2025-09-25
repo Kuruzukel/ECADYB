@@ -77,7 +77,6 @@ function importCSVToTemplateDepartments($tmpName, $templateDB, $programMap)
 
                 $deptSection = $record['department section'];
 
-                // Clean the department section (remove extra spaces, special characters)
                 $deptSection = trim($deptSection);
 
                 // Try to match department code with program map keys
