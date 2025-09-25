@@ -8,7 +8,6 @@ $uploadStatus = [
     'student_info' => null
 ];
 
-// Department mapping based on program codes
 $programMap = [
     "bsme" => "BS Marine Engineering",
     "bsmt" => "BS Marine Transportation",
@@ -44,7 +43,8 @@ function cleanHeader($col)
 }
 
 // Enhanced function to import CSV and route to correct department collections in template database
-function importCSVToTemplateDepartments($tmpName, $templateDB, $programMap) {
+function importCSVToTemplateDepartments($tmpName, $templateDB, $programMap)
+{
     if (!isValidCSV($tmpName)) return false;
 
     $header = null;
@@ -73,22 +73,22 @@ function importCSVToTemplateDepartments($tmpName, $templateDB, $programMap) {
                 }, $row);
             } elseif (count($row) === count($header)) {
                 $record = array_combine($header, $row);
-                
+
                 // Check if department section exists
                 if (!isset($record['department section'])) continue;
 
                 // Extract department code from section (e.g., "BECED-1A" -> "beced")
                 $deptSection = $record['department section'];
-                
+
                 // Clean the department section (remove extra spaces, special characters)
                 $deptSection = trim($deptSection);
-                
+
                 // Try to match department code with program map keys
                 $matchedDept = null;
-                
+
                 // Normalize the department section for matching
                 $normalizedDeptSection = strtolower(preg_replace('/\s+/', '', $deptSection));
-                
+
                 // First, try exact matching at the beginning of the string
                 foreach ($programMap as $code => $fullName) {
                     if (strpos($normalizedDeptSection, $code) === 0) {
@@ -96,7 +96,7 @@ function importCSVToTemplateDepartments($tmpName, $templateDB, $programMap) {
                         break;
                     }
                 }
-                
+
                 // If no direct match, try to find any occurrence of the code
                 if (!$matchedDept) {
                     foreach ($programMap as $code => $fullName) {
@@ -106,7 +106,7 @@ function importCSVToTemplateDepartments($tmpName, $templateDB, $programMap) {
                         }
                     }
                 }
-                
+
                 // If still no match, try matching with full program names
                 if (!$matchedDept) {
                     foreach ($programMap as $code => $fullName) {
@@ -118,7 +118,7 @@ function importCSVToTemplateDepartments($tmpName, $templateDB, $programMap) {
                         }
                     }
                 }
-                
+
                 // If still no match, try to extract the first part before a dash or space
                 if (!$matchedDept) {
                     // Extract the part before the first dash or space
@@ -131,7 +131,7 @@ function importCSVToTemplateDepartments($tmpName, $templateDB, $programMap) {
                         }
                     }
                 }
-                
+
                 // If we found a matching department, add record to that department
                 if ($matchedDept) {
                     $dataByDepartment[$matchedDept][] = $record;
@@ -139,7 +139,6 @@ function importCSVToTemplateDepartments($tmpName, $templateDB, $programMap) {
                     // As a fallback, default to beced only if no other match found
                     $dataByDepartment['beced'][] = $record;
                 }
-
             }
         }
         fclose($handle);
@@ -151,7 +150,7 @@ function importCSVToTemplateDepartments($tmpName, $templateDB, $programMap) {
             try {
                 // Get the collection for this department
                 $collection = $templateDB->$deptCode;
-                
+
                 // Clear existing data and insert new records
                 $collection->drop();
                 $collection->insertMany($records);
@@ -193,21 +192,22 @@ function importCSVByMessage($tmpName, $collection)
 }
 
 // Function to get selected template from localStorage via hidden form field
-function getSelectedTemplateDatabase($client) {
+function getSelectedTemplateDatabase($client)
+{
     // Default to BatchTemplate1 if no template selected
     $selectedTemplate = !empty($_POST['selected_template']) ? $_POST['selected_template'] : 'Batch Template 1';
-    
+
     // Validate and sanitize the template name
     $selectedTemplate = trim($selectedTemplate);
-    
+
     // Create database name by removing spaces and ensuring valid format
     $dbName = str_replace(' ', '', $selectedTemplate);
-    
+
     // Ensure the database name starts with "BatchTemplate"
     if (strpos($dbName, 'BatchTemplate') !== 0) {
         $dbName = 'BatchTemplate1'; // Default to BatchTemplate1 if invalid
     }
-    
+
     // Return the database object
     return $client->$dbName;
 }
@@ -250,11 +250,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             // Get the template database instead of the generic Departments database
             $templateDB = getSelectedTemplateDatabase($client);
-            
+
             // Use the enhanced import function with program mapping
             $uploadStatus['student_info'] = importCSVToTemplateDepartments(
-                $_FILES['student_info']['tmp_name'], 
-                $templateDB, 
+                $_FILES['student_info']['tmp_name'],
+                $templateDB,
                 $programMap
             );
         } catch (Exception $e) {
