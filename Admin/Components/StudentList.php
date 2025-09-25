@@ -9,7 +9,6 @@ error_reporting(E_ALL);
 
 ob_start();
 
-// Set default timezone
 date_default_timezone_set('Asia/Manila');
 
 $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
