@@ -20,7 +20,6 @@ if ($selectedTemplate < 1 || $selectedTemplate > 3) {
 
 $dbName = "BatchTemplate" . $selectedTemplate;
 
-// Add connection options for better performance
 $client = new Client($mongoUrl, [
     'connectTimeoutMS' => 5000,
     'socketTimeoutMS' => 30000,
