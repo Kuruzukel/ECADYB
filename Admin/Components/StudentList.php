@@ -577,7 +577,6 @@ try {
                             url.searchParams.set('department', dept);
                             url.searchParams.set('pageNum', '1');
 
-                            // Preserve template parameter
                             const templateFilter = document.getElementById("template-filter");
                             if (templateFilter) {
                                 url.searchParams.set('template', templateFilter.value);
