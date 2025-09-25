@@ -81,7 +81,6 @@ function importCSVToTemplateDepartments($tmpName, $templateDB, $programMap)
 
                 $matchedDept = null;
 
-                // Normalize the department section for matching
                 $normalizedDeptSection = strtolower(preg_replace('/\s+/', '', $deptSection));
 
                 // First, try exact matching at the beginning of the string
