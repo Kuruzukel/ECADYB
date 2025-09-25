@@ -102,7 +102,6 @@ function importCSVToTemplateDepartments($tmpName, $templateDB, $programMap)
                 if (!$matchedDept) {
                     foreach ($programMap as $code => $fullName) {
                         $normalizedFullName = strtolower(preg_replace('/\s+/', '', $fullName));
-                        // Check if the full name is in the department section
                         if (strpos($normalizedDeptSection, str_replace([' ', '-'], '', $normalizedFullName)) !== false) {
                             $matchedDept = $code;
                             break;
