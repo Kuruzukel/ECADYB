@@ -147,7 +147,6 @@ try {
         $existingUrl      = isset($doc[$urlField]) ? (string)$doc[$urlField] : '';
         $existingThumbUrl = isset($doc[$thumbField]) ? (string)$doc[$thumbField] : '';
 
-        // Debug: Log the URLs being deleted
         error_log("DeleteCover.php deleting URLs - main: $existingUrl, thumb: $existingThumbUrl");
 
         deleteFromBunny($existingUrl, $bunnyStorageZone, $bunnyAccessKey);
