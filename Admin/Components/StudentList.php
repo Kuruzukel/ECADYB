@@ -84,7 +84,7 @@ try {
             ],
             'skip' => $skip,
             'limit' => $perPage,
-            'sort' => ['id' => 1]  // Sort by ID in ascending order
+            'sort' => ['id' => 1]
         ]
     );
 
