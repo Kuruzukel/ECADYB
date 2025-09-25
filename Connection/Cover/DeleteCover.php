@@ -64,7 +64,6 @@ try {
         'socketTimeoutMS'          => 5000
     ]);
 
-    // Create database name based on selected template
     $dbName = "BatchTemplate" . $template;
     $db = $client->$dbName;
     $collection = $db->YearbookCovers;
