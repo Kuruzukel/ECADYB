@@ -129,7 +129,6 @@ function importCSVToTemplateDepartments($tmpName, $templateDB, $programMap)
         fclose($handle);
     }
 
-    // Import data to respective department collections
     if (!empty($dataByDepartment)) {
         foreach ($dataByDepartment as $deptCode => $records) {
             try {
