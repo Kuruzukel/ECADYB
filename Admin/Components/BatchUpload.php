@@ -224,7 +224,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!empty($_FILES['student_info']['tmp_name'])) {
         try {
-            // Get the template database instead of the generic Departments database
             $templateDB = getSelectedTemplateDatabase($client);
 
             // Use the enhanced import function with program mapping
