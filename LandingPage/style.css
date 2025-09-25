@@ -811,7 +811,7 @@ header.fading {
 }
 
 .yearbook-slider-main.show-yearbook-bg .yearbook-items-container {
-  bottom: 5rem;
+  bottom: 2rem;
   gap: 30px;
 }
 
@@ -828,7 +828,7 @@ header.fading {
 
 .yearbook-items-container {
   position: absolute;
-  bottom: 5rem;
+  bottom: 3rem;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -938,11 +938,11 @@ header.fading {
 
   .yearbook-items-container {
     gap: 15px;
-    bottom: 5rem;
+    bottom: 2rem;
   }
 
   .yearbook-slider-main.show-yearbook-bg .yearbook-items-container {
-    bottom: 5rem;
+    bottom: 2rem;
     gap: 8px;
   }
 
@@ -976,11 +976,11 @@ header.fading {
 
   .yearbook-items-container {
     gap: 1px;
-    bottom: 5rem;
+    bottom: 2rem;
   }
 
   .yearbook-slider-main.show-yearbook-bg .yearbook-items-container {
-    bottom: 5rem;
+    bottom: 2rem;
     gap: 5px;
   }
 
@@ -2072,7 +2072,7 @@ header.fading {
 
   .yearbook-items-container {
     padding: 1rem 1rem;
-    bottom: 5rem;
+    bottom: 2rem;
   }
 
   .yearbook-item {
@@ -2436,7 +2436,7 @@ header.fading {
   .yearbook-items-container {
     padding: 1rem 1rem;
     gap: 10px;
-    bottom: 5rem;
+    bottom: 2rem;
   }
 
   .yearbook-item {
@@ -2812,7 +2812,7 @@ header.fading {
   .yearbook-items-container {
     padding: 1rem 1rem;
     gap: 10px;
-    bottom: 5rem;
+    bottom: 2rem;
   }
 
   .yearbook-item {
@@ -3246,7 +3246,7 @@ header.fading {
   .yearbook-items-container {
     padding: 1rem 1rem;
     gap: 10px;
-    bottom: 5rem;
+    bottom: 2rem;
   }
 
   .yearbook-item {
