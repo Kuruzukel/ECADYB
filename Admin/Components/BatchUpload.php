@@ -175,7 +175,6 @@ function importCSVByMessage($tmpName, $collection)
 
 function getSelectedTemplateDatabase($client)
 {
-    // Default to BatchTemplate1 if no template selected
     $selectedTemplate = !empty($_POST['selected_template']) ? $_POST['selected_template'] : 'Batch Template 1';
 
     // Validate and sanitize the template name
