@@ -122,7 +122,6 @@ function importCSVToTemplateDepartments($tmpName, $templateDB, $programMap)
                 if ($matchedDept) {
                     $dataByDepartment[$matchedDept][] = $record;
                 } else {
-                    // As a fallback, default to beced only if no other match found
                     $dataByDepartment['beced'][] = $record;
                 }
             }
