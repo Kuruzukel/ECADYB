@@ -61,7 +61,6 @@ try {
     $totalStudents = $collection->countDocuments();
     $totalPages = ceil($totalStudents / $perPage);
 
-    // Query with pagination and only necessary fields
     $cursor = $collection->find(
         [],
         [
