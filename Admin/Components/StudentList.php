@@ -4,7 +4,6 @@ require __DIR__ . '/../../vendor/autoload.php';
 use MongoDB\Client;
 use MongoDB\BSON\ObjectId;
 
-// Set error reporting for development
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
@@ -66,15 +65,15 @@ $totalStudents = 0;
 
 try {
     $collection = $db->$selectedDepartment;
-    
+
     // Create indexes if they don't exist (run this once, maybe in an admin section)
     // $collection->createIndex(['id' => 1]);
     // $collection->createIndex(['status' => 1]);
-    
+
     // Get total count for pagination
     $totalStudents = $collection->countDocuments();
     $totalPages = ceil($totalStudents / $perPage);
-    
+
     // Query with pagination and only necessary fields
     $cursor = $collection->find(
         [],
@@ -240,25 +239,27 @@ try {
                 <div class="card-datatable">
                     <table style="width:100%;">
                         <?php if (!empty($allStudents)): ?>
-                        <thead>
-                            <tr>
-                                <th>STUDENT</th>
-                                <th>ID NUMBER</th>
-                                <th>DEPARTMENT</th>
-                                <th>ACADEMIC YEAR</th>
-                                <th>STATUS</th>
-                                <th>PASSWORD</th>
-                                <th>ACTIONS <input type="checkbox" id="select-all-header" title="Select All"></th>
-                            </tr>
-                        </thead>
+                            <thead>
+                                <tr>
+                                    <th>STUDENT</th>
+                                    <th>ID NUMBER</th>
+                                    <th>DEPARTMENT</th>
+                                    <th>ACADEMIC YEAR</th>
+                                    <th>STATUS</th>
+                                    <th>PASSWORD</th>
+                                    <th>ACTIONS <input type="checkbox" id="select-all-header" title="Select All"></th>
+                                </tr>
+                            </thead>
                         <?php endif; ?>
                         <tbody>
                             <?php if (empty($allStudents)): ?>
                                 <tr>
                                     <td colspan="7" class="no-students-message">
                                         <div class="no-students-content">
-                                            
-                                            <p>No students found in this department for Batch Template <strong><?php echo htmlspecialchars($selectedTemplate); ?></strong>.</p>
+
+                                            <p>No students found in this department for Batch Template
+                                                <strong><?php echo htmlspecialchars($selectedTemplate); ?></strong>.
+                                            </p>
                                         </div>
                                     </td>
                                 </tr>
@@ -593,13 +594,13 @@ try {
                             const url = new URL(window.location.href);
                             url.searchParams.set('department', dept);
                             url.searchParams.set('pageNum', '1');
-                            
+
                             // Preserve template parameter
                             const templateFilter = document.getElementById("template-filter");
                             if (templateFilter) {
                                 url.searchParams.set('template', templateFilter.value);
                             }
-                            
+
                             window.location.href = url.toString();
                         });
                     }
@@ -610,13 +611,13 @@ try {
                             const url = new URL(window.location.href);
                             url.searchParams.set('tab', tabName);
                             url.searchParams.set('pageNum', '1');
-                            
+
                             // Preserve template parameter
                             const templateFilter = document.getElementById("template-filter");
                             if (templateFilter) {
                                 url.searchParams.set('template', templateFilter.value);
                             }
-                            
+
                             window.location.href = url.toString();
                         });
                     });
