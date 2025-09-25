@@ -109,7 +109,6 @@ function importCSVToTemplateDepartments($tmpName, $templateDB, $programMap)
                     }
                 }
 
-                // If still no match, try to extract the first part before a dash or space
                 if (!$matchedDept) {
                     // Extract the part before the first dash or space
                     $parts = preg_split('/[\s-]+/', $deptSection, 2); // Limit to 2 parts
