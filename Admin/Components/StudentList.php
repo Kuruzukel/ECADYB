@@ -558,7 +558,6 @@ try {
                         }
                     });
 
-                    // Batch Template filter
                     const templateFilter = document.getElementById("template-filter");
                     if (templateFilter) {
                         templateFilter.addEventListener("change", function() {
