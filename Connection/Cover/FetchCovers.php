@@ -37,7 +37,6 @@ try {
 
     error_log("FetchCovers.php received template parameter: $template");
 
-    // Validate template parameter
     if ($template < 1 || $template > 3) {
         respond(false, 'Invalid template parameter. Must be 1, 2, or 3.');
     }
