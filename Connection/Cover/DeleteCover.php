@@ -106,7 +106,6 @@ try {
             $relativePath = ltrim($parsed['path'], '/');
             $storageUrl   = 'https://storage.bunnycdn.com/' . $zone . '/' . $relativePath;
 
-            // Debug: Log the deletion attempt
             error_log("DeleteCover.php attempting to delete from BunnyCDN: $storageUrl");
 
             $ch = curl_init($storageUrl);
