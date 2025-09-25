@@ -75,7 +75,6 @@ function importCSVToTemplateDepartments($tmpName, $templateDB, $programMap)
 
                 if (!isset($record['department section'])) continue;
 
-                // Extract department code from section (e.g., "BECED-1A" -> "beced")
                 $deptSection = $record['department section'];
 
                 // Clean the department section (remove extra spaces, special characters)
