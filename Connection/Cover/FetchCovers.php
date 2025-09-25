@@ -144,7 +144,6 @@ try {
         }
     }
 
-    // Debug: Log the number of items found
     error_log("FetchCovers.php found " . count($items) . " items for template $template");
 
     // Debug: Log the items found
