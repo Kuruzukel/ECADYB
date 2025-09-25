@@ -73,7 +73,6 @@ function importCSVToTemplateDepartments($tmpName, $templateDB, $programMap)
             } elseif (count($row) === count($header)) {
                 $record = array_combine($header, $row);
 
-                // Check if department section exists
                 if (!isset($record['department section'])) continue;
 
                 // Extract department code from section (e.g., "BECED-1A" -> "beced")
