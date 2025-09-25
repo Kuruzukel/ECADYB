@@ -181,7 +181,6 @@ function getSelectedTemplateDatabase($client)
 
     $dbName = str_replace(' ', '', $selectedTemplate);
 
-    // Ensure the database name starts with "BatchTemplate"
     if (strpos($dbName, 'BatchTemplate') !== 0) {
         $dbName = 'BatchTemplate1'; // Default to BatchTemplate1 if invalid
     }
