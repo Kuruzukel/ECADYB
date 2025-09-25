@@ -146,7 +146,6 @@ try {
 
     error_log("FetchCovers.php found " . count($items) . " items for template $template");
 
-    // Debug: Log the items found
     error_log("FetchCovers.php items: " . json_encode($items));
 
     respond(true, 'Covers fetched successfully', ['items' => $items]);
