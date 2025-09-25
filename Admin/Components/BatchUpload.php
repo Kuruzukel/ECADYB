@@ -113,7 +113,6 @@ function importCSVToTemplateDepartments($tmpName, $templateDB, $programMap)
                     $parts = preg_split('/[\s-]+/', $deptSection, 2);
                     if (!empty($parts)) {
                         $extractedCode = strtolower($parts[0]);
-                        // Check if the extracted code exactly matches a program code
                         if (array_key_exists($extractedCode, $programMap)) {
                             $matchedDept = $extractedCode;
                         }
