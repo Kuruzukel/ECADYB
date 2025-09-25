@@ -83,7 +83,6 @@ function importCSVToTemplateDepartments($tmpName, $templateDB, $programMap)
 
                 $normalizedDeptSection = strtolower(preg_replace('/\s+/', '', $deptSection));
 
-                // First, try exact matching at the beginning of the string
                 foreach ($programMap as $code => $fullName) {
                     if (strpos($normalizedDeptSection, $code) === 0) {
                         $matchedDept = $code;
