@@ -68,7 +68,6 @@ try {
     $db = $client->$dbName;
     $collection = $db->YearbookCovers;
 
-    // Debug: Log the database and collection being used
     error_log("DeleteCover.php using database: $dbName, collection: YearbookCovers");
 
     // Debug: Check if the database exists and list collections
