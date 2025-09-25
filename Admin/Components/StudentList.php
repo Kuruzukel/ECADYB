@@ -18,7 +18,6 @@ if ($selectedTemplate < 1 || $selectedTemplate > 3) {
     $selectedTemplate = 1;
 }
 
-// Create database name based on selected template
 $dbName = "BatchTemplate" . $selectedTemplate;
 
 // Add connection options for better performance
