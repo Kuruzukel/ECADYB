@@ -57,7 +57,6 @@ $totalStudents = 0;
 try {
     $collection = $db->$selectedDepartment;
 
-    // Create indexes if they don't exist (run this once, maybe in an admin section)
     // $collection->createIndex(['id' => 1]);
     // $collection->createIndex(['status' => 1]);
 
