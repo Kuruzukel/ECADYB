@@ -99,7 +99,6 @@ function importCSVToTemplateDepartments($tmpName, $templateDB, $programMap)
                     }
                 }
 
-                // If still no match, try matching with full program names
                 if (!$matchedDept) {
                     foreach ($programMap as $code => $fullName) {
                         $normalizedFullName = strtolower(preg_replace('/\s+/', '', $fullName));
