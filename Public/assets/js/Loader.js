@@ -1,5 +1,5 @@
 (function () {
-  const iframe = document.getElementById('preload-frame');
+  const iframe = document.getElementById("preload-frame");
   const body = document.body;
   let redirectInProgress = false;
 
@@ -12,14 +12,12 @@
   function startTransition() {
     if (redirectInProgress) return;
     redirectInProgress = true;
-    
-    // Add the transition class to trigger the animation
-    body.classList.add('page-transition-out');
-    
-    // Wait for the animation to complete before redirecting
+
+    body.classList.add("page-transition-out");
+
     setTimeout(() => {
-      window.location.href = '/LandingPage';
-    }, 1000); // Match this with the animation duration (1s)
+      window.location.href = "/LandingPage";
+    }, 1000);
   }
 
   function tryRedirect() {
@@ -31,11 +29,10 @@
     } catch (_) {}
   }
 
-  iframe.addEventListener('load', () => {
+  iframe.addEventListener("load", () => {
     tryRedirect();
     const interval = setInterval(tryRedirect, 300);
-    
-    // Fallback in case the page takes too long to load
+
     setTimeout(() => {
       clearInterval(interval);
       if (!redirectInProgress) {
