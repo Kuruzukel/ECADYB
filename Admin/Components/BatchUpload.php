@@ -185,7 +185,6 @@ function getSelectedTemplateDatabase($client)
         $dbName = 'BatchTemplate1';
     }
 
-    // Return the database object
     return $client->$dbName;
 }
 
