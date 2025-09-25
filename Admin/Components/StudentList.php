@@ -569,7 +569,6 @@ try {
                         });
                     }
 
-                    // Department filter
                     const deptFilter = document.getElementById("department-filter");
                     if (deptFilter) {
                         deptFilter.addEventListener("change", function() {
