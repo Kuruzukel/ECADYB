@@ -42,7 +42,6 @@ function cleanHeader($col)
     return strtolower(preg_replace('/[\s_]+/', '', trim($col)));
 }
 
-// Enhanced function to import CSV and route to correct department collections in template database
 function importCSVToTemplateDepartments($tmpName, $templateDB, $programMap)
 {
     if (!isValidCSV($tmpName)) return false;
