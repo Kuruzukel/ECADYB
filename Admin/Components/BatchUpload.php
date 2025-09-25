@@ -90,7 +90,6 @@ function importCSVToTemplateDepartments($tmpName, $templateDB, $programMap)
                     }
                 }
 
-                // If no direct match, try to find any occurrence of the code
                 if (!$matchedDept) {
                     foreach ($programMap as $code => $fullName) {
                         if (strpos($normalizedDeptSection, $code) !== false) {
