@@ -132,7 +132,6 @@ function importCSVToTemplateDepartments($tmpName, $templateDB, $programMap)
     if (!empty($dataByDepartment)) {
         foreach ($dataByDepartment as $deptCode => $records) {
             try {
-                // Get the collection for this department
                 $collection = $templateDB->$deptCode;
 
                 // Clear existing data and insert new records
