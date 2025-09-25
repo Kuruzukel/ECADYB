@@ -139,7 +139,6 @@ try {
             <div class="card">
                 <div class="card-header">
                     <div class="filter-bar">
-                        <!-- Batch Template Selector -->
                         <label for="template-filter" class="filter-label">
                             <select id="template-filter" class="filter-select">
                                 <option value="" disabled>Select Batch Template</option>
