@@ -7,7 +7,6 @@ use MongoDB\BSON\ObjectId;
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-// Start output buffering
 ob_start();
 
 // Set default timezone
