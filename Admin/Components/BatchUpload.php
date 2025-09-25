@@ -173,7 +173,6 @@ function importCSVByMessage($tmpName, $collection)
     return false;
 }
 
-// Function to get selected template from localStorage via hidden form field
 function getSelectedTemplateDatabase($client)
 {
     // Default to BatchTemplate1 if no template selected
