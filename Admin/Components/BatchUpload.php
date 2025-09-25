@@ -226,7 +226,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $templateDB = getSelectedTemplateDatabase($client);
 
-            // Use the enhanced import function with program mapping
             $uploadStatus['student_info'] = importCSVToTemplateDepartments(
                 $_FILES['student_info']['tmp_name'],
                 $templateDB,
