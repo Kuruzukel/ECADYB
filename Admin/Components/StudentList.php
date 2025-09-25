@@ -57,7 +57,6 @@ $totalStudents = 0;
 try {
     $collection = $db->$selectedDepartment;
 
-    // $collection->createIndex(['id' => 1]);
     // $collection->createIndex(['status' => 1]);
 
     // Get total count for pagination
