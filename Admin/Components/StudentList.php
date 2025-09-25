@@ -47,7 +47,6 @@ if (!array_key_exists($selectedDepartment, $collections)) {
     $selectedDepartment = "bsme";
 }
 
-// Pagination settings
 $perPage = 10;
 $page = isset($_GET['pageNum']) ? max(1, (int)$_GET['pageNum']) : 1;
 $skip = ($page - 1) * $perPage;
