@@ -179,7 +179,6 @@ function getSelectedTemplateDatabase($client)
 
     $selectedTemplate = trim($selectedTemplate);
 
-    // Create database name by removing spaces and ensuring valid format
     $dbName = str_replace(' ', '', $selectedTemplate);
 
     // Ensure the database name starts with "BatchTemplate"
