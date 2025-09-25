@@ -158,7 +158,6 @@ try {
         ];
     }
 
-    // Debug: Log the fields being unset
     error_log("DeleteCover.php unsetting fields: " . json_encode($unsetFields));
 
     $result = $collection->updateOne(
