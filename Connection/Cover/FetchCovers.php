@@ -35,7 +35,6 @@ use MongoDB\Client;
 try {
     $template = isset($_GET['template']) ? (int)$_GET['template'] : 1;
 
-    // Debug: Log the received template parameter
     error_log("FetchCovers.php received template parameter: $template");
 
     // Validate template parameter
@@ -50,7 +49,7 @@ try {
         'connectTimeoutMS' => 5000,
         'socketTimeoutMS' => 5000
     ]);
-    
+
     // Create database name based on selected template
     $dbName = "BatchTemplate" . $template;
     $db = $client->$dbName;
@@ -58,7 +57,7 @@ try {
 
     // Debug: Log the database and collection being used
     error_log("FetchCovers.php using database: $dbName, collection: YearbookCovers");
-    
+
     // Debug: Check if the database exists and list collections
     try {
         $databases = $client->listDatabases();
@@ -70,7 +69,7 @@ try {
             }
         }
         error_log("FetchCovers.php database $dbName exists: " . ($dbExists ? "true" : "false"));
-        
+
         if ($dbExists) {
             $collections = $db->listCollections();
             $collectionNames = [];
@@ -99,7 +98,7 @@ try {
             ],
             ['upsert' => true]
         );
-        
+
         error_log("FetchCovers.php slot $slot upsert result: matched=" . $result->getMatchedCount() . ", modified=" . $result->getModifiedCount() . ", upserted=" . $result->getUpsertedCount());
     }
 
@@ -116,7 +115,7 @@ try {
         ],
         ['upsert' => true]
     );
-    
+
     error_log("FetchCovers.php slot 8 upsert result: matched=" . $result8->getMatchedCount() . ", modified=" . $result8->getModifiedCount() . ", upserted=" . $result8->getUpsertedCount());
 
     $cursor = $collection->find(['template' => $template]);
@@ -151,7 +150,7 @@ try {
 
     // Debug: Log the number of items found
     error_log("FetchCovers.php found " . count($items) . " items for template $template");
-    
+
     // Debug: Log the items found
     error_log("FetchCovers.php items: " . json_encode($items));
 
