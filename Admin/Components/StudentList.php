@@ -58,7 +58,6 @@ try {
     $collection = $db->$selectedDepartment;
 
 
-    // Get total count for pagination
     $totalStudents = $collection->countDocuments();
     $totalPages = ceil($totalStudents / $perPage);
 
