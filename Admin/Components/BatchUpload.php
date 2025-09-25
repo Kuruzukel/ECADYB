@@ -119,7 +119,6 @@ function importCSVToTemplateDepartments($tmpName, $templateDB, $programMap)
                     }
                 }
 
-                // If we found a matching department, add record to that department
                 if ($matchedDept) {
                     $dataByDepartment[$matchedDept][] = $record;
                 } else {
