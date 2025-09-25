@@ -42,7 +42,6 @@ try {
 
     error_log("DeleteCover.php received parameters: slot=$slot, side=$side, template=$template");
 
-    // Validate template parameter
     if ($template < 1 || $template > 3) {
         respond(false, 'Invalid template parameter. Must be 1, 2, or 3.');
     }
