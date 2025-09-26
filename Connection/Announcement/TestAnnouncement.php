@@ -10,7 +10,6 @@ use MongoDB\BSON\UTCDateTime;
 echo "<h1>Announcement System Test</h1>";
 
 try {
-    // Test MongoDB connection
     echo "<h2>Testing MongoDB Connection</h2>";
 
     $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
@@ -68,7 +67,6 @@ try {
         $collection->deleteOne(['_id' => $insertedId]);
         echo "<p style='color: blue;'>✓ Test announcement cleaned up</p>";
     }
-
 } catch (Exception $e) {
     echo "<p style='color: red;'>✗ Error: " . $e->getMessage() . "</p>";
 }
