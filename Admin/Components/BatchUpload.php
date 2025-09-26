@@ -296,10 +296,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
 
                 <?php if (!empty($resultMsg)): ?>
-                    <?php
+                <?php
                     $popupClass = in_array(true, $uploadStatus, true) ? 'popup-success' : 'popup-failure';
                     ?>
-                    <div class="popup-message <?= $popupClass ?>"><?= $resultMsg ?></div>
+                <div class="popup-message <?= $popupClass ?>"><?= $resultMsg ?></div>
                 <?php endif; ?>
             </div>
         </form>
@@ -307,13 +307,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <script src="../Assets/js/BatchUpload.js"></script>
     <script>
-        // Get selected template from localStorage (set by BatchTemplates.js)
-        document.addEventListener('DOMContentLoaded', function() {
-            const selectedTemplate = localStorage.getItem('selectedBatchTemplate');
-            if (selectedTemplate) {
-                document.getElementById('selected_template').value = selectedTemplate;
-            }
-        });
+    document.addEventListener('DOMContentLoaded', function() {
+        const selectedTemplate = localStorage.getItem('selectedBatchTemplate');
+        if (selectedTemplate) {
+            document.getElementById('selected_template').value = selectedTemplate;
+        }
+    });
     </script>
 </body>
 
