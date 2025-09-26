@@ -269,35 +269,36 @@ window.addEventListener("DOMContentLoaded", () => {
   function selectSection(section) {
     sections.forEach((s) => s.classList.remove("selected"));
     if (section) section.classList.add("selected");
-    
-    // Store selected template in localStorage
+
     if (section) {
-      const templateName = section.querySelector('.section-header').textContent.trim();
-      localStorage.setItem('selectedBatchTemplate', templateName);
+      const templateName = section
+        .querySelector(".section-header")
+        .textContent.trim();
+      localStorage.setItem("selectedBatchTemplate", templateName);
     }
-    
+
     // Disable upload boxes for non-selected templates
     updateUploadBoxStates();
   }
 
   function updateUploadBoxStates() {
     // Get the currently selected template
-    const selectedTemplate = document.querySelector('.section.selected');
-    
+    const selectedTemplate = document.querySelector(".section.selected");
+
     // Enable/disable upload boxes based on template selection
-    sections.forEach(section => {
-      const uploadBoxes = section.querySelectorAll('.upload-box');
+    sections.forEach((section) => {
+      const uploadBoxes = section.querySelectorAll(".upload-box");
       const isSelected = section === selectedTemplate;
-      
-      uploadBoxes.forEach(box => {
+
+      uploadBoxes.forEach((box) => {
         if (isSelected) {
           // Enable upload boxes for selected template
-          box.classList.remove('disabled');
-          box.style.pointerEvents = 'auto';
+          box.classList.remove("disabled");
+          box.style.pointerEvents = "auto";
         } else {
           // Disable upload boxes for non-selected templates
-          box.classList.add('disabled');
-          box.style.pointerEvents = 'none';
+          box.classList.add("disabled");
+          box.style.pointerEvents = "none";
         }
       });
     });
@@ -353,24 +354,26 @@ window.addEventListener("DOMContentLoaded", () => {
   // Set initial selected template
   if (sections.length > 0) {
     // Check if there's already a selected template in localStorage
-    const savedTemplate = localStorage.getItem('selectedBatchTemplate');
+    const savedTemplate = localStorage.getItem("selectedBatchTemplate");
     let selectedSection = null;
-    
+
     if (savedTemplate) {
       // Find the section that matches the saved template
-      sections.forEach(section => {
-        const headerText = section.querySelector('.section-header').textContent.trim();
+      sections.forEach((section) => {
+        const headerText = section
+          .querySelector(".section-header")
+          .textContent.trim();
         if (headerText === savedTemplate) {
           selectedSection = section;
         }
       });
     }
-    
+
     // If no saved template or not found, select the first one
     if (!selectedSection) {
       selectedSection = sections[0];
     }
-    
+
     selectSection(selectedSection);
   } else {
     // If no sections, still update upload box states
@@ -378,20 +381,22 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   // Process upload boxes for each section separately
-  sections.forEach(section => {
+  sections.forEach((section) => {
     const sectionUploadBoxes = section.querySelectorAll(".upload-box");
-    const sectionHeader = section.querySelector('.section-header').textContent.trim();
+    const sectionHeader = section
+      .querySelector(".section-header")
+      .textContent.trim();
     // Extract template number more robustly
     let template = 1;
     const templateMatch = sectionHeader.match(/Batch Template (\d+)/);
     if (templateMatch && templateMatch[1]) {
       template = parseInt(templateMatch[1]);
     }
-    
+
     // Debug: Log the section header and extracted template
     console.log("Section header:", sectionHeader);
     console.log("Extracted template:", template);
-    
+
     sectionUploadBoxes.forEach((box, index) => {
       const frontInput = box.querySelector(".frontInput");
       const backInput = box.querySelector(".backInput");
@@ -416,7 +421,7 @@ window.addEventListener("DOMContentLoaded", () => {
         FETCH_ENDPOINT,
         DELETE_ENDPOINT,
         template,
-        slot
+        slot,
       });
 
       const toggleImages = () => {
@@ -548,7 +553,8 @@ window.addEventListener("DOMContentLoaded", () => {
           console.error("Upload error:", err);
           showNotification(err.message || "Upload failed", "error");
         } finally {
-          if (!currentXhr && uploadOverlay) uploadOverlay.style.display = "none";
+          if (!currentXhr && uploadOverlay)
+            uploadOverlay.style.display = "none";
         }
       }
 
@@ -641,7 +647,9 @@ window.addEventListener("DOMContentLoaded", () => {
       (async function loadExisting() {
         try {
           // Use the template-specific endpoint
-          const res = await fetch(`${CONNECTION_PATH}/Cover/FetchCovers.php?template=${template}`);
+          const res = await fetch(
+            `${CONNECTION_PATH}/Cover/FetchCovers.php?template=${template}`
+          );
 
           if (!res.ok) {
             throw new Error(`HTTP ${res.status}: ${res.statusText}`);
