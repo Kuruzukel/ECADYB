@@ -48,7 +48,7 @@
   transform: scale(1, 1);
 }
 
-----------------------------------*/ .ui-state-disabled {
+.ui-state-disabled {
   cursor: default !important;
 }
 
