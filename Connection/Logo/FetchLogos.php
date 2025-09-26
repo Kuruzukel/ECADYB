@@ -19,7 +19,6 @@ function respond($success, $message = '', $data = [])
         ob_end_clean();
     }
 
-    // Set JSON header
     header('Content-Type: application/json');
 
     // Return JSON response
