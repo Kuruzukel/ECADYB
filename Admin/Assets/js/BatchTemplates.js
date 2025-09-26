@@ -370,7 +370,6 @@ window.addEventListener("DOMContentLoaded", () => {
     updateUploadBoxStates();
   }
 
-  // Process upload boxes for each section separately
   sections.forEach((section) => {
     const sectionUploadBoxes = section.querySelectorAll(".upload-box");
     const sectionHeader = section
