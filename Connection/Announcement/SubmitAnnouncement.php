@@ -2,7 +2,6 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Set timezone
 date_default_timezone_set('Asia/Manila');
 
 require __DIR__ . '/../../vendor/autoload.php';
@@ -70,7 +69,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             throw new Exception("Failed to insert announcement");
         }
-
     } catch (Exception $e) {
         error_log("Announcement submission error: " . $e->getMessage());
         $response = [
