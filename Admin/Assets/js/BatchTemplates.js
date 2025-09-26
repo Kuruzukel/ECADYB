@@ -630,7 +630,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
       (async function loadExisting() {
         try {
-          // Use the template-specific endpoint
           const res = await fetch(
             `${CONNECTION_PATH}/Cover/FetchCovers.php?template=${template}`
           );
