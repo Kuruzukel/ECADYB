@@ -292,7 +292,6 @@ window.addEventListener("DOMContentLoaded", () => {
           box.classList.remove("disabled");
           box.style.pointerEvents = "auto";
         } else {
-          // Disable upload boxes for non-selected templates
           box.classList.add("disabled");
           box.style.pointerEvents = "none";
         }
