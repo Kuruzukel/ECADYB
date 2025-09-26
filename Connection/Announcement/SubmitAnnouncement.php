@@ -24,7 +24,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             throw new Exception("Title and message are required");
         }
 
-        // Use current date if not provided
         $selectedDate = $date ?: date('Y-m-d');
         $selectedTime = $time ?: date('H:i:s');
 
