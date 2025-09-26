@@ -9,7 +9,6 @@ require __DIR__ . '/../../vendor/autoload.php';
 use MongoDB\Client;
 use MongoDB\BSON\UTCDateTime;
 
-// Check if form was submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         // MongoDB connection
