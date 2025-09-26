@@ -289,7 +289,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
       uploadBoxes.forEach((box) => {
         if (isSelected) {
-          // Enable upload boxes for selected template
           box.classList.remove("disabled");
           box.style.pointerEvents = "auto";
         } else {
