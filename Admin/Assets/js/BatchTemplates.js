@@ -281,7 +281,6 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   function updateUploadBoxStates() {
-    // Get the currently selected template
     const selectedTemplate = document.querySelector(".section.selected");
 
     // Enable/disable upload boxes based on template selection
