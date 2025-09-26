@@ -20,7 +20,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $date = $_POST['date'] ?? '';
         $time = $_POST['time'] ?? '';
 
-        // Validate required fields
         if (empty($title) || empty($message)) {
             throw new Exception("Title and message are required");
         }
