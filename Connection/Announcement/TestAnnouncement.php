@@ -59,7 +59,6 @@ try {
 
     echo "</table>";
 
-    // Clean up test announcement
     if (isset($insertedId)) {
         $collection->deleteOne(['_id' => $insertedId]);
         echo "<p style='color: blue;'>✓ Test announcement cleaned up</p>";
