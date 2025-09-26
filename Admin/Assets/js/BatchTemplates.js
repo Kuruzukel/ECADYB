@@ -351,7 +351,6 @@ window.addEventListener("DOMContentLoaded", () => {
     let selectedSection = null;
 
     if (savedTemplate) {
-      // Find the section that matches the saved template
       sections.forEach((section) => {
         const headerText = section
           .querySelector(".section-header")
