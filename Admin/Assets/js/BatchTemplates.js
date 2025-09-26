@@ -367,7 +367,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
     selectSection(selectedSection);
   } else {
-    // If no sections, still update upload box states
     updateUploadBoxStates();
   }
 
