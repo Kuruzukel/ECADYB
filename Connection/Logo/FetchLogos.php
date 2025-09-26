@@ -29,7 +29,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     respond(false, 'Invalid request method');
 }
 
-// Load dependencies
 require __DIR__ . '/../../vendor/autoload.php';
 
 use MongoDB\Client;
