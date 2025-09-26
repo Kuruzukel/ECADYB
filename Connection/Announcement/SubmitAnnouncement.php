@@ -27,7 +27,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $selectedDate = $date ?: date('Y-m-d');
         $selectedTime = $time ?: date('H:i:s');
 
-        // Check max 5 announcements per day
         $existingCount = $collection->countDocuments([
             'date' => $selectedDate,
             'status' => 'active'
