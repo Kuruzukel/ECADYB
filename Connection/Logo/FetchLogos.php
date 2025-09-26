@@ -25,7 +25,6 @@ function respond($success, $message = '', $data = [])
     exit;
 }
 
-// Check if it's a GET request
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     respond(false, 'Invalid request method');
 }
