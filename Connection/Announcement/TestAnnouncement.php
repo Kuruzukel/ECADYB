@@ -38,7 +38,6 @@ try {
         echo "<p style='color: red;'>✗ Failed to insert test announcement</p>";
     }
 
-    // Test fetching announcements
     echo "<h2>Testing Announcement Fetching</h2>";
     $cursor = $collection->find(['status' => 'active']);
     $count = $collection->countDocuments(['status' => 'active']);
