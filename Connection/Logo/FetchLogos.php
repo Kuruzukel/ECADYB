@@ -13,7 +13,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 session_start();
 
-// Error handling function
 function respond($success, $message = '', $data = [])
 {
     // Clear any output buffers
