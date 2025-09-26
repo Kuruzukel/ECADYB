@@ -43,7 +43,6 @@ try {
     $count = $collection->countDocuments(['status' => 'active']);
     echo "<p style='color: green;'>✓ Found {$count} active announcements</p>";
 
-    // Display all announcements
     echo "<h2>Current Announcements</h2>";
     echo "<table border='1' style='border-collapse: collapse; width: 100%;'>";
     echo "<tr><th>Title</th><th>Message</th><th>Date</th><th>Time</th><th>Created</th></tr>";
