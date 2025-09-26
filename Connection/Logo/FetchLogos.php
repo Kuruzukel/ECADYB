@@ -1,5 +1,4 @@
 <?php
-// Ensure no output before headers
 ob_start();
 
 // Set proper headers for Railway
