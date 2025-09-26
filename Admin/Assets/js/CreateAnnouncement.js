@@ -317,7 +317,6 @@ function submitForm() {
               checkDateStatus();
             }, 500);
 
-            // Show success notification
             showNotification("Announcement posted successfully!", "success");
           }
         })
