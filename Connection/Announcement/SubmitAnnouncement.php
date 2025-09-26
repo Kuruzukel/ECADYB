@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'message' => $message,
             'date' => $selectedDate,
             'time' => $selectedTime,
-            'created_at' => new \MongoDB\BSON\UTCDateTime((int)(microtime(true) * 1000)), // fully qualified name
+            'created_at' => new \MongoDB\BSON\UTCDateTime((int)(microtime(true) * 1000)),
             'status' => 'active',
             'type' => 'announcement'
         ];
