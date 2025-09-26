@@ -1,7 +1,6 @@
 <?php
 ob_start();
 
-// Set proper headers for Railway
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, OPTIONS');
