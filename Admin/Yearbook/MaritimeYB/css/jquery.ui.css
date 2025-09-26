@@ -48,9 +48,7 @@
   transform: scale(1, 1);
 }
 
-/* Interaction Cues
-----------------------------------*/
-.ui-state-disabled {
+----------------------------------*/ .ui-state-disabled {
   cursor: default !important;
 }
 
