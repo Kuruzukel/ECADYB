@@ -46,7 +46,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'type' => 'announcement'
         ];
 
-        // Log for debugging
         error_log("Saving announcement: " . json_encode($announcement));
 
         // Insert into database
