@@ -1,4 +1,3 @@
-/*
  */
 
 function addPage(page, book) {
