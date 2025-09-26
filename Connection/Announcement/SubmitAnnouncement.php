@@ -48,7 +48,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         error_log("Saving announcement: " . json_encode($announcement));
 
-        // Insert into database
         $result = $collection->insertOne($announcement);
 
         if ($result->getInsertedCount() > 0) {
