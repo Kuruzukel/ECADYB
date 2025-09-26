@@ -283,7 +283,6 @@ window.addEventListener("DOMContentLoaded", () => {
   function updateUploadBoxStates() {
     const selectedTemplate = document.querySelector(".section.selected");
 
-    // Enable/disable upload boxes based on template selection
     sections.forEach((section) => {
       const uploadBoxes = section.querySelectorAll(".upload-box");
       const isSelected = section === selectedTemplate;
