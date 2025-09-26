@@ -15,7 +15,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $client = new Client($mongoUrl);
         $collection = $client->Announcement->Calendar;
 
-        // Get POST data
         $title = trim($_POST['title'] ?? '');
         $message = trim($_POST['message'] ?? '');
         $date = $_POST['date'] ?? '';
