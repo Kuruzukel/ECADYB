@@ -277,7 +277,6 @@ window.addEventListener("DOMContentLoaded", () => {
       localStorage.setItem("selectedBatchTemplate", templateName);
     }
 
-    // Disable upload boxes for non-selected templates
     updateUploadBoxStates();
   }
 
