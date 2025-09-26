@@ -73,6 +73,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-// Redirect if not POST
 header('Location: ../Admin/Components/CreateAnnouncement.php');
 exit;
