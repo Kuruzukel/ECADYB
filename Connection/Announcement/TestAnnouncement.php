@@ -18,7 +18,6 @@ try {
 
     echo "<p style='color: green;'>✓ MongoDB connection successful</p>";
 
-    // Test inserting a sample announcement
     echo "<h2>Testing Announcement Insertion</h2>";
 
     $testAnnouncement = [
