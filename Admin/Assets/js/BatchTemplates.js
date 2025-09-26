@@ -507,7 +507,6 @@ window.addEventListener("DOMContentLoaded", () => {
           const data = await xhrUpload(UPLOAD_ENDPOINT, form);
           if (data && data.aborted) {
             if (uploadOverlay) uploadOverlay.style.display = "none";
-            // Show notification for canceled upload
             showNotification("Upload canceled by user", "error");
             return;
           }
