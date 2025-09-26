@@ -270,7 +270,6 @@ function submitForm() {
     const modalOverlay = document.getElementById("modal-overlay");
     const dateStatus = document.getElementById("date-status");
 
-    // Hide the modal immediately when submitting
     hideModal();
 
     if (
@@ -317,7 +316,7 @@ function submitForm() {
             setTimeout(() => {
               checkDateStatus();
             }, 500);
-            
+
             // Show success notification
             showNotification("Announcement posted successfully!", "success");
           }
