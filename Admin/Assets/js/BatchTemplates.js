@@ -381,7 +381,6 @@ window.addEventListener("DOMContentLoaded", () => {
       template = parseInt(templateMatch[1]);
     }
 
-    // Debug: Log the section header and extracted template
     console.log("Section header:", sectionHeader);
     console.log("Extracted template:", template);
 
