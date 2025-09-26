@@ -347,7 +347,6 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 
   if (sections.length > 0) {
-    // Check if there's already a selected template in localStorage
     const savedTemplate = localStorage.getItem("selectedBatchTemplate");
     let selectedSection = null;
 
