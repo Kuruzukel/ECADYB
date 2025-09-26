@@ -602,7 +602,6 @@ window.addEventListener("DOMContentLoaded", () => {
           form.append("side", side);
           form.append("template", String(template));
 
-          // Debug: Log the form data being sent
           console.log("Sending delete request with template:", template);
           for (let [key, value] of form.entries()) {
             console.log(key, value);
