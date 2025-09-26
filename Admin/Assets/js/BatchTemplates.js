@@ -361,7 +361,6 @@ window.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    // If no saved template or not found, select the first one
     if (!selectedSection) {
       selectedSection = sections[0];
     }
