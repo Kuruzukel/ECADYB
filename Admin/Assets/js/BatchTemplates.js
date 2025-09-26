@@ -375,7 +375,6 @@ window.addEventListener("DOMContentLoaded", () => {
     const sectionHeader = section
       .querySelector(".section-header")
       .textContent.trim();
-    // Extract template number more robustly
     let template = 1;
     const templateMatch = sectionHeader.match(/Batch Template (\d+)/);
     if (templateMatch && templateMatch[1]) {
