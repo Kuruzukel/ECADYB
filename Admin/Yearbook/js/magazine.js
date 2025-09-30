@@ -38,18 +38,31 @@ function loadPage(page, pageElement) {
   // Check if we're loading the first or last page and use cover data if available
   var totalPages = $(".magazine").turn("pages");
   
-  if (page === 1 && typeof coverData !== 'undefined' && coverData !== null) {
+  // Wait for coverData to be available if it's not yet loaded, but don't wait indefinitely
+  var maxWaitTime = 5000; // 5 seconds
+  var waitStartTime = Date.now();
+  
+  if ((typeof coverData === 'undefined' || coverData === null) && (Date.now() - waitStartTime < maxWaitTime)) {
+    setTimeout(function() {
+      loadPage(page, pageElement);
+    }, 100);
+    return;
+  }
+  
+  if (page === 1 && typeof coverData !== 'undefined' && coverData !== null && coverData.front_url) {
     // First page - use front cover
     img.attr("src", coverData.front_url);
-  } else if (page === totalPages && typeof coverData !== 'undefined' && coverData !== null) {
+  } else if (page === totalPages && typeof coverData !== 'undefined' && coverData !== null && coverData.back_url) {
     // Last page - use back cover
     img.attr("src", coverData.back_url);
+  } else if (page >= 2 && page <= 11 && typeof coverData !== 'undefined' && coverData !== null && coverData.background_url) {
+    // Pages 2-11 - use background image
+    img.attr("src", coverData.background_url);
   } else if (typeof coverData !== 'undefined' && coverData !== null && coverData.background_url) {
-    // Middle pages - use background image
+    // Other middle pages - use background image as fallback
     img.attr("src", coverData.background_url);
   } else {
-    // Loadnew page
-    // Use absolute path for page images
+    // Use static image as fallback
     img.attr("src", "pages/" + page + ".jpg");
   }
 
@@ -166,18 +179,31 @@ function loadLargePage(page, pageElement) {
   // Check if we're loading the first or last page and use cover data if available
   var totalPages = $(".magazine").turn("pages");
   
-  if (page === 1 && typeof coverData !== 'undefined' && coverData !== null) {
+  // Wait for coverData to be available if it's not yet loaded, but don't wait indefinitely
+  var maxWaitTime = 5000; // 5 seconds
+  var waitStartTime = Date.now();
+  
+  if ((typeof coverData === 'undefined' || coverData === null) && (Date.now() - waitStartTime < maxWaitTime)) {
+    setTimeout(function() {
+      loadLargePage(page, pageElement);
+    }, 100);
+    return;
+  }
+  
+  if (page === 1 && typeof coverData !== 'undefined' && coverData !== null && coverData.front_url) {
     // First page - use front cover
     img.attr("src", coverData.front_url);
-  } else if (page === totalPages && typeof coverData !== 'undefined' && coverData !== null) {
+  } else if (page === totalPages && typeof coverData !== 'undefined' && coverData !== null && coverData.back_url) {
     // Last page - use back cover
     img.attr("src", coverData.back_url);
+  } else if (page >= 2 && page <= 11 && typeof coverData !== 'undefined' && coverData !== null && coverData.background_url) {
+    // Pages 2-11 - use background image
+    img.attr("src", coverData.background_url);
   } else if (typeof coverData !== 'undefined' && coverData !== null && coverData.background_url) {
-    // Middle pages - use background image
+    // Other middle pages - use background image as fallback
     img.attr("src", coverData.background_url);
   } else {
-    // Loadnew page
-    // Use absolute path for large page images
+    // Use static image as fallback
     img.attr("src", "pages/" + page + "-large.jpg");
   }
 }
@@ -194,15 +220,28 @@ function loadSmallPage(page, pageElement) {
   // Check if we're loading the first or last page and use cover data if available
   var totalPages = $(".magazine").turn("pages");
   
-  if (page === 1 && typeof coverData !== 'undefined' && coverData !== null) {
+  // Wait for coverData to be available if it's not yet loaded, but don't wait indefinitely
+  var maxWaitTime = 5000; // 5 seconds
+  var waitStartTime = Date.now();
+  
+  if ((typeof coverData === 'undefined' || coverData === null) && (Date.now() - waitStartTime < maxWaitTime)) {
+    setTimeout(function() {
+      loadSmallPage(page, pageElement);
+    }, 100);
+    return;
+  }
+  
+  if (page === 1 && typeof coverData !== 'undefined' && coverData !== null && coverData.front_url) {
     // First page - use front cover
     img.attr("src", coverData.front_url);
-  } else if (page === totalPages && typeof coverData !== 'undefined' && coverData !== null) {
+  } else if (page === totalPages && typeof coverData !== 'undefined' && coverData !== null && coverData.back_url) {
     // Last page - use back cover
     img.attr("src", coverData.back_url);
+  } else if (page >= 2 && page <= 11 && typeof coverData !== 'undefined' && coverData !== null && coverData.background_url) {
+    // Pages 2-11 - use background image
+    img.attr("src", coverData.background_url);
   } else {
-    // Loadnew page
-    // Use absolute path for page images
+    // Use static image as fallback
     img.attr("src", "pages/" + page + ".jpg");
   }
 }

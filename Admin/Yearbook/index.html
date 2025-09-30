@@ -115,7 +115,6 @@
       success: function(response) {
         if (response.success) {
           coverData = response.data;
-          console.log("Cover data loaded:", coverData);
           
           // Populate thumbnails with the fetched data
           populateThumbnails();
@@ -125,12 +124,17 @@
             loadApp();
           }
         } else {
-          console.error("Failed to fetch covers:", response.message);
+          // Even if fetch fails, we still need to initialize the app
+          if (typeof loadApp === 'function') {
+            loadApp();
+          }
         }
       },
       error: function(xhr, status, error) {
-        console.error("AJAX error:", error);
-        console.error("Response:", xhr.responseText);
+        // Even if fetch fails, we still need to initialize the app
+        if (typeof loadApp === 'function') {
+          loadApp();
+        }
       }
     });
   }
@@ -155,6 +159,7 @@
     thumbnailList.append(firstPageLi);
     
     // Middle pages thumbnails (pages 2-11)
+    // Using background_thumb_url for all middle pages as requested
     for (var i = 2; i <= 11; i += 2) {
       var li = $('<li class="d"></li>');
       var img1 = $('<img>').attr({
@@ -256,26 +261,16 @@ function loadApp() {
 	}
 
 	flipbook.turn({
-
 			width: 922,
-
 			height: 600,
-
 			duration: 1000,
-
 			acceleration: true,
-
 			gradients: false,
-
 			autoCenter: true,
-
 			elevation: 50,
-
 			pages: 12,
-
 			when: {
 				turning: function(event, page, view) {
-					
 					var book = $(this),
 					currentPage = book.turn('page'),
 					pages = book.turn('pages');
@@ -291,25 +286,38 @@ function loadApp() {
 					$('.thumbnails .page-'+page).
 						parent().
 						addClass('current');
-
 				},
 
 				turned: function(event, page, view) {
-
 					disableControls(page);
-
 					$(this).turn('center');
-
 				},
 
 				missing: function (event, pages) {
-
-					for (var i = 0; i < pages.length; i++)
-						addPage(pages[i], $(this));
-
+					// Ensure coverData is available before loading pages
+					var maxWaitTime = 5000; // 5 seconds
+					var waitStartTime = Date.now();
+					
+					function tryToAddPages() {
+						if (typeof coverData !== 'undefined' && coverData !== null) {
+							// Cover data is available, proceed with adding pages
+							for (var i = 0; i < pages.length; i++) {
+								addPage(pages[i], $(this));
+							}
+						} else if (Date.now() - waitStartTime < maxWaitTime) {
+							// Still waiting for cover data
+							setTimeout(tryToAddPages.bind(this), 100);
+						} else {
+							// Timeout - add pages anyway with fallback images
+							for (var i = 0; i < pages.length; i++) {
+								addPage(pages[i], $(this));
+							}
+						}
+					}
+					
+					tryToAddPages.call(this);
 				}
 			}
-
 	});
 
 	$('.magazine-viewport').zoom({
