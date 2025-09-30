@@ -41,14 +41,6 @@ try {
     // Find the specific cover
     $cover = $collection->findOne(['template' => $template, 'slot' => $slot]);
 
-    // Debug: Log what we found
-    error_log("Searching for template: " . $template . ", slot: " . $slot);
-    if ($cover) {
-        error_log("Cover found: " . json_encode($cover));
-    } else {
-        error_log("No cover found for template: " . $template . ", slot: " . $slot);
-    }
-
     if (!$cover) {
         throw new Exception('Cover not found for template ' . $template . ' and slot ' . $slot);
     }

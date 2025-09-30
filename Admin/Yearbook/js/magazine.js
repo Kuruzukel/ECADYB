@@ -49,22 +49,30 @@ function loadPage(page, pageElement) {
     return;
   }
   
+  // Debug: Log the coverData and page information
+  console.log('Loading page:', page, 'Total pages:', totalPages, 'Cover data:', coverData);
+  
   if (page === 1 && typeof coverData !== 'undefined' && coverData !== null && coverData.front_url) {
     // First page - use front cover
+    console.log('Using front_url for page 1:', coverData.front_url);
     img.attr("src", coverData.front_url);
   } else if (page === totalPages && typeof coverData !== 'undefined' && coverData !== null && coverData.back_url) {
     // Last page - use back cover
+    console.log('Using back_url for page', page, ':', coverData.back_url);
     img.attr("src", coverData.back_url);
-  } else if (page >= 2 && page <= 11) {
-    // Pages 2-11 - remove images (show blank page)
-    img.attr("src", "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7");
-    img.css({ opacity: 0 });
+  } else if (page >= 2 && page <= 11 && typeof coverData !== 'undefined' && coverData !== null && coverData.background_url) {
+    // Pages 2-11 - use background image from database
+    console.log('Using background_url for page', page, ':', coverData.background_url);
+    img.attr("src", coverData.background_url);
   } else if (typeof coverData !== 'undefined' && coverData !== null && coverData.background_url) {
     // Other middle pages - use background image as fallback
+    console.log('Using background_url as fallback for page', page, ':', coverData.background_url);
     img.attr("src", coverData.background_url);
   } else {
-    // Use static image as fallback
-    img.attr("src", "pages/" + page + ".jpg");
+    // Show a placeholder when no image is available
+    console.log('No image available for page:', page, 'Showing placeholder');
+    // Create a placeholder with a colored background
+    img.attr("src", "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23f0f0f0'/%3E%3Ctext x='50' y='55' font-family='Arial' font-size='12' fill='%23999' text-anchor='middle'%3EPage " + page + "%3C/text%3E%3C/svg%3E");
   }
 
   loadRegions(page, pageElement);
@@ -197,16 +205,17 @@ function loadLargePage(page, pageElement) {
   } else if (page === totalPages && typeof coverData !== 'undefined' && coverData !== null && coverData.back_url) {
     // Last page - use back cover
     img.attr("src", coverData.back_url);
-  } else if (page >= 2 && page <= 11) {
-    // Pages 2-11 - remove images (show blank page)
-    img.attr("src", "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7");
-    img.css({ opacity: 0 });
+  } else if (page >= 2 && page <= 11 && typeof coverData !== 'undefined' && coverData !== null && coverData.background_url) {
+    // Pages 2-11 - use background image from database
+    img.attr("src", coverData.background_url);
   } else if (typeof coverData !== 'undefined' && coverData !== null && coverData.background_url) {
     // Other middle pages - use background image as fallback
     img.attr("src", coverData.background_url);
   } else {
-    // Use static image as fallback
-    img.attr("src", "pages/" + page + "-large.jpg");
+    // Show a placeholder when no image is available
+    console.log('No image available for page:', page, 'Showing placeholder');
+    // Create a placeholder with a colored background
+    img.attr("src", "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23f0f0f0'/%3E%3Ctext x='50' y='55' font-family='Arial' font-size='12' fill='%23999' text-anchor='middle'%3ELarge Page " + page + "%3C/text%3E%3C/svg%3E");
   }
 }
 
@@ -239,13 +248,14 @@ function loadSmallPage(page, pageElement) {
   } else if (page === totalPages && typeof coverData !== 'undefined' && coverData !== null && coverData.back_url) {
     // Last page - use back cover
     img.attr("src", coverData.back_url);
-  } else if (page >= 2 && page <= 11) {
-    // Pages 2-11 - remove images (show blank page)
-    img.attr("src", "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7");
-    img.css({ opacity: 0 });
+  } else if (page >= 2 && page <= 11 && typeof coverData !== 'undefined' && coverData !== null && coverData.background_url) {
+    // Pages 2-11 - use background image from database
+    img.attr("src", coverData.background_url);
   } else {
-    // Use static image as fallback
-    img.attr("src", "pages/" + page + ".jpg");
+    // Show a placeholder when no image is available
+    console.log('No image available for page:', page, 'Showing placeholder');
+    // Create a placeholder with a colored background
+    img.attr("src", "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23f0f0f0'/%3E%3Ctext x='50' y='55' font-family='Arial' font-size='12' fill='%23999' text-anchor='middle'%3ESmall Page " + page + "%3C/text%3E%3C/svg%3E");
   }
 }
 

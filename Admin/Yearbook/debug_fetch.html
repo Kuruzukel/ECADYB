@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Fetch Cover Data</title>
+    <script src="../../Turn.js/extras/jquery.min.js"></script>
+</head>
+<body>
+    <h1>Debug Fetch Cover Data</h1>
+    <button id="fetchData">Fetch Cover Data</button>
+    <div id="result"></div>
+
+    <script>
+        $('#fetchData').click(function() {
+            $.ajax({
+                url: 'FetchCoverData.php',
+                method: 'GET',
+                data: { template: 1, slot: 1 },
+                dataType: 'json',
+                success: function(response) {
+                    $('#result').html('<pre>' + JSON.stringify(response, null, 2) + '</pre>');
+                },
+                error: function(xhr, status, error) {
+                    $('#result').html('<p>Error: ' + error + '</p><p>Status: ' + status + '</p><pre>' + JSON.stringify(xhr, null, 2) + '</pre>');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
