@@ -8,13 +8,13 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <link href="../Flipbook/turn.js/dist/style.css" rel="stylesheet">
   <link href="./assets/css/Tourism.css" rel="stylesheet">
-</head>
+  </head>
 
 <body>
   <div class="container">
     <div class="catalog-root">
       <div class="catalog-app">
-        <iframe src="../Yearbook/index.html?department=BSTM" width="100%" height="100%" style="border: none; min-height: 600px;"></iframe>
+        <iframe src="../Yearbook/index.html?department=BSTM" width="100%" height="100%" style="border: none; min-height: 680px;"></iframe>
       </div>
     </div>
 
