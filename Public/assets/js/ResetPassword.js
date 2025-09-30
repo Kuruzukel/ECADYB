@@ -141,12 +141,7 @@ window.addEventListener("DOMContentLoaded", () => {
   if (backButton) {
     backButton.addEventListener("click", function (e) {
       e.preventDefault();
-
-      document.body.classList.add("page-transition-out");
-
-      setTimeout(() => {
-        window.location.href = "/Public/Components/Login.php";
-      }, 1000);
+      window.location.href = "/Public/Components/Login.php";
     });
   }
 
