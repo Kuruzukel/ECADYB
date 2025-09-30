@@ -3,7 +3,47 @@
 <head>
 <title>Maritime Yearbook - Graduation Gallery</title>
 <meta name="viewport" content="width = 1050, user-scalable = no" />
-
+<style>
+  /* Hide scrollbars for all browsers */
+  body {
+    overflow: hidden;
+  }
+  
+  /* Specifically target the html and body elements */
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+  
+  /* Also hide scrollbars for the canvas element */
+  #canvas {
+    overflow: hidden;
+  }
+  
+  /* Webkit browsers (Chrome, Safari) */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Hide thumbnails by default */
+  .thumbnails {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+    transform: translateY(20px);
+  }
+  
+  /* Show thumbnails when hovered */
+  .thumbnails.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out, transform 0.5s ease-in-out;
+  }
+</style>
 <meta property="fb:app_id" content="1767810860531321" />
 <meta property="og:locale" content="en_US" />
 <meta
@@ -50,12 +90,120 @@
   href="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png"
   type="image/png"
 />
-<script type="text/javascript" src="../../../Turn.js/extras/jquery.min.js"></script>
-<script type="text/javascript" src="../../../Turn.js/lib/hash.js"></script>
-<script type="text/javascript" src="../../../Turn.js/lib/turn.min.js"></script>
-<script type="text/javascript" src="../../../Turn.js/lib/zoom.min.js"></script>
+<script type="text/javascript" src="../../Turn.js/extras/jquery.min.js"></script>
+<script type="text/javascript" src="../../Turn.js/lib/hash.js"></script>
+<script type="text/javascript" src="../../Turn.js/lib/turn.min.js"></script>
+<script type="text/javascript" src="../../Turn.js/lib/zoom.min.js"></script>
 <script type="text/javascript" src="js/magazine.js"></script>
 <link rel="stylesheet" href="css/magazine.css">
+
+<!-- Add script to fetch cover data -->
+<script type="text/javascript">
+  var coverData = null;
+  
+  // Fetch cover data from the database
+  function fetchCoverData(template, slot) {
+    // Default values
+    template = template || 1;
+    slot = slot || 1;
+    
+    $.ajax({
+      url: '../../Connection/YearbookCover/FetchCoverData.php',
+      method: 'GET',
+      data: { template: template, slot: slot },
+      dataType: 'json',
+      success: function(response) {
+        if (response.success) {
+          coverData = response.data;
+          console.log("Cover data loaded:", coverData);
+          
+          // Populate thumbnails with the fetched data
+          populateThumbnails();
+          
+          // Re-initialize the magazine after loading cover data
+          if (typeof loadApp === 'function') {
+            loadApp();
+          }
+        } else {
+          console.error("Failed to fetch covers:", response.message);
+        }
+      },
+      error: function(xhr, status, error) {
+        console.error("AJAX error:", error);
+        console.error("Response:", xhr.responseText);
+      }
+    });
+  }
+  
+  // Function to populate thumbnails
+  function populateThumbnails() {
+    if (!coverData) return;
+    
+    var thumbnailList = $('#thumbnail-list');
+    thumbnailList.empty();
+    
+    // First page thumbnail (front cover)
+    var firstPageLi = $('<li class="i"></li>');
+    var firstPageImg = $('<img>').attr({
+      src: coverData.front_thumb_url,
+      width: 76,
+      height: 100,
+      class: 'page-1'
+    });
+    var firstPageSpan = $('<span>1</span>');
+    firstPageLi.append(firstPageImg).append(firstPageSpan);
+    thumbnailList.append(firstPageLi);
+    
+    // Middle pages thumbnails (pages 2-11)
+    for (var i = 2; i <= 11; i += 2) {
+      var li = $('<li class="d"></li>');
+      var img1 = $('<img>').attr({
+        src: 'pages/' + i + '-thumb.jpg',
+        width: 76,
+        height: 100,
+        class: 'page-' + i
+      });
+      var img2 = $('<img>').attr({
+        src: 'pages/' + (i + 1) + '-thumb.jpg',
+        width: 76,
+        height: 100,
+        class: 'page-' + (i + 1)
+      });
+      var span = $('<span>' + i + '-' + (i + 1) + '</span>');
+      li.append(img1).append(img2).append(span);
+      thumbnailList.append(li);
+    }
+    
+    // Last page thumbnail (back cover)
+    var lastPageLi = $('<li class="i"></li>');
+    var lastPageImg = $('<img>').attr({
+      src: coverData.back_thumb_url,
+      width: 76,
+      height: 100,
+      class: 'page-12'
+    });
+    var lastPageSpan = $('<span>12</span>');
+    lastPageLi.append(lastPageImg).append(lastPageSpan);
+    thumbnailList.append(lastPageLi);
+    
+    // Reattach event handlers for thumbnails
+    $('.thumbnails').off('click').on('click', function(event) {
+      var page;
+      if (event.target && (page=/page-([0-9]+)/.exec($(event.target).attr('class'))) ) {
+        $('.magazine').turn('page', page[1]);
+      }
+    });
+
+    $('.thumbnails li').
+      off($.mouseEvents.over).
+      off($.mouseEvents.out).
+      on($.mouseEvents.over, function() {
+        $(this).addClass('thumb-hover');
+      }).on($.mouseEvents.out, function() {
+        $(this).removeClass('thumb-hover');
+      });
+  }
+</script>
 </head>
 <body>
 
@@ -74,48 +222,29 @@
 
 <div class="thumbnails">
 	<div>
-		<ul>
-			<li class="i">
-				<img src="pages/1-thumb.jpg" width="76" height="100" class="page-1">
-				<span>1</span>
-			</li>
-			<li class="d">
-				<img src="pages/2-thumb.jpg" width="76" height="100" class="page-2">
-				<img src="pages/3-thumb.jpg" width="76" height="100" class="page-3">
-				<span>2-3</span>
-			</li>
-			<li class="d">
-				<img src="pages/4-thumb.jpg" width="76" height="100" class="page-4">
-				<img src="pages/5-thumb.jpg" width="76" height="100" class="page-5">
-				<span>4-5</span>
-			</li>
-			<li class="d">
-				<img src="pages/6-thumb.jpg" width="76" height="100" class="page-6">
-				<img src="pages/7-thumb.jpg" width="76" height="100" class="page-7">
-				<span>6-7</span>
-			</li>
-			<li class="d">
-				<img src="pages/8-thumb.jpg" width="76" height="100" class="page-8">
-				<img src="pages/9-thumb.jpg" width="76" height="100" class="page-9">
-				<span>8-9</span>
-			</li>
-			<li class="d">
-				<img src="pages/10-thumb.jpg" width="76" height="100" class="page-10">
-				<img src="pages/11-thumb.jpg" width="76" height="100" class="page-11">
-				<span>10-11</span>
-			</li>
-			<li class="i">
-				<img src="pages/12-thumb.jpg" width="76" height="100" class="page-12">
-				<span>12</span>
-			</li>
-		<ul>
-	<div>	
+		<ul id="thumbnail-list">
+			<!-- Thumbnails will be dynamically populated by JavaScript -->
+		</ul>
+	</div>	
 </div>
 </div>
 
 <script type="text/javascript">
 
+// Fetch cover data when page loads
+$(document).ready(function() {
+  // For now, we'll use template 1 and slot 1 as default
+  // In a real implementation, these could be passed as URL parameters
+  fetchCoverData(1, 1);
+});
+
 function loadApp() {
+  // Only proceed if cover data has been loaded
+  if (!coverData) {
+    console.log("Waiting for cover data to load...");
+    setTimeout(loadApp, 100);
+    return;
+  }
 
  	$('#canvas').fadeIn(1000);
 
@@ -304,6 +433,7 @@ function loadApp() {
 		resizeViewport();
 	});
 
+	// Initialize thumbnail event handlers
 	$('.thumbnails').on('click', function(event) {
 		
 		var page;
@@ -399,7 +529,6 @@ function loadApp() {
 	resizeViewport();
 
 	$('.magazine').addClass('animated');
-
 }
 
  $('.zoom-icon').on('mouseover', function() { 
@@ -431,7 +560,48 @@ function loadApp() {
 
  $('#canvas').hide();
 
-loadApp()
+// Load the app after cover data is fetched
+// loadApp() is now called from fetchCoverData when data is ready
+
+// Add hover detection for thumbnails
+$(document).ready(function() {
+  var thumbnails = $('.thumbnails');
+  var hoverTimer;
+  
+  // Detect mouse movement at the bottom of the page
+  $(document).on('mousemove', function(e) {
+    var windowHeight = $(window).height();
+    var mouseY = e.clientY;
+    
+    // If mouse is near the bottom (within 150px of the bottom)
+    if (mouseY > windowHeight - 150) {
+      // Clear any existing timer
+      clearTimeout(hoverTimer);
+      
+      // Show thumbnails with a slight delay for better UX
+      setTimeout(function() {
+        thumbnails.addClass('visible');
+      }, 100);
+      
+      // Set timer to hide thumbnails after 3 seconds of no movement
+      hoverTimer = setTimeout(function() {
+        thumbnails.removeClass('visible');
+      }, 3000);
+    }
+  });
+  
+  // Also show thumbnails when hovering directly over them
+  thumbnails.on('mouseenter', function() {
+    clearTimeout(hoverTimer);
+    thumbnails.addClass('visible');
+  });
+  
+  thumbnails.on('mouseleave', function() {
+    hoverTimer = setTimeout(function() {
+      thumbnails.removeClass('visible');
+    }, 1000);
+  });
+});
 
 </script>
 

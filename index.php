@@ -228,7 +228,13 @@ $staticPaths = [
     '/img/'                             => '/img/',
     '/LandingPage/'                     => '/LandingPage/',
     '/Public/assets/css/'               => '/Public/assets/css/',
-    '/Public/assets/js/'                => '/Public/assets/js/'
+    '/Public/assets/js/'                => '/Public/assets/js/',
+    '/Admin/Yearbook/'                  => '/Admin/Yearbook/',  // Add this line
+    '/Admin/Yearbook/pages/'            => '/Admin/Yearbook/pages/',  // Add this line
+    '/Admin/Yearbook/pics/'             => '/Admin/Yearbook/pics/',  // Add this line
+    '/Admin/Yearbook/css/'              => '/Admin/Yearbook/css/',  // Add this line
+    '/Admin/Yearbook/js/'               => '/Admin/Yearbook/js/',  // Add this line
+    '/Turn.js/'                         => '/Turn.js/'  // Add this line
 ];
 
 foreach ($staticPaths as $uriPrefix => $folder) {

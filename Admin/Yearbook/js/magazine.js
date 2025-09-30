@@ -18,7 +18,6 @@ function addPage(page, book) {
 
 function loadPage(page, pageElement) {
   // Create an image element
-
   var img = $("<img />");
 
   img.on("mousedown", function (e) {
@@ -30,17 +29,29 @@ function loadPage(page, pageElement) {
     $(this).css({ width: "100%", height: "100%" });
 
     // Add the image to the page after loaded
-
     $(this).appendTo(pageElement);
 
     // Remove the loader indicator
-
     pageElement.find(".loader").remove();
   });
 
-  // Load the page
-
-  img.attr("src", "pages/" + page + ".jpg");
+  // Check if we're loading the first or last page and use cover data if available
+  var totalPages = $(".magazine").turn("pages");
+  
+  if (page === 1 && typeof coverData !== 'undefined' && coverData !== null) {
+    // First page - use front cover
+    img.attr("src", coverData.front_url);
+  } else if (page === totalPages && typeof coverData !== 'undefined' && coverData !== null) {
+    // Last page - use back cover
+    img.attr("src", coverData.back_url);
+  } else if (typeof coverData !== 'undefined' && coverData !== null && coverData.background_url) {
+    // Middle pages - use background image
+    img.attr("src", coverData.background_url);
+  } else {
+    // Loadnew page
+    // Use absolute path for page images
+    img.attr("src", "pages/" + page + ".jpg");
+  }
 
   loadRegions(page, pageElement);
 }
@@ -64,6 +75,13 @@ function zoomTo(event) {
 // Load regions
 
 function loadRegions(page, element) {
+  // Skip loading regions for cover pages
+  var totalPages = $(".magazine").turn("pages");
+  if (page === 1 || page === totalPages) {
+    return;
+  }
+  
+  // Use absolute path for JSON files
   $.getJSON("pages/" + page + "-regions.json").done(function (data) {
     $.each(data, function (key, region) {
       addRegion(region, element);
@@ -145,9 +163,20 @@ function loadLargePage(page, pageElement) {
     prevImg.remove();
   });
 
-  // Loadnew page
-
-  img.attr("src", "pages/" + page + "-large.jpg");
+  // Check if we're loading the first or last page and use cover data if available
+  var totalPages = $(".magazine").turn("pages");
+  
+  if (page === 1 && typeof coverData !== 'undefined' && coverData !== null) {
+    // First page - use front cover
+    img.attr("src", coverData.front_url);
+  } else if (page === totalPages && typeof coverData !== 'undefined' && coverData !== null) {
+    // Last page - use back cover
+    img.attr("src", coverData.back_url);
+  } else {
+    // Loadnew page
+    // Use absolute path for large page images
+    img.attr("src", "pages/" + page + "-large.jpg");
+  }
 }
 
 // Load small page
@@ -158,9 +187,21 @@ function loadSmallPage(page, pageElement) {
   img.css({ width: "100%", height: "100%" });
 
   img.off("load");
-  // Loadnew page
-
-  img.attr("src", "pages/" + page + ".jpg");
+  
+  // Check if we're loading the first or last page and use cover data if available
+  var totalPages = $(".magazine").turn("pages");
+  
+  if (page === 1 && typeof coverData !== 'undefined' && coverData !== null) {
+    // First page - use front cover
+    img.attr("src", coverData.front_url);
+  } else if (page === totalPages && typeof coverData !== 'undefined' && coverData !== null) {
+    // Last page - use back cover
+    img.attr("src", coverData.back_url);
+  } else {
+    // Loadnew page
+    // Use absolute path for page images
+    img.attr("src", "pages/" + page + ".jpg");
+  }
 }
 
 function disableControls(page) {
