@@ -225,19 +225,18 @@ try {
 
         error_log("UploadCover.php update result: matched=" . $result->getMatchedCount() . ", modified=" . $result->getModifiedCount() . ", upserted=" . $result->getUpsertedCount());
 
-        $result8 = $collection->updateOne(
-            ['template' => $template, 'slot' => 8],
-            [
-                '$setOnInsert' => [
-                    'template'             => $template,
-                    'slot'                 => 8,
-                    'background_url'       => '',
-                    'background_thumb_url' => '',
-                    'created_at'           => new MongoDB\BSON\UTCDateTime()
-                ]
-            ],
-            ['upsert' => true]
-        );
+        // Only create slot 8 if it doesn't exist yet
+        $slot8 = $collection->findOne(['template' => $template, 'slot' => 8]);
+        if (!$slot8) {
+            $result8 = $collection->insertOne([
+                'template' => $template,
+                'slot' => 8,
+                'background_url' => '',
+                'background_thumb_url' => '',
+                'created_at' => new MongoDB\BSON\UTCDateTime(),
+                'updated_at' => new MongoDB\BSON\UTCDateTime()
+            ]);
+        }
 
         error_log("UploadCover.php slot 8 update result: matched=" . $result8->getMatchedCount() . ", modified=" . $result8->getModifiedCount() . ", upserted=" . $result8->getUpsertedCount());
     } catch (Exception $e) {

@@ -38,11 +38,13 @@ try {
     $db = $client->$dbName;
     $collection = $db->YearbookCovers;
 
-    // Find the specific cover
+    // Find the specific cover and background (slot 8)
     $cover = $collection->findOne(['template' => $template, 'slot' => $slot]);
+    $background = $collection->findOne(['template' => $template, 'slot' => 8]);
 
     // Debug: Log what we found
     error_log("Searching for template: " . $template . ", slot: " . $slot);
+    error_log("Background data found: " . ($background ? json_encode($background) : "none"));
     if ($cover) {
         error_log("Cover found: " . json_encode($cover));
     } else {
@@ -62,8 +64,8 @@ try {
         'back_url' => isset($cover['back_url']) ? (string)$cover['back_url'] : '',
         'front_thumb_url' => isset($cover['front_thumb_url']) ? (string)$cover['front_thumb_url'] : '',
         'back_thumb_url' => isset($cover['back_thumb_url']) ? (string)$cover['back_thumb_url'] : '',
-        'background_url' => isset($cover['background_url']) ? (string)$cover['background_url'] : '',
-        'background_thumb_url' => isset($cover['background_thumb_url']) ? (string)$cover['background_thumb_url'] : '',
+        'background_url' => $background && isset($background['background_url']) ? (string)$background['background_url'] : '',
+        'background_thumb_url' => $background && isset($background['background_thumb_url']) ? (string)$background['background_thumb_url'] : '',
         'created_at' => isset($cover['created_at']) ? $cover['created_at']->toDateTime()->format('c') : null,
         'updated_at' => isset($cover['updated_at']) ? $cover['updated_at']->toDateTime()->format('c') : null
     ];
