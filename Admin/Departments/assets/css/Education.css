@@ -1,0 +1,57 @@
+:root {
+  --header-bg: #1d2db2;
+  --body-bg: #000042;
+  --sidebar-bg: #0c27be;
+  --content-bg: #112d4e;
+  --menu-bg-active: #000042;
+  --menu-border-active: #fcda15;
+  --menu-hover-bg: #1c1c84;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  width: 100%;
+  background-color: var(--body-bg);
+}
+
+.container {
+  height: 100%;
+  background-color: var(--content-bg);
+  border-radius: 10px 10px 0 0;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.catalog-root {
+  width: 100%;
+  height: calc(100vh - 65px);
+  background-color: var(--content-bg);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.catalog-app {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  border-radius: 8px;
+  background-color: var(--content-bg);
+}
+
+html:fullscreen .catalog-app,
+html:fullscreen #viewer,
+html:fullscreen #flipbook,
+html:-webkit-full-screen .catalog-app,
+html:-webkit-full-screen #viewer,
+html:-webkit-full-screen #flipbook {
+  width: 100%;
+  height: 100%;
+  max-width: 100vw;
+  max-height: 100vh;
+  min-width: 1300px;
+  min-height: 780px;
+}

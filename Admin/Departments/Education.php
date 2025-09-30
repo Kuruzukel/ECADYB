@@ -7,6 +7,7 @@
   <title>College of Education</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <link href="../Flipbook/turn.js/dist/style.css" rel="stylesheet">
+  <link href="./assets/css/Education.css" rel="stylesheet">
   <style>
     :root {
       --header-bg: #1d2db2;
@@ -290,6 +291,7 @@
         });
       });
     </script>
+    <script src="./assets/js/Education.js"></script>
   </div>
 </body>
 
