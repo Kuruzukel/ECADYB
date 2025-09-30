@@ -500,8 +500,8 @@ window.addEventListener("DOMContentLoaded", () => {
           });
           
           xhr.open("POST", url, true);
-          // Faster timeout settings
-          xhr.timeout = 10000; // 10 second timeout
+          // Reasonable timeout settings
+          xhr.timeout = 60000; // 60 seconds - reasonable for file uploads
           
           xhr.onabort = () => {
             resolve({ aborted: true });
@@ -519,7 +519,7 @@ window.addEventListener("DOMContentLoaded", () => {
                   resolve(JSON.parse(xhr.responseText));
                 } else if (xhr.status === 0) {
                   // Handle Error 0 - usually caused by cancellation or network issues
-                  resolve({ success: false, message: "Cancelled upload" });
+                  resolve({ success: false, message: "Upload cancelled" });
                 } else {
                   resolve({
                     success: false,
@@ -637,7 +637,7 @@ window.addEventListener("DOMContentLoaded", () => {
           }
 
           const img = document.createElement("img");
-          img.src = data.url;
+          img.src = data.url || data.public_url; // Handle both possible response formats
           img.classList.add(detectedSide === "front" ? "front-img" : "back-img");
           if (detectedSide === "front") frontImg = img;
           else backImg = img;
@@ -775,6 +775,7 @@ window.addEventListener("DOMContentLoaded", () => {
               if (backImg && !isBackgroundSlot) backImg.style.opacity = 0;
             }
           }
+
         } catch (e) {
           // Handle timeout errors specifically
           if (e.name === 'TimeoutError' || e.name === 'AbortError') {

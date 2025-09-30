@@ -41,7 +41,8 @@ try {
         respond(false, 'Invalid template parameter. Must be 1, 2, or 3.');
     }
 
-    $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
+    $mongoUrl = getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
+    error_log("FetchCovers.php using MongoDB URL: $mongoUrl");
 
     // Ultra-fast MongoDB connection
     $client = new Client($mongoUrl, [
@@ -57,15 +58,19 @@ try {
 
     error_log("FetchCovers.php using database: $dbName, collection: YearbookCovers");
 
-    // Ultra-fast fetch with minimal projection
+    // Ultra-fast fetch with minimal projection including thumbnail fields
     $cursor = $collection->find(
-        ['template' => $template],
+        [], // Fetch all documents, not just those matching template
         [
             'projection' => [
                 'slot' => 1,
                 'front_url' => 1,
                 'back_url' => 1,
-                'background_url' => 1
+                'front_thumb_url' => 1,
+                'back_thumb_url' => 1,
+                'background_url' => 1,
+                'background_thumb_url' => 1,
+                'template' => 1
             ],
             'limit' => 8  // We only have 8 slots maximum
         ]
@@ -74,20 +79,26 @@ try {
     $items = [];
 
     foreach ($cursor as $doc) {
+        error_log("FetchCovers.php found document: " . json_encode($doc));
         $slot = (int)($doc['slot'] ?? 0);
 
         if ($slot >= 1 && $slot <= 7) {
             $items[] = [
                 'slot' => $slot,
                 'front_url' => isset($doc['front_url']) ? (string)$doc['front_url'] : '',
-                'back_url' => isset($doc['back_url']) ? (string)$doc['back_url'] : ''
+                'back_url' => isset($doc['back_url']) ? (string)$doc['back_url'] : '',
+                'front_thumb_url' => isset($doc['front_thumb_url']) ? (string)$doc['front_thumb_url'] : '',
+                'back_thumb_url' => isset($doc['back_thumb_url']) ? (string)$doc['back_thumb_url'] : ''
             ];
         } elseif ($slot === 8) {
             $backgroundUrl = isset($doc['background_url']) ? (string)$doc['background_url'] : '';
+            $backgroundThumbUrl = isset($doc['background_thumb_url']) ? (string)$doc['background_thumb_url'] : '';
             $items[] = [
                 'slot' => 8,
                 'front_url' => $backgroundUrl,
-                'background_url' => $backgroundUrl
+                'background_url' => $backgroundUrl,
+                'front_thumb_url' => $backgroundThumbUrl,
+                'background_thumb_url' => $backgroundThumbUrl
             ];
         }
     }
@@ -96,5 +107,6 @@ try {
 
     respond(true, 'Covers fetched', ['items' => array_values($items)]);
 } catch (Exception $e) {
+    error_log("FetchCovers.php error: " . $e->getMessage());
     respond(false, 'Failed to fetch: ' . $e->getMessage());
 }
