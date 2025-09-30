@@ -271,9 +271,67 @@
 
 // Fetch cover data when page loads
 $(document).ready(function() {
-  // For now, we'll use template 1 and slot 1 as default
-  // In a real implementation, these could be passed as URL parameters
-  fetchCoverData(1, 1);
+  // Get department code from URL parameter or default
+  var urlParams = new URLSearchParams(window.location.search);
+  var departmentCode = urlParams.get('department');
+  
+  // Fetch cover data
+  $.ajax({
+    url: 'FetchCoverData.php',
+    method: 'GET',
+    data: { 
+      template: 1, 
+      department: departmentCode 
+    },
+    dataType: 'json',
+    success: function(response) {
+      console.log('Cover data response:', response);
+      
+      // If a specific department is detected and differs from URL parameter
+      if (response.success && response.data.department && 
+          (!departmentCode || departmentCode !== response.data.department)) {
+        // Redirect to the correct department page if needed
+        if (response.data.department_page) {
+          var redirectUrl = '../Departments/' + response.data.department_page + '.php';
+          window.location.href = redirectUrl + '?department=' + response.data.department;
+          return;
+        }
+      }
+      
+      // Continue with normal cover data loading
+      if (response.success) {
+        coverData = response.data;
+        
+        // Debug: Log the coverData to see what we're getting
+        console.log('Cover data loaded:', coverData);
+        
+        // Populate thumbnails with the fetched data
+        populateThumbnails();
+        
+        // Re-initialize the magazine after loading cover data
+        if (typeof loadApp === 'function') {
+          loadApp();
+        }
+      } else {
+        // Debug: Log the error
+        console.log('Failed to fetch cover data:', response.message);
+        // Even if fetch fails, we still need to initialize the app
+        if (typeof loadApp === 'function') {
+          loadApp();
+        }
+      }
+    },
+    error: function(xhr, status, error) {
+      // Debug: Log the error
+      console.log('Error fetching cover data:', error);
+      console.log('XHR:', xhr);
+      console.log('Status:', status);
+      // Even if fetch fails, we still need to initialize the app
+      if (typeof loadApp === 'function') {
+        loadApp();
+      }
+    }
+  });
 });
 
 function loadApp() {

@@ -14,7 +14,7 @@
   <div class="container">
     <div class="catalog-root">
       <div class="catalog-app">
-        <iframe src="../Yearbook/index.html" width="100%" height="100%" style="border: none;"></iframe>
+        <iframe src="../Yearbook/index.html?department=BSN" width="100%" height="100%" style="border: none;"></iframe>
       </div>
     </div>
 

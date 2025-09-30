@@ -16,7 +16,24 @@ use MongoDB\Client;
 try {
     // Get parameters from URL
     $template = isset($_GET['template']) ? (int)$_GET['template'] : 1;
-    $slot = isset($_GET['slot']) ? (int)$_GET['slot'] : 1;
+    // Department code to slot mapping
+    $departmentSlots = [
+        'BSBA' => 1,   // Business Administration
+        'BSCJE' => 3,  // Criminal Justice Education
+        'BSE' => 6,    // Education
+        'BSIS' => 8,   // Information System
+        'BSME' => 1,   // Maritime (using slot 1)
+        'BSN' => 7,    // Nursing
+        'BSTM' => 4    // Tourism Management
+    ];
+
+    // Get department code from URL parameter
+    $departmentCode = isset($_GET['department']) ? strtoupper($_GET['department']) : null;
+
+    // Determine slot based on department code
+    $slot = $departmentCode && isset($departmentSlots[$departmentCode]) 
+        ? $departmentSlots[$departmentCode] 
+        : 1; // Default to slot 1 if no match
 
     if ($template < 1 || $template > 3) {
         throw new Exception('Invalid template parameter. Must be 1, 2, or 3.');
@@ -69,6 +86,44 @@ try {
         'created_at' => isset($cover['created_at']) ? $cover['created_at']->toDateTime()->format('c') : null,
         'updated_at' => isset($cover['updated_at']) ? $cover['updated_at']->toDateTime()->format('c') : null
     ];
+
+    // Department code mapping based on first 4 letters of filename
+    $departmentMap = [
+        'BSBA' => 'BusinessAdministration',
+        'BSCJ' => 'Criminology',
+        'BSE'  => 'Education',
+        'BSIS' => 'InformationSystem',
+        'BSME' => 'Maritime',
+        'BSN'  => 'Nursing',
+        'BSTM' => 'Tourism'
+    ];
+
+    // Function to extract department code from filename
+    function extractDepartmentCode($filename) {
+        // Extract first 4 letters from the filename
+        $code = substr(strtoupper(pathinfo($filename, PATHINFO_FILENAME)), 0, 4);
+        
+        // Special handling for Criminal Justice (BSCJE)
+        if (strpos($code, 'BSCJ') === 0) {
+            $code = 'BSCJ';
+        }
+        
+        return $code;
+    }
+
+    // Determine department based on front and back cover URLs
+    $departmentCode = null;
+    if (isset($cover['front_url'])) {
+        $departmentCode = extractDepartmentCode(basename($cover['front_url']));
+    } elseif (isset($cover['back_url'])) {
+        $departmentCode = extractDepartmentCode(basename($cover['back_url']));
+    }
+
+    // Add department information to the response
+    $response['department'] = $departmentCode;
+    $response['department_page'] = isset($departmentMap[$departmentCode]) 
+        ? $departmentMap[$departmentCode] 
+        : null;
 
     // Debug: Print the actual data being returned
     error_log("FetchCoverData response: " . json_encode($response));
