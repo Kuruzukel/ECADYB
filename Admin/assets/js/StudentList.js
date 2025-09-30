@@ -181,6 +181,7 @@ function applyTheme(theme) {
 const STATUS_ENDPOINT = "/Connection/Student/UpdateStatus.php";
 const STUDENT_UPDATE_ENDPOINT = "/Connection/Student/UpdateStudent.php";
 const DELETE_STUDENT_ENDPOINT = "/Connection/Student/DeleteStudent.php";
+const BULK_STATUS_ENDPOINT = "/Connection/Student/BulkUpdateStatus.php";
 
 window.addEventListener("DOMContentLoaded", () => {
   console.log("StudentList.js loaded successfully");
@@ -194,9 +195,38 @@ window.addEventListener("DOMContentLoaded", () => {
   initializeFilters();
   initializeStatusUpdates();
   initializeDeleteModal();
+  
+  // Update select all state on page load
+  setTimeout(updateSelectAllState, 100);
 });
 
 let isSelectAllActive = false;
+let isSelectAllOperation = false;
+let selectAllProcessedCount = 0;
+let selectAllTotalCount = 0;
+
+// Function to update the select all checkbox state based on individual checkbox states
+function updateSelectAllState() {
+  const selectAllCheckbox = document.getElementById("select-all-header");
+  if (!selectAllCheckbox) return;
+
+  const visibleCheckboxes = getVisibleStudentCheckboxes();
+  if (visibleCheckboxes.length === 0) {
+    selectAllCheckbox.checked = false;
+    return;
+  }
+
+  // Check if all visible checkboxes are checked
+  const allChecked = visibleCheckboxes.every(checkbox => checkbox.checked);
+  selectAllCheckbox.checked = allChecked;
+  
+  // Also update localStorage
+  if (allChecked) {
+    localStorage.setItem("selectAllState", "true");
+  } else {
+    localStorage.removeItem("selectAllState");
+  }
+}
 
 function initializeSelectAll() {
   const selectAllCheckbox = document.getElementById("select-all-header");
@@ -215,6 +245,7 @@ function initializeSelectAll() {
           checkbox.dispatchEvent(new Event("change", { bubbles: true }));
         }
       });
+      // Removed notification when select all is clicked
     }, 100);
   }
 
@@ -223,19 +254,116 @@ function initializeSelectAll() {
 
     isSelectAllActive = this.checked;
 
-    localStorage.setItem("selectAllState", this.checked.toString());
+    if (this.checked) {
+      localStorage.setItem("selectAllState", "true");
+    } else {
+      localStorage.removeItem("selectAllState");
+    }
 
     const visibleStudentCheckboxes = getVisibleStudentCheckboxes();
     console.log("Found", visibleStudentCheckboxes.length, "visible checkboxes");
 
-    visibleStudentCheckboxes.forEach((checkbox) => {
-      const was = checkbox.checked;
-      checkbox.checked = this.checked;
-      if (was !== this.checked) {
-        checkbox.dispatchEvent(new Event("change", { bubbles: true }));
+    if (visibleStudentCheckboxes.length > 0) {
+      if (this.checked) {
+        // For select all, we want to update ALL students in the department, not just visible ones
+        // Get current department and template from filters
+        const departmentFilter = document.getElementById("department-filter");
+        const statusFilter = document.getElementById("status-filter");
+        const templateFilter = document.getElementById("template-filter");
+        
+        const department = departmentFilter ? departmentFilter.value : "";
+        const status = statusFilter ? statusFilter.value : "";
+        const template = templateFilter ? templateFilter.value : "1";
+        
+        if (department) {
+          // Use bulk update for all students in department
+          updateAllStudentsStatus(department, "Active", template, status);
+        } else {
+          // Fall back to individual updates for visible students only
+          // Set up for select all operation
+          isSelectAllOperation = true;
+          selectAllProcessedCount = 0;
+          selectAllTotalCount = visibleStudentCheckboxes.length;
+
+          visibleStudentCheckboxes.forEach((checkbox) => {
+            const was = checkbox.checked;
+            checkbox.checked = this.checked;
+            if (was !== this.checked) {
+              checkbox.dispatchEvent(new Event("change", { bubbles: true }));
+            }
+          });
+          // Removed notification when select all is clicked
+        }
+      } else {
+        // For unselect all, we want to update ALL students in the department, not just visible ones
+        // Get current department and template from filters
+        const departmentFilter = document.getElementById("department-filter");
+        const statusFilter = document.getElementById("status-filter");
+        const templateFilter = document.getElementById("template-filter");
+        
+        const department = departmentFilter ? departmentFilter.value : "";
+        const status = statusFilter ? statusFilter.value : "";
+        const template = templateFilter ? templateFilter.value : "1";
+        
+        if (department) {
+          // Use bulk update for all students in department
+          updateAllStudentsStatus(department, "Pending", template, status);
+        } else {
+          // Fall back to individual updates for visible students only
+          // Uncheck all
+          visibleStudentCheckboxes.forEach((checkbox) => {
+            if (checkbox.checked) {
+              checkbox.checked = false;
+              checkbox.dispatchEvent(new Event("change", { bubbles: true }));
+            }
+          });
+          // Removed notification when unselect all is clicked
+        }
       }
-    });
+    } else {
+      // Show notification immediately if no checkboxes found
+      if (this.checked) {
+        _showNotification("No students found to update", "info");
+      }
+    }
   });
+}
+
+// New function to update all students in a department
+async function updateAllStudentsStatus(collection, status, template, statusFilter) {
+  try {
+    // Ensure we're using the correct base URL
+    const baseUrl = window.location.origin + (window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '');
+    const endpoint = baseUrl + BULK_STATUS_ENDPOINT;
+    
+    const res = await fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ 
+        collection: collection, 
+        status: status, 
+        template: template,
+        status_filter: statusFilter
+      }),
+    });
+
+    if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+
+    const data = await res.json();
+    
+    if (data && data.success) {
+      _showNotification(data.message || `All students status updated to ${status}`, "success");
+      // Reload the page to reflect changes
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
+    } else {
+      _showNotification(data.message || "Failed to update all students status", "error");
+    }
+  } catch (err) {
+    console.error("[BulkUpdateStatus] Fetch error:", err);
+    _showNotification("Error updating all students status. Check console.", "error");
+  }
 }
 
 function getVisibleStudentCheckboxes() {
@@ -267,6 +395,9 @@ function clearSelectAllState() {
   if (selectAllCheckbox) {
     selectAllCheckbox.checked = false;
   }
+  
+  // Update select all state
+  setTimeout(updateSelectAllState, 0);
 }
 
 function initializeFilters() {
@@ -325,9 +456,34 @@ function applyFilters() {
     console.log("Row", index, "will be", showRow ? "shown" : "hidden");
     row.style.display = showRow ? "" : "none";
   });
+  
+  // Update select all state after filtering
+  setTimeout(updateSelectAllState, 0);
 }
 
+// Modify the showNotification function to handle select all operations
 function showNotification(message, type = "success") {
+  // If this is a select all operation, suppress individual notifications
+  if (isSelectAllOperation && message.includes("Status updated")) {
+    selectAllProcessedCount++;
+    
+    // When all operations are complete, show a single summary notification
+    if (selectAllProcessedCount >= selectAllTotalCount) {
+      const finalMessage = `All ${selectAllTotalCount} student statuses updated successfully`;
+      _showNotification(finalMessage, type);
+      isSelectAllOperation = false; // Reset for next operation
+      selectAllProcessedCount = 0;
+      selectAllTotalCount = 0;
+    }
+    return; // Don't show individual notifications during select all
+  }
+  
+  // For all other cases, show the notification normally
+  _showNotification(message, type);
+}
+
+// The actual notification display function
+function _showNotification(message, type = "success") {
   const container = document.getElementById("notification-container");
   if (!container) return;
 
@@ -341,10 +497,11 @@ function showNotification(message, type = "success") {
   `;
   container.appendChild(notif);
 
+  // Make notification visible longer (5 seconds instead of 3)
   setTimeout(() => {
     notif.classList.remove("show");
     setTimeout(() => notif.remove(), 500);
-  }, 3000);
+  }, 5000);
 }
 
 const deleteModal = document.getElementById("delete-modal-overlay");
@@ -372,6 +529,10 @@ async function confirmDeleteStudent() {
   confirmDeleteBtn.disabled = true;
 
   try {
+    // Get template information from URL or default to 1
+    const urlParams = new URLSearchParams(window.location.search);
+    const template = urlParams.get('template') || '1';
+    
     // Ensure we're using the correct base URL
     const baseUrl = window.location.origin + (window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '');
     const endpoint = baseUrl + DELETE_STUDENT_ENDPOINT;
@@ -382,6 +543,7 @@ async function confirmDeleteStudent() {
       body: JSON.stringify({
         student_id: selectedStudentId,
         collection: selectedCollection,
+        template: template
       }),
     });
 
@@ -390,7 +552,7 @@ async function confirmDeleteStudent() {
     const data = await res.json().catch(() => null);
 
     if (data?.success) {
-      showNotification(
+      _showNotification(
         data.message || "Student deleted successfully",
         "success"
       );
@@ -401,11 +563,11 @@ async function confirmDeleteStudent() {
         ?.closest("tr");
       if (row) row.remove();
     } else {
-      showNotification(data?.message || "Failed to delete student", "error");
+      _showNotification(data?.message || "Failed to delete student", "error");
     }
   } catch (err) {
     console.error("Error deleting student:", err);
-    showNotification("Error deleting student. Check console.", "error");
+    _showNotification("Error deleting student. Check console.", "error");
   } finally {
     confirmDeleteBtn.disabled = false;
     closeDeleteModal();
@@ -455,6 +617,9 @@ function initializeStatusUpdates() {
       console.log("Checkbox changed", this.checked);
       console.log("Dataset:", this.dataset);
 
+      // Update select all state
+      setTimeout(updateSelectAllState, 0);
+
       if (!isSelectAllActive) {
         clearSelectAllState();
       }
@@ -471,13 +636,17 @@ function initializeStatusUpdates() {
       console.log("Status:", status);
 
       if (!studentId || !collection) {
-        showNotification("Student ID or collection missing", "error");
+        _showNotification("Student ID or collection missing", "error");
         this.checked = !this.checked;
         this.dataset.busy = "0";
         return;
       }
 
       try {
+        // Get template information from URL or default to 1
+        const urlParams = new URLSearchParams(window.location.search);
+        const template = urlParams.get('template') || '1';
+        
         // Ensure we're using the correct base URL
         const baseUrl = window.location.origin + (window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '');
         const endpoint = baseUrl + STATUS_ENDPOINT;
@@ -485,7 +654,7 @@ function initializeStatusUpdates() {
         const res = await fetch(endpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ student_id: studentId, collection, status }),
+          body: JSON.stringify({ student_id: studentId, collection, status, template }),
         });
 
         if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
@@ -495,10 +664,12 @@ function initializeStatusUpdates() {
           data = await res.json();
         } catch (err) {
           console.error("[UpdateStatus] Invalid JSON:", err);
-          showNotification(
-            "Server error: Invalid JSON response from UpdateStatus.php",
-            "error"
-          );
+          if (!isSelectAllOperation) {
+            _showNotification(
+              "Server error: Invalid JSON response from UpdateStatus.php",
+              "error"
+            );
+          }
           this.checked = !this.checked;
           return;
         }
@@ -520,17 +691,25 @@ function initializeStatusUpdates() {
             console.log("New status cell className:", statusCell.className);
           }
           applyFilters();
-          showNotification(
-            data.message || "Status updated successfully",
-            "success"
-          );
+          
+          // Only show individual notifications if not in select all mode
+          if (!isSelectAllOperation) {
+            _showNotification(
+              data.message || "Status updated successfully",
+              "success"
+            );
+          }
         } else {
-          showNotification(data.message || "Failed to update status", "error");
+          if (!isSelectAllOperation) {
+            _showNotification(data.message || "Failed to update status", "error");
+          }
           this.checked = !this.checked;
         }
       } catch (err) {
         console.error("[UpdateStatus] Fetch error:", err);
-        showNotification("Error updating status. Check console.", "error");
+        if (!isSelectAllOperation) {
+          _showNotification("Error updating status. Check console.", "error");
+        }
         this.checked = !this.checked;
       } finally {
         this.dataset.busy = "0";
@@ -553,6 +732,11 @@ async function updateStudentDetails(studentId, fields) {
   );
   if (collectionEl) fields["collection"] = collectionEl.value;
 
+  // Get template information from URL or default to 1
+  const urlParams = new URLSearchParams(window.location.search);
+  const template = urlParams.get('template') || '1';
+  fields["template"] = template;
+
   try {
     // Ensure we're using the correct base URL
     const baseUrl = window.location.origin + (window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '');
@@ -567,7 +751,7 @@ async function updateStudentDetails(studentId, fields) {
     const data = await res.json().catch(() => null);
 
     if (data?.success) {
-      showNotification(
+      _showNotification(
         data.message || "Student Details Saved Successfully",
         "success"
       );
@@ -575,13 +759,13 @@ async function updateStudentDetails(studentId, fields) {
         window.location.reload();
       }, 1500);
     } else {
-      showNotification(
+      _showNotification(
         data?.message || "Failed to save student details",
         "error"
       );
     }
   } catch {
-    showNotification("Error saving student details", "error");
+    _showNotification("Error saving student details", "error");
   }
 }
 
@@ -611,6 +795,7 @@ function submitStudentForm(studentId) {
     status: "status",
   };
 
+  // Get current values
   for (const [key, mongoKey] of Object.entries(fieldMapping)) {
     const el = document.getElementById(`${key}${studentId}`);
     if (el) {
@@ -629,6 +814,7 @@ function submitStudentForm(studentId) {
   if (collectionEl) {
     fields["collection"] = collectionEl.value;
   } else {
+    _showNotification("Collection information missing", "error");
     return;
   }
 

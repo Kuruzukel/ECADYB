@@ -10,7 +10,6 @@ $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDds
 
 try {
     $client = new Client($mongoUrl);
-    $departmentsDB = $client->Departments;
 } catch (Exception $e) {
     echo json_encode([
         'success' => false,
@@ -23,6 +22,7 @@ $data = json_decode(file_get_contents('php://input'), true);
 
 $studentId = isset($data['student_id']) ? trim($data['student_id']) : null;
 $collectionName = isset($data['collection']) ? trim($data['collection']) : null;
+$template = isset($data['template']) ? trim($data['template']) : '1';
 
 if (!$studentId || !$collectionName) {
     echo json_encode([
@@ -32,18 +32,23 @@ if (!$studentId || !$collectionName) {
     exit;
 }
 
-$collections = iterator_to_array($departmentsDB->listCollectionNames());
-if (!in_array($collectionName, $collections)) {
-    echo json_encode([
-        'success' => false,
-        'message' => "Collection '$collectionName' does not exist."
-    ]);
-    exit;
-}
-
-$collection = $departmentsDB->$collectionName;
+// Use the correct BatchTemplate database
+$dbName = "BatchTemplate" . $template;
+$db = $client->$dbName;
 
 try {
+    // Check if the collection exists in this database
+    $collections = iterator_to_array($db->listCollectionNames());
+    if (!in_array($collectionName, $collections)) {
+        echo json_encode([
+            'success' => false,
+            'message' => "Collection '$collectionName' does not exist in database '$dbName'."
+        ]);
+        exit;
+    }
+
+    $collection = $db->$collectionName;
+
     // Use exact match for better reliability
     $student = $collection->findOne([
         '$or' => [
@@ -54,7 +59,8 @@ try {
 
     if (!$student) {
         $allStudents = $collection->find([], [
-            'projection' => ['student id' => 1, 'student_id' => 1]
+            'projection' => ['student id' => 1, 'student_id' => 1],
+            'limit' => 10
         ]);
 
         $ids = [];
@@ -71,7 +77,7 @@ try {
 
         echo json_encode([
             'success' => false,
-            'message' => "No student found with student_id='$studentId' in collection '$collectionName'.",
+            'message' => "No student found with student_id='$studentId' in collection '$collectionName' in database '$dbName'.",
             'debug_ids' => $ids
         ]);
         exit;
