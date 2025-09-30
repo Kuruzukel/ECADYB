@@ -70,7 +70,7 @@ php -S localhost:8000 -t .
 ## Files Updated for Deployment
 
 All MongoDB connection files have been updated to use environment variables:
-- `Connection/MongoFetch.php`
+- `Connection/Configuration/MongoFetch.php`
 - `Connection/FetchAnnouncement.php`
 - `Connection/DeleteAnnouncement.php`
 - `Connection/TestAnnouncement.php`

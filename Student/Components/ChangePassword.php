@@ -9,7 +9,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'student') {
 $error_message = '';
 $success_message = '';
 
-require __DIR__ . '/../../Connection/MongoConnect.php';
+require __DIR__ . '/../../Connection/Configuration/MongoConnect.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $currentPassword = trim($_POST['current_password'] ?? '');

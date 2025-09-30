@@ -1,10 +1,10 @@
 <?php
 session_start();
 
-$mongoPath = realpath(__DIR__ . '/../../Connection/MongoConnect.php');
+$mongoPath = realpath(__DIR__ . '/../../Connection/Configuration/MongoConnect.php');
 
 if (!$mongoPath || !file_exists($mongoPath)) {
-    die("MongoConnect.php not found at: " . (__DIR__ . '/../../Connection/MongoConnect.php'));
+    die("MongoConnect.php not found at: " . (__DIR__ . '/../../Connection/Configuration/MongoConnect.php'));
 }
 
 require $mongoPath;
