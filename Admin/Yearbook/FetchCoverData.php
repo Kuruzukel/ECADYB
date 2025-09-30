@@ -18,13 +18,13 @@ try {
     $template = isset($_GET['template']) ? (int)$_GET['template'] : 1;
     // Department code to slot mapping
     $departmentSlots = [
-        'BSBA' => 1,   // Business Administration
-        'BSCJE' => 3,  // Criminal Justice Education
-        'BSE' => 6,    // Education
-        'BSIS' => 8,   // Information System
-        'BSME' => 1,   // Maritime (using slot 1)
-        'BSN' => 7,    // Nursing
-        'BSTM' => 4    // Tourism Management
+        'BSME' => 1,   // Maritime
+        'BSCJ' => 2,   // Criminal Justice Education
+        'BSTM' => 3,   // Tourism Management
+        'BSE' => 4,    // Education
+        'BSN' => 5,    // Nursing
+        'BSIS' => 6,   // Information System
+        'BSBA' => 7    // Business Administration
     ];
 
     // Get department code from URL parameter
@@ -103,7 +103,7 @@ try {
         // Extract first 4 letters from the filename
         $code = substr(strtoupper(pathinfo($filename, PATHINFO_FILENAME)), 0, 4);
         
-        // Special handling for Criminal Justice (BSCJE)
+        // Special handling for Criminal Justice (BSCJ)
         if (strpos($code, 'BSCJ') === 0) {
             $code = 'BSCJ';
         }
