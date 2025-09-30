@@ -254,7 +254,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Batch Upload</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="../Assets/css/BatchUpload.css">
+    <link rel="stylesheet" href="../assets/css/BatchUpload.css">
 </head>
 
 <body>
@@ -305,7 +305,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
     </div>
 
-    <script src="../Assets/js/BatchUpload.js"></script>
+    <script src="../assets/js/BatchUpload.js"></script>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         const selectedTemplate = localStorage.getItem('selectedBatchTemplate');

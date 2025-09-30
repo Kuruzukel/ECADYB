@@ -111,7 +111,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Add New Student</title>
-    <link rel="stylesheet" href="../Assets/css/AddNewStudent.css">
+    <link rel="stylesheet" href="../assets/css/AddNewStudent.css">
 </head>
 
 <body>
@@ -193,7 +193,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </div>
     </div>
 
-    <script src="../Assets/js/AddNewStudent.js"></script>
+    <script src="../assets/js/AddNewStudent.js"></script>
 </body>
 
 </html>

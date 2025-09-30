@@ -125,7 +125,7 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student List</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="../Assets/css/StudentList.css">
+    <link rel="stylesheet" href="../assets/css/StudentList.css">
 </head>
 
 <body>
@@ -627,7 +627,7 @@ try {
                 });
             </script>
 
-            <script src="../Assets/js/StudentList.js"></script>
+            <script src="../assets/js/StudentList.js"></script>
 </body>
 
 </html>
