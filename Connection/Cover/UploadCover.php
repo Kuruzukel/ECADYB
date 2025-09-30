@@ -13,17 +13,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 session_start();
 
+// Global variable to track if upload should be cancelled
+$uploadCancelled = false;
+
 function respond($success, $message = '', $data = [])
 {
+    global $uploadCancelled;
+    
     while (ob_get_level()) {
         ob_end_clean();
     }
+    
+    // If upload was cancelled, ensure we don't save anything
+    if ($uploadCancelled && $success) {
+        $success = false;
+        $message = 'Upload cancelled';
+    }
+    
     header('Content-Type: application/json');
     echo json_encode(array_merge([
         'success' => $success,
         'message' => $message
     ], $data));
     exit;
+}
+
+// Check for client disconnection/cancellation at the very beginning
+if (connection_aborted()) {
+    $uploadCancelled = true;
+    respond(false, 'Upload cancelled');
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -36,6 +54,12 @@ if (file_exists(__DIR__ . '/../Configuration/BunnyConfig.php')) {
 }
 
 use MongoDB\Client;
+
+// Check for client disconnection/cancellation
+if (connection_aborted()) {
+    $uploadCancelled = true;
+    respond(false, 'Upload cancelled');
+}
 
 try {
     $bunnyStorageZone = getenv('BUNNY_STORAGE_ZONE')
@@ -63,6 +87,12 @@ try {
         respond(false, 'Invalid parameters: slot and side (front|back) are required, unless slot=8 (BackgroundPage).');
     }
 
+    // Check for client disconnection/cancellation
+    if (connection_aborted()) {
+        $uploadCancelled = true;
+        respond(false, 'Upload cancelled');
+    }
+
     if (!isset($_FILES['file']) || $_FILES['file']['error'] !== UPLOAD_ERR_OK) {
         $errorMap = [
             UPLOAD_ERR_INI_SIZE   => 'File too large (php.ini limit).',
@@ -77,9 +107,61 @@ try {
         respond(false, $errorMap[$code] ?? 'Upload failed.');
     }
 
+    // Check for client disconnection/cancellation
+    if (connection_aborted()) {
+        $uploadCancelled = true;
+        respond(false, 'Upload cancelled');
+    }
+
     $fileTmp      = $_FILES['file']['tmp_name'];
     $originalName = $_FILES['file']['name'];
     $ext          = pathinfo($originalName, PATHINFO_EXTENSION) ?: 'jpg';
+
+    // Auto-detect slot and side from filename if not properly set
+    $upperName = strtoupper($originalName);
+    
+    // Slot mapping based on filename prefix
+    $slotMapping = [
+        'BSME' => 1,
+        'BSCJ' => 2,
+        'BSTM' => 3,
+        'BSE' => 4,
+        'BSN' => 5,
+        'BSIS' => 6,
+        'BSBA' => 7
+    ];
+    
+    // Override slot if we can detect it from filename
+    $detectedSlot = null;
+    foreach ($slotMapping as $prefix => $slotNum) {
+        if (strpos($upperName, $prefix) === 0) {
+            $detectedSlot = $slotNum;
+            break;
+        }
+    }
+    
+    // If we detected a slot from filename but it doesn't match the provided slot, cancel upload
+    if ($detectedSlot !== null && $detectedSlot != $slot) {
+        respond(false, "Upload cancelled: Filename prefix doesn't match the selected slot. Expected slot $detectedSlot for this filename.");
+    }
+    
+    // If we couldn't detect a slot from filename for slots 1-7, cancel upload
+    if ($slot >= 1 && $slot <= 7 && $detectedSlot === null) {
+        respond(false, "Upload cancelled: Filename must start with a valid prefix (BSME, BSCJ, BSTM, BSE, BSN, BSIS, BSBA).");
+    }
+    
+    // Override side if we can detect it from filename
+    if (strpos($upperName, 'BACK') !== false) {
+        $side = 'back';
+    } else if (strpos($upperName, 'FRONT') !== false) {
+        $side = 'front';
+    }
+
+    // Check for client disconnection/cancellation
+    if (connection_aborted()) {
+        $uploadCancelled = true;
+        respond(false, 'Upload cancelled');
+    }
 
     $baseOriginal = pathinfo($originalName, PATHINFO_FILENAME);
     $safeBase     = preg_replace('/[^A-Za-z0-9 _.-]/', '', $baseOriginal) ?: ('image_' . time());
@@ -106,6 +188,12 @@ try {
         respond(false, 'Failed to read uploaded file.');
     }
 
+    // Check for client disconnection/cancellation before uploading to BunnyCDN
+    if (connection_aborted()) {
+        $uploadCancelled = true;
+        respond(false, 'Upload cancelled');
+    }
+
     error_log("UploadCover.php storage URL: $storageUrl");
 
     // Ultra-fast BunnyCDN upload with minimal timeout
@@ -128,6 +216,27 @@ try {
     $curlErr  = curl_error($ch);
     curl_close($ch);
 
+    // Check for client disconnection/cancellation after uploading to BunnyCDN
+    if (connection_aborted()) {
+        $uploadCancelled = true;
+        // If upload was successful but client disconnected, we need to delete the file from BunnyCDN
+        if ($response !== false && $httpCode >= 200 && $httpCode < 300) {
+            // Delete the uploaded file since client disconnected
+            error_log("UploadCover.php deleting file from BunnyCDN due to cancellation: $storageUrl");
+            $deleteCh = curl_init($storageUrl);
+            curl_setopt_array($deleteCh, [
+                CURLOPT_CUSTOMREQUEST  => 'DELETE',
+                CURLOPT_HTTPHEADER     => ['AccessKey: ' . $bunnyAccessKey],
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_TIMEOUT        => 5,
+                CURLOPT_CONNECTTIMEOUT => 2
+            ]);
+            curl_exec($deleteCh);
+            curl_close($deleteCh);
+        }
+        respond(false, 'Upload cancelled');
+    }
+
     if ($response === false || $httpCode < 200 || $httpCode >= 300) {
         respond(false, 'Failed to upload to Bunny: ' . ($curlErr ?: 'HTTP ' . $httpCode));
     }
@@ -139,82 +248,111 @@ try {
     // Skip thumbnail creation entirely for faster upload
     $thumbUrl = '';
     
-    // Ultra-fast MongoDB connection
-    $mongoUrl = getenv('MONGO_URL')
-        ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
-
-    try {
-        $client = new Client($mongoUrl, [
-            'serverSelectionTimeoutMS' => 1000,  // Ultra-fast timeout
-            'connectTimeoutMS'         => 1000,  // Ultra-fast timeout
-            'socketTimeoutMS'          => 2000,  // Reduced timeout
-            'retryWrites'              => true,
-            'writeConcern'             => new MongoDB\Driver\WriteConcern(1, 1000) // Fast write concern
+    // Check for client disconnection/cancellation before updating MongoDB
+    if (connection_aborted()) {
+        $uploadCancelled = true;
+        // Delete the uploaded file from BunnyCDN since we're cancelling before MongoDB
+        error_log("UploadCover.php deleting file from BunnyCDN due to cancellation before MongoDB: $storageUrl");
+        $deleteCh = curl_init($storageUrl);
+        curl_setopt_array($deleteCh, [
+            CURLOPT_CUSTOMREQUEST  => 'DELETE',
+            CURLOPT_HTTPHEADER     => ['AccessKey: ' . $bunnyAccessKey],
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT        => 5,
+            CURLOPT_CONNECTTIMEOUT => 2
         ]);
-
-        $dbName = "BatchTemplate" . $template;
-        $db = $client->$dbName;
-        $collection = $db->YearbookCovers;
-
-        error_log("UploadCover.php using database: $dbName, collection: YearbookCovers");
-
-        $update = [
-            '$set' => [
-                'template'   => $template,
-                'slot'       => $slot,
-                'updated_at' => new MongoDB\BSON\UTCDateTime()
-            ]
-        ];
-
-        if ($slot === 8) {
-            $update['$set']['background_url']       = $publicUrl;
-            $update['$set']['background_thumb_url'] = $thumbUrl;
-        } else {
-            $update['$set'][$side . '_url']       = $publicUrl;
-            $update['$set'][$side . '_thumb_url'] = $thumbUrl;
-        }
-
-        error_log("UploadCover.php updating document with filter: template=$template, slot=$slot");
-
-        // Ultra-fast database operation with minimal options
-        $result = $collection->updateOne(
-            ['template' => $template, 'slot' => $slot],
-            $update,
-            ['upsert' => true, 'writeConcern' => new MongoDB\Driver\WriteConcern(1, 1000)]
-        );
-
-        error_log("UploadCover.php update result: matched=" . $result->getMatchedCount() . ", modified=" . $result->getModifiedCount() . ", upserted=" . $result->getUpsertedCount());
-
-        // Minimal slot 8 check (only check if needed)
-        if ($slot !== 8) {
-            $slot8 = $collection->findOne(['template' => $template, 'slot' => 8], ['projection' => ['_id' => 1]]);
-            if (!$slot8) {
-                $collection->insertOne([
-                    'template' => $template,
-                    'slot' => 8,
-                    'background_url' => '',
-                    'background_thumb_url' => '',
-                    'created_at' => new MongoDB\BSON\UTCDateTime(),
-                    'updated_at' => new MongoDB\BSON\UTCDateTime()
-                ]);
-            }
-        }
-
-        error_log("UploadCover.php operation completed");
-    } catch (Exception $e) {
-        respond(false, 'Uploaded to CDN, but failed to update MongoDB: ' . $e->getMessage(), [
-            'url'       => $publicUrl,
-            'thumb_url' => $thumbUrl
-        ]);
+        curl_exec($deleteCh);
+        curl_close($deleteCh);
+        respond(false, 'Upload cancelled');
     }
 
-    respond(true, 'Cover updated successfully', [
-        'url'       => $publicUrl,
-        'thumb_url' => $thumbUrl,
-        'slot'      => $slot,
-        'side'      => $side,
-        'template'  => $template
+    // MongoDB connection and update
+    $mongoDbName = "BatchTemplate{$template}";
+    $mongoClient = new Client(getenv('MONGODB_URI') ?: 'mongodb://localhost:27017');
+    $collection = $mongoClient->$mongoDbName->cover_images;
+
+    // Check for client disconnection/cancellation before MongoDB operations
+    if (connection_aborted()) {
+        $uploadCancelled = true;
+        // Delete the uploaded file from BunnyCDN since we're cancelling before MongoDB
+        error_log("UploadCover.php deleting file from BunnyCDN due to cancellation before MongoDB operations: $storageUrl");
+        $deleteCh = curl_init($storageUrl);
+        curl_setopt_array($deleteCh, [
+            CURLOPT_CUSTOMREQUEST  => 'DELETE',
+            CURLOPT_HTTPHEADER     => ['AccessKey: ' . $bunnyAccessKey],
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT        => 5,
+            CURLOPT_CONNECTTIMEOUT => 2
+        ]);
+        curl_exec($deleteCh);
+        curl_close($deleteCh);
+        respond(false, 'Upload cancelled');
+    }
+
+    // Prepare document for MongoDB
+    $document = [
+        'filename' => $filename,
+        'original_name' => $originalName,
+        'slot' => $slot,
+        'side' => $side,
+        'template' => $template,
+        'public_url' => $publicUrl,
+        'thumbnail_url' => $thumbUrl,
+        'upload_time' => new \MongoDB\BSON\UTCDateTime()
+    ];
+
+    // Check for client disconnection/cancellation just before MongoDB insert
+    if (connection_aborted()) {
+        $uploadCancelled = true;
+        // Delete the uploaded file from BunnyCDN since we're cancelling before MongoDB insert
+        error_log("UploadCover.php deleting file from BunnyCDN due to cancellation before MongoDB insert: $storageUrl");
+        $deleteCh = curl_init($storageUrl);
+        curl_setopt_array($deleteCh, [
+            CURLOPT_CUSTOMREQUEST  => 'DELETE',
+            CURLOPT_HTTPHEADER     => ['AccessKey: ' . $bunnyAccessKey],
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT        => 5,
+            CURLOPT_CONNECTTIMEOUT => 2
+        ]);
+        curl_exec($deleteCh);
+        curl_close($deleteCh);
+        respond(false, 'Upload cancelled');
+    }
+
+    // Insert document into MongoDB
+    $result = $collection->insertOne($document);
+    $document['_id'] = (string) $result->getInsertedId();
+
+    // Check for client disconnection/cancellation after MongoDB insert
+    if (connection_aborted()) {
+        $uploadCancelled = true;
+        // Delete the uploaded file from BunnyCDN and remove the MongoDB entry since we're cancelling after insert
+        error_log("UploadCover.php deleting file from BunnyCDN and MongoDB entry due to cancellation after insert: $storageUrl");
+        $deleteCh = curl_init($storageUrl);
+        curl_setopt_array($deleteCh, [
+            CURLOPT_CUSTOMREQUEST  => 'DELETE',
+            CURLOPT_HTTPHEADER     => ['AccessKey: ' . $bunnyAccessKey],
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT        => 5,
+            CURLOPT_CONNECTTIMEOUT => 2
+        ]);
+        curl_exec($deleteCh);
+        curl_close($deleteCh);
+        
+        // Delete MongoDB entry
+        $collection->deleteOne(['_id' => $result->getInsertedId()]);
+        respond(false, 'Upload cancelled');
+    }
+
+    respond(true, 'Upload successful', [
+        'filename' => $filename,
+        'public_url' => $publicUrl,
+        'thumbnail_url' => $thumbUrl,
+        'slot' => $slot,
+        'side' => $side,
+        'template' => $template
     ]);
 } catch (Exception $e) {
-    respond(false, 'Unexpected error: ' . $e->getMessage());
+    error_log("UploadCover.php exception: " . $e->getMessage());
+    respond(false, 'Server error: ' . $e->getMessage());
 }

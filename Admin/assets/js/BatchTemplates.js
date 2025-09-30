@@ -483,73 +483,12 @@ window.addEventListener("DOMContentLoaded", () => {
         openDeleteModal();
       });
 
-      async function uploadToBunny(file, slot, side) {
-        const form = new FormData();
-        form.append("file", file);
-        form.append("slot", String(slot));
-        form.append("side", side);
-        form.append("template", String(template));
-
-        console.log("Sending upload request with template:", template);
-
-        const uploadOverlay = document.getElementById("upload-overlay");
-        const uploadText = document.getElementById("uploadText");
-
-        if (uploadOverlay && uploadText) {
-          uploadOverlay.style.display = "flex";
-          uploadText.textContent = "Image upload in progress…";
-        }
-
-        try {
-          // Immediate UI update
-          await new Promise(resolve => setTimeout(resolve, 10));
-          
-          const data = await xhrUpload(UPLOAD_ENDPOINT, form);
-          if (data && data.aborted) {
-            if (uploadOverlay) uploadOverlay.style.display = "none";
-            showNotification("Upload canceled", "error");
-            return;
-          }
-          if (!data?.success) {
-            showNotification(data?.message || "Upload failed", "error");
-            return;
-          }
-
-          const img = document.createElement("img");
-          img.src = data.url;
-          img.classList.add(side === "front" ? "front-img" : "back-img");
-          if (side === "front") frontImg = img;
-          else backImg = img;
-
-          box.innerHTML = "";
-          const plusIcon = box.querySelector(".plus-icon");
-          if (plusIcon) plusIcon.remove();
-          ensureChildren();
-          deleteBtn.style.display = "flex";
-          box.classList.add("has-image");
-
-          showingFront = true;
-          if (frontImg) {
-            frontImg.style.opacity = 1;
-            if (backImg && !isBackgroundSlot) backImg.style.opacity = 0;
-          }
-
-          showNotification("Upload successful!", "success");
-        } catch (err) {
-          console.error("Upload error:", err);
-          showNotification(err.message || "Upload failed", "error");
-        } finally {
-          if (!currentXhr && uploadOverlay)
-            uploadOverlay.style.display = "none";
-        }
-      }
-
       function xhrUpload(url, formData) {
         return new Promise((resolve) => {
           const xhr = new XMLHttpRequest();
           currentXhr = xhr;
           
-          // Optimized for speed - reduced event handlers
+          // Add upload progress tracking
           xhr.upload.addEventListener("progress", function(e) {
             if (e.lengthComputable) {
               const percentComplete = (e.loaded / e.total) * 100;
@@ -562,7 +501,7 @@ window.addEventListener("DOMContentLoaded", () => {
           
           xhr.open("POST", url, true);
           // Faster timeout settings
-          xhr.timeout = 8000; // 8 second timeout
+          xhr.timeout = 10000; // 10 second timeout
           
           xhr.onabort = () => {
             resolve({ aborted: true });
@@ -578,6 +517,9 @@ window.addEventListener("DOMContentLoaded", () => {
               try {
                 if (xhr.status >= 200 && xhr.status < 300) {
                   resolve(JSON.parse(xhr.responseText));
+                } else if (xhr.status === 0) {
+                  // Handle Error 0 - usually caused by cancellation or network issues
+                  resolve({ success: false, message: "Cancelled upload" });
                 } else {
                   resolve({
                     success: false,
@@ -600,18 +542,152 @@ window.addEventListener("DOMContentLoaded", () => {
         });
       }
 
+      async function uploadToBunny(file, slot, side) {
+        const form = new FormData();
+        form.append("file", file);
+        form.append("slot", String(slot));
+        form.append("side", side);
+        form.append("template", String(template));
+
+        console.log("Sending upload request with template:", template);
+
+        const uploadOverlay = document.getElementById("upload-overlay");
+        const uploadText = document.getElementById("uploadText");
+
+        if (uploadOverlay && uploadText) {
+          uploadOverlay.style.display = "flex";
+          uploadText.textContent = "Image upload in progress…";
+        }
+
+        try {
+          // Auto-detect side based on filename
+          const fileName = file.name.toUpperCase();
+          let detectedSide = side; // Default to provided side
+          
+          // New rule: detect FRONT/BACK from filename
+          if (fileName.includes('FRONT')) {
+            detectedSide = "front";
+          } else if (fileName.includes('BACK')) {
+            detectedSide = "back";
+          }
+          
+          // Update form with detected side
+          form.set("side", detectedSide);
+          
+          // Auto-detect slot based on filename prefix
+          const slotMapping = {
+            'BSME': 1,
+            'BSCJ': 2,
+            'BSTM': 3,
+            'BSE': 4,
+            'BSN': 5,
+            'BSIS': 6,
+            'BSBA': 7
+          };
+          
+          let detectedSlot = slot; // Default to provided slot
+          
+          // Check for slot prefix in filename
+          for (const [prefix, slotNum] of Object.entries(slotMapping)) {
+            if (fileName.startsWith(prefix)) {
+              detectedSlot = slotNum;
+              break;
+            }
+          }
+          
+          // If detected slot doesn't match provided slot, show error and cancel
+          if (detectedSlot != slot) {
+            showNotification(`Filename doesn't match slot. Expected slot ${detectedSlot} for this filename.`, "error");
+            if (uploadOverlay) uploadOverlay.style.display = "none";
+            return;
+          }
+          
+          // If we couldn't detect a slot for slots 1-7, show error and cancel
+          if (slot >= 1 && slot <= 7 && detectedSlot == slot && !fileName.startsWith('BS')) {
+            showNotification("Filename must start with a valid prefix (BSME, BSCJ, BSTM, BSE, BSN, BSIS, BSBA).", "error");
+            if (uploadOverlay) uploadOverlay.style.display = "none";
+            return;
+          }
+          
+          // Update form with detected slot
+          form.set("slot", String(detectedSlot));
+          
+          console.log(`Auto-detected - Slot: ${detectedSlot}, Side: ${detectedSide} from filename: ${fileName}`);
+
+          // Immediate UI update
+          await new Promise(resolve => setTimeout(resolve, 10));
+          
+          const data = await xhrUpload(UPLOAD_ENDPOINT, form);
+          if (data && data.aborted) {
+            if (uploadOverlay) uploadOverlay.style.display = "none";
+            showNotification("Cancelled upload", "error");
+            return;
+          }
+          
+          // Handle Error 0 specifically
+          if (data && data.message === "Cancelled upload") {
+            if (uploadOverlay) uploadOverlay.style.display = "none";
+            showNotification("Cancelled upload", "error");
+            return;
+          }
+          
+          if (!data?.success) {
+            showNotification(data?.message || "Upload failed", "error");
+            return;
+          }
+
+          const img = document.createElement("img");
+          img.src = data.url;
+          img.classList.add(detectedSide === "front" ? "front-img" : "back-img");
+          if (detectedSide === "front") frontImg = img;
+          else backImg = img;
+
+          box.innerHTML = "";
+          const plusIcon = box.querySelector(".plus-icon");
+          if (plusIcon) plusIcon.remove();
+          ensureChildren();
+          deleteBtn.style.display = "flex";
+          box.classList.add("has-image");
+
+          showingFront = true;
+          if (frontImg) {
+            frontImg.style.opacity = 1;
+            if (backImg && !isBackgroundSlot) backImg.style.opacity = 0;
+          }
+
+          // Show different message for Slot 8 (background images)
+          if (detectedSlot === 8) {
+            showNotification("Yearbook Backgrounds have been uploaded successfully!", "success");
+          } else {
+            showNotification(`Uploaded to Slot ${detectedSlot} ${detectedSide} successfully!`, "success");
+          }
+        } catch (err) {
+          console.error("Upload error:", err);
+          showNotification(err.message || "Upload failed", "error");
+        } finally {
+          if (!currentXhr && uploadOverlay)
+            uploadOverlay.style.display = "none";
+        }
+      }
+
       window.cancelUpload = function () {
         const uploadOverlay = document.getElementById("upload-overlay");
         const progressBar = document.getElementById("progressBar");
         const uploadText = document.getElementById("uploadText");
         const progressPercent = document.getElementById("progressPercent");
+        
+        // Abort the current upload request if exists
         if (currentXhr) {
           try {
             currentXhr.abort();
           } catch (_) {}
           currentXhr = null;
-          showNotification("Upload has been canceled", "error");
         }
+        
+        // Show cancellation notification
+        showNotification("Cancelled upload", "error");
+        
+        // Reset UI elements
         if (progressBar) progressBar.style.width = "0%";
         if (uploadOverlay) uploadOverlay.style.display = "none";
         if (uploadText)
