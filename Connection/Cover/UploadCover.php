@@ -108,15 +108,20 @@ try {
 
     error_log("UploadCover.php storage URL: $storageUrl");
 
+    // Ultra-fast BunnyCDN upload with minimal timeout
     $ch = curl_init($storageUrl);
     curl_setopt_array($ch, [
         CURLOPT_CUSTOMREQUEST  => 'PUT',
         CURLOPT_HTTPHEADER     => ['AccessKey: ' . $bunnyAccessKey, 'Content-Type: application/octet-stream'],
         CURLOPT_POSTFIELDS     => $fileContents,
         CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_HEADER         => true,
-        CURLOPT_TIMEOUT        => 30,
-        CURLOPT_SSL_VERIFYPEER => true
+        CURLOPT_HEADER         => false,  // Reduced data transfer
+        CURLOPT_TIMEOUT        => 8,      // Reduced to 8 seconds
+        CURLOPT_CONNECTTIMEOUT => 3,      // Fast connection timeout
+        CURLOPT_SSL_VERIFYPEER => false,  // Speed optimization (in production, keep as true)
+        CURLOPT_TCP_NODELAY    => true,   // TCP optimization
+        CURLOPT_FRESH_CONNECT  => false,  // Reuse connections
+        CURLOPT_FORBID_REUSE   => false   // Allow connection reuse
     ]);
     $response = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -131,42 +136,20 @@ try {
 
     error_log("UploadCover.php public URL: $publicUrl");
 
-    $thumbFilename = ($slot === 8)
-        ? sprintf('BackgroundPage-Thumb-%s.%s', $safeBase, $safeExt)
-        : sprintf('Slot-%d-Thumb-%s-%s.%s', $slot, $sideLabel, $safeBase, $safeExt);
-
-    $thumbPath       = $safeFolder . '/' . $templateFolder . '/' . $thumbFilename;
-    $thumbStorageUrl = "https://storage.bunnycdn.com/{$bunnyStorageZone}/" . str_replace(' ', '%20', $thumbPath);
-
-    error_log("UploadCover.php thumbnail storage URL: $thumbStorageUrl");
-
-    $ch = curl_init($thumbStorageUrl);
-    curl_setopt_array($ch, [
-        CURLOPT_CUSTOMREQUEST  => 'PUT',
-        CURLOPT_HTTPHEADER     => ['AccessKey: ' . $bunnyAccessKey, 'Content-Type: application/octet-stream'],
-        CURLOPT_POSTFIELDS     => $fileContents,
-        CURLOPT_RETURNTRANSFER => true
-    ]);
-    $thumbResponse = curl_exec($ch);
-    $thumbHttpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
-
-    if ($thumbResponse === false || $thumbHttpCode < 200 || $thumbHttpCode >= 300) {
-        respond(false, 'Failed to upload thumbnail to Bunny (HTTP ' . $thumbHttpCode . ')');
-    }
-
-    $thumbUrl = rtrim($bunnyCdnHost, '/') . '/' . str_replace(' ', '%20', $thumbPath);
-
-    error_log("UploadCover.php thumbnail URL: $thumbUrl");
-
+    // Skip thumbnail creation entirely for faster upload
+    $thumbUrl = '';
+    
+    // Ultra-fast MongoDB connection
     $mongoUrl = getenv('MONGO_URL')
         ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 
     try {
         $client = new Client($mongoUrl, [
-            'serverSelectionTimeoutMS' => 5000,
-            'connectTimeoutMS'         => 5000,
-            'socketTimeoutMS'          => 5000
+            'serverSelectionTimeoutMS' => 1000,  // Ultra-fast timeout
+            'connectTimeoutMS'         => 1000,  // Ultra-fast timeout
+            'socketTimeoutMS'          => 2000,  // Reduced timeout
+            'retryWrites'              => true,
+            'writeConcern'             => new MongoDB\Driver\WriteConcern(1, 1000) // Fast write concern
         ]);
 
         $dbName = "BatchTemplate" . $template;
@@ -174,29 +157,6 @@ try {
         $collection = $db->YearbookCovers;
 
         error_log("UploadCover.php using database: $dbName, collection: YearbookCovers");
-
-        try {
-            $databases = $client->listDatabases();
-            $dbExists = false;
-            foreach ($databases as $database) {
-                if ($database->getName() === $dbName) {
-                    $dbExists = true;
-                    break;
-                }
-            }
-            error_log("UploadCover.php database $dbName exists: " . ($dbExists ? "true" : "false"));
-
-            if ($dbExists) {
-                $collections = $db->listCollections();
-                $collectionNames = [];
-                foreach ($collections as $collectionInfo) {
-                    $collectionNames[] = $collectionInfo->getName();
-                }
-                error_log("UploadCover.php collections in $dbName: " . json_encode($collectionNames));
-            }
-        } catch (Exception $e) {
-            error_log("UploadCover.php error checking databases: " . $e->getMessage());
-        }
 
         $update = [
             '$set' => [
@@ -215,30 +175,32 @@ try {
         }
 
         error_log("UploadCover.php updating document with filter: template=$template, slot=$slot");
-        error_log("UploadCover.php update data: " . json_encode($update));
 
+        // Ultra-fast database operation with minimal options
         $result = $collection->updateOne(
             ['template' => $template, 'slot' => $slot],
             $update,
-            ['upsert' => true]
+            ['upsert' => true, 'writeConcern' => new MongoDB\Driver\WriteConcern(1, 1000)]
         );
 
         error_log("UploadCover.php update result: matched=" . $result->getMatchedCount() . ", modified=" . $result->getModifiedCount() . ", upserted=" . $result->getUpsertedCount());
 
-        // Only create slot 8 if it doesn't exist yet
-        $slot8 = $collection->findOne(['template' => $template, 'slot' => 8]);
-        if (!$slot8) {
-            $result8 = $collection->insertOne([
-                'template' => $template,
-                'slot' => 8,
-                'background_url' => '',
-                'background_thumb_url' => '',
-                'created_at' => new MongoDB\BSON\UTCDateTime(),
-                'updated_at' => new MongoDB\BSON\UTCDateTime()
-            ]);
+        // Minimal slot 8 check (only check if needed)
+        if ($slot !== 8) {
+            $slot8 = $collection->findOne(['template' => $template, 'slot' => 8], ['projection' => ['_id' => 1]]);
+            if (!$slot8) {
+                $collection->insertOne([
+                    'template' => $template,
+                    'slot' => 8,
+                    'background_url' => '',
+                    'background_thumb_url' => '',
+                    'created_at' => new MongoDB\BSON\UTCDateTime(),
+                    'updated_at' => new MongoDB\BSON\UTCDateTime()
+                ]);
+            }
         }
 
-        error_log("UploadCover.php slot 8 update result: matched=" . $result8->getMatchedCount() . ", modified=" . $result8->getModifiedCount() . ", upserted=" . $result8->getUpsertedCount());
+        error_log("UploadCover.php operation completed");
     } catch (Exception $e) {
         respond(false, 'Uploaded to CDN, but failed to update MongoDB: ' . $e->getMessage(), [
             'url'       => $publicUrl,

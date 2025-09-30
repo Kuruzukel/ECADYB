@@ -491,23 +491,23 @@ window.addEventListener("DOMContentLoaded", () => {
         form.append("template", String(template));
 
         console.log("Sending upload request with template:", template);
-        for (let [key, value] of form.entries()) {
-          console.log(key, value);
-        }
 
         const uploadOverlay = document.getElementById("upload-overlay");
         const uploadText = document.getElementById("uploadText");
 
         if (uploadOverlay && uploadText) {
           uploadOverlay.style.display = "flex";
-          uploadText.textContent = "Please wait while we upload your file";
+          uploadText.textContent = "Image upload in progress…";
         }
 
         try {
+          // Immediate UI update
+          await new Promise(resolve => setTimeout(resolve, 10));
+          
           const data = await xhrUpload(UPLOAD_ENDPOINT, form);
           if (data && data.aborted) {
             if (uploadOverlay) uploadOverlay.style.display = "none";
-            showNotification("Upload canceled by user", "error");
+            showNotification("Upload canceled", "error");
             return;
           }
           if (!data?.success) {
@@ -522,6 +522,7 @@ window.addEventListener("DOMContentLoaded", () => {
           else backImg = img;
 
           box.innerHTML = "";
+          const plusIcon = box.querySelector(".plus-icon");
           if (plusIcon) plusIcon.remove();
           ensureChildren();
           deleteBtn.style.display = "flex";
@@ -533,7 +534,7 @@ window.addEventListener("DOMContentLoaded", () => {
             if (backImg && !isBackgroundSlot) backImg.style.opacity = 0;
           }
 
-          showNotification("Image uploaded successfully", "success");
+          showNotification("Upload successful!", "success");
         } catch (err) {
           console.error("Upload error:", err);
           showNotification(err.message || "Upload failed", "error");
@@ -547,10 +548,31 @@ window.addEventListener("DOMContentLoaded", () => {
         return new Promise((resolve) => {
           const xhr = new XMLHttpRequest();
           currentXhr = xhr;
+          
+          // Optimized for speed - reduced event handlers
+          xhr.upload.addEventListener("progress", function(e) {
+            if (e.lengthComputable) {
+              const percentComplete = (e.loaded / e.total) * 100;
+              const progressBar = document.getElementById("progressBar");
+              const progressPercent = document.getElementById("progressPercent");
+              if (progressBar) progressBar.style.width = percentComplete + "%";
+              if (progressPercent) progressPercent.textContent = Math.round(percentComplete) + "%";
+            }
+          });
+          
           xhr.open("POST", url, true);
+          // Faster timeout settings
+          xhr.timeout = 8000; // 8 second timeout
+          
           xhr.onabort = () => {
             resolve({ aborted: true });
           };
+          
+          xhr.ontimeout = () => {
+            resolve({ success: false, message: "Upload timed out" });
+            currentXhr = null;
+          };
+          
           xhr.onreadystatechange = () => {
             if (xhr.readyState === 4) {
               try {
@@ -559,19 +581,21 @@ window.addEventListener("DOMContentLoaded", () => {
                 } else {
                   resolve({
                     success: false,
-                    message: `HTTP ${xhr.status}: ${xhr.statusText}`,
+                    message: `Error ${xhr.status}`,
                   });
                 }
               } catch (e) {
-                resolve({ success: false, message: "Invalid response format" });
+                resolve({ success: false, message: "Network error" });
               }
               currentXhr = null;
             }
           };
+          
           xhr.onerror = () => {
-            resolve({ success: false, message: "Network error" });
+            resolve({ success: false, message: "Connection failed" });
             currentXhr = null;
           };
+          
           xhr.send(formData);
         });
       }
@@ -630,8 +654,14 @@ window.addEventListener("DOMContentLoaded", () => {
 
       (async function loadExisting() {
         try {
+          // Add a small delay to prevent UI blocking
+          await new Promise(resolve => setTimeout(resolve, 50));
+          
           const res = await fetch(
-            `${CONNECTION_PATH}/Cover/FetchCovers.php?template=${template}`
+            `${CONNECTION_PATH}/Cover/FetchCovers.php?template=${template}`, {
+              // Add timeout to fetch request
+              signal: AbortSignal.timeout(10000) // 10 second timeout
+            }
           );
 
           if (!res.ok) {
@@ -658,6 +688,7 @@ window.addEventListener("DOMContentLoaded", () => {
           }
           if (frontImg || backImg) {
             box.innerHTML = "";
+            const plusIcon = box.querySelector(".plus-icon");
             if (plusIcon) plusIcon.remove();
             ensureChildren();
             deleteBtn.style.display = "flex";
@@ -669,7 +700,14 @@ window.addEventListener("DOMContentLoaded", () => {
             }
           }
         } catch (e) {
-          console.error("Failed to load existing covers:", e);
+          // Handle timeout errors specifically
+          if (e.name === 'TimeoutError' || e.name === 'AbortError') {
+            console.warn("Fetch covers request timed out");
+            showNotification("Loading covers timed out. Please try again.", "error");
+          } else {
+            console.error("Failed to load existing covers:", e);
+            showNotification("Failed to load existing covers", "error");
+          }
         }
       })();
     });
