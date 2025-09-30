@@ -172,6 +172,9 @@ function loadLargePage(page, pageElement) {
   } else if (page === totalPages && typeof coverData !== 'undefined' && coverData !== null) {
     // Last page - use back cover
     img.attr("src", coverData.back_url);
+  } else if (typeof coverData !== 'undefined' && coverData !== null && coverData.background_url) {
+    // Middle pages - use background image
+    img.attr("src", coverData.background_url);
   } else {
     // Loadnew page
     // Use absolute path for large page images

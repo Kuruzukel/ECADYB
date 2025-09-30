@@ -108,7 +108,7 @@
     slot = slot || 1;
     
     $.ajax({
-      url: '../../Connection/YearbookCover/FetchCoverData.php',
+      url: 'FetchCoverData.php',
       method: 'GET',
       data: { template: template, slot: slot },
       dataType: 'json',
@@ -158,13 +158,13 @@
     for (var i = 2; i <= 11; i += 2) {
       var li = $('<li class="d"></li>');
       var img1 = $('<img>').attr({
-        src: 'pages/' + i + '-thumb.jpg',
+        src: coverData.background_thumb_url || 'pages/' + i + '-thumb.jpg',
         width: 76,
         height: 100,
         class: 'page-' + i
       });
       var img2 = $('<img>').attr({
-        src: 'pages/' + (i + 1) + '-thumb.jpg',
+        src: coverData.background_thumb_url || 'pages/' + (i + 1) + '-thumb.jpg',
         width: 76,
         height: 100,
         class: 'page-' + (i + 1)
