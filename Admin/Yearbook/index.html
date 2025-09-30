@@ -159,20 +159,22 @@
     thumbnailList.append(firstPageLi);
     
     // Middle pages thumbnails (pages 2-11)
-    // Using background_thumb_url for all middle pages as requested
+    // Remove images for pages 2-11 as requested
     for (var i = 2; i <= 11; i += 2) {
       var li = $('<li class="d"></li>');
       var img1 = $('<img>').attr({
-        src: coverData.background_thumb_url || 'pages/' + i + '-thumb.jpg',
+        src: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
         width: 76,
         height: 100,
-        class: 'page-' + i
+        class: 'page-' + i,
+        style: 'opacity: 0;'
       });
       var img2 = $('<img>').attr({
-        src: coverData.background_thumb_url || 'pages/' + (i + 1) + '-thumb.jpg',
+        src: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
         width: 76,
         height: 100,
-        class: 'page-' + (i + 1)
+        class: 'page-' + (i + 1),
+        style: 'opacity: 0;'
       });
       var span = $('<span>' + i + '-' + (i + 1) + '</span>');
       li.append(img1).append(img2).append(span);
