@@ -178,29 +178,9 @@ function applyTheme(theme) {
   console.log("Theme applied and saved:", theme);
 }
 
-const STATUS_ENDPOINT = (() => {
-  const origin = window.location.origin;
-  const pathSegments = window.location.pathname.split("/").filter(Boolean);
-  if (pathSegments[0] !== "ECADYB")
-    return `${origin}/Connection/Student/UpdateStatus.php`;
-  return `${origin}/ECADYB/Connection/Student/UpdateStatus.php`;
-})();
-
-const STUDENT_UPDATE_ENDPOINT = (() => {
-  const origin = window.location.origin;
-  const pathSegments = window.location.pathname.split("/").filter(Boolean);
-  if (pathSegments[0] !== "ECADYB")
-    return `${origin}/Connection/Student/UpdateStudent.php`;
-  return `${origin}/ECADYB/Connection/Student/UpdateStudent.php`;
-})();
-
-const DELETE_STUDENT_ENDPOINT = (() => {
-  const origin = window.location.origin;
-  const pathSegments = window.location.pathname.split("/").filter(Boolean);
-  if (pathSegments[0] !== "ECADYB")
-    return `${origin}/Connection/Student/DeleteStudent.php`;
-  return `${origin}/ECADYB/Connection/Student/DeleteStudent.php`;
-})();
+const STATUS_ENDPOINT = "/Connection/Student/UpdateStatus.php";
+const STUDENT_UPDATE_ENDPOINT = "/Connection/Student/UpdateStudent.php";
+const DELETE_STUDENT_ENDPOINT = "/Connection/Student/DeleteStudent.php";
 
 window.addEventListener("DOMContentLoaded", () => {
   console.log("StudentList.js loaded successfully");
@@ -392,7 +372,11 @@ async function confirmDeleteStudent() {
   confirmDeleteBtn.disabled = true;
 
   try {
-    const res = await fetch(DELETE_STUDENT_ENDPOINT, {
+    // Ensure we're using the correct base URL
+    const baseUrl = window.location.origin + (window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '');
+    const endpoint = baseUrl + DELETE_STUDENT_ENDPOINT;
+    
+    const res = await fetch(endpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -494,7 +478,11 @@ function initializeStatusUpdates() {
       }
 
       try {
-        const res = await fetch(STATUS_ENDPOINT, {
+        // Ensure we're using the correct base URL
+        const baseUrl = window.location.origin + (window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '');
+        const endpoint = baseUrl + STATUS_ENDPOINT;
+        
+        const res = await fetch(endpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ student_id: studentId, collection, status }),
@@ -566,7 +554,11 @@ async function updateStudentDetails(studentId, fields) {
   if (collectionEl) fields["collection"] = collectionEl.value;
 
   try {
-    const res = await fetch(STUDENT_UPDATE_ENDPOINT, {
+    // Ensure we're using the correct base URL
+    const baseUrl = window.location.origin + (window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '');
+    const endpoint = baseUrl + STUDENT_UPDATE_ENDPOINT;
+    
+    const res = await fetch(endpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ original_student_id: studentId, ...fields }),

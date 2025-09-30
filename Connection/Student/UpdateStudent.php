@@ -41,8 +41,11 @@ unset($data['collection']);
 try {
     $collection = $db->{$collectionName};
 
-    $updateFields = array_filter($data, function ($val) {});
+    $updateFields = array_filter($data, function ($val) {
+        return $val !== null && $val !== '';
+    });
 
+    // Find the existing document
     $existingDoc = $collection->findOne([
         '$or' => [
             ['student id' => $originalId],
@@ -51,15 +54,18 @@ try {
     ]);
 
     if (!$existingDoc) {
-        respond(false, 'Student not found with ID: ' . $studentId);
+        respond(false, 'Student not found with ID: ' . $originalId);
     }
 
+    // Determine which field name is used for student ID in this document
     $queryField = isset($existingDoc['student id']) ? 'student id' : 'student_id';
 
+    // If student ID is being changed, update that field as well
     if ($newStudentId !== null && $newStudentId !== $originalId) {
         $updateFields[$queryField] = $newStudentId;
     }
 
+    // Perform the update operation
     $result = $collection->updateOne(
         [$queryField => $originalId],
         ['$set' => $updateFields],

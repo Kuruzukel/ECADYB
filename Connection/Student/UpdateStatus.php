@@ -50,6 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $coll = $db->$collection;
 
+        // Use exact match for better reliability
         $filter = [
             '$or' => [
                 ['student_id' => $studentId],
@@ -61,17 +62,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $result = $coll->updateOne($filter, $update);
 
-        echo json_encode([
-            "success"    => $result->getMatchedCount() > 0,
-            "message"    => $result->getMatchedCount() > 0
-                ? "Status updated successfully"
-                : "No matching student found",
-            "lookup_id"  => $studentId,
-            "collection" => $collection,
-            "matched"    => $result->getMatchedCount(),
-            "modified"   => $result->getModifiedCount()
-        ]);
+        if ($result->getMatchedCount() > 0) {
+            echo json_encode([
+                "success"    => true,
+                "message"    => "Status updated successfully",
+                "lookup_id"  => $studentId,
+                "collection" => $collection,
+                "matched"    => $result->getMatchedCount(),
+                "modified"   => $result->getModifiedCount()
+            ]);
+        } else {
+            echo json_encode([
+                "success"    => false,
+                "message"    => "No matching student found",
+                "lookup_id"  => $studentId,
+                "collection" => $collection
+            ]);
+        }
     } catch (Exception $e) {
+        error_log("UpdateStatus Error: " . $e->getMessage());
         echo json_encode([
             "success" => false,
             "message" => "Database error: " . $e->getMessage()

@@ -44,15 +44,11 @@ if (!in_array($collectionName, $collections)) {
 $collection = $departmentsDB->$collectionName;
 
 try {
-    $studentIdRegex = [
-        '$regex' => '^' . preg_quote($studentId) . '$',
-        '$options' => 'i'
-    ];
-
+    // Use exact match for better reliability
     $student = $collection->findOne([
         '$or' => [
-            ['student id' => $studentIdRegex],
-            ['student_id' => $studentIdRegex],
+            ['student id' => $studentId],
+            ['student_id' => $studentId]
         ]
     ]);
 
@@ -83,8 +79,8 @@ try {
 
     $deleteResult = $collection->deleteOne([
         '$or' => [
-            ['student id' => $studentIdRegex],
-            ['student_id' => $studentIdRegex],
+            ['student id' => $studentId],
+            ['student_id' => $studentId]
         ]
     ]);
 
@@ -100,6 +96,7 @@ try {
         ]);
     }
 } catch (Exception $e) {
+    error_log("DeleteStudent Error: " . $e->getMessage());
     echo json_encode([
         'success' => false,
         'message' => 'Error deleting student: ' . $e->getMessage()
