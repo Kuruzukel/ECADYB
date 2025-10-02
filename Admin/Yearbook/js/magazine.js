@@ -92,6 +92,37 @@ function loadPage(page, pageElement) {
           text: 'Honors and Achievements'
         });
 
+        // Add click handler for the card
+        card.on('click', function() {
+          var modal = $('.student-modal');
+          var closeBtn = $('.close-modal');
+          
+          // Update modal content with student data
+          modal.find('.student-name').text($(this).find('h3').text());
+          
+          // Show modal
+          modal.addClass('active');
+          
+          // Handle thumbnail clicks
+          $('.thumbnail').on('click', function() {
+            $('.thumbnail').removeClass('active');
+            $(this).addClass('active');
+            var imgSrc = $(this).find('img').attr('src');
+            $('.student-image-large img').attr('src', imgSrc);
+          });
+          
+          // Close modal when clicking close button or outside
+          closeBtn.on('click', function() {
+            modal.removeClass('active');
+          });
+          
+          $(window).on('click', function(event) {
+            if ($(event.target).hasClass('student-modal')) {
+              modal.removeClass('active');
+            }
+          });
+        });
+
         // Assemble the card
         card.append(studentImg)
             .append(studentName)

@@ -263,6 +263,152 @@
   width: 100%;
 }
 
+/* Student Modal Styles */
+.student-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+
+.student-modal.active {
+  display: flex;
+}
+
+.modal-content {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  width: 50%;
+  max-width: 900px;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.close-modal {
+  position: absolute;
+  right: 20px;
+  top: 15px;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #666;
+  transition: color 0.3s ease;
+}
+
+.close-modal:hover {
+  color: #000;
+}
+
+.student-details {
+  display: flex;
+  gap: 30px;
+}
+
+.student-images {
+  flex: 1;
+  max-width: 400px;
+}
+
+.student-image-large {
+  width: 100%;
+  height: 300px;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 15px;
+  background: #f0f0f0;
+}
+
+.student-image-large img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.student-image-thumbnails {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.thumbnail {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+  background: #f0f0f0;
+}
+
+.thumbnail.active {
+  opacity: 1;
+  border: 2px solid #0066cc;
+}
+
+.thumbnail:hover {
+  opacity: 0.8;
+}
+
+.thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.student-info {
+  flex: 1;
+  padding: 20px;
+}
+
+.student-name {
+  font-size: 24px;
+  margin: 0 0 10px 0;
+  color: #333;
+}
+
+.academic-year {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.motto, .milestones {
+  margin-bottom: 25px;
+}
+
+.motto h3, .milestones h3 {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.motto p {
+  font-style: italic;
+  color: #666;
+  line-height: 1.6;
+}
+
+.milestones ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.milestones li {
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+  color: #444;
+}
+
 /* Student Cards Styles */
 .cards-container {
   position: absolute;

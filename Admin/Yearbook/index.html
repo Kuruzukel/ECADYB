@@ -255,6 +255,47 @@
           <ul id="thumbnail-list"></ul>
         </div>
       </div>
+
+      <!-- Student Card Modal -->
+      <div class="student-modal">
+        <div class="modal-content">
+          <span class="close-modal">&times;</span>
+          <div class="student-details">
+            <div class="student-images">
+              <div class="student-image-large">
+                <img src="" alt="Student Photo 1">
+              </div>
+              <div class="student-image-thumbnails">
+                <div class="thumbnail active">
+                  <img src="" alt="Photo 1">
+                </div>
+                <div class="thumbnail">
+                  <img src="" alt="Photo 2">
+                </div>
+                <div class="thumbnail">
+                  <img src="" alt="Photo 3">
+                </div>
+              </div>
+            </div>
+            <div class="student-info">
+              <h2 class="student-name">Student Name</h2>
+              <p class="academic-year">Academic Year: <span>2023-2024</span></p>
+              <div class="motto">
+                <h3>Motto</h3>
+                <p>"Success is not final, failure is not fatal: it is the courage to continue that counts."</p>
+              </div>
+              <div class="milestones">
+                <h3>Milestones</h3>
+                <ul>
+                  <li>Dean's Lister (2020-2024)</li>
+                  <li>Student Council President</li>
+                  <li>Academic Excellence Award</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <script type="text/javascript">
@@ -588,21 +629,23 @@
       $(document).ready(function () {
         var thumbnails = $(".thumbnails");
         var hoverTimer;
+        var magazineViewport = $(".magazine-viewport");
 
-        $(document).on("mousemove", function (e) {
-          var windowHeight = $(window).height();
-          var mouseY = e.clientY;
-
-          if (mouseY > windowHeight - 150) {
+        magazineViewport.on("mousemove", function (e) {
+          var viewportOffset = magazineViewport.offset();
+          var viewportHeight = magazineViewport.height();
+          var relativeY = e.pageY - viewportOffset.top;
+          
+          // Show thumbnails when mouse is in bottom 120px of magazine viewport
+          if (relativeY > viewportHeight - 30) {
             clearTimeout(hoverTimer);
-
-            setTimeout(function () {
-              thumbnails.addClass("visible");
-            }, 100);
-
-            hoverTimer = setTimeout(function () {
-              thumbnails.removeClass("visible");
-            }, 3000);
+            thumbnails.addClass("visible");
+          } else {
+            if (thumbnails.hasClass("visible") && !thumbnails.is(":hover")) {
+              hoverTimer = setTimeout(function () {
+                thumbnails.removeClass("visible");
+              }, 300);
+            }
           }
         });
 
@@ -612,9 +655,15 @@
         });
 
         thumbnails.on("mouseleave", function () {
-          hoverTimer = setTimeout(function () {
-            thumbnails.removeClass("visible");
-          }, 1000);
+          var viewportOffset = magazineViewport.offset();
+          var viewportHeight = magazineViewport.height();
+          var mouseY = event.pageY - viewportOffset.top;
+          
+          if (mouseY <= viewportHeight - 120) {
+            hoverTimer = setTimeout(function () {
+              thumbnails.removeClass("visible");
+            }, 300);
+          }
         });
       });
     </script>
