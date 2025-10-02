@@ -15,7 +15,6 @@ use MongoDB\Client;
 
 try {
     $template = isset($_GET['template']) ? (int)$_GET['template'] : 1;
-    // Department code to slot mapping
     $departmentSlots = [
         'BSME' => 1,   // Maritime
         'BSCJ' => 2,   // Criminal Justice Education
