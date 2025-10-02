@@ -262,7 +262,6 @@
         var urlParams = new URLSearchParams(window.location.search);
         var departmentCode = urlParams.get("department");
 
-        // Fetch cover data
         $.ajax({
           url: "FetchCoverData.php",
           method: "GET",
