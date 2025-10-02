@@ -278,7 +278,6 @@
               response.data.department &&
               (!departmentCode || departmentCode !== response.data.department)
             ) {
-              // Redirect to the correct department page if needed
               if (response.data.department_page) {
                 var redirectUrl =
                   "../Departments/" + response.data.department_page + ".php";
