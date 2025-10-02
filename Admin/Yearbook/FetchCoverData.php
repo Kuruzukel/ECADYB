@@ -14,7 +14,6 @@ require __DIR__ . '/../../vendor/autoload.php';
 use MongoDB\Client;
 
 try {
-    // Get parameters from URL
     $template = isset($_GET['template']) ? (int)$_GET['template'] : 1;
     // Department code to slot mapping
     $departmentSlots = [
@@ -31,8 +30,8 @@ try {
     $departmentCode = isset($_GET['department']) ? strtoupper($_GET['department']) : null;
 
     // Determine slot based on department code
-    $slot = $departmentCode && isset($departmentSlots[$departmentCode]) 
-        ? $departmentSlots[$departmentCode] 
+    $slot = $departmentCode && isset($departmentSlots[$departmentCode])
+        ? $departmentSlots[$departmentCode]
         : 1; // Default to slot 1 if no match
 
     if ($template < 1 || $template > 3) {
@@ -99,15 +98,16 @@ try {
     ];
 
     // Function to extract department code from filename
-    function extractDepartmentCode($filename) {
+    function extractDepartmentCode($filename)
+    {
         // Extract first 4 letters from the filename
         $code = substr(strtoupper(pathinfo($filename, PATHINFO_FILENAME)), 0, 4);
-        
+
         // Special handling for Criminal Justice (BSCJ)
         if (strpos($code, 'BSCJ') === 0) {
             $code = 'BSCJ';
         }
-        
+
         return $code;
     }
 
@@ -121,8 +121,8 @@ try {
 
     // Add department information to the response
     $response['department'] = $departmentCode;
-    $response['department_page'] = isset($departmentMap[$departmentCode]) 
-        ? $departmentMap[$departmentCode] 
+    $response['department_page'] = isset($departmentMap[$departmentCode])
+        ? $departmentMap[$departmentCode]
         : null;
 
     // Debug: Print the actual data being returned
@@ -132,7 +132,6 @@ try {
         'success' => true,
         'data' => $response
     ]);
-
 } catch (Exception $e) {
     error_log("FetchCoverData error: " . $e->getMessage());
     http_response_code(500);
@@ -141,4 +140,3 @@ try {
         'message' => $e->getMessage()
     ]);
 }
-?>
