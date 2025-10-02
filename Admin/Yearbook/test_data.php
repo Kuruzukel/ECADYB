@@ -37,7 +37,6 @@ try {
     $db = $client->$dbName;
     $collection = $db->YearbookCovers;
 
-    // Find the specific cover
     $cover = $collection->findOne(['template' => $template, 'slot' => $slot]);
 
     if (!$cover) {
