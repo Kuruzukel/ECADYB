@@ -17,7 +17,7 @@ try {
     $template = isset($_GET['template']) ? (int)$_GET['template'] : 1;
     $departmentSlots = [
         'BSME' => 1,
-        'BSCJ' => 2,   // Criminal Justice Education
+        'BSCJ' => 2,
         'BSTM' => 3,   // Tourism Management
         'BSE' => 4,    // Education
         'BSN' => 5,    // Nursing
