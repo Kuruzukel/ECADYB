@@ -511,12 +511,15 @@
 .student-card h3 {
   margin: 0;
   font-size: 16px;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
   font-weight: bold;
   text-align: center;
   color: #333;
 }
 
 .student-card p {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+  font-style: italic;
   margin: 0;
   font-size: 14px;
   color: #666;
