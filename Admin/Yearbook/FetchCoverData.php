@@ -16,7 +16,7 @@ use MongoDB\Client;
 try {
     $template = isset($_GET['template']) ? (int)$_GET['template'] : 1;
     $departmentSlots = [
-        'BSME' => 1,   // Maritime
+        'BSME' => 1,
         'BSCJ' => 2,   // Criminal Justice Education
         'BSTM' => 3,   // Tourism Management
         'BSE' => 4,    // Education
