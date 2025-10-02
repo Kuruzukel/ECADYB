@@ -92,7 +92,6 @@ try {
 
     function extractDepartmentCode($filename)
     {
-        // Extract first 4 letters from the filename
         $code = substr(strtoupper(pathinfo($filename, PATHINFO_FILENAME)), 0, 4);
 
         // Special handling for Criminal Justice (BSCJ)
