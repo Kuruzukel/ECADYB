@@ -27,7 +27,6 @@ try {
 
     $departmentCode = isset($_GET['department']) ? strtoupper($_GET['department']) : null;
 
-    // Determine slot based on department code
     $slot = $departmentCode && isset($departmentSlots[$departmentCode])
         ? $departmentSlots[$departmentCode]
         : 1; // Default to slot 1 if no match
