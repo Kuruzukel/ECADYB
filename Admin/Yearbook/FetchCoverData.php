@@ -108,7 +108,6 @@ try {
         $departmentCode = extractDepartmentCode(basename($cover['back_url']));
     }
 
-    // Add department information to the response
     $response['department'] = $departmentCode;
     $response['department_page'] = isset($departmentMap[$departmentCode])
         ? $departmentMap[$departmentCode]
