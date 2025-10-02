@@ -80,7 +80,6 @@ try {
         'updated_at' => isset($cover['updated_at']) ? $cover['updated_at']->toDateTime()->format('c') : null
     ];
 
-    // Department code mapping based on first 4 letters of filename
     $departmentMap = [
         'BSBA' => 'BusinessAdministration',
         'BSCJ' => 'Criminology',
