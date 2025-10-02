@@ -66,7 +66,6 @@ try {
         throw new Exception('Cover not found for template ' . $template . ' and slot ' . $slot);
     }
 
-    // Format the response
     $response = [
         '_id' => (string)$cover['_id'],
         'slot' => (int)$cover['slot'],
