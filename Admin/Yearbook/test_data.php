@@ -57,7 +57,6 @@ try {
         'updated_at' => isset($cover['updated_at']) ? $cover['updated_at']->toDateTime()->format('c') : null
     ];
 
-    // Debug: Print the actual data being returned
     error_log("FetchCoverData response: " . json_encode($response));
 
     echo json_encode([
