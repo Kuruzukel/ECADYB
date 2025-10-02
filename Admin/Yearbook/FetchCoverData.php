@@ -19,7 +19,7 @@ try {
         'BSME' => 1,
         'BSCJ' => 2,
         'BSTM' => 3,
-        'BSE' => 4,    // Education
+        'BSE' => 4,
         'BSN' => 5,    // Nursing
         'BSIS' => 6,   // Information System
         'BSBA' => 7    // Business Administration
