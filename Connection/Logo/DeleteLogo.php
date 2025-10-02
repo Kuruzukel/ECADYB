@@ -43,49 +43,87 @@ try {
         respond(false, 'Invalid slot. Must be between 1 and 9.');
     }
 
-    $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
-    $bunnyStorageZone = getenv('BUNNY_STORAGE_ZONE') ?: (defined('BUNNY_STORAGE_ZONE') ? BUNNY_STORAGE_ZONE : ($GLOBALS['BUNNY_STORAGE_ZONE'] ?? 'ecadyb'));
-    $bunnyAccessKey = getenv('BUNNY_ACCESS_KEY') ?: (defined('BUNNY_ACCESS_KEY') ? BUNNY_ACCESS_KEY : ($GLOBALS['BUNNY_ACCESS_KEY'] ?? null));
-
-    $client = new Client($mongoUrl, [
-        'serverSelectionTimeoutMS' => 5000,
-        'connectTimeoutMS' => 5000,
-        'socketTimeoutMS' => 5000
-    ]);
-    $db = $client->amin;
-    $collection = $db->logo;
-
-    $doc = $collection->findOne(['type' => 'logo_container', 'slot' => $slot]);
-    if (!$doc) {
-        respond(false, 'Logo not found');
-    }
-
-    $url = (string)($doc['url'] ?? '');
-    if ($url && $bunnyStorageZone && $bunnyAccessKey) {
-        $pathStart = strpos($url, '/Logo%20Container/');
-        if ($pathStart !== false) {
-            $relative = substr($url, $pathStart + 1);
-            $storageUrl = 'https://storage.bunnycdn.com/' . $bunnyStorageZone . '/' . $relative;
-
-            $ch = curl_init($storageUrl);
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
-            curl_setopt($ch, CURLOPT_HTTPHEADER, ['AccessKey: ' . $bunnyAccessKey]);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-
-            $response = curl_exec($ch);
-            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
-
-            if ($httpCode !== 200 && $httpCode !== 404) {
-                error_log("Warning: Failed to delete logo from BunnyCDN. HTTP $httpCode");
-            }
+    // Get MongoDB connection details from environment or config
+    $mongoUrl = getenv('MONGO_URL');
+    if (!$mongoUrl) {
+        // Fallback to config file if exists
+        if (file_exists(__DIR__ . '/../Configuration/MongoConfig.php')) {
+            require __DIR__ . '/../Configuration/MongoConfig.php';
+            $mongoUrl = defined('MONGO_URL') ? MONGO_URL : null;
+        }
+        if (!$mongoUrl) {
+            respond(false, 'MongoDB connection URL not configured');
         }
     }
 
-    $collection->deleteOne(['type' => 'logo_container', 'slot' => $slot]);
-    respond(true, 'Logo deleted successfully');
+    // Get BunnyCDN details
+    $bunnyStorageZone = getenv('BUNNY_STORAGE_ZONE') ?: (defined('BUNNY_STORAGE_ZONE') ? BUNNY_STORAGE_ZONE : null);
+    $bunnyAccessKey = getenv('BUNNY_ACCESS_KEY') ?: (defined('BUNNY_ACCESS_KEY') ? BUNNY_ACCESS_KEY : null);
+
+    if (!$bunnyStorageZone || !$bunnyAccessKey) {
+        respond(false, 'BunnyCDN configuration is missing');
+    }
+
+    try {
+        // Connect to MongoDB with proper timeout settings
+        $client = new Client($mongoUrl, [
+            'serverSelectionTimeoutMS' => 5000,
+            'connectTimeoutMS' => 5000,
+            'socketTimeoutMS' => 5000
+        ]);
+        $db = $client->amin;
+        $collection = $db->logo;
+
+        // Find the logo document first
+        $doc = $collection->findOne(['type' => 'logo_container', 'slot' => $slot]);
+        if (!$doc) {
+            respond(false, 'Logo not found');
+        }
+
+        // Get the URL and verify it exists
+        $url = (string)($doc['url'] ?? '');
+        if (!$url) {
+            respond(false, 'Logo URL is missing');
+        }
+
+        // Delete from BunnyCDN first
+        $pathStart = strpos($url, '/Logo%20Container/');
+        if ($pathStart === false) {
+            respond(false, 'Invalid logo URL format');
+        }
+
+        $relative = substr($url, $pathStart + 1);
+        $storageUrl = 'https://storage.bunnycdn.com/' . $bunnyStorageZone . '/' . $relative;
+
+        $ch = curl_init($storageUrl);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['AccessKey: ' . $bunnyAccessKey]);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        // Check if BunnyCDN deletion was successful
+        if ($httpCode !== 200 && $httpCode !== 404) {
+            error_log("Failed to delete logo from BunnyCDN. HTTP $httpCode");
+            respond(false, 'Failed to delete logo from storage');
+        }
+
+        // Only delete from MongoDB if BunnyCDN deletion was successful
+        $result = $collection->deleteOne(['type' => 'logo_container', 'slot' => $slot]);
+        
+        if ($result->getDeletedCount() === 0) {
+            respond(false, 'Failed to delete logo from database');
+        }
+
+        respond(true, 'Logo deleted successfully');
+    } catch (Exception $e) {
+        error_log('Logo deletion error: ' . $e->getMessage());
+        respond(false, 'Failed to delete logo: ' . $e->getMessage());
+    }
 } catch (Exception $e) {
     respond(false, 'Failed to delete logo: ' . $e->getMessage());
 }
