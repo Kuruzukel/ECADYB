@@ -14,7 +14,6 @@ require __DIR__ . '/../../vendor/autoload.php';
 use MongoDB\Client;
 
 try {
-    // Get parameters from URL
     $template = isset($_GET['template']) ? (int)$_GET['template'] : 1;
     $slot = isset($_GET['slot']) ? (int)$_GET['slot'] : 1;
 
@@ -67,7 +66,6 @@ try {
         'success' => true,
         'data' => $response
     ]);
-
 } catch (Exception $e) {
     error_log("FetchCoverData error: " . $e->getMessage());
     http_response_code(500);
@@ -76,4 +74,3 @@ try {
         'message' => $e->getMessage()
     ]);
 }
-?>
