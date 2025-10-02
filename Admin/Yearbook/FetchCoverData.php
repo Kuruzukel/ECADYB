@@ -90,7 +90,6 @@ try {
         'BSTM' => 'Tourism'
     ];
 
-    // Function to extract department code from filename
     function extractDepartmentCode($filename)
     {
         // Extract first 4 letters from the filename
