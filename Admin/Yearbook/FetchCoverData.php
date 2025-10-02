@@ -101,7 +101,6 @@ try {
         return $code;
     }
 
-    // Determine department based on front and back cover URLs
     $departmentCode = null;
     if (isset($cover['front_url'])) {
         $departmentCode = extractDepartmentCode(basename($cover['front_url']));
