@@ -61,9 +61,48 @@ function loadPage(page, pageElement) {
     console.log('Using back_url for page', page, ':', coverData.back_url);
     img.attr("src", coverData.back_url);
   } else if (page >= 2 && page <= 11 && typeof coverData !== 'undefined' && coverData !== null && coverData.background_url) {
-    // Pages 2-11 - use background image from database
+    // Pages 2-11 - use background image from database and add student cards
     console.log('Using background_url for page', page, ':', coverData.background_url);
     img.attr("src", coverData.background_url);
+    
+    // Create student cards container after image loads
+    img.on('load', function() {
+      var cardsContainer = $('<div/>', {
+        class: 'cards-container'
+      });
+
+      // Add 6 student cards (3 per column)
+      for (var i = 0; i < 6; i++) {
+        var card = $('<div/>', {
+          class: 'student-card'
+        });
+
+        // Add student image placeholder
+        var studentImg = $('<div/>', {
+          class: 'student-image'
+        });
+
+        // Add student name
+        var studentName = $('<h3/>', {
+          text: 'Student Name ' + (i + 1)
+        });
+
+        // Add honors text
+        var honorsText = $('<p/>', {
+          text: 'Honors and Achievements'
+        });
+
+        // Assemble the card
+        card.append(studentImg)
+            .append(studentName)
+            .append(honorsText);
+
+        cardsContainer.append(card);
+      }
+
+      // Add the cards container to the page
+      pageElement.append(cardsContainer);
+    });
   } else if (typeof coverData !== 'undefined' && coverData !== null && coverData.background_url) {
     // Other middle pages - use background image as fallback
     console.log('Using background_url as fallback for page', page, ':', coverData.background_url);
