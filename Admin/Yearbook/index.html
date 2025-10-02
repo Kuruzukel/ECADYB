@@ -129,7 +129,6 @@
               }
             } else {
               console.log("Failed to fetch cover data:", response.message);
-              // Even if fetch fails, we still need to initialize the app
               if (typeof loadApp === "function") {
                 loadApp();
               }
