@@ -113,7 +113,6 @@ try {
         ? $departmentMap[$departmentCode]
         : null;
 
-    // Debug: Print the actual data being returned
     error_log("FetchCoverData response: " . json_encode($response));
 
     echo json_encode([
