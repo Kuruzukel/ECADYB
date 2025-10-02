@@ -22,7 +22,7 @@ try {
         'BSE' => 4,
         'BSN' => 5,
         'BSIS' => 6,
-        'BSBA' => 7    // Business Administration
+        'BSBA' => 7
     ];
 
     // Get department code from URL parameter
