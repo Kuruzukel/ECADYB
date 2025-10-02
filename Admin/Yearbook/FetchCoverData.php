@@ -25,7 +25,6 @@ try {
         'BSBA' => 7
     ];
 
-    // Get department code from URL parameter
     $departmentCode = isset($_GET['department']) ? strtoupper($_GET['department']) : null;
 
     // Determine slot based on department code
