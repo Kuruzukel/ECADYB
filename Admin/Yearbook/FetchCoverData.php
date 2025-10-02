@@ -21,7 +21,7 @@ try {
         'BSTM' => 3,
         'BSE' => 4,
         'BSN' => 5,
-        'BSIS' => 6,   // Information System
+        'BSIS' => 6,
         'BSBA' => 7    // Business Administration
     ];
 
