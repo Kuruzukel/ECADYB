@@ -138,7 +138,6 @@
             console.log("Error fetching cover data:", error);
             console.log("XHR:", xhr);
             console.log("Status:", status);
-            // Even if fetch fails, we still need to initialize the app
             if (typeof loadApp === "function") {
               loadApp();
             }
