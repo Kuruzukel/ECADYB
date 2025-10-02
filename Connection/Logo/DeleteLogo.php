@@ -43,26 +43,17 @@ try {
         respond(false, 'Invalid slot. Must be between 1 and 9.');
     }
 
-    // Get MongoDB connection details from environment or config
-    $mongoUrl = getenv('MONGO_URL');
-    if (!$mongoUrl) {
-        // Fallback to config file if exists
-        if (file_exists(__DIR__ . '/../Configuration/MongoConfig.php')) {
-            require __DIR__ . '/../Configuration/MongoConfig.php';
-            $mongoUrl = defined('MONGO_URL') ? MONGO_URL : null;
-        }
-        if (!$mongoUrl) {
-            respond(false, 'MongoDB connection URL not configured');
-        }
+    // Get MongoDB URL from environment or use default Railway URL
+    $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
+
+    // Get BunnyCDN configuration from environment or config file
+    if (file_exists(__DIR__ . '/../Configuration/BunnyConfig.php')) {
+        require __DIR__ . '/../Configuration/BunnyConfig.php';
     }
 
-    // Get BunnyCDN details
-    $bunnyStorageZone = getenv('BUNNY_STORAGE_ZONE') ?: (defined('BUNNY_STORAGE_ZONE') ? BUNNY_STORAGE_ZONE : null);
-    $bunnyAccessKey = getenv('BUNNY_ACCESS_KEY') ?: (defined('BUNNY_ACCESS_KEY') ? BUNNY_ACCESS_KEY : null);
-
-    if (!$bunnyStorageZone || !$bunnyAccessKey) {
-        respond(false, 'BunnyCDN configuration is missing');
-    }
+    $bunnyStorageZone = getenv('BUNNY_STORAGE_ZONE') ?: (defined('BUNNY_STORAGE_ZONE') ? BUNNY_STORAGE_ZONE : ($GLOBALS['BUNNY_STORAGE_ZONE'] ?? 'ecadyb'));
+    $bunnyAccessKey = getenv('BUNNY_ACCESS_KEY') ?: (defined('BUNNY_ACCESS_KEY') ? BUNNY_ACCESS_KEY : ($GLOBALS['BUNNY_ACCESS_KEY'] ?? 'db959684-d63e-41f4-a1c7de4737a9-2dd8-41fb'));
+    $bunnyCdnHost = getenv('BUNNY_CDN_HOST') ?: (defined('BUNNY_CDN_HOST') ? BUNNY_CDN_HOST : ($GLOBALS['BUNNY_CDN_HOST'] ?? 'https://ECADYB.b-cdn.net'));
 
     try {
         // Connect to MongoDB with proper timeout settings
@@ -71,8 +62,8 @@ try {
             'connectTimeoutMS' => 5000,
             'socketTimeoutMS' => 5000
         ]);
-        $db = $client->amin;
-        $collection = $db->logo;
+    $db = $client->admin;
+    $collection = $db->logo;
 
         // Find the logo document first
         $doc = $collection->findOne(['type' => 'logo_container', 'slot' => $slot]);
