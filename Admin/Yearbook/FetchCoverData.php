@@ -94,7 +94,6 @@ try {
     {
         $code = substr(strtoupper(pathinfo($filename, PATHINFO_FILENAME)), 0, 4);
 
-        // Special handling for Criminal Justice (BSCJ)
         if (strpos($code, 'BSCJ') === 0) {
             $code = 'BSCJ';
         }
