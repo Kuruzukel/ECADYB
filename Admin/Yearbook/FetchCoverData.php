@@ -51,7 +51,6 @@ try {
     $db = $client->$dbName;
     $collection = $db->YearbookCovers;
 
-    // Find the specific cover and background (slot 8)
     $cover = $collection->findOne(['template' => $template, 'slot' => $slot]);
     $background = $collection->findOne(['template' => $template, 'slot' => 8]);
 
