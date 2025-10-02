@@ -154,7 +154,6 @@
         thumbnailList.empty();
 
         var firstPageLi = $('<li class="i"></li>');
-        // Use front_thumb_url if available, otherwise create a placeholder
         var firstThumbSrc = coverData.front_thumb_url
           ? coverData.front_thumb_url
           : 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="76" height="100" viewBox="0 0 76 100"%3E%3Crect width="76" height="100" fill="%23f0f0f0"/%3E%3Ctext x="38" y="55" font-family="Arial" font-size="10" fill="%23999" text-anchor="middle"%3E1%3C/text%3E%3C/svg%3E';
