@@ -96,19 +96,59 @@ function loadPage(page, pageElement) {
         card.on('click', function() {
           var modal = $('.student-modal');
           var closeBtn = $('.close-modal');
+          var studentName = $(this).find('h3').text();
           
-          // Update modal content with student data
-          modal.find('.student-name').text($(this).find('h3').text());
+          // Sample images for demonstration (replace with actual student photos)
+          var studentPhotos = [
+            'https://ECADYB.b-cdn.net/img/Profile.png',
+            'https://ECADYB.b-cdn.net/img/Profile.png',
+            'https://ECADYB.b-cdn.net/img/Profile.png'
+          ];
+          
+          // Initialize modal content
+          modal.find('.student-name').text(studentName);
+          
+          // Initialize images
+          var $largeImage = modal.find('.student-image-large img');
+          var $thumbnails = modal.find('.student-image-thumbnails .thumbnail');
+          
+          // Set initial large image
+          $largeImage.attr('src', studentPhotos[0]);
+          
+          // Set thumbnail images and initial active state
+          $thumbnails.each(function(index) {
+            $(this)
+              .find('img')
+              .attr('src', studentPhotos[index]);
+            
+            if (index === 0) {
+              $(this).addClass('active');
+            } else {
+              $(this).removeClass('active');
+            }
+          });
           
           // Show modal
           modal.addClass('active');
           
           // Handle thumbnail clicks
-          $('.thumbnail').on('click', function() {
-            $('.thumbnail').removeClass('active');
-            $(this).addClass('active');
-            var imgSrc = $(this).find('img').attr('src');
-            $('.student-image-large img').attr('src', imgSrc);
+          $thumbnails.off('click').on('click', function(e) {
+            e.stopPropagation(); // Prevent modal from closing
+            e.preventDefault();
+            
+            var $this = $(this);
+            var index = $this.index();
+            
+            // Update active state
+            $thumbnails.removeClass('active');
+            $this.addClass('active');
+            
+            // Update large image with fade effect
+            $largeImage.fadeOut(200, function() {
+              $(this).attr('src', studentPhotos[index]).fadeIn(200);
+            });
+            
+            console.log('Switching to photo:', index + 1); // Debug log
           });
           
           // Close modal when clicking close button or outside
