@@ -54,7 +54,6 @@ try {
     $cover = $collection->findOne(['template' => $template, 'slot' => $slot]);
     $background = $collection->findOne(['template' => $template, 'slot' => 8]);
 
-    // Debug: Log what we found
     error_log("Searching for template: " . $template . ", slot: " . $slot);
     error_log("Background data found: " . ($background ? json_encode($background) : "none"));
     if ($cover) {
