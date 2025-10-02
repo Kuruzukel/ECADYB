@@ -29,7 +29,7 @@ try {
 
     $slot = $departmentCode && isset($departmentSlots[$departmentCode])
         ? $departmentSlots[$departmentCode]
-        : 1; // Default to slot 1 if no match
+        : 1;
 
     if ($template < 1 || $template > 3) {
         throw new Exception('Invalid template parameter. Must be 1, 2, or 3.');
