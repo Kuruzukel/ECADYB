@@ -301,7 +301,6 @@ try {
 
     if (connection_aborted()) {
         $uploadCancelled = true;
-        // Delete both main image and thumbnail from BunnyCDN since we're cancelling before MongoDB
         error_log("UploadCover.php deleting file from BunnyCDN due to cancellation before MongoDB: $storageUrl");
         $deleteCh = curl_init($storageUrl);
         curl_setopt_array($deleteCh, [
