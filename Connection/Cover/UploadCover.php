@@ -387,7 +387,6 @@ try {
         $document['background_url'] = $publicUrl;
         $document['background_thumb_url'] = $thumbPublicUrl;
     } else {
-        // Regular slot images
         if ($side === 'front') {
             $document['front_url'] = $publicUrl;
             $document['front_thumb_url'] = $thumbPublicUrl;
