@@ -183,7 +183,6 @@ try {
 
     error_log("UploadCover.php storage URL: $storageUrl");
 
-    // This prevents false positives while still catching real cancellations
     if (connection_aborted()) {
         $uploadCancelled = true;
         respond(false, 'Upload cancelled');
