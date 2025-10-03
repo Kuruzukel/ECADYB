@@ -159,23 +159,25 @@ function showNotification(message, type = "success") {
   }, 5000);
 }
 
-window.addEventListener("DOMContentLoaded", () => {
-  const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
-  applyTheme(savedTheme);
+window.addEventListener("DOMContentLoaded", function() {
+    const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
+    applyTheme(savedTheme);
 
-  document.querySelectorAll(".upload-input").forEach((input) => {
-    input.addEventListener("change", () => {
-      // Special handling for folder upload
-      if (input.id === 'folder-upload') {
-        // For folder uploads, we let the form submit normally
-        // The server-side processing will handle the folder structure validation
-        input.form.submit();
-      } else {
-        // Regular file upload handling for CSV files
-        if (input.files.length > 0) {
-          input.form.submit();
-        }
-      }
+    document.querySelectorAll(".upload-input").forEach((input) => {
+        input.addEventListener("change", () => {
+            // Special handling for multiple image upload
+            if (input.id === 'folder-upload') {
+                // For multiple image uploads, we let the form submit normally
+                // The server-side processing will handle the file validation
+                if (input.files.length > 0) {
+                    input.form.submit();
+                }
+            } else {
+                // Regular file upload handling for CSV files (now supporting multiple)
+                if (input.files.length > 0) {
+                    input.form.submit();
+                }
+            }
+        });
     });
-  });
 });

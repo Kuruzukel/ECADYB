@@ -212,28 +212,45 @@ function getTemplateFolderName($selectedTemplate) {
     return "Batch Template 1";
 }
 
-// Function to upload entire folder to BunnyCDN
-function uploadFolderToBunnyCDN($files, $selectedTemplate) {
+// Function to validate and upload individual files (student and top management images)
+function processFolderUpload($files, $templateDB, $validDepartments, $validTopManagementFolder, $selectedTemplate) {
     $results = [
         'success' => 0,
         'failed' => 0,
         'errors' => []
     ];
     
-    // Load BunnyCDN configuration
-    if (file_exists(__DIR__ . '/../Configuration/BunnyConfig.php')) {
-        require __DIR__ . '/../Configuration/BunnyConfig.php';
+    // Check if files were actually uploaded
+    if (empty($files['name'][0])) {
+        $results['errors'][] = "No files were uploaded.";
+        $results['failed'] = 1;
+        return $results;
     }
     
-    $bunnyStorageZone = getenv('BUNNY_STORAGE_ZONE')
-        ?: (defined('BUNNY_STORAGE_ZONE') ? BUNNY_STORAGE_ZONE : ($GLOBALS['BUNNY_STORAGE_ZONE'] ?? 'ecadyb'));
-    $bunnyAccessKey = getenv('BUNNY_ACCESS_KEY')
-        ?: (defined('BUNNY_ACCESS_KEY') ? BUNNY_ACCESS_KEY : ($GLOBALS['BUNNY_ACCESS_KEY'] ?? null));
-    $bunnyCdnHost = getenv('BUNNY_CDN_HOST')
-        ?: (defined('BUNNY_CDN_HOST') ? BUNNY_CDN_HOST : ($GLOBALS['BUNNY_CDN_HOST'] ?? 'https://ECADYB.b-cdn.net'));
+    // Load BunnyCDN configuration
+    $configPath = __DIR__ . '/../../Connection/Configuration/BunnyConfig.php';
+    if (file_exists($configPath)) {
+        require $configPath;
+    }
     
-    if (!$bunnyStorageZone || !$bunnyAccessKey || !$bunnyCdnHost) {
-        $results['errors'][] = 'BunnyCDN configuration missing.';
+    // Try multiple ways to get BunnyCDN configuration
+    $bunnyStorageZone = getenv('BUNNY_STORAGE_ZONE') 
+        ?: (defined('BUNNY_STORAGE_ZONE') ? BUNNY_STORAGE_ZONE : null)
+        ?: ($GLOBALS['BUNNY_STORAGE_ZONE'] ?? null)
+        ?: 'ecadyb';
+        
+    $bunnyAccessKey = getenv('BUNNY_ACCESS_KEY') 
+        ?: (defined('BUNNY_ACCESS_KEY') ? BUNNY_ACCESS_KEY : null)
+        ?: ($GLOBALS['BUNNY_ACCESS_KEY'] ?? null);
+        
+    $bunnyCdnHost = getenv('BUNNY_CDN_HOST') 
+        ?: (defined('BUNNY_CDN_HOST') ? BUNNY_CDN_HOST : null)
+        ?: ($GLOBALS['BUNNY_CDN_HOST'] ?? null)
+        ?: 'https://ECADYB.b-cdn.net';
+    
+    // Check if we have the required configuration
+    if (!$bunnyAccessKey) {
+        $results['errors'][] = 'BunnyCDN configuration missing: Access Key not found.';
         $results['failed'] = count($files['name']);
         return $results;
     }
@@ -253,181 +270,215 @@ function uploadFolderToBunnyCDN($files, $selectedTemplate) {
             continue;
         }
         
-        // Construct the full path in BunnyCDN
-        // Format: Yearbook Covers/Batch Template X/[original folder structure]/filename
-        $safeFolder = 'Yearbook Covers';
-        $fullPath = $safeFolder . '/' . $templateFolder . '/' . $fileName;
-        $storageUrl = "https://storage.bunnycdn.com/{$bunnyStorageZone}/" . str_replace(' ', '%20', $fullPath);
+        // Extract name from filename
+        $nameWithoutExt = pathinfo($fileName, PATHINFO_FILENAME);
         
-        // Read file contents
-        $fileContents = file_get_contents($filePath);
-        if ($fileContents === false) {
-            $results['errors'][] = "Failed to read file: $fileName";
-            $results['failed']++;
-            continue;
-        }
-        
-        // Upload to BunnyCDN
-        $ch = curl_init($storageUrl);
-        curl_setopt_array($ch, [
-            CURLOPT_CUSTOMREQUEST => 'PUT',
-            CURLOPT_HTTPHEADER => ['AccessKey: ' . $bunnyAccessKey, 'Content-Type: application/octet-stream'],
-            CURLOPT_POSTFIELDS => $fileContents,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_HEADER => false,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_CONNECTTIMEOUT => 10,
-            CURLOPT_SSL_VERIFYPEER => true
-        ]);
-        
-        $response = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $curlErr = curl_error($ch);
-        curl_close($ch);
-        
-        if ($response === false || $httpCode < 200 || $httpCode >= 300) {
-            $results['errors'][] = "Failed to upload $fileName to BunnyCDN: " . ($curlErr ?: 'HTTP ' . $httpCode);
-            $results['failed']++;
+        // Check if it's a student photo (filename must be a valid student ID)
+        if (preg_match('/^\d{4}-\d{6}\.(jpg|jpeg|png|gif)$/i', $fileName) || preg_match('/^\d+\.(jpg|jpeg|png|gif)$/i', $fileName)) {
+            // Validate that filename is a valid student ID format
+            if (preg_match('/^\d{4}-\d{6}$/', $nameWithoutExt) || is_numeric($nameWithoutExt)) {
+                // Process student photo
+                $studentId = $nameWithoutExt;
+                
+                // Determine department based on student ID (simplified approach)
+                $department = 'unknown';
+                $departmentMap = [
+                    '100' => 'bsme',  // BS Marine Engineering
+                    '200' => 'bsmt',  // BS Marine Transportation
+                    '300' => 'bscje', // BS Criminal Justice Education
+                    '400' => 'bstm',  // BS Tourism Management
+                    '500' => 'btvted', // BS Technical-Vocational Teacher Education
+                    '600' => 'beced', // BS Early Childhood Education
+                    '700' => 'bsn',   // BS Nursing
+                    '800' => 'bsis',  // BS Information System
+                    '900' => 'bsma',  // BS Management Accounting
+                    '1000' => 'bse'   // BS Entrepreneurship
+                ];
+                
+                // Extract prefix from student ID to determine department
+                $prefix = substr(str_replace('-', '', $studentId), 0, 3);
+                if (isset($departmentMap[$prefix])) {
+                    $department = $departmentMap[$prefix];
+                } else {
+                    // Try with 2-digit prefix
+                    $prefix = substr(str_replace('-', '', $studentId), 0, 2);
+                    if (isset($departmentMap[$prefix])) {
+                        $department = $departmentMap[$prefix];
+                    }
+                }
+                
+                // Upload to BunnyCDN
+                $safeFolder = 'Student Photos';
+                $ext = pathinfo($fileName, PATHINFO_EXTENSION) ?: 'jpg';
+                $safeFileName = preg_replace('/[^A-Za-z0-9 _.-]/', '', $studentId) ?: ('student_' . time());
+                $safeExt = preg_replace('/[^A-Za-z0-9]/', '', $ext) ?: 'jpg';
+                $filename = sprintf('%s.%s', $safeFileName, $safeExt);
+                $path = $safeFolder . '/' . $templateFolder . '/' . $department . '/' . $filename;
+                $storageUrl = "https://storage.bunnycdn.com/{$bunnyStorageZone}/" . str_replace(' ', '%20', $path);
+                
+                // Read file contents
+                $fileContents = file_get_contents($filePath);
+                if ($fileContents === false) {
+                    $results['errors'][] = "Failed to read file: $fileName";
+                    $results['failed']++;
+                    continue;
+                }
+                
+                // Upload to BunnyCDN
+                $ch = curl_init($storageUrl);
+                curl_setopt_array($ch, [
+                    CURLOPT_CUSTOMREQUEST => 'PUT',
+                    CURLOPT_HTTPHEADER => ['AccessKey: ' . $bunnyAccessKey, 'Content-Type: application/octet-stream'],
+                    CURLOPT_POSTFIELDS => $fileContents,
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_HEADER => false,
+                    CURLOPT_TIMEOUT => 30,
+                    CURLOPT_CONNECTTIMEOUT => 10,
+                    CURLOPT_SSL_VERIFYPEER => true
+                ]);
+                
+                $response = curl_exec($ch);
+                $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                $curlErr = curl_error($ch);
+                curl_close($ch);
+                
+                if ($response === false || $httpCode < 200 || $httpCode >= 300) {
+                    $results['errors'][] = "Failed to upload $fileName to BunnyCDN: " . ($curlErr ?: 'HTTP ' . $httpCode);
+                    $results['failed']++;
+                    continue;
+                }
+                
+                $publicUrl = rtrim($bunnyCdnHost, '/') . '/' . str_replace(' ', '%20', $path);
+                
+                // Store in MongoDB
+                try {
+                    // Get or create collection for this department
+                    $collection = $templateDB->$department;
+                    
+                    // Prepare document for MongoDB
+                    $document = [
+                        'student_id' => $studentId,
+                        'filename' => $filename,
+                        'original_name' => $fileName,
+                        'department' => $department,
+                        'template' => str_replace('Batch Template ', '', $selectedTemplate),
+                        'url' => $publicUrl,
+                        'upload_time' => new \MongoDB\BSON\UTCDateTime()
+                    ];
+                    
+                    // Insert document
+                    $collection->insertOne($document);
+                    $results['success']++;
+                } catch (Exception $e) {
+                    $results['errors'][] = "Error storing student file $fileName in database: " . $e->getMessage();
+                    $results['failed']++;
+                    
+                    // Delete file from BunnyCDN since database storage failed
+                    $deleteCh = curl_init($storageUrl);
+                    curl_setopt_array($deleteCh, [
+                        CURLOPT_CUSTOMREQUEST => 'DELETE',
+                        CURLOPT_HTTPHEADER => ['AccessKey: ' . $bunnyAccessKey],
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_TIMEOUT => 10,
+                        CURLOPT_CONNECTTIMEOUT => 3
+                    ]);
+                    curl_exec($deleteCh);
+                    curl_close($deleteCh);
+                }
+            } else {
+                $results['errors'][] = "Invalid student ID format for file: $fileName. Expected format: 2021-004393.jpg or numeric ID.";
+                $results['failed']++;
+            }
         } else {
-            $results['success']++;
-        }
-    }
-    
-    return $results;
-}
-
-// Function to validate folder structure and upload student images and top management images
-function processFolderUpload($files, $templateDB, $validDepartments, $validTopManagementFolder, $selectedTemplate) {
-    $results = [
-        'success' => 0,
-        'failed' => 0,
-        'errors' => []
-    ];
-    
-    // Check if files were actually uploaded
-    if (empty($files['name'][0])) {
-        $results['errors'][] = "No files were uploaded.";
-        $results['failed'] = 1;
-        return $results;
-    }
-    
-    // First, upload the entire folder structure to BunnyCDN
-    $cdnResults = uploadFolderToBunnyCDN($files, $selectedTemplate);
-    $results['success'] += $cdnResults['success'];
-    $results['failed'] += $cdnResults['failed'];
-    $results['errors'] = array_merge($results['errors'], $cdnResults['errors']);
-    
-    // Then process files for MongoDB storage
-    $studentFiles = [];
-    $topManagementFiles = [];
-    
-    for ($i = 0; $i < count($files['name']); $i++) {
-        $fileName = $files['name'][$i];
-        $filePath = $files['tmp_name'][$i];
-        
-        // Skip if file wasn't uploaded successfully
-        if (!is_uploaded_file($filePath)) {
-            continue;
-        }
-        
-        // Extract folder from file path
-        // Expected path formats: 
-        // For students: [DEPARTMENT]/[student_id].ext
-        // For top management: TOPMANAGEMENT/[name].ext
-        $pathParts = explode(DIRECTORY_SEPARATOR, dirname($fileName));
-        
-        // Check if it's a top management file
-        if (count($pathParts) >= 1 && strtoupper($pathParts[0]) === $validTopManagementFolder) {
-            $topManagementFiles[] = [
-                'name' => $fileName,
-                'tmp_name' => $filePath,
-                'person_name' => pathinfo(basename($fileName), PATHINFO_FILENAME)
-            ];
-        } 
-        // Check if it's a student file
-        elseif (count($pathParts) >= 1) {
-            $department = strtolower($pathParts[0]);
-            
-            // Validate department
-            if (!in_array($department, $validDepartments)) {
-                continue;
-            }
-            
-            // Validate that filename is a numeric student ID
-            $studentId = pathinfo(basename($fileName), PATHINFO_FILENAME);
-            if (!is_numeric($studentId)) {
-                continue;
-            }
-            
-            $studentFiles[] = [
-                'name' => $fileName,
-                'tmp_name' => $filePath,
-                'student_id' => $studentId,
-                'department' => $department
-            ];
-        }
-    }
-    
-    // Process student files
-    $studentFilesByDepartment = [];
-    foreach ($studentFiles as $file) {
-        $department = $file['department'];
-        if (!isset($studentFilesByDepartment[$department])) {
-            $studentFilesByDepartment[$department] = [];
-        }
-        $studentFilesByDepartment[$department][] = $file;
-    }
-    
-    // Process student files for each department
-    foreach ($studentFilesByDepartment as $department => $deptFiles) {
-        try {
-            // Get or create collection for this department
-            $collection = $templateDB->$department;
-            
-            // Process each file in the department
-            foreach ($deptFiles as $file) {
-                // Prepare document for MongoDB
-                $document = [
-                    'student_id' => $file['student_id'],
-                    'filename' => basename($file['name']),
-                    'upload_time' => new \MongoDB\BSON\UTCDateTime(),
-                    'file_path' => $file['name']  // Store relative path
-                ];
+            // Treat as top management photo (any name with image extension)
+            if (preg_match('/\.(jpg|jpeg|png|gif)$/i', $fileName)) {
+                // Process top management photo
+                $personName = $nameWithoutExt;
                 
-                // Insert document
-                $collection->insertOne($document);
-            }
-        } catch (Exception $e) {
-            $results['errors'][] = "Error processing department $department: " . $e->getMessage();
-            $results['failed'] += count($deptFiles);
-        }
-    }
-    
-    // Process top management files
-    if (!empty($topManagementFiles)) {
-        try {
-            // Connect to Top_Management database
-            $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
-            $client = new Client($mongoUrl);
-            $topManagementDB = $client->Top_Management;
-            $collection = $topManagementDB->Photos;
-            
-            // Process each top management file
-            foreach ($topManagementFiles as $file) {
-                // Prepare document for MongoDB
-                $document = [
-                    'name' => $file['person_name'],
-                    'filename' => basename($file['name']),
-                    'upload_time' => new \MongoDB\BSON\UTCDateTime(),
-                    'file_path' => $file['name']  // Store relative path
-                ];
+                // Upload to BunnyCDN
+                $safeFolder = 'Top Management Photos';
+                $ext = pathinfo($fileName, PATHINFO_EXTENSION) ?: 'jpg';
+                $safeFileName = preg_replace('/[^A-Za-z0-9 _.-]/', '', $personName) ?: ('top_management_' . time());
+                $safeExt = preg_replace('/[^A-Za-z0-9]/', '', $ext) ?: 'jpg';
+                $filename = sprintf('%s.%s', $safeFileName, $safeExt);
+                $path = $safeFolder . '/' . $templateFolder . '/' . $filename;
+                $storageUrl = "https://storage.bunnycdn.com/{$bunnyStorageZone}/" . str_replace(' ', '%20', $path);
                 
-                // Insert document
-                $collection->insertOne($document);
+                // Read file contents
+                $fileContents = file_get_contents($filePath);
+                if ($fileContents === false) {
+                    $results['errors'][] = "Failed to read file: $fileName";
+                    $results['failed']++;
+                    continue;
+                }
+                
+                // Upload to BunnyCDN
+                $ch = curl_init($storageUrl);
+                curl_setopt_array($ch, [
+                    CURLOPT_CUSTOMREQUEST => 'PUT',
+                    CURLOPT_HTTPHEADER => ['AccessKey: ' . $bunnyAccessKey, 'Content-Type: application/octet-stream'],
+                    CURLOPT_POSTFIELDS => $fileContents,
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_HEADER => false,
+                    CURLOPT_TIMEOUT => 30,
+                    CURLOPT_CONNECTTIMEOUT => 10,
+                    CURLOPT_SSL_VERIFYPEER => true
+                ]);
+                
+                $response = curl_exec($ch);
+                $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                $curlErr = curl_error($ch);
+                curl_close($ch);
+                
+                if ($response === false || $httpCode < 200 || $httpCode >= 300) {
+                    $results['errors'][] = "Failed to upload $fileName to BunnyCDN: " . ($curlErr ?: 'HTTP ' . $httpCode);
+                    $results['failed']++;
+                    continue;
+                }
+                
+                $publicUrl = rtrim($bunnyCdnHost, '/') . '/' . str_replace(' ', '%20', $path);
+                
+                // Store in MongoDB
+                try {
+                    // Connect to Top_Management database
+                    $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
+                    $client = new Client($mongoUrl);
+                    $topManagementDB = $client->Top_Management;
+                    $collection = $topManagementDB->Photos;
+                    
+                    // Prepare document for MongoDB
+                    $document = [
+                        'name' => $personName,
+                        'filename' => $filename,
+                        'original_name' => $fileName,
+                        'template' => str_replace('Batch Template ', '', $selectedTemplate),
+                        'url' => $publicUrl,
+                        'upload_time' => new \MongoDB\BSON\UTCDateTime()
+                    ];
+                    
+                    // Insert document
+                    $collection->insertOne($document);
+                    $results['success']++;
+                } catch (Exception $e) {
+                    $results['errors'][] = "Error storing top management file $fileName in database: " . $e->getMessage();
+                    $results['failed']++;
+                    
+                    // Delete file from BunnyCDN since database storage failed
+                    $deleteCh = curl_init($storageUrl);
+                    curl_setopt_array($deleteCh, [
+                        CURLOPT_CUSTOMREQUEST => 'DELETE',
+                        CURLOPT_HTTPHEADER => ['AccessKey: ' . $bunnyAccessKey],
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_TIMEOUT => 10,
+                        CURLOPT_CONNECTTIMEOUT => 3
+                    ]);
+                    curl_exec($deleteCh);
+                    curl_close($deleteCh);
+                }
+            } else {
+                $results['errors'][] = "Invalid file format for file: $fileName. Only image files are allowed.";
+                $results['failed']++;
             }
-        } catch (Exception $e) {
-            $results['errors'][] = "Error processing top management files: " . $e->getMessage();
-            $results['failed'] += count($topManagementFiles);
         }
     }
     
@@ -438,10 +489,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
     $client = new Client($mongoUrl);
 
-    if (!empty($_FILES['top_management_message']['tmp_name'])) {
-        $tmpName = $_FILES['top_management_message']['tmp_name'];
+    if (isset($_FILES['top_management_message']) && is_array($_FILES['top_management_message']['tmp_name']) && !empty($_FILES['top_management_message']['tmp_name'][0])) {
+        // Handle multiple CSV files for top management message
+        $files = $_FILES['top_management_message'];
+        $allSuccess = true;
+        
+        // Process each uploaded file
+        for ($i = 0; $i < count($files['tmp_name']); $i++) {
+            $tmpName = $files['tmp_name'][$i];
+            
+            // Skip if file wasn't uploaded successfully
+            if (!is_uploaded_file($tmpName)) {
+                $allSuccess = false;
+                continue;
+            }
+            
+            // Validate headers for top management CSV
+            $validTopManagementHeaders = ['name', 'message', 'batchname', 'academicyear'];
+            $validTopManagementHeaders = array_map('cleanHeader', $validTopManagementHeaders);
+            $actualHeaders = [];
 
-        $validTopManagementHeaders = ['name', 'message', 'batch_name', 'academic_year'];
+            if (($handle = fopen($tmpName, 'r')) !== false) {
+                if (($row = fgetcsv($handle, 1000, ',')) !== false) {
+                    $actualHeaders = array_map('cleanHeader', $row);
+                }
+                fclose($handle);
+            }
+
+            sort($validTopManagementHeaders);
+            sort($actualHeaders);
+
+            if ($actualHeaders === $validTopManagementHeaders) {
+                try {
+                    $topManagementDB = $client->Top_Management;
+                    $result = importCSVByMessage($tmpName, $topManagementDB->message);
+                    if (!$result) {
+                        $allSuccess = false;
+                    }
+                } catch (Exception $e) {
+                    error_log("Error importing top management message: " . $e->getMessage());
+                    $allSuccess = false;
+                }
+            } else {
+                $allSuccess = false;
+            }
+        }
+        
+        $uploadStatus['top_management_message'] = $allSuccess;
+    } else if (isset($_FILES['top_management_message']) && !is_array($_FILES['top_management_message']['tmp_name']) && !empty($_FILES['top_management_message']['tmp_name'])) {
+        // Handle single CSV file for backward compatibility
+        $tmpName = $_FILES['top_management_message']['tmp_name'];
+        
+        // Validate headers for top management CSV
+        $validTopManagementHeaders = ['name', 'message', 'batchname', 'academicyear'];
         $validTopManagementHeaders = array_map('cleanHeader', $validTopManagementHeaders);
         $actualHeaders = [];
 
@@ -468,17 +568,94 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    if (!empty($_FILES['student_info']['tmp_name'])) {
-        try {
-            $templateDB = getSelectedTemplateDatabase($client);
+    if (isset($_FILES['student_info']) && is_array($_FILES['student_info']['tmp_name']) && !empty($_FILES['student_info']['tmp_name'][0])) {
+        // Handle multiple CSV files for student info
+        $files = $_FILES['student_info'];
+        $allSuccess = true;
+        
+        // Process each uploaded file
+        for ($i = 0; $i < count($files['tmp_name']); $i++) {
+            $tmpName = $files['tmp_name'][$i];
+            
+            // Skip if file wasn't uploaded successfully
+            if (!is_uploaded_file($tmpName)) {
+                $allSuccess = false;
+                continue;
+            }
+            
+            // Validate headers for student info CSV
+            $validStudentHeaders = ['id', 'academic year', 'department section', 'student id', 'last name', 'first name', 'middle initial', 'motto', 'honors', 'email', 'milestone', 'password'];
+            $validStudentHeaders = array_map('cleanHeader', $validStudentHeaders);
+            $actualHeaders = [];
 
-            $uploadStatus['student_info'] = importCSVToTemplateDepartments(
-                $_FILES['student_info']['tmp_name'],
-                $templateDB,
-                $programMap
-            );
-        } catch (Exception $e) {
-            error_log("Error processing student info: " . $e->getMessage());
+            if (($handle = fopen($tmpName, 'r')) !== false) {
+                if (($row = fgetcsv($handle, 1000, ',')) !== false) {
+                    $actualHeaders = array_map('cleanHeader', $row);
+                }
+                fclose($handle);
+            }
+
+            sort($validStudentHeaders);
+            sort($actualHeaders);
+
+            // Check if headers match student info format
+            if ($actualHeaders === $validStudentHeaders) {
+                try {
+                    $templateDB = getSelectedTemplateDatabase($client);
+                    
+                    $result = importCSVToTemplateDepartments(
+                        $tmpName,
+                        $templateDB,
+                        $programMap
+                    );
+                    
+                    if (!$result) {
+                        $allSuccess = false;
+                    }
+                } catch (Exception $e) {
+                    error_log("Error processing student info: " . $e->getMessage());
+                    $allSuccess = false;
+                }
+            } else {
+                $allSuccess = false;
+            }
+        }
+        
+        $uploadStatus['student_info'] = $allSuccess;
+    } else if (isset($_FILES['student_info']) && !is_array($_FILES['student_info']['tmp_name']) && !empty($_FILES['student_info']['tmp_name'])) {
+        // Handle single CSV file for backward compatibility
+        $tmpName = $_FILES['student_info']['tmp_name'];
+        
+        // Validate headers for student info CSV
+        $validStudentHeaders = ['id', 'academic year', 'department section', 'student id', 'last name', 'first name', 'middle initial', 'motto', 'honors', 'email', 'milestone', 'password'];
+        $validStudentHeaders = array_map('cleanHeader', $validStudentHeaders);
+        $actualHeaders = [];
+
+        if (($handle = fopen($tmpName, 'r')) !== false) {
+            if (($row = fgetcsv($handle, 1000, ',')) !== false) {
+                $actualHeaders = array_map('cleanHeader', $row);
+            }
+            fclose($handle);
+        }
+
+        sort($validStudentHeaders);
+        sort($actualHeaders);
+
+        // Check if headers match student info format
+        if ($actualHeaders === $validStudentHeaders) {
+            try {
+                $templateDB = getSelectedTemplateDatabase($client);
+
+                $uploadStatus['student_info'] = importCSVToTemplateDepartments(
+                    $tmpName,
+                    $templateDB,
+                    $programMap
+                );
+            } catch (Exception $e) {
+                error_log("Error processing student info: " . $e->getMessage());
+                $uploadStatus['student_info'] = false;
+            }
+        } else {
             $uploadStatus['student_info'] = false;
         }
     }
@@ -530,9 +707,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="section-header">Top Management Message</div>
                         <div
                             class="file-card <?= $uploadStatus['top_management_message'] === false ? 'upload-failed' : ($uploadStatus['top_management_message'] === true ? 'upload-success' : '') ?>">
-                            <label class="custom-upload" for="top_management_message">Upload CSV File</label>
-                            <input type="file" name="top_management_message" id="top_management_message"
-                                class="upload-input" accept=".csv">
+                            <label class="custom-upload" for="top_management_message">Upload CSV Files</label>
+                            <input type="file" name="top_management_message[]" id="top_management_message"
+                                class="upload-input" accept=".csv" multiple>
                         </div>
                     </div>
 
@@ -540,16 +717,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="section-header">Student Information</div>
                         <div
                             class="file-card <?= $uploadStatus['student_info'] === false ? 'upload-failed' : ($uploadStatus['student_info'] === true ? 'upload-success' : '') ?>">
-                            <label class="custom-upload" for="student-info">Upload CSV File</label>
-                            <input type="file" name="student_info" id="student-info" class="upload-input" accept=".csv">
+                            <label class="custom-upload" for="student-info">Upload CSV Files</label>
+                            <input type="file" name="student_info[]" id="student-info" class="upload-input" accept=".csv" multiple>
                         </div>
                     </div>
 
                     <div class="section">
                         <div class="section-header">Student Images and Top Management Images</div>
                         <div class="file-card <?= isset($uploadStatus['folder_upload']) && $uploadStatus['folder_upload'] === false ? 'upload-failed' : (isset($uploadStatus['folder_upload']) && !empty($uploadStatus['folder_upload']['success']) ? 'upload-success' : '') ?>">
-                            <label class="custom-upload" for="folder-upload">Upload Department Folder</label>
-                            <input type="file" name="folder_upload[]" id="folder-upload" class="upload-input" accept="image/*" multiple webkitdirectory directory>
+                            <label class="custom-upload" for="folder-upload">Upload Images</label>
+                            <input type="file" name="folder_upload[]" id="folder-upload" class="upload-input" accept="image/*" multiple>
                         </div>
                     </div>
                 </div>

@@ -126,11 +126,11 @@ try {
         $studentId = pathinfo($fileName, PATHINFO_FILENAME);
         
         // Validate that filename is a valid student ID (you may want to adjust this validation)
-        if (!preg_match('/^\d+$/', $studentId)) {
+        if (!preg_match('/^\d{4}-\d{6}$/', $studentId) && !is_numeric($studentId)) {
             $results[] = [
                 'filename' => $fileName,
                 'success' => false,
-                'message' => 'Invalid filename. Filename must be a student ID (numbers only).'
+                'message' => 'Invalid filename. Filename must be a student ID in format 2021-004393 or numeric ID.'
             ];
             $failedCount++;
             continue;
@@ -154,6 +154,7 @@ try {
         
         // For demonstration, we'll use a simple mapping
         // In practice, you should query the database to get the actual department
+        $cleanStudentId = str_replace('-', '', $studentId);
         $departmentMap = [
             '100' => 'bsme',  // BS Marine Engineering
             '200' => 'bsmt',  // BS Marine Transportation
@@ -168,12 +169,12 @@ try {
         ];
         
         // Extract prefix from student ID to determine department
-        $prefix = substr($studentId, 0, 3);
+        $prefix = substr($cleanStudentId, 0, 3);
         if (isset($departmentMap[$prefix])) {
             $department = $departmentMap[$prefix];
         } else {
             // Try with 2-digit prefix
-            $prefix = substr($studentId, 0, 2);
+            $prefix = substr($cleanStudentId, 0, 2);
             if (isset($departmentMap[$prefix])) {
                 $department = $departmentMap[$prefix];
             }
