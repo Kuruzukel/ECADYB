@@ -58,7 +58,7 @@ try {
     error_log("FetchCovers.php using database: $dbName, collection: YearbookCovers");
 
     $cursor = $collection->find(
-        [], // Fetch all documents, not just those matching template
+        [],
         [
             'projection' => [
                 'slot' => 1,
