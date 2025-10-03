@@ -457,15 +457,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="file-card <?= isset($uploadStatus['folder_upload']) && $uploadStatus['folder_upload'] === false ? 'upload-failed' : (isset($uploadStatus['folder_upload']) && !empty($uploadStatus['folder_upload']['success']) ? 'upload-success' : '') ?>">
                             <label class="custom-upload" for="folder-upload">Upload Department Folder</label>
                             <input type="file" name="folder_upload[]" id="folder-upload" class="upload-input" accept="image/*" multiple webkitdirectory directory>
-                            <div class="upload-instructions">
-                                <p><strong>Folder Structure Instructions:</strong></p>
-                                <ul>
-                                    <li>For student images: Create folders named exactly: BECED, BSCJE, BSE, BSIS, BSMA, BSME, BSMT, BSN, BSTM, BTVTED</li>
-                                    <li>For top management images: Create a folder named exactly: TOPMANAGEMENT</li>
-                                    <li>Place student images in their respective department folders with student ID as filename (e.g., 123456789.jpg)</li>
-                                    <li>Place top management images in the TOPMANAGEMENT folder with person's name as filename (e.g., JohnDoe.jpg)</li>
-                                </ul>
-                            </div>
                         </div>
                         <?php if (isset($uploadStatus['folder_upload']) && is_array($uploadStatus['folder_upload'])): ?>
                             <div class="upload-results">
