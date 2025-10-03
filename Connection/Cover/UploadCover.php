@@ -384,7 +384,6 @@ try {
     ];
 
     if ($slot === 8) {
-        // Background image
         $document['background_url'] = $publicUrl;
         $document['background_thumb_url'] = $thumbPublicUrl;
     } else {
