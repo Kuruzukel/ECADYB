@@ -1,7 +1,26 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 require __DIR__ . '/../../vendor/autoload.php';
 
 use MongoDB\Client;
+
+// Handle flash messages and redirection
+$flashMessage = null;
+if (isset($_SESSION['upload_status'])) {
+    if ($_SESSION['upload_status'] === 'success') {
+        $flashMessage = ['type' => 'success', 'message' => 'Upload successful!'];
+    } else if ($_SESSION['upload_status'] === 'error') {
+        $flashMessage = ['type' => 'error', 'message' => "One or more uploads failed. Please ensure you're using valid CSV files."];
+    }
+    unset($_SESSION['upload_status']);
+}
+
+// Clear return URL after use
+if (isset($_SESSION['return_url'])) {
+    unset($_SESSION['return_url']);
+}
 
 $uploadStatus = [
     'top_management_message' => null,
@@ -237,11 +256,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    $resultMsg = null;
-    if ($uploadStatus['top_management_message'] || $uploadStatus['student_info']) {
-        $resultMsg = "Upload successful!";
-    } elseif ($uploadStatus['top_management_message'] === false || $uploadStatus['student_info'] === false) {
-        $resultMsg = "One or more uploads failed. Please ensure you're using valid CSV files.";
+    if ($uploadStatus['top_management_message'] !== null || $uploadStatus['student_info'] !== null) {
+        $message = '';
+        $type = '';
+        
+        if ($uploadStatus['top_management_message'] || $uploadStatus['student_info']) {
+            $message = 'Upload successful!';
+            $type = 'success';
+        } else {
+            $message = "One or more uploads failed. Please ensure you're using valid CSV files.";
+            $type = 'error';
+        }
+        
+        // Add notification script with a data attribute for AJAX detection
+        echo '<script data-notification>
+            if (typeof showNotification === "function") {
+                showNotification("' . $message . '", "' . $type . '");
+            }
+        </script>';
     }
 }
 
@@ -269,8 +301,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="form-group">
                     <div class="section">
                         <div class="section-header">Top Management Message</div>
-                        <div
-                            class="file-card <?= $uploadStatus['top_management_message'] === false ? 'upload-failed' : ($uploadStatus['top_management_message'] === true ? 'upload-success' : '') ?>">
+                        <div class="file-card">
                             <label class="custom-upload" for="top_management_message">Upload CSV File</label>
                             <input type="file" name="top_management_message" id="top_management_message"
                                 class="upload-input" accept=".csv">
@@ -279,8 +310,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <div class="section">
                         <div class="section-header">Student Information</div>
-                        <div
-                            class="file-card <?= $uploadStatus['student_info'] === false ? 'upload-failed' : ($uploadStatus['student_info'] === true ? 'upload-success' : '') ?>">
+                        <div class="file-card">
                             <label class="custom-upload" for="student-info">Upload CSV File</label>
                             <input type="file" name="student_info" id="student-info" class="upload-input" accept=".csv">
                         </div>
@@ -307,6 +337,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (selectedTemplate) {
             document.getElementById('selected_template').value = selectedTemplate;
         }
+
+        <?php if ($flashMessage): ?>
+        if (typeof showNotification === "function") {
+            showNotification(<?= json_encode($flashMessage['message']) ?>, <?= json_encode($flashMessage['type']) ?>);
+        }
+        <?php endif; ?>
     });
     </script>
 </body>

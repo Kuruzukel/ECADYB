@@ -138,14 +138,70 @@ const themes = {
     document.body.style.display = "";
   }
   
+  function showNotification(message, type = "success") {
+    const container = document.getElementById("notification-container");
+    if (!container) return;
+
+    const notif = document.createElement("div");
+    notif.className = `notification ${type} show`;
+    notif.innerHTML = `
+      <i class="fas ${type === "success" ? "fa-check-circle" : "fa-exclamation-circle"}"></i>
+      <span>${message}</span>
+    `;
+    container.appendChild(notif);
+
+    setTimeout(() => {
+      notif.classList.remove("show");
+      setTimeout(() => notif.remove(), 500);
+    }, 3000);
+  }
+
   window.addEventListener("DOMContentLoaded", () => {
     const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
     applyTheme(savedTheme);
-  
+
     document.querySelectorAll(".upload-input").forEach((input) => {
-      input.addEventListener("change", () => {
+      input.addEventListener("change", async (e) => {
+        e.preventDefault();
         if (input.files.length > 0) {
-          input.form.submit();
+          showNotification("Uploaded Successfully", "success");
+          
+          const form = input.form;
+          const formData = new FormData(form);
+          
+          try {
+            const response = await fetch(form.action, {
+              method: 'POST',
+              body: formData
+            });
+            
+            const result = await response.text();
+            
+            // Create a temporary div to parse the response
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = result;
+            
+            // Check if there's a notification message in the response
+            if (tempDiv.querySelector('#notification-container')) {
+              const notificationScript = tempDiv.querySelector('script[data-notification]');
+              if (notificationScript) {
+                eval(notificationScript.textContent);
+              }
+            }
+            
+            // Update the form content
+            const newFormContent = tempDiv.querySelector('.form-content');
+            if (newFormContent) {
+              document.querySelector('.form-content').innerHTML = newFormContent.innerHTML;
+            }
+            
+            // Reset the file input
+            input.value = '';
+            
+          } catch (error) {
+            console.error('Upload error:', error);
+            showNotification("Upload failed. Please try again.", "error");
+          }
         }
       });
     });

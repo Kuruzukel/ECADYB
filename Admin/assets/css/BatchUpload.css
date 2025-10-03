@@ -146,55 +146,6 @@ h1 .chevron i {
   display: none;
 }
 
-.upload-success {
-  border-color: #2ecc71;
-  background-color: #14532d;
-  color: white;
-}
-
-.upload-failed {
-  border-color: #e74c3c;
-  background-color: #7f1d1d;
-  color: white;
-}
-
-.popup-message {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 25px 40px;
-  border-radius: 10px;
-  font-size: 18px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-  z-index: 9999;
-  animation: fadeOut 3s forwards;
-}
-
-.popup-success {
-  background-color: #2ecc71;
-  color: white;
-}
-
-.popup-failure {
-  background-color: #e74c3c;
-  color: white;
-}
-
-@keyframes fadeOut {
-  0% {
-    opacity: 1;
-  }
-
-  80% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0;
-    display: none;
-  }
-}
 
 /* Notification styles copied from BatchTemplates.css */
 .notification {
