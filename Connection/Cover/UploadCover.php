@@ -106,7 +106,6 @@ try {
     $originalName = $_FILES['file']['name'];
     $ext          = pathinfo($originalName, PATHINFO_EXTENSION) ?: 'jpg';
 
-    // Auto-detect slot and side from filename if not properly set
     $upperName = strtoupper($originalName);
 
     // Slot mapping based on filename prefix
