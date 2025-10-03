@@ -97,7 +97,6 @@ try {
         respond(false, $errorMap[$code] ?? 'Upload failed.');
     }
 
-    // Check for client disconnection/cancellation
     if (connection_aborted()) {
         $uploadCancelled = true;
         respond(false, 'Upload cancelled');
