@@ -551,29 +551,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <label class="custom-upload" for="folder-upload">Upload Department Folder</label>
                             <input type="file" name="folder_upload[]" id="folder-upload" class="upload-input" accept="image/*" multiple webkitdirectory directory>
                         </div>
-                        <?php if (isset($uploadStatus['folder_upload']) && is_array($uploadStatus['folder_upload'])): ?>
-                            <div class="upload-results">
-                                <p>Successfully uploaded: <?= $uploadStatus['folder_upload']['success'] ?> files</p>
-                                <?php if ($uploadStatus['folder_upload']['failed'] > 0): ?>
-                                    <p>Failed: <?= $uploadStatus['folder_upload']['failed'] ?> files</p>
-                                    <?php foreach ($uploadStatus['folder_upload']['errors'] as $error): ?>
-                                        <p class="error-message"><?= $error ?></p>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
-                            </div>
-                        <?php endif; ?>
                     </div>
                 </div>
-
-                <?php if (!empty($resultMsg)): ?>
-                <?php
-                    $popupClass = in_array(true, $uploadStatus, true) ? 'popup-success' : 'popup-failure';
-                    ?>
-                <div class="popup-message <?= $popupClass ?>"><?= $resultMsg ?></div>
-                <?php endif; ?>
             </div>
         </form>
     </div>
+    
+    <div id="notification-container"></div>
 
     <script src="../assets/js/BatchUpload.js"></script>
     <script>
@@ -582,6 +566,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (selectedTemplate) {
             document.getElementById('selected_template').value = selectedTemplate;
         }
+        
+        // Show notification if there's a result message
+        <?php if (!empty($resultMsg)): ?>
+        if (typeof showNotification === 'function') {
+            const isSuccess = <?= json_encode(in_array(true, $uploadStatus, true)) ?>;
+            showNotification("<?= $resultMsg ?>", isSuccess ? "success" : "error");
+        }
+        <?php endif; ?>
+        
+        // Show folder upload results as notifications
+        <?php if (isset($uploadStatus['folder_upload']) && is_array($uploadStatus['folder_upload'])): ?>
+        if (typeof showNotification === 'function') {
+            const folderResult = <?= json_encode($uploadStatus['folder_upload']) ?>;
+            if (folderResult.success > 0) {
+                showNotification(`Successfully uploaded ${folderResult.success} files`, "success");
+            }
+            if (folderResult.failed > 0) {
+                showNotification(`Failed to upload ${folderResult.failed} files`, "error");
+            }
+            // Show individual errors if any
+            if (folderResult.errors && folderResult.errors.length > 0) {
+                folderResult.errors.forEach(error => {
+                    showNotification(error, "error");
+                });
+            }
+        }
+        <?php endif; ?>
     });
     </script>
 </body>
