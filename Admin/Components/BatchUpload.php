@@ -455,7 +455,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="section">
                         <div class="section-header">Student Images and Top Management Images</div>
                         <div class="file-card <?= isset($uploadStatus['folder_upload']) && $uploadStatus['folder_upload'] === false ? 'upload-failed' : (isset($uploadStatus['folder_upload']) && !empty($uploadStatus['folder_upload']['success']) ? 'upload-success' : '') ?>">
-                            <label class="custom-upload" for="folder-upload">Upload Department Folder</label>
+                            <label class="custom-upload" for="folder-upload">Upload Folder</label>
                             <input type="file" name="folder_upload[]" id="folder-upload" class="upload-input" accept="image/*" multiple webkitdirectory directory>
                         </div>
                         <?php if (isset($uploadStatus['folder_upload']) && is_array($uploadStatus['folder_upload'])): ?>
