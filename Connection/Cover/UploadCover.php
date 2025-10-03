@@ -197,7 +197,6 @@ try {
 
     $thumbContents = $fileContents;
 
-    // Ultra-fast BunnyCDN upload with minimal timeout for main image
     $ch = curl_init($storageUrl);
     curl_setopt_array($ch, [
         CURLOPT_CUSTOMREQUEST  => 'PUT',
