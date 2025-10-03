@@ -209,7 +209,7 @@ try {
         CURLOPT_SSL_VERIFYPEER => true,
         CURLOPT_TCP_NODELAY    => true,
         CURLOPT_FRESH_CONNECT  => false,
-        CURLOPT_FORBID_REUSE   => false   // Allow connection reuse for performance
+        CURLOPT_FORBID_REUSE   => false
     ]);
     $response = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
