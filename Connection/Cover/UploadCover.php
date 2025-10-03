@@ -208,7 +208,7 @@ try {
         CURLOPT_CONNECTTIMEOUT => 5,
         CURLOPT_SSL_VERIFYPEER => true,
         CURLOPT_TCP_NODELAY    => true,
-        CURLOPT_FRESH_CONNECT  => false,  // Allow connection reuse for performance
+        CURLOPT_FRESH_CONNECT  => false,
         CURLOPT_FORBID_REUSE   => false   // Allow connection reuse for performance
     ]);
     $response = curl_exec($ch);
