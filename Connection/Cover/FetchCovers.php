@@ -47,7 +47,7 @@ try {
     $client = new Client($mongoUrl, [
         'serverSelectionTimeoutMS' => 1000,
         'connectTimeoutMS' => 1000,
-        'socketTimeoutMS' => 2000,           // Reduced timeout
+        'socketTimeoutMS' => 2000,
         'retryReads' => true
     ]);
 
