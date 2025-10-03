@@ -146,6 +146,15 @@ h1 .chevron i {
   display: none;
 }
 
+.upload-hint {
+  margin-top: 10px;
+  color: #e0e0e0;
+  font-size: 0.85em;
+  text-align: center;
+  opacity: 0.8;
+  font-style: italic;
+}
+
 
 /* Notification styles copied from BatchTemplates.css */
 .notification {

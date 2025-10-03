@@ -166,40 +166,91 @@ const themes = {
         if (input.files.length > 0) {
           const form = input.form;
           const formData = new FormData();
-          
-          // Only append the changed input file and the selected template
-          formData.append(input.name, input.files[0]);
           const selectedTemplate = document.getElementById('selected_template');
-          if (selectedTemplate) {
-            formData.append('selected_template', selectedTemplate.value);
-          }
           
-          try {
-            const response = await fetch(form.action, {
-              method: 'POST',
-              body: formData
+          if (input.id === 'student-photos' || input.id === 'management-photos') {
+            // Show uploading notification
+            showNotification("Uploaded Successfully", "success");
+            
+            // Handle image uploads
+            Array.from(input.files).forEach(file => {
+              formData.append('files[]', file);
             });
             
-            const result = await response.text();
-            
-            // Create a temporary div to parse the response
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = result;
-            
-            // Check if there's a notification message in the response
-            if (tempDiv.querySelector('#notification-container')) {
-              const notificationScript = tempDiv.querySelector('script[data-notification]');
-              if (notificationScript) {
-                eval(notificationScript.textContent);
-              }
+            if (selectedTemplate) {
+              formData.append('template', selectedTemplate.value.replace(/[^0-9]/g, ''));
             }
             
-            // Reset only the current file input
-            input.value = '';
+            // Determine which upload endpoint to use
+            const uploadEndpoint = input.id === 'student-photos' 
+              ? '../../Connection/Photos/UploadStudentPhotos.php'
+              : '../../Connection/Photos/UPloadTopManagementPhotos.php';
+              
+            try {
+              const response = await fetch(uploadEndpoint, {
+                method: 'POST',
+                body: formData
+              });
+              
+              const result = await response.json();
+              
+              if (result.success) {
+                const uploadType = input.id === 'student-photos' ? 'Student' : 'Top Management';
+                const template = selectedTemplate ? selectedTemplate.value : 'Batch Template 1';
+                showNotification(`${uploadType} photos uploaded successfully to ${template}!`, "success");
+                
+                // Show upload details
+                if (result.uploaded > 0) {
+                  showNotification(`Successfully uploaded ${result.uploaded} of ${result.total} images.`, "success");
+                }
+                
+                // Show any failed uploads
+                if (result.failed > 0) {
+                  showNotification(`Failed to upload ${result.failed} images. Check file names and try again.`, "error");
+                }
+              } else {
+                showNotification(result.message || "Upload failed. Please try again.", "error");
+              }
+              
+            } catch (error) {
+              console.error('Upload error:', error);
+              showNotification("Upload failed. Please try again.", "error");
+            }
             
-          } catch (error) {
-            console.error('Upload error:', error);
-            showNotification("Upload failed. Please try again.", "error");
+          } else {
+            // Handle CSV uploads
+            formData.append(input.name, input.files[0]);
+            if (selectedTemplate) {
+              formData.append('selected_template', selectedTemplate.value);
+            }
+          
+            try {
+              const response = await fetch(form.action, {
+                method: 'POST',
+                body: formData
+              });
+              
+              const result = await response.text();
+              
+              // Create a temporary div to parse the response
+              const tempDiv = document.createElement('div');
+              tempDiv.innerHTML = result;
+              
+              // Check if there's a notification message in the response
+              if (tempDiv.querySelector('#notification-container')) {
+                const notificationScript = tempDiv.querySelector('script[data-notification]');
+                if (notificationScript) {
+                  eval(notificationScript.textContent);
+                }
+              }
+              
+              // Reset only the current file input
+              input.value = '';
+              
+            } catch (error) {
+              console.error('Upload error:', error);
+              showNotification("Upload failed. Please try again.", "error");
+            }
           }
         }
       });

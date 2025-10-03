@@ -189,7 +189,7 @@ try {
         $safeFolder = 'Student Photos';
         $templateFolder = sprintf('Batch Template %d', $template);
         $filename = sprintf('%s.%s', $safeFileName, $safeExt);
-        $path = $safeFolder . '/' . $templateFolder . '/' . $department . '/' . $filename;
+        $path = $safeFolder . '/' . $templateFolder . '/' . $filename;
         $storageUrl = "https://storage.bunnycdn.com/{$bunnyStorageZone}/" . str_replace(' ', '%20', $path);
 
         // Check for client disconnection/cancellation before uploading to BunnyCDN

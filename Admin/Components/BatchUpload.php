@@ -318,10 +318,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
 
                     <div class="section">
-                        <div class="section-header">Student and Top Management Images</div>
+                        <div class="section-header">Student and Top Management Photos</div>
                         <div class="file-card">
-                            <label class="custom-upload" for="image-upload">Upload Image Folder</label>
-                            <input type="file" id="image-upload" class="upload-input" accept="image/*" multiple>
+                            <label class="custom-upload" for="student-photos">Upload Student Photos</label>
+                            <input type="file" name="student_photos[]" id="student-photos" class="upload-input" accept="image/*" multiple>
+                        </div>
+                        <div class="file-card" style="margin-top: 20px;">
+                            <label class="custom-upload" for="management-photos">Upload Top Management Photos</label>
+                            <input type="file" name="management_photos[]" id="management-photos" class="upload-input" accept="image/*" multiple>
                         </div>
                     </div>
                 </div>
