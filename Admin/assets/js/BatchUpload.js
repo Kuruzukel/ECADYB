@@ -144,8 +144,16 @@ window.addEventListener("DOMContentLoaded", () => {
 
   document.querySelectorAll(".upload-input").forEach((input) => {
     input.addEventListener("change", () => {
-      if (input.files.length > 0) {
+      // Special handling for folder upload
+      if (input.id === 'folder-upload') {
+        // For folder uploads, we let the form submit normally
+        // The server-side processing will handle the folder structure validation
         input.form.submit();
+      } else {
+        // Regular file upload handling for CSV files
+        if (input.files.length > 0) {
+          input.form.submit();
+        }
       }
     });
   });
