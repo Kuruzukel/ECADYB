@@ -452,7 +452,6 @@ try {
 
     if (connection_aborted()) {
         $uploadCancelled = true;
-        // Delete both main image and thumbnail from BunnyCDN and remove the MongoDB entry since we're cancelling after insert
         error_log("UploadCover.php deleting file from BunnyCDN and MongoDB entry due to cancellation after insert: $storageUrl");
         $deleteCh = curl_init($storageUrl);
         curl_setopt_array($deleteCh, [
@@ -477,12 +476,10 @@ try {
         curl_exec($deleteThumbCh);
         curl_close($deleteThumbCh);
 
-        // Delete MongoDB entry
         $collection->deleteOne(['_id' => $document['_id']]);
         respond(false, 'Upload cancelled');
     }
 
-    // Prepare response data
     $responseData = [
         'filename' => $filename,
         'slot' => $slot,
@@ -490,7 +487,6 @@ try {
         'template' => $template
     ];
 
-    // Add appropriate URL fields to response
     if ($slot === 8) {
         $responseData['url'] = $publicUrl;
         $responseData['thumb_url'] = $thumbPublicUrl;
