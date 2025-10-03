@@ -118,7 +118,6 @@ try {
         'BSBA' => 7
     ];
 
-    // Override slot if we can detect it from filename
     $detectedSlot = null;
     foreach ($slotMapping as $prefix => $slotNum) {
         if (strpos($upperName, $prefix) === 0) {
