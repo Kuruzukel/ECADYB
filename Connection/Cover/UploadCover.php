@@ -176,7 +176,6 @@ try {
         respond(false, 'Failed to read uploaded file.');
     }
 
-    // Check for client disconnection/cancellation after reading file but before uploading to BunnyCDN
     if (connection_aborted()) {
         $uploadCancelled = true;
         respond(false, 'Upload cancelled');
