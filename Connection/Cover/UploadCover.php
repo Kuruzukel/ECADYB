@@ -206,7 +206,7 @@ try {
         CURLOPT_HEADER         => false,
         CURLOPT_TIMEOUT        => 15,
         CURLOPT_CONNECTTIMEOUT => 5,
-        CURLOPT_SSL_VERIFYPEER => true,   // Keep security
+        CURLOPT_SSL_VERIFYPEER => true,
         CURLOPT_TCP_NODELAY    => true,   // TCP optimization
         CURLOPT_FRESH_CONNECT  => false,  // Allow connection reuse for performance
         CURLOPT_FORBID_REUSE   => false   // Allow connection reuse for performance
