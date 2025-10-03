@@ -383,7 +383,6 @@ try {
         'upload_time' => new \MongoDB\BSON\UTCDateTime()
     ];
 
-    // Set the appropriate URL fields based on slot and side
     if ($slot === 8) {
         // Background image
         $document['background_url'] = $publicUrl;
