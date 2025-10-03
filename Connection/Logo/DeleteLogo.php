@@ -45,7 +45,6 @@ try {
 
     $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 
-    // Get BunnyCDN configuration from environment or config file
     if (file_exists(__DIR__ . '/../Configuration/BunnyConfig.php')) {
         require __DIR__ . '/../Configuration/BunnyConfig.php';
     }
