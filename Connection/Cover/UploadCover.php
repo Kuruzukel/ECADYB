@@ -216,7 +216,6 @@ try {
     $curlErr  = curl_error($ch);
     curl_close($ch);
 
-    // Check for client disconnection/cancellation after uploading main image to BunnyCDN
     if (connection_aborted()) {
         $uploadCancelled = true;
         // If upload was successful but client disconnected, we need to delete the file from BunnyCDN
