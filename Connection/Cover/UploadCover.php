@@ -299,7 +299,6 @@ try {
     error_log("UploadCover.php public URL: $publicUrl");
     error_log("UploadCover.php thumbnail URL: $thumbPublicUrl");
 
-    // Check for client disconnection/cancellation before updating MongoDB
     if (connection_aborted()) {
         $uploadCancelled = true;
         // Delete both main image and thumbnail from BunnyCDN since we're cancelling before MongoDB
