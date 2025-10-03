@@ -70,7 +70,7 @@ try {
                 'background_thumb_url' => 1,
                 'template' => 1
             ],
-            'limit' => 8  // We only have 8 slots maximum
+            'limit' => 8
         ]
     );
 
