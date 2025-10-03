@@ -72,7 +72,6 @@ try {
             respond(false, 'Logo URL is missing');
         }
 
-        // Delete from BunnyCDN first
         $pathStart = strpos($url, '/Logo%20Container/');
         if ($pathStart === false) {
             respond(false, 'Invalid logo URL format');
