@@ -43,7 +43,6 @@ try {
         respond(false, 'Invalid slot. Must be between 1 and 9.');
     }
 
-    // Get MongoDB URL from environment or use default Railway URL
     $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 
     // Get BunnyCDN configuration from environment or config file
@@ -62,8 +61,8 @@ try {
             'connectTimeoutMS' => 5000,
             'socketTimeoutMS' => 5000
         ]);
-    $db = $client->admin;
-    $collection = $db->logo;
+        $db = $client->admin;
+        $collection = $db->logo;
 
         // Find the logo document first
         $doc = $collection->findOne(['type' => 'logo_container', 'slot' => $slot]);
@@ -105,7 +104,7 @@ try {
 
         // Only delete from MongoDB if BunnyCDN deletion was successful
         $result = $collection->deleteOne(['type' => 'logo_container', 'slot' => $slot]);
-        
+
         if ($result->getDeletedCount() === 0) {
             respond(false, 'Failed to delete logo from database');
         }
