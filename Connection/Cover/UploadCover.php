@@ -183,7 +183,6 @@ try {
 
     error_log("UploadCover.php storage URL: $storageUrl");
 
-    // CRITICAL: ONLY ONE CANCELLATION CHECK RIGHT BEFORE UPLOADING TO BUNNYCDN
     // This prevents false positives while still catching real cancellations
     if (connection_aborted()) {
         $uploadCancelled = true;
