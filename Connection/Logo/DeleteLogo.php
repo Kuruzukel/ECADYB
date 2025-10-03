@@ -67,7 +67,6 @@ try {
             respond(false, 'Logo not found');
         }
 
-        // Get the URL and verify it exists
         $url = (string)($doc['url'] ?? '');
         if (!$url) {
             respond(false, 'Logo URL is missing');
