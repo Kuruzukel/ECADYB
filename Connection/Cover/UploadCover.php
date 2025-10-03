@@ -36,7 +36,6 @@ function respond($success, $message = '', $data = [])
     exit;
 }
 
-// Don't be too aggressive here as it might trigger false positives
 if (connection_aborted()) {
     // Only cancel if we can confirm it's a real disconnection
     $uploadCancelled = true;
