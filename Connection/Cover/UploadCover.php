@@ -188,7 +188,6 @@ try {
         respond(false, 'Upload cancelled');
     }
 
-    // Create thumbnail from the original image
     $thumbContents = '';
     $thumbFilename = '';
 
