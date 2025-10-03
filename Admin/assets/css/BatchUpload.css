@@ -195,3 +195,62 @@ h1 .chevron i {
     display: none;
   }
 }
+
+/* Notification styles copied from BatchTemplates.css */
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  min-width: 280px;
+  max-width: 350px;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  transform: translateY(-40px);
+  pointer-events: none;
+  z-index: 9999;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.notification.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.notification.success {
+  background: linear-gradient(135deg, #34d399, #059669);
+}
+
+.notification.error {
+  background: linear-gradient(135deg, #f87171, #b91c1c);
+}
+
+.notification i {
+  font-size: 1.2rem;
+}
+
+.upload-results {
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.upload-results p {
+  margin: 5px 0;
+  color: #e0e0e0;
+}
+
+.error-message {
+  color: #f87171;
+  margin: 5px 0;
+  font-size: 0.9em;
+}

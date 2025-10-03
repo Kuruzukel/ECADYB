@@ -199,8 +199,105 @@ function getSelectedTemplateDatabase($client)
     return $client->$dbName;
 }
 
+// Function to get the template folder name
+function getTemplateFolderName($selectedTemplate) {
+    // Convert "Batch Template 1" to "Batch Template 1"
+    // Convert "BatchTemplate1" to "Batch Template 1"
+    if (strpos($selectedTemplate, 'Batch Template') === 0) {
+        return $selectedTemplate;
+    } else if (strpos($selectedTemplate, 'BatchTemplate') === 0) {
+        $number = str_replace('BatchTemplate', '', $selectedTemplate);
+        return "Batch Template " . $number;
+    }
+    return "Batch Template 1";
+}
+
+// Function to upload entire folder to BunnyCDN
+function uploadFolderToBunnyCDN($files, $selectedTemplate) {
+    $results = [
+        'success' => 0,
+        'failed' => 0,
+        'errors' => []
+    ];
+    
+    // Load BunnyCDN configuration
+    if (file_exists(__DIR__ . '/../Configuration/BunnyConfig.php')) {
+        require __DIR__ . '/../Configuration/BunnyConfig.php';
+    }
+    
+    $bunnyStorageZone = getenv('BUNNY_STORAGE_ZONE')
+        ?: (defined('BUNNY_STORAGE_ZONE') ? BUNNY_STORAGE_ZONE : ($GLOBALS['BUNNY_STORAGE_ZONE'] ?? 'ecadyb'));
+    $bunnyAccessKey = getenv('BUNNY_ACCESS_KEY')
+        ?: (defined('BUNNY_ACCESS_KEY') ? BUNNY_ACCESS_KEY : ($GLOBALS['BUNNY_ACCESS_KEY'] ?? null));
+    $bunnyCdnHost = getenv('BUNNY_CDN_HOST')
+        ?: (defined('BUNNY_CDN_HOST') ? BUNNY_CDN_HOST : ($GLOBALS['BUNNY_CDN_HOST'] ?? 'https://ECADYB.b-cdn.net'));
+    
+    if (!$bunnyStorageZone || !$bunnyAccessKey || !$bunnyCdnHost) {
+        $results['errors'][] = 'BunnyCDN configuration missing.';
+        $results['failed'] = count($files['name']);
+        return $results;
+    }
+    
+    // Get template folder name
+    $templateFolder = getTemplateFolderName($selectedTemplate);
+    
+    // Process each file
+    for ($i = 0; $i < count($files['name']); $i++) {
+        $fileName = $files['name'][$i];
+        $filePath = $files['tmp_name'][$i];
+        
+        // Skip if file wasn't uploaded successfully
+        if (!is_uploaded_file($filePath)) {
+            $results['errors'][] = "File not uploaded properly: $fileName";
+            $results['failed']++;
+            continue;
+        }
+        
+        // Construct the full path in BunnyCDN
+        // Format: Yearbook Covers/Batch Template X/[original folder structure]/filename
+        $safeFolder = 'Yearbook Covers';
+        $fullPath = $safeFolder . '/' . $templateFolder . '/' . $fileName;
+        $storageUrl = "https://storage.bunnycdn.com/{$bunnyStorageZone}/" . str_replace(' ', '%20', $fullPath);
+        
+        // Read file contents
+        $fileContents = file_get_contents($filePath);
+        if ($fileContents === false) {
+            $results['errors'][] = "Failed to read file: $fileName";
+            $results['failed']++;
+            continue;
+        }
+        
+        // Upload to BunnyCDN
+        $ch = curl_init($storageUrl);
+        curl_setopt_array($ch, [
+            CURLOPT_CUSTOMREQUEST => 'PUT',
+            CURLOPT_HTTPHEADER => ['AccessKey: ' . $bunnyAccessKey, 'Content-Type: application/octet-stream'],
+            CURLOPT_POSTFIELDS => $fileContents,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HEADER => false,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_CONNECTTIMEOUT => 10,
+            CURLOPT_SSL_VERIFYPEER => true
+        ]);
+        
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curlErr = curl_error($ch);
+        curl_close($ch);
+        
+        if ($response === false || $httpCode < 200 || $httpCode >= 300) {
+            $results['errors'][] = "Failed to upload $fileName to BunnyCDN: " . ($curlErr ?: 'HTTP ' . $httpCode);
+            $results['failed']++;
+        } else {
+            $results['success']++;
+        }
+    }
+    
+    return $results;
+}
+
 // Function to validate folder structure and upload student images and top management images
-function processFolderUpload($files, $templateDB, $validDepartments, $validTopManagementFolder) {
+function processFolderUpload($files, $templateDB, $validDepartments, $validTopManagementFolder, $selectedTemplate) {
     $results = [
         'success' => 0,
         'failed' => 0,
@@ -214,7 +311,13 @@ function processFolderUpload($files, $templateDB, $validDepartments, $validTopMa
         return $results;
     }
     
-    // Group files by type (student or top management)
+    // First, upload the entire folder structure to BunnyCDN
+    $cdnResults = uploadFolderToBunnyCDN($files, $selectedTemplate);
+    $results['success'] += $cdnResults['success'];
+    $results['failed'] += $cdnResults['failed'];
+    $results['errors'] = array_merge($results['errors'], $cdnResults['errors']);
+    
+    // Then process files for MongoDB storage
     $studentFiles = [];
     $topManagementFiles = [];
     
@@ -224,8 +327,6 @@ function processFolderUpload($files, $templateDB, $validDepartments, $validTopMa
         
         // Skip if file wasn't uploaded successfully
         if (!is_uploaded_file($filePath)) {
-            $results['errors'][] = "File not uploaded properly: $fileName";
-            $results['failed']++;
             continue;
         }
         
@@ -249,16 +350,12 @@ function processFolderUpload($files, $templateDB, $validDepartments, $validTopMa
             
             // Validate department
             if (!in_array($department, $validDepartments)) {
-                $results['errors'][] = "Invalid department folder: $department. Valid departments: " . implode(', ', $validDepartments);
-                $results['failed']++;
                 continue;
             }
             
             // Validate that filename is a numeric student ID
             $studentId = pathinfo(basename($fileName), PATHINFO_FILENAME);
             if (!is_numeric($studentId)) {
-                $results['errors'][] = "Invalid filename for file: $fileName. Filename must be a numeric student ID.";
-                $results['failed']++;
                 continue;
             }
             
@@ -268,9 +365,6 @@ function processFolderUpload($files, $templateDB, $validDepartments, $validTopMa
                 'student_id' => $studentId,
                 'department' => $department
             ];
-        } else {
-            $results['errors'][] = "Invalid folder structure for file: $fileName. Expected: [DEPARTMENT]/[student_id].ext or TOPMANAGEMENT/[name].ext";
-            $results['failed']++;
         }
     }
     
@@ -302,7 +396,6 @@ function processFolderUpload($files, $templateDB, $validDepartments, $validTopMa
                 
                 // Insert document
                 $collection->insertOne($document);
-                $results['success']++;
             }
         } catch (Exception $e) {
             $results['errors'][] = "Error processing department $department: " . $e->getMessage();
@@ -331,7 +424,6 @@ function processFolderUpload($files, $templateDB, $validDepartments, $validTopMa
                 
                 // Insert document
                 $collection->insertOne($document);
-                $results['success']++;
             }
         } catch (Exception $e) {
             $results['errors'][] = "Error processing top management files: " . $e->getMessage();
@@ -394,8 +486,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Handle folder upload
     if (!empty($_FILES['folder_upload'])) {
         try {
+            $selectedTemplate = !empty($_POST['selected_template']) ? $_POST['selected_template'] : 'Batch Template 1';
             $templateDB = getSelectedTemplateDatabase($client);
-            $folderUploadResult = processFolderUpload($_FILES['folder_upload'], $templateDB, $validDepartments, $validTopManagementFolder);
+            $folderUploadResult = processFolderUpload($_FILES['folder_upload'], $templateDB, $validDepartments, $validTopManagementFolder, $selectedTemplate);
             $uploadStatus['folder_upload'] = $folderUploadResult;
         } catch (Exception $e) {
             error_log("Error processing folder upload: " . $e->getMessage());
@@ -455,7 +548,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="section">
                         <div class="section-header">Student Images and Top Management Images</div>
                         <div class="file-card <?= isset($uploadStatus['folder_upload']) && $uploadStatus['folder_upload'] === false ? 'upload-failed' : (isset($uploadStatus['folder_upload']) && !empty($uploadStatus['folder_upload']['success']) ? 'upload-success' : '') ?>">
-                            <label class="custom-upload" for="folder-upload">Upload Folder</label>
+                            <label class="custom-upload" for="folder-upload">Upload Department Folder</label>
                             <input type="file" name="folder_upload[]" id="folder-upload" class="upload-input" accept="image/*" multiple webkitdirectory directory>
                         </div>
                         <?php if (isset($uploadStatus['folder_upload']) && is_array($uploadStatus['folder_upload'])): ?>
