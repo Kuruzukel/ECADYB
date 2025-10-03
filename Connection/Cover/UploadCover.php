@@ -108,7 +108,6 @@ try {
 
     $upperName = strtoupper($originalName);
 
-    // Slot mapping based on filename prefix
     $slotMapping = [
         'BSME' => 1,
         'BSCJ' => 2,
