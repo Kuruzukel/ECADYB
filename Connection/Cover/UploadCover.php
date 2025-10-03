@@ -374,7 +374,6 @@ try {
         respond(false, 'Upload cancelled');
     }
 
-    // Prepare document for MongoDB with proper field names
     $document = [
         'filename' => $filename,
         'original_name' => $originalName,
