@@ -54,7 +54,6 @@ try {
     $bunnyCdnHost = getenv('BUNNY_CDN_HOST') ?: (defined('BUNNY_CDN_HOST') ? BUNNY_CDN_HOST : ($GLOBALS['BUNNY_CDN_HOST'] ?? 'https://ECADYB.b-cdn.net'));
 
     try {
-        // Connect to MongoDB with proper timeout settings
         $client = new Client($mongoUrl, [
             'serverSelectionTimeoutMS' => 5000,
             'connectTimeoutMS' => 5000,
