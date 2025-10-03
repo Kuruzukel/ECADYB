@@ -36,7 +36,6 @@ function respond($success, $message = '', $data = [])
     exit;
 }
 
-// Only check for client disconnection/cancellation at the very beginning
 // Don't be too aggressive here as it might trigger false positives
 if (connection_aborted()) {
     // Only cancel if we can confirm it's a real disconnection
