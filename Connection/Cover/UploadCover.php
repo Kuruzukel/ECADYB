@@ -78,7 +78,6 @@ try {
         respond(false, 'Invalid parameters: slot and side (front|back) are required, unless slot=8 (BackgroundPage).');
     }
 
-    // Check for client disconnection/cancellation - but not too aggressively
     if (connection_aborted()) {
         $uploadCancelled = true;
         respond(false, 'Upload cancelled');
