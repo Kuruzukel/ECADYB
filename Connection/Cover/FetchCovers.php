@@ -57,7 +57,6 @@ try {
 
     error_log("FetchCovers.php using database: $dbName, collection: YearbookCovers");
 
-    // Ultra-fast fetch with minimal projection including thumbnail fields
     $cursor = $collection->find(
         [], // Fetch all documents, not just those matching template
         [
