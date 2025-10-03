@@ -62,7 +62,6 @@ try {
         $db = $client->admin;
         $collection = $db->logo;
 
-        // Find the logo document first
         $doc = $collection->findOne(['type' => 'logo_container', 'slot' => $slot]);
         if (!$doc) {
             respond(false, 'Logo not found');
