@@ -204,7 +204,7 @@ try {
         CURLOPT_POSTFIELDS     => $fileContents,
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_HEADER         => false,
-        CURLOPT_TIMEOUT        => 15,     // Reasonable timeout
+        CURLOPT_TIMEOUT        => 15,
         CURLOPT_CONNECTTIMEOUT => 5,      // Reasonable connection timeout
         CURLOPT_SSL_VERIFYPEER => true,   // Keep security
         CURLOPT_TCP_NODELAY    => true,   // TCP optimization
