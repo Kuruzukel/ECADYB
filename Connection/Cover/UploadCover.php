@@ -195,7 +195,6 @@ try {
     $thumbPath = $safeFolder . '/' . $templateFolder . '/' . $thumbFilename;
     $thumbStorageUrl = "https://storage.bunnycdn.com/{$bunnyStorageZone}/" . str_replace(' ', '%20', $thumbPath);
 
-    // Create a simple thumbnail by resizing the image
     $thumbContents = $fileContents;
 
     // Ultra-fast BunnyCDN upload with minimal timeout for main image
