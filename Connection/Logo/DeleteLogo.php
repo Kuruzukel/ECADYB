@@ -96,7 +96,6 @@ try {
             respond(false, 'Failed to delete logo from storage');
         }
 
-        // Only delete from MongoDB if BunnyCDN deletion was successful
         $result = $collection->deleteOne(['type' => 'logo_container', 'slot' => $slot]);
 
         if ($result->getDeletedCount() === 0) {
