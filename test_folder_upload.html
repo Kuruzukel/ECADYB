@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Folder Upload</title>
+</head>
+<body>
+    <h1>Test Folder Upload</h1>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <label for="folderInput">Select Folder:</label>
+        <input type="file" id="folderInput" webkitdirectory directory multiple>
+        <br><br>
+        <button type="button" onclick="uploadFolder()">Upload Folder</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        function uploadFolder() {
+            const folderInput = document.getElementById('folderInput');
+            const files = folderInput.files;
+            
+            if (files.length === 0) {
+                alert('Please select a folder');
+                return;
+            }
+            
+            // Display file information
+            let fileInfo = '<h2>Files in Folder:</h2><ul>';
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                fileInfo += `<li>${file.name} (${file.size} bytes)</li>`;
+            }
+            fileInfo += '</ul>';
+            document.getElementById('result').innerHTML = fileInfo;
+            
+            // Here you would implement the actual upload logic
+            // Similar to what we added in BatchUpload.js
+            console.log('Files selected:', files);
+        }
+    </script>
+</body>
+</html>
