@@ -214,7 +214,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!empty($_FILES['top_management_message']['tmp_name'])) {
         $tmpName = $_FILES['top_management_message']['tmp_name'];
 
-        $validTopManagementHeaders = ['name', 'message', 'batch_name', 'academic_year'];
+         $validTopManagementHeaders = ['name', 'message', 'batchname', 'academicyear'];
         $validTopManagementHeaders = array_map('cleanHeader', $validTopManagementHeaders);
         $actualHeaders = [];
 
@@ -228,15 +228,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         sort($validTopManagementHeaders);
         sort($actualHeaders);
 
-        if ($actualHeaders === $validTopManagementHeaders) {
+         if ($actualHeaders === $validTopManagementHeaders) {
             try {
-                $topManagementDB = $client->Top_Management;
-                $uploadStatus['top_management_message'] = importCSVByMessage($tmpName, $topManagementDB->message);
+                $templateDB = getSelectedTemplateDatabase($client);
+                $uploadStatus['top_management_message'] = importCSVByMessage($tmpName, $templateDB->top_management_message);
             } catch (Exception $e) {
                 error_log("Error importing top management message: " . $e->getMessage());
                 $uploadStatus['top_management_message'] = false;
             }
         } else {
+            error_log("Header mismatch. Expected: " . implode(',', $validTopManagementHeaders) . " Got: " . implode(',', $actualHeaders));
             $uploadStatus['top_management_message'] = false;
         }
     }
@@ -264,7 +265,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $message = 'Upload successful!';
             $type = 'success';
         } else {
-            $message = "One or more uploads failed. Please ensure you're using valid CSV files.";
+            $message = "Upload failed. CSV file must have these columns: name, message, batchname, academicyear";
             $type = 'error';
         }
         
