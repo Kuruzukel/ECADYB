@@ -396,7 +396,6 @@ try {
         }
     }
 
-    // Check for client disconnection/cancellation just before MongoDB insert
     if (connection_aborted()) {
         $uploadCancelled = true;
         // Delete both main image and thumbnail from BunnyCDN since we're cancelling before MongoDB insert
