@@ -441,7 +441,6 @@ try {
 
         error_log("UploadCover.php upsert result - matched: " . $result->getMatchedCount() . ", modified: " . $result->getModifiedCount() . ", upserted: " . $result->getUpsertedCount());
 
-        // If this was an insert (upserted), get the new ID
         if ($result->getUpsertedCount() > 0) {
             $document['_id'] = (string) $result->getUpsertedId();
         }
