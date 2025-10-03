@@ -130,7 +130,6 @@ try {
         respond(false, "Upload cancelled: Filename prefix doesn't match the selected slot. Expected slot $detectedSlot for this filename.");
     }
 
-    // If we couldn't detect a slot from filename for slots 1-7, cancel upload
     if ($slot >= 1 && $slot <= 7 && $detectedSlot === null) {
         respond(false, "Upload cancelled: Filename must start with a valid prefix (BSME, BSCJ, BSTM, BSE, BSN, BSIS, BSBA).");
     }
