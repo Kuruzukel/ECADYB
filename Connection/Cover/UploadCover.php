@@ -257,7 +257,6 @@ try {
     $thumbCurlErr  = curl_error($thumbCh);
     curl_close($thumbCh);
 
-    // Check for client disconnection/cancellation after uploading thumbnail to BunnyCDN
     if (connection_aborted()) {
         $uploadCancelled = true;
         // Delete both main image and thumbnail if client disconnected
