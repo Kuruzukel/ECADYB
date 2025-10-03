@@ -203,7 +203,7 @@ try {
         CURLOPT_HTTPHEADER     => ['AccessKey: ' . $bunnyAccessKey, 'Content-Type: application/octet-stream'],
         CURLOPT_POSTFIELDS     => $fileContents,
         CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_HEADER         => false,  // Reduced data transfer
+        CURLOPT_HEADER         => false,
         CURLOPT_TIMEOUT        => 15,     // Reasonable timeout
         CURLOPT_CONNECTTIMEOUT => 5,      // Reasonable connection timeout
         CURLOPT_SSL_VERIFYPEER => true,   // Keep security
