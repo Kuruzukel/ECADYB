@@ -424,7 +424,6 @@ try {
         respond(false, 'Upload cancelled');
     }
 
-    // Upsert document into MongoDB based on template and slot
     try {
         error_log("UploadCover.php upserting document: " . json_encode($document));
 
