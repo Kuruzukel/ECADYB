@@ -238,7 +238,6 @@ try {
         respond(false, 'Failed to upload to Bunny: ' . ($curlErr ?: 'HTTP ' . $httpCode));
     }
 
-    // Upload thumbnail to BunnyCDN
     $thumbCh = curl_init($thumbStorageUrl);
     curl_setopt_array($thumbCh, [
         CURLOPT_CUSTOMREQUEST  => 'PUT',
