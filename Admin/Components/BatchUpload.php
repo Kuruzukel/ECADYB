@@ -1,11 +1,18 @@
 <?php
+// Set maximum limits at runtime (300MB)
+ini_set('upload_max_filesize', '300M');
+ini_set('post_max_size', '300M');
+ini_set('max_execution_time', '300');
+ini_set('memory_limit', '512M');
+
 require __DIR__ . '/../../vendor/autoload.php';
 
 use MongoDB\Client;
 
 $uploadStatus = [
     'top_management_message' => null,
-    'student_info' => null
+    'student_info' => null,
+    'folder_upload' => null
 ];
 
 $programMap = [
@@ -20,6 +27,9 @@ $programMap = [
     "bsma" => "BS Management Accounting",
     "bse" => "BS Entrepreneurship"
 ];
+
+// Valid department codes
+$validDepartments = ['beced', 'bscje', 'bse', 'bsis', 'bsma', 'bsme', 'bsmt', 'bsn', 'bstm', 'btvted'];
 
 function isValidCSV($fileTmpName)
 {
@@ -188,6 +198,104 @@ function getSelectedTemplateDatabase($client)
     return $client->$dbName;
 }
 
+// Function to validate folder structure and upload student images
+function processFolderUpload($files, $templateDB, $validDepartments) {
+    $results = [
+        'success' => 0,
+        'failed' => 0,
+        'errors' => []
+    ];
+    
+    // Check if files were actually uploaded
+    if (empty($files['name'][0])) {
+        $results['errors'][] = "No files were uploaded.";
+        $results['failed'] = 1;
+        return $results;
+    }
+    
+    // Group files by department based on their path
+    $filesByDepartment = [];
+    
+    for ($i = 0; $i < count($files['name']); $i++) {
+        $fileName = $files['name'][$i];
+        $filePath = $files['tmp_name'][$i];
+        
+        // Skip if file wasn't uploaded successfully
+        if (!is_uploaded_file($filePath)) {
+            $results['errors'][] = "File not uploaded properly: $fileName";
+            $results['failed']++;
+            continue;
+        }
+        
+        // Extract department from file path
+        // Expected path format: Departments/[DEPARTMENT]/[student_id].ext
+        $pathParts = explode(DIRECTORY_SEPARATOR, dirname($fileName));
+        
+        // Check if we have the correct folder structure
+        if (count($pathParts) < 2 || $pathParts[0] !== 'Departments') {
+            $results['errors'][] = "Invalid folder structure for file: $fileName. Expected: Departments/[DEPARTMENT]/[student_id].ext";
+            $results['failed']++;
+            continue;
+        }
+        
+        $department = strtolower($pathParts[1]);
+        
+        // Validate department
+        if (!in_array($department, $validDepartments)) {
+            $results['errors'][] = "Invalid department folder: $department. Valid departments: " . implode(', ', $validDepartments);
+            $results['failed']++;
+            continue;
+        }
+        
+        // Validate that filename is a numeric student ID
+        $studentId = pathinfo(basename($fileName), PATHINFO_FILENAME);
+        if (!is_numeric($studentId)) {
+            $results['errors'][] = "Invalid filename for file: $fileName. Filename must be a numeric student ID.";
+            $results['failed']++;
+            continue;
+        }
+        
+        // Add file to department group
+        if (!isset($filesByDepartment[$department])) {
+            $filesByDepartment[$department] = [];
+        }
+        
+        $filesByDepartment[$department][] = [
+            'name' => $fileName,
+            'tmp_name' => $filePath,
+            'student_id' => $studentId
+        ];
+    }
+    
+    // Process files for each department
+    foreach ($filesByDepartment as $department => $deptFiles) {
+        try {
+            // Get or create collection for this department
+            $collection = $templateDB->$department;
+            
+            // Process each file in the department
+            foreach ($deptFiles as $file) {
+                // Prepare document for MongoDB
+                $document = [
+                    'student_id' => $file['student_id'],
+                    'filename' => basename($file['name']),
+                    'upload_time' => new \MongoDB\BSON\UTCDateTime(),
+                    'file_path' => $file['name']  // Store relative path
+                ];
+                
+                // Insert document
+                $collection->insertOne($document);
+                $results['success']++;
+            }
+        } catch (Exception $e) {
+            $results['errors'][] = "Error processing department $department: " . $e->getMessage();
+            $results['failed'] += count($deptFiles);
+        }
+    }
+    
+    return $results;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
     $client = new Client($mongoUrl);
@@ -236,12 +344,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $uploadStatus['student_info'] = false;
         }
     }
+    
+    // Handle folder upload
+    if (!empty($_FILES['folder_upload'])) {
+        try {
+            $templateDB = getSelectedTemplateDatabase($client);
+            $folderUploadResult = processFolderUpload($_FILES['folder_upload'], $templateDB, $validDepartments);
+            $uploadStatus['folder_upload'] = $folderUploadResult;
+        } catch (Exception $e) {
+            error_log("Error processing folder upload: " . $e->getMessage());
+            $uploadStatus['folder_upload'] = false;
+        }
+    }
 
     $resultMsg = null;
-    if ($uploadStatus['top_management_message'] || $uploadStatus['student_info']) {
+    if ($uploadStatus['top_management_message'] || $uploadStatus['student_info'] || (!empty($uploadStatus['folder_upload']) && $uploadStatus['folder_upload']['success'] > 0)) {
         $resultMsg = "Upload successful!";
-    } elseif ($uploadStatus['top_management_message'] === false || $uploadStatus['student_info'] === false) {
-        $resultMsg = "One or more uploads failed. Please ensure you're using valid CSV files.";
+    } elseif ($uploadStatus['top_management_message'] === false || $uploadStatus['student_info'] === false || $uploadStatus['folder_upload'] === false) {
+        $resultMsg = "One or more uploads failed. Please ensure you're using valid files.";
     }
 }
 
@@ -287,11 +407,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
 
                     <div class="section">
-                        <div class="section-header">Student and Top Management Images</div>
-                        <div class="file-card">
-                            <label class="custom-upload" for="image-upload">Upload Image Folder</label>
-                            <input type="file" id="image-upload" class="upload-input" accept="image/*" multiple>
+                        <div class="section-header">Student Images by Department</div>
+                        <div class="file-card <?= isset($uploadStatus['folder_upload']) && $uploadStatus['folder_upload'] === false ? 'upload-failed' : (isset($uploadStatus['folder_upload']) && !empty($uploadStatus['folder_upload']['success']) ? 'upload-success' : '') ?>">
+                            <label class="custom-upload" for="folder-upload">Upload Department Folder</label>
+                            <input type="file" name="folder_upload[]" id="folder-upload" class="upload-input" accept="image/*" multiple webkitdirectory directory>
                         </div>
+                        <?php if (isset($uploadStatus['folder_upload']) && is_array($uploadStatus['folder_upload'])): ?>
+                            <div class="upload-results">
+                                <p>Successfully uploaded: <?= $uploadStatus['folder_upload']['success'] ?> files</p>
+                                <?php if ($uploadStatus['folder_upload']['failed'] > 0): ?>
+                                    <p>Failed: <?= $uploadStatus['folder_upload']['failed'] ?> files</p>
+                                    <?php foreach ($uploadStatus['folder_upload']['errors'] as $error): ?>
+                                        <p class="error-message"><?= $error ?></p>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 </div>
 
