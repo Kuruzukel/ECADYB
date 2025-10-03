@@ -166,7 +166,6 @@ try {
 
     $storageUrl   = "https://storage.bunnycdn.com/{$bunnyStorageZone}/" . str_replace(' ', '%20', $path);
 
-    // Check for client disconnection/cancellation before reading file
     if (connection_aborted()) {
         $uploadCancelled = true;
         respond(false, 'Upload cancelled');
