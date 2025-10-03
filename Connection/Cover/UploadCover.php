@@ -126,7 +126,6 @@ try {
         }
     }
 
-    // If we detected a slot from filename but it doesn't match the provided slot, cancel upload
     if ($detectedSlot !== null && $detectedSlot != $slot) {
         respond(false, "Upload cancelled: Filename prefix doesn't match the selected slot. Expected slot $detectedSlot for this filename.");
     }
