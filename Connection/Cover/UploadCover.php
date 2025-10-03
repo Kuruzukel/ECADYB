@@ -140,7 +140,6 @@ try {
         $side = 'front';
     }
 
-    // Check for client disconnection/cancellation
     if (connection_aborted()) {
         $uploadCancelled = true;
         respond(false, 'Upload cancelled');
