@@ -30,6 +30,7 @@ $programMap = [
 
 // Valid department codes
 $validDepartments = ['beced', 'bscje', 'bse', 'bsis', 'bsma', 'bsme', 'bsmt', 'bsn', 'bstm', 'btvted'];
+$validTopManagementFolder = 'TOPMANAGEMENT';
 
 function isValidCSV($fileTmpName)
 {
@@ -198,8 +199,8 @@ function getSelectedTemplateDatabase($client)
     return $client->$dbName;
 }
 
-// Function to validate folder structure and upload student images
-function processFolderUpload($files, $templateDB, $validDepartments) {
+// Function to validate folder structure and upload student images and top management images
+function processFolderUpload($files, $templateDB, $validDepartments, $validTopManagementFolder) {
     $results = [
         'success' => 0,
         'failed' => 0,
@@ -213,8 +214,9 @@ function processFolderUpload($files, $templateDB, $validDepartments) {
         return $results;
     }
     
-    // Group files by department based on their path
-    $filesByDepartment = [];
+    // Group files by type (student or top management)
+    $studentFiles = [];
+    $topManagementFiles = [];
     
     for ($i = 0; $i < count($files['name']); $i++) {
         $fileName = $files['name'][$i];
@@ -227,48 +229,63 @@ function processFolderUpload($files, $templateDB, $validDepartments) {
             continue;
         }
         
-        // Extract department from file path
-        // Expected path format: Departments/[DEPARTMENT]/[student_id].ext
+        // Extract folder from file path
+        // Expected path formats: 
+        // For students: [DEPARTMENT]/[student_id].ext
+        // For top management: TOPMANAGEMENT/[name].ext
         $pathParts = explode(DIRECTORY_SEPARATOR, dirname($fileName));
         
-        // Check if we have the correct folder structure
-        if (count($pathParts) < 2 || $pathParts[0] !== 'Departments') {
-            $results['errors'][] = "Invalid folder structure for file: $fileName. Expected: Departments/[DEPARTMENT]/[student_id].ext";
+        // Check if it's a top management file
+        if (count($pathParts) >= 1 && strtoupper($pathParts[0]) === $validTopManagementFolder) {
+            $topManagementFiles[] = [
+                'name' => $fileName,
+                'tmp_name' => $filePath,
+                'person_name' => pathinfo(basename($fileName), PATHINFO_FILENAME)
+            ];
+        } 
+        // Check if it's a student file
+        elseif (count($pathParts) >= 1) {
+            $department = strtolower($pathParts[0]);
+            
+            // Validate department
+            if (!in_array($department, $validDepartments)) {
+                $results['errors'][] = "Invalid department folder: $department. Valid departments: " . implode(', ', $validDepartments);
+                $results['failed']++;
+                continue;
+            }
+            
+            // Validate that filename is a numeric student ID
+            $studentId = pathinfo(basename($fileName), PATHINFO_FILENAME);
+            if (!is_numeric($studentId)) {
+                $results['errors'][] = "Invalid filename for file: $fileName. Filename must be a numeric student ID.";
+                $results['failed']++;
+                continue;
+            }
+            
+            $studentFiles[] = [
+                'name' => $fileName,
+                'tmp_name' => $filePath,
+                'student_id' => $studentId,
+                'department' => $department
+            ];
+        } else {
+            $results['errors'][] = "Invalid folder structure for file: $fileName. Expected: [DEPARTMENT]/[student_id].ext or TOPMANAGEMENT/[name].ext";
             $results['failed']++;
-            continue;
         }
-        
-        $department = strtolower($pathParts[1]);
-        
-        // Validate department
-        if (!in_array($department, $validDepartments)) {
-            $results['errors'][] = "Invalid department folder: $department. Valid departments: " . implode(', ', $validDepartments);
-            $results['failed']++;
-            continue;
-        }
-        
-        // Validate that filename is a numeric student ID
-        $studentId = pathinfo(basename($fileName), PATHINFO_FILENAME);
-        if (!is_numeric($studentId)) {
-            $results['errors'][] = "Invalid filename for file: $fileName. Filename must be a numeric student ID.";
-            $results['failed']++;
-            continue;
-        }
-        
-        // Add file to department group
-        if (!isset($filesByDepartment[$department])) {
-            $filesByDepartment[$department] = [];
-        }
-        
-        $filesByDepartment[$department][] = [
-            'name' => $fileName,
-            'tmp_name' => $filePath,
-            'student_id' => $studentId
-        ];
     }
     
-    // Process files for each department
-    foreach ($filesByDepartment as $department => $deptFiles) {
+    // Process student files
+    $studentFilesByDepartment = [];
+    foreach ($studentFiles as $file) {
+        $department = $file['department'];
+        if (!isset($studentFilesByDepartment[$department])) {
+            $studentFilesByDepartment[$department] = [];
+        }
+        $studentFilesByDepartment[$department][] = $file;
+    }
+    
+    // Process student files for each department
+    foreach ($studentFilesByDepartment as $department => $deptFiles) {
         try {
             // Get or create collection for this department
             $collection = $templateDB->$department;
@@ -290,6 +307,35 @@ function processFolderUpload($files, $templateDB, $validDepartments) {
         } catch (Exception $e) {
             $results['errors'][] = "Error processing department $department: " . $e->getMessage();
             $results['failed'] += count($deptFiles);
+        }
+    }
+    
+    // Process top management files
+    if (!empty($topManagementFiles)) {
+        try {
+            // Connect to Top_Management database
+            $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
+            $client = new Client($mongoUrl);
+            $topManagementDB = $client->Top_Management;
+            $collection = $topManagementDB->Photos;
+            
+            // Process each top management file
+            foreach ($topManagementFiles as $file) {
+                // Prepare document for MongoDB
+                $document = [
+                    'name' => $file['person_name'],
+                    'filename' => basename($file['name']),
+                    'upload_time' => new \MongoDB\BSON\UTCDateTime(),
+                    'file_path' => $file['name']  // Store relative path
+                ];
+                
+                // Insert document
+                $collection->insertOne($document);
+                $results['success']++;
+            }
+        } catch (Exception $e) {
+            $results['errors'][] = "Error processing top management files: " . $e->getMessage();
+            $results['failed'] += count($topManagementFiles);
         }
     }
     
@@ -349,7 +395,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!empty($_FILES['folder_upload'])) {
         try {
             $templateDB = getSelectedTemplateDatabase($client);
-            $folderUploadResult = processFolderUpload($_FILES['folder_upload'], $templateDB, $validDepartments);
+            $folderUploadResult = processFolderUpload($_FILES['folder_upload'], $templateDB, $validDepartments, $validTopManagementFolder);
             $uploadStatus['folder_upload'] = $folderUploadResult;
         } catch (Exception $e) {
             error_log("Error processing folder upload: " . $e->getMessage());
@@ -407,10 +453,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
 
                     <div class="section">
-                        <div class="section-header">Student Images by Department</div>
+                        <div class="section-header">Student Images and Top Management Images</div>
                         <div class="file-card <?= isset($uploadStatus['folder_upload']) && $uploadStatus['folder_upload'] === false ? 'upload-failed' : (isset($uploadStatus['folder_upload']) && !empty($uploadStatus['folder_upload']['success']) ? 'upload-success' : '') ?>">
                             <label class="custom-upload" for="folder-upload">Upload Department Folder</label>
                             <input type="file" name="folder_upload[]" id="folder-upload" class="upload-input" accept="image/*" multiple webkitdirectory directory>
+                            <div class="upload-instructions">
+                                <p><strong>Folder Structure Instructions:</strong></p>
+                                <ul>
+                                    <li>For student images: Create folders named exactly: BECED, BSCJE, BSE, BSIS, BSMA, BSME, BSMT, BSN, BSTM, BTVTED</li>
+                                    <li>For top management images: Create a folder named exactly: TOPMANAGEMENT</li>
+                                    <li>Place student images in their respective department folders with student ID as filename (e.g., 123456789.jpg)</li>
+                                    <li>Place top management images in the TOPMANAGEMENT folder with person's name as filename (e.g., JohnDoe.jpg)</li>
+                                </ul>
+                            </div>
                         </div>
                         <?php if (isset($uploadStatus['folder_upload']) && is_array($uploadStatus['folder_upload'])): ?>
                             <div class="upload-results">
