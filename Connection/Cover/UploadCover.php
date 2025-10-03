@@ -134,7 +134,6 @@ try {
         respond(false, "Upload cancelled: Filename must start with a valid prefix (BSME, BSCJ, BSTM, BSE, BSN, BSIS, BSBA).");
     }
 
-    // Override side if we can detect it from filename
     if (strpos($upperName, 'BACK') !== false) {
         $side = 'back';
     } else if (strpos($upperName, 'FRONT') !== false) {
