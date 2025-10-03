@@ -191,7 +191,6 @@ try {
     $thumbContents = '';
     $thumbFilename = '';
 
-    // Generate thumbnail filename
     $thumbFilename = pathinfo($filename, PATHINFO_FILENAME) . '_thumb.' . pathinfo($filename, PATHINFO_EXTENSION);
     $thumbPath = $safeFolder . '/' . $templateFolder . '/' . $thumbFilename;
     $thumbStorageUrl = "https://storage.bunnycdn.com/{$bunnyStorageZone}/" . str_replace(' ', '%20', $thumbPath);
