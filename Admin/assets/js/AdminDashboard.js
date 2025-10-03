@@ -283,6 +283,13 @@ async function loadAdminLogo() {
   }
 }
 
+// Theme function to prevent errors
+function applyTheme(theme) {
+  // Simple placeholder function to prevent errors
+  console.log("Theme applied:", theme);
+  // The actual theme application is handled in BatchTemplates.js
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   loadAdminLogo();
 
