@@ -45,7 +45,7 @@ try {
     error_log("FetchCovers.php using MongoDB URL: $mongoUrl");
 
     $client = new Client($mongoUrl, [
-        'serverSelectionTimeoutMS' => 1000,  // Ultra-fast timeout
+        'serverSelectionTimeoutMS' => 1000,
         'connectTimeoutMS' => 1000,          // Ultra-fast timeout
         'socketTimeoutMS' => 2000,           // Reduced timeout
         'retryReads' => true
