@@ -311,7 +311,6 @@ try {
             'student_id' => $studentId,
             'filename' => $filename,
             'original_name' => $fileName,
-            'department' => $department,
             'template' => $template,
             'url' => $publicUrl,
             'upload_time' => new \MongoDB\BSON\UTCDateTime()

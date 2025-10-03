@@ -236,11 +236,11 @@ try {
             respond(false, 'Upload cancelled');
         }
 
-        // MongoDB connection for Top Management database
-        $mongoDbName = "Top_Management";
+        // MongoDB connection for the selected batch template
+        $mongoDbName = "BatchTemplate" . $template;
         $mongoUrl = getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
         error_log("UploadTopManagementPhotos.php using MongoDB URL: $mongoUrl");
-        error_log("UploadTopManagementPhotos.php using database: $mongoDbName, collection: Photos");
+        error_log("UploadTopManagementPhotos.php using database: $mongoDbName, collection: top_management_photos");
         
         try {
             $mongoClient = new Client($mongoUrl, [
@@ -249,7 +249,7 @@ try {
                 'socketTimeoutMS' => 10000,
                 'retryReads' => true
             ]);
-            $collection = $mongoClient->$mongoDbName->Photos;
+            $collection = $mongoClient->$mongoDbName->top_management_photos;
         } catch (Exception $e) {
             error_log("UploadTopManagementPhotos.php MongoDB connection error: " . $e->getMessage());
             $results[] = [
