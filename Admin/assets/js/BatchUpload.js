@@ -164,10 +164,15 @@ const themes = {
       input.addEventListener("change", async (e) => {
         e.preventDefault();
         if (input.files.length > 0) {
-          showNotification("Uploaded Successfully", "success");
-          
           const form = input.form;
-          const formData = new FormData(form);
+          const formData = new FormData();
+          
+          // Only append the changed input file and the selected template
+          formData.append(input.name, input.files[0]);
+          const selectedTemplate = document.getElementById('selected_template');
+          if (selectedTemplate) {
+            formData.append('selected_template', selectedTemplate.value);
+          }
           
           try {
             const response = await fetch(form.action, {
@@ -189,13 +194,7 @@ const themes = {
               }
             }
             
-            // Update the form content
-            const newFormContent = tempDiv.querySelector('.form-content');
-            if (newFormContent) {
-              document.querySelector('.form-content').innerHTML = newFormContent.innerHTML;
-            }
-            
-            // Reset the file input
+            // Reset only the current file input
             input.value = '';
             
           } catch (error) {
