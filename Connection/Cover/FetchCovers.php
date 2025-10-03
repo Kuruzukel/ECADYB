@@ -44,7 +44,6 @@ try {
     $mongoUrl = getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
     error_log("FetchCovers.php using MongoDB URL: $mongoUrl");
 
-    // Ultra-fast MongoDB connection
     $client = new Client($mongoUrl, [
         'serverSelectionTimeoutMS' => 1000,  // Ultra-fast timeout
         'connectTimeoutMS' => 1000,          // Ultra-fast timeout
@@ -75,7 +74,7 @@ try {
             'limit' => 8  // We only have 8 slots maximum
         ]
     );
-    
+
     $items = [];
 
     foreach ($cursor as $doc) {
