@@ -13,23 +13,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 session_start();
 
-// Global variable to track if upload should be cancelled
 $uploadCancelled = false;
 
 function respond($success, $message = '', $data = [])
 {
     global $uploadCancelled;
-    
+
     while (ob_get_level()) {
         ob_end_clean();
     }
-    
+
     // If upload was cancelled, ensure we don't save anything
     if ($uploadCancelled && $success) {
         $success = false;
         $message = 'Upload cancelled';
     }
-    
+
     header('Content-Type: application/json');
     echo json_encode(array_merge([
         'success' => $success,
@@ -115,7 +114,7 @@ try {
 
     // Auto-detect slot and side from filename if not properly set
     $upperName = strtoupper($originalName);
-    
+
     // Slot mapping based on filename prefix
     $slotMapping = [
         'BSME' => 1,
@@ -126,7 +125,7 @@ try {
         'BSIS' => 6,
         'BSBA' => 7
     ];
-    
+
     // Override slot if we can detect it from filename
     $detectedSlot = null;
     foreach ($slotMapping as $prefix => $slotNum) {
@@ -135,17 +134,17 @@ try {
             break;
         }
     }
-    
+
     // If we detected a slot from filename but it doesn't match the provided slot, cancel upload
     if ($detectedSlot !== null && $detectedSlot != $slot) {
         respond(false, "Upload cancelled: Filename prefix doesn't match the selected slot. Expected slot $detectedSlot for this filename.");
     }
-    
+
     // If we couldn't detect a slot from filename for slots 1-7, cancel upload
     if ($slot >= 1 && $slot <= 7 && $detectedSlot === null) {
         respond(false, "Upload cancelled: Filename must start with a valid prefix (BSME, BSCJ, BSTM, BSE, BSN, BSIS, BSBA).");
     }
-    
+
     // Override side if we can detect it from filename
     if (strpos($upperName, 'BACK') !== false) {
         $side = 'back';
@@ -179,13 +178,13 @@ try {
     error_log("UploadCover.php constructed path: $path");
 
     $storageUrl   = "https://storage.bunnycdn.com/{$bunnyStorageZone}/" . str_replace(' ', '%20', $path);
-    
+
     // Check for client disconnection/cancellation before reading file
     if (connection_aborted()) {
         $uploadCancelled = true;
         respond(false, 'Upload cancelled');
     }
-    
+
     $fileContents = file_get_contents($fileTmp);
     if ($fileContents === false) {
         respond(false, 'Failed to read uploaded file.');
@@ -209,12 +208,12 @@ try {
     // Create thumbnail from the original image
     $thumbContents = '';
     $thumbFilename = '';
-    
+
     // Generate thumbnail filename
     $thumbFilename = pathinfo($filename, PATHINFO_FILENAME) . '_thumb.' . pathinfo($filename, PATHINFO_EXTENSION);
     $thumbPath = $safeFolder . '/' . $templateFolder . '/' . $thumbFilename;
     $thumbStorageUrl = "https://storage.bunnycdn.com/{$bunnyStorageZone}/" . str_replace(' ', '%20', $thumbPath);
-    
+
     // Create a simple thumbnail by resizing the image
     $thumbContents = $fileContents;
 
@@ -300,7 +299,7 @@ try {
             curl_exec($deleteCh);
             curl_close($deleteCh);
         }
-        
+
         if ($thumbResponse !== false && $thumbHttpCode >= 200 && $thumbHttpCode < 300) {
             error_log("UploadCover.php deleting thumbnail from BunnyCDN due to cancellation: $thumbStorageUrl");
             $deleteThumbCh = curl_init($thumbStorageUrl);
@@ -342,7 +341,7 @@ try {
         ]);
         curl_exec($deleteCh);
         curl_close($deleteCh);
-        
+
         error_log("UploadCover.php deleting thumbnail from BunnyCDN due to cancellation before MongoDB: $thumbStorageUrl");
         $deleteThumbCh = curl_init($thumbStorageUrl);
         curl_setopt_array($deleteThumbCh, [
@@ -362,7 +361,7 @@ try {
     $mongoUrl = getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
     error_log("UploadCover.php using MongoDB URL: $mongoUrl");
     error_log("UploadCover.php using database: $mongoDbName, collection: YearbookCovers");
-    
+
     try {
         $mongoClient = new Client($mongoUrl, [
             'serverSelectionTimeoutMS' => 5000,
@@ -392,7 +391,7 @@ try {
         ]);
         curl_exec($deleteCh);
         curl_close($deleteCh);
-        
+
         error_log("UploadCover.php deleting thumbnail from BunnyCDN due to cancellation before MongoDB operations: $thumbStorageUrl");
         $deleteThumbCh = curl_init($thumbStorageUrl);
         curl_setopt_array($deleteThumbCh, [
@@ -448,7 +447,7 @@ try {
         ]);
         curl_exec($deleteCh);
         curl_close($deleteCh);
-        
+
         error_log("UploadCover.php deleting thumbnail from BunnyCDN due to cancellation before MongoDB insert: $thumbStorageUrl");
         $deleteThumbCh = curl_init($thumbStorageUrl);
         curl_setopt_array($deleteThumbCh, [
@@ -466,26 +465,25 @@ try {
     // Upsert document into MongoDB based on template and slot
     try {
         error_log("UploadCover.php upserting document: " . json_encode($document));
-        
+
         $filter = [
             'template' => $template,
             'slot' => $slot
         ];
-        
+
         error_log("UploadCover.php using filter: " . json_encode($filter));
-        
+
         $update = ['$set' => $document];
         $options = ['upsert' => true];
-        
+
         $result = $collection->updateOne($filter, $update, $options);
-        
+
         error_log("UploadCover.php upsert result - matched: " . $result->getMatchedCount() . ", modified: " . $result->getModifiedCount() . ", upserted: " . $result->getUpsertedCount());
-        
+
         // If this was an insert (upserted), get the new ID
         if ($result->getUpsertedCount() > 0) {
             $document['_id'] = (string) $result->getUpsertedId();
         }
-        
     } catch (Exception $e) {
         error_log("UploadCover.php MongoDB upsert error: " . $e->getMessage());
         respond(false, 'Failed to save to database: ' . $e->getMessage());
@@ -507,7 +505,7 @@ try {
         ]);
         curl_exec($deleteCh);
         curl_close($deleteCh);
-        
+
         error_log("UploadCover.php deleting thumbnail from BunnyCDN due to cancellation after insert: $thumbStorageUrl");
         $deleteThumbCh = curl_init($thumbStorageUrl);
         curl_setopt_array($deleteThumbCh, [
@@ -519,7 +517,7 @@ try {
         ]);
         curl_exec($deleteThumbCh);
         curl_close($deleteThumbCh);
-        
+
         // Delete MongoDB entry
         $collection->deleteOne(['_id' => $document['_id']]);
         respond(false, 'Upload cancelled');
@@ -532,7 +530,7 @@ try {
         'side' => $side,
         'template' => $template
     ];
-    
+
     // Add appropriate URL fields to response
     if ($slot === 8) {
         $responseData['url'] = $publicUrl;
