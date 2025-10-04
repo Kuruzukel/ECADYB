@@ -334,7 +334,6 @@ try {
 
         if (connection_aborted()) {
             $uploadCancelled = true;
-            // Delete file from BunnyCDN and remove the MongoDB entry since we're cancelling after insert
             error_log("UploadStudentPhotos.php deleting file from BunnyCDN and MongoDB entry due to cancellation after insert: $storageUrl");
             $deleteCh = curl_init($storageUrl);
             curl_setopt_array($deleteCh, [
