@@ -125,25 +125,25 @@ function loadPage(page, pageElement) {
               class: 'management-info'
             });
             
-            // Add photo
-            var photoUrl = currentManager.photo_url || 'https://ECADYB.b-cdn.net/img/Profile.png';
+            // Add photo with fallback for no image
+            var photoUrl = currentManager.photo_url || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="270" height="270" viewBox="0 0 270 270"%3E%3Crect width="270" height="270" fill="%23f0f0f0"/%3E%3Ctext x="135" y="135" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Image Available%3C/text%3E%3C/svg%3E';
             var photo = $('<img/>', {
               src: photoUrl,
               alt: currentManager.name,
-              onerror: "this.src='https://ECADYB.b-cdn.net/img/Profile.png';"
+              onerror: "this.src='data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"270\" height=\"270\" viewBox=\"0 0 270 270\"%3E%3Crect width=\"270\" height=\"270\" fill=\"%23f0f0f0\"/%3E%3Ctext x=\"135\" y=\"135\" font-family=\"Arial\" font-size=\"14\" fill=\"%23999\" text-anchor=\"middle\" dominant-baseline=\"middle\"%3ENo Image Available%3C/text%3E%3C/svg%3E';"
             });
             photoContainer.append(photo);
             
-            // Add name
+            // Add name with default placeholder
             var name = $('<h2/>', {
               class: 'management-name',
-              text: currentManager.name
+              text: currentManager.name || 'Top Management Name'
             });
             
-            // Add position
+            // Add position with default placeholder
             var position = $('<h3/>', {
               class: 'management-position',
-              text: currentManager.position || 'Top Management'
+              text: currentManager.position || 'Position Title'
             });
             
             // Add message with quotation marks
@@ -161,7 +161,7 @@ function loadPage(page, pageElement) {
               text: '❞'
             });
             
-            var messageText = currentManager.message || 'No message available.';
+            var messageText = currentManager.message || 'No message available for this top management position. Messages typically contain inspirational words, guidance, or congratulations for the graduating class.';
             var message = $('<div/>', {
               class: 'management-message',
               text: messageText
@@ -188,12 +188,62 @@ function loadPage(page, pageElement) {
             managementPage.append(photoContainer)
                        .append(infoContainer);
           } else {
-            // Not enough data for this page
-            var noDataMessage = $('<div/>', {
-              class: 'management-no-data',
-              text: 'No top management data available for this page.'
+            // Not enough data for this page - create a placeholder with default content
+            var placeholderContainer = $('<div/>', {
+              class: 'top-management-page'
             });
-            managementPage.append(noDataMessage);
+            
+            // Create photo container with placeholder
+            var photoContainer = $('<div/>', {
+              class: 'management-photo'
+            });
+            
+            var photo = $('<img/>', {
+              src: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="270" height="270" viewBox="0 0 270 270"%3E%3Crect width="270" height="270" fill="%23f0f0f0"/%3E%3Ctext x="135" y="135" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Image Available%3C/text%3E%3C/svg%3E',
+              alt: 'Top Management Placeholder'
+            });
+            photoContainer.append(photo);
+            
+            // Create info container with placeholder text
+            var infoContainer = $('<div/>', {
+              class: 'management-info'
+            });
+            
+            var name = $('<h2/>', {
+              class: 'management-name',
+              text: 'Top Management Name'
+            });
+            
+            var position = $('<h3/>', {
+              class: 'management-position',
+              text: 'Position Title'
+            });
+            
+            var messageContainer = $('<div/>', {
+              class: 'message-container'
+            });
+            
+            var messageWrapper = $('<div/>', {
+              class: 'message-wrapper'
+            });
+            
+            var message = $('<div/>', {
+              class: 'management-message',
+              text: 'No top management data available for this page. Messages typically contain inspirational words, guidance, or congratulations for the graduating class.'
+            });
+            
+            // Assemble the placeholder
+            messageWrapper.append(message);
+            messageContainer.append(messageWrapper);
+            
+            infoContainer.append(name)
+                       .append(position)
+                       .append(messageContainer);
+            
+            placeholderContainer.append(photoContainer)
+                             .append(infoContainer);
+            
+            managementPage.append(placeholderContainer);
           }
         } else {
           // Error or no data
@@ -239,13 +289,20 @@ function loadPage(page, pageElement) {
         var studentImg = $('<div/>', {
           class: 'student-image'
         });
+        
+        // Add placeholder image
+        var placeholderImg = $('<img/>', {
+          src: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="135" height="155" viewBox="0 0 135 155"%3E%3Crect width="135" height="155" fill="%23f0f0f0"/%3E%3Ctext x="67.5" y="77.5" font-family="Arial" font-size="12" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Photo%3C/text%3E%3C/svg%3E',
+          alt: 'Student placeholder'
+        });
+        studentImg.append(placeholderImg);
 
-        // Add student name
+        // Add student name (default placeholder)
         var studentName = $('<h3/>', {
-          text: 'Student Name ' + (i + 1)
+          text: 'Student Name'
         });
 
-        // Add honors text
+        // Add honors text (default placeholder)
         var honorsText = $('<p/>', {
           text: 'Honors and Achievements'
         });
@@ -258,13 +315,15 @@ function loadPage(page, pageElement) {
           
           // Sample images for demonstration (replace with actual student photos)
           var studentPhotos = [
-            'https://ECADYB.b-cdn.net/img/Profile.png',
-            'https://ECADYB.b-cdn.net/img/Profile.png',
-            'https://ECADYB.b-cdn.net/img/Profile.png'
+            'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect width="300" height="300" fill="%23f0f0f0"/%3E%3Ctext x="150" y="150" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Student Photo%3C/text%3E%3C/svg%3E',
+            'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect width="300" height="300" fill="%23f0f0f0"/%3E%3Ctext x="150" y="150" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Student Photo%3C/text%3E%3C/svg%3E',
+            'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect width="300" height="300" fill="%23f0f0f0"/%3E%3Ctext x="150" y="150" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Student Photo%3C/text%3E%3C/svg%3E'
           ];
           
-          // Initialize modal content
-          modal.find('.student-name').text(studentName);
+          // Initialize modal content with default placeholder
+          modal.find('.student-name').text('Student Name');
+          modal.find('.motto p').text('No motto available.');
+          modal.find('.milestones ul').html('<li>Honors and Achievements</li>');
           
           // Initialize images
           var $largeImage = modal.find('.student-image-large img');
