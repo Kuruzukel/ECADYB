@@ -318,7 +318,6 @@ try {
             ];
             $failedCount++;
 
-            // Delete file from BunnyCDN since database insert failed
             error_log("UploadStudentPhotos.php deleting file from BunnyCDN due to MongoDB insert error: $storageUrl");
             $deleteCh = curl_init($storageUrl);
             curl_setopt_array($deleteCh, [
