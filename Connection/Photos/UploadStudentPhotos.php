@@ -147,7 +147,7 @@ try {
             '300' => 'bscje',
             '400' => 'bstm',
             '500' => 'btvted',
-            '600' => 'beced', // BS Early Childhood Education
+            '600' => 'beced',
             '700' => 'bsn',   // BS Nursing
             '800' => 'bsis',  // BS Information System
             '900' => 'bsma',  // BS Management Accounting
