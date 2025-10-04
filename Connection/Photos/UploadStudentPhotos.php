@@ -144,7 +144,7 @@ try {
         $departmentMap = [
             '100' => 'bsme',
             '200' => 'bsmt',
-            '300' => 'bscje', // BS Criminal Justice Education
+            '300' => 'bscje',
             '400' => 'bstm',  // BS Tourism Management
             '500' => 'btvted', // BS Technical-Vocational Teacher Education
             '600' => 'beced', // BS Early Childhood Education
