@@ -143,7 +143,7 @@ try {
         $cleanStudentId = str_replace('-', '', $studentId);
         $departmentMap = [
             '100' => 'bsme',
-            '200' => 'bsmt',  // BS Marine Transportation
+            '200' => 'bsmt',
             '300' => 'bscje', // BS Criminal Justice Education
             '400' => 'bstm',  // BS Tourism Management
             '500' => 'btvted', // BS Technical-Vocational Teacher Education
