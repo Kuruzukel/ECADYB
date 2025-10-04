@@ -332,7 +332,6 @@ try {
             continue;
         }
 
-        // Check for client disconnection/cancellation after MongoDB insert
         if (connection_aborted()) {
             $uploadCancelled = true;
             // Delete file from BunnyCDN and remove the MongoDB entry since we're cancelling after insert
