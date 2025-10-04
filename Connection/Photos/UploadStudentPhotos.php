@@ -280,7 +280,6 @@ try {
             continue;
         }
 
-        // Prepare document for MongoDB
         $document = [
             'student_id' => $studentId,
             'filename' => $filename,
