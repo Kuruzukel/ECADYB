@@ -148,7 +148,7 @@ try {
             '400' => 'bstm',
             '500' => 'btvted',
             '600' => 'beced',
-            '700' => 'bsn',   // BS Nursing
+            '700' => 'bsn',
             '800' => 'bsis',  // BS Information System
             '900' => 'bsma',  // BS Management Accounting
             '1000' => 'bse'   // BS Entrepreneurship
