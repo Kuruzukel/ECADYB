@@ -228,7 +228,6 @@ try {
 
         $publicUrl = rtrim($bunnyCdnHost, '/') . '/' . str_replace(' ', '%20', $path);
 
-        // Check for client disconnection/cancellation before updating MongoDB
         if (connection_aborted()) {
             $uploadCancelled = true;
             // Delete file from BunnyCDN since we're cancelling before MongoDB
