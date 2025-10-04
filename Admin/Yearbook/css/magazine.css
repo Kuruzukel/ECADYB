@@ -475,8 +475,8 @@
   right: 10px;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-gap: 20px;
-  padding: 20px;
+  grid-gap: 10px;
+  padding: 10px;
   z-index: 1;
 }
 
@@ -496,8 +496,8 @@
 }
 
 .student-image {
-  width: 120px;
-  height: 120px;
+  width: 135px;
+  height: 135px;
   background: #00ff44;
   overflow: hidden;
 }
