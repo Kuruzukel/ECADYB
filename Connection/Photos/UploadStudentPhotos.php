@@ -13,23 +13,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 session_start();
 
-// Global variable to track if upload should be cancelled
 $uploadCancelled = false;
 
 function respond($success, $message = '', $data = [])
 {
     global $uploadCancelled;
-    
+
     while (ob_get_level()) {
         ob_end_clean();
     }
-    
+
     // If upload was cancelled, ensure we don't save anything
     if ($uploadCancelled && $success) {
         $success = false;
         $message = 'Upload cancelled';
     }
-    
+
     header('Content-Type: application/json');
     echo json_encode(array_merge([
         'success' => $success,
@@ -124,7 +123,7 @@ try {
 
         // Extract student ID from filename (assuming filename is the student ID)
         $studentId = pathinfo($fileName, PATHINFO_FILENAME);
-        
+
         // Validate that filename is a valid student ID (you may want to adjust this validation)
         if (!preg_match('/^\d{4}-\d{6}$/', $studentId) && !is_numeric($studentId)) {
             $results[] = [
@@ -151,7 +150,7 @@ try {
         // Determine department based on student ID (this is a simplified approach)
         // In a real implementation, you would look up the student in the database to get their department
         $department = 'unknown';
-        
+
         // For demonstration, we'll use a simple mapping
         // In practice, you should query the database to get the actual department
         $cleanStudentId = str_replace('-', '', $studentId);
@@ -167,7 +166,7 @@ try {
             '900' => 'bsma',  // BS Management Accounting
             '1000' => 'bse'   // BS Entrepreneurship
         ];
-        
+
         // Extract prefix from student ID to determine department
         $prefix = substr($cleanStudentId, 0, 3);
         if (isset($departmentMap[$prefix])) {
@@ -273,7 +272,7 @@ try {
         $mongoUrl = getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
         error_log("UploadStudentPhotos.php using MongoDB URL: $mongoUrl");
         error_log("UploadStudentPhotos.php using database: $mongoDbName, collection: StudentPhotos");
-        
+
         try {
             $mongoClient = new Client($mongoUrl, [
                 'serverSelectionTimeoutMS' => 5000,
@@ -290,7 +289,7 @@ try {
                 'message' => 'Database connection failed: ' . $e->getMessage()
             ];
             $failedCount++;
-            
+
             // Delete file from BunnyCDN since database connection failed
             error_log("UploadStudentPhotos.php deleting file from BunnyCDN due to MongoDB connection error: $storageUrl");
             $deleteCh = curl_init($storageUrl);
@@ -347,7 +346,7 @@ try {
                 'message' => 'Failed to save to database: ' . $e->getMessage()
             ];
             $failedCount++;
-            
+
             // Delete file from BunnyCDN since database insert failed
             error_log("UploadStudentPhotos.php deleting file from BunnyCDN due to MongoDB insert error: $storageUrl");
             $deleteCh = curl_init($storageUrl);
@@ -378,7 +377,7 @@ try {
             ]);
             curl_exec($deleteCh);
             curl_close($deleteCh);
-            
+
             // Delete MongoDB entry
             $collection->deleteOne(['_id' => $document['_id']]);
             respond(false, 'Upload cancelled');
