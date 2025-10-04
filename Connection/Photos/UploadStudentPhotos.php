@@ -127,7 +127,6 @@ try {
             continue;
         }
 
-        // Read file contents
         $fileContents = file_get_contents($fileTmp);
         if ($fileContents === false) {
             $results[] = [
