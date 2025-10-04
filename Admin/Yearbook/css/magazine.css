@@ -543,13 +543,12 @@
 }
 
 .management-photo {
-  width: 200px;
-  height: 200px;
+  width: 270px;
+  height: 270px;
   border-radius: 50%;
   overflow: hidden;
   border: 6px solid rgba(255,255,255,0.75);
   position: relative;
-  margin-bottom: 8px;
 }
 
 .management-photo::before {
@@ -579,8 +578,9 @@
   display: flex;
   flex-direction: column;
   flex: 1;
-  height: calc(100% - 200px - 20px - 8px);
+  height: calc(100% - 240px - 20px - 5px);
   overflow: hidden;
+  justify-content: flex-start;
 }
 
 .management-name {
@@ -590,7 +590,7 @@
   font-family: 'Times New Roman', Times, serif;
   text-shadow: 1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;
   letter-spacing: 1px;
-  margin: 0 0 5px 0;
+  margin: 0.5rem 0 5px 0;
   padding: 0;
 }
 
@@ -649,7 +649,7 @@
   align-items: center;
   justify-content: center;
   min-height: 0;
-  padding: 15px 0;
+  padding: 5px 0 30px 0;
   position: relative;
 }
 
@@ -660,7 +660,6 @@
   font-style: italic;
   text-align: center;
   font-family: 'Times New Roman', Times, serif;
-  padding: 0 15px;
   margin: 0;
   overflow-y: auto;
   position: relative;
