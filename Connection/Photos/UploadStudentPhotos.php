@@ -346,7 +346,6 @@ try {
             curl_exec($deleteCh);
             curl_close($deleteCh);
 
-            // Delete MongoDB entry
             $collection->deleteOne(['_id' => $document['_id']]);
             respond(false, 'Upload cancelled');
         }
@@ -362,7 +361,6 @@ try {
         $uploadedCount++;
     }
 
-    // Prepare response data
     $responseData = [
         'uploaded' => $uploadedCount,
         'failed' => $failedCount,
