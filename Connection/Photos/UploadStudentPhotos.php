@@ -151,7 +151,7 @@ try {
             '700' => 'bsn',
             '800' => 'bsis',
             '900' => 'bsma',
-            '1000' => 'bse'   // BS Entrepreneurship
+            '1000' => 'bse'
         ];
 
         // Extract prefix from student ID to determine department
