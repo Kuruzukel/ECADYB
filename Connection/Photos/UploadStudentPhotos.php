@@ -179,7 +179,6 @@ try {
             respond(false, 'Upload cancelled');
         }
 
-        // Upload to BunnyCDN
         $ch = curl_init($storageUrl);
         curl_setopt_array($ch, [
             CURLOPT_CUSTOMREQUEST  => 'PUT',
