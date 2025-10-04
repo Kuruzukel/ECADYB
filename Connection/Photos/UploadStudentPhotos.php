@@ -117,7 +117,6 @@ try {
 
         $studentId = pathinfo($fileName, PATHINFO_FILENAME);
 
-        // Validate that filename is a valid student ID (you may want to adjust this validation)
         if (!preg_match('/^\d{4}-\d{6}$/', $studentId) && !is_numeric($studentId)) {
             $results[] = [
                 'filename' => $fileName,
