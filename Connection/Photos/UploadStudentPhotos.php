@@ -158,7 +158,6 @@ try {
         if (isset($departmentMap[$prefix])) {
             $department = $departmentMap[$prefix];
         } else {
-            // Try with 2-digit prefix
             $prefix = substr($cleanStudentId, 0, 2);
             if (isset($departmentMap[$prefix])) {
                 $department = $departmentMap[$prefix];
