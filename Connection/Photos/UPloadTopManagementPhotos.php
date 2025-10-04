@@ -274,15 +274,93 @@ try {
             continue;
         }
 
-        // Prepare document for MongoDB
-        $document = [
-            'name' => $nameWithoutExt,
-            'filename' => $filename,
-            'original_name' => $fileName,
-            'template' => $template,
-            'url' => $publicUrl,
-            'upload_time' => new \MongoDB\BSON\UTCDateTime()
-        ];
+        // First, check if the name exists in top_management_message collection
+        try {
+            $messageCollection = $mongoClient->$mongoDbName->top_management_message;
+            
+            // Find all available names in the collection for logging
+            $allNames = $messageCollection->distinct('name');
+            error_log("Available names in top_management_message: " . implode(", ", $allNames));
+            
+            // Try exact match first
+            $messageDoc = $messageCollection->findOne(['name' => $nameWithoutExt]);
+            
+            // If no exact match, try case-insensitive comparison
+            if (!$messageDoc) {
+                // Get all documents and manually compare (since MongoDB doesn't have case-insensitive distinct)
+                $cursor = $messageCollection->find([]);
+                foreach ($cursor as $doc) {
+                    if (strcasecmp($doc['name'], $nameWithoutExt) === 0) {
+                        $messageDoc = $doc;
+                        break;
+                    }
+                }
+            }
+            
+            // If still no match found, reject the upload
+            if (!$messageDoc) {
+                $results[] = [
+                    'filename' => $fileName,
+                    'success' => false,
+                    'message' => "Image name '$nameWithoutExt' does not match any name in the top management message CSV. Available names: " . implode(", ", $allNames)
+                ];
+                $failedCount++;
+                
+                // Delete the uploaded file from BunnyCDN since it's not associated with a valid name
+                error_log("Deleting file from BunnyCDN due to no matching name: $storageUrl");
+                $deleteCh = curl_init($storageUrl);
+                curl_setopt_array($deleteCh, [
+                    CURLOPT_CUSTOMREQUEST  => 'DELETE',
+                    CURLOPT_HTTPHEADER     => ['AccessKey: ' . $bunnyAccessKey],
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_TIMEOUT        => 10,
+                    CURLOPT_CONNECTTIMEOUT => 3
+                ]);
+                curl_exec($deleteCh);
+                curl_close($deleteCh);
+                continue;
+            }
+            
+            // Get the position and correct name from the database
+            $position = isset($messageDoc['position']) ? $messageDoc['position'] : '';
+            $correctName = $messageDoc['name']; // Use the exact name from the database
+            
+            error_log("Found matching document for '$nameWithoutExt': name='$correctName', position='$position'");
+            
+            // Prepare document for MongoDB
+            $document = [
+                'name' => $correctName, // Use the correct name from the database
+                'position' => $position,
+                'filename' => $filename,
+                'original_name' => $fileName,
+                'template' => $template,
+                'url' => $publicUrl,
+                'upload_time' => new \MongoDB\BSON\UTCDateTime()
+            ];
+        } catch (Exception $e) {
+            error_log("Error checking name in top_management_message: " . $e->getMessage());
+            
+            $results[] = [
+                'filename' => $fileName,
+                'success' => false,
+                'message' => "Error verifying name in database: " . $e->getMessage()
+            ];
+            $failedCount++;
+            
+            // Delete file from BunnyCDN since we couldn't verify the name
+            error_log("Deleting file from BunnyCDN due to database error: $storageUrl");
+            $deleteCh = curl_init($storageUrl);
+            curl_setopt_array($deleteCh, [
+                CURLOPT_CUSTOMREQUEST  => 'DELETE',
+                CURLOPT_HTTPHEADER     => ['AccessKey: ' . $bunnyAccessKey],
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_TIMEOUT        => 10,
+                CURLOPT_CONNECTTIMEOUT => 3
+            ]);
+            curl_exec($deleteCh);
+            curl_close($deleteCh);
+            continue;
+        }
 
         // Check for client disconnection/cancellation just before MongoDB insert
         if (connection_aborted()) {
@@ -357,7 +435,8 @@ try {
             'success' => true,
             'message' => 'Upload successful',
             'url' => $publicUrl,
-            'name' => $nameWithoutExt
+            'name' => $correctName, // Use the name from the database for consistency
+            'position' => $position
         ];
         $uploadedCount++;
     }

@@ -214,7 +214,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!empty($_FILES['top_management_message']['tmp_name'])) {
         $tmpName = $_FILES['top_management_message']['tmp_name'];
 
-         $validTopManagementHeaders = ['name', 'message', 'batchname', 'academicyear'];
+        $validTopManagementHeaders = ['name', 'position', 'message', 'academicyear'];
         $validTopManagementHeaders = array_map('cleanHeader', $validTopManagementHeaders);
         $actualHeaders = [];
 
@@ -228,7 +228,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         sort($validTopManagementHeaders);
         sort($actualHeaders);
 
-         if ($actualHeaders === $validTopManagementHeaders) {
+        if ($actualHeaders === $validTopManagementHeaders) {
             try {
                 $templateDB = getSelectedTemplateDatabase($client);
                 $uploadStatus['top_management_message'] = importCSVByMessage($tmpName, $templateDB->top_management_message);
@@ -265,7 +265,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $message = 'Upload successful!';
             $type = 'success';
         } else {
-            $message = "Upload failed. CSV file must have these columns: name, message, batchname, academicyear";
+            $message = "Upload failed. CSV file must have these columns: name, position, message, academicyear";
             $type = 'error';
         }
         
