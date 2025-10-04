@@ -77,7 +77,6 @@ try {
         respond(false, 'Upload cancelled');
     }
 
-    // Check if files were uploaded
     if (empty($_FILES) || !isset($_FILES['files'])) {
         respond(false, 'No files were uploaded.');
     }
