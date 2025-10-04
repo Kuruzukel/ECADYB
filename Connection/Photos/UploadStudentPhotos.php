@@ -138,7 +138,6 @@ try {
             continue;
         }
 
-        // In a real implementation, you would look up the student in the database to get their department
         $department = 'unknown';
 
         // For demonstration, we'll use a simple mapping
