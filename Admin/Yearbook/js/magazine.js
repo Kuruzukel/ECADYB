@@ -60,8 +60,139 @@ function loadPage(page, pageElement) {
     // Last page - use back cover
     console.log('Using back_url for page', page, ':', coverData.back_url);
     img.attr("src", coverData.back_url);
-  } else if (page >= 2 && page <= 11 && typeof coverData !== 'undefined' && coverData !== null && coverData.background_url) {
-    // Pages 2-11 - use background image from database and add student cards
+  } else if (page >= 2 && page <= 6 && typeof coverData !== 'undefined' && coverData !== null) {
+    // Pages 2-6 - Top Management pages
+    console.log('Loading top management page:', page);
+    
+    // Use background image if available
+    if (coverData.background_url) {
+      console.log('Using background_url for management page', page, ':', coverData.background_url);
+      img.attr("src", coverData.background_url);
+    } else {
+      // Fallback to white background if no background image is available
+      img.attr("src", "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23ffffff'/%3E%3C/svg%3E");
+    }
+    
+    // Create top management page container
+    var managementPage = $('<div/>', {
+      class: 'top-management-page'
+    });
+
+    // Create photo container
+    var photoContainer = $('<div/>', {
+      class: 'management-photo'
+    });
+
+    // Create info container
+    var infoContainer = $('<div/>', {
+      class: 'management-info'
+    });
+
+    // Sample data - replace with actual data from database
+    var managementData = {
+      2: {
+        name: 'Dr. John Smith',
+        position: 'University President',
+        photo: 'https://ECADYB.b-cdn.net/img/Profile.png',
+        message: 'As we celebrate another milestone in our academic journey, I am filled with immense pride in our graduating class. Your dedication, resilience, and achievements have been truly remarkable. Remember that education is not just about acquiring knowledge; it\'s about developing character, critical thinking, and the ability to make a positive impact in the world.'
+      },
+      3: {
+        name: 'Dr. Sarah Johnson',
+        position: 'Vice President for Academic Affairs',
+        photo: 'https://ECADYB.b-cdn.net/img/Profile.png',
+        message: 'To our dear graduates, you have demonstrated exceptional academic excellence and personal growth throughout your journey. As you step into the next chapter of your lives, carry with you the values, knowledge, and skills you\'ve gained. Your success is our success, and we are confident that you will make significant contributions to your chosen fields.'
+      },
+      4: {
+        name: 'Dr. Michael Chen',
+        position: 'Dean of Student Affairs',
+        photo: 'https://ECADYB.b-cdn.net/img/Profile.png',
+        message: 'Watching you grow and develop into capable professionals has been one of the most rewarding experiences. Your enthusiasm, creativity, and determination have inspired us all. As you embark on your professional journeys, remember that learning is a lifelong process, and your alma mater will always be here to support you.'
+      },
+      5: {
+        name: 'Prof. Emily Rodriguez',
+        position: 'Director of Research and Development',
+        photo: 'https://ECADYB.b-cdn.net/img/Profile.png',
+        message: 'Your academic journey has been marked by innovation, curiosity, and a commitment to excellence. As you graduate, remember that research and continuous learning are key to professional growth. May you continue to push boundaries and make meaningful contributions to your fields of expertise.'
+      },
+      6: {
+        name: 'Dr. Robert Wilson',
+        position: 'Head of International Relations',
+        photo: 'https://ECADYB.b-cdn.net/img/Profile.png',
+        message: 'In today\'s interconnected world, your global perspective and cultural awareness will be invaluable assets. You have been part of a diverse academic community, and this experience will serve you well in your future endeavors. Go forth with confidence, knowing that you are prepared to make a difference on both local and global stages.'
+      }
+    };
+
+    var currentManager = managementData[page];
+
+    // Add photo
+    var photo = $('<img/>', {
+      src: currentManager.photo,
+      alt: currentManager.name
+    });
+    photoContainer.append(photo);
+
+    // Add name
+    var name = $('<h2/>', {
+      class: 'management-name',
+      text: currentManager.name
+    });
+
+    // Add position
+    var position = $('<h3/>', {
+      class: 'management-position',
+      text: currentManager.position
+    });
+
+    // Add decorative elements
+    var topDecoration = $('<div/>', {
+      class: 'yearbook-decoration top'
+    });
+    
+    var bottomDecoration = $('<div/>', {
+      class: 'yearbook-decoration bottom'
+    });
+    
+    // Add message with quotation marks
+    var messageContainer = $('<div/>', {
+      class: 'message-container'
+    });
+    
+    var quoteOpen = $('<span/>', {
+      class: 'quote-mark open',
+      text: '❝'
+    });
+    
+    var quoteClose = $('<span/>', {
+      class: 'quote-mark close',
+      text: '❞'
+    });
+    
+    var message = $('<div/>', {
+      class: 'management-message',
+      text: currentManager.message
+    });
+    
+    // Assemble the message with quotes
+    messageContainer.append(quoteOpen)
+                   .append(message)
+                   .append(quoteClose);
+    
+    // Assemble the page
+    infoContainer.append(name)
+                 .append(position)
+                 .append(messageContainer);
+                 
+    // Add decorations
+    pageElement.append(topDecoration)
+               .append(bottomDecoration);
+
+    managementPage.append(photoContainer)
+                 .append(infoContainer);
+
+    // Add the management page to the page element
+    pageElement.append(managementPage);
+  } else if (page >= 7 && page <= 11 && typeof coverData !== 'undefined' && coverData !== null && coverData.background_url) {
+    // Pages 7-11 - Student pages
     console.log('Using background_url for page', page, ':', coverData.background_url);
     img.attr("src", coverData.background_url);
     
