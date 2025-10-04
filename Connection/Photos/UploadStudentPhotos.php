@@ -140,7 +140,6 @@ try {
 
         $department = 'unknown';
 
-        // In practice, you should query the database to get the actual department
         $cleanStudentId = str_replace('-', '', $studentId);
         $departmentMap = [
             '100' => 'bsme',  // BS Marine Engineering
