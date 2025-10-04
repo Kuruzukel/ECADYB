@@ -164,7 +164,6 @@ try {
             }
         }
 
-        // Generate safe filename
         $ext = pathinfo($fileName, PATHINFO_EXTENSION) ?: 'jpg';
         $safeFileName = preg_replace('/[^A-Za-z0-9 _.-]/', '', $studentId) ?: ('student_' . time());
         $safeExt = preg_replace('/[^A-Za-z0-9]/', '', $ext) ?: 'jpg';
