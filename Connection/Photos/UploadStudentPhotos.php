@@ -72,7 +72,6 @@ try {
         respond(false, 'Invalid template parameter. Must be 1, 2, or 3.');
     }
 
-    // Check for client disconnection/cancellation
     if (connection_aborted()) {
         $uploadCancelled = true;
         respond(false, 'Upload cancelled');
