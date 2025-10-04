@@ -143,14 +143,7 @@ function loadPage(page, pageElement) {
       text: currentManager.position
     });
 
-    // Add decorative elements
-    var topDecoration = $('<div/>', {
-      class: 'yearbook-decoration top'
-    });
-    
-    var bottomDecoration = $('<div/>', {
-      class: 'yearbook-decoration bottom'
-    });
+    // No decorative elements
     
     // Add message with quotation marks
     var messageContainer = $('<div/>', {
@@ -172,23 +165,29 @@ function loadPage(page, pageElement) {
       text: currentManager.message
     });
     
-    // Assemble the message with quotes
-    messageContainer.append(quoteOpen)
-                   .append(message)
-                   .append(quoteClose);
+    // Create message wrapper for better positioning
+    var messageWrapper = $('<div/>', {
+      class: 'message-wrapper'
+    });
+    
+    // Put quotes directly in the message text
+    message.prepend(quoteOpen);
+    message.append(quoteClose);
+    
+    // Assemble the message in container
+    messageWrapper.append(message);
+    messageContainer.append(messageWrapper);
     
     // Assemble the page
     infoContainer.append(name)
                  .append(position)
                  .append(messageContainer);
-                 
-    // Add decorations
-    pageElement.append(topDecoration)
-               .append(bottomDecoration);
 
     managementPage.append(photoContainer)
                  .append(infoContainer);
 
+    // No decorations to add
+               
     // Add the management page to the page element
     pageElement.append(managementPage);
   } else if (page >= 7 && page <= 11 && typeof coverData !== 'undefined' && coverData !== null && coverData.background_url) {
