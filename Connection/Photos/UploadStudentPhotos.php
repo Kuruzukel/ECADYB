@@ -138,7 +138,6 @@ try {
             continue;
         }
 
-        // Determine department based on student ID (this is a simplified approach)
         // In a real implementation, you would look up the student in the database to get their department
         $department = 'unknown';
 
