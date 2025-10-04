@@ -289,7 +289,6 @@ try {
             'upload_time' => new \MongoDB\BSON\UTCDateTime()
         ];
 
-        // Check for client disconnection/cancellation just before MongoDB insert
         if (connection_aborted()) {
             $uploadCancelled = true;
             // Delete file from BunnyCDN since we're cancelling before MongoDB insert
