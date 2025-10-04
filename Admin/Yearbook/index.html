@@ -637,7 +637,6 @@
           var viewportHeight = magazineViewport.height();
           var relativeY = e.pageY - viewportOffset.top;
 
-          // Show thumbnails when mouse is in bottom 120px of magazine viewport
           if (relativeY > viewportHeight - 30) {
             clearTimeout(hoverTimer);
             thumbnails.addClass("visible");
