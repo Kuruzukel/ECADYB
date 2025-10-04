@@ -150,7 +150,7 @@ try {
             '600' => 'beced',
             '700' => 'bsn',
             '800' => 'bsis',
-            '900' => 'bsma',  // BS Management Accounting
+            '900' => 'bsma',
             '1000' => 'bse'   // BS Entrepreneurship
         ];
 
