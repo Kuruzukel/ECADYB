@@ -200,7 +200,6 @@ try {
 
         if (connection_aborted()) {
             $uploadCancelled = true;
-            // If upload was successful but client disconnected, delete the file from BunnyCDN
             if ($response !== false && $httpCode >= 200 && $httpCode < 300) {
                 error_log("UploadStudentPhotos.php deleting file from BunnyCDN due to cancellation: $storageUrl");
                 $deleteCh = curl_init($storageUrl);
