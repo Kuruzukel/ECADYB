@@ -115,7 +115,6 @@ try {
             continue;
         }
 
-        // Extract student ID from filename (assuming filename is the student ID)
         $studentId = pathinfo($fileName, PATHINFO_FILENAME);
 
         // Validate that filename is a valid student ID (you may want to adjust this validation)
