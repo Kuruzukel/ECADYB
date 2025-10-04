@@ -87,7 +87,6 @@ try {
     $results = [];
 
     for ($i = 0; $i < count($uploadedFiles['name']); $i++) {
-        // Check for client disconnection/cancellation during processing
         if (connection_aborted()) {
             $uploadCancelled = true;
             respond(false, 'Upload cancelled');
