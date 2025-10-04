@@ -154,7 +154,6 @@ try {
             '1000' => 'bse'
         ];
 
-        // Extract prefix from student ID to determine department
         $prefix = substr($cleanStudentId, 0, 3);
         if (isset($departmentMap[$prefix])) {
             $department = $departmentMap[$prefix];
