@@ -23,7 +23,6 @@ function respond($success, $message = '', $data = [])
         ob_end_clean();
     }
 
-    // If upload was cancelled, ensure we don't save anything
     if ($uploadCancelled && $success) {
         $success = false;
         $message = 'Upload cancelled';
