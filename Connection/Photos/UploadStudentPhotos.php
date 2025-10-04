@@ -145,7 +145,7 @@ try {
             '100' => 'bsme',
             '200' => 'bsmt',
             '300' => 'bscje',
-            '400' => 'bstm',  // BS Tourism Management
+            '400' => 'bstm',
             '500' => 'btvted', // BS Technical-Vocational Teacher Education
             '600' => 'beced', // BS Early Childhood Education
             '700' => 'bsn',   // BS Nursing
