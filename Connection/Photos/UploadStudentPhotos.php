@@ -117,7 +117,13 @@ try {
 
         $studentId = pathinfo($fileName, PATHINFO_FILENAME);
 
-        if (!preg_match('/^\d{4}-\d{6}$/', $studentId) && !is_numeric($studentId)) {
+        // Handle filenames with suffixes like -FILIPINIANA, -TOGA, -UNIFORM
+        // Extract the actual student ID by removing the suffix if present
+        $baseStudentId = $studentId; // Default to the full filename without extension
+        if (preg_match('/^(\d{4}-\d{6})(?:-(?:FILIPINIANA|TOGA|UNIFORM))?$/', $studentId, $matches)) {
+            $studentId = $matches[1]; // This is the clean student ID (2019-003088)
+            $baseStudentId = $studentId; // For use in filename
+        } else if (!preg_match('/^\d{4}-\d{6}$/', $studentId) && !is_numeric($studentId)) {
             $results[] = [
                 'filename' => $fileName,
                 'success' => false,
@@ -165,12 +171,14 @@ try {
         }
 
         $ext = pathinfo($fileName, PATHINFO_EXTENSION) ?: 'jpg';
-        $safeFileName = preg_replace('/[^A-Za-z0-9 _.-]/', '', $studentId) ?: ('student_' . time());
+        // Use the original filename (with suffix) for storage, but extract student ID for metadata
+        $originalNameWithoutExt = pathinfo($fileName, PATHINFO_FILENAME);
+        $safeFileName = preg_replace('/[^A-Za-z0-9 _.-]/', '', $originalNameWithoutExt) ?: ('student_' . time());
         $safeExt = preg_replace('/[^A-Za-z0-9]/', '', $ext) ?: 'jpg';
 
         $safeFolder = 'Student Photos';
         $templateFolder = sprintf('Batch Template %d', $template);
-        $filename = sprintf('%s.%s', $safeFileName, $safeExt);
+        $filename = sprintf('%s.%s', $safeFileName, $safeExt); // This preserves the full filename with suffix
         $path = $safeFolder . '/' . $templateFolder . '/' . $filename;
         $storageUrl = "https://storage.bunnycdn.com/{$bunnyStorageZone}/" . str_replace(' ', '%20', $path);
 
@@ -281,9 +289,9 @@ try {
         }
 
         $document = [
-            'student_id' => $studentId,
-            'filename' => $filename,
-            'original_name' => $fileName,
+            'student_id' => $studentId, // This will be the clean student ID (2019-003088)
+            'filename' => $filename, // This will preserve the full filename with suffix
+            'original_name' => $fileName, // This preserves the original uploaded filename
             'template' => $template,
             'url' => $publicUrl,
             'upload_time' => new \MongoDB\BSON\UTCDateTime()
@@ -307,10 +315,72 @@ try {
 
         try {
             error_log("UploadStudentPhotos.php inserting document: " . json_encode($document));
-            $result = $collection->insertOne($document);
-            $document['_id'] = (string) $result->getInsertedId();
+
+            $existingDocument = $collection->findOne([
+                'student_id' => $studentId,
+                'template' => $template
+            ]);
+
+            if ($existingDocument) {
+                $updateData = ['$set' => ['upload_time' => new \MongoDB\BSON\UTCDateTime()]];
+
+                $originalNameWithoutExt = pathinfo($fileName, PATHINFO_FILENAME);
+                if (strpos($originalNameWithoutExt, '-FILIPINIANA') !== false) {
+                    $updateData['$set']['filipiniana_url'] = $publicUrl;
+                    $updateData['$set']['filipiniana_filename'] = $filename;
+                    $updateData['$set']['filipiniana_original_name'] = $fileName;
+                } elseif (strpos($originalNameWithoutExt, '-TOGA') !== false) {
+                    $updateData['$set']['toga_url'] = $publicUrl;
+                    $updateData['$set']['toga_filename'] = $filename;
+                    $updateData['$set']['toga_original_name'] = $fileName;
+                } elseif (strpos($originalNameWithoutExt, '-UNIFORM') !== false) {
+                    $updateData['$set']['uniform_url'] = $publicUrl;
+                    $updateData['$set']['uniform_filename'] = $filename;
+                    $updateData['$set']['uniform_original_name'] = $fileName;
+                } else {
+                    $updateData['$set']['url'] = $publicUrl;
+                    $updateData['$set']['filename'] = $filename;
+                    $updateData['$set']['original_name'] = $fileName;
+                }
+
+                $result = $collection->updateOne(
+                    ['student_id' => $studentId, 'template' => $template],
+                    $updateData
+                );
+                $document = $existingDocument;
+                $document['_id'] = (string) $document['_id'];
+            } else {
+                $newDocument = [
+                    'student_id' => $studentId,
+                    'template' => $template,
+                    'upload_time' => new \MongoDB\BSON\UTCDateTime()
+                ];
+
+                $originalNameWithoutExt = pathinfo($fileName, PATHINFO_FILENAME);
+                if (strpos($originalNameWithoutExt, '-FILIPINIANA') !== false) {
+                    $newDocument['filipiniana_url'] = $publicUrl;
+                    $newDocument['filipiniana_filename'] = $filename;
+                    $newDocument['filipiniana_original_name'] = $fileName;
+                } elseif (strpos($originalNameWithoutExt, '-TOGA') !== false) {
+                    $newDocument['toga_url'] = $publicUrl;
+                    $newDocument['toga_filename'] = $filename;
+                    $newDocument['toga_original_name'] = $fileName;
+                } elseif (strpos($originalNameWithoutExt, '-UNIFORM') !== false) {
+                    $newDocument['uniform_url'] = $publicUrl;
+                    $newDocument['uniform_filename'] = $filename;
+                    $newDocument['uniform_original_name'] = $fileName;
+                } else {
+                    $newDocument['url'] = $publicUrl;
+                    $newDocument['filename'] = $filename;
+                    $newDocument['original_name'] = $fileName;
+                }
+
+                $result = $collection->insertOne($newDocument);
+                $newDocument['_id'] = (string) $result->getInsertedId();
+                $document = $newDocument;
+            }
         } catch (Exception $e) {
-            error_log("UploadStudentPhotos.php MongoDB insert error: " . $e->getMessage());
+            error_log("UploadStudentPhotos.php MongoDB insert/update error: " . $e->getMessage());
             $results[] = [
                 'filename' => $fileName,
                 'success' => false,
@@ -318,7 +388,7 @@ try {
             ];
             $failedCount++;
 
-            error_log("UploadStudentPhotos.php deleting file from BunnyCDN due to MongoDB insert error: $storageUrl");
+            error_log("UploadStudentPhotos.php deleting file from BunnyCDN due to MongoDB insert/update error: $storageUrl");
             $deleteCh = curl_init($storageUrl);
             curl_setopt_array($deleteCh, [
                 CURLOPT_CUSTOMREQUEST  => 'DELETE',
