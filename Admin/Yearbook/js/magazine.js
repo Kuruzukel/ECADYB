@@ -16,6 +16,20 @@ function addPage(page, book) {
   }
 }
 
+// Function to dynamically add student pages based on student data
+function addStudentPages(book, studentData) {
+  if (!studentData || !studentData.total_pages) return;
+  
+  var totalPages = studentData.total_pages;
+  var studentsPerPage = studentData.students_per_page || 6;
+  
+  // Student pages start at page 7
+  for (var i = 0; i < totalPages; i++) {
+    var pageNum = 7 + i;
+    addPage(pageNum, book);
+  }
+}
+
 function loadPage(page, pageElement) {
   // Create an image element
   var img = $("<img />");
@@ -268,8 +282,8 @@ function loadPage(page, pageElement) {
         managementPage.append(errorMessage);
       }
     });
-  } else if (page >= 7 && page <= 11 && typeof coverData !== 'undefined' && coverData !== null && coverData.background_url) {
-    // Pages 7-11 - Student pages
+  } else if (page >= 7 && typeof coverData !== 'undefined' && coverData !== null && coverData.background_url) {
+    // Dynamic student pages - start from page 7
     console.log('Using background_url for page', page, ':', coverData.background_url);
     img.attr("src", coverData.background_url);
     
@@ -279,117 +293,422 @@ function loadPage(page, pageElement) {
         class: 'cards-container'
       });
 
-      // Add 6 student cards (3 per column)
-      for (var i = 0; i < 6; i++) {
-        var card = $('<div/>', {
-          class: 'student-card'
-        });
-
-        // Add student image placeholder
-        var studentImg = $('<div/>', {
-          class: 'student-image'
-        });
-        
-        // Add placeholder image
-        var placeholderImg = $('<img/>', {
-          src: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="135" height="155" viewBox="0 0 135 155"%3E%3Crect width="135" height="155" fill="%23f0f0f0"/%3E%3Ctext x="67.5" y="77.5" font-family="Arial" font-size="12" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Photo%3C/text%3E%3C/svg%3E',
-          alt: 'Student placeholder'
-        });
-        studentImg.append(placeholderImg);
-
-        // Add student name (default placeholder)
-        var studentName = $('<h3/>', {
-          text: 'Student Name'
-        });
-
-        // Add honors text (default placeholder)
-        var honorsText = $('<p/>', {
-          text: 'Honors and Achievements'
-        });
-
-        // Add click handler for the card
-        card.on('click', function() {
-          var modal = $('.student-modal');
-          var closeBtn = $('.close-modal');
-          var studentName = $(this).find('h3').text();
+      // Extract department from coverData or URL parameters
+      var urlParams = new URLSearchParams(window.location.search);
+      var department = urlParams.get('department') || 'BSME'; // Default to Maritime
+      
+      // Get template from coverData or default to 1
+      var template = (coverData && coverData.template) ? coverData.template : 1;
+      
+      console.log('Fetching student data for department:', department, 'template:', template);
+      
+      // Fetch student data from our API
+      $.ajax({
+        url: "../../Connection/Photos/FetchStudentData.php",
+        method: "GET",
+        data: {
+          department: department,
+          template: template
+        },
+        dataType: "json",
+        success: function(response) {
+          console.log("Student data response:", response);
           
-          // Sample images for demonstration (replace with actual student photos)
-          var studentPhotos = [
-            'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect width="300" height="300" fill="%23f0f0f0"/%3E%3Ctext x="150" y="150" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Student Photo%3C/text%3E%3C/svg%3E',
-            'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect width="300" height="300" fill="%23f0f0f0"/%3E%3Ctext x="150" y="150" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Student Photo%3C/text%3E%3C/svg%3E',
-            'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect width="300" height="300" fill="%23f0f0f0"/%3E%3Ctext x="150" y="150" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Student Photo%3C/text%3E%3C/svg%3E'
-          ];
-          
-          // Initialize modal content with default placeholder
-          modal.find('.student-name').text('Student Name');
-          modal.find('.motto p').text('No motto available.');
-          modal.find('.milestones ul').html('<li>Honors and Achievements</li>');
-          
-          // Initialize images
-          var $largeImage = modal.find('.student-image-large img');
-          var $thumbnails = modal.find('.student-image-thumbnails .thumbnail');
-          
-          // Set initial large image
-          $largeImage.attr('src', studentPhotos[0]);
-          
-          // Set thumbnail images and initial active state
-          $thumbnails.each(function(index) {
-            $(this)
-              .find('img')
-              .attr('src', studentPhotos[index]);
+          if (response.success && response.data && response.data.students) {
+            var students = response.data.students;
+            var totalStudents = response.data.total_students;
+            var studentsPerPage = response.data.students_per_page;
             
-            if (index === 0) {
-              $(this).addClass('active');
-            } else {
-              $(this).removeClass('active');
+            // Calculate which students to show on this page
+            // Pages 7+ correspond to student pages, so page 7 = first student page (students 1-6)
+            var pageOffset = (page - 7) * studentsPerPage;
+            
+            // Add up to 6 student cards for this page
+            for (var i = 0; i < studentsPerPage; i++) {
+              var studentIndex = pageOffset + i;
+              
+              // Check if we have a student for this position
+              if (studentIndex < students.length) {
+                var student = students[studentIndex];
+                
+                var card = $('<div/>', {
+                  class: 'student-card'
+                });
+
+                // Add student image
+                var studentImg = $('<div/>', {
+                  class: 'student-image'
+                });
+                
+                // Use student photo or placeholder
+                var photoUrl = student.photo_url || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="135" height="155" viewBox="0 0 135 155"%3E%3Crect width="135" height="155" fill="%23f0f0f0"/%3E%3Ctext x="67.5" y="77.5" font-family="Arial" font-size="12" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Photo%3C/text%3E%3C/svg%3E';
+                var studentPhoto = $('<img/>', {
+                  src: photoUrl,
+                  alt: student.name,
+                  onerror: "this.src='data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"135\" height=\"155\" viewBox=\"0 0 135 155\"%3E%3Crect width=\"135\" height=\"155\" fill=\"%23f0f0f0\"/%3E%3Ctext x=\"67.5\" y=\"77.5\" font-family=\"Arial\" font-size=\"12\" fill=\"%23999\" text-anchor=\"middle\" dominant-baseline=\"middle\"%3ENo Photo%3C/text%3E%3C/svg%3E';"
+                });
+                studentImg.append(studentPhoto);
+
+                // Add student name
+                var studentName = $('<h3/>', {
+                  text: student.name
+                });
+
+                // Add honors/program text
+                var honorsText = $('<p/>', {
+                  text: student.program || 'Honors and Achievements'
+                });
+
+                // Add click handler for the card
+                card.on('click', function() {
+                  var modal = $('.student-modal');
+                  var closeBtn = $('.close-modal');
+                  var clickedStudent = students[$(this).index()];
+                  
+                  // Initialize modal content with student data
+                  modal.find('.student-name').text(clickedStudent.name);
+                  modal.find('.academic-year span').text(clickedStudent.year || 'N/A');
+                  modal.find('.motto p').text(clickedStudent.motto || 'No motto provided');
+                  
+                  // Process milestones
+                  var milestonesList = modal.find('.milestones ul');
+                  milestonesList.empty();
+                  
+                  if (clickedStudent.milestones && Array.isArray(clickedStudent.milestones) && clickedStudent.milestones.length > 0) {
+                    clickedStudent.milestones.forEach(function(milestone) {
+                      milestonesList.append('<li>' + milestone + '</li>');
+                    });
+                  } else {
+                    milestonesList.append('<li>No milestones recorded</li>');
+                  }
+                  
+                  // Initialize images
+                  var $largeImage = modal.find('.student-image-large img');
+                  var $thumbnails = modal.find('.student-image-thumbnails .thumbnail');
+                  
+                  // Use student photo or placeholder
+                  var modalPhotoUrl = clickedStudent.photo_url || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect width="300" height="300" fill="%23f0f0f0"/%3E%3Ctext x="150" y="150" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Student Photo%3C/text%3E%3C/svg%3E';
+                  
+                  // Set initial large image
+                  $largeImage.attr('src', modalPhotoUrl);
+                  
+                  // Set thumbnail images and initial active state
+                  $thumbnails.each(function(index) {
+                    $(this)
+                      .find('img')
+                      .attr('src', modalPhotoUrl);
+                    
+                    if (index === 0) {
+                      $(this).addClass('active');
+                    } else {
+                      $(this).removeClass('active');
+                    }
+                  });
+                  
+                  // Show modal
+                  modal.addClass('active');
+                  
+                  // Handle thumbnail clicks
+                  $thumbnails.off('click').on('click', function(e) {
+                    e.stopPropagation(); // Prevent modal from closing
+                    e.preventDefault();
+                    
+                    var $this = $(this);
+                    var index = $this.index();
+                    
+                    // Update active state
+                    $thumbnails.removeClass('active');
+                    $this.addClass('active');
+                    
+                    // Update large image with fade effect
+                    $largeImage.fadeOut(200, function() {
+                      $(this).attr('src', modalPhotoUrl).fadeIn(200);
+                    });
+                  });
+                  
+                  // Close modal when clicking close button or outside
+                  closeBtn.on('click', function() {
+                    modal.removeClass('active');
+                  });
+                  
+                  $(window).on('click', function(event) {
+                    if ($(event.target).hasClass('student-modal')) {
+                      modal.removeClass('active');
+                    }
+                  });
+                });
+
+                // Assemble the card
+                card.append(studentImg)
+                    .append(studentName)
+                    .append(honorsText);
+
+                cardsContainer.append(card);
+              } else {
+                // Add empty card placeholder
+                var card = $('<div/>', {
+                  class: 'student-card empty'
+                });
+
+                // Add student image placeholder
+                var studentImg = $('<div/>', {
+                  class: 'student-image'
+                });
+                
+                // Add placeholder image
+                var placeholderImg = $('<img/>', {
+                  src: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="135" height="155" viewBox="0 0 135 155"%3E%3Crect width="135" height="155" fill="%23f0f0f0"/%3E%3Ctext x="67.5" y="77.5" font-family="Arial" font-size="12" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3EEmpty%3C/text%3E%3C/svg%3E',
+                  alt: 'Empty slot'
+                });
+                studentImg.append(placeholderImg);
+
+                // Add placeholder text
+                var studentName = $('<h3/>', {
+                  text: 'Available Slot'
+                });
+
+                var honorsText = $('<p/>', {
+                  text: 'Student data pending'
+                });
+
+                // Assemble the card
+                card.append(studentImg)
+                    .append(studentName)
+                    .append(honorsText);
+
+                cardsContainer.append(card);
+              }
             }
-          });
+          } else {
+            // Error or no data - create default cards
+            for (var i = 0; i < 6; i++) {
+              var card = $('<div/>', {
+                class: 'student-card'
+              });
+
+              // Add student image placeholder
+              var studentImg = $('<div/>', {
+                class: 'student-image'
+              });
+              
+              // Add placeholder image
+              var placeholderImg = $('<img/>', {
+                src: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="135" height="155" viewBox="0 0 135 155"%3E%3Crect width="135" height="155" fill="%23f0f0f0"/%3E%3Ctext x="67.5" y="77.5" font-family="Arial" font-size="12" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Photo%3C/text%3E%3C/svg%3E',
+                alt: 'Student placeholder'
+              });
+              studentImg.append(placeholderImg);
+
+              // Add student name (default placeholder)
+              var studentName = $('<h3/>', {
+                text: 'Student Name'
+              });
+
+              // Add honors text (default placeholder)
+              var honorsText = $('<p/>', {
+                text: 'Honors and Achievements'
+              });
+
+              // Add click handler for the card
+              card.on('click', function() {
+                var modal = $('.student-modal');
+                var closeBtn = $('.close-modal');
+                var studentName = $(this).find('h3').text();
+                
+                // Sample images for demonstration (replace with actual student photos)
+                var studentPhotos = [
+                  'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect width="300" height="300" fill="%23f0f0f0"/%3E%3Ctext x="150" y="150" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Student Photo%3C/text%3E%3C/svg%3E',
+                  'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect width="300" height="300" fill="%23f0f0f0"/%3E%3Ctext x="150" y="150" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Student Photo%3C/text%3E%3C/svg%3E',
+                  'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect width="300" height="300" fill="%23f0f0f0"/%3E%3Ctext x="150" y="150" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Student Photo%3C/text%3E%3C/svg%3E'
+                ];
+                
+                // Initialize modal content with default placeholder
+                modal.find('.student-name').text('Student Name');
+                modal.find('.motto p').text('No motto available.');
+                modal.find('.milestones ul').html('<li>Honors and Achievements</li>');
+                
+                // Initialize images
+                var $largeImage = modal.find('.student-image-large img');
+                var $thumbnails = modal.find('.student-image-thumbnails .thumbnail');
+                
+                // Set initial large image
+                $largeImage.attr('src', studentPhotos[0]);
+                
+                // Set thumbnail images and initial active state
+                $thumbnails.each(function(index) {
+                  $(this)
+                    .find('img')
+                    .attr('src', studentPhotos[index]);
+                  
+                  if (index === 0) {
+                    $(this).addClass('active');
+                  } else {
+                    $(this).removeClass('active');
+                  }
+                });
+                
+                // Show modal
+                modal.addClass('active');
+                
+                // Handle thumbnail clicks
+                $thumbnails.off('click').on('click', function(e) {
+                  e.stopPropagation(); // Prevent modal from closing
+                  e.preventDefault();
+                  
+                  var $this = $(this);
+                  var index = $this.index();
+                  
+                  // Update active state
+                  $thumbnails.removeClass('active');
+                  $this.addClass('active');
+                  
+                  // Update large image with fade effect
+                  $largeImage.fadeOut(200, function() {
+                    $(this).attr('src', studentPhotos[index]).fadeIn(200);
+                  });
+                  
+                  console.log('Switching to photo:', index + 1); // Debug log
+                });
+                
+                // Close modal when clicking close button or outside
+                closeBtn.on('click', function() {
+                  modal.removeClass('active');
+                });
+                
+                $(window).on('click', function(event) {
+                  if ($(event.target).hasClass('student-modal')) {
+                    modal.removeClass('active');
+                  }
+                });
+              });
+
+              // Assemble the card
+              card.append(studentImg)
+                  .append(studentName)
+                  .append(honorsText);
+
+              cardsContainer.append(card);
+            }
+          }
           
-          // Show modal
-          modal.addClass('active');
+          // Add the cards container to the page
+          pageElement.append(cardsContainer);
+        },
+        error: function(xhr, status, error) {
+          console.log("Error fetching student data:", error);
           
-          // Handle thumbnail clicks
-          $thumbnails.off('click').on('click', function(e) {
-            e.stopPropagation(); // Prevent modal from closing
-            e.preventDefault();
-            
-            var $this = $(this);
-            var index = $this.index();
-            
-            // Update active state
-            $thumbnails.removeClass('active');
-            $this.addClass('active');
-            
-            // Update large image with fade effect
-            $largeImage.fadeOut(200, function() {
-              $(this).attr('src', studentPhotos[index]).fadeIn(200);
+          // Create default cards on error
+          for (var i = 0; i < 6; i++) {
+            var card = $('<div/>', {
+              class: 'student-card'
+            });
+
+            // Add student image placeholder
+            var studentImg = $('<div/>', {
+              class: 'student-image'
             });
             
-            console.log('Switching to photo:', index + 1); // Debug log
-          });
+            // Add placeholder image
+            var placeholderImg = $('<img/>', {
+              src: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="135" height="155" viewBox="0 0 135 155"%3E%3Crect width="135" height="155" fill="%23f0f0f0"/%3E%3Ctext x="67.5" y="77.5" font-family="Arial" font-size="12" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Photo%3C/text%3E%3C/svg%3E',
+              alt: 'Student placeholder'
+            });
+            studentImg.append(placeholderImg);
+
+            // Add student name (default placeholder)
+            var studentName = $('<h3/>', {
+              text: 'Student Name'
+            });
+
+            // Add honors text (default placeholder)
+            var honorsText = $('<p/>', {
+              text: 'Honors and Achievements'
+            });
+
+            // Add click handler for the card
+            card.on('click', function() {
+              var modal = $('.student-modal');
+              var closeBtn = $('.close-modal');
+              var studentName = $(this).find('h3').text();
+              
+              // Sample images for demonstration (replace with actual student photos)
+              var studentPhotos = [
+                'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect width="300" height="300" fill="%23f0f0f0"/%3E%3Ctext x="150" y="150" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Student Photo%3C/text%3E%3C/svg%3E',
+                'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect width="300" height="300" fill="%23f0f0f0"/%3E%3Ctext x="150" y="150" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Student Photo%3C/text%3E%3C/svg%3E',
+                'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect width="300" height="300" fill="%23f0f0f0"/%3E%3Ctext x="150" y="150" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Student Photo%3C/text%3E%3C/svg%3E'
+              ];
+              
+              // Initialize modal content with default placeholder
+              modal.find('.student-name').text('Student Name');
+              modal.find('.motto p').text('No motto available.');
+              modal.find('.milestones ul').html('<li>Honors and Achievements</li>');
+              
+              // Initialize images
+              var $largeImage = modal.find('.student-image-large img');
+              var $thumbnails = modal.find('.student-image-thumbnails .thumbnail');
+              
+              // Set initial large image
+              $largeImage.attr('src', studentPhotos[0]);
+              
+              // Set thumbnail images and initial active state
+              $thumbnails.each(function(index) {
+                $(this)
+                  .find('img')
+                  .attr('src', studentPhotos[index]);
+                
+                if (index === 0) {
+                  $(this).addClass('active');
+                } else {
+                  $(this).removeClass('active');
+                }
+              });
+              
+              // Show modal
+              modal.addClass('active');
+              
+              // Handle thumbnail clicks
+              $thumbnails.off('click').on('click', function(e) {
+                e.stopPropagation(); // Prevent modal from closing
+                e.preventDefault();
+                
+                var $this = $(this);
+                var index = $this.index();
+                
+                // Update active state
+                $thumbnails.removeClass('active');
+                $this.addClass('active');
+                
+                // Update large image with fade effect
+                $largeImage.fadeOut(200, function() {
+                  $(this).attr('src', studentPhotos[index]).fadeIn(200);
+                });
+                
+                console.log('Switching to photo:', index + 1); // Debug log
+              });
+              
+              // Close modal when clicking close button or outside
+              closeBtn.on('click', function() {
+                modal.removeClass('active');
+              });
+              
+              $(window).on('click', function(event) {
+                if ($(event.target).hasClass('student-modal')) {
+                  modal.removeClass('active');
+                }
+              });
+            });
+
+            // Assemble the card
+            card.append(studentImg)
+                .append(studentName)
+                .append(honorsText);
+
+            cardsContainer.append(card);
+          }
           
-          // Close modal when clicking close button or outside
-          closeBtn.on('click', function() {
-            modal.removeClass('active');
-          });
-          
-          $(window).on('click', function(event) {
-            if ($(event.target).hasClass('student-modal')) {
-              modal.removeClass('active');
-            }
-          });
-        });
-
-        // Assemble the card
-        card.append(studentImg)
-            .append(studentName)
-            .append(honorsText);
-
-        cardsContainer.append(card);
-      }
-
-      // Add the cards container to the page
-      pageElement.append(cardsContainer);
+          // Add the cards container to the page
+          pageElement.append(cardsContainer);
+        }
+      });
     });
   } else if (typeof coverData !== 'undefined' && coverData !== null && coverData.background_url) {
     // Other middle pages - use background image as fallback

@@ -7,7 +7,7 @@
     <title>College of Information System</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link href="../Flipbook/turn.js/dist/style.css" rel="stylesheet">
-    <link href="./assets/css/InformationSystem.css" rel="stylesheet">
+    <link href="../Departments/assets/css/InformationSystem.css" rel="stylesheet">
     </head>
 
 <body>
@@ -21,8 +21,7 @@
     <script src="https://code.jquery.com/jquery-2.0.3.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.4.0/backbone-min.js"></script>
-    <script src="./script.js"></script>
-    <script src="./assets/js/InformationSystem.js"></script>
+    <script src="../Departments/assets/js/InformationSystem.js"></script>
   </div>
 </body>
 
