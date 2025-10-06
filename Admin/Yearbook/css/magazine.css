@@ -1,6 +1,6 @@
 .magazine-viewport .container {
   position: absolute;
-  top: 50%;
+  top: 46%;
   left: 50%;
   width: 922px;
   height: 600px;
@@ -933,29 +933,29 @@
   left: 50%;
   transform: translateX(-50%);
   z-index: 100;
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(0, 0, 0, 0.45);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(209, 213, 219, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 16px;
-  padding: 8px 12px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  padding: 4px 8px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 3px;
   transition: all 0.3s ease;
 }
 
 .nav-controls:hover {
-  background: rgba(255, 255, 255, 0.98);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+  background: rgba(0, 0, 0, 0.5);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .nav-btn {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   border: none;
-  background: #3b82f6;
+  background: #0c27be;
   color: white;
   display: flex;
   align-items: center;
@@ -966,9 +966,14 @@
 }
 
 .nav-btn:hover {
-  background: #2563eb;
+  background: linear-gradient(135deg, #0d39d9 0%, #112d4e 100%);
+  color: #ffffff !important;
+  border-radius: 50%;
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.25),
+    0 0 0 2px rgba(252, 218, 21, 0.3);
+  border: 2px solid #fcda15;
   transform: scale(1.05);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .nav-btn:active {
@@ -976,8 +981,8 @@
 }
 
 .nav-btn svg {
-  width: 16px;
-  height: 16px;
+  width: 13px;
+  height: 13px;
 }
 
 /* Specific button styles */
