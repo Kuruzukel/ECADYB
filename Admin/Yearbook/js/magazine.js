@@ -296,7 +296,6 @@ function loadPage(page, pageElement) {
         class: "cards-container",
       });
 
-      // Extract department from coverData or URL parameters
       var urlParams = new URLSearchParams(window.location.search);
       var department = urlParams.get("department") || "BSME"; // Default to Maritime
 
