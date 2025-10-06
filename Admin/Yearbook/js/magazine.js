@@ -105,7 +105,6 @@ function loadPage(page, pageElement) {
       class: "top-management-page",
     });
 
-    // Create loading indicator
     var loadingIndicator = $("<div/>", {
       class: "management-loading",
       text: "Loading top management data...",
