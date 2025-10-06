@@ -33,7 +33,6 @@ function loadPage(page, pageElement) {
   img.on("load", function () {
     $(this).css({ width: "100%", height: "100%" });
 
-    // Add the image to the page after loaded
     $(this).appendTo(pageElement);
 
     // Remove the loader indicator
