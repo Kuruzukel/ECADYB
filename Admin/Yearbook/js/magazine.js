@@ -204,7 +204,6 @@ function loadPage(page, pageElement) {
 
             managementPage.append(photoContainer).append(infoContainer);
           } else {
-            // Not enough data for this page - create a placeholder with default content
             var placeholderContainer = $("<div/>", {
               class: "top-management-page",
             });
