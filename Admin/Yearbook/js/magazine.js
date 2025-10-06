@@ -17,7 +17,6 @@ function addStudentPages(book, studentData) {
   var totalPages = studentData.total_pages;
   var studentsPerPage = studentData.students_per_page || 6;
 
-  // Student pages start at page 7
   for (var i = 0; i < totalPages; i++) {
     var pageNum = 7 + i;
     addPage(pageNum, book);
