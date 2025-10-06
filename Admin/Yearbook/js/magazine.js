@@ -444,7 +444,6 @@ function loadPage(page, pageElement) {
                   class: "student-card empty",
                 });
 
-                // Add student image placeholder
                 var studentImg = $("<div/>", {
                   class: "student-image",
                 });
