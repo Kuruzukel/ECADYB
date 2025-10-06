@@ -53,7 +53,6 @@ function loadPage(page, pageElement) {
     return;
   }
 
-  // Debug: Log the coverData and page information
   console.log(
     "Loading page:",
     page,
