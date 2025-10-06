@@ -84,7 +84,6 @@ function loadPage(page, pageElement) {
     typeof coverData !== "undefined" &&
     coverData !== null
   ) {
-    // Pages 2-6 - Top Management pages
     console.log("Loading top management page:", page);
 
     // Use background image if available
