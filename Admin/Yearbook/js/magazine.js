@@ -133,7 +133,6 @@ function loadPage(page, pageElement) {
         loadingIndicator.remove();
 
         if (response.success && response.data && response.data.length > 0) {
-          // Check if we have enough data for this page
           if (managementIndex < response.data.length) {
             var currentManager = response.data[managementIndex];
 
