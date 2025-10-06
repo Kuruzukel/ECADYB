@@ -120,7 +120,6 @@ function loadPage(page, pageElement) {
 
     var managementIndex = page - 2;
 
-    // Fetch data from our API
     $.ajax({
       url: "../../Connection/Photos/FetchTopManagement.php",
       method: "GET",
