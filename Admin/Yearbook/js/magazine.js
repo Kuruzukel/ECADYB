@@ -477,7 +477,6 @@ function loadPage(page, pageElement) {
                 class: "student-image",
               });
 
-              // Add placeholder image
               var placeholderImg = $("<img/>", {
                 src: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="135" height="155" viewBox="0 0 135 155"%3E%3Crect width="135" height="155" fill="%23f0f0f0"/%3E%3Ctext x="67.5" y="77.5" font-family="Arial" font-size="12" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Photo%3C/text%3E%3C/svg%3E',
                 alt: "Student placeholder",
