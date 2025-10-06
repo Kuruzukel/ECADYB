@@ -268,7 +268,6 @@ function loadPage(page, pageElement) {
       error: function (xhr, status, error) {
         console.log("Error fetching top management data:", error);
 
-        // Remove loading indicator
         loadingIndicator.remove();
 
         // Show error message
