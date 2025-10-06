@@ -155,7 +155,6 @@ function loadPage(page, pageElement) {
             });
             photoContainer.append(photo);
 
-            // Add name with default placeholder
             var name = $("<h2/>", {
               class: "management-name",
               text: currentManager.name || "Top Management Name",
