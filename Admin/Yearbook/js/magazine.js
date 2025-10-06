@@ -4,7 +4,6 @@ function addPage(page, book) {
 
   var element = $("<div />", {});
 
-  // Add the page to the flipbook
   if (book.turn("addPage", element, page)) {
     // Add the initial HTML
     // Only show a loader indicator; gradient removed
