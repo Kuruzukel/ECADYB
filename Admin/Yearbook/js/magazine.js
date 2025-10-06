@@ -31,7 +31,6 @@ function loadPage(page, pageElement) {
   });
 
   img.on("load", function () {
-    // Set the size
     $(this).css({ width: "100%", height: "100%" });
 
     // Add the image to the page after loaded
