@@ -283,7 +283,6 @@ function loadPage(page, pageElement) {
     coverData !== null &&
     coverData.background_url
   ) {
-    // Dynamic student pages - start from page 7
     console.log(
       "Using background_url for page",
       page,
