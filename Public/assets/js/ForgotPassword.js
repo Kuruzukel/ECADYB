@@ -2,6 +2,7 @@
 let otpSent = false;
 let otpCode = null;
 let emailVerified = false;
+let emailExists = false;
 
 // DOM elements
 const emailInput = document.getElementById("idInput");
@@ -14,8 +15,17 @@ const form = document.querySelector("form");
 window.addEventListener("DOMContentLoaded", () => {
   document.body.classList.add("page-transition-in");
   
-  // Disable submit button initially
-  updateSubmitButton();
+  // Enable submit button initially
+  submitButton.disabled = false;
+  submitButton.style.opacity = "1";
+  submitButton.style.cursor = "pointer";
+  
+  // Disable verification code input initially
+  verificationCodeInput.disabled = true;
+  verificationCodeInput.style.opacity = "0.5";
+  verificationCodeInput.style.cursor = "not-allowed";
+  
+  updateGetCodeButton();
   
   // Add event listeners
   setupEventListeners();
@@ -30,11 +40,24 @@ function setupEventListeners() {
     limitID();
     validateEmail();
     updateSubmitButton();
+    updateGetCodeButton();
+    // Disable verification input when email changes
+    otpSent = false;
+    emailVerified = false;
+    verificationCodeInput.value = "";
+    verificationCodeInput.disabled = true;
+    verificationCodeInput.style.opacity = "0.5";
+    verificationCodeInput.style.cursor = "not-allowed";
   });
 
-  // Verification code input validation
+  // Verification code input validation & sanitize to digits only, max 6
   verificationCodeInput.addEventListener("input", function() {
-    validateVerificationCode();
+    const sanitized = verificationCodeInput.value.replace(/\D+/g, '').slice(0, 6);
+    if (verificationCodeInput.value !== sanitized) {
+      verificationCodeInput.value = sanitized;
+    }
+    // Don't validate on input - only validate on submit
+    clearFieldHighlight("verificationCodeInput");
     updateSubmitButton();
   });
 
@@ -82,11 +105,13 @@ function validateEmail() {
   
   if (!email) {
     clearFieldHighlight("idInput");
+    emailExists = false;
     return false;
   }
   
   if (!emailRegex.test(email)) {
-    highlightField("idInput", "Please enter a valid email address.");
+    // keep validation silent during typing; show errors on action (Get Code)
+    emailExists = false;
     return false;
   }
   
@@ -94,20 +119,41 @@ function validateEmail() {
   return true;
 }
 
+async function checkEmailExists(email) {
+  try {
+    const response = await fetch('../../Connection/Student/CheckEmail.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email: email })
+    });
+    
+    const result = await response.json();
+    return result.exists;
+  } catch (error) {
+    console.error('Error checking email:', error);
+    return false;
+  }
+}
+
 function validateVerificationCode() {
   const code = verificationCodeInput.value.trim();
   
   if (!code) {
+    // Don't show error for empty field initially
     clearFieldHighlight("verificationCodeInput");
     return false;
   }
   
   if (code.length !== 6) {
+    // Only show error if there's content but it's not 6 digits
     highlightField("verificationCodeInput", "Verification code must be 6 digits.");
     return false;
   }
   
   if (!/^\d{6}$/.test(code)) {
+    // Only show error if there's content but it contains non-digits
     highlightField("verificationCodeInput", "Verification code must contain only numbers.");
     return false;
   }
@@ -117,18 +163,25 @@ function validateVerificationCode() {
 }
 
 function updateSubmitButton() {
-  const emailValid = validateEmail();
-  const codeValid = validateVerificationCode();
-  const canSubmit = emailValid && codeValid && otpSent && emailVerified;
+  // Always keep submit button enabled
+  submitButton.disabled = false;
+  submitButton.style.opacity = "1";
+  submitButton.style.cursor = "pointer";
+}
+
+function updateGetCodeButton() {
+  const email = emailInput.value.trim();
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const isValidEmail = email && emailRegex.test(email);
   
-  if (canSubmit) {
-    submitButton.disabled = false;
-    submitButton.style.opacity = "1";
-    submitButton.style.cursor = "pointer";
+  if (!isValidEmail || otpSent) {
+    getCodeText.style.opacity = "0.5";
+    getCodeText.style.cursor = "not-allowed";
+    getCodeText.style.pointerEvents = "none";
   } else {
-    submitButton.disabled = true;
-    submitButton.style.opacity = "0.6";
-    submitButton.style.cursor = "not-allowed";
+    getCodeText.style.opacity = "1";
+    getCodeText.style.cursor = "pointer";
+    getCodeText.style.pointerEvents = "auto";
   }
 }
 
@@ -142,16 +195,18 @@ async function handleGetCode() {
   }
   
   if (!validateEmail()) {
+    showErrorModal("Please enter a valid email address.");
+    highlightField("idInput");
     return;
   }
   
   // Show loading state
-  getCodeText.textContent = "Sending...";
+  getCodeText.textContent = "Checking...";
   getCodeText.style.pointerEvents = "none";
   
   try {
     // Check if email exists in database
-    const emailCheckResponse = await fetch('/Connection/Student/CheckEmail.php', {
+    const emailCheckResponse = await fetch('../../Connection/Student/CheckEmail.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -162,14 +217,17 @@ async function handleGetCode() {
     const emailCheckResult = await emailCheckResponse.json();
     
     if (!emailCheckResult.exists) {
-      showErrorModal("Email address not found in our database. Please check your email or contact support.");
+      showErrorModal("Email address not found in our database. Please check your email address or contact support.");
       highlightField("idInput");
       resetGetCodeButton();
       return;
     }
     
+    // Update loading text
+    getCodeText.textContent = "Sending...";
+    
     // Generate and send OTP
-    const otpResponse = await fetch('/Connection/Student/SendOTP.php', {
+    const otpResponse = await fetch('../../Connection/Student/SendOTP.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -183,10 +241,17 @@ async function handleGetCode() {
       otpCode = otpResult.otp;
       otpSent = true;
       emailVerified = true;
+      emailExists = true;
       
-      showErrorModal("Verification code sent to your email address.", "success");
+      showErrorModal("Please check your email inbox for your verification code.", "success");
       getCodeText.textContent = "Code Sent";
       getCodeText.style.color = "#28a745";
+      getCodeText.style.pointerEvents = "none";
+      
+      // Enable verification code input only after OTP is sent
+      verificationCodeInput.disabled = false;
+      verificationCodeInput.style.opacity = "1";
+      verificationCodeInput.style.cursor = "text";
       
       // Focus on verification code input
       verificationCodeInput.focus();
@@ -206,24 +271,60 @@ function resetGetCodeButton() {
   getCodeText.textContent = "Get Code";
   getCodeText.style.pointerEvents = "auto";
   getCodeText.style.color = "#6366f1";
+  updateGetCodeButton();
 }
 
 async function handleFormSubmission() {
   const email = emailInput.value.trim();
   const verificationCode = verificationCodeInput.value.trim();
   
-  // Final validation
-  if (!validateEmail() || !validateVerificationCode()) {
+  // Check if all fields are empty
+  if (!email && !verificationCode) {
+    showErrorModal("Please fill in all required fields.");
     return;
   }
   
-  if (!otpSent || !emailVerified) {
-    showErrorModal("Please get and verify your code first.");
+  // Check if only verification code is filled
+  if (!email && verificationCode) {
+    showErrorModal("Please enter your email address first before entering the verification code.");
+    highlightField("idInput");
     return;
   }
   
-  // Verify OTP
-  if (verificationCode !== otpCode) {
+  // Check if email is empty
+  if (!email) {
+    showErrorModal("Please enter your email address.");
+    highlightField("idInput");
+    return;
+  }
+  
+  // Check if verification code input is disabled (OTP not sent)
+  if (verificationCodeInput.disabled) {
+    showErrorModal("Please click 'Get Code' to receive your verification code first.");
+    return;
+  }
+  
+  // Check if verification code is empty
+  if (!verificationCode) {
+    showErrorModal("Please enter the verification code.");
+    highlightField("verificationCodeInput");
+    return;
+  }
+  
+  // Validate email format
+  if (!validateEmail()) {
+    showErrorModal("Please enter a valid email address.");
+    highlightField("idInput");
+    return;
+  }
+  
+  // Validate verification code format
+  if (!validateVerificationCode()) {
+    return; // Error message already shown by validateVerificationCode
+  }
+  
+  // Verify OTP if available
+  if (otpCode && verificationCode !== otpCode) {
     showErrorModal("Invalid verification code. Please check and try again.");
     highlightField("verificationCodeInput");
     return;
@@ -235,7 +336,7 @@ async function handleFormSubmission() {
   
   try {
     // Submit the form with verification
-    const response = await fetch('/Connection/Student/ResetPassword.php', {
+    const response = await fetch('../../Connection/Student/ForgotPassword.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -330,7 +431,7 @@ function checkForServerMessages() {
   if (errorMessage) {
     showErrorModal(errorMessage);
   }
-  
+
   const successMessage = document.body.getAttribute("data-success-message");
   if (successMessage) {
     showErrorModal(successMessage, "success");

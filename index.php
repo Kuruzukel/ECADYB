@@ -181,10 +181,10 @@ if (array_key_exists($requestUri, $routes)) {
                     'href="../assets/css/Login.css?v=',
                     'src="../assets/js/Login.js"',
                     'src="../assets/js/Login.js?v=',
-                    'href="../assets/css/ResetPassword.css"',
-                    'href="../assets/css/ResetPassword.css?v=',
-                    'src="../assets/js/ResetPassword.js"',
-                    'src="../assets/js/ResetPassword.js?v='
+                    'href="../assets/css/ForgotPassword.css"',
+                    'href="../assets/css/ForgotPassword.css?v=',
+                    'src="../assets/js/ForgotPassword.js"',
+                    'src="../assets/js/ForgotPassword.js?v='
                 ],
                 [
                     'href="' . BASE_URL . 'LandingPage/style.css"',
@@ -197,10 +197,10 @@ if (array_key_exists($requestUri, $routes)) {
                     'href="' . BASE_URL . 'Public/assets/css/Login.css?v=',
                     'src="' . BASE_URL . 'Public/assets/js/Login.js"',
                     'src="' . BASE_URL . 'Public/assets/js/Login.js?v=',
-                    'href="' . BASE_URL . 'Public/assets/css/ResetPassword.css"',
-                    'href="' . BASE_URL . 'Public/assets/css/ResetPassword.css?v=',
-                    'src="' . BASE_URL . 'Public/assets/js/ResetPassword.js"',
-                    'src="' . BASE_URL . 'Public/assets/js/ResetPassword.js?v='
+                    'href="' . BASE_URL . 'Public/assets/css/ForgotPassword.css"',
+                    'href="' . BASE_URL . 'Public/assets/css/ForgotPassword.css?v=',
+                    'src="' . BASE_URL . 'Public/assets/js/ForgotPassword.js"',
+                    'src="' . BASE_URL . 'Public/assets/js/ForgotPassword.js?v='
                 ],
                 $htmlContent
             );
