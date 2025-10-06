@@ -68,7 +68,6 @@ function loadPage(page, pageElement) {
     coverData !== null &&
     coverData.front_url
   ) {
-    // First page - use front cover
     console.log("Using front_url for page 1:", coverData.front_url);
     img.attr("src", coverData.front_url);
   } else if (
