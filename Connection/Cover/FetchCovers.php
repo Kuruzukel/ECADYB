@@ -65,7 +65,8 @@ try {
                 'front_url' => 1,
                 'back_url' => 1,
                 'background_url' => 1,
-                'template' => 1
+                'template' => 1,
+                'upload_time' => 1
             ],
             'limit' => 8
         ]
@@ -77,18 +78,31 @@ try {
         error_log("FetchCovers.php found document: " . json_encode($doc));
         $slot = (int)($doc['slot'] ?? 0);
 
+        $version = '';
+        if (isset($doc['upload_time'])) {
+            try {
+                $uploadMs = (int) ((string) $doc['upload_time']->toDateTime()->format('Uu'));
+                $version = $uploadMs > 0 ? ('?v=' . $uploadMs) : '';
+            } catch (Exception $e) {
+                $version = '';
+            }
+        }
+
         if ($slot >= 1 && $slot <= 7) {
+            $front = isset($doc['front_url']) ? (string)$doc['front_url'] : '';
+            $back  = isset($doc['back_url']) ? (string)$doc['back_url'] : '';
             $items[] = [
                 'slot' => $slot,
-                'front_url' => isset($doc['front_url']) ? (string)$doc['front_url'] : '',
-                'back_url' => isset($doc['back_url']) ? (string)$doc['back_url'] : ''
+                'front_url' => $front ? ($front . $version) : '',
+                'back_url' => $back ? ($back . $version) : ''
             ];
         } elseif ($slot === 8) {
             $backgroundUrl = isset($doc['background_url']) ? (string)$doc['background_url'] : '';
+            $backgroundWithV = $backgroundUrl ? ($backgroundUrl . $version) : '';
             $items[] = [
                 'slot' => 8,
-                'front_url' => $backgroundUrl,
-                'background_url' => $backgroundUrl
+                'front_url' => $backgroundWithV,
+                'background_url' => $backgroundWithV
             ];
         }
     }

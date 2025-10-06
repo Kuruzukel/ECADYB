@@ -148,6 +148,7 @@ try {
     $baseOriginal = pathinfo($originalName, PATHINFO_FILENAME);
     $safeBase     = preg_replace('/[^A-Za-z0-9 _.-]/', '', $baseOriginal) ?: ('image_' . time());
     $safeExt      = preg_replace('/[^A-Za-z0-9]/', '', $ext) ?: 'jpg';
+    $versionToken = (string) round(microtime(true) * 1000);
 
     $safeFolder     = 'Yearbook Covers';
     $templateFolder = sprintf('Batch Template %d', $template);
@@ -157,8 +158,8 @@ try {
         : ($side === 'back' ? 'Back' : 'Front');
 
     $filename = ($slot === 8)
-        ? sprintf('BackgroundPage-%s.%s', $safeBase, $safeExt)
-        : sprintf('Slot-%d-%s-%s.%s', $slot, $sideLabel, $safeBase, $safeExt);
+        ? sprintf('BackgroundPage-%s-%s.%s', $safeBase, $versionToken, $safeExt)
+        : sprintf('Slot-%d-%s-%s-%s.%s', $slot, $sideLabel, $safeBase, $versionToken, $safeExt);
 
     $path = $safeFolder . '/' . $templateFolder . '/' . $filename;
 
