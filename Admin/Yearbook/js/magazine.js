@@ -11,7 +11,6 @@ function addPage(page, book) {
   }
 }
 
-// Function to dynamically add student pages based on student data
 function addStudentPages(book, studentData) {
   if (!studentData || !studentData.total_pages) return;
 
