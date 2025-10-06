@@ -308,7 +308,6 @@ function loadPage(page, pageElement) {
         template
       );
 
-      // Fetch student data from our API
       $.ajax({
         url: "../../Connection/Photos/FetchStudentData.php",
         method: "GET",
