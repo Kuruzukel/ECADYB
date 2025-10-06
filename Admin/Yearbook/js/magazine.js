@@ -425,7 +425,6 @@ function loadPage(page, pageElement) {
                     });
                   });
 
-                  // Close modal when clicking close button or outside
                   closeBtn.on("click", function () {
                     modal.removeClass("active");
                   });
