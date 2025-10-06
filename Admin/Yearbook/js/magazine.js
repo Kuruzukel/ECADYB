@@ -144,7 +144,6 @@ function loadPage(page, pageElement) {
               class: "management-info",
             });
 
-            // Add photo with fallback for no image
             var photoUrl =
               currentManager.photo_url ||
               'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="270" height="270" viewBox="0 0 270 270"%3E%3Crect width="270" height="270" fill="%23f0f0f0"/%3E%3Ctext x="135" y="135" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Image Available%3C/text%3E%3C/svg%3E';
