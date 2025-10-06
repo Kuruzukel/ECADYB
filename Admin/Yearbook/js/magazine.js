@@ -245,7 +245,6 @@ function loadPage(page, pageElement) {
               text: "No top management data available for this page. Messages typically contain inspirational words, guidance, or congratulations for the graduating class.",
             });
 
-            // Assemble the placeholder
             messageWrapper.append(message);
             messageContainer.append(messageWrapper);
 
