@@ -324,7 +324,6 @@ function loadPage(page, pageElement) {
             var totalStudents = response.data.total_students;
             var studentsPerPage = response.data.students_per_page;
 
-            // Pages 7+ correspond to student pages, so page 7 = first student page (students 1-6)
             var pageOffset = (page - 7) * studentsPerPage;
 
             // Add up to 6 student cards for this page
