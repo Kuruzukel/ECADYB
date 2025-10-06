@@ -398,7 +398,6 @@ function loadPage(page, pageElement) {
 
                   $largeImage.attr("src", modalPhotoUrl);
 
-                  // Set thumbnail images and initial active state
                   $thumbnails.each(function (index) {
                     $(this).find("img").attr("src", modalPhotoUrl);
 
