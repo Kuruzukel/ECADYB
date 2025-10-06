@@ -483,7 +483,6 @@ function loadPage(page, pageElement) {
               });
               studentImg.append(placeholderImg);
 
-              // Add student name (default placeholder)
               var studentName = $("<h3/>", {
                 text: "Student Name",
               });
