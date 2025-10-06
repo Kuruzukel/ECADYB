@@ -118,7 +118,6 @@ function loadPage(page, pageElement) {
       template = coverData.template;
     }
 
-    // Calculate index for management data (0-4 for pages 2-6)
     var managementIndex = page - 2;
 
     // Fetch data from our API
