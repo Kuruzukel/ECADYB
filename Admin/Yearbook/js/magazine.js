@@ -24,7 +24,6 @@ function addStudentPages(book, studentData) {
 }
 
 function loadPage(page, pageElement) {
-  // Create an image element
   var img = $("<img />");
 
   img.on("mousedown", function (e) {
