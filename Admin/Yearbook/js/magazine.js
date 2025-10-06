@@ -355,7 +355,6 @@ function loadPage(page, pageElement) {
                   text: student.name,
                 });
 
-                // Add honors/program text
                 var honorsText = $("<p/>", {
                   text: student.program || "Honors and Achievements",
                 });
