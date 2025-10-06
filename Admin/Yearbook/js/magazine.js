@@ -130,7 +130,6 @@ function loadPage(page, pageElement) {
       success: function (response) {
         console.log("Top management data response:", response);
 
-        // Remove loading indicator
         loadingIndicator.remove();
 
         if (response.success && response.data && response.data.length > 0) {
