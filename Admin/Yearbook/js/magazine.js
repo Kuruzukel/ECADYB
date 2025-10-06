@@ -440,7 +440,6 @@ function loadPage(page, pageElement) {
 
                 cardsContainer.append(card);
               } else {
-                // Add empty card placeholder
                 var card = $("<div/>", {
                   class: "student-card empty",
                 });
