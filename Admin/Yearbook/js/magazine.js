@@ -326,7 +326,6 @@ function loadPage(page, pageElement) {
 
             var pageOffset = (page - 7) * studentsPerPage;
 
-            // Add up to 6 student cards for this page
             for (var i = 0; i < studentsPerPage; i++) {
               var studentIndex = pageOffset + i;
 
