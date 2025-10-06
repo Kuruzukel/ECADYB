@@ -299,7 +299,6 @@ function loadPage(page, pageElement) {
       var urlParams = new URLSearchParams(window.location.search);
       var department = urlParams.get("department") || "BSME";
 
-      // Get template from coverData or default to 1
       var template = coverData && coverData.template ? coverData.template : 1;
 
       console.log(
