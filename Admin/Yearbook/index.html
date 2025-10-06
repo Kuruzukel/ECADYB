@@ -196,22 +196,7 @@
         var thumbnailList = $("#thumbnail-list");
         thumbnailList.empty();
 
-        var firstPageLi = $('<li class="i"></li>');
-        var firstThumbSrc = dataToUse.front_thumb_url
-          ? dataToUse.front_thumb_url
-          : 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="76" height="100" viewBox="0 0 76 100"%3E%3Crect width="76" height="100" fill="%23f0f0f0"/%3E%3Ctext x="38" y="55" font-family="Arial" font-size="10" fill="%23999" text-anchor="middle"%3E1%3C/text%3E%3C/svg%3E';
-        var firstPageImg = $("<img>").attr({
-          src: firstThumbSrc,
-          width: 76,
-          height: 100,
-          class: "page-1",
-        });
-        console.log("Front thumbnail URL:", firstThumbSrc);
-        var firstPageSpan = $("<span>1</span>");
-        firstPageLi.append(firstPageImg).append(firstPageSpan);
-        thumbnailList.append(firstPageLi);
-
-        // Calculate number of student pages based on student data
+        // Calculate total pages
         var totalPages = 12; // Default
         if (studentData && studentData.total_pages) {
           // Student pages start at page 7, so we need to calculate:
@@ -220,102 +205,123 @@
           console.log("Calculated total pages based on student data:", totalPages);
         }
 
-        // Add management pages (pages 2-6)
-        for (var i = 2; i <= 6; i++) {
-          var li = $('<li class="d"></li>');
-          var img1Src = dataToUse.background_thumb_url
-            ? dataToUse.background_thumb_url
-            : 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="76" height="100" viewBox="0 0 76 100"%3E%3Crect width="76" height="100" fill="%23f0f0f0"/%3E%3Ctext x="38" y="55" font-family="Arial" font-size="10" fill="%23999" text-anchor="middle"%3E' +
-              i +
-              "%3C/text%3E%3C/svg%3E";
-          var img2Src = dataToUse.background_thumb_url
-            ? dataToUse.background_thumb_url
-            : 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="76" height="100" viewBox="0 0 76 100"%3E%3Crect width="76" height="100" fill="%23f0f0f0"/%3E%3Ctext x="38" y="55" font-family="Arial" font-size="10" fill="%23999" text-anchor="middle"%3E' +
-              (i + 1) +
-              "%3C/text%3E%3C/svg%3E";
+        // Create all thumbnails in order
+        var thumbnails = [];
 
-          // For single pages, we might only need one image
-          if (i < 6) {
-            var img1 = $("<img>").attr({
-              src: img1Src,
-              width: 76,
-              height: 100,
-              class: "page-" + i,
+        // Page 1 - Front cover
+        var firstThumbSrc = dataToUse.front_thumb_url || dataToUse.front_url || 
+          'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="76" height="100" viewBox="0 0 76 100"%3E%3Crect width="76" height="100" fill="%23f0f0f0"/%3E%3Ctext x="38" y="55" font-family="Arial" font-size="10" fill="%23999" text-anchor="middle"%3E1%3C/text%3E%3C/svg%3E';
+        thumbnails.push({
+          type: 'single',
+          page: 1,
+          src: firstThumbSrc,
+          label: '1'
+        });
+
+        // Pages 2-6 - Management pages (as spreads)
+        for (var i = 2; i <= 6; i += 2) {
+          var img1Src = dataToUse.background_thumb_url || dataToUse.background_url || 
+            'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="76" height="100" viewBox="0 0 76 100"%3E%3Crect width="76" height="100" fill="%23f0f0f0"/%3E%3Ctext x="38" y="55" font-family="Arial" font-size="10" fill="%23999" text-anchor="middle"%3E' + i + '%3C/text%3E%3C/svg%3E';
+          var img2Src = dataToUse.background_thumb_url || dataToUse.background_url || 
+            'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="76" height="100" viewBox="0 0 76 100"%3E%3Crect width="76" height="100" fill="%23f0f0f0"/%3E%3Ctext x="38" y="55" font-family="Arial" font-size="10" fill="%23999" text-anchor="middle"%3E' + (i + 1) + '%3C/text%3E%3C/svg%3E';
+          
+          thumbnails.push({
+            type: 'spread',
+            page1: i,
+            page2: i + 1,
+            src1: img1Src,
+            src2: img2Src,
+            label: i + '-' + (i + 1)
+          });
+        }
+
+        // Student pages (starting from page 7)
+        if (studentData && studentData.total_pages) {
+          for (var i = 0; i < studentData.total_pages; i += 2) {
+            var pageNum = 7 + i;
+            var img1Src = dataToUse.background_thumb_url || dataToUse.background_url || 
+              'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="76" height="100" viewBox="0 0 76 100"%3E%3Crect width="76" height="100" fill="%23f0f0f0"/%3E%3Ctext x="38" y="55" font-family="Arial" font-size="10" fill="%23999" text-anchor="middle"%3E' + pageNum + '%3C/text%3E%3C/svg%3E';
+            var img2Src = dataToUse.background_thumb_url || dataToUse.background_url || 
+              'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="76" height="100" viewBox="0 0 76 100"%3E%3Crect width="76" height="100" fill="%23f0f0f0"/%3E%3Ctext x="38" y="55" font-family="Arial" font-size="10" fill="%23999" text-anchor="middle"%3E' + (pageNum + 1) + '%3C/text%3E%3C/svg%3E';
+            
+            thumbnails.push({
+              type: 'spread',
+              page1: pageNum,
+              page2: pageNum + 1,
+              src1: img1Src,
+              src2: img2Src,
+              label: pageNum + '-' + (pageNum + 1)
             });
-            var span = $("<span>" + i + "</span>");
-            li.append(img1).append(span);
-          } else {
-            // Last management page
-            var img1 = $("<img>").attr({
-              src: img1Src,
-              width: 76,
-              height: 100,
-              class: "page-" + i,
-            });
-            var span = $("<span>" + i + "</span>");
-            li.append(img1).append(span);
           }
+        } else {
+          // Fallback to default student pages as spreads (7-8, 9-10, 11-12)
+          for (var i = 7; i <= 11; i += 2) {
+            var img1Src = dataToUse.background_thumb_url || dataToUse.background_url || 
+              'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="76" height="100" viewBox="0 0 76 100"%3E%3Crect width="76" height="100" fill="%23f0f0f0"/%3E%3Ctext x="38" y="55" font-family="Arial" font-size="10" fill="%23999" text-anchor="middle"%3E' + i + '%3C/text%3E%3C/svg%3E';
+            var img2Src = dataToUse.background_thumb_url || dataToUse.background_url || 
+              'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="76" height="100" viewBox="0 0 76 100"%3E%3Crect width="76" height="100" fill="%23f0f0f0"/%3E%3Ctext x="38" y="55" font-family="Arial" font-size="10" fill="%23999" text-anchor="middle"%3E' + (i + 1) + '%3C/text%3E%3C/svg%3E';
+            
+            thumbnails.push({
+              type: 'spread',
+              page1: i,
+              page2: i + 1,
+              src1: img1Src,
+              src2: img2Src,
+              label: i + '-' + (i + 1)
+            });
+          }
+        }
+
+        // Last page - Back cover
+        var lastThumbSrc = dataToUse.back_thumb_url || dataToUse.back_url || 
+          'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="76" height="100" viewBox="0 0 76 100"%3E%3Crect width="76" height="100" fill="%23f0f0f0"/%3E%3Ctext x="38" y="55" font-family="Arial" font-size="10" fill="%23999" text-anchor="middle"%3E' + totalPages + '%3C/text%3E%3C/svg%3E';
+        thumbnails.push({
+          type: 'single',
+          page: totalPages,
+          src: lastThumbSrc,
+          label: totalPages.toString()
+        });
+
+        // Render thumbnails in 12-column grid
+        var currentRow = 0;
+        var itemsPerRow = 12;
+        
+        for (var i = 0; i < thumbnails.length; i++) {
+          var thumbnail = thumbnails[i];
+          var li;
+          
+          if (thumbnail.type === 'single') {
+            li = $('<li class="i"></li>');
+            var img = $("<img>").attr({
+              src: thumbnail.src,
+              width: 76,
+              height: 100,
+              class: "page-" + thumbnail.page,
+            });
+            var span = $("<span>" + thumbnail.label + "</span>");
+            li.append(img).append(span);
+          } else {
+            li = $('<li class="d"></li>');
+            var img1 = $("<img>").attr({
+              src: thumbnail.src1,
+              width: 76,
+              height: 100,
+              class: "page-" + thumbnail.page1,
+            });
+            var img2 = $("<img>").attr({
+              src: thumbnail.src2,
+              width: 76,
+              height: 100,
+              class: "page-" + thumbnail.page2,
+            });
+            var span = $("<span>" + thumbnail.label + "</span>");
+            li.append(img1).append(img2).append(span);
+          }
+          
           thumbnailList.append(li);
         }
 
-        // Add student pages (starting from page 7)
-        if (studentData && studentData.total_pages) {
-          for (var i = 0; i < studentData.total_pages; i++) {
-            var pageNum = 7 + i;
-            var li = $('<li class="d"></li>');
-            var img1Src = dataToUse.background_thumb_url
-              ? dataToUse.background_thumb_url
-              : 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="76" height="100" viewBox="0 0 76 100"%3E%3Crect width="76" height="100" fill="%23f0f0f0"/%3E%3Ctext x="38" y="55" font-family="Arial" font-size="10" fill="%23999" text-anchor="middle"%3E' +
-                pageNum +
-                "%3C/text%3E%3C/svg%3E";
-            var img1 = $("<img>").attr({
-              src: img1Src,
-              width: 76,
-              height: 100,
-              class: "page-" + pageNum,
-            });
-            var span = $("<span>" + pageNum + "</span>");
-            li.append(img1).append(span);
-            thumbnailList.append(li);
-          }
-        } else {
-          // Fallback to default student pages (7-11)
-          for (var i = 7; i <= 11; i++) {
-            var li = $('<li class="d"></li>');
-            var img1Src = dataToUse.background_thumb_url
-              ? dataToUse.background_thumb_url
-              : 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="76" height="100" viewBox="0 0 76 100"%3E%3Crect width="76" height="100" fill="%23f0f0f0"/%3E%3Ctext x="38" y="55" font-family="Arial" font-size="10" fill="%23999" text-anchor="middle"%3E' +
-                i +
-                "%3C/text%3E%3C/svg%3E";
-            var img1 = $("<img>").attr({
-              src: img1Src,
-              width: 76,
-              height: 100,
-              class: "page-" + i,
-            });
-            var span = $("<span>" + i + "</span>");
-            li.append(img1).append(span);
-            thumbnailList.append(li);
-          }
-        }
-
-        var lastPageLi = $('<li class="i"></li>');
-        var pageNum = totalPages; // Use calculated total pages
-        var lastThumbSrc = dataToUse.back_thumb_url
-          ? dataToUse.back_thumb_url
-          : 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="76" height="100" viewBox="0 0 76 100"%3E%3Crect width="76" height="100" fill="%23f0f0f0"/%3E%3Ctext x="38" y="55" font-family="Arial" font-size="10" fill="%23999" text-anchor="middle"%3E' + 
-            pageNum + '%3C/text%3E%3C/svg%3E';
-        var lastPageImg = $("<img>").attr({
-          src: lastThumbSrc,
-          width: 76,
-          height: 100,
-          class: "page-" + pageNum,
-        });
-        console.log("Back thumbnail URL:", lastThumbSrc);
-        var lastPageSpan = $("<span>" + pageNum + "</span>");
-        lastPageLi.append(lastPageImg).append(lastPageSpan);
-        thumbnailList.append(lastPageLi);
-
+        // Add click handlers
         $(".thumbnails")
           .off("click")
           .on("click", function (event) {
@@ -325,6 +331,8 @@
               (page = /page-([0-9]+)/.exec($(event.target).attr("class")))
             ) {
               $(".magazine").turn("page", page[1]);
+              // Close thumbnails modal after clicking a thumbnail
+              $('.thumbnails').removeClass('visible');
             }
           });
 
@@ -355,8 +363,39 @@
 
       <div class="thumbnails">
         <div>
-          <ul id="thumbnail-list"></ul>
+          <button class="close-thumbnails" id="closeThumbnails">&times;</button>
+          <div class="thumbnail-content">
+            <ul id="thumbnail-list"></ul>
+          </div>
         </div>
+      </div>
+
+      <!-- Navigation Control Bar -->
+      <div class="nav-controls">
+        <button class="nav-btn prev-btn" id="prevBtn" title="Previous Page">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15,18 9,12 15,6"></polyline>
+          </svg>
+        </button>
+        <button class="nav-btn thumbnails-btn" id="thumbnailsBtn" title="Show Thumbnails">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+        </button>
+        <button class="nav-btn audio-btn" id="audioBtn" title="Audio Controls">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11,5 6,9 2,9 2,15 6,15 11,19 11,5"></polygon>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          </svg>
+        </button>
+        <button class="nav-btn next-btn" id="nextBtn" title="Next Page">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9,18 15,12 9,6"></polyline>
+          </svg>
+        </button>
       </div>
 
       <div class="student-modal">
@@ -651,6 +690,8 @@
             (page = /page-([0-9]+)/.exec($(event.target).attr("class")))
           ) {
             $(".magazine").turn("page", page[1]);
+              // Close thumbnails modal after clicking a thumbnail
+            $('.thumbnails').removeClass('visible');
           }
         });
 
@@ -747,42 +788,41 @@
 
       $("#canvas").hide();
 
-      $(document).ready(function () {
-        var thumbnails = $(".thumbnails");
-        var hoverTimer;
-        var magazineViewport = $(".magazine-viewport");
+      // Hover functionality removed - thumbnails now controlled by button only
 
-        magazineViewport.on("mousemove", function (e) {
-          var viewportOffset = magazineViewport.offset();
-          var viewportHeight = magazineViewport.height();
-          var relativeY = e.pageY - viewportOffset.top;
-
-          if (relativeY > viewportHeight - 30) {
-            clearTimeout(hoverTimer);
-            thumbnails.addClass("visible");
-          } else {
-            if (thumbnails.hasClass("visible") && !thumbnails.is(":hover")) {
-              hoverTimer = setTimeout(function () {
-                thumbnails.removeClass("visible");
-              }, 300);
-            }
-          }
+      // Navigation Controls Functionality
+      $(document).ready(function() {
+        // Previous button
+        $('#prevBtn').on('click', function() {
+          $('.magazine').turn('previous');
         });
 
-        thumbnails.on("mouseenter", function () {
-          clearTimeout(hoverTimer);
-          thumbnails.addClass("visible");
+        // Next button
+        $('#nextBtn').on('click', function() {
+          $('.magazine').turn('next');
         });
 
-        thumbnails.on("mouseleave", function () {
-          var viewportOffset = magazineViewport.offset();
-          var viewportHeight = magazineViewport.height();
-          var mouseY = event.pageY - viewportOffset.top;
+        // Thumbnails toggle button
+        $('#thumbnailsBtn').on('click', function() {
+          $('.thumbnails').addClass('visible');
+        });
 
-          if (mouseY <= viewportHeight - 120) {
-            hoverTimer = setTimeout(function () {
-              thumbnails.removeClass("visible");
-            }, 300);
+        // Close thumbnails button
+        $('#closeThumbnails').on('click', function() {
+          $('.thumbnails').removeClass('visible');
+        });
+
+        // Audio button (placeholder for future audio functionality)
+        $('#audioBtn').on('click', function() {
+          // Placeholder for audio controls
+          console.log('Audio controls clicked');
+          // You can add audio functionality here later
+        });
+
+        // Hide thumbnails when clicking outside the modal
+        $(document).on('click', function(e) {
+          if ($(e.target).hasClass('thumbnails')) {
+            $('.thumbnails').removeClass('visible');
           }
         });
       });
