@@ -5,7 +5,6 @@ function addPage(page, book) {
   var element = $("<div />", {});
 
   if (book.turn("addPage", element, page)) {
-    // Add the initial HTML
     // Only show a loader indicator; gradient removed
     element.html('<div class="loader"></div>');
 
