@@ -372,7 +372,6 @@ function loadPage(page, pageElement) {
                     .find(".motto p")
                     .text(clickedStudent.motto || "No motto provided");
 
-                  // Process milestones
                   var milestonesList = modal.find(".milestones ul");
                   milestonesList.empty();
 
