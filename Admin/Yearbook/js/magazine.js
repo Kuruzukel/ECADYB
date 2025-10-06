@@ -359,7 +359,6 @@ function loadPage(page, pageElement) {
                   text: student.program || "Honors and Achievements",
                 });
 
-                // Add click handler for the card
                 card.on("click", function () {
                   var modal = $(".student-modal");
                   var closeBtn = $(".close-modal");
