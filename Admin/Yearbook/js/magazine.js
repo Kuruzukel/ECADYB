@@ -329,7 +329,6 @@ function loadPage(page, pageElement) {
             for (var i = 0; i < studentsPerPage; i++) {
               var studentIndex = pageOffset + i;
 
-              // Check if we have a student for this position
               if (studentIndex < students.length) {
                 var student = students[studentIndex];
 
