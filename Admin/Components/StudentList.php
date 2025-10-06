@@ -54,6 +54,9 @@ $skip = ($page - 1) * $perPage;
 $allStudents = [];
 $totalStudents = 0;
 
+// Check if this is an AJAX request
+$isAjax = isset($_GET['ajax']) && $_GET['ajax'] == '1';
+
 try {
     $collection = $db->$selectedDepartment;
 
@@ -84,7 +87,7 @@ try {
             ],
             'skip' => $skip,
             'limit' => $perPage,
-            'sort' => ['id' => 1]
+            'sort' => ['department section' => 1, 'last name' => 1]
         ]
     );
 
@@ -117,6 +120,7 @@ try {
 
 ?>
 
+<?php if (!$isAjax): ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -129,6 +133,7 @@ try {
 </head>
 
 <body>
+<?php endif; ?>
     <div class="container">
         <div class="header-container">
             <h1><i class="fas fa-home"></i> <span class="chevron"><i class="fas fa-chevron-right"></i></span> Student
@@ -179,44 +184,21 @@ try {
                         <div class="pagination-controls"
                             style="margin-top:1em; display:flex; justify-content:center; gap:1em;">
 
-                            <?php
-                            $baseUrl = '?page=student-list';
-
-                            if (!empty($selectedTemplate)) {
-                                $baseUrl .= '&template=' . urlencode($selectedTemplate);
-                            }
-
-                            if (!empty($selectedDepartment)) {
-                                $baseUrl .= '&department=' . urlencode($selectedDepartment);
-                            }
-
-                            if (!empty($_GET['tab'])) {
-                                $baseUrl .= '&tab=' . urlencode($_GET['tab']);
-                            }
-
-                            if ($page > 1):
-                                $prevUrl = $baseUrl . '&pageNum=' . ($page - 1);
-                            ?>
-                                <a href="<?php echo htmlspecialchars($prevUrl); ?>">
-                                    <button id="prev-btn">Previous</button>
-                                </a>
+                            <?php if ($page > 1): ?>
+                                <button id="prev-btn" onclick="changePage(<?php echo $page - 1; ?>)">Previous</button>
                             <?php else: ?>
                                 <button id="prev-btn" disabled>Previous</button>
                             <?php endif; ?>
 
-                            <?php
-                            if ($page < $totalPages):
-                                $nextUrl = $baseUrl . '&pageNum=' . ($page + 1);
-                            ?>
-                                <a href="<?php echo htmlspecialchars($nextUrl); ?>">
-                                    <button id="next-btn">Next</button>
-                                </a>
+                            <?php if ($page < $totalPages): ?>
+                                <button id="next-btn" onclick="changePage(<?php echo $page + 1; ?>)">Next</button>
                             <?php else: ?>
                                 <button id="next-btn" disabled>Next</button>
                             <?php endif; ?>
 
                             <span>Page <?php echo $page; ?> of <?php echo $totalPages; ?></span>
                         </div>
+                        <input type="hidden" id="total-pages" value="<?php echo $totalPages; ?>">
                     </div>
                 </div>
 
@@ -536,6 +518,105 @@ try {
             <div id="notification-container"></div>
 
             <script>
+                function changePage(pageNum) {
+                    // Get current URL parameters
+                    const urlParams = new URLSearchParams(window.location.search);
+                    
+                    // Update the page number
+                    urlParams.set('pageNum', pageNum);
+                    
+                    // Preserve other parameters
+                    const template = urlParams.get('template') || '1';
+                    const department = urlParams.get('department') || 'bsme';
+                    const tab = urlParams.get('tab') || 'all';
+                    
+                    // Build new URL without refreshing the page
+                    const newUrl = `?page=student-list&template=${template}&department=${department}&tab=${tab}&pageNum=${pageNum}`;
+                    
+                    // Use history.pushState to change URL without refresh
+                    window.history.pushState({}, '', newUrl);
+                    
+                    // Reload the content using AJAX
+                    loadStudentList(pageNum, template, department, tab);
+                }
+                
+                function loadStudentList(pageNum, template, department, tab) {
+                    // Show loading indicator
+                    const tableBody = document.querySelector('tbody');
+                    if (tableBody) {
+                        tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px; color: #fff;">Loading...</td></tr>';
+                    }
+                    
+                    // Make AJAX request to load new page content
+                    fetch(`?page=student-list&template=${template}&department=${department}&tab=${tab}&pageNum=${pageNum}&ajax=1`)
+                        .then(response => response.text())
+                        .then(data => {
+                            // Parse the response to extract just the table content
+                            const parser = new DOMParser();
+                            const doc = parser.parseFromString(data, 'text/html');
+                            const newTableBody = doc.querySelector('tbody');
+                            const newPaginationControls = doc.querySelector('.pagination-controls');
+                            const newPageInfo = doc.querySelector('.pagination-controls span');
+                            
+                            if (newTableBody && tableBody) {
+                                tableBody.innerHTML = newTableBody.innerHTML;
+                            }
+                            
+                            if (newPageInfo) {
+                                const currentPageInfo = document.querySelector('.pagination-controls span');
+                                if (currentPageInfo) {
+                                    currentPageInfo.textContent = newPageInfo.textContent;
+                                }
+                            }
+                            
+                            // Extract total pages from the response
+                            const totalPagesInput = doc.getElementById('total-pages');
+                            const totalPages = totalPagesInput ? parseInt(totalPagesInput.value) : null;
+                            
+                            // Update pagination buttons
+                            updatePaginationButtons(pageNum, template, department, tab, totalPages);
+                            
+                            // Re-initialize JavaScript functionality
+                            setTimeout(() => {
+                                initializeSelectAll();
+                                initializeFilters();
+                                initializeStatusUpdates();
+                                updateSelectAllState();
+                            }, 100);
+                        })
+                        .catch(error => {
+                            console.error('Error loading page:', error);
+                            if (tableBody) {
+                                tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px; color: #ff4444;">Error loading page. Please refresh.</td></tr>';
+                            }
+                        });
+                }
+                
+                function updatePaginationButtons(pageNum, template, department, tab, totalPages = null) {
+                    const prevBtn = document.getElementById('prev-btn');
+                    const nextBtn = document.getElementById('next-btn');
+                    
+                    if (prevBtn) {
+                        if (pageNum > 1) {
+                            prevBtn.disabled = false;
+                            prevBtn.onclick = () => changePage(pageNum - 1);
+                        } else {
+                            prevBtn.disabled = true;
+                            prevBtn.onclick = null;
+                        }
+                    }
+                    
+                    if (nextBtn && totalPages) {
+                        if (pageNum < totalPages) {
+                            nextBtn.disabled = false;
+                            nextBtn.onclick = () => changePage(pageNum + 1);
+                        } else {
+                            nextBtn.disabled = true;
+                            nextBtn.onclick = null;
+                        }
+                    }
+                }
+
                 document.addEventListener('DOMContentLoaded', function() {
                     const urlParams = new URLSearchParams(window.location.search);
                     const activeTab = urlParams.get('tab') || 'all';
@@ -628,6 +709,8 @@ try {
             </script>
 
             <script src="../assets/js/StudentList.js"></script>
+<?php if (!$isAjax): ?>
 </body>
 
 </html>
+<?php endif; ?>
