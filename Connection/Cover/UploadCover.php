@@ -188,14 +188,7 @@ try {
         respond(false, 'Upload cancelled');
     }
 
-    $thumbContents = '';
-    $thumbFilename = '';
-
-    $thumbFilename = pathinfo($filename, PATHINFO_FILENAME) . '_thumb.' . pathinfo($filename, PATHINFO_EXTENSION);
-    $thumbPath = $safeFolder . '/' . $templateFolder . '/' . $thumbFilename;
-    $thumbStorageUrl = "https://storage.bunnycdn.com/{$bunnyStorageZone}/" . str_replace(' ', '%20', $thumbPath);
-
-    $thumbContents = $fileContents;
+    // Thumbnail generation removed
 
     $ch = curl_init($storageUrl);
     curl_setopt_array($ch, [
@@ -238,66 +231,11 @@ try {
         respond(false, 'Failed to upload to Bunny: ' . ($curlErr ?: 'HTTP ' . $httpCode));
     }
 
-    $thumbCh = curl_init($thumbStorageUrl);
-    curl_setopt_array($thumbCh, [
-        CURLOPT_CUSTOMREQUEST  => 'PUT',
-        CURLOPT_HTTPHEADER     => ['AccessKey: ' . $bunnyAccessKey, 'Content-Type: application/octet-stream'],
-        CURLOPT_POSTFIELDS     => $thumbContents,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_HEADER         => false,
-        CURLOPT_TIMEOUT        => 15,
-        CURLOPT_CONNECTTIMEOUT => 5,
-        CURLOPT_SSL_VERIFYPEER => true,
-        CURLOPT_TCP_NODELAY    => true,
-        CURLOPT_FRESH_CONNECT  => false,
-        CURLOPT_FORBID_REUSE   => false
-    ]);
-    $thumbResponse = curl_exec($thumbCh);
-    $thumbHttpCode = curl_getinfo($thumbCh, CURLINFO_HTTP_CODE);
-    $thumbCurlErr  = curl_error($thumbCh);
-    curl_close($thumbCh);
-
-    if (connection_aborted()) {
-        $uploadCancelled = true;
-        if ($response !== false && $httpCode >= 200 && $httpCode < 300) {
-            error_log("UploadCover.php deleting file from BunnyCDN due to cancellation: $storageUrl");
-            $deleteCh = curl_init($storageUrl);
-            curl_setopt_array($deleteCh, [
-                CURLOPT_CUSTOMREQUEST  => 'DELETE',
-                CURLOPT_HTTPHEADER     => ['AccessKey: ' . $bunnyAccessKey],
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_TIMEOUT        => 10,
-                CURLOPT_CONNECTTIMEOUT => 3
-            ]);
-            curl_exec($deleteCh);
-            curl_close($deleteCh);
-        }
-
-        if ($thumbResponse !== false && $thumbHttpCode >= 200 && $thumbHttpCode < 300) {
-            error_log("UploadCover.php deleting thumbnail from BunnyCDN due to cancellation: $thumbStorageUrl");
-            $deleteThumbCh = curl_init($thumbStorageUrl);
-            curl_setopt_array($deleteThumbCh, [
-                CURLOPT_CUSTOMREQUEST  => 'DELETE',
-                CURLOPT_HTTPHEADER     => ['AccessKey: ' . $bunnyAccessKey],
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_TIMEOUT        => 10,
-                CURLOPT_CONNECTTIMEOUT => 3
-            ]);
-            curl_exec($deleteThumbCh);
-            curl_close($deleteThumbCh);
-        }
-        respond(false, 'Upload cancelled');
-    }
-
-    if ($thumbResponse === false || $thumbHttpCode < 200 || $thumbHttpCode >= 300) {
-        respond(false, 'Failed to upload thumbnail to Bunny: ' . ($thumbCurlErr ?: 'HTTP ' . $thumbHttpCode));
-    }
+    // Thumbnail upload removed
 
     $publicUrl = rtrim($bunnyCdnHost, '/') . '/' . str_replace(' ', '%20', $path);
-    $thumbPublicUrl = rtrim($bunnyCdnHost, '/') . '/' . str_replace(' ', '%20', $thumbPath);
 
     error_log("UploadCover.php public URL: $publicUrl");
-    error_log("UploadCover.php thumbnail URL: $thumbPublicUrl");
 
     if (connection_aborted()) {
         $uploadCancelled = true;
@@ -313,17 +251,7 @@ try {
         curl_exec($deleteCh);
         curl_close($deleteCh);
 
-        error_log("UploadCover.php deleting thumbnail from BunnyCDN due to cancellation before MongoDB: $thumbStorageUrl");
-        $deleteThumbCh = curl_init($thumbStorageUrl);
-        curl_setopt_array($deleteThumbCh, [
-            CURLOPT_CUSTOMREQUEST  => 'DELETE',
-            CURLOPT_HTTPHEADER     => ['AccessKey: ' . $bunnyAccessKey],
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_TIMEOUT        => 10,
-            CURLOPT_CONNECTTIMEOUT => 3
-        ]);
-        curl_exec($deleteThumbCh);
-        curl_close($deleteThumbCh);
+        // Thumbnail deletion removed
         respond(false, 'Upload cancelled');
     }
 
@@ -360,17 +288,7 @@ try {
         curl_exec($deleteCh);
         curl_close($deleteCh);
 
-        error_log("UploadCover.php deleting thumbnail from BunnyCDN due to cancellation before MongoDB operations: $thumbStorageUrl");
-        $deleteThumbCh = curl_init($thumbStorageUrl);
-        curl_setopt_array($deleteThumbCh, [
-            CURLOPT_CUSTOMREQUEST  => 'DELETE',
-            CURLOPT_HTTPHEADER     => ['AccessKey: ' . $bunnyAccessKey],
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_TIMEOUT        => 10,
-            CURLOPT_CONNECTTIMEOUT => 3
-        ]);
-        curl_exec($deleteThumbCh);
-        curl_close($deleteThumbCh);
+        // Thumbnail deletion removed
         respond(false, 'Upload cancelled');
     }
 
@@ -385,14 +303,11 @@ try {
 
     if ($slot === 8) {
         $document['background_url'] = $publicUrl;
-        $document['background_thumb_url'] = $thumbPublicUrl;
     } else {
         if ($side === 'front') {
             $document['front_url'] = $publicUrl;
-            $document['front_thumb_url'] = $thumbPublicUrl;
         } else {
             $document['back_url'] = $publicUrl;
-            $document['back_thumb_url'] = $thumbPublicUrl;
         }
     }
 
@@ -410,17 +325,7 @@ try {
         curl_exec($deleteCh);
         curl_close($deleteCh);
 
-        error_log("UploadCover.php deleting thumbnail from BunnyCDN due to cancellation before MongoDB insert: $thumbStorageUrl");
-        $deleteThumbCh = curl_init($thumbStorageUrl);
-        curl_setopt_array($deleteThumbCh, [
-            CURLOPT_CUSTOMREQUEST  => 'DELETE',
-            CURLOPT_HTTPHEADER     => ['AccessKey: ' . $bunnyAccessKey],
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_TIMEOUT        => 10,
-            CURLOPT_CONNECTTIMEOUT => 3
-        ]);
-        curl_exec($deleteThumbCh);
-        curl_close($deleteThumbCh);
+        // Thumbnail deletion removed
         respond(false, 'Upload cancelled');
     }
 
@@ -464,17 +369,7 @@ try {
         curl_exec($deleteCh);
         curl_close($deleteCh);
 
-        error_log("UploadCover.php deleting thumbnail from BunnyCDN due to cancellation after insert: $thumbStorageUrl");
-        $deleteThumbCh = curl_init($thumbStorageUrl);
-        curl_setopt_array($deleteThumbCh, [
-            CURLOPT_CUSTOMREQUEST  => 'DELETE',
-            CURLOPT_HTTPHEADER     => ['AccessKey: ' . $bunnyAccessKey],
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_TIMEOUT        => 10,
-            CURLOPT_CONNECTTIMEOUT => 3
-        ]);
-        curl_exec($deleteThumbCh);
-        curl_close($deleteThumbCh);
+        // Thumbnail deletion removed
 
         $collection->deleteOne(['_id' => $document['_id']]);
         respond(false, 'Upload cancelled');
@@ -489,14 +384,11 @@ try {
 
     if ($slot === 8) {
         $responseData['url'] = $publicUrl;
-        $responseData['thumb_url'] = $thumbPublicUrl;
     } else {
         if ($side === 'front') {
             $responseData['url'] = $publicUrl;
-            $responseData['thumb_url'] = $thumbPublicUrl;
         } else {
             $responseData['url'] = $publicUrl;
-            $responseData['thumb_url'] = $thumbPublicUrl;
         }
     }
 

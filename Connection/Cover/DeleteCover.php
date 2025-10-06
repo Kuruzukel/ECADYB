@@ -130,31 +130,24 @@ try {
     $unsetFields = [];
 
     if ($slot === 8) {
-        $existingUrl      = isset($doc['background_url']) ? (string)$doc['background_url'] : '';
-        $existingThumbUrl = isset($doc['background_thumb_url']) ? (string)$doc['background_thumb_url'] : '';
+        $existingUrl = isset($doc['background_url']) ? (string)$doc['background_url'] : '';
 
         deleteFromBunny($existingUrl, $bunnyStorageZone, $bunnyAccessKey);
-        deleteFromBunny($existingThumbUrl, $bunnyStorageZone, $bunnyAccessKey);
 
         $unsetFields = [
-            'background_url'       => "",
-            'background_thumb_url' => ""
+            'background_url' => ""
         ];
     } else {
-        $urlField   = $side . '_url';
-        $thumbField = $side . '_thumb_url';
+        $urlField = $side . '_url';
 
-        $existingUrl      = isset($doc[$urlField]) ? (string)$doc[$urlField] : '';
-        $existingThumbUrl = isset($doc[$thumbField]) ? (string)$doc[$thumbField] : '';
+        $existingUrl = isset($doc[$urlField]) ? (string)$doc[$urlField] : '';
 
-        error_log("DeleteCover.php deleting URLs - main: $existingUrl, thumb: $existingThumbUrl");
+        error_log("DeleteCover.php deleting URL - main: $existingUrl");
 
         deleteFromBunny($existingUrl, $bunnyStorageZone, $bunnyAccessKey);
-        deleteFromBunny($existingThumbUrl, $bunnyStorageZone, $bunnyAccessKey);
 
         $unsetFields = [
-            $urlField   => "",
-            $thumbField => ""
+            $urlField => ""
         ];
     }
 

@@ -64,10 +64,7 @@ try {
                 'slot' => 1,
                 'front_url' => 1,
                 'back_url' => 1,
-                'front_thumb_url' => 1,
-                'back_thumb_url' => 1,
                 'background_url' => 1,
-                'background_thumb_url' => 1,
                 'template' => 1
             ],
             'limit' => 8
@@ -84,19 +81,14 @@ try {
             $items[] = [
                 'slot' => $slot,
                 'front_url' => isset($doc['front_url']) ? (string)$doc['front_url'] : '',
-                'back_url' => isset($doc['back_url']) ? (string)$doc['back_url'] : '',
-                'front_thumb_url' => isset($doc['front_thumb_url']) ? (string)$doc['front_thumb_url'] : '',
-                'back_thumb_url' => isset($doc['back_thumb_url']) ? (string)$doc['back_thumb_url'] : ''
+                'back_url' => isset($doc['back_url']) ? (string)$doc['back_url'] : ''
             ];
         } elseif ($slot === 8) {
             $backgroundUrl = isset($doc['background_url']) ? (string)$doc['background_url'] : '';
-            $backgroundThumbUrl = isset($doc['background_thumb_url']) ? (string)$doc['background_thumb_url'] : '';
             $items[] = [
                 'slot' => 8,
                 'front_url' => $backgroundUrl,
-                'background_url' => $backgroundUrl,
-                'front_thumb_url' => $backgroundThumbUrl,
-                'background_thumb_url' => $backgroundThumbUrl
+                'background_url' => $backgroundUrl
             ];
         }
     }
