@@ -187,7 +187,6 @@ function loadPage(page, pageElement) {
               text: messageText,
             });
 
-            // Create message wrapper for better positioning
             var messageWrapper = $("<div/>", {
               class: "message-wrapper",
             });
