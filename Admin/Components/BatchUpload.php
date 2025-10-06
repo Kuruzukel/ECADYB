@@ -335,21 +335,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
     </div>
 
+    <?php if ($flashMessage): ?>
+    <div id="flash-data" data-message="<?= htmlspecialchars($flashMessage['message'], ENT_QUOTES) ?>" data-type="<?= htmlspecialchars($flashMessage['type'], ENT_QUOTES) ?>" style="display:none"></div>
+    <?php endif; ?>
     <script src="../assets/js/BatchUpload.js"></script>
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const selectedTemplate = localStorage.getItem('selectedBatchTemplate');
-        if (selectedTemplate) {
-            document.getElementById('selected_template').value = selectedTemplate;
-        }
-
-        <?php if ($flashMessage): ?>
-        if (typeof showNotification === "function") {
-            showNotification(<?= json_encode($flashMessage['message']) ?>, <?= json_encode($flashMessage['type']) ?>);
-        }
-        <?php endif; ?>
-    });
-    </script>
 </body>
 
 </html>

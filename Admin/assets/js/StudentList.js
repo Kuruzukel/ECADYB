@@ -847,3 +847,103 @@ function formatStudentID(input) {
 function removeSpaces(input) {
   input.value = input.value.replace(/\s+/g, "");
 }
+
+// Pagination and content loading helpers migrated from inline script
+function changePage(pageNum) {
+  const urlParams = new URLSearchParams(window.location.search);
+  urlParams.set("pageNum", pageNum);
+
+  const template = urlParams.get("template") || "1";
+  const department = urlParams.get("department") || "bsme";
+  const tab = urlParams.get("tab") || "all";
+
+  const newUrl = `?page=student-list&template=${template}&department=${department}&tab=${tab}&pageNum=${pageNum}`;
+  window.history.pushState({}, "", newUrl);
+
+  loadStudentList(pageNum, template, department, tab);
+}
+
+function loadStudentList(pageNum, template, department, tab) {
+  const tableBody = document.querySelector("tbody");
+  if (tableBody) {
+    tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px; color: #fff;">Loading...</td></tr>';
+  }
+
+  fetch(`?page=student-list&template=${template}&department=${department}&tab=${tab}&pageNum=${pageNum}&ajax=1`)
+    .then((response) => response.text())
+    .then((data) => {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(data, "text/html");
+      const newTableBody = doc.querySelector("tbody");
+      const newPageInfo = doc.querySelector(".pagination-controls span");
+
+      if (newTableBody && tableBody) {
+        tableBody.innerHTML = newTableBody.innerHTML;
+      }
+
+      if (newPageInfo) {
+        const currentPageInfo = document.querySelector(".pagination-controls span");
+        if (currentPageInfo) currentPageInfo.textContent = newPageInfo.textContent;
+      }
+
+      const totalPagesInput = doc.getElementById("total-pages");
+      const totalPages = totalPagesInput ? parseInt(totalPagesInput.value) : null;
+
+      updatePaginationButtons(pageNum, template, department, tab, totalPages);
+
+      setTimeout(() => {
+        initializeSelectAll();
+        initializeFilters();
+        initializeStatusUpdates();
+        updateSelectAllState();
+      }, 100);
+    })
+    .catch((error) => {
+      console.error("Error loading page:", error);
+      if (tableBody) {
+        tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px; color: #ff4444;">Error loading page. Please refresh.</td></tr>';
+      }
+    });
+}
+
+function updatePaginationButtons(pageNum, template, department, tab, totalPages = null) {
+  const prevBtn = document.getElementById("prev-btn");
+  const nextBtn = document.getElementById("next-btn");
+
+  if (prevBtn) {
+    if (pageNum > 1) {
+      prevBtn.disabled = false;
+      prevBtn.onclick = () => changePage(pageNum - 1);
+    } else {
+      prevBtn.disabled = true;
+      prevBtn.onclick = null;
+    }
+  }
+
+  if (nextBtn && totalPages) {
+    if (pageNum < totalPages) {
+      nextBtn.disabled = false;
+      nextBtn.onclick = () => changePage(pageNum + 1);
+    } else {
+      nextBtn.disabled = true;
+      nextBtn.onclick = null;
+    }
+  }
+}
+
+function openModal(modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) modal.classList.add("active");
+}
+
+function closeModal(modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) modal.classList.remove("active");
+}
+
+window.addEventListener("click", function (event) {
+  const modals = document.querySelectorAll(".editStudentModal");
+  modals.forEach((modal) => {
+    if (event.target === modal) modal.classList.remove("active");
+  });
+});

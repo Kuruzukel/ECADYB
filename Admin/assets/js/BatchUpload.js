@@ -160,6 +160,21 @@ const themes = {
     const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
     applyTheme(savedTheme);
 
+    // Set selected_template hidden field from localStorage
+    const selectedTemplate = localStorage.getItem('selectedBatchTemplate');
+    if (selectedTemplate) {
+      const hidden = document.getElementById('selected_template');
+      if (hidden) hidden.value = selectedTemplate;
+    }
+
+    // Show flash message via hidden data element
+    const flash = document.getElementById('flash-data');
+    if (flash && typeof showNotification === 'function') {
+      const msg = flash.getAttribute('data-message');
+      const type = flash.getAttribute('data-type') || 'success';
+      if (msg) showNotification(msg, type);
+    }
+
     document.querySelectorAll(".upload-input").forEach((input) => {
       input.addEventListener("change", async (e) => {
         e.preventDefault();
