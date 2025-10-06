@@ -140,7 +140,6 @@ function loadPage(page, pageElement) {
               class: "management-photo",
             });
 
-            // Create info container
             var infoContainer = $("<div/>", {
               class: "management-info",
             });
