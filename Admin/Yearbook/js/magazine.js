@@ -258,7 +258,6 @@ function loadPage(page, pageElement) {
             managementPage.append(placeholderContainer);
           }
         } else {
-          // Error or no data
           var errorMessage = $("<div/>", {
             class: "management-error",
             text: response.message || "Failed to load top management data.",
