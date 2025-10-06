@@ -336,7 +336,6 @@ function loadPage(page, pageElement) {
                   class: "student-card",
                 });
 
-                // Add student image
                 var studentImg = $("<div/>", {
                   class: "student-image",
                 });
