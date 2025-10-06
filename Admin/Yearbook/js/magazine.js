@@ -7,7 +7,6 @@ function addPage(page, book) {
   if (book.turn("addPage", element, page)) {
     element.html('<div class="loader"></div>');
 
-    // Load the page
     loadPage(page, element);
   }
 }
