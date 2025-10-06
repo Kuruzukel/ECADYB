@@ -351,7 +351,6 @@ function loadPage(page, pageElement) {
                 });
                 studentImg.append(studentPhoto);
 
-                // Add student name
                 var studentName = $("<h3/>", {
                   text: student.name,
                 });
