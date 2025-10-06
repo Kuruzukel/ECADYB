@@ -165,7 +165,6 @@ function loadPage(page, pageElement) {
               text: currentManager.position || "Position Title",
             });
 
-            // Add message with quotation marks
             var messageContainer = $("<div/>", {
               class: "message-container",
             });
