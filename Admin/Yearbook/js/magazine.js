@@ -38,7 +38,6 @@ function loadPage(page, pageElement) {
     pageElement.find(".loader").remove();
   });
 
-  // Check if we're loading the first or last page and use cover data if available
   var totalPages = $(".magazine").turn("pages");
 
   // Wait for coverData to be available if it's not yet loaded, but don't wait indefinitely
