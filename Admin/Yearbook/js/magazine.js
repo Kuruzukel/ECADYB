@@ -76,7 +76,6 @@ function loadPage(page, pageElement) {
     coverData !== null &&
     coverData.back_url
   ) {
-    // Last page - use back cover
     console.log("Using back_url for page", page, ":", coverData.back_url);
     img.attr("src", coverData.back_url);
   } else if (
