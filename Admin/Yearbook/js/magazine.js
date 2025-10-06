@@ -364,7 +364,6 @@ function loadPage(page, pageElement) {
                   var closeBtn = $(".close-modal");
                   var clickedStudent = students[$(this).index()];
 
-                  // Initialize modal content with student data
                   modal.find(".student-name").text(clickedStudent.name);
                   modal
                     .find(".academic-year span")
