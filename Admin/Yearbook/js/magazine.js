@@ -136,7 +136,6 @@ function loadPage(page, pageElement) {
           if (managementIndex < response.data.length) {
             var currentManager = response.data[managementIndex];
 
-            // Create photo container
             var photoContainer = $("<div/>", {
               class: "management-photo",
             });
