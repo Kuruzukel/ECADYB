@@ -270,7 +270,6 @@ function loadPage(page, pageElement) {
 
         loadingIndicator.remove();
 
-        // Show error message
         var errorMessage = $("<div/>", {
           class: "management-error",
           text: "Error connecting to server. Please try again later.",
