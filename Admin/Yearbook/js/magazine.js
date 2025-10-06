@@ -468,7 +468,6 @@ function loadPage(page, pageElement) {
               }
             }
           } else {
-            // Error or no data - create default cards
             for (var i = 0; i < 6; i++) {
               var card = $("<div/>", {
                 class: "student-card",
