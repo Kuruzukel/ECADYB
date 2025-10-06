@@ -208,7 +208,6 @@ function loadPage(page, pageElement) {
               class: "top-management-page",
             });
 
-            // Create photo container with placeholder
             var photoContainer = $("<div/>", {
               class: "management-photo",
             });
