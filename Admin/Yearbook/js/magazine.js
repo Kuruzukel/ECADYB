@@ -291,7 +291,6 @@ function loadPage(page, pageElement) {
     );
     img.attr("src", coverData.background_url);
 
-    // Create student cards container after image loads
     img.on("load", function () {
       var cardsContainer = $("<div/>", {
         class: "cards-container",
