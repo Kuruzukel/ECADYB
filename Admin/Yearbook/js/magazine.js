@@ -86,7 +86,6 @@ function loadPage(page, pageElement) {
   ) {
     console.log("Loading top management page:", page);
 
-    // Use background image if available
     if (coverData.background_url) {
       console.log(
         "Using background_url for management page",
