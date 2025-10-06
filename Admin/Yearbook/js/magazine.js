@@ -454,7 +454,6 @@ function loadPage(page, pageElement) {
                 });
                 studentImg.append(placeholderImg);
 
-                // Add placeholder text
                 var studentName = $("<h3/>", {
                   text: "Available Slot",
                 });
