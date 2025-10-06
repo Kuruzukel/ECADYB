@@ -95,7 +95,6 @@ function loadPage(page, pageElement) {
       );
       img.attr("src", coverData.background_url);
     } else {
-      // Fallback to white background if no background image is available
       img.attr(
         "src",
         "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23ffffff'/%3E%3C/svg%3E"
