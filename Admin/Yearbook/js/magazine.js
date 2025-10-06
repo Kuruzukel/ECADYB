@@ -218,7 +218,6 @@ function loadPage(page, pageElement) {
             });
             photoContainer.append(photo);
 
-            // Create info container with placeholder text
             var infoContainer = $("<div/>", {
               class: "management-info",
             });
