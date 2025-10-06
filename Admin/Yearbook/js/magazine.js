@@ -387,7 +387,6 @@ function loadPage(page, pageElement) {
                     milestonesList.append("<li>No milestones recorded</li>");
                   }
 
-                  // Initialize images
                   var $largeImage = modal.find(".student-image-large img");
                   var $thumbnails = modal.find(
                     ".student-image-thumbnails .thumbnail"
