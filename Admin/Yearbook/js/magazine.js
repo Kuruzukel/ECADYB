@@ -101,7 +101,6 @@ function loadPage(page, pageElement) {
       );
     }
 
-    // Create top management page container
     var managementPage = $("<div/>", {
       class: "top-management-page",
     });
