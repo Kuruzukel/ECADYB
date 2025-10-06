@@ -160,7 +160,6 @@ function loadPage(page, pageElement) {
               text: currentManager.name || "Top Management Name",
             });
 
-            // Add position with default placeholder
             var position = $("<h3/>", {
               class: "management-position",
               text: currentManager.position || "Position Title",
