@@ -113,7 +113,7 @@ function loadPage(page, pageElement) {
     managementPage.append(loadingIndicator);
     pageElement.append(managementPage);
 
-    var template = 1; // Default template
+    var template = 1;
     if (coverData.template) {
       template = coverData.template;
     }
