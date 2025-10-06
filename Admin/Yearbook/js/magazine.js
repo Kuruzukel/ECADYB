@@ -113,7 +113,6 @@ function loadPage(page, pageElement) {
     managementPage.append(loadingIndicator);
     pageElement.append(managementPage);
 
-    // Fetch top management data from MongoDB
     var template = 1; // Default template
     if (coverData.template) {
       template = coverData.template;
