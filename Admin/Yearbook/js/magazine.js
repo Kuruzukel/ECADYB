@@ -194,7 +194,6 @@ function loadPage(page, pageElement) {
             message.prepend(quoteOpen);
             message.append(quoteClose);
 
-            // Assemble the message in container
             messageWrapper.append(message);
             messageContainer.append(messageWrapper);
 
