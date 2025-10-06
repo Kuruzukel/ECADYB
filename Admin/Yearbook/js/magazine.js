@@ -203,6 +203,11 @@ function loadPage(page, pageElement) {
               .append(messageContainer);
 
             managementPage.append(photoContainer).append(infoContainer);
+            
+            // Generate thumbnail after management content is loaded
+            setTimeout(function() {
+              waitForImagesAndGenerateThumbnail(page, pageElement);
+            }, 500);
           } else {
             var placeholderContainer = $("<div/>", {
               class: "top-management-page",
@@ -256,6 +261,11 @@ function loadPage(page, pageElement) {
             placeholderContainer.append(photoContainer).append(infoContainer);
 
             managementPage.append(placeholderContainer);
+            
+            // Generate thumbnail after placeholder content is loaded
+            setTimeout(function() {
+              waitForImagesAndGenerateThumbnail(page, pageElement);
+            }, 500);
           }
         } else {
           var errorMessage = $("<div/>", {
@@ -576,6 +586,11 @@ function loadPage(page, pageElement) {
 
           // Add the cards container to the page
           pageElement.append(cardsContainer);
+          
+          // Generate thumbnail after student content is loaded
+          setTimeout(function() {
+            waitForImagesAndGenerateThumbnail(page, pageElement);
+          }, 500);
         },
         error: function (xhr, status, error) {
           console.log("Error fetching student data:", error);
@@ -691,6 +706,11 @@ function loadPage(page, pageElement) {
 
           // Add the cards container to the page
           pageElement.append(cardsContainer);
+          
+          // Generate thumbnail after error fallback content is loaded
+          setTimeout(function() {
+            waitForImagesAndGenerateThumbnail(page, pageElement);
+          }, 500);
         },
       });
     });
@@ -1153,4 +1173,369 @@ function calculateBound(d) {
   }
 
   return bound;
+}
+
+// Generate thumbnail for a specific page
+function generatePageThumbnail(page, pageElement) {
+  try {
+    console.log('Generating thumbnail for page', page);
+    
+    // Create a canvas to capture the page content
+    var canvas = document.createElement('canvas');
+    var ctx = canvas.getContext('2d');
+    
+    // Set thumbnail dimensions
+    canvas.width = 76;
+    canvas.height = 100;
+    
+    // Get the page content
+    var pageImg = pageElement.find('img').first();
+    var managementContent = pageElement.find('.top-management-page').first();
+    var studentContent = pageElement.find('.cards-container').first();
+    
+    console.log('Page content found:', {
+      page: page,
+      hasImage: pageImg.length > 0,
+      hasManagement: managementContent.length > 0,
+      hasStudent: studentContent.length > 0,
+      managementText: managementContent.text().substring(0, 50),
+      studentCards: studentContent.find('.student-card').length
+    });
+    
+    // Start with background
+    if (pageImg.length && pageImg[0].complete) {
+      // Draw the background image scaled to fit
+      ctx.drawImage(pageImg[0], 0, 0, canvas.width, canvas.height);
+    } else {
+      // Fallback background
+      ctx.fillStyle = '#f8f9fa';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+    
+    // Add content overlay for management pages (pages 2-6)
+    if (page >= 2 && page <= 6 && managementContent.length) {
+      // Create semi-transparent overlay
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+      ctx.fillRect(2, 2, canvas.width - 4, canvas.height - 4);
+      
+      // Add border
+      ctx.strokeStyle = '#007AFF';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(2, 2, canvas.width - 4, canvas.height - 4);
+      
+      // Get management data
+      var managementName = managementContent.find('.management-name').text().trim() || 'Management';
+      var managementPosition = managementContent.find('.management-position').text().trim() || 'Position';
+      var managementPhoto = managementContent.find('.management-photo img').first();
+      
+      console.log('Management data extracted:', {
+        name: managementName,
+        position: managementPosition,
+        hasPhoto: managementPhoto.length > 0
+      });
+      
+      // Draw management info
+      ctx.fillStyle = '#1C1C1E';
+      ctx.font = 'bold 6px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText('MANAGEMENT', canvas.width / 2, 12);
+      
+      ctx.fillStyle = '#007AFF';
+      ctx.font = '5px Arial';
+      ctx.fillText('Page ' + page, canvas.width / 2, 20);
+      
+      // Draw management photo if available
+      if (managementPhoto.length && managementPhoto[0].complete) {
+        try {
+          // Draw the actual management photo
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(canvas.width / 2, 35, 10, 0, 2 * Math.PI);
+          ctx.clip();
+          ctx.drawImage(managementPhoto[0], canvas.width / 2 - 10, 25, 20, 20);
+          ctx.restore();
+        } catch (e) {
+          // Fallback to placeholder circle
+          ctx.fillStyle = '#E5E5EA';
+          ctx.beginPath();
+          ctx.arc(canvas.width / 2, 35, 10, 0, 2 * Math.PI);
+          ctx.fill();
+          ctx.strokeStyle = '#007AFF';
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+      } else {
+        // Draw management photo placeholder
+        ctx.fillStyle = '#E5E5EA';
+        ctx.beginPath();
+        ctx.arc(canvas.width / 2, 35, 10, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.strokeStyle = '#007AFF';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+      
+      // Draw name (truncated)
+      var displayName = managementName.length > 10 ? managementName.substring(0, 10) + '...' : managementName;
+      ctx.fillStyle = '#1C1C1E';
+      ctx.font = '4px Arial';
+      ctx.fillText(displayName, canvas.width / 2, 50);
+      
+      // Draw position (truncated)
+      var displayPosition = managementPosition.length > 12 ? managementPosition.substring(0, 12) + '...' : managementPosition;
+      ctx.fillStyle = '#8E8E93';
+      ctx.font = '3px Arial';
+      ctx.fillText(displayPosition, canvas.width / 2, 58);
+    }
+    
+    // Add content overlay for student pages (page 7+)
+    if (page >= 7 && studentContent.length) {
+      // Create semi-transparent overlay
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+      ctx.fillRect(2, 2, canvas.width - 4, canvas.height - 4);
+      
+      // Add border
+      ctx.strokeStyle = '#34C759';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(2, 2, canvas.width - 4, canvas.height - 4);
+      
+      // Count students and get student data
+      var studentCards = studentContent.find('.student-card');
+      var studentCount = studentCards.length;
+      
+      console.log('Student data extracted:', {
+        studentCount: studentCount,
+        cardsFound: studentCards.length
+      });
+      
+      // Draw student info
+      ctx.fillStyle = '#1C1C1E';
+      ctx.font = 'bold 6px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText('STUDENTS', canvas.width / 2, 12);
+      
+      ctx.fillStyle = '#34C759';
+      ctx.font = '5px Arial';
+      ctx.fillText('Page ' + page, canvas.width / 2, 20);
+      
+      // Draw student count
+      ctx.fillStyle = '#1C1C1E';
+      ctx.font = 'bold 7px Arial';
+      ctx.fillText(studentCount.toString(), canvas.width / 2, 32);
+      
+      ctx.fillStyle = '#8E8E93';
+      ctx.font = '4px Arial';
+      ctx.fillText('students', canvas.width / 2, 40);
+      
+      // Draw mini student avatars from actual student photos
+      var avatarSize = 6;
+      var maxAvatars = Math.min(studentCount, 8);
+      var startX = (canvas.width - (maxAvatars * (avatarSize + 1))) / 2;
+      
+      studentCards.each(function(index) {
+        if (index >= maxAvatars) return false; // Stop after maxAvatars
+        
+        var $card = $(this);
+        var studentImg = $card.find('.student-image img').first();
+        var studentName = $card.find('h3').text().trim();
+        var x = startX + index * (avatarSize + 1);
+        var y = 48;
+        
+        // Draw avatar circle
+        ctx.fillStyle = '#E5E5EA';
+        ctx.beginPath();
+        ctx.arc(x + avatarSize/2, y + avatarSize/2, avatarSize/2, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        ctx.strokeStyle = '#34C759';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        
+        // Try to draw actual student photo
+        if (studentImg.length && studentImg[0].complete) {
+          try {
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(x + avatarSize/2, y + avatarSize/2, avatarSize/2, 0, 2 * Math.PI);
+            ctx.clip();
+            ctx.drawImage(studentImg[0], x, y, avatarSize, avatarSize);
+            ctx.restore();
+          } catch (e) {
+            // Fallback to initial
+            ctx.fillStyle = '#1C1C1E';
+            ctx.font = '3px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText((index + 1).toString(), x + avatarSize/2, y + avatarSize/2 + 1);
+          }
+        } else {
+          // Draw student initial
+          ctx.fillStyle = '#1C1C1E';
+          ctx.font = '3px Arial';
+          ctx.textAlign = 'center';
+          ctx.fillText((index + 1).toString(), x + avatarSize/2, y + avatarSize/2 + 1);
+        }
+      });
+      
+      if (studentCount > maxAvatars) {
+        ctx.fillStyle = '#8E8E93';
+        ctx.font = '3px Arial';
+        ctx.fillText('+' + (studentCount - maxAvatars), canvas.width / 2, 70);
+      }
+    }
+    
+    // Add page number for all pages
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+    ctx.fillRect(canvas.width - 12, canvas.height - 10, 10, 8);
+    
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = '5px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText(page.toString(), canvas.width - 7, canvas.height - 4);
+    
+    // Convert canvas to data URL
+    var thumbnailDataUrl = canvas.toDataURL('image/png');
+    
+    // Store thumbnail data for later use
+    if (!window.pageThumbnails) {
+      window.pageThumbnails = {};
+    }
+    window.pageThumbnails[page] = thumbnailDataUrl;
+    
+    // Update existing thumbnail if it exists
+    var existingThumbnail = $('.thumbnails .page-' + page);
+    if (existingThumbnail.length) {
+      existingThumbnail.attr('src', thumbnailDataUrl);
+      console.log('Updated thumbnail for page', page);
+    }
+    
+    console.log('Generated detailed thumbnail for page', page, 'with content:', {
+      hasManagement: managementContent.length > 0,
+      hasStudent: studentContent.length > 0,
+      hasImage: pageImg.length > 0
+    });
+    
+  } catch (error) {
+    console.log('Error generating thumbnail for page', page, ':', error);
+  }
+}
+
+// Generate all thumbnails after pages are loaded
+function generateAllThumbnails() {
+  if (!window.pageThumbnails) {
+    window.pageThumbnails = {};
+  }
+  
+  console.log('Starting thumbnail generation for all pages...');
+  
+  // Wait a bit more to ensure all content is loaded
+  setTimeout(function() {
+    // Generate thumbnails for all loaded pages
+    $('.magazine .page').each(function(index) {
+      var pageElement = $(this);
+      var pageNumber = index + 1;
+      
+      // Check if page has content before generating thumbnail
+      var hasContent = pageElement.find('img').length > 0 || 
+                      pageElement.find('.top-management-page').length > 0 || 
+                      pageElement.find('.cards-container').length > 0;
+      
+      if (hasContent) {
+        setTimeout(function() {
+          console.log('Generating thumbnail for page', pageNumber);
+          generatePageThumbnail(pageNumber, pageElement);
+        }, index * 500); // Stagger thumbnail generation with more delay
+      } else {
+        console.log('Skipping page', pageNumber, '- no content found');
+      }
+    });
+  }, 1000);
+}
+
+// Wait for images to load before generating thumbnails
+function waitForImagesAndGenerateThumbnail(page, pageElement) {
+  var images = pageElement.find('img');
+  var loadedImages = 0;
+  var totalImages = images.length;
+  
+  if (totalImages === 0) {
+    // No images, generate thumbnail immediately
+    generatePageThumbnail(page, pageElement);
+    return;
+  }
+  
+  images.each(function() {
+    var img = this;
+    if (img.complete) {
+      loadedImages++;
+    } else {
+      $(img).on('load', function() {
+        loadedImages++;
+        if (loadedImages === totalImages) {
+          generatePageThumbnail(page, pageElement);
+        }
+      });
+    }
+  });
+  
+  // If all images are already loaded
+  if (loadedImages === totalImages) {
+    generatePageThumbnail(page, pageElement);
+  }
+}
+
+// Force regenerate all thumbnails with current content
+function forceRegenerateThumbnails() {
+  console.log('Force regenerating all thumbnails...');
+  
+  $('.magazine .page').each(function(index) {
+    var pageElement = $(this);
+    var pageNumber = index + 1;
+    
+    // Wait for images to load before generating thumbnail
+    setTimeout(function() {
+      waitForImagesAndGenerateThumbnail(pageNumber, pageElement);
+    }, index * 300);
+  });
+  
+  // Refresh thumbnails after generation
+  setTimeout(function() {
+    if (typeof refreshThumbnails === "function") {
+      refreshThumbnails();
+    }
+  }, 3000);
+}
+
+// Update thumbnail generation functions to use actual page content
+function createManagementThumbnail(managementIndex, dataToUse) {
+  // Check if we have a generated thumbnail for this management page
+  var pageNumber = managementIndex + 2;
+  if (window.pageThumbnails && window.pageThumbnails[pageNumber]) {
+    return window.pageThumbnails[pageNumber];
+  }
+  
+  // Fallback to background image or placeholder
+  var backgroundSrc = dataToUse.background_thumb_url || dataToUse.background_url;
+  if (backgroundSrc) {
+    return backgroundSrc;
+  }
+  
+  // Create a placeholder that indicates management content
+  return 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="76" height="100" viewBox="0 0 76 100"%3E%3Crect width="76" height="100" fill="%23e8f4fd"/%3E%3Ccircle cx="38" cy="30" r="15" fill="%23ffffff" stroke="%23cccccc"/%3E%3Ctext x="38" y="35" font-family="Arial" font-size="8" fill="%23666" text-anchor="middle"%3EMGT%3C/text%3E%3Ctext x="38" y="60" font-family="Arial" font-size="6" fill="%23999" text-anchor="middle"%3EPage ' + pageNumber + '%3C/text%3E%3C/svg%3E';
+}
+
+function createStudentThumbnail(studentPageIndex, dataToUse) {
+  // Check if we have a generated thumbnail for this student page
+  var pageNumber = studentPageIndex + 7;
+  if (window.pageThumbnails && window.pageThumbnails[pageNumber]) {
+    return window.pageThumbnails[pageNumber];
+  }
+  
+  // Fallback to background image or placeholder
+  var backgroundSrc = dataToUse.background_thumb_url || dataToUse.background_url;
+  if (backgroundSrc) {
+    return backgroundSrc;
+  }
+  
+  // Create a placeholder that indicates student content
+  return 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="76" height="100" viewBox="0 0 76 100"%3E%3Crect width="76" height="100" fill="%23f0f8ff"/%3E%3Ccircle cx="38" cy="30" r="15" fill="%23ffffff" stroke="%23cccccc"/%3E%3Ctext x="38" y="35" font-family="Arial" font-size="8" fill="%23666" text-anchor="middle"%3ESTU%3C/text%3E%3Ctext x="38" y="60" font-family="Arial" font-size="6" fill="%23999" text-anchor="middle"%3EPage ' + pageNumber + '%3C/text%3E%3C/svg%3E';
 }

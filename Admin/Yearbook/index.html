@@ -186,154 +186,188 @@
         });
       }
 
-      function populateThumbnails() {
-        // Use coverData for basic thumbnails if studentData is not available
-        var dataToUse = studentData || coverData;
-        if (!dataToUse) return;
+      // Detect current yearbook department
+      function getCurrentYearbook() {
+        var urlParams = new URLSearchParams(window.location.search);
+        var departmentCode = urlParams.get("department") || "BSME";
+        
+        // Map department codes to yearbook names
+        var yearbookMap = {
+          "BSME": "Maritime Education",
+          "BSCJE": "College of Criminology", 
+          "BSTM": "Tourism Management",
+          "BSE": "College of Education",
+          "BSN": "College of Nursing",
+          "BSIS": "Information System",
+          "BSBA": "Business Administration"
+        };
+        
+        return {
+          code: departmentCode,
+          name: yearbookMap[departmentCode] || "Unknown Department"
+        };
+      }
 
-        console.log("Populating thumbnails with data:", dataToUse);
+      // Page descriptions mapping based on yearbook
+      function getPageDescription(pageNumber) {
+        var yearbook = getCurrentYearbook();
+        var departmentCode = yearbook.code;
+        
+        console.log("Getting page description for page", pageNumber, "in yearbook:", yearbook.name);
+        
+        // Common pages for all yearbooks
+        var commonPages = {
+          1: "FRONT COVER",
+          2: "TOP MANAGEMENT MESSAGE",
+          3: "TOP MANAGEMENT MESSAGE", 
+          4: "TOP MANAGEMENT MESSAGE",
+          5: "TOP MANAGEMENT MESSAGE",
+          6: "TOP MANAGEMENT MESSAGE"
+        };
+        
+        // Department-specific pages
+        var departmentPages = {};
+        
+        if (departmentCode === "BSME") {
+          departmentPages = {
+            7: "MARITIME EDUCATION STUDENTS P1",
+            8: "MARITIME EDUCATION STUDENTS P2",
+            9: "MARITIME EDUCATION STUDENTS P3",
+            10: "MARITIME EDUCATION STUDENTS P4",
+            11: "MARITIME EDUCATION STUDENTS P5",
+            12: "MARITIME EDUCATION STUDENTS P6",
+            13: "BACK COVER"
+          };
+        } else if (departmentCode === "BSCJE") {
+          departmentPages = {
+            7: "COLLEGE OF CRIMINOLOGY STUDENTS P1",
+            8: "COLLEGE OF CRIMINOLOGY STUDENTS P2", 
+            9: "COLLEGE OF CRIMINOLOGY STUDENTS P3",
+            10: "COLLEGE OF CRIMINOLOGY STUDENTS P4",
+            11: "COLLEGE OF CRIMINOLOGY STUDENTS P5",
+            12: "COLLEGE OF CRIMINOLOGY STUDENTS P6",
+            13: "BACK COVER"
+          };
+        } else if (departmentCode === "BSTM") {
+          departmentPages = {
+            7: "TOURISM MANAGEMENT STUDENTS P1",
+            8: "TOURISM MANAGEMENT STUDENTS P2",
+            9: "TOURISM MANAGEMENT STUDENTS P3", 
+            10: "TOURISM MANAGEMENT STUDENTS P4",
+            11: "TOURISM MANAGEMENT STUDENTS P5",
+            12: "BACK COVER"
+          };
+        } else if (departmentCode === "BSE") {
+          departmentPages = {
+            7: "COLLEGE OF EDUCATION STUDENTS P1",
+            8: "COLLEGE OF EDUCATION STUDENTS P2",
+            9: "COLLEGE OF EDUCATION STUDENTS P3",
+            10: "COLLEGE OF EDUCATION STUDENTS P4", 
+            11: "BACK COVER"
+          };
+        } else if (departmentCode === "BSN") {
+          departmentPages = {
+            7: "COLLEGE OF NURSING STUDENTS P1",
+            8: "COLLEGE OF NURSING STUDENTS P2",
+            9: "COLLEGE OF NURSING STUDENTS P3",
+            10: "COLLEGE OF NURSING STUDENTS P4",
+            11: "BACK COVER"
+          };
+        } else if (departmentCode === "BSIS") {
+          departmentPages = {
+            7: "INFORMATION SYSTEM STUDENTS P1",
+            8: "INFORMATION SYSTEM STUDENTS P2",
+            9: "INFORMATION SYSTEM STUDENTS P3",
+            10: "BACK COVER"
+          };
+        } else if (departmentCode === "BSBA") {
+          departmentPages = {
+            7: "BUSINESS ADMINISTRATION STUDENTS P1",
+            8: "BUSINESS ADMINISTRATION STUDENTS P2",
+            9: "BUSINESS ADMINISTRATION STUDENTS P3",
+            10: "BACK COVER"
+          };
+        }
+        
+        // Merge common and department-specific pages
+        var allDescriptions = Object.assign({}, commonPages, departmentPages);
+        
+        return allDescriptions[pageNumber] || "PAGE " + pageNumber;
+      }
+
+      function populateThumbnails() {
+        var yearbook = getCurrentYearbook();
+        console.log("Populating text-based thumbnails for:", yearbook.name);
 
         var thumbnailList = $("#thumbnail-list");
         thumbnailList.empty();
-
-        // Calculate total pages
-        var totalPages = 12; // Default
-        if (studentData && studentData.total_pages) {
-          // Student pages start at page 7, so we need to calculate:
-          // Pages 1 (front cover) + 5 (management) + student pages + 1 (back cover)
-          totalPages = 7 + studentData.total_pages + 1;
-          console.log("Calculated total pages based on student data:", totalPages);
-        }
-
-        // Create all thumbnails in order
-        var thumbnails = [];
-
-        // Page 1 - Front cover
-        var firstThumbSrc = dataToUse.front_thumb_url || dataToUse.front_url || 
-          'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="76" height="100" viewBox="0 0 76 100"%3E%3Crect width="76" height="100" fill="%23f0f0f0"/%3E%3Ctext x="38" y="55" font-family="Arial" font-size="10" fill="%23999" text-anchor="middle"%3E1%3C/text%3E%3C/svg%3E';
-        thumbnails.push({
-          type: 'single',
-          page: 1,
-          src: firstThumbSrc,
-          label: '1'
-        });
-
-        // Pages 2-6 - Management pages (as spreads)
-        for (var i = 2; i <= 6; i += 2) {
-          var img1Src = dataToUse.background_thumb_url || dataToUse.background_url || 
-            'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="76" height="100" viewBox="0 0 76 100"%3E%3Crect width="76" height="100" fill="%23f0f0f0"/%3E%3Ctext x="38" y="55" font-family="Arial" font-size="10" fill="%23999" text-anchor="middle"%3E' + i + '%3C/text%3E%3C/svg%3E';
-          var img2Src = dataToUse.background_thumb_url || dataToUse.background_url || 
-            'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="76" height="100" viewBox="0 0 76 100"%3E%3Crect width="76" height="100" fill="%23f0f0f0"/%3E%3Ctext x="38" y="55" font-family="Arial" font-size="10" fill="%23999" text-anchor="middle"%3E' + (i + 1) + '%3C/text%3E%3C/svg%3E';
-          
-          thumbnails.push({
-            type: 'spread',
-            page1: i,
-            page2: i + 1,
-            src1: img1Src,
-            src2: img2Src,
-            label: i + '-' + (i + 1)
-          });
-        }
-
-        // Student pages (starting from page 7)
-        if (studentData && studentData.total_pages) {
-          for (var i = 0; i < studentData.total_pages; i += 2) {
-            var pageNum = 7 + i;
-            var img1Src = dataToUse.background_thumb_url || dataToUse.background_url || 
-              'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="76" height="100" viewBox="0 0 76 100"%3E%3Crect width="76" height="100" fill="%23f0f0f0"/%3E%3Ctext x="38" y="55" font-family="Arial" font-size="10" fill="%23999" text-anchor="middle"%3E' + pageNum + '%3C/text%3E%3C/svg%3E';
-            var img2Src = dataToUse.background_thumb_url || dataToUse.background_url || 
-              'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="76" height="100" viewBox="0 0 76 100"%3E%3Crect width="76" height="100" fill="%23f0f0f0"/%3E%3Ctext x="38" y="55" font-family="Arial" font-size="10" fill="%23999" text-anchor="middle"%3E' + (pageNum + 1) + '%3C/text%3E%3C/svg%3E';
-            
-            thumbnails.push({
-              type: 'spread',
-              page1: pageNum,
-              page2: pageNum + 1,
-              src1: img1Src,
-              src2: img2Src,
-              label: pageNum + '-' + (pageNum + 1)
-            });
-          }
-        } else {
-          // Fallback to default student pages as spreads (7-8, 9-10, 11-12)
-          for (var i = 7; i <= 11; i += 2) {
-            var img1Src = dataToUse.background_thumb_url || dataToUse.background_url || 
-              'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="76" height="100" viewBox="0 0 76 100"%3E%3Crect width="76" height="100" fill="%23f0f0f0"/%3E%3Ctext x="38" y="55" font-family="Arial" font-size="10" fill="%23999" text-anchor="middle"%3E' + i + '%3C/text%3E%3C/svg%3E';
-            var img2Src = dataToUse.background_thumb_url || dataToUse.background_url || 
-              'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="76" height="100" viewBox="0 0 76 100"%3E%3Crect width="76" height="100" fill="%23f0f0f0"/%3E%3Ctext x="38" y="55" font-family="Arial" font-size="10" fill="%23999" text-anchor="middle"%3E' + (i + 1) + '%3C/text%3E%3C/svg%3E';
-            
-            thumbnails.push({
-              type: 'spread',
-              page1: i,
-              page2: i + 1,
-              src1: img1Src,
-              src2: img2Src,
-              label: i + '-' + (i + 1)
-            });
-          }
-        }
-
-        // Last page - Back cover
-        var lastThumbSrc = dataToUse.back_thumb_url || dataToUse.back_url || 
-          'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="76" height="100" viewBox="0 0 76 100"%3E%3Crect width="76" height="100" fill="%23f0f0f0"/%3E%3Ctext x="38" y="55" font-family="Arial" font-size="10" fill="%23999" text-anchor="middle"%3E' + totalPages + '%3C/text%3E%3C/svg%3E';
-        thumbnails.push({
-          type: 'single',
-          page: totalPages,
-          src: lastThumbSrc,
-          label: totalPages.toString()
-        });
-
-        // Render thumbnails in 12-column grid
-        var currentRow = 0;
-        var itemsPerRow = 12;
         
-        for (var i = 0; i < thumbnails.length; i++) {
-          var thumbnail = thumbnails[i];
-          var li;
+        // Add header to thumbnails modal
+        var yearbook = getCurrentYearbook();
+        var headerHtml = `
+          <div class="thumbnails-header">
+            <div class="thumbnails-title">
+              <span class="thumbnails-icon">☰</span>
+              Table of Contents
+            </div>
+            <div class="thumbnails-subtitle">
+              ${totalPages} pages • Currently on page <span id="current-page-display">1</span>
+            </div>
+            <button class="close-thumbnails">×</button>
+          </div>
+        `;
+        
+        // Wrap everything in a modal container
+        var modalContainer = $('<div class="thumbnails-modal"></div>');
+        modalContainer.append(headerHtml);
+        modalContainer.append(thumbnailList);
+        
+        // Replace the existing thumbnails content
+        $('.thumbnails').html(modalContainer);
+
+        // Calculate total pages based on yearbook type
+        var totalPages = 13; // Default for most yearbooks (6 management + 6 students + 1 back cover)
+        
+        // Adjust total pages based on department
+        if (yearbook.code === "BSTM") {
+          totalPages = 12; // Tourism Management (6 management + 5 students + 1 back cover)
+        } else if (yearbook.code === "BSE") {
+          totalPages = 11; // Education (6 management + 4 students + 1 back cover)
+        } else if (yearbook.code === "BSN") {
+          totalPages = 11; // Nursing (6 management + 4 students + 1 back cover)
+        } else if (yearbook.code === "BSIS") {
+          totalPages = 10; // Information System (6 management + 3 students + 1 back cover)
+        } else if (yearbook.code === "BSBA") {
+          totalPages = 10; // Business Administration (6 management + 3 students + 1 back cover)
+        }
+        
+        console.log("Total pages for", yearbook.name, ":", totalPages);
+        
+        // Create horizontal thumbnail divs for all pages
+        for (var pageNum = 1; pageNum <= totalPages; pageNum++) {
+          var thumbnailDiv = $('<div class="thumbnail-item"></div>');
+          thumbnailDiv.text(pageNum);
+          thumbnailDiv.attr('data-page', pageNum);
           
-          if (thumbnail.type === 'single') {
-            li = $('<li class="i"></li>');
-            var img = $("<img>").attr({
-              src: thumbnail.src,
-              width: 76,
-              height: 100,
-              class: "page-" + thumbnail.page,
-            });
-            var span = $("<span>" + thumbnail.label + "</span>");
-            li.append(img).append(span);
-          } else {
-            li = $('<li class="d"></li>');
-            var img1 = $("<img>").attr({
-              src: thumbnail.src1,
-              width: 76,
-              height: 100,
-              class: "page-" + thumbnail.page1,
-            });
-            var img2 = $("<img>").attr({
-              src: thumbnail.src2,
-              width: 76,
-              height: 100,
-              class: "page-" + thumbnail.page2,
-            });
-            var span = $("<span>" + thumbnail.label + "</span>");
-            li.append(img1).append(img2).append(span);
-          }
-          
-          thumbnailList.append(li);
+          thumbnailList.append(thumbnailDiv);
         }
 
         // Add click handlers
         $(".thumbnails")
           .off("click")
           .on("click", function (event) {
-            var page;
-            if (
-              event.target &&
-              (page = /page-([0-9]+)/.exec($(event.target).attr("class")))
-            ) {
-              $(".magazine").turn("page", page[1]);
-              // Close thumbnails modal after clicking a thumbnail
+            var thumbnailElement = $(event.target).closest('.thumbnail-item');
+            if (thumbnailElement.length) {
+              var pageNumber = thumbnailElement.attr('data-page');
+              $(".magazine").turn("page", pageNumber);
+              // Close thumbnails modal after clicking
               $('.thumbnails').removeClass('visible');
             }
+          });
+          
+        // Add close button handler
+        $(".close-thumbnails").off("click").on("click", function() {
+          $('.thumbnails').removeClass('visible');
           });
 
         $(".thumbnails li")
@@ -346,29 +380,58 @@
             $(this).removeClass("thumb-hover");
           });
       }
+
+      // Function to refresh thumbnails with generated content
+      function refreshThumbnails() {
+        if (!window.pageThumbnails) return;
+        
+        // Update existing thumbnails with generated content
+        for (var pageNum in window.pageThumbnails) {
+          var thumbnailSrc = window.pageThumbnails[pageNum];
+          var existingThumbnail = $('.thumbnails .page-' + pageNum);
+          if (existingThumbnail.length) {
+            existingThumbnail.attr('src', thumbnailSrc);
+          }
+        }
+        
+        console.log('Refreshed thumbnails with generated content');
+      }
+
+      // Function to create management thumbnail with actual content
+      function createManagementThumbnail(managementIndex, dataToUse) {
+        // For now, use the background image but with a management indicator
+        var backgroundSrc = dataToUse.background_thumb_url || dataToUse.background_url;
+        if (backgroundSrc) {
+          return backgroundSrc;
+        }
+        
+        // Create a placeholder that indicates management content
+        return 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="76" height="100" viewBox="0 0 76 100"%3E%3Crect width="76" height="100" fill="%23e8f4fd"/%3E%3Ccircle cx="38" cy="30" r="15" fill="%23ffffff" stroke="%23cccccc"/%3E%3Ctext x="38" y="35" font-family="Arial" font-size="8" fill="%23666" text-anchor="middle"%3EMGT%3C/text%3E%3Ctext x="38" y="60" font-family="Arial" font-size="6" fill="%23999" text-anchor="middle"%3EPage ' + (managementIndex + 2) + '%3C/text%3E%3C/svg%3E';
+      }
+
+      // Function to create student thumbnail with actual content
+      function createStudentThumbnail(studentPageIndex, dataToUse) {
+        // For now, use the background image but with a student indicator
+        var backgroundSrc = dataToUse.background_thumb_url || dataToUse.background_url;
+        if (backgroundSrc) {
+          return backgroundSrc;
+        }
+        
+        // Create a placeholder that indicates student content
+        return 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="76" height="100" viewBox="0 0 76 100"%3E%3Crect width="76" height="100" fill="%23f0f8ff"/%3E%3Ccircle cx="38" cy="30" r="15" fill="%23ffffff" stroke="%23cccccc"/%3E%3Ctext x="38" y="35" font-family="Arial" font-size="8" fill="%23666" text-anchor="middle"%3ESTU%3C/text%3E%3Ctext x="38" y="60" font-family="Arial" font-size="6" fill="%23999" text-anchor="middle"%3EPage ' + (studentPageIndex + 7) + '%3C/text%3E%3C/svg%3E';
+      }
     </script>
   </head>
   <body>
     <div id="canvas">
-      <div class="zoom-icon zoom-icon-in"></div>
-
       <div class="magazine-viewport">
         <div class="container">
           <div class="magazine">
-            <div ignore="1" class="next-button"></div>
-            <div ignore="1" class="previous-button"></div>
           </div>
         </div>
       </div>
 
-      <div class="thumbnails">
-        <div>
-          <button class="close-thumbnails" id="closeThumbnails">&times;</button>
-          <div class="thumbnail-content">
-            <ul id="thumbnail-list"></ul>
-          </div>
-        </div>
-      </div>
+      <!-- Thumbnails div removed -->
 
       <!-- Navigation Control Bar -->
       <div class="nav-controls">
@@ -385,10 +448,9 @@
             <rect x="3" y="14" width="7" height="7"></rect>
           </svg>
         </button>
-        <button class="nav-btn audio-btn" id="audioBtn" title="Audio Controls">
+        <button class="nav-btn fullscreen-btn" id="fullscreenBtn" title="Toggle Fullscreen">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="11,5 6,9 2,9 2,15 6,15 11,19 11,5"></polygon>
-            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
           </svg>
         </button>
         <button class="nav-btn next-btn" id="nextBtn" title="Next Page">
@@ -521,14 +583,24 @@
           return;
         }
 
-        // Calculate pages based on student data if available
-        var totalPages = 12; // Default
-        if (studentData && studentData.total_pages) {
-          // Student pages start at page 7, so we need to calculate:
-          // Pages 1 (front cover) + 5 (management) + student pages + 1 (back cover)
-          totalPages = 7 + studentData.total_pages + 1;
-          console.log("Setting total pages to:", totalPages);
+        // Calculate pages based on yearbook type
+        var yearbook = getCurrentYearbook();
+        var totalPages = 13; // Default for most yearbooks (6 management + 6 students + 1 back cover)
+        
+        // Adjust total pages based on department
+        if (yearbook.code === "BSTM") {
+          totalPages = 12; // Tourism Management (6 management + 5 students + 1 back cover)
+        } else if (yearbook.code === "BSE") {
+          totalPages = 11; // Education (6 management + 4 students + 1 back cover)
+        } else if (yearbook.code === "BSN") {
+          totalPages = 11; // Nursing (6 management + 4 students + 1 back cover)
+        } else if (yearbook.code === "BSIS") {
+          totalPages = 10; // Information System (6 management + 3 students + 1 back cover)
+        } else if (yearbook.code === "BSBA") {
+          totalPages = 10; // Business Administration (6 management + 3 students + 1 back cover)
         }
+        
+        console.log("Setting total pages for", yearbook.name, "to:", totalPages);
 
         flipbook.turn({
           width: 922,
@@ -549,13 +621,14 @@
 
               disableControls(page);
 
-              $(".thumbnails .page-" + currentPage)
-                .parent()
+              $(".thumbnails .thumbnail-item")
                 .removeClass("current");
 
-              $(".thumbnails .page-" + page)
-                .parent()
+              $(".thumbnails .thumbnail-item[data-page='" + page + "']")
                 .addClass("current");
+                
+              // Update current page display in thumbnails modal
+              $("#current-page-display").text(page);
             },
 
             turned: function (event, page, view) {
@@ -759,6 +832,32 @@
         resizeViewport();
 
         $(".magazine").addClass("animated");
+        
+        // Generate thumbnails after everything is loaded
+        setTimeout(function() {
+          if (typeof generateAllThumbnails === "function") {
+            generateAllThumbnails();
+            // Refresh thumbnails after generation with multiple attempts
+            setTimeout(function() {
+              if (typeof refreshThumbnails === "function") {
+                refreshThumbnails();
+              }
+            }, 3000);
+            
+            // Additional refresh attempts
+            setTimeout(function() {
+              if (typeof refreshThumbnails === "function") {
+                refreshThumbnails();
+              }
+            }, 5000);
+            
+            setTimeout(function() {
+              if (typeof refreshThumbnails === "function") {
+                refreshThumbnails();
+              }
+            }, 8000);
+          }
+        }, 3000);
       }
 
       $(".zoom-icon")
@@ -805,6 +904,18 @@
         // Thumbnails toggle button
         $('#thumbnailsBtn').on('click', function() {
           $('.thumbnails').addClass('visible');
+          
+          // Force refresh thumbnails when opening
+          setTimeout(function() {
+            if (typeof forceRegenerateThumbnails === "function") {
+              forceRegenerateThumbnails();
+            } else if (typeof refreshThumbnails === "function") {
+              refreshThumbnails();
+            }
+            if (typeof generateAllThumbnails === "function") {
+              generateAllThumbnails();
+            }
+          }, 100);
         });
 
         // Close thumbnails button
@@ -812,11 +923,63 @@
           $('.thumbnails').removeClass('visible');
         });
 
-        // Audio button (placeholder for future audio functionality)
-        $('#audioBtn').on('click', function() {
-          // Placeholder for audio controls
-          console.log('Audio controls clicked');
-          // You can add audio functionality here later
+        // Fullscreen functionality
+        function toggleFullscreen() {
+          if (!document.fullscreenElement) {
+            // Enter fullscreen
+            if (document.documentElement.requestFullscreen) {
+              document.documentElement.requestFullscreen();
+            } else if (document.documentElement.webkitRequestFullscreen) {
+              document.documentElement.webkitRequestFullscreen();
+            } else if (document.documentElement.msRequestFullscreen) {
+              document.documentElement.msRequestFullscreen();
+            }
+          } else {
+            // Exit fullscreen
+            if (document.exitFullscreen) {
+              document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+              document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) {
+              document.msExitFullscreen();
+            }
+          }
+        }
+
+        // Update fullscreen button icon based on state
+        function updateFullscreenIcon() {
+          var fullscreenBtn = document.getElementById('fullscreenBtn');
+          var isFullscreen = document.fullscreenElement || 
+                            document.webkitFullscreenElement || 
+                            document.msFullscreenElement;
+          
+          if (isFullscreen) {
+            // Show exit fullscreen icon
+            fullscreenBtn.innerHTML = `
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"></path>
+              </svg>
+            `;
+            fullscreenBtn.title = "Exit Fullscreen";
+          } else {
+            // Show enter fullscreen icon
+            fullscreenBtn.innerHTML = `
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+              </svg>
+            `;
+            fullscreenBtn.title = "Enter Fullscreen";
+          }
+        }
+
+        // Add event listeners for fullscreen changes
+        document.addEventListener('fullscreenchange', updateFullscreenIcon);
+        document.addEventListener('webkitfullscreenchange', updateFullscreenIcon);
+        document.addEventListener('msfullscreenchange', updateFullscreenIcon);
+
+        // Fullscreen button click handler
+        $('#fullscreenBtn').on('click', function() {
+          toggleFullscreen();
         });
 
         // Hide thumbnails when clicking outside the modal
