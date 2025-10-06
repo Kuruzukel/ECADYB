@@ -191,7 +191,6 @@ function loadPage(page, pageElement) {
               class: "message-wrapper",
             });
 
-            // Put quotes directly in the message text
             message.prepend(quoteOpen);
             message.append(quoteClose);
 
