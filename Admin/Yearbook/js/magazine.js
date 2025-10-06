@@ -197,7 +197,6 @@ function loadPage(page, pageElement) {
             messageWrapper.append(message);
             messageContainer.append(messageWrapper);
 
-            // Assemble the page
             infoContainer
               .append(name)
               .append(position)
