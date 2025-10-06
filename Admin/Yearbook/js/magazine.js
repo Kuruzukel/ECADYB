@@ -40,7 +40,6 @@ function loadPage(page, pageElement) {
 
   var totalPages = $(".magazine").turn("pages");
 
-  // Wait for coverData to be available if it's not yet loaded, but don't wait indefinitely
   var maxWaitTime = 5000; // 5 seconds
   var waitStartTime = Date.now();
 
