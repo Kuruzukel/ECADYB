@@ -47,7 +47,6 @@ try {
 
     $collection = $db->$collectionName;
 
-    // Use exact match for better reliability
     $student = $collection->findOne([
         '$or' => [
             ['student id' => $studentId],
