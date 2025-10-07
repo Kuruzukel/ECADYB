@@ -99,7 +99,7 @@ try {
         echo json_encode([
             'success' => true,
             'message' => 'Verification code sent successfully',
-            'otp' => $otp // For development/testing purposes
+            'otp' => $otp
         ]);
     } else {
         echo json_encode(['success' => false, 'message' => 'Failed to send email. Please try again.']);
