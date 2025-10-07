@@ -80,7 +80,6 @@ try {
     $queryField = isset($existingDoc['student id']) ? 'student id' : 'student_id';
     error_log("Using query field: " . $queryField . " with value: " . $originalId);
 
-    // If student ID is being changed, update that field as well
     if ($newStudentId !== null && $newStudentId !== $originalId) {
         $updateFields[$queryField] = $newStudentId;
         error_log("Student ID will be changed from " . $originalId . " to " . $newStudentId);
