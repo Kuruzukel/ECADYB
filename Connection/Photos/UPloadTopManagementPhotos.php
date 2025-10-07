@@ -257,7 +257,6 @@ try {
         try {
             $messageCollection = $mongoClient->$mongoDbName->top_management_message;
 
-            // Find all available names in the collection for logging
             $allNames = $messageCollection->distinct('name');
             error_log("Available names in top_management_message: " . implode(", ", $allNames));
 
