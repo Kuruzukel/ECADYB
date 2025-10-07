@@ -138,7 +138,6 @@ try {
             continue;
         }
 
-        // Generate safe filename
         $ext = pathinfo($fileName, PATHINFO_EXTENSION) ?: 'jpg';
         $safeFileName = preg_replace('/[^A-Za-z0-9 _.-]/', '', $nameWithoutExt) ?: ('top_management_' . time());
         $safeExt = preg_replace('/[^A-Za-z0-9]/', '', $ext) ?: 'jpg';
