@@ -32,7 +32,6 @@ try {
         exit;
     }
 
-    // Validate verification code (should be 6 digits)
     if (!preg_match('/^\d{6}$/', $verificationCode)) {
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'Invalid verification code format']);
