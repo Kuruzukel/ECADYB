@@ -47,7 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Use the correct BatchTemplate database
     $dbName = "BatchTemplate" . $template;
     $db = $client->$dbName;
 
@@ -56,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Build filter for bulk update
         $filter = [];
-        
+
         // Apply status filter if provided
         if ($statusFilter && $statusFilter !== '') {
             if ($statusFilter === 'active') {
