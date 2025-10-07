@@ -260,7 +260,6 @@ try {
             $allNames = $messageCollection->distinct('name');
             error_log("Available names in top_management_message: " . implode(", ", $allNames));
 
-            // Try exact match first
             $messageDoc = $messageCollection->findOne(['name' => $nameWithoutExt]);
 
             // If no exact match, try case-insensitive comparison
