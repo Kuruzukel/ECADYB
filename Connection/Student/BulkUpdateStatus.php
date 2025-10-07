@@ -53,7 +53,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $coll = $db->$collection;
 
-        // Build filter for bulk update
         $filter = [];
 
         // Apply status filter if provided
