@@ -44,7 +44,6 @@ try {
         'attempts' => 0
     ];
 
-    // Send email with OTP
     $subject = "Password Reset Verification Code - Exact Colleges of Asia";
     $message = "
     <html>
