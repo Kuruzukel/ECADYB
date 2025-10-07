@@ -78,7 +78,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 "modified"   => $result->getModifiedCount()
             ]);
         } else {
-            // Let's debug what documents exist in this collection
             $allStudents = $coll->find([], [
                 'projection' => ['student id' => 1, 'student_id' => 1, 'status' => 1],
                 'limit' => 5
