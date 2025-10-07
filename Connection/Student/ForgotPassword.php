@@ -51,7 +51,6 @@ try {
     }
 
 
-    // Generate a new password (8 characters)
     $newPassword = generateRandomPassword();
 
     // Hash the new password
