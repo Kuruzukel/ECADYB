@@ -36,7 +36,6 @@ $dbName = "BatchTemplate" . $template;
 $db = $client->$dbName;
 
 try {
-    // Check if the collection exists in this database
     $collections = iterator_to_array($db->listCollectionNames());
     if (!in_array($collectionName, $collections)) {
         echo json_encode([
