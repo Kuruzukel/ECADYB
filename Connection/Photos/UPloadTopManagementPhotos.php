@@ -280,7 +280,6 @@ try {
                 ];
                 $failedCount++;
 
-                // Delete the uploaded file from BunnyCDN since it's not associated with a valid name
                 error_log("Deleting file from BunnyCDN due to no matching name: $storageUrl");
                 $deleteCh = curl_init($storageUrl);
                 curl_setopt_array($deleteCh, [
