@@ -77,7 +77,6 @@ try {
 
     error_log("Found existing document: " . print_r($existingDoc, true));
 
-    // Determine which field name is used for student ID in this document
     $queryField = isset($existingDoc['student id']) ? 'student id' : 'student_id';
     error_log("Using query field: " . $queryField . " with value: " . $originalId);
 
