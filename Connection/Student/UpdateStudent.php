@@ -48,7 +48,6 @@ try {
     $collection = $db->{$collectionName};
     error_log("Using database: " . $dbName . ", collection: " . $collectionName);
 
-    // Filter out null values but keep empty strings
     $updateFields = array_filter($data, function ($val) {
         return $val !== null;
     });
