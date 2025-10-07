@@ -99,7 +99,6 @@ function generateRandomPassword($length = 8)
 
 function sendPasswordEmail($email, $password)
 {
-    // Email configuration
     $to = $email;
     $subject = "Your New Password - ECADYB";
     $message = "
