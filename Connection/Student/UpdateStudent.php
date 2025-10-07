@@ -101,7 +101,6 @@ try {
         }
     }
 
-    // If no fields have actually changed, return success but indicate no changes
     if (empty($updateFields)) {
         respond(true, 'No changes detected, student record remains the same.');
     }
