@@ -295,7 +295,7 @@ try {
             }
 
             $position = isset($messageDoc['position']) ? $messageDoc['position'] : '';
-            $correctName = $messageDoc['name']; // Use the exact name from the database
+            $correctName = $messageDoc['name'];
 
             error_log("Found matching document for '$nameWithoutExt': name='$correctName', position='$position'");
 
