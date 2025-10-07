@@ -50,7 +50,6 @@ try {
         exit;
     }
 
-    // You should implement proper OTP verification with expiration time
 
     // Generate a new password (8 characters)
     $newPassword = generateRandomPassword();
