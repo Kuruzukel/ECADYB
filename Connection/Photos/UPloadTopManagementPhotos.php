@@ -172,7 +172,6 @@ try {
         $curlErr  = curl_error($ch);
         curl_close($ch);
 
-        // Check for client disconnection/cancellation after uploading to BunnyCDN
         if (connection_aborted()) {
             $uploadCancelled = true;
             // If upload was successful but client disconnected, delete the file from BunnyCDN
