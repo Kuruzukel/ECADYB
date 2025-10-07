@@ -272,7 +272,6 @@ try {
                 }
             }
 
-            // If still no match found, reject the upload
             if (!$messageDoc) {
                 $results[] = [
                     'filename' => $fileName,
