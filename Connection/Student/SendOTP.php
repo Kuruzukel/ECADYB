@@ -40,7 +40,7 @@ try {
     session_start();
     $_SESSION['otp_' . $email] = [
         'code' => $otp,
-        'expires' => time() + 300, // 5 minutes
+        'expires' => time() + 300,
         'attempts' => 0
     ];
 
