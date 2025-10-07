@@ -47,7 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Use the correct BatchTemplate database
     $dbName = "BatchTemplate" . $template;
     $db = $client->$dbName;
 
