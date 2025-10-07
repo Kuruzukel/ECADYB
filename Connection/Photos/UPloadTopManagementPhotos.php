@@ -300,7 +300,7 @@ try {
             error_log("Found matching document for '$nameWithoutExt': name='$correctName', position='$position'");
 
             $document = [
-                'name' => $correctName, // Use the correct name from the database
+                'name' => $correctName,
                 'position' => $position,
                 'filename' => $filename,
                 'original_name' => $fileName,
