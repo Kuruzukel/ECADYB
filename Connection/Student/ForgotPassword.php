@@ -15,101 +15,101 @@ require_once '../../vendor/autoload.php';
 use MongoDB\Client;
 
 try {
-    // Get the request body
     $input = json_decode(file_get_contents('php://input'), true);
-    
+
     if (!$input || !isset($input['email']) || !isset($input['verificationCode'])) {
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'Email and verification code are required']);
         exit;
     }
-    
+
     $email = trim($input['email']);
     $verificationCode = trim($input['verificationCode']);
-    
+
     // Validate email format
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'Invalid email format']);
         exit;
     }
-    
+
     // Validate verification code (should be 6 digits)
     if (!preg_match('/^\d{6}$/', $verificationCode)) {
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'Invalid verification code format']);
         exit;
     }
-    
+
     // Connect to MongoDB
     $client = new Client("mongodb://localhost:27017");
     $database = $client->selectDatabase('ECADYB');
     $collection = $database->selectCollection('students');
-    
+
     // Find the student by email
     $student = $collection->findOne(['email' => $email]);
-    
+
     if (!$student) {
         http_response_code(404);
         echo json_encode(['success' => false, 'message' => 'Student not found']);
         exit;
     }
-    
+
     // In a real implementation, you would verify the OTP here
     // For now, we'll just check if it's a 6-digit number
     // You should implement proper OTP verification with expiration time
-    
+
     // Generate a new password (8 characters)
     $newPassword = generateRandomPassword();
-    
+
     // Hash the new password
     $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-    
+
     // Update the student's password in the database
     $updateResult = $collection->updateOne(
         ['email' => $email],
         ['$set' => ['password' => $hashedPassword]]
     );
-    
+
     if ($updateResult->getModifiedCount() === 0) {
         http_response_code(500);
         echo json_encode(['success' => false, 'message' => 'Failed to update password']);
         exit;
     }
-    
+
     // Send the new password via email
     $emailSent = sendPasswordEmail($email, $newPassword);
-    
+
     if (!$emailSent) {
         http_response_code(500);
         echo json_encode(['success' => false, 'message' => 'Password updated but failed to send email']);
         exit;
     }
-    
+
     echo json_encode([
-        'success' => true, 
+        'success' => true,
         'message' => 'Password reset successful. Please check your email for your new password.'
     ]);
-    
 } catch (Exception $e) {
     error_log("ForgotPassword error: " . $e->getMessage());
     http_response_code(500);
     echo json_encode(['success' => false, 'message' => 'Internal server error']);
 }
 
-function generateRandomPassword($length = 8) {
+function generateRandomPassword($length = 8)
+{
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $password = '';
     $max = strlen($characters) - 1;
-    
+
     for ($i = 0; $i < $length; $i++) {
         $password .= $characters[random_int(0, $max)];
     }
-    
+
     return $password;
 }
 
-function sendPasswordEmail($email, $password) {
+function sendPasswordEmail($email, $password)
+{
     // Email configuration
     $to = $email;
     $subject = "Your New Password - ECADYB";
@@ -158,7 +158,7 @@ function sendPasswordEmail($email, $password) {
         </div>
     </body>
     </html>";
-    
+
     $headers = [
         'MIME-Version: 1.0',
         'Content-type: text/html; charset=UTF-8',
@@ -166,7 +166,6 @@ function sendPasswordEmail($email, $password) {
         'Reply-To: support@ecadyb.com',
         'X-Mailer: PHP/' . phpversion()
     ];
-    
+
     return mail($to, $subject, $message, implode("\r\n", $headers));
 }
-?>
