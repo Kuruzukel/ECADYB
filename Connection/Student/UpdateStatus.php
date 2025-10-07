@@ -53,7 +53,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $coll = $db->$collection;
 
-        // Use exact match for better reliability
         $filter = [
             '$or' => [
                 ['student_id' => $studentId],
