@@ -62,7 +62,6 @@ try {
     ]);
 
     if (!$existingDoc) {
-        // Let's also check what documents exist in this collection
         $allDocs = $collection->find([], ['limit' => 5]);
         $docList = [];
         foreach ($allDocs as $doc) {
