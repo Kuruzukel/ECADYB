@@ -27,7 +27,6 @@ try {
 
     require_once '../../Connection/Configuration/MongoConnect.php';
 
-    // Check if email exists in database
     $collection = $database->selectCollection('students');
     $student = $collection->findOne(['email' => $email]);
 
