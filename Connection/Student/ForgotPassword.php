@@ -66,7 +66,6 @@ try {
         exit;
     }
 
-    // Send the new password via email
     $emailSent = sendPasswordEmail($email, $newPassword);
 
     if (!$emailSent) {
