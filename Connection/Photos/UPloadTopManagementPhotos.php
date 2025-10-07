@@ -115,7 +115,6 @@ try {
             continue;
         }
 
-        // Extract name from filename (assuming filename without extension is the person's name)
         $nameWithoutExt = pathinfo($fileName, PATHINFO_FILENAME);
 
         // Validate that we have a name
