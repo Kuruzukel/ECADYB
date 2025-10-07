@@ -13,23 +13,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 session_start();
 
-// Global variable to track if upload should be cancelled
 $uploadCancelled = false;
 
 function respond($success, $message = '', $data = [])
 {
     global $uploadCancelled;
-    
+
     while (ob_get_level()) {
         ob_end_clean();
     }
-    
+
     // If upload was cancelled, ensure we don't save anything
     if ($uploadCancelled && $success) {
         $success = false;
         $message = 'Upload cancelled';
     }
-    
+
     header('Content-Type: application/json');
     echo json_encode(array_merge([
         'success' => $success,
@@ -124,7 +123,7 @@ try {
 
         // Extract name from filename (assuming filename without extension is the person's name)
         $nameWithoutExt = pathinfo($fileName, PATHINFO_FILENAME);
-        
+
         // Validate that we have a name
         if (empty($nameWithoutExt)) {
             $results[] = [
@@ -241,7 +240,7 @@ try {
         $mongoUrl = getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
         error_log("UploadTopManagementPhotos.php using MongoDB URL: $mongoUrl");
         error_log("UploadTopManagementPhotos.php using database: $mongoDbName, collection: top_management_photos");
-        
+
         try {
             $mongoClient = new Client($mongoUrl, [
                 'serverSelectionTimeoutMS' => 5000,
@@ -258,7 +257,7 @@ try {
                 'message' => 'Database connection failed: ' . $e->getMessage()
             ];
             $failedCount++;
-            
+
             // Delete file from BunnyCDN since database connection failed
             error_log("UploadTopManagementPhotos.php deleting file from BunnyCDN due to MongoDB connection error: $storageUrl");
             $deleteCh = curl_init($storageUrl);
@@ -277,14 +276,14 @@ try {
         // First, check if the name exists in top_management_message collection
         try {
             $messageCollection = $mongoClient->$mongoDbName->top_management_message;
-            
+
             // Find all available names in the collection for logging
             $allNames = $messageCollection->distinct('name');
             error_log("Available names in top_management_message: " . implode(", ", $allNames));
-            
+
             // Try exact match first
             $messageDoc = $messageCollection->findOne(['name' => $nameWithoutExt]);
-            
+
             // If no exact match, try case-insensitive comparison
             if (!$messageDoc) {
                 // Get all documents and manually compare (since MongoDB doesn't have case-insensitive distinct)
@@ -296,7 +295,7 @@ try {
                     }
                 }
             }
-            
+
             // If still no match found, reject the upload
             if (!$messageDoc) {
                 $results[] = [
@@ -305,7 +304,7 @@ try {
                     'message' => "Image name '$nameWithoutExt' does not match any name in the top management message CSV. Available names: " . implode(", ", $allNames)
                 ];
                 $failedCount++;
-                
+
                 // Delete the uploaded file from BunnyCDN since it's not associated with a valid name
                 error_log("Deleting file from BunnyCDN due to no matching name: $storageUrl");
                 $deleteCh = curl_init($storageUrl);
@@ -320,13 +319,13 @@ try {
                 curl_close($deleteCh);
                 continue;
             }
-            
+
             // Get the position and correct name from the database
             $position = isset($messageDoc['position']) ? $messageDoc['position'] : '';
             $correctName = $messageDoc['name']; // Use the exact name from the database
-            
+
             error_log("Found matching document for '$nameWithoutExt': name='$correctName', position='$position'");
-            
+
             // Prepare document for MongoDB
             $document = [
                 'name' => $correctName, // Use the correct name from the database
@@ -339,14 +338,14 @@ try {
             ];
         } catch (Exception $e) {
             error_log("Error checking name in top_management_message: " . $e->getMessage());
-            
+
             $results[] = [
                 'filename' => $fileName,
                 'success' => false,
                 'message' => "Error verifying name in database: " . $e->getMessage()
             ];
             $failedCount++;
-            
+
             // Delete file from BunnyCDN since we couldn't verify the name
             error_log("Deleting file from BunnyCDN due to database error: $storageUrl");
             $deleteCh = curl_init($storageUrl);
@@ -393,7 +392,7 @@ try {
                 'message' => 'Failed to save to database: ' . $e->getMessage()
             ];
             $failedCount++;
-            
+
             // Delete file from BunnyCDN since database insert failed
             error_log("UploadTopManagementPhotos.php deleting file from BunnyCDN due to MongoDB insert error: $storageUrl");
             $deleteCh = curl_init($storageUrl);
@@ -424,7 +423,7 @@ try {
             ]);
             curl_exec($deleteCh);
             curl_close($deleteCh);
-            
+
             // Delete MongoDB entry
             $collection->deleteOne(['_id' => $document['_id']]);
             respond(false, 'Upload cancelled');
