@@ -148,7 +148,6 @@ try {
         $path = $safeFolder . '/' . $templateFolder . '/' . $filename;
         $storageUrl = "https://storage.bunnycdn.com/{$bunnyStorageZone}/" . str_replace(' ', '%20', $path);
 
-        // Check for client disconnection/cancellation before uploading to BunnyCDN
         if (connection_aborted()) {
             $uploadCancelled = true;
             respond(false, 'Upload cancelled');
