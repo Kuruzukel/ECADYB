@@ -142,7 +142,6 @@ try {
         $safeFileName = preg_replace('/[^A-Za-z0-9 _.-]/', '', $nameWithoutExt) ?: ('top_management_' . time());
         $safeExt = preg_replace('/[^A-Za-z0-9]/', '', $ext) ?: 'jpg';
 
-        // Construct path for BunnyCDN
         $safeFolder = 'Top Management Photos';
         $templateFolder = sprintf('Batch Template %d', $template);
         $filename = sprintf('%s.%s', $safeFileName, $safeExt);
