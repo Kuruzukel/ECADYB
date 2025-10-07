@@ -26,7 +26,6 @@ try {
     $email = trim($input['email']);
     $verificationCode = trim($input['verificationCode']);
 
-    // Validate email format
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'Invalid email format']);
