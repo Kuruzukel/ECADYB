@@ -117,7 +117,6 @@ try {
 
         $nameWithoutExt = pathinfo($fileName, PATHINFO_FILENAME);
 
-        // Validate that we have a name
         if (empty($nameWithoutExt)) {
             $results[] = [
                 'filename' => $fileName,
