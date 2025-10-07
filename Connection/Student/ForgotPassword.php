@@ -42,7 +42,6 @@ try {
     $database = $client->selectDatabase('ECADYB');
     $collection = $database->selectCollection('students');
 
-    // Find the student by email
     $student = $collection->findOne(['email' => $email]);
 
     if (!$student) {
