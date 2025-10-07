@@ -20,7 +20,6 @@ try {
 
     $email = trim($input['email']);
 
-    // Validate email format
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         echo json_encode(['success' => false, 'message' => 'Invalid email format']);
         exit;
