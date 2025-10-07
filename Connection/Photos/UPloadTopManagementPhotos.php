@@ -240,7 +240,6 @@ try {
             ];
             $failedCount++;
 
-            // Delete file from BunnyCDN since database connection failed
             error_log("UploadTopManagementPhotos.php deleting file from BunnyCDN due to MongoDB connection error: $storageUrl");
             $deleteCh = curl_init($storageUrl);
             curl_setopt_array($deleteCh, [
