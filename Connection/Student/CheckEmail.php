@@ -11,37 +11,34 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 try {
-    // Get JSON input
     $input = json_decode(file_get_contents('php://input'), true);
-    
+
     if (!isset($input['email']) || empty($input['email'])) {
         echo json_encode(['success' => false, 'message' => 'Email is required']);
         exit;
     }
-    
+
     $email = trim($input['email']);
-    
+
     // Validate email format
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         echo json_encode(['success' => false, 'message' => 'Invalid email format']);
         exit;
     }
-    
+
     // Include MongoDB connection
     require_once '../../Connection/Configuration/MongoConnect.php';
-    
+
     // Check if email exists in database
     $collection = $database->selectCollection('students');
     $student = $collection->findOne(['email' => $email]);
-    
+
     if ($student) {
         echo json_encode(['success' => true, 'exists' => true]);
     } else {
         echo json_encode(['success' => true, 'exists' => false]);
     }
-    
 } catch (Exception $e) {
     error_log("CheckEmail error: " . $e->getMessage());
     echo json_encode(['success' => false, 'message' => 'Database error occurred']);
 }
-?>
