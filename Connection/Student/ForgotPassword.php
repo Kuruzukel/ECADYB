@@ -50,7 +50,6 @@ try {
         exit;
     }
 
-    // In a real implementation, you would verify the OTP here
     // For now, we'll just check if it's a 6-digit number
     // You should implement proper OTP verification with expiration time
 
