@@ -32,7 +32,6 @@ if (!$studentId || !$collectionName) {
     exit;
 }
 
-// Use the correct BatchTemplate database
 $dbName = "BatchTemplate" . $template;
 $db = $client->$dbName;
 
