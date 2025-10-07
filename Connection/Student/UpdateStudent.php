@@ -95,7 +95,6 @@ try {
             error_log("Field " . $field . " unchanged, removing from update");
         }
 
-        // If the field doesn't exist in the document and the new value is empty, remove it
         if (!isset($existingDoc[$field]) && ($value === '' || $value === null)) {
             unset($updateFields[$field]);
             error_log("Field " . $field . " is empty and didn't exist, removing from update");
