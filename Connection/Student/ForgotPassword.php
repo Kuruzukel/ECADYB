@@ -55,7 +55,6 @@ try {
 
     $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
 
-    // Update the student's password in the database
     $updateResult = $collection->updateOne(
         ['email' => $email],
         ['$set' => ['password' => $hashedPassword]]
