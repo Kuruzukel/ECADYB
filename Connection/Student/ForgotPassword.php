@@ -50,7 +50,6 @@ try {
         exit;
     }
 
-    // For now, we'll just check if it's a 6-digit number
     // You should implement proper OTP verification with expiration time
 
     // Generate a new password (8 characters)
