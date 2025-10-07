@@ -361,7 +361,6 @@ try {
             ];
             $failedCount++;
 
-            // Delete file from BunnyCDN since database insert failed
             error_log("UploadTopManagementPhotos.php deleting file from BunnyCDN due to MongoDB insert error: $storageUrl");
             $deleteCh = curl_init($storageUrl);
             curl_setopt_array($deleteCh, [
@@ -376,10 +375,8 @@ try {
             continue;
         }
 
-        // Check for client disconnection/cancellation after MongoDB insert
         if (connection_aborted()) {
             $uploadCancelled = true;
-            // Delete file from BunnyCDN and remove the MongoDB entry since we're cancelling after insert
             error_log("UploadTopManagementPhotos.php deleting file from BunnyCDN and MongoDB entry due to cancellation after insert: $storageUrl");
             $deleteCh = curl_init($storageUrl);
             curl_setopt_array($deleteCh, [
@@ -392,7 +389,6 @@ try {
             curl_exec($deleteCh);
             curl_close($deleteCh);
 
-            // Delete MongoDB entry
             $collection->deleteOne(['_id' => $document['_id']]);
             respond(false, 'Upload cancelled');
         }
@@ -402,13 +398,12 @@ try {
             'success' => true,
             'message' => 'Upload successful',
             'url' => $publicUrl,
-            'name' => $correctName, // Use the name from the database for consistency
+            'name' => $correctName,
             'position' => $position
         ];
         $uploadedCount++;
     }
 
-    // Prepare response data
     $responseData = [
         'uploaded' => $uploadedCount,
         'failed' => $failedCount,
