@@ -36,7 +36,6 @@ function respond($success, $message = '', $data = [])
     exit;
 }
 
-// Only check for client disconnection/cancellation at the very beginning
 if (connection_aborted()) {
     $uploadCancelled = true;
     respond(false, 'Upload cancelled');
