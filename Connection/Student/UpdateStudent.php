@@ -85,7 +85,6 @@ try {
         error_log("Student ID will be changed from " . $originalId . " to " . $newStudentId);
     }
 
-    // Remove fields that haven't actually changed
     foreach ($updateFields as $field => $value) {
         // Skip the student ID field as it's used for querying
         if ($field === $queryField) {
