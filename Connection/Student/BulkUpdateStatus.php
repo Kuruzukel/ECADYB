@@ -65,7 +65,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $update = ['$set' => ['status' => $status]];
 
-        // Perform bulk update
         $result = $coll->updateMany($filter, $update);
 
         error_log("BulkUpdateStatus - Database: " . $dbName . ", Collection: " . $collection . ", Status: " . $status);
