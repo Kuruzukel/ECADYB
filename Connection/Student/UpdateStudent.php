@@ -54,7 +54,6 @@ try {
 
     error_log("Update fields: " . print_r($updateFields, true));
 
-    // Find the existing document
     $existingDoc = $collection->findOne([
         '$or' => [
             ['student id' => $originalId],
