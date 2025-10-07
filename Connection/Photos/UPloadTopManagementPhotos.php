@@ -318,7 +318,6 @@ try {
             ];
             $failedCount++;
 
-            // Delete file from BunnyCDN since we couldn't verify the name
             error_log("Deleting file from BunnyCDN due to database error: $storageUrl");
             $deleteCh = curl_init($storageUrl);
             curl_setopt_array($deleteCh, [
