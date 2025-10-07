@@ -55,7 +55,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $filter = [];
 
-        // Apply status filter if provided
         if ($statusFilter && $statusFilter !== '') {
             if ($statusFilter === 'active') {
                 $filter['status'] = 'Active';
