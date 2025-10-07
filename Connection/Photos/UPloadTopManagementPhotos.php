@@ -254,7 +254,6 @@ try {
             continue;
         }
 
-        // First, check if the name exists in top_management_message collection
         try {
             $messageCollection = $mongoClient->$mongoDbName->top_management_message;
 
