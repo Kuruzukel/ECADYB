@@ -90,7 +90,6 @@ try {
             continue;
         }
 
-        // If the field exists in the existing document and has the same value, remove it
         if (isset($existingDoc[$field]) && $existingDoc[$field] === $value) {
             unset($updateFields[$field]);
             error_log("Field " . $field . " unchanged, removing from update");
