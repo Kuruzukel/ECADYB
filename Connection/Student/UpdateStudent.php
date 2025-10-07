@@ -41,7 +41,6 @@ $template = $data['template'] ?? '1';
 unset($data['collection']);
 unset($data['template']);
 
-// Use the correct BatchTemplate database
 $dbName = "BatchTemplate" . $template;
 $db = $client->$dbName;
 
@@ -53,7 +52,7 @@ try {
     $updateFields = array_filter($data, function ($val) {
         return $val !== null;
     });
-    
+
     error_log("Update fields: " . print_r($updateFields, true));
 
     // Find the existing document
@@ -97,13 +96,13 @@ try {
         if ($field === $queryField) {
             continue;
         }
-        
+
         // If the field exists in the existing document and has the same value, remove it
         if (isset($existingDoc[$field]) && $existingDoc[$field] === $value) {
             unset($updateFields[$field]);
             error_log("Field " . $field . " unchanged, removing from update");
         }
-        
+
         // If the field doesn't exist in the document and the new value is empty, remove it
         if (!isset($existingDoc[$field]) && ($value === '' || $value === null)) {
             unset($updateFields[$field]);
