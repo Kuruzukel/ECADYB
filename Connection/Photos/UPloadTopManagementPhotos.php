@@ -294,7 +294,6 @@ try {
                 continue;
             }
 
-            // Get the position and correct name from the database
             $position = isset($messageDoc['position']) ? $messageDoc['position'] : '';
             $correctName = $messageDoc['name']; // Use the exact name from the database
 
