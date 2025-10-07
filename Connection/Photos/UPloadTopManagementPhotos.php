@@ -263,7 +263,6 @@ try {
             $messageDoc = $messageCollection->findOne(['name' => $nameWithoutExt]);
 
             if (!$messageDoc) {
-                // Get all documents and manually compare (since MongoDB doesn't have case-insensitive distinct)
                 $cursor = $messageCollection->find([]);
                 foreach ($cursor as $doc) {
                     if (strcasecmp($doc['name'], $nameWithoutExt) === 0) {
