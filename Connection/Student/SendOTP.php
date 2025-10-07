@@ -11,37 +11,36 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 try {
-    // Get JSON input
     $input = json_decode(file_get_contents('php://input'), true);
-    
+
     if (!isset($input['email']) || empty($input['email'])) {
         echo json_encode(['success' => false, 'message' => 'Email is required']);
         exit;
     }
-    
+
     $email = trim($input['email']);
-    
+
     // Validate email format
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         echo json_encode(['success' => false, 'message' => 'Invalid email format']);
         exit;
     }
-    
+
     // Include MongoDB connection
     require_once '../../Connection/Configuration/MongoConnect.php';
-    
+
     // Check if email exists in database
     $collection = $database->selectCollection('students');
     $student = $collection->findOne(['email' => $email]);
-    
+
     if (!$student) {
         echo json_encode(['success' => false, 'message' => 'Email not found in database']);
         exit;
     }
-    
+
     // Generate 6-digit OTP
     $otp = str_pad(random_int(100000, 999999), 6, '0', STR_PAD_LEFT);
-    
+
     // Store OTP in session or database with expiration (5 minutes)
     session_start();
     $_SESSION['otp_' . $email] = [
@@ -49,7 +48,7 @@ try {
         'expires' => time() + 300, // 5 minutes
         'attempts' => 0
     ];
-    
+
     // Send email with OTP
     $subject = "Password Reset Verification Code - Exact Colleges of Asia";
     $message = "
@@ -91,7 +90,7 @@ try {
     </body>
     </html>
     ";
-    
+
     $headers = [
         'MIME-Version: 1.0',
         'Content-type: text/html; charset=UTF-8',
@@ -99,21 +98,19 @@ try {
         'Reply-To: support@exactcolleges.edu.ph',
         'X-Mailer: PHP/' . phpversion()
     ];
-    
+
     $mailSent = mail($email, $subject, $message, implode("\r\n", $headers));
-    
+
     if ($mailSent) {
         echo json_encode([
-            'success' => true, 
+            'success' => true,
             'message' => 'Verification code sent successfully',
             'otp' => $otp // For development/testing purposes
         ]);
     } else {
         echo json_encode(['success' => false, 'message' => 'Failed to send email. Please try again.']);
     }
-    
 } catch (Exception $e) {
     error_log("SendOTP error: " . $e->getMessage());
     echo json_encode(['success' => false, 'message' => 'An error occurred while sending the verification code']);
 }
-?>
