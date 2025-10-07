@@ -53,7 +53,6 @@ try {
 
     $newPassword = generateRandomPassword();
 
-    // Hash the new password
     $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
 
     // Update the student's password in the database
