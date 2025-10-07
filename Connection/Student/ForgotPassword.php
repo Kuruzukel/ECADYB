@@ -38,7 +38,6 @@ try {
         exit;
     }
 
-    // Connect to MongoDB
     $client = new Client("mongodb://localhost:27017");
     $database = $client->selectDatabase('ECADYB');
     $collection = $database->selectCollection('students');
