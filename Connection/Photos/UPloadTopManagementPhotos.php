@@ -299,7 +299,6 @@ try {
 
             error_log("Found matching document for '$nameWithoutExt': name='$correctName', position='$position'");
 
-            // Prepare document for MongoDB
             $document = [
                 'name' => $correctName, // Use the correct name from the database
                 'position' => $position,
