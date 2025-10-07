@@ -348,7 +348,6 @@ try {
             respond(false, 'Upload cancelled');
         }
 
-        // Insert document into MongoDB
         try {
             error_log("UploadTopManagementPhotos.php inserting document: " . json_encode($document));
             $result = $collection->insertOne($document);
