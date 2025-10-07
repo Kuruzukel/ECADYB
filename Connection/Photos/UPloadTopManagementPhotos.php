@@ -218,7 +218,6 @@ try {
             respond(false, 'Upload cancelled');
         }
 
-        // MongoDB connection for the selected batch template
         $mongoDbName = "BatchTemplate" . $template;
         $mongoUrl = getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
         error_log("UploadTopManagementPhotos.php using MongoDB URL: $mongoUrl");
