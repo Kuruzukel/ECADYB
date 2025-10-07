@@ -107,7 +107,6 @@ try {
 
     error_log("Final update fields: " . print_r($updateFields, true));
 
-    // Perform the update operation
     $result = $collection->updateOne(
         [$queryField => $originalId],
         ['$set' => $updateFields],
