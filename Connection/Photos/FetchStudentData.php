@@ -40,7 +40,7 @@ try {
         'BSE' => ['btvted', 'beced'],
         'BSIS' => ['bsis'],
         'BSME' => ['bsme', 'bsmt'],
-        'BSN' => ['bsn'],               // Nursing
+        'BSN' => ['bsn'],
         'BSTM' => ['bstm']              // Tourism
     ];
 
