@@ -81,7 +81,6 @@ try {
                         $middleName = $student['middle name'] ?? '';
                         $lastName = $student['last name'] ?? '';
 
-                        // Format: First Name Middle Initial Last Name (e.g., "Enric John L. Reyes")
                         if (!empty($firstName) || !empty($lastName)) {
                             $parts = [];
                             if (!empty($firstName)) {
