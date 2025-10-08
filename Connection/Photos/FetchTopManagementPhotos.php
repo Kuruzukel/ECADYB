@@ -34,7 +34,6 @@ try {
 
     $mongoClient = new MongoDB\Client($mongoUrl);
 
-    // Get photos from top_management_photos collection
     $photosCollection = $mongoClient->$mongoDbName->top_management_photos;
     $photos = $photosCollection->find([], ['sort' => ['position' => 1]]);
 
