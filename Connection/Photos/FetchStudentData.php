@@ -140,7 +140,6 @@ try {
             }
         } catch (Exception $e) {
             error_log("Error fetching from collection $collectionName: " . $e->getMessage());
-            // Continue with other collections even if one fails
         }
     }
 
