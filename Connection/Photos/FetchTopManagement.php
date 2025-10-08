@@ -86,7 +86,6 @@ try {
             return 0;
         }
 
-        // Handle numeric positions
         if (is_numeric($posA) && is_numeric($posB)) {
             return $posA - $posB;
         }
