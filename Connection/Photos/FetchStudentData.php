@@ -65,7 +65,6 @@ try {
 
     foreach ($collections as $collectionName) {
         try {
-            // Check if collection exists
             $collectionNames = iterator_to_array($db->listCollectionNames());
             $collectionExists = in_array($collectionName, $collectionNames);
 
