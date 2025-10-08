@@ -521,7 +521,6 @@ function loadPage(page, pageElement) {
                   ".student-image-thumbnails .thumbnail"
                 );
 
-                // Set initial large image
                 $largeImage.attr("src", studentPhotos[0]);
 
                 // Set thumbnail images and initial active state
