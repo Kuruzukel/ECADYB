@@ -23,18 +23,17 @@ function respond($success, $message = '', $data = [])
 }
 
 try {
-    // Get parameters
     $template = isset($_GET['template']) ? (int)$_GET['template'] : 1;
     $department = isset($_GET['department']) ? strtoupper($_GET['department']) : null;
-    
+
     if ($template < 1 || $template > 3) {
         respond(false, 'Invalid template parameter. Must be 1, 2, or 3.');
     }
-    
+
     if (!$department) {
         respond(false, 'Department parameter is required.');
     }
-    
+
     // Department to collection mapping
     $departmentCollections = [
         'BSBA' => ['bsma', 'bse'],      // Business Administration
@@ -45,40 +44,40 @@ try {
         'BSN' => ['bsn'],               // Nursing
         'BSTM' => ['bstm']              // Tourism
     ];
-    
+
     // Check if department exists in mapping
     if (!isset($departmentCollections[$department])) {
         respond(false, 'Invalid department code: ' . $department);
     }
-    
+
     // MongoDB connection for the selected batch template
     $mongoDbName = "BatchTemplate" . $template;
     $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
-    
+
     $mongoClient = new MongoDB\Client($mongoUrl, [
         'serverSelectionTimeoutMS' => 5000,
         'connectTimeoutMS' => 5000,
         'socketTimeoutMS' => 5000
     ]);
-    
+
     $db = $mongoClient->$mongoDbName;
-    
+
     // Get collections for this department
     $collections = $departmentCollections[$department];
-    
+
     // Fetch all students from relevant collections
     $allStudents = [];
-    
+
     foreach ($collections as $collectionName) {
         try {
             // Check if collection exists
             $collectionNames = iterator_to_array($db->listCollectionNames());
             $collectionExists = in_array($collectionName, $collectionNames);
-            
+
             if ($collectionExists) {
                 $collection = $db->$collectionName;
                 $students = $collection->find([], ['sort' => ['name' => 1]]);
-                
+
                 foreach ($students as $student) {
                     // Construct the full name from individual fields
                     $fullName = '';
@@ -90,7 +89,7 @@ try {
                         $firstName = $student['first name'] ?? '';
                         $middleName = $student['middle name'] ?? '';
                         $lastName = $student['last name'] ?? '';
-                        
+
                         // Format: First Name Middle Initial Last Name (e.g., "Enric John L. Reyes")
                         if (!empty($firstName) || !empty($lastName)) {
                             $parts = [];
@@ -115,7 +114,7 @@ try {
                             $fullName = 'Unknown Student';
                         }
                     }
-                    
+
                     // Process milestones - handle both string and array formats
                     $milestones = [];
                     if (isset($student['milestone'])) {
@@ -131,7 +130,7 @@ try {
                             $milestones = [$student['milestones']];
                         }
                     }
-                    
+
                     // Process honors
                     $honors = $student['honors'] ?? '';
                     if (!empty($honors) && !is_array($milestones)) {
@@ -139,7 +138,7 @@ try {
                     } elseif (!empty($honors) && is_array($milestones)) {
                         array_unshift($milestones, $honors);
                     }
-                    
+
                     $allStudents[] = [
                         'id' => (string)$student['_id'],
                         'student_id' => $student['student id'] ?? $student['student_id'] ?? '',
@@ -159,12 +158,12 @@ try {
             // Continue with other collections even if one fails
         }
     }
-    
+
     // Calculate number of pages needed (6 students per page)
     $studentsPerPage = 6;
     $totalStudents = count($allStudents);
     $totalPages = ceil($totalStudents / $studentsPerPage);
-    
+
     // Prepare response
     $response = [
         'success' => true,
@@ -178,9 +177,8 @@ try {
             'template' => $template
         ]
     ];
-    
+
     respond(true, 'Student data retrieved successfully', $response);
-    
 } catch (Exception $e) {
     error_log("FetchStudentData.php exception: " . $e->getMessage());
     respond(false, 'Server error: ' . $e->getMessage());
