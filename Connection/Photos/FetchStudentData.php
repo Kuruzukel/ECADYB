@@ -117,7 +117,6 @@ try {
                         }
                     }
 
-                    // Process honors
                     $honors = $student['honors'] ?? '';
                     if (!empty($honors) && !is_array($milestones)) {
                         $milestones[] = $honors;
