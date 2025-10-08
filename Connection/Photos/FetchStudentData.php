@@ -44,7 +44,6 @@ try {
         'BSTM' => ['bstm']
     ];
 
-    // Check if department exists in mapping
     if (!isset($departmentCollections[$department])) {
         respond(false, 'Invalid department code: ' . $department);
     }
