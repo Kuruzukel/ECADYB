@@ -90,7 +90,6 @@ try {
                                 if (strlen($middleName) <= 2) {
                                     $parts[] = rtrim($middleName, '.') . '.';
                                 } else {
-                                    // Otherwise, take first character and add period
                                     $parts[] = substr($middleName, 0, 1) . '.';
                                 }
                             }
