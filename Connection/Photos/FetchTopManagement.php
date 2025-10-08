@@ -23,29 +23,28 @@ function respond($success, $message = '', $data = [])
 }
 
 try {
-    // Get template parameter (default to 1)
     $template = isset($_GET['template']) ? (int)$_GET['template'] : 1;
-    
+
     if ($template < 1 || $template > 3) {
         respond(false, 'Invalid template parameter. Must be 1, 2, or 3.');
     }
-    
+
     // MongoDB connection for the selected batch template
     $mongoDbName = "BatchTemplate" . $template;
     $mongoUrl = getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
-    
+
     $mongoClient = new MongoDB\Client($mongoUrl);
-    
+
     // Get photos from top_management_photos collection
     $photosCollection = $mongoClient->$mongoDbName->top_management_photos;
     $photos = $photosCollection->find([], ['sort' => ['position' => 1]]);
-    
+
     // Get messages from top_management_message collection
     $messageCollection = $mongoClient->$mongoDbName->top_management_message;
-    
+
     $result = [];
     $photoMap = [];
-    
+
     // Process each photo and store in a map by name
     foreach ($photos as $photo) {
         $name = $photo['name'] ?? '';
@@ -60,12 +59,12 @@ try {
             'academicyear' => ''
         ];
     }
-    
+
     // Process each message and merge with photo data if available
     $messages = $messageCollection->find([], ['sort' => ['position' => 1]]);
     foreach ($messages as $message) {
         $name = $message['name'] ?? '';
-        
+
         if (isset($photoMap[$name])) {
             // Update existing entry with message data
             $photoMap[$name]['message'] = $message['message'] ?? '';
@@ -83,33 +82,32 @@ try {
             ];
         }
     }
-    
+
     // Convert map to array for response
     $result = array_values($photoMap);
-    
+
     // Sort by position if available
-    usort($result, function($a, $b) {
+    usort($result, function ($a, $b) {
         $posA = isset($a['position']) ? $a['position'] : '';
         $posB = isset($b['position']) ? $b['position'] : '';
-        
+
         if ($posA == $posB) {
             return 0;
         }
-        
+
         // Handle numeric positions
         if (is_numeric($posA) && is_numeric($posB)) {
             return $posA - $posB;
         }
-        
+
         // Handle string positions (e.g. "President" should come before "Vice President")
         if ($posA == "President") return -1;
         if ($posB == "President") return 1;
-        
+
         return strcmp($posA, $posB);
     });
-    
+
     respond(true, 'Top management data retrieved successfully', ['data' => $result]);
-    
 } catch (Exception $e) {
     error_log("FetchTopManagement.php exception: " . $e->getMessage());
     respond(false, 'Server error: ' . $e->getMessage());
