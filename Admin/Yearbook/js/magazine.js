@@ -535,7 +535,6 @@ function loadPage(page, pageElement) {
 
                 modal.addClass("active");
 
-                // Handle thumbnail clicks
                 $thumbnails.off("click").on("click", function (e) {
                   e.stopPropagation(); // Prevent modal from closing
                   e.preventDefault();
