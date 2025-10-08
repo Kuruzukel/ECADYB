@@ -545,7 +545,6 @@ function loadPage(page, pageElement) {
                   $thumbnails.removeClass("active");
                   $this.addClass("active");
 
-                  // Update large image with fade effect
                   $largeImage.fadeOut(200, function () {
                     $(this).attr("src", studentPhotos[index]).fadeIn(200);
                   });
