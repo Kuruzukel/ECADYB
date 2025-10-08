@@ -39,7 +39,6 @@ try {
 
     $result = [];
 
-    // Process each message
     foreach ($messages as $message) {
         $personData = [
             'id' => (string)$message['_id'],
