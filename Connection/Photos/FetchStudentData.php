@@ -61,7 +61,6 @@ try {
 
     $collections = $departmentCollections[$department];
 
-    // Fetch all students from relevant collections
     $allStudents = [];
 
     foreach ($collections as $collectionName) {
