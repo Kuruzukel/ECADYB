@@ -533,7 +533,6 @@ function loadPage(page, pageElement) {
                   }
                 });
 
-                // Show modal
                 modal.addClass("active");
 
                 // Handle thumbnail clicks
