@@ -583,7 +583,6 @@ function loadPage(page, pageElement) {
               class: "student-card",
             });
 
-            // Add student image placeholder
             var studentImg = $("<div/>", {
               class: "student-image",
             });
