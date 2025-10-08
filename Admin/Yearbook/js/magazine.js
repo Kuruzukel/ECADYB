@@ -597,7 +597,6 @@ function loadPage(page, pageElement) {
               text: "Student Name",
             });
 
-            // Add honors text (default placeholder)
             var honorsText = $("<p/>", {
               text: "Honors and Achievements",
             });
