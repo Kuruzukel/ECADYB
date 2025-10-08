@@ -552,7 +552,6 @@ function loadPage(page, pageElement) {
                   console.log("Switching to photo:", index + 1);
                 });
 
-                // Close modal when clicking close button or outside
                 closeBtn.on("click", function () {
                   modal.removeClass("active");
                 });
