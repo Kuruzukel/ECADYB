@@ -37,7 +37,6 @@ try {
     $photosCollection = $mongoClient->$mongoDbName->top_management_photos;
     $photos = $photosCollection->find([], ['sort' => ['position' => 1]]);
 
-    // Get messages from top_management_message collection
     $messageCollection = $mongoClient->$mongoDbName->top_management_message;
 
     $result = [];
