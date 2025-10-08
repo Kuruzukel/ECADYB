@@ -542,7 +542,6 @@ function loadPage(page, pageElement) {
                   var $this = $(this);
                   var index = $this.index();
 
-                  // Update active state
                   $thumbnails.removeClass("active");
                   $this.addClass("active");
 
