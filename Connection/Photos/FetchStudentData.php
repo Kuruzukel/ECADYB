@@ -41,7 +41,7 @@ try {
         'BSIS' => ['bsis'],
         'BSME' => ['bsme', 'bsmt'],
         'BSN' => ['bsn'],
-        'BSTM' => ['bstm']              // Tourism
+        'BSTM' => ['bstm']
     ];
 
     // Check if department exists in mapping
