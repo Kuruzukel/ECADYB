@@ -61,7 +61,6 @@ try {
         $name = $message['name'] ?? '';
 
         if (isset($photoMap[$name])) {
-            // Update existing entry with message data
             $photoMap[$name]['message'] = $message['message'] ?? '';
             $photoMap[$name]['academicyear'] = $message['academicyear'] ?? '';
         } else {
