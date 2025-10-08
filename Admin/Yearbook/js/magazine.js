@@ -571,7 +571,6 @@ function loadPage(page, pageElement) {
 
           pageElement.append(cardsContainer);
 
-          // Generate thumbnail after student content is loaded
           setTimeout(function () {
             waitForImagesAndGenerateThumbnail(page, pageElement);
           }, 500);
