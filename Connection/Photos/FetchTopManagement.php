@@ -64,7 +64,6 @@ try {
             $photoMap[$name]['message'] = $message['message'] ?? '';
             $photoMap[$name]['academicyear'] = $message['academicyear'] ?? '';
         } else {
-            // Create new entry for message without photo
             $photoMap[$name] = [
                 'id' => (string)$message['_id'],
                 'name' => $name,
