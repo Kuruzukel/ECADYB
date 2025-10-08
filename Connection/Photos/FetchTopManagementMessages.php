@@ -23,25 +23,24 @@ function respond($success, $message = '', $data = [])
 }
 
 try {
-    // Get template parameter (default to 1)
     $template = isset($_GET['template']) ? (int)$_GET['template'] : 1;
-    
+
     if ($template < 1 || $template > 3) {
         respond(false, 'Invalid template parameter. Must be 1, 2, or 3.');
     }
-    
+
     // MongoDB connection for the selected batch template
     $mongoDbName = "BatchTemplate" . $template;
     $mongoUrl = getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
-    
+
     $mongoClient = new MongoDB\Client($mongoUrl);
-    
+
     // Get messages from top_management_message collection
     $messageCollection = $mongoClient->$mongoDbName->top_management_message;
     $messages = $messageCollection->find([], ['sort' => ['position' => 1]]);
-    
+
     $result = [];
-    
+
     // Process each message
     foreach ($messages as $message) {
         $personData = [
@@ -51,12 +50,11 @@ try {
             'message' => $message['message'] ?? '',
             'academicyear' => $message['academicyear'] ?? ''
         ];
-        
+
         $result[] = $personData;
     }
-    
+
     respond(true, 'Top management messages retrieved successfully', ['data' => $result]);
-    
 } catch (Exception $e) {
     error_log("FetchTopManagementMessages.php exception: " . $e->getMessage());
     respond(false, 'Server error: ' . $e->getMessage());
