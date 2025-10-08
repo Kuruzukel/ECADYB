@@ -147,7 +147,6 @@ try {
     $totalStudents = count($allStudents);
     $totalPages = ceil($totalStudents / $studentsPerPage);
 
-    // Prepare response
     $response = [
         'success' => true,
         'message' => 'Student data retrieved successfully',
