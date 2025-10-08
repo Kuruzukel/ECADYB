@@ -29,7 +29,6 @@ try {
         respond(false, 'Invalid template parameter. Must be 1, 2, or 3.');
     }
 
-    // MongoDB connection for the selected batch template
     $mongoDbName = "BatchTemplate" . $template;
     $mongoUrl = getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 
