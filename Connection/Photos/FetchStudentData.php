@@ -102,7 +102,6 @@ try {
                         }
                     }
 
-                    // Process milestones - handle both string and array formats
                     $milestones = [];
                     if (isset($student['milestone'])) {
                         if (is_array($student['milestone'])) {
