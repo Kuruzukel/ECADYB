@@ -87,7 +87,6 @@ try {
                                 $parts[] = $firstName;
                             }
                             if (!empty($middleName)) {
-                                // If middle name is already just an initial (like "L." or "L"), use as is
                                 if (strlen($middleName) <= 2) {
                                     $parts[] = rtrim($middleName, '.') . '.';
                                 } else {
