@@ -569,7 +569,6 @@ function loadPage(page, pageElement) {
             }
           }
 
-          // Add the cards container to the page
           pageElement.append(cardsContainer);
 
           // Generate thumbnail after student content is loaded
