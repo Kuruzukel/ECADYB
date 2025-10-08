@@ -516,7 +516,6 @@ function loadPage(page, pageElement) {
                   .find(".milestones ul")
                   .html("<li>Honors and Achievements</li>");
 
-                // Initialize images
                 var $largeImage = modal.find(".student-image-large img");
                 var $thumbnails = modal.find(
                   ".student-image-thumbnails .thumbnail"
