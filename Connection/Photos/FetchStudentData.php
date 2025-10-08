@@ -75,7 +75,6 @@ try {
                 foreach ($students as $student) {
                     $fullName = '';
                     if (isset($student['name']) && !empty($student['name'])) {
-                        // If name field exists, use it
                         $fullName = $student['name'];
                     } else {
                         // Otherwise, construct from first, middle, last name
