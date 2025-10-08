@@ -35,7 +35,7 @@ try {
     }
 
     $departmentCollections = [
-        'BSBA' => ['bsma', 'bse'],      // Business Administration
+        'BSBA' => ['bsma', 'bse'],
         'BSCJ' => ['bscje'],            // Criminology
         'BSE' => ['btvted', 'beced'],   // Education
         'BSIS' => ['bsis'],             // Information System
