@@ -34,7 +34,6 @@ try {
 
     $mongoClient = new MongoDB\Client($mongoUrl);
 
-    // Get messages from top_management_message collection
     $messageCollection = $mongoClient->$mongoDbName->top_management_message;
     $messages = $messageCollection->find([], ['sort' => ['position' => 1]]);
 
