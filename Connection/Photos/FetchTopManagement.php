@@ -78,7 +78,6 @@ try {
 
     $result = array_values($photoMap);
 
-    // Sort by position if available
     usort($result, function ($a, $b) {
         $posA = isset($a['position']) ? $a['position'] : '';
         $posB = isset($b['position']) ? $b['position'] : '';
