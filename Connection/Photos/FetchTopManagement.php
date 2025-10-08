@@ -76,7 +76,6 @@ try {
         }
     }
 
-    // Convert map to array for response
     $result = array_values($photoMap);
 
     // Sort by position if available
