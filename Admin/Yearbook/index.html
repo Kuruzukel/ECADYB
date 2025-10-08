@@ -101,7 +101,11 @@
       var studentData = null;
 
       function fetchCoverData(template, slot) {
-        template = template || 1;
+        // Get selected template from localStorage if not provided
+        if (!template) {
+          template = localStorage.getItem("selectedBatchTemplateNumber") || 1;
+          template = parseInt(template);
+        }
         slot = slot || 1;
 
         console.log(
@@ -152,13 +156,19 @@
       function fetchStudentData() {
         var urlParams = new URLSearchParams(window.location.search);
         var departmentCode = urlParams.get("department") || "BSME"; // Default to Maritime
-        var template = 1; // Default template
-
+        
+        // Get template from coverData, localStorage, or default to 1
+        var template = 1;
         if (coverData && coverData.template) {
           template = coverData.template;
+        } else {
+          var savedTemplate = localStorage.getItem("selectedBatchTemplateNumber");
+          if (savedTemplate) {
+            template = parseInt(savedTemplate);
+          }
         }
 
-        console.log("Fetching student data for department:", departmentCode);
+        console.log("Fetching student data for department:", departmentCode, "template:", template);
 
         $.ajax({
           url: "../Connection/Photos/FetchStudentData.php",
@@ -508,12 +518,17 @@
       $(document).ready(function () {
         var urlParams = new URLSearchParams(window.location.search);
         var departmentCode = urlParams.get("department");
+        
+        // Get selected template from localStorage (default to 1 if not set)
+        var selectedTemplate = localStorage.getItem("selectedBatchTemplateNumber") || 1;
+        selectedTemplate = parseInt(selectedTemplate);
+        console.log("Using template from localStorage:", selectedTemplate);
 
         $.ajax({
           url: "FetchCoverData.php",
           method: "GET",
           data: {
-            template: 1,
+            template: selectedTemplate,
             department: departmentCode,
           },
           dataType: "json",
