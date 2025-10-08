@@ -39,7 +39,6 @@ try {
 
     $result = [];
 
-    // Process each photo
     foreach ($photos as $photo) {
         $personData = [
             'id' => (string)$photo['_id'],
