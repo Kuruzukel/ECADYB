@@ -261,7 +261,6 @@ function loadPage(page, pageElement) {
 
             managementPage.append(placeholderContainer);
 
-            // Generate thumbnail after placeholder content is loaded
             setTimeout(function () {
               waitForImagesAndGenerateThumbnail(page, pageElement);
             }, 500);
