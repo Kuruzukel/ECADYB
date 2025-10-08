@@ -38,7 +38,7 @@ try {
         'BSBA' => ['bsma', 'bse'],
         'BSCJ' => ['bscje'],
         'BSE' => ['btvted', 'beced'],
-        'BSIS' => ['bsis'],             // Information System
+        'BSIS' => ['bsis'],
         'BSME' => ['bsme', 'bsmt'],     // Maritime
         'BSN' => ['bsn'],               // Nursing
         'BSTM' => ['bstm']              // Tourism
