@@ -86,7 +86,6 @@ try {
                             if (!empty($firstName)) {
                                 $parts[] = $firstName;
                             }
-                            // Handle middle name/initial
                             if (!empty($middleName)) {
                                 // If middle name is already just an initial (like "L." or "L"), use as is
                                 if (strlen($middleName) <= 2) {
