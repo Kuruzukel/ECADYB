@@ -39,7 +39,7 @@ try {
         'BSCJ' => ['bscje'],
         'BSE' => ['btvted', 'beced'],
         'BSIS' => ['bsis'],
-        'BSME' => ['bsme', 'bsmt'],     // Maritime
+        'BSME' => ['bsme', 'bsmt'],
         'BSN' => ['bsn'],               // Nursing
         'BSTM' => ['bstm']              // Tourism
     ];
