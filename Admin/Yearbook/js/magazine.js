@@ -563,7 +563,6 @@ function loadPage(page, pageElement) {
                 });
               });
 
-              // Assemble the card
               card.append(studentImg).append(studentName).append(honorsText);
 
               cardsContainer.append(card);
