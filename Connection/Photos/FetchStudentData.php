@@ -48,7 +48,6 @@ try {
         respond(false, 'Invalid department code: ' . $department);
     }
 
-    // MongoDB connection for the selected batch template
     $mongoDbName = "BatchTemplate" . $template;
     $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 
