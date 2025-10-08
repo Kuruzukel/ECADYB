@@ -523,7 +523,6 @@ function loadPage(page, pageElement) {
 
                 $largeImage.attr("src", studentPhotos[0]);
 
-                // Set thumbnail images and initial active state
                 $thumbnails.each(function (index) {
                   $(this).find("img").attr("src", studentPhotos[index]);
 
