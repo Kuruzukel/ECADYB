@@ -23,25 +23,24 @@ function respond($success, $message = '', $data = [])
 }
 
 try {
-    // Get template parameter (default to 1)
     $template = isset($_GET['template']) ? (int)$_GET['template'] : 1;
-    
+
     if ($template < 1 || $template > 3) {
         respond(false, 'Invalid template parameter. Must be 1, 2, or 3.');
     }
-    
+
     // MongoDB connection for the selected batch template
     $mongoDbName = "BatchTemplate" . $template;
     $mongoUrl = getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
-    
+
     $mongoClient = new MongoDB\Client($mongoUrl);
-    
+
     // Get photos from top_management_photos collection
     $photosCollection = $mongoClient->$mongoDbName->top_management_photos;
     $photos = $photosCollection->find([], ['sort' => ['position' => 1]]);
-    
+
     $result = [];
-    
+
     // Process each photo
     foreach ($photos as $photo) {
         $personData = [
@@ -52,12 +51,11 @@ try {
             'filename' => $photo['filename'] ?? '',
             'template' => $photo['template'] ?? $template
         ];
-        
+
         $result[] = $personData;
     }
-    
+
     respond(true, 'Top management photos retrieved successfully', ['data' => $result]);
-    
 } catch (Exception $e) {
     error_log("FetchTopManagementPhotos.php exception: " . $e->getMessage());
     respond(false, 'Server error: ' . $e->getMessage());
