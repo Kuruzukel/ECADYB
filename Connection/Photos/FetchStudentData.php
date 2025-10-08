@@ -34,7 +34,6 @@ try {
         respond(false, 'Department parameter is required.');
     }
 
-    // Department to collection mapping
     $departmentCollections = [
         'BSBA' => ['bsma', 'bse'],      // Business Administration
         'BSCJ' => ['bscje'],            // Criminology
