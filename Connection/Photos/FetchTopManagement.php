@@ -56,7 +56,6 @@ try {
         ];
     }
 
-    // Process each message and merge with photo data if available
     $messages = $messageCollection->find([], ['sort' => ['position' => 1]]);
     foreach ($messages as $message) {
         $name = $message['name'] ?? '';
