@@ -73,7 +73,6 @@ try {
                 $students = $collection->find([], ['sort' => ['name' => 1]]);
 
                 foreach ($students as $student) {
-                    // Construct the full name from individual fields
                     $fullName = '';
                     if (isset($student['name']) && !empty($student['name'])) {
                         // If name field exists, use it
