@@ -90,7 +90,6 @@ try {
             return $posA - $posB;
         }
 
-        // Handle string positions (e.g. "President" should come before "Vice President")
         if ($posA == "President") return -1;
         if ($posB == "President") return 1;
 
