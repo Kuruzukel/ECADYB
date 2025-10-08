@@ -77,7 +77,6 @@ try {
                     if (isset($student['name']) && !empty($student['name'])) {
                         $fullName = $student['name'];
                     } else {
-                        // Otherwise, construct from first, middle, last name
                         $firstName = $student['first name'] ?? '';
                         $middleName = $student['middle name'] ?? '';
                         $lastName = $student['last name'] ?? '';
