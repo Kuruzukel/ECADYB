@@ -42,7 +42,6 @@ try {
     $result = [];
     $photoMap = [];
 
-    // Process each photo and store in a map by name
     foreach ($photos as $photo) {
         $name = $photo['name'] ?? '';
         $photoMap[$name] = [
