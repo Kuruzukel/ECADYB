@@ -578,7 +578,6 @@ function loadPage(page, pageElement) {
         error: function (xhr, status, error) {
           console.log("Error fetching student data:", error);
 
-          // Create default cards on error
           for (var i = 0; i < 6; i++) {
             var card = $("<div/>", {
               class: "student-card",
