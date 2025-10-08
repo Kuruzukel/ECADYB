@@ -59,7 +59,6 @@ try {
 
     $db = $mongoClient->$mongoDbName;
 
-    // Get collections for this department
     $collections = $departmentCollections[$department];
 
     // Fetch all students from relevant collections
