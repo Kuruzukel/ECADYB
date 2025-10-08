@@ -143,7 +143,6 @@ try {
         }
     }
 
-    // Calculate number of pages needed (6 students per page)
     $studentsPerPage = 6;
     $totalStudents = count($allStudents);
     $totalPages = ceil($totalStudents / $studentsPerPage);
