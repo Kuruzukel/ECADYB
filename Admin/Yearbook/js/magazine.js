@@ -421,19 +421,20 @@ function loadPage(page, pageElement) {
 
             for (var i = 0; i < studentsPerPage; i++) {
               var localStudentIndex = localOffset + i;
+              var globalIndex = studentStartIndex + i;
+              
+              var card = $("<div/>", {
+                class: "student-card",
+              });
 
-              if (localStudentIndex >= 0 && localStudentIndex < students.length) {
+              var studentImg = $("<div/>", {
+                class: "student-image",
+              });
+
+              if (localStudentIndex >= 0 && localStudentIndex < students.length && globalIndex < totalStudents) {
+                // Real student data
                 var student = students[localStudentIndex];
-                var globalIndex = studentStartIndex + i;
                 console.log("Processing student", globalIndex, "(local index " + localStudentIndex + "):", student.name, "Program:", student.program, "Milestones:", student.milestones);
-
-                var card = $("<div/>", {
-                  class: "student-card",
-                });
-
-                var studentImg = $("<div/>", {
-                  class: "student-image",
-                });
 
                 var photoUrl =
                   student.photo_url ||
@@ -540,30 +541,33 @@ function loadPage(page, pageElement) {
 
                 cardsContainer.append(card);
               } else {
-                var card = $("<div/>", {
-                  class: "student-card empty",
-                });
-
-                var studentImg = $("<div/>", {
-                  class: "student-image",
-                });
-
+                // Empty slot - create placeholder card
+                console.log("Creating placeholder for slot", i, "on page", page);
+                
                 var placeholderImg = $("<img/>", {
-                  src: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="135" height="155" viewBox="0 0 135 155"%3E%3Crect width="135" height="155" fill="%23f0f0f0"/%3E%3Ctext x="67.5" y="77.5" font-family="Arial" font-size="12" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3EEmpty%3C/text%3E%3C/svg%3E',
-                  alt: "Empty slot",
+                  src: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="135" height="155" viewBox="0 0 135 155"%3E%3Crect width="135" height="155" fill="%23f8f8f8"/%3E%3Ctext x="67.5" y="60" font-family="Arial" font-size="10" fill="%23ccc" text-anchor="middle" dominant-baseline="middle"%3EAvailable%3C/text%3E%3Ctext x="67.5" y="75" font-family="Arial" font-size="10" fill="%23ccc" text-anchor="middle" dominant-baseline="middle"%3ESlot%3C/text%3E%3C/svg%3E',
+                  alt: "Available Slot",
+                  crossOrigin: "anonymous",
                 });
                 studentImg.append(placeholderImg);
 
                 var studentName = $("<h3/>", {
                   text: "Available Slot",
+                  css: {
+                    color: "#ccc",
+                    fontStyle: "italic"
+                  }
                 });
 
                 var honorsText = $("<p/>", {
                   text: "Student data pending",
+                  css: {
+                    color: "#ccc",
+                    fontStyle: "italic"
+                  }
                 });
 
                 card.append(studentImg).append(studentName).append(honorsText);
-
                 cardsContainer.append(card);
               }
             }
@@ -574,40 +578,21 @@ function loadPage(page, pageElement) {
             waitForImagesAndGenerateThumbnail(page, pageElement);
           }, 500);
         } else {
-          // No student data - show placeholders
-          for (var i = 0; i < 6; i++) {
-            var card = $("<div/>", {
-              class: "student-card",
-            });
-
-            var studentImg = $("<div/>", {
-              class: "student-image",
-            });
-
-            var placeholderImg = $("<img/>", {
-              src: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="135" height="155" viewBox="0 0 135 155"%3E%3Crect width="135" height="155" fill="%23f0f0f0"/%3E%3Ctext x="67.5" y="77.5" font-family="Arial" font-size="12" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Photo%3C/text%3E%3C/svg%3E',
-              alt: "Student placeholder",
-            });
-            studentImg.append(placeholderImg);
-
-            var studentName = $("<h3/>", {
-              text: "Student Name",
-            });
-
-            var honorsText = $("<p/>", {
-              text: "Honors and Achievements",
-            });
-
-            card.append(studentImg).append(studentName).append(honorsText);
-
-            cardsContainer.append(card);
-          }
-
-          pageElement.append(cardsContainer);
-
-          setTimeout(function () {
-            waitForImagesAndGenerateThumbnail(page, pageElement);
-          }, 500);
+          // No student data - show message or leave empty
+          console.log("No student data available for page", page);
+          
+          var errorMessage = $("<div/>", {
+            class: "no-data-message",
+            text: "No student data available",
+            css: {
+              textAlign: "center",
+              padding: "50px",
+              color: "#999",
+              fontSize: "14px"
+            }
+          });
+          
+          pageElement.append(errorMessage);
         }
       });
     });
