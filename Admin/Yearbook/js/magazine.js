@@ -733,8 +733,6 @@ function loadRegions(page, element) {
   });
 }
 
-// Add region
-
 function addRegion(region, pageElement) {
   var reg = $("<div />", { class: "region  " + region["class"] }),
     options = $(".magazine").turn("options"),
