@@ -1349,7 +1349,6 @@ function generateAllThumbnails() {
   console.log("Starting thumbnail generation for all pages...");
 
   setTimeout(function () {
-    // Generate thumbnails for all loaded pages
     $(".magazine .page").each(function (index) {
       var pageElement = $(this);
       var pageNumber = index + 1;
