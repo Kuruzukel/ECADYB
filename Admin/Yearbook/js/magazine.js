@@ -855,7 +855,6 @@ function loadLargePage(page, pageElement) {
     coverData !== null &&
     coverData.background_url
   ) {
-    // Other middle pages - use background image as fallback
     img.attr("src", coverData.background_url);
   } else {
     // Show a placeholder when no image is available
