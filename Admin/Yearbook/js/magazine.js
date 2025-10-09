@@ -670,7 +670,6 @@ function loadPage(page, pageElement) {
             cardsContainer.append(card);
           }
 
-          // Add the cards container to the page
           pageElement.append(cardsContainer);
 
           // Generate thumbnail after error fallback content is loaded
