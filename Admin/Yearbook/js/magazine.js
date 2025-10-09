@@ -1104,7 +1104,6 @@ function generatePageThumbnail(page, pageElement) {
     canvas.width = 76;
     canvas.height = 100;
 
-    // Get the page content
     var pageImg = pageElement.find("img").first();
     var managementContent = pageElement.find(".top-management-page").first();
     var studentContent = pageElement.find(".cards-container").first();
