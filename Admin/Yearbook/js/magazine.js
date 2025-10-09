@@ -1007,8 +1007,6 @@ function resizeViewport() {
   $(".magazine").addClass("animated");
 }
 
-// Number of views in a flipbook
-
 function numberOfViews(book) {
   return book.turn("pages") / 2 + 1;
 }
