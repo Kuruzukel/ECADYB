@@ -1217,7 +1217,6 @@ function generatePageThumbnail(page, pageElement) {
         cardsFound: studentCards.length,
       });
 
-      // Draw student info
       ctx.fillStyle = "#1C1C1E";
       ctx.font = "bold 6px Arial";
       ctx.textAlign = "center";
