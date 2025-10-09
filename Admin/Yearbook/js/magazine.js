@@ -9,19 +9,29 @@ window.allStudentsLoading = window.allStudentsLoading || {};
 // Function to load all students for a department and cache them
 function loadAllStudentsForDepartment(department, template, callback) {
   var cacheKey = department + "_" + template;
-  
+
   // Check if we already have all students cached
   if (window.allStudentsCache[cacheKey]) {
-    console.log("Using cached all students for", department, "template", template);
+    console.log(
+      "Using cached all students for",
+      department,
+      "template",
+      template
+    );
     callback(window.allStudentsCache[cacheKey]);
     return;
   }
-  
+
   // Check if we're already loading all students
   if (window.allStudentsLoading[cacheKey]) {
-    console.log("All students already loading for", department, "template", template);
+    console.log(
+      "All students already loading for",
+      department,
+      "template",
+      template
+    );
     // Wait for the loading to complete
-    var checkLoading = setInterval(function() {
+    var checkLoading = setInterval(function () {
       if (window.allStudentsCache[cacheKey]) {
         clearInterval(checkLoading);
         callback(window.allStudentsCache[cacheKey]);
@@ -29,129 +39,215 @@ function loadAllStudentsForDepartment(department, template, callback) {
     }, 100);
     return;
   }
-  
+
   // Mark as loading
   window.allStudentsLoading[cacheKey] = true;
-  
+
   console.log("Loading all students for", department, "template", template);
   var allStudents = [];
   var currentPage = 1;
   var totalPages = 0;
   var maxPages = 10; // Safety limit to prevent infinite loading
-  
+
   function fetchNextPage() {
     // First, get the total pages from page 1
     if (currentPage === 1) {
-      fetchStudentDataCached(department, template, currentPage, function(response) {
-        if (response.success && response.data && response.data.students) {
-          var students = response.data.students;
-          totalPages = response.data.total_pages;
-          
-          allStudents = allStudents.concat(students);
-          console.log("Loaded page", currentPage, "of", totalPages, "- total students so far:", allStudents.length);
-          
-          currentPage++;
-          
-          if (currentPage <= totalPages && currentPage <= maxPages) {
-            fetchNextPage();
-          } else {
-            // All pages loaded
-            console.log("All students loaded for", department, "template", template, "- total:", allStudents.length);
-            window.allStudentsCache[cacheKey] = allStudents;
-            delete window.allStudentsLoading[cacheKey];
-            callback(allStudents);
-          }
-        } else {
-          console.error("Failed to load students for page", currentPage);
-          delete window.allStudentsLoading[cacheKey];
-          callback([]);
-        }
-      });
-    } else {
-      // For subsequent pages, only fetch if we know the page exists and within safety limit
-      if (currentPage <= totalPages && currentPage <= maxPages) {
-        fetchStudentDataCached(department, template, currentPage, function(response) {
+      fetchStudentDataCached(
+        department,
+        template,
+        currentPage,
+        function (response) {
           if (response.success && response.data && response.data.students) {
             var students = response.data.students;
-            
+            totalPages = response.data.total_pages;
+
             allStudents = allStudents.concat(students);
-            console.log("Loaded page", currentPage, "of", totalPages, "- total students so far:", allStudents.length);
-            
+            console.log(
+              "Loaded page",
+              currentPage,
+              "of",
+              totalPages,
+              "- total students so far:",
+              allStudents.length
+            );
+
             currentPage++;
-            
-            if (currentPage <= totalPages) {
+
+            if (currentPage <= totalPages && currentPage <= maxPages) {
               fetchNextPage();
             } else {
               // All pages loaded
-              console.log("All students loaded for", department, "template", template, "- total:", allStudents.length);
+              console.log(
+                "All students loaded for",
+                department,
+                "template",
+                template,
+                "- total:",
+                allStudents.length
+              );
               window.allStudentsCache[cacheKey] = allStudents;
               delete window.allStudentsLoading[cacheKey];
               callback(allStudents);
             }
           } else {
-            console.warn("Failed to load students for page", currentPage, "- continuing with available students");
-            // Continue to the end even if this page failed
-            currentPage++;
-            if (currentPage <= totalPages) {
-              fetchNextPage();
+            console.error("Failed to load students for page", currentPage);
+            delete window.allStudentsLoading[cacheKey];
+            callback([]);
+          }
+        }
+      );
+    } else {
+      // For subsequent pages, only fetch if we know the page exists and within safety limit
+      if (currentPage <= totalPages && currentPage <= maxPages) {
+        fetchStudentDataCached(
+          department,
+          template,
+          currentPage,
+          function (response) {
+            if (response.success && response.data && response.data.students) {
+              var students = response.data.students;
+
+              allStudents = allStudents.concat(students);
+              console.log(
+                "Loaded page",
+                currentPage,
+                "of",
+                totalPages,
+                "- total students so far:",
+                allStudents.length
+              );
+
+              currentPage++;
+
+              if (currentPage <= totalPages) {
+                fetchNextPage();
+              } else {
+                // All pages loaded
+                console.log(
+                  "All students loaded for",
+                  department,
+                  "template",
+                  template,
+                  "- total:",
+                  allStudents.length
+                );
+                window.allStudentsCache[cacheKey] = allStudents;
+                delete window.allStudentsLoading[cacheKey];
+                callback(allStudents);
+              }
             } else {
-              // All pages processed (even if some failed)
-              console.log("All students loaded for", department, "template", template, "- total:", allStudents.length);
-              window.allStudentsCache[cacheKey] = allStudents;
-              delete window.allStudentsLoading[cacheKey];
-              callback(allStudents);
+              console.warn(
+                "Failed to load students for page",
+                currentPage,
+                "- continuing with available students"
+              );
+              // Continue to the end even if this page failed
+              currentPage++;
+              if (currentPage <= totalPages) {
+                fetchNextPage();
+              } else {
+                // All pages processed (even if some failed)
+                console.log(
+                  "All students loaded for",
+                  department,
+                  "template",
+                  template,
+                  "- total:",
+                  allStudents.length
+                );
+                window.allStudentsCache[cacheKey] = allStudents;
+                delete window.allStudentsLoading[cacheKey];
+                callback(allStudents);
+              }
             }
           }
-        });
+        );
       } else {
         // We've reached the end
-        console.log("All students loaded for", department, "template", template, "- total:", allStudents.length);
+        console.log(
+          "All students loaded for",
+          department,
+          "template",
+          template,
+          "- total:",
+          allStudents.length
+        );
         window.allStudentsCache[cacheKey] = allStudents;
         delete window.allStudentsLoading[cacheKey];
         callback(allStudents);
       }
     }
   }
-  
+
   fetchNextPage();
 }
 
 // Function to load students for a specific page range (more reliable)
-function loadStudentsForPage(department, template, startIndex, count, callback) {
+function loadStudentsForPage(
+  department,
+  template,
+  startIndex,
+  count,
+  callback
+) {
   var studentsPerAPIPage = 50;
   var apiPage = Math.floor(startIndex / studentsPerAPIPage) + 1;
   var localStartIndex = startIndex % studentsPerAPIPage;
-  
-  console.log("Loading students starting from index", startIndex, "needing", count, "students from API page", apiPage);
-  
-  fetchStudentDataCached(department, template, apiPage, function(response) {
+
+  console.log(
+    "Loading students starting from index",
+    startIndex,
+    "needing",
+    count,
+    "students from API page",
+    apiPage
+  );
+
+  fetchStudentDataCached(department, template, apiPage, function (response) {
     if (response.success && response.data && response.data.students) {
       var students = response.data.students;
       var totalStudents = response.data.total_students;
-      
+
       // Get students from current API page
-      var studentsFromThisPage = students.slice(localStartIndex, localStartIndex + count);
+      var studentsFromThisPage = students.slice(
+        localStartIndex,
+        localStartIndex + count
+      );
       var studentsNeeded = count - studentsFromThisPage.length;
-      
+
       if (studentsNeeded > 0 && apiPage * studentsPerAPIPage < totalStudents) {
         // Need more students from next API page
         var nextApiPage = apiPage + 1;
         var remainingCount = studentsNeeded;
-        
-        fetchStudentDataCached(department, template, nextApiPage, function(nextResponse) {
-          if (nextResponse.success && nextResponse.data && nextResponse.data.students) {
-            var nextStudents = nextResponse.data.students;
-            var studentsFromNextPage = nextStudents.slice(0, remainingCount);
-            studentsFromThisPage = studentsFromThisPage.concat(studentsFromNextPage);
+
+        fetchStudentDataCached(
+          department,
+          template,
+          nextApiPage,
+          function (nextResponse) {
+            if (
+              nextResponse.success &&
+              nextResponse.data &&
+              nextResponse.data.students
+            ) {
+              var nextStudents = nextResponse.data.students;
+              var studentsFromNextPage = nextStudents.slice(0, remainingCount);
+              studentsFromThisPage =
+                studentsFromThisPage.concat(studentsFromNextPage);
+            }
+
+            callback(studentsFromThisPage);
           }
-          
-          callback(studentsFromThisPage);
-        });
+        );
       } else {
         callback(studentsFromThisPage);
       }
     } else {
-      console.warn("Failed to load students for API page", apiPage, "- returning empty array");
+      console.warn(
+        "Failed to load students for API page",
+        apiPage,
+        "- returning empty array"
+      );
       callback([]);
     }
   });
@@ -160,27 +256,31 @@ function loadStudentsForPage(department, template, startIndex, count, callback) 
 // Function to fetch student data with caching and request deduplication
 function fetchStudentDataCached(department, template, apiPage, callback) {
   var cacheKey = department + "_" + template + "_" + apiPage;
-  
+
   // Check if we already have this data cached
   if (window.studentDataCache[cacheKey]) {
     console.log("Using cached student data for API page", apiPage);
     callback(window.studentDataCache[cacheKey]);
     return;
   }
-  
+
   // Check if there's already a pending request for this data
   if (window.studentDataPendingRequests[cacheKey]) {
-    console.log("Request already pending for API page", apiPage, "- waiting for it to complete");
+    console.log(
+      "Request already pending for API page",
+      apiPage,
+      "- waiting for it to complete"
+    );
     // Add this callback to the list of callbacks waiting for this request
     window.studentDataPendingRequests[cacheKey].push(callback);
     return;
   }
-  
+
   // Create a new pending request
   window.studentDataPendingRequests[cacheKey] = [callback];
-  
+
   var studentsPerAPIPage = 50;
-  
+
   $.ajax({
     url: "../../Connection/Photos/FetchStudentData.php",
     method: "GET",
@@ -188,38 +288,43 @@ function fetchStudentDataCached(department, template, apiPage, callback) {
       department: department,
       template: template,
       page: apiPage,
-      limit: studentsPerAPIPage
+      limit: studentsPerAPIPage,
     },
     dataType: "json",
     success: function (response) {
       // Cache the response
       window.studentDataCache[cacheKey] = response;
-      
+
       // Call all waiting callbacks
       var callbacks = window.studentDataPendingRequests[cacheKey];
       delete window.studentDataPendingRequests[cacheKey];
-      
-      callbacks.forEach(function(cb) {
+
+      callbacks.forEach(function (cb) {
         cb(response);
       });
     },
     error: function (xhr, status, error) {
-      console.log("Error fetching student data for API page", apiPage, ":", error);
-      
+      console.log(
+        "Error fetching student data for API page",
+        apiPage,
+        ":",
+        error
+      );
+
       // Call all waiting callbacks with an error response
       var callbacks = window.studentDataPendingRequests[cacheKey];
       delete window.studentDataPendingRequests[cacheKey];
-      
+
       var errorResponse = {
         success: false,
         message: "Failed to fetch student data",
-        data: { students: [] }
+        data: { students: [] },
       };
-      
-      callbacks.forEach(function(cb) {
+
+      callbacks.forEach(function (cb) {
         cb(errorResponse);
       });
-    }
+    },
   });
 }
 
@@ -242,11 +347,13 @@ function addPage(page, book) {
 
 function addStudentPages(book, studentData) {
   // NOTE: This function is no longer needed since pages are pre-initialized
-  // in index.html with pages: totalPages. Turn.js will call addPage() 
+  // in index.html with pages: totalPages. Turn.js will call addPage()
   // automatically via the 'missing' event for each page that needs content.
   // Keeping this function for backward compatibility but it does nothing.
-  
-  console.log("Student pages are managed by turn.js 'missing' event - no manual addition needed");
+
+  console.log(
+    "Student pages are managed by turn.js 'missing' event - no manual addition needed"
+  );
   return;
 }
 
@@ -268,460 +375,493 @@ function loadPage(page, pageElement) {
 
     var totalPages = $(".magazine").turn("pages");
 
-  var maxWaitTime = 5000; // 5 seconds
-  var waitStartTime = Date.now();
+    var maxWaitTime = 5000; // 5 seconds
+    var waitStartTime = Date.now();
 
-  if (
-    (typeof coverData === "undefined" || coverData === null) &&
-    Date.now() - waitStartTime < maxWaitTime
-  ) {
-    setTimeout(function () {
-      loadPage(page, pageElement);
-    }, 100);
-    return;
-  }
+    if (
+      (typeof coverData === "undefined" || coverData === null) &&
+      Date.now() - waitStartTime < maxWaitTime
+    ) {
+      setTimeout(function () {
+        loadPage(page, pageElement);
+      }, 100);
+      return;
+    }
 
-  console.log(
-    "Loading page:",
-    page,
-    "Total pages:",
-    totalPages,
-    "Cover data:",
-    coverData
-  );
+    console.log(
+      "Loading page:",
+      page,
+      "Total pages:",
+      totalPages,
+      "Cover data:",
+      coverData
+    );
 
-  if (
-    page === 1 &&
-    typeof coverData !== "undefined" &&
-    coverData !== null &&
-    coverData.front_url
-  ) {
-    console.log("Using front_url for page 1:", coverData.front_url);
-    img.attr("src", coverData.front_url);
-  } else if (
-    page === totalPages &&
-    typeof coverData !== "undefined" &&
-    coverData !== null &&
-    coverData.back_url
-  ) {
-    console.log("Using back_url for page", page, ":", coverData.back_url);
-    img.attr("src", coverData.back_url);
-  } else if (
-    page >= 2 &&
-    page <= 6 &&
-    typeof coverData !== "undefined" &&
-    coverData !== null
-  ) {
-    console.log("Loading top management page:", page);
+    if (
+      page === 1 &&
+      typeof coverData !== "undefined" &&
+      coverData !== null &&
+      coverData.front_url
+    ) {
+      console.log("Using front_url for page 1:", coverData.front_url);
+      img.attr("src", coverData.front_url);
+    } else if (
+      page === totalPages &&
+      typeof coverData !== "undefined" &&
+      coverData !== null &&
+      coverData.back_url
+    ) {
+      console.log("Using back_url for page", page, ":", coverData.back_url);
+      img.attr("src", coverData.back_url);
+    } else if (
+      page >= 2 &&
+      page <= 6 &&
+      typeof coverData !== "undefined" &&
+      coverData !== null
+    ) {
+      console.log("Loading top management page:", page);
 
-    if (coverData.background_url) {
+      if (coverData.background_url) {
+        console.log(
+          "Using background_url for management page",
+          page,
+          ":",
+          coverData.background_url
+        );
+        img.attr("src", coverData.background_url);
+      } else {
+        img.attr(
+          "src",
+          "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23ffffff'/%3E%3C/svg%3E"
+        );
+      }
+
+      var managementPage = $("<div/>", {
+        class: "top-management-page",
+      });
+
+      var loadingIndicator = $("<div/>", {
+        class: "management-loading",
+        text: "Loading top management data...",
+      });
+
+      managementPage.append(loadingIndicator);
+      pageElement.append(managementPage);
+
+      var template = 1;
+      if (coverData.template) {
+        template = coverData.template;
+      }
+
+      var managementIndex = page - 2;
+
+      $.ajax({
+        url: "../../Connection/Photos/FetchTopManagement.php",
+        method: "GET",
+        data: {
+          template: template,
+        },
+        dataType: "json",
+        success: function (response) {
+          console.log("Top management data response:", response);
+
+          loadingIndicator.remove();
+
+          if (response.success && response.data && response.data.length > 0) {
+            if (managementIndex < response.data.length) {
+              var currentManager = response.data[managementIndex];
+
+              var photoContainer = $("<div/>", {
+                class: "management-photo",
+              });
+
+              var infoContainer = $("<div/>", {
+                class: "management-info",
+              });
+
+              var photoUrl =
+                currentManager.photo_url ||
+                'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="270" height="270" viewBox="0 0 270 270"%3E%3Crect width="270" height="270" fill="%23f0f0f0"/%3E%3Ctext x="135" y="135" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Image Available%3C/text%3E%3C/svg%3E';
+              var photo = $("<img/>", {
+                src: photoUrl,
+                alt: currentManager.name,
+                crossOrigin: "anonymous",
+                onerror:
+                  'this.src=\'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="270" height="270" viewBox="0 0 270 270"%3E%3Crect width="270" height="270" fill="%23f0f0f0"/%3E%3Ctext x="135" y="135" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Image Available%3C/text%3E%3C/svg%3E\';',
+              });
+              photoContainer.append(photo);
+
+              var name = $("<h2/>", {
+                class: "management-name",
+                text: currentManager.name || "Top Management Name",
+              });
+
+              var position = $("<h3/>", {
+                class: "management-position",
+                text: currentManager.position || "Position Title",
+              });
+
+              var messageContainer = $("<div/>", {
+                class: "message-container",
+              });
+
+              var quoteOpen = $("<span/>", {
+                class: "quote-mark open",
+                text: "❝",
+              });
+
+              var quoteClose = $("<span/>", {
+                class: "quote-mark close",
+                text: "❞",
+              });
+
+              var messageText =
+                currentManager.message ||
+                "No message available for this top management position. Messages typically contain inspirational words, guidance, or congratulations for the graduating class.";
+              var message = $("<div/>", {
+                class: "management-message",
+                text: messageText,
+              });
+
+              var messageWrapper = $("<div/>", {
+                class: "message-wrapper",
+              });
+
+              message.prepend(quoteOpen);
+              message.append(quoteClose);
+
+              messageWrapper.append(message);
+              messageContainer.append(messageWrapper);
+
+              infoContainer
+                .append(name)
+                .append(position)
+                .append(messageContainer);
+
+              managementPage.append(photoContainer).append(infoContainer);
+
+              setTimeout(function () {
+                waitForImagesAndGenerateThumbnail(page, pageElement);
+              }, 500);
+            } else {
+              var placeholderContainer = $("<div/>", {
+                class: "top-management-page",
+              });
+
+              var photoContainer = $("<div/>", {
+                class: "management-photo",
+              });
+
+              var photo = $("<img/>", {
+                src: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="270" height="270" viewBox="0 0 270 270"%3E%3Crect width="270" height="270" fill="%23f0f0f0"/%3E%3Ctext x="135" y="135" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Image Available%3C/text%3E%3C/svg%3E',
+                alt: "Top Management Placeholder",
+              });
+              photoContainer.append(photo);
+
+              var infoContainer = $("<div/>", {
+                class: "management-info",
+              });
+
+              var name = $("<h2/>", {
+                class: "management-name",
+                text: "Top Management Name",
+              });
+
+              var position = $("<h3/>", {
+                class: "management-position",
+                text: "Position Title",
+              });
+
+              var messageContainer = $("<div/>", {
+                class: "message-container",
+              });
+
+              var messageWrapper = $("<div/>", {
+                class: "message-wrapper",
+              });
+
+              var message = $("<div/>", {
+                class: "management-message",
+                text: "No top management data available for this page. Messages typically contain inspirational words, guidance, or congratulations for the graduating class.",
+              });
+
+              messageWrapper.append(message);
+              messageContainer.append(messageWrapper);
+
+              infoContainer
+                .append(name)
+                .append(position)
+                .append(messageContainer);
+
+              placeholderContainer.append(photoContainer).append(infoContainer);
+
+              managementPage.append(placeholderContainer);
+
+              setTimeout(function () {
+                waitForImagesAndGenerateThumbnail(page, pageElement);
+              }, 500);
+            }
+          } else {
+            var errorMessage = $("<div/>", {
+              class: "management-error",
+              text: response.message || "Failed to load top management data.",
+            });
+            managementPage.append(errorMessage);
+          }
+        },
+        error: function (xhr, status, error) {
+          console.log("Error fetching top management data:", error);
+
+          loadingIndicator.remove();
+
+          var errorMessage = $("<div/>", {
+            class: "management-error",
+            text: "Error connecting to server. Please try again later.",
+          });
+          managementPage.append(errorMessage);
+        },
+      });
+    } else if (
+      page >= 7 &&
+      page < totalPages &&
+      typeof coverData !== "undefined" &&
+      coverData !== null &&
+      coverData.background_url
+    ) {
       console.log(
-        "Using background_url for management page",
+        "Using background_url for page",
+        page,
+        ":",
+        coverData.background_url
+      );
+      img.attr("src", coverData.background_url);
+
+      img.on("load", function () {
+        var cardsContainer = $("<div/>", {
+          class: "cards-container",
+        });
+
+        var urlParams = new URLSearchParams(window.location.search);
+        var department = urlParams.get("department") || "BSME";
+
+        var template = coverData && coverData.template ? coverData.template : 1;
+
+        // Calculate which students we need for this yearbook page
+        var studentsPerYearbookPage = 6;
+        var studentStartIndex = (page - 7) * studentsPerYearbookPage; // First student index for this page
+        var studentEndIndex = studentStartIndex + studentsPerYearbookPage; // Last student index + 1
+
+        // Safety check: don't try to load students beyond what we can reasonably expect
+        // Based on our conservative calculation, we limit to 150 students (3 API pages)
+        var maxReliableStudents = 150;
+        if (studentStartIndex >= maxReliableStudents) {
+          console.log(
+            "Skipping yearbook page",
+            page,
+            "- beyond reliable student range (student index",
+            studentStartIndex,
+            ">= max",
+            maxReliableStudents,
+            ")"
+          );
+          // Just show the background without student cards
+          setTimeout(function () {
+            waitForImagesAndGenerateThumbnail(page, pageElement);
+          }, 500);
+          return;
+        }
+
+        // Calculate which API page we need (API returns 50 students per page)
+        var studentsPerAPIPage = 50;
+        var apiPage = Math.floor(studentStartIndex / studentsPerAPIPage) + 1;
+
+        console.log(
+          "Loading yearbook page:",
+          page,
+          "Students needed:",
+          studentStartIndex,
+          "-",
+          studentEndIndex - 1,
+          "Fetching API page:",
+          apiPage
+        );
+
+        // Load students for this specific page (more reliable than loading all at once)
+        var studentsPerPage = 6; // Fixed at 6 students per yearbook page
+        loadStudentsForPage(
+          department,
+          template,
+          studentStartIndex,
+          studentsPerPage,
+          function (studentsForThisPage) {
+            console.log(
+              "Students for page",
+              page,
+              ":",
+              studentsForThisPage.length,
+              "students starting from index",
+              studentStartIndex
+            );
+
+            for (var i = 0; i < studentsForThisPage.length; i++) {
+              var student = studentsForThisPage[i];
+              var globalIndex = studentStartIndex + i;
+
+              console.log(
+                "Processing student",
+                globalIndex,
+                ":",
+                student.name,
+                "Program:",
+                student.program
+              );
+
+              var card = $("<div/>", {
+                class: "student-card",
+              });
+
+              var studentImg = $("<div/>", {
+                class: "student-image",
+              });
+
+              var photoUrl =
+                student.photo_url ||
+                'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="135" height="155" viewBox="0 0 135 155"%3E%3Crect width="135" height="155" fill="%23f0f0f0"/%3E%3Ctext x="67.5" y="77.5" font-family="Arial" font-size="12" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Photo%3C/text%3E%3C/svg%3E';
+              var studentPhoto = $("<img/>", {
+                src: photoUrl,
+                alt: student.name,
+                crossOrigin: "anonymous",
+                onerror:
+                  'this.src=\'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="135" height="155" viewBox="0 0 135 155"%3E%3Crect width="135" height="155" fill="%23f0f0f0"/%3E%3Ctext x="67.5" y="77.5" font-family="Arial" font-size="12" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Photo%3C/text%3E%3C/svg%3E\';',
+              });
+              studentImg.append(studentPhoto);
+
+              var studentName = $("<h3/>", {
+                text: student.name,
+              });
+
+              var honorsText = $("<p/>", {
+                text: student.program || "Honors and Achievements",
+              });
+
+              card.on("click", function (e) {
+                var modal = $(".student-modal");
+                var closeBtn = $(".close-modal");
+                // Store the student data directly on the card element
+                var clickedStudent = $(this).data("student");
+
+                modal.find(".student-name").text(clickedStudent.name);
+                modal
+                  .find(".academic-year span")
+                  .text(clickedStudent.year || "N/A");
+                modal
+                  .find(".motto p")
+                  .text(clickedStudent.motto || "No motto provided");
+
+                var milestonesList = modal.find(".milestones ul");
+                milestonesList.empty();
+
+                if (
+                  clickedStudent.milestones &&
+                  Array.isArray(clickedStudent.milestones) &&
+                  clickedStudent.milestones.length > 0
+                ) {
+                  clickedStudent.milestones.forEach(function (milestone) {
+                    milestonesList.append("<li>" + milestone + "</li>");
+                  });
+                } else {
+                  milestonesList.append("<li>No milestones recorded</li>");
+                }
+
+                var $largeImage = modal.find(".student-image-large img");
+                var $thumbnails = modal.find(
+                  ".student-image-thumbnails .thumbnail"
+                );
+
+                var modalPhotoUrl =
+                  clickedStudent.photo_url ||
+                  'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect width="300" height="300" fill="%23f0f0f0"/%3E%3Ctext x="150" y="150" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Student Photo%3C/text%3E%3C/svg%3E';
+
+                $largeImage.attr("src", modalPhotoUrl);
+
+                $thumbnails.each(function (index) {
+                  $(this).find("img").attr("src", modalPhotoUrl);
+
+                  if (index === 0) {
+                    $(this).addClass("active");
+                  } else {
+                    $(this).removeClass("active");
+                  }
+                });
+
+                modal.addClass("active");
+
+                $thumbnails.off("click").on("click", function (e) {
+                  e.stopPropagation(); // Prevent modal from closing
+                  e.preventDefault();
+
+                  var $this = $(this);
+                  var index = $this.index();
+
+                  $thumbnails.removeClass("active");
+                  $this.addClass("active");
+
+                  $largeImage.fadeOut(200, function () {
+                    $(this).attr("src", modalPhotoUrl).fadeIn(200);
+                  });
+                });
+
+                closeBtn.on("click", function () {
+                  modal.removeClass("active");
+                });
+
+                $(window).on("click", function (event) {
+                  if ($(event.target).hasClass("student-modal")) {
+                    modal.removeClass("active");
+                  }
+                });
+              });
+
+              card.append(studentImg).append(studentName).append(honorsText);
+
+              // Store student data on the card for the click handler
+              card.data("student", student);
+
+              cardsContainer.append(card);
+            }
+
+            pageElement.append(cardsContainer);
+
+            setTimeout(function () {
+              waitForImagesAndGenerateThumbnail(page, pageElement);
+            }, 500);
+          }
+        );
+      });
+    } else if (
+      typeof coverData !== "undefined" &&
+      coverData !== null &&
+      coverData.background_url
+    ) {
+      console.log(
+        "Using background_url as fallback for page",
         page,
         ":",
         coverData.background_url
       );
       img.attr("src", coverData.background_url);
     } else {
+      console.log("No image available for page:", page, "Showing placeholder");
+      // Create a placeholder with a colored background
       img.attr(
         "src",
-        "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23ffffff'/%3E%3C/svg%3E"
+        "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23f0f0f0'/%3E%3Ctext x='50' y='55' font-family='Arial' font-size='12' fill='%23999' text-anchor='middle'%3EPage " +
+          page +
+          "%3C/text%3E%3C/svg%3E"
       );
     }
 
-    var managementPage = $("<div/>", {
-      class: "top-management-page",
-    });
-
-    var loadingIndicator = $("<div/>", {
-      class: "management-loading",
-      text: "Loading top management data...",
-    });
-
-    managementPage.append(loadingIndicator);
-    pageElement.append(managementPage);
-
-    var template = 1;
-    if (coverData.template) {
-      template = coverData.template;
-    }
-
-    var managementIndex = page - 2;
-
-    $.ajax({
-      url: "../../Connection/Photos/FetchTopManagement.php",
-      method: "GET",
-      data: {
-        template: template,
-      },
-      dataType: "json",
-      success: function (response) {
-        console.log("Top management data response:", response);
-
-        loadingIndicator.remove();
-
-        if (response.success && response.data && response.data.length > 0) {
-          if (managementIndex < response.data.length) {
-            var currentManager = response.data[managementIndex];
-
-            var photoContainer = $("<div/>", {
-              class: "management-photo",
-            });
-
-            var infoContainer = $("<div/>", {
-              class: "management-info",
-            });
-
-            var photoUrl =
-              currentManager.photo_url ||
-              'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="270" height="270" viewBox="0 0 270 270"%3E%3Crect width="270" height="270" fill="%23f0f0f0"/%3E%3Ctext x="135" y="135" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Image Available%3C/text%3E%3C/svg%3E';
-            var photo = $("<img/>", {
-              src: photoUrl,
-              alt: currentManager.name,
-              crossOrigin: "anonymous",
-              onerror:
-                'this.src=\'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="270" height="270" viewBox="0 0 270 270"%3E%3Crect width="270" height="270" fill="%23f0f0f0"/%3E%3Ctext x="135" y="135" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Image Available%3C/text%3E%3C/svg%3E\';',
-            });
-            photoContainer.append(photo);
-
-            var name = $("<h2/>", {
-              class: "management-name",
-              text: currentManager.name || "Top Management Name",
-            });
-
-            var position = $("<h3/>", {
-              class: "management-position",
-              text: currentManager.position || "Position Title",
-            });
-
-            var messageContainer = $("<div/>", {
-              class: "message-container",
-            });
-
-            var quoteOpen = $("<span/>", {
-              class: "quote-mark open",
-              text: "❝",
-            });
-
-            var quoteClose = $("<span/>", {
-              class: "quote-mark close",
-              text: "❞",
-            });
-
-            var messageText =
-              currentManager.message ||
-              "No message available for this top management position. Messages typically contain inspirational words, guidance, or congratulations for the graduating class.";
-            var message = $("<div/>", {
-              class: "management-message",
-              text: messageText,
-            });
-
-            var messageWrapper = $("<div/>", {
-              class: "message-wrapper",
-            });
-
-            message.prepend(quoteOpen);
-            message.append(quoteClose);
-
-            messageWrapper.append(message);
-            messageContainer.append(messageWrapper);
-
-            infoContainer
-              .append(name)
-              .append(position)
-              .append(messageContainer);
-
-            managementPage.append(photoContainer).append(infoContainer);
-
-            setTimeout(function () {
-              waitForImagesAndGenerateThumbnail(page, pageElement);
-            }, 500);
-          } else {
-            var placeholderContainer = $("<div/>", {
-              class: "top-management-page",
-            });
-
-            var photoContainer = $("<div/>", {
-              class: "management-photo",
-            });
-
-            var photo = $("<img/>", {
-              src: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="270" height="270" viewBox="0 0 270 270"%3E%3Crect width="270" height="270" fill="%23f0f0f0"/%3E%3Ctext x="135" y="135" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Image Available%3C/text%3E%3C/svg%3E',
-              alt: "Top Management Placeholder",
-            });
-            photoContainer.append(photo);
-
-            var infoContainer = $("<div/>", {
-              class: "management-info",
-            });
-
-            var name = $("<h2/>", {
-              class: "management-name",
-              text: "Top Management Name",
-            });
-
-            var position = $("<h3/>", {
-              class: "management-position",
-              text: "Position Title",
-            });
-
-            var messageContainer = $("<div/>", {
-              class: "message-container",
-            });
-
-            var messageWrapper = $("<div/>", {
-              class: "message-wrapper",
-            });
-
-            var message = $("<div/>", {
-              class: "management-message",
-              text: "No top management data available for this page. Messages typically contain inspirational words, guidance, or congratulations for the graduating class.",
-            });
-
-            messageWrapper.append(message);
-            messageContainer.append(messageWrapper);
-
-            infoContainer
-              .append(name)
-              .append(position)
-              .append(messageContainer);
-
-            placeholderContainer.append(photoContainer).append(infoContainer);
-
-            managementPage.append(placeholderContainer);
-
-            setTimeout(function () {
-              waitForImagesAndGenerateThumbnail(page, pageElement);
-            }, 500);
-          }
-        } else {
-          var errorMessage = $("<div/>", {
-            class: "management-error",
-            text: response.message || "Failed to load top management data.",
-          });
-          managementPage.append(errorMessage);
-        }
-      },
-      error: function (xhr, status, error) {
-        console.log("Error fetching top management data:", error);
-
-        loadingIndicator.remove();
-
-        var errorMessage = $("<div/>", {
-          class: "management-error",
-          text: "Error connecting to server. Please try again later.",
-        });
-        managementPage.append(errorMessage);
-      },
-    });
-  } else if (
-    page >= 7 &&
-    page < totalPages &&
-    typeof coverData !== "undefined" &&
-    coverData !== null &&
-    coverData.background_url
-  ) {
-    console.log(
-      "Using background_url for page",
-      page,
-      ":",
-      coverData.background_url
-    );
-    img.attr("src", coverData.background_url);
-
-    img.on("load", function () {
-      var cardsContainer = $("<div/>", {
-        class: "cards-container",
-      });
-
-      var urlParams = new URLSearchParams(window.location.search);
-      var department = urlParams.get("department") || "BSME";
-
-      var template = coverData && coverData.template ? coverData.template : 1;
-      
-      // Calculate which students we need for this yearbook page
-      var studentsPerYearbookPage = 6;
-      var studentStartIndex = (page - 7) * studentsPerYearbookPage; // First student index for this page
-      var studentEndIndex = studentStartIndex + studentsPerYearbookPage; // Last student index + 1
-      
-      // Safety check: don't try to load students beyond what we can reasonably expect
-      // Based on our conservative calculation, we limit to 150 students (3 API pages)
-      var maxReliableStudents = 150;
-      if (studentStartIndex >= maxReliableStudents) {
-        console.log("Skipping yearbook page", page, "- beyond reliable student range (student index", studentStartIndex, ">= max", maxReliableStudents, ")");
-        // Just show the background without student cards
-        setTimeout(function () {
-          waitForImagesAndGenerateThumbnail(page, pageElement);
-        }, 500);
-        return;
-      }
-      
-      // Calculate which API page we need (API returns 50 students per page)
-      var studentsPerAPIPage = 50;
-      var apiPage = Math.floor(studentStartIndex / studentsPerAPIPage) + 1;
-
-      console.log(
-        "Loading yearbook page:", page,
-        "Students needed:", studentStartIndex, "-", studentEndIndex - 1,
-        "Fetching API page:", apiPage
-      );
-
-      // Load students for this specific page (more reliable than loading all at once)
-      var studentsPerPage = 6; // Fixed at 6 students per yearbook page
-      loadStudentsForPage(department, template, studentStartIndex, studentsPerPage, function(studentsForThisPage) {
-        console.log("Students for page", page, ":", studentsForThisPage.length, "students starting from index", studentStartIndex);
-
-        for (var i = 0; i < studentsForThisPage.length; i++) {
-          var student = studentsForThisPage[i];
-          var globalIndex = studentStartIndex + i;
-          
-          console.log("Processing student", globalIndex, ":", student.name, "Program:", student.program);
-          
-          var card = $("<div/>", {
-            class: "student-card",
-          });
-
-          var studentImg = $("<div/>", {
-            class: "student-image",
-          });
-
-          var photoUrl =
-            student.photo_url ||
-            'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="135" height="155" viewBox="0 0 135 155"%3E%3Crect width="135" height="155" fill="%23f0f0f0"/%3E%3Ctext x="67.5" y="77.5" font-family="Arial" font-size="12" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Photo%3C/text%3E%3C/svg%3E';
-          var studentPhoto = $("<img/>", {
-            src: photoUrl,
-            alt: student.name,
-            crossOrigin: "anonymous",
-            onerror:
-              'this.src=\'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="135" height="155" viewBox="0 0 135 155"%3E%3Crect width="135" height="155" fill="%23f0f0f0"/%3E%3Ctext x="67.5" y="77.5" font-family="Arial" font-size="12" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Photo%3C/text%3E%3C/svg%3E\';',
-          });
-          studentImg.append(studentPhoto);
-
-          var studentName = $("<h3/>", {
-            text: student.name,
-          });
-
-          var honorsText = $("<p/>", {
-            text: student.program || "Honors and Achievements",
-          });
-
-          card.on("click", function (e) {
-            var modal = $(".student-modal");
-            var closeBtn = $(".close-modal");
-            // Store the student data directly on the card element
-            var clickedStudent = $(this).data('student');
-
-            modal.find(".student-name").text(clickedStudent.name);
-            modal
-              .find(".academic-year span")
-              .text(clickedStudent.year || "N/A");
-            modal
-              .find(".motto p")
-              .text(clickedStudent.motto || "No motto provided");
-
-            var milestonesList = modal.find(".milestones ul");
-            milestonesList.empty();
-
-            if (
-              clickedStudent.milestones &&
-              Array.isArray(clickedStudent.milestones) &&
-              clickedStudent.milestones.length > 0
-            ) {
-              clickedStudent.milestones.forEach(function (milestone) {
-                milestonesList.append("<li>" + milestone + "</li>");
-              });
-            } else {
-              milestonesList.append("<li>No milestones recorded</li>");
-            }
-
-            var $largeImage = modal.find(".student-image-large img");
-            var $thumbnails = modal.find(
-              ".student-image-thumbnails .thumbnail"
-            );
-
-            var modalPhotoUrl =
-              clickedStudent.photo_url ||
-              'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect width="300" height="300" fill="%23f0f0f0"/%3E%3Ctext x="150" y="150" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Student Photo%3C/text%3E%3C/svg%3E';
-
-            $largeImage.attr("src", modalPhotoUrl);
-
-            $thumbnails.each(function (index) {
-              $(this).find("img").attr("src", modalPhotoUrl);
-
-              if (index === 0) {
-                $(this).addClass("active");
-              } else {
-                $(this).removeClass("active");
-              }
-            });
-
-            modal.addClass("active");
-
-            $thumbnails.off("click").on("click", function (e) {
-              e.stopPropagation(); // Prevent modal from closing
-              e.preventDefault();
-
-              var $this = $(this);
-              var index = $this.index();
-
-              $thumbnails.removeClass("active");
-              $this.addClass("active");
-
-              $largeImage.fadeOut(200, function () {
-                $(this).attr("src", modalPhotoUrl).fadeIn(200);
-              });
-            });
-
-            closeBtn.on("click", function () {
-              modal.removeClass("active");
-            });
-
-            $(window).on("click", function (event) {
-              if ($(event.target).hasClass("student-modal")) {
-                modal.removeClass("active");
-              }
-            });
-          });
-
-          card.append(studentImg).append(studentName).append(honorsText);
-          
-          // Store student data on the card for the click handler
-          card.data('student', student);
-
-          cardsContainer.append(card);
-        }
-        
-        pageElement.append(cardsContainer);
-
-        setTimeout(function () {
-          waitForImagesAndGenerateThumbnail(page, pageElement);
-        }, 500);
-      });
-    });
-  } else if (
-    typeof coverData !== "undefined" &&
-    coverData !== null &&
-    coverData.background_url
-  ) {
-    console.log(
-      "Using background_url as fallback for page",
-      page,
-      ":",
-      coverData.background_url
-    );
-    img.attr("src", coverData.background_url);
-  } else {
-    console.log("No image available for page:", page, "Showing placeholder");
-    // Create a placeholder with a colored background
-    img.attr(
-      "src",
-      "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23f0f0f0'/%3E%3Ctext x='50' y='55' font-family='Arial' font-size='12' fill='%23999' text-anchor='middle'%3EPage " +
-        page +
-        "%3C/text%3E%3C/svg%3E"
-    );
-  }
-
-  loadRegions(page, pageElement);
+    loadRegions(page, pageElement);
   } catch (e) {
     console.log("Error loading page", page, ":", e);
   }
@@ -745,7 +885,7 @@ function zoomTo(event) {
 
 function loadRegions(page, element) {
   var totalPages = $(".magazine").turn("pages");
-  
+
   // Don't load regions for first page, last page, or student/management pages (2-44 are dynamic)
   // Only load regions if you have actual region files for specific pages
   if (page === 1 || page === totalPages || page >= 2) {
@@ -897,7 +1037,7 @@ function loadSmallPage(page, pageElement) {
   var img = pageElement.find("img");
 
   img.css({ width: "100%", height: "100%" });
-  
+
   img.attr("crossOrigin", "anonymous");
 
   img.off("load");
