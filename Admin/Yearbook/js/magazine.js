@@ -1313,7 +1313,6 @@ function generatePageThumbnail(page, pageElement) {
     ctx.textAlign = "center";
     ctx.fillText(page.toString(), canvas.width - 7, canvas.height - 4);
 
-    // Convert canvas to data URL
     var thumbnailDataUrl = canvas.toDataURL("image/png");
 
     // Store thumbnail data for later use
