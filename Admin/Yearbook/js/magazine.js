@@ -1277,7 +1277,6 @@ function generatePageThumbnail(page, pageElement) {
             ctx.drawImage(studentImg[0], x, y, avatarSize, avatarSize);
             ctx.restore();
           } catch (e) {
-            // Fallback to initial
             ctx.fillStyle = "#1C1C1E";
             ctx.font = "3px Arial";
             ctx.textAlign = "center";
