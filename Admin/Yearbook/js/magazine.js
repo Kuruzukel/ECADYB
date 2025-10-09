@@ -1315,7 +1315,6 @@ function generatePageThumbnail(page, pageElement) {
 
     var thumbnailDataUrl = canvas.toDataURL("image/png");
 
-    // Store thumbnail data for later use
     if (!window.pageThumbnails) {
       window.pageThumbnails = {};
     }
