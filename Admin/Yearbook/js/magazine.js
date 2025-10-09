@@ -1101,7 +1101,6 @@ function generatePageThumbnail(page, pageElement) {
     var canvas = document.createElement("canvas");
     var ctx = canvas.getContext("2d");
 
-    // Set thumbnail dimensions
     canvas.width = 76;
     canvas.height = 100;
 
