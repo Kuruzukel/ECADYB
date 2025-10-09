@@ -1247,7 +1247,6 @@ function generatePageThumbnail(page, pageElement) {
         var x = startX + index * (avatarSize + 1);
         var y = 48;
 
-        // Draw avatar circle
         ctx.fillStyle = "#E5E5EA";
         ctx.beginPath();
         ctx.arc(
