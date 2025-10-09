@@ -1370,7 +1370,6 @@ function generateAllThumbnails() {
   }, 1000);
 }
 
-// Wait for images to load before generating thumbnails
 function waitForImagesAndGenerateThumbnail(page, pageElement) {
   var images = pageElement.find("img");
   var loadedImages = 0;
