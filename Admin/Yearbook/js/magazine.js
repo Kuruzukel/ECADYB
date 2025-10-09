@@ -1201,7 +1201,6 @@ function generatePageThumbnail(page, pageElement) {
       ctx.fillText(displayPosition, canvas.width / 2, 58);
     }
 
-    // Add content overlay for student pages (page 7+)
     if (page >= 7 && studentContent.length) {
       // Create semi-transparent overlay
       ctx.fillStyle = "rgba(255, 255, 255, 0.95)";
