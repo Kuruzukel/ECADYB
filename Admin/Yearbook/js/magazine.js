@@ -1120,7 +1120,6 @@ function generatePageThumbnail(page, pageElement) {
     if (pageImg.length && pageImg[0].complete) {
       ctx.drawImage(pageImg[0], 0, 0, canvas.width, canvas.height);
     } else {
-      // Fallback background
       ctx.fillStyle = "#f8f9fa";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
