@@ -1305,7 +1305,6 @@ function generatePageThumbnail(page, pageElement) {
       }
     }
 
-    // Add page number for all pages
     ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
     ctx.fillRect(canvas.width - 12, canvas.height - 10, 10, 8);
 
