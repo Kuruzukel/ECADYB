@@ -1128,7 +1128,6 @@ function generatePageThumbnail(page, pageElement) {
       ctx.fillStyle = "rgba(255, 255, 255, 0.95)";
       ctx.fillRect(2, 2, canvas.width - 4, canvas.height - 4);
 
-      // Add border
       ctx.strokeStyle = "#007AFF";
       ctx.lineWidth = 2;
       ctx.strokeRect(2, 2, canvas.width - 4, canvas.height - 4);
