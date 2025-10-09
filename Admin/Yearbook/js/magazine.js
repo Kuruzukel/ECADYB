@@ -1166,7 +1166,6 @@ function generatePageThumbnail(page, pageElement) {
           ctx.drawImage(managementPhoto[0], canvas.width / 2 - 10, 25, 20, 20);
           ctx.restore();
         } catch (e) {
-          // Fallback to placeholder circle
           ctx.fillStyle = "#E5E5EA";
           ctx.beginPath();
           ctx.arc(canvas.width / 2, 35, 10, 0, 2 * Math.PI);
