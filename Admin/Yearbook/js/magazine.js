@@ -1142,8 +1142,6 @@ function resizeViewport() {
     ) {
       $(".magazine").turn("size", bound.width, bound.height);
 
-      if ($(".magazine").turn("page") == 1) $(".magazine").turn("peel", "br");
-
       $(".next-button").css({
         height: bound.height,
         backgroundPosition: "-38px " + (bound.height / 2 - 32 / 2) + "px",
@@ -1632,4 +1630,96 @@ function createStudentThumbnail(studentPageIndex, dataToUse) {
     pageNumber +
     "%3C/text%3E%3C/svg%3E"
   );
+}
+
+// Corner hover detection for page peel effect
+function initializeCornerHover() {
+  var $magazine = $(".magazine");
+  var cornerSize = 100; // Size of the corner detection area in pixels
+  var currentPeelCorner = null;
+  var peelTimer = null;
+  var peelDuration = 600; // Duration in milliseconds before peel returns to normal
+
+  $magazine.on("mousemove", function (e) {
+    if (!$magazine.turn("is")) return;
+
+    var offset = $magazine.offset();
+    var relX = e.pageX - offset.left;
+    var relY = e.pageY - offset.top;
+    var width = $magazine.width();
+    var height = $magazine.height();
+    var page = $magazine.turn("page");
+    var pages = $magazine.turn("pages");
+
+    var inCorner = false;
+    var corner = null;
+
+    // Check bottom-right corner (for odd pages on the right side)
+    if (relX > width - cornerSize && relY > height - cornerSize) {
+      if (page < pages) {
+        corner = "br";
+        inCorner = true;
+      }
+    }
+    // Check bottom-left corner (for even pages on the left side)
+    else if (relX < cornerSize && relY > height - cornerSize) {
+      if (page > 1) {
+        corner = "bl";
+        inCorner = true;
+      }
+    }
+    // Check top-right corner (for odd pages on the right side)
+    else if (relX > width - cornerSize && relY < cornerSize) {
+      if (page < pages) {
+        corner = "tr";
+        inCorner = true;
+      }
+    }
+    // Check top-left corner (for even pages on the left side)
+    else if (relX < cornerSize && relY < cornerSize) {
+      if (page > 1) {
+        corner = "tl";
+        inCorner = true;
+      }
+    }
+
+    // Apply peel and auto-return based on corner detection
+    if (inCorner && corner !== currentPeelCorner) {
+      // Clear any existing timer
+      if (peelTimer) {
+        clearTimeout(peelTimer);
+      }
+
+      // Apply the peel
+      $magazine.turn("peel", corner);
+      currentPeelCorner = corner;
+
+      // Set timer to automatically return peel to normal
+      peelTimer = setTimeout(function () {
+        $magazine.turn("peel", false);
+        currentPeelCorner = null;
+        peelTimer = null;
+      }, peelDuration);
+    } else if (!inCorner && currentPeelCorner) {
+      // Clear timer and remove peel immediately when leaving corner
+      if (peelTimer) {
+        clearTimeout(peelTimer);
+        peelTimer = null;
+      }
+      $magazine.turn("peel", false);
+      currentPeelCorner = null;
+    }
+  });
+
+  // Remove peel when mouse leaves the magazine
+  $magazine.on("mouseleave", function () {
+    if (peelTimer) {
+      clearTimeout(peelTimer);
+      peelTimer = null;
+    }
+    if (currentPeelCorner) {
+      $magazine.turn("peel", false);
+      currentPeelCorner = null;
+    }
+  });
 }
