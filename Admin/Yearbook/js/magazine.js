@@ -1348,7 +1348,6 @@ function generateAllThumbnails() {
 
   console.log("Starting thumbnail generation for all pages...");
 
-  // Wait a bit more to ensure all content is loaded
   setTimeout(function () {
     // Generate thumbnails for all loaded pages
     $(".magazine .page").each(function (index) {
