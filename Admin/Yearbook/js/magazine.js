@@ -820,7 +820,6 @@ function loadLargePage(page, pageElement) {
     coverData !== null &&
     coverData.front_url
   ) {
-    // First page - use front cover
     img.attr("src", coverData.front_url);
   } else if (
     page === totalPages &&
