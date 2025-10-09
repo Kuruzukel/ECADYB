@@ -1157,7 +1157,6 @@ function generatePageThumbnail(page, pageElement) {
       ctx.font = "5px Arial";
       ctx.fillText("Page " + page, canvas.width / 2, 20);
 
-      // Draw management photo if available
       if (managementPhoto.length && managementPhoto[0].complete) {
         try {
           // Draw the actual management photo
