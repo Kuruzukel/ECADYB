@@ -720,8 +720,6 @@ function zoomTo(event) {
   }, 1);
 }
 
-// Load regions
-
 function loadRegions(page, element) {
   // Skip loading regions for cover pages
   var totalPages = $(".magazine").turn("pages");
