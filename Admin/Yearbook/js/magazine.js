@@ -1287,7 +1287,6 @@ function generatePageThumbnail(page, pageElement) {
             );
           }
         } else {
-          // Draw student initial
           ctx.fillStyle = "#1C1C1E";
           ctx.font = "3px Arial";
           ctx.textAlign = "center";
