@@ -1094,7 +1094,6 @@ function calculateBound(d) {
   return bound;
 }
 
-// Generate thumbnail for a specific page
 function generatePageThumbnail(page, pageElement) {
   try {
     console.log("Generating thumbnail for page", page);
