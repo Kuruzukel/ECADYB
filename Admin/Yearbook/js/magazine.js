@@ -1239,7 +1239,7 @@ function generatePageThumbnail(page, pageElement) {
       var startX = (canvas.width - maxAvatars * (avatarSize + 1)) / 2;
 
       studentCards.each(function (index) {
-        if (index >= maxAvatars) return false; // Stop after maxAvatars
+        if (index >= maxAvatars) return false;
 
         var $card = $(this);
         var studentImg = $card.find(".student-image img").first();
