@@ -1,21 +1,105 @@
+// Global cache for student data API responses
+window.studentDataCache = window.studentDataCache || {};
+window.studentDataPendingRequests = window.studentDataPendingRequests || {};
+
+// Function to fetch student data with caching and request deduplication
+function fetchStudentDataCached(department, template, apiPage, callback) {
+  var cacheKey = department + "_" + template + "_" + apiPage;
+  
+  // Check if we already have this data cached
+  if (window.studentDataCache[cacheKey]) {
+    console.log("Using cached student data for API page", apiPage);
+    callback(window.studentDataCache[cacheKey]);
+    return;
+  }
+  
+  // Check if there's already a pending request for this data
+  if (window.studentDataPendingRequests[cacheKey]) {
+    console.log("Request already pending for API page", apiPage, "- waiting for it to complete");
+    // Add this callback to the list of callbacks waiting for this request
+    window.studentDataPendingRequests[cacheKey].push(callback);
+    return;
+  }
+  
+  // Create a new pending request
+  window.studentDataPendingRequests[cacheKey] = [callback];
+  
+  var studentsPerAPIPage = 50;
+  
+  $.ajax({
+    url: "../../Connection/Photos/FetchStudentData.php",
+    method: "GET",
+    data: {
+      department: department,
+      template: template,
+      page: apiPage,
+      limit: studentsPerAPIPage
+    },
+    dataType: "json",
+    success: function (response) {
+      // Cache the response
+      window.studentDataCache[cacheKey] = response;
+      
+      // Call all waiting callbacks
+      var callbacks = window.studentDataPendingRequests[cacheKey];
+      delete window.studentDataPendingRequests[cacheKey];
+      
+      callbacks.forEach(function(cb) {
+        cb(response);
+      });
+    },
+    error: function (xhr, status, error) {
+      console.log("Error fetching student data for API page", apiPage, ":", error);
+      
+      // Call all waiting callbacks with an error response
+      var callbacks = window.studentDataPendingRequests[cacheKey];
+      delete window.studentDataPendingRequests[cacheKey];
+      
+      var errorResponse = {
+        success: false,
+        message: "Failed to fetch student data",
+        data: { students: [] }
+      };
+      
+      callbacks.forEach(function(cb) {
+        cb(errorResponse);
+      });
+    }
+  });
+}
+
 function addPage(page, book) {
-  var id,
-    pages = book.turn("pages");
+  try {
+    var id,
+      pages = book.turn("pages");
 
-  var element = $("<div />", {});
+    var element = $("<div />", {});
 
-  if (book.turn("addPage", element, page)) {
-    element.html('<div class="loader"></div>');
+    if (book.turn("addPage", element, page)) {
+      element.html('<div class="loader"></div>');
 
-    loadPage(page, element);
+      loadPage(page, element);
+    }
+  } catch (e) {
+    console.log("Error adding page", page, ":", e);
   }
 }
 
 function addStudentPages(book, studentData) {
-  if (!studentData || !studentData.total_pages) return;
+  if (!studentData) return;
+  
+  // Use yearbook_pages (actual yearbook pages needed)
+  // or calculate from total_students if yearbook_pages is not available
+  var totalPages = studentData.yearbook_pages;
+  if (!totalPages && studentData.total_students && studentData.students_per_page) {
+    totalPages = Math.ceil(studentData.total_students / studentData.students_per_page);
+  }
+  
+  if (!totalPages) return;
 
-  var totalPages = studentData.total_pages;
   var studentsPerPage = studentData.students_per_page || 6;
+
+  console.log("Adding", totalPages, "student pages to flipbook");
 
   for (var i = 0; i < totalPages; i++) {
     var pageNum = 7 + i;
@@ -24,21 +108,22 @@ function addStudentPages(book, studentData) {
 }
 
 function loadPage(page, pageElement) {
-  var img = $("<img />").attr("crossOrigin", "anonymous");
+  try {
+    var img = $("<img />").attr("crossOrigin", "anonymous");
 
-  img.on("mousedown", function (e) {
-    e.preventDefault();
-  });
+    img.on("mousedown", function (e) {
+      e.preventDefault();
+    });
 
-  img.on("load", function () {
-    $(this).css({ width: "100%", height: "100%" });
+    img.on("load", function () {
+      $(this).css({ width: "100%", height: "100%" });
 
-    $(this).appendTo(pageElement);
+      $(this).appendTo(pageElement);
 
-    pageElement.find(".loader").remove();
-  });
+      pageElement.find(".loader").remove();
+    });
 
-  var totalPages = $(".magazine").turn("pages");
+    var totalPages = $(".magazine").turn("pages");
 
   var maxWaitTime = 5000; // 5 seconds
   var waitStartTime = Date.now();
@@ -326,18 +411,9 @@ function loadPage(page, pageElement) {
         "Fetching API page:", apiPage
       );
 
-      $.ajax({
-        url: "../../Connection/Photos/FetchStudentData.php",
-        method: "GET",
-        data: {
-          department: department,
-          template: template,
-          page: apiPage,
-          limit: studentsPerAPIPage
-        },
-        dataType: "json",
-        success: function (response) {
-          console.log("Student data response:", response);
+      // Use cached fetch to avoid duplicate requests
+      fetchStudentDataCached(department, template, apiPage, function (response) {
+          console.log("Student data response for page", page, ":", response);
 
           if (response.success && response.data && response.data.students) {
             var students = response.data.students;
@@ -503,109 +579,14 @@ function loadPage(page, pageElement) {
                 cardsContainer.append(card);
               }
             }
-          } else {
-            for (var i = 0; i < 6; i++) {
-              var card = $("<div/>", {
-                class: "student-card",
-              });
-
-              var studentImg = $("<div/>", {
-                class: "student-image",
-              });
-
-              var placeholderImg = $("<img/>", {
-                src: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="135" height="155" viewBox="0 0 135 155"%3E%3Crect width="135" height="155" fill="%23f0f0f0"/%3E%3Ctext x="67.5" y="77.5" font-family="Arial" font-size="12" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Photo%3C/text%3E%3C/svg%3E',
-                alt: "Student placeholder",
-              });
-              studentImg.append(placeholderImg);
-
-              var studentName = $("<h3/>", {
-                text: "Student Name",
-              });
-
-              var honorsText = $("<p/>", {
-                text: "Honors and Achievements",
-              });
-
-              card.on("click", function () {
-                var modal = $(".student-modal");
-                var closeBtn = $(".close-modal");
-                var studentName = $(this).find("h3").text();
-
-                var studentPhotos = [
-                  'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect width="300" height="300" fill="%23f0f0f0"/%3E%3Ctext x="150" y="150" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Student Photo%3C/text%3E%3C/svg%3E',
-                  'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect width="300" height="300" fill="%23f0f0f0"/%3E%3Ctext x="150" y="150" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Student Photo%3C/text%3E%3C/svg%3E',
-                  'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect width="300" height="300" fill="%23f0f0f0"/%3E%3Ctext x="150" y="150" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Student Photo%3C/text%3E%3C/svg%3E',
-                ];
-
-                modal.find(".student-name").text("Student Name");
-                modal.find(".motto p").text("No motto available.");
-                modal
-                  .find(".milestones ul")
-                  .html("<li>Honors and Achievements</li>");
-
-                var $largeImage = modal.find(".student-image-large img");
-                var $thumbnails = modal.find(
-                  ".student-image-thumbnails .thumbnail"
-                );
-
-                $largeImage.attr("src", studentPhotos[0]);
-
-                $thumbnails.each(function (index) {
-                  $(this).find("img").attr("src", studentPhotos[index]);
-
-                  if (index === 0) {
-                    $(this).addClass("active");
-                  } else {
-                    $(this).removeClass("active");
-                  }
-                });
-
-                modal.addClass("active");
-
-                $thumbnails.off("click").on("click", function (e) {
-                  e.stopPropagation();
-                  e.preventDefault();
-
-                  var $this = $(this);
-                  var index = $this.index();
-
-                  $thumbnails.removeClass("active");
-                  $this.addClass("active");
-
-                  $largeImage.fadeOut(200, function () {
-                    $(this).attr("src", studentPhotos[index]).fadeIn(200);
-                  });
-
-                  console.log("Switching to photo:", index + 1);
-                });
-
-                closeBtn.on("click", function () {
-                  modal.removeClass("active");
-                });
-
-                $(window).on("click", function (event) {
-                  if ($(event.target).hasClass("student-modal")) {
-                    modal.removeClass("active");
-                  }
-                });
-              });
-
-              card.append(studentImg).append(studentName).append(honorsText);
-
-              cardsContainer.append(card);
-            }
-          }
 
           pageElement.append(cardsContainer);
 
           setTimeout(function () {
             waitForImagesAndGenerateThumbnail(page, pageElement);
           }, 500);
-        },
-        error: function (xhr, status, error) {
-          console.log("Error fetching student data:", error);
-
+        } else {
+          // No student data - show placeholders
           for (var i = 0; i < 6; i++) {
             var card = $("<div/>", {
               class: "student-card",
@@ -629,70 +610,6 @@ function loadPage(page, pageElement) {
               text: "Honors and Achievements",
             });
 
-            card.on("click", function () {
-              var modal = $(".student-modal");
-              var closeBtn = $(".close-modal");
-              var studentName = $(this).find("h3").text();
-
-              var studentPhotos = [
-                'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect width="300" height="300" fill="%23f0f0f0"/%3E%3Ctext x="150" y="150" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Student Photo%3C/text%3E%3C/svg%3E',
-                'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect width="300" height="300" fill="%23f0f0f0"/%3E%3Ctext x="150" y="150" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Student Photo%3C/text%3E%3C/svg%3E',
-                'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect width="300" height="300" fill="%23f0f0f0"/%3E%3Ctext x="150" y="150" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Student Photo%3C/text%3E%3C/svg%3E',
-              ];
-
-              modal.find(".student-name").text("Student Name");
-              modal.find(".motto p").text("No motto available.");
-              modal
-                .find(".milestones ul")
-                .html("<li>Honors and Achievements</li>");
-
-              var $largeImage = modal.find(".student-image-large img");
-              var $thumbnails = modal.find(
-                ".student-image-thumbnails .thumbnail"
-              );
-
-              $largeImage.attr("src", studentPhotos[0]);
-
-              $thumbnails.each(function (index) {
-                $(this).find("img").attr("src", studentPhotos[index]);
-
-                if (index === 0) {
-                  $(this).addClass("active");
-                } else {
-                  $(this).removeClass("active");
-                }
-              });
-
-              modal.addClass("active");
-
-              $thumbnails.off("click").on("click", function (e) {
-                e.stopPropagation();
-                e.preventDefault();
-
-                var $this = $(this);
-                var index = $this.index();
-
-                $thumbnails.removeClass("active");
-                $this.addClass("active");
-
-                $largeImage.fadeOut(200, function () {
-                  $(this).attr("src", studentPhotos[index]).fadeIn(200);
-                });
-
-                console.log("Switching to photo:", index + 1);
-              });
-
-              closeBtn.on("click", function () {
-                modal.removeClass("active");
-              });
-
-              $(window).on("click", function (event) {
-                if ($(event.target).hasClass("student-modal")) {
-                  modal.removeClass("active");
-                }
-              });
-            });
-
             card.append(studentImg).append(studentName).append(honorsText);
 
             cardsContainer.append(card);
@@ -703,7 +620,7 @@ function loadPage(page, pageElement) {
           setTimeout(function () {
             waitForImagesAndGenerateThumbnail(page, pageElement);
           }, 500);
-        },
+        }
       });
     });
   } else if (
@@ -730,6 +647,9 @@ function loadPage(page, pageElement) {
   }
 
   loadRegions(page, pageElement);
+  } catch (e) {
+    console.log("Error loading page", page, ":", e);
+  }
 }
 
 // Zoom in / Zoom out
@@ -750,15 +670,24 @@ function zoomTo(event) {
 
 function loadRegions(page, element) {
   var totalPages = $(".magazine").turn("pages");
-  if (page === 1 || page === totalPages) {
-    return;
+  
+  // Don't load regions for first page, last page, or student/management pages (2-44 are dynamic)
+  // Only load regions if you have actual region files for specific pages
+  if (page === 1 || page === totalPages || page >= 2) {
+    return; // Skip region loading for all pages - they're dynamically generated
   }
 
-  $.getJSON("pages/" + page + "-regions.json").done(function (data) {
-    $.each(data, function (key, region) {
-      addRegion(region, element);
+  // Load regions silently - fail gracefully if files don't exist
+  $.getJSON("pages/" + page + "-regions.json")
+    .done(function (data) {
+      $.each(data, function (key, region) {
+        addRegion(region, element);
+      });
+    })
+    .fail(function () {
+      // Silently ignore missing region files - they're optional
+      // No need to log errors for non-existent region files
     });
-  });
 }
 
 function addRegion(region, pageElement) {
