@@ -683,7 +683,6 @@ function loadPage(page, pageElement) {
     coverData !== null &&
     coverData.background_url
   ) {
-    // Other middle pages - use background image as fallback
     console.log(
       "Using background_url as fallback for page",
       page,
