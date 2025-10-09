@@ -1262,7 +1262,6 @@ function generatePageThumbnail(page, pageElement) {
         ctx.lineWidth = 1;
         ctx.stroke();
 
-        // Try to draw actual student photo
         if (studentImg.length && studentImg[0].complete) {
           try {
             ctx.save();
