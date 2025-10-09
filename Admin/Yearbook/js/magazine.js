@@ -1353,7 +1353,6 @@ function generateAllThumbnails() {
       var pageElement = $(this);
       var pageNumber = index + 1;
 
-      // Check if page has content before generating thumbnail
       var hasContent =
         pageElement.find("img").length > 0 ||
         pageElement.find(".top-management-page").length > 0 ||
