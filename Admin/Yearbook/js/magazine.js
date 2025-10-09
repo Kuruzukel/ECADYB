@@ -849,7 +849,6 @@ function loadLargePage(page, pageElement) {
     coverData !== null &&
     coverData.background_url
   ) {
-    // Pages 7-11 - use background image from database
     img.attr("src", coverData.background_url);
   } else if (
     typeof coverData !== "undefined" &&
