@@ -1159,7 +1159,6 @@ function generatePageThumbnail(page, pageElement) {
 
       if (managementPhoto.length && managementPhoto[0].complete) {
         try {
-          // Draw the actual management photo
           ctx.save();
           ctx.beginPath();
           ctx.arc(canvas.width / 2, 35, 10, 0, 2 * Math.PI);
