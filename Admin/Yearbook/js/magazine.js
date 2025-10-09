@@ -726,7 +726,6 @@ function loadRegions(page, element) {
     return;
   }
 
-  // Use absolute path for JSON files
   $.getJSON("pages/" + page + "-regions.json").done(function (data) {
     $.each(data, function (key, region) {
       addRegion(region, element);
