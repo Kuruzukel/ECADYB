@@ -1175,7 +1175,6 @@ function generatePageThumbnail(page, pageElement) {
           ctx.stroke();
         }
       } else {
-        // Draw management photo placeholder
         ctx.fillStyle = "#E5E5EA";
         ctx.beginPath();
         ctx.arc(canvas.width / 2, 35, 10, 0, 2 * Math.PI);
