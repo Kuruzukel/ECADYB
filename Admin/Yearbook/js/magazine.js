@@ -1226,7 +1226,6 @@ function generatePageThumbnail(page, pageElement) {
       ctx.font = "5px Arial";
       ctx.fillText("Page " + page, canvas.width / 2, 20);
 
-      // Draw student count
       ctx.fillStyle = "#1C1C1E";
       ctx.font = "bold 7px Arial";
       ctx.fillText(studentCount.toString(), canvas.width / 2, 32);
