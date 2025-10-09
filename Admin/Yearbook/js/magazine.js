@@ -721,7 +721,6 @@ function zoomTo(event) {
 }
 
 function loadRegions(page, element) {
-  // Skip loading regions for cover pages
   var totalPages = $(".magazine").turn("pages");
   if (page === 1 || page === totalPages) {
     return;
