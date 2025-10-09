@@ -1376,7 +1376,6 @@ function waitForImagesAndGenerateThumbnail(page, pageElement) {
   var totalImages = images.length;
 
   if (totalImages === 0) {
-    // No images, generate thumbnail immediately
     generatePageThumbnail(page, pageElement);
     return;
   }
