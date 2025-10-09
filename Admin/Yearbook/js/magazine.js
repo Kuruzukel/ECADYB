@@ -691,7 +691,6 @@ function loadPage(page, pageElement) {
     );
     img.attr("src", coverData.background_url);
   } else {
-    // Show a placeholder when no image is available
     console.log("No image available for page:", page, "Showing placeholder");
     // Create a placeholder with a colored background
     img.attr(
