@@ -1320,7 +1320,6 @@ function generatePageThumbnail(page, pageElement) {
     }
     window.pageThumbnails[page] = thumbnailDataUrl;
 
-    // Update existing thumbnail if it exists
     var existingThumbnail = $(".thumbnails .page-" + page);
     if (existingThumbnail.length) {
       existingThumbnail.attr("src", thumbnailDataUrl);
