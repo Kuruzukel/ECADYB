@@ -1132,7 +1132,6 @@ function generatePageThumbnail(page, pageElement) {
       ctx.lineWidth = 2;
       ctx.strokeRect(2, 2, canvas.width - 4, canvas.height - 4);
 
-      // Get management data
       var managementName =
         managementContent.find(".management-name").text().trim() ||
         "Management";
