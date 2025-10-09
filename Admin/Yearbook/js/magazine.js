@@ -1184,7 +1184,6 @@ function generatePageThumbnail(page, pageElement) {
         ctx.stroke();
       }
 
-      // Draw name (truncated)
       var displayName =
         managementName.length > 10
           ? managementName.substring(0, 10) + "..."
