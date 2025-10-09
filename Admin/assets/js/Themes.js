@@ -1,4 +1,5 @@
-const themes = {
+// Define themes globally to share across all scripts
+window.themes = {
   "Light Mode": {
     "--primary-bg": "#ffffff",
     "--header-bg": "#94a3b8",
@@ -104,19 +105,21 @@ function selectColor(el) {
   document.getElementById("modal-overlay").style.display = "flex";
 }
 
-function applyTheme(theme) {
+window.applyTheme = function (theme) {
   console.log("Applying theme:", theme);
+  
   const root = document.documentElement;
-  const selectedTheme = themes[theme] || themes["Default"];
+  const selectedTheme = window.themes[theme] || window.themes["Default"];
 
   console.log("Selected theme data:", selectedTheme);
 
+  // Apply CSS variables to the root element
   for (const [varName, color] of Object.entries(selectedTheme)) {
     root.style.setProperty(varName, color);
   }
 
   const currentSectionBg =
-    selectedTheme["--section-bg"] || themes["Default"]["--section-bg"];
+    selectedTheme["--section-bg"] || window.themes["Default"]["--section-bg"];
   const modal = document.querySelector(".modal");
   if (modal) modal.style.background = currentSectionBg;
 
@@ -133,10 +136,11 @@ function applyTheme(theme) {
 
   console.log("Theme applied and saved:", theme);
 
-  document.body.style.display = "none";
-  document.body.offsetHeight;
-  document.body.style.display = "";
-}
+  // Force a repaint
+  body.style.display = "none";
+  body.offsetHeight;
+  body.style.display = "";
+};
 
 const uploadOverlay = document.getElementById("upload-overlay");
 
@@ -397,7 +401,7 @@ async function uploadLogoToBunny(file, slot, box, input, deleteBtn) {
 
 window.addEventListener("DOMContentLoaded", () => {
   const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
-  applyTheme(savedTheme);
+  window.applyTheme(savedTheme);
 
   const selectedBox = document.querySelector(
     `.color-box[data-label="${savedTheme}"]`
@@ -410,7 +414,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   confirmBtn?.addEventListener("click", () => {
     if (pendingTheme) {
-      applyTheme(pendingTheme);
+      window.applyTheme(pendingTheme);
       showNotification("Theme applied successfully");
       pendingTheme = null;
     }
