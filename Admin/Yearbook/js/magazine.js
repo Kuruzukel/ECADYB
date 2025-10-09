@@ -867,8 +867,6 @@ function loadLargePage(page, pageElement) {
   }
 }
 
-// Load small page
-
 function loadSmallPage(page, pageElement) {
   var img = pageElement.find("img");
 
