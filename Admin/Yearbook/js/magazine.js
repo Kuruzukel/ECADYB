@@ -909,7 +909,6 @@ function loadSmallPage(page, pageElement) {
     typeof coverData !== "undefined" &&
     coverData !== null
   ) {
-    // Pages 2-6 - Top Management pages
     if (coverData.background_url) {
       img.attr("src", coverData.background_url);
     } else {
