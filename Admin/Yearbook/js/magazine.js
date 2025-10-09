@@ -1394,7 +1394,6 @@ function waitForImagesAndGenerateThumbnail(page, pageElement) {
     }
   });
 
-  // If all images are already loaded
   if (loadedImages === totalImages) {
     generatePageThumbnail(page, pageElement);
   }
