@@ -651,7 +651,7 @@ function loadPage(page, pageElement) {
                   $(this).attr("src", studentPhotos[index]).fadeIn(200);
                 });
 
-                console.log("Switching to photo:", index + 1); // Debug log
+                console.log("Switching to photo:", index + 1);
               });
 
               // Close modal when clicking close button or outside
