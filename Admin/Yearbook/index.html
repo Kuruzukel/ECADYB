@@ -613,10 +613,8 @@
                 addPage(pages[i], $(this));
               }
               
-              // Add student pages dynamically if we have student data
-              if (studentData && studentData.total_pages) {
-                addStudentPages($(this), studentData);
-              }
+              // Note: Don't call addStudentPages here - pages are already initialized
+              // The 'missing' event will call addPage for each missing page automatically
             },
           },
         });

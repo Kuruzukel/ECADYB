@@ -86,25 +86,13 @@ function addPage(page, book) {
 }
 
 function addStudentPages(book, studentData) {
-  if (!studentData) return;
+  // NOTE: This function is no longer needed since pages are pre-initialized
+  // in index.html with pages: totalPages. Turn.js will call addPage() 
+  // automatically via the 'missing' event for each page that needs content.
+  // Keeping this function for backward compatibility but it does nothing.
   
-  // Use yearbook_pages (actual yearbook pages needed)
-  // or calculate from total_students if yearbook_pages is not available
-  var totalPages = studentData.yearbook_pages;
-  if (!totalPages && studentData.total_students && studentData.students_per_page) {
-    totalPages = Math.ceil(studentData.total_students / studentData.students_per_page);
-  }
-  
-  if (!totalPages) return;
-
-  var studentsPerPage = studentData.students_per_page || 6;
-
-  console.log("Adding", totalPages, "student pages to flipbook");
-
-  for (var i = 0; i < totalPages; i++) {
-    var pageNum = 7 + i;
-    addPage(pageNum, book);
-  }
+  console.log("Student pages are managed by turn.js 'missing' event - no manual addition needed");
+  return;
 }
 
 function loadPage(page, pageElement) {
