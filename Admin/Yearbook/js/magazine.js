@@ -1234,7 +1234,6 @@ function generatePageThumbnail(page, pageElement) {
       ctx.font = "4px Arial";
       ctx.fillText("students", canvas.width / 2, 40);
 
-      // Draw mini student avatars from actual student photos
       var avatarSize = 6;
       var maxAvatars = Math.min(studentCount, 8);
       var startX = (canvas.width - maxAvatars * (avatarSize + 1)) / 2;
