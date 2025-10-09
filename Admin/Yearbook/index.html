@@ -171,7 +171,7 @@
         console.log("Fetching student data for department:", departmentCode, "template:", template);
 
         $.ajax({
-          url: "../Connection/Photos/FetchStudentData.php",
+          url: "../../Connection/Photos/FetchStudentData.php",
           method: "GET",
           data: {
             department: departmentCode,
@@ -183,6 +183,9 @@
             if (response.success) {
               studentData = response.data;
               console.log("Student data loaded:", studentData);
+              console.log("Total students:", studentData.total_students);
+              console.log("Students array:", studentData.students);
+              console.log("First few students:", studentData.students.slice(0, 3));
               populateThumbnails();
             } else {
               console.log("Failed to fetch student data:", response.message);

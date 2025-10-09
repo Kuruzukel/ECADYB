@@ -332,6 +332,10 @@ function loadPage(page, pageElement) {
             var totalStudents = response.data.total_students;
             var studentsPerPage = response.data.students_per_page;
 
+            console.log("Processing student page", page, "with", students.length, "total students");
+            console.log("Students per page:", studentsPerPage);
+            console.log("Page offset:", (page - 7) * studentsPerPage);
+
             var pageOffset = (page - 7) * studentsPerPage;
 
             for (var i = 0; i < studentsPerPage; i++) {
@@ -339,6 +343,7 @@ function loadPage(page, pageElement) {
 
               if (studentIndex < students.length) {
                 var student = students[studentIndex];
+                console.log("Processing student", studentIndex, ":", student.name, "Program:", student.program, "Milestones:", student.milestones);
 
                 var card = $("<div/>", {
                   class: "student-card",
