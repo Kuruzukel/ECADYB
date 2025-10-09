@@ -165,7 +165,7 @@ try {
                     error_log("Collection $collectionName: Skip $collectionSkip, Limit $collectionLimit");
                     
                     $students = $collection->find([], [
-                        'sort' => ['name' => 1], 
+                        'sort' => ['department section' => 1, 'last name' => 1], 
                         'skip' => $collectionSkip,
                         'limit' => $collectionLimit
                     ]);
