@@ -1341,7 +1341,6 @@ function generatePageThumbnail(page, pageElement) {
   }
 }
 
-// Generate all thumbnails after pages are loaded
 function generateAllThumbnails() {
   if (!window.pageThumbnails) {
     window.pageThumbnails = {};
