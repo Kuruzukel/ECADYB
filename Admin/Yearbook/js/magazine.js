@@ -1192,7 +1192,6 @@ function generatePageThumbnail(page, pageElement) {
       ctx.font = "4px Arial";
       ctx.fillText(displayName, canvas.width / 2, 50);
 
-      // Draw position (truncated)
       var displayPosition =
         managementPosition.length > 12
           ? managementPosition.substring(0, 12) + "..."
