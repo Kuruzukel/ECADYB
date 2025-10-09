@@ -763,8 +763,6 @@ function regionClick(event) {
   //   }
 }
 
-// Process the data of every region
-
 function processRegion(region, regionType) {
   data = decodeParams(region.attr("region-data"));
 
