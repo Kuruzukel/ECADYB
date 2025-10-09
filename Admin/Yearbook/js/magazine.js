@@ -1098,7 +1098,6 @@ function generatePageThumbnail(page, pageElement) {
   try {
     console.log("Generating thumbnail for page", page);
 
-    // Create a canvas to capture the page content
     var canvas = document.createElement("canvas");
     var ctx = canvas.getContext("2d");
 
