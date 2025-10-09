@@ -221,91 +221,65 @@
         };
       }
 
-      // Page descriptions mapping based on yearbook
+      // Page descriptions mapping based on yearbook - now dynamic
       function getPageDescription(pageNumber) {
         var yearbook = getCurrentYearbook();
         var departmentCode = yearbook.code;
+        var totalPages = calculateTotalPages();
         
         console.log("Getting page description for page", pageNumber, "in yearbook:", yearbook.name);
         
-        // Common pages for all yearbooks
-        var commonPages = {
-          1: "FRONT COVER",
-          2: "TOP MANAGEMENT MESSAGE",
-          3: "TOP MANAGEMENT MESSAGE", 
-          4: "TOP MANAGEMENT MESSAGE",
-          5: "TOP MANAGEMENT MESSAGE",
-          6: "TOP MANAGEMENT MESSAGE"
-        };
-        
-        // Department-specific pages
-        var departmentPages = {};
-        
-        if (departmentCode === "BSME") {
-          departmentPages = {
-            7: "MARITIME EDUCATION STUDENTS P1",
-            8: "MARITIME EDUCATION STUDENTS P2",
-            9: "MARITIME EDUCATION STUDENTS P3",
-            10: "MARITIME EDUCATION STUDENTS P4",
-            11: "MARITIME EDUCATION STUDENTS P5",
-            12: "MARITIME EDUCATION STUDENTS P6",
-            13: "BACK COVER"
-          };
-        } else if (departmentCode === "BSCJE") {
-          departmentPages = {
-            7: "COLLEGE OF CRIMINOLOGY STUDENTS P1",
-            8: "COLLEGE OF CRIMINOLOGY STUDENTS P2", 
-            9: "COLLEGE OF CRIMINOLOGY STUDENTS P3",
-            10: "COLLEGE OF CRIMINOLOGY STUDENTS P4",
-            11: "COLLEGE OF CRIMINOLOGY STUDENTS P5",
-            12: "COLLEGE OF CRIMINOLOGY STUDENTS P6",
-            13: "BACK COVER"
-          };
-        } else if (departmentCode === "BSTM") {
-          departmentPages = {
-            7: "TOURISM MANAGEMENT STUDENTS P1",
-            8: "TOURISM MANAGEMENT STUDENTS P2",
-            9: "TOURISM MANAGEMENT STUDENTS P3", 
-            10: "TOURISM MANAGEMENT STUDENTS P4",
-            11: "TOURISM MANAGEMENT STUDENTS P5",
-            12: "BACK COVER"
-          };
-        } else if (departmentCode === "BSE") {
-          departmentPages = {
-            7: "COLLEGE OF EDUCATION STUDENTS P1",
-            8: "COLLEGE OF EDUCATION STUDENTS P2",
-            9: "COLLEGE OF EDUCATION STUDENTS P3",
-            10: "COLLEGE OF EDUCATION STUDENTS P4", 
-            11: "BACK COVER"
-          };
-        } else if (departmentCode === "BSN") {
-          departmentPages = {
-            7: "COLLEGE OF NURSING STUDENTS P1",
-            8: "COLLEGE OF NURSING STUDENTS P2",
-            9: "COLLEGE OF NURSING STUDENTS P3",
-            10: "COLLEGE OF NURSING STUDENTS P4",
-            11: "BACK COVER"
-          };
-        } else if (departmentCode === "BSIS") {
-          departmentPages = {
-            7: "INFORMATION SYSTEM STUDENTS P1",
-            8: "INFORMATION SYSTEM STUDENTS P2",
-            9: "INFORMATION SYSTEM STUDENTS P3",
-            10: "BACK COVER"
-          };
-        } else if (departmentCode === "BSBA") {
-          departmentPages = {
-            7: "BUSINESS ADMINISTRATION STUDENTS P1",
-            8: "BUSINESS ADMINISTRATION STUDENTS P2",
-            9: "BUSINESS ADMINISTRATION STUDENTS P3",
-            10: "BACK COVER"
-          };
+        // Page 1 - Front Cover
+        if (pageNumber === 1) {
+          return "FRONT COVER";
         }
         
-        // Merge common and department-specific pages
-        var allDescriptions = Object.assign({}, commonPages, departmentPages);
+        // Pages 2-6 - Top Management
+        if (pageNumber >= 2 && pageNumber <= 6) {
+          return "TOP MANAGEMENT MESSAGE";
+        }
         
-        return allDescriptions[pageNumber] || "PAGE " + pageNumber;
+        // Last Page - Back Cover
+        if (pageNumber === totalPages) {
+          return "BACK COVER";
+        }
+        
+        // Student pages (pages 7 to totalPages - 1)
+        if (pageNumber >= 7 && pageNumber < totalPages) {
+          var studentPageNumber = pageNumber - 6; // Calculate which student page this is
+          
+          // Get department name for the description
+          var departmentName = yearbook.name.toUpperCase();
+          
+          return departmentName + " STUDENTS P" + studentPageNumber;
+        }
+        
+        return "PAGE " + pageNumber;
+      }
+
+      // Calculate total pages dynamically based on student data
+      function calculateTotalPages() {
+        // Structure: 1 front cover + 5 management pages + X student pages + 1 back cover
+        var studentPages = 0;
+        
+        if (studentData && studentData.yearbook_pages) {
+          // Use yearbook_pages which is calculated as ceil(total_students / students_per_page)
+          studentPages = studentData.yearbook_pages;
+        } else if (studentData && studentData.total_students && studentData.students_per_page) {
+          // Fallback: calculate it ourselves if yearbook_pages is not available
+          studentPages = Math.ceil(studentData.total_students / studentData.students_per_page);
+        }
+        
+        var totalPages = 1 + 5 + studentPages + 1; // front + management + students + back
+        
+        console.log("Calculated total pages:", totalPages, "(1 front + 5 management + " + studentPages + " students + 1 back)");
+        console.log("Student data details:", {
+          yearbook_pages: studentData?.yearbook_pages,
+          total_students: studentData?.total_students,
+          students_per_page: studentData?.students_per_page
+        });
+        
+        return totalPages;
       }
 
       function populateThumbnails() {
@@ -315,8 +289,10 @@
         var thumbnailList = $("#thumbnail-list");
         thumbnailList.empty();
         
+        // Calculate total pages dynamically
+        var totalPages = calculateTotalPages();
+        
         // Add header to thumbnails modal
-        var yearbook = getCurrentYearbook();
         var headerHtml = `
           <div class="thumbnails-header">
             <div class="thumbnails-title">
@@ -337,22 +313,6 @@
         
         // Replace the existing thumbnails content
         $('.thumbnails').html(modalContainer);
-
-        // Calculate total pages based on yearbook type
-        var totalPages = 13; // Default for most yearbooks (6 management + 6 students + 1 back cover)
-        
-        // Adjust total pages based on department
-        if (yearbook.code === "BSTM") {
-          totalPages = 12; // Tourism Management (6 management + 5 students + 1 back cover)
-        } else if (yearbook.code === "BSE") {
-          totalPages = 11; // Education (6 management + 4 students + 1 back cover)
-        } else if (yearbook.code === "BSN") {
-          totalPages = 11; // Nursing (6 management + 4 students + 1 back cover)
-        } else if (yearbook.code === "BSIS") {
-          totalPages = 10; // Information System (6 management + 3 students + 1 back cover)
-        } else if (yearbook.code === "BSBA") {
-          totalPages = 10; // Business Administration (6 management + 3 students + 1 back cover)
-        }
         
         console.log("Total pages for", yearbook.name, ":", totalPages);
         
@@ -590,7 +550,15 @@
           return;
         }
 
-        console.log("Cover data available, initializing app:", coverData);
+        if (!studentData) {
+          console.log("Waiting for student data to load...");
+          setTimeout(loadApp, 100);
+          return;
+        }
+
+        console.log("Cover data and student data available, initializing app");
+        console.log("Cover data:", coverData);
+        console.log("Student data:", studentData);
 
         $("#canvas").fadeIn(1000);
 
@@ -601,24 +569,10 @@
           return;
         }
 
-        // Calculate pages based on yearbook type
-        var yearbook = getCurrentYearbook();
-        var totalPages = 13; // Default for most yearbooks (6 management + 6 students + 1 back cover)
+        // Calculate pages dynamically based on student data
+        var totalPages = calculateTotalPages();
         
-        // Adjust total pages based on department
-        if (yearbook.code === "BSTM") {
-          totalPages = 12; // Tourism Management (6 management + 5 students + 1 back cover)
-        } else if (yearbook.code === "BSE") {
-          totalPages = 11; // Education (6 management + 4 students + 1 back cover)
-        } else if (yearbook.code === "BSN") {
-          totalPages = 11; // Nursing (6 management + 4 students + 1 back cover)
-        } else if (yearbook.code === "BSIS") {
-          totalPages = 10; // Information System (6 management + 3 students + 1 back cover)
-        } else if (yearbook.code === "BSBA") {
-          totalPages = 10; // Business Administration (6 management + 3 students + 1 back cover)
-        }
-        
-        console.log("Setting total pages for", yearbook.name, "to:", totalPages);
+        console.log("Setting total pages to:", totalPages);
 
         flipbook.turn({
           width: 922,

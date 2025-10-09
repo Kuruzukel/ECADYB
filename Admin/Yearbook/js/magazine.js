@@ -24,7 +24,7 @@ function addStudentPages(book, studentData) {
 }
 
 function loadPage(page, pageElement) {
-  var img = $("<img />");
+  var img = $("<img />").attr("crossOrigin", "anonymous");
 
   img.on("mousedown", function (e) {
     e.preventDefault();
@@ -150,6 +150,7 @@ function loadPage(page, pageElement) {
             var photo = $("<img/>", {
               src: photoUrl,
               alt: currentManager.name,
+              crossOrigin: "anonymous",
               onerror:
                 'this.src=\'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="270" height="270" viewBox="0 0 270 270"%3E%3Crect width="270" height="270" fill="%23f0f0f0"/%3E%3Ctext x="135" y="135" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Image Available%3C/text%3E%3C/svg%3E\';',
             });
@@ -287,6 +288,7 @@ function loadPage(page, pageElement) {
     });
   } else if (
     page >= 7 &&
+    page < totalPages &&
     typeof coverData !== "undefined" &&
     coverData !== null &&
     coverData.background_url
@@ -308,12 +310,20 @@ function loadPage(page, pageElement) {
       var department = urlParams.get("department") || "BSME";
 
       var template = coverData && coverData.template ? coverData.template : 1;
+      
+      // Calculate which students we need for this yearbook page
+      var studentsPerYearbookPage = 6;
+      var studentStartIndex = (page - 7) * studentsPerYearbookPage; // First student index for this page
+      var studentEndIndex = studentStartIndex + studentsPerYearbookPage; // Last student index + 1
+      
+      // Calculate which API page we need (API returns 50 students per page)
+      var studentsPerAPIPage = 50;
+      var apiPage = Math.floor(studentStartIndex / studentsPerAPIPage) + 1;
 
       console.log(
-        "Fetching student data for department:",
-        department,
-        "template:",
-        template
+        "Loading yearbook page:", page,
+        "Students needed:", studentStartIndex, "-", studentEndIndex - 1,
+        "Fetching API page:", apiPage
       );
 
       $.ajax({
@@ -322,6 +332,8 @@ function loadPage(page, pageElement) {
         data: {
           department: department,
           template: template,
+          page: apiPage,
+          limit: studentsPerAPIPage
         },
         dataType: "json",
         success: function (response) {
@@ -331,19 +343,25 @@ function loadPage(page, pageElement) {
             var students = response.data.students;
             var totalStudents = response.data.total_students;
             var studentsPerPage = response.data.students_per_page;
+            
+            // Calculate the offset within the returned students array
+            // studentStartIndex is the global index, we need the offset within this API page
+            var apiPageStartIndex = (apiPage - 1) * studentsPerAPIPage;
+            var localOffset = studentStartIndex - apiPageStartIndex;
 
-            console.log("Processing student page", page, "with", students.length, "total students");
-            console.log("Students per page:", studentsPerPage);
-            console.log("Page offset:", (page - 7) * studentsPerPage);
-
-            var pageOffset = (page - 7) * studentsPerPage;
+            console.log("Processing student page", page);
+            console.log("Total students in database:", totalStudents);
+            console.log("Students in this API response:", students.length);
+            console.log("Local offset in API response:", localOffset);
+            console.log("Students per yearbook page:", studentsPerPage);
 
             for (var i = 0; i < studentsPerPage; i++) {
-              var studentIndex = pageOffset + i;
+              var localStudentIndex = localOffset + i;
 
-              if (studentIndex < students.length) {
-                var student = students[studentIndex];
-                console.log("Processing student", studentIndex, ":", student.name, "Program:", student.program, "Milestones:", student.milestones);
+              if (localStudentIndex >= 0 && localStudentIndex < students.length) {
+                var student = students[localStudentIndex];
+                var globalIndex = studentStartIndex + i;
+                console.log("Processing student", globalIndex, "(local index " + localStudentIndex + "):", student.name, "Program:", student.program, "Milestones:", student.milestones);
 
                 var card = $("<div/>", {
                   class: "student-card",
@@ -359,6 +377,7 @@ function loadPage(page, pageElement) {
                 var studentPhoto = $("<img/>", {
                   src: photoUrl,
                   alt: student.name,
+                  crossOrigin: "anonymous",
                   onerror:
                     'this.src=\'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="135" height="155" viewBox="0 0 135 155"%3E%3Crect width="135" height="155" fill="%23f0f0f0"/%3E%3Ctext x="67.5" y="77.5" font-family="Arial" font-size="12" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Photo%3C/text%3E%3C/svg%3E\';',
                 });
@@ -372,10 +391,11 @@ function loadPage(page, pageElement) {
                   text: student.program || "Honors and Achievements",
                 });
 
-                card.on("click", function () {
+                card.on("click", function (e) {
                   var modal = $(".student-modal");
                   var closeBtn = $(".close-modal");
-                  var clickedStudent = students[$(this).index()];
+                  // Store the student data directly on the card element
+                  var clickedStudent = $(this).data('student');
 
                   modal.find(".student-name").text(clickedStudent.name);
                   modal
@@ -450,6 +470,9 @@ function loadPage(page, pageElement) {
                 });
 
                 card.append(studentImg).append(studentName).append(honorsText);
+                
+                // Store student data on the card for the click handler
+                card.data('student', student);
 
                 cardsContainer.append(card);
               } else {
@@ -795,7 +818,7 @@ function processRegion(region, regionType) {
 }
 
 function loadLargePage(page, pageElement) {
-  var img = $("<img />");
+  var img = $("<img />").attr("crossOrigin", "anonymous");
 
   img.on("load", function () {
     var prevImg = pageElement.find("img");
@@ -849,13 +872,7 @@ function loadLargePage(page, pageElement) {
     }
   } else if (
     page >= 7 &&
-    page <= 11 &&
-    typeof coverData !== "undefined" &&
-    coverData !== null &&
-    coverData.background_url
-  ) {
-    img.attr("src", coverData.background_url);
-  } else if (
+    page < totalPages &&
     typeof coverData !== "undefined" &&
     coverData !== null &&
     coverData.background_url
@@ -876,6 +893,8 @@ function loadSmallPage(page, pageElement) {
   var img = pageElement.find("img");
 
   img.css({ width: "100%", height: "100%" });
+  
+  img.attr("crossOrigin", "anonymous");
 
   img.off("load");
 
@@ -924,7 +943,7 @@ function loadSmallPage(page, pageElement) {
     }
   } else if (
     page >= 7 &&
-    page <= 11 &&
+    page < totalPages &&
     typeof coverData !== "undefined" &&
     coverData !== null &&
     coverData.background_url

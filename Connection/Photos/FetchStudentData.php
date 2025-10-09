@@ -256,6 +256,9 @@ try {
     $studentsPerPage = 6;
     $currentPageStudents = count($allStudents);
     $totalStudents = $totalStudentsCount; // Use the total count across all collections
+    
+    // Calculate actual yearbook pages needed (not API pagination pages)
+    $yearbookPagesNeeded = ceil($totalStudents / $studentsPerPage);
 
     $response = [
         'success' => true,
@@ -264,7 +267,8 @@ try {
             'students' => $allStudents,
             'total_students' => $totalStudents,
             'current_page' => $page,
-            'total_pages' => $totalPages,
+            'total_pages' => $totalPages, // API pagination pages
+            'yearbook_pages' => $yearbookPagesNeeded, // Actual yearbook pages needed
             'students_per_page' => $studentsPerPage,
             'limit_per_request' => $limit,
             'students_returned' => $currentPageStudents,
