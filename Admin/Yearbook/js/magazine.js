@@ -1209,7 +1209,6 @@ function generatePageThumbnail(page, pageElement) {
       ctx.lineWidth = 2;
       ctx.strokeRect(2, 2, canvas.width - 4, canvas.height - 4);
 
-      // Count students and get student data
       var studentCards = studentContent.find(".student-card");
       var studentCount = studentCards.length;
 
