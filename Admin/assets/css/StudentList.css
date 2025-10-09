@@ -685,6 +685,14 @@ th {
   background: linear-gradient(135deg, #f87171, #b91c1c);
 }
 
+.notification.info {
+  background: linear-gradient(135deg, #60a5fa, #2563eb);
+}
+
+.notification.warning {
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+}
+
 .notification i {
   font-size: 1.2rem;
 }
@@ -822,15 +830,34 @@ table th:nth-child(7) #select-all-header {
   width: 15px;
   flex-shrink: 0;
   margin: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border: 2px solid #ccc;
+  border-radius: 3px;
+  background-color: transparent;
+  cursor: pointer;
+  position: relative;
 }
 
 .actions-container .student-checkbox[data-status="pending"] {
-  accent-color: #ff4444;
   border-color: #ff4444;
+  background-color: #ff4444;
+}
+
+.actions-container .student-checkbox[data-status="pending"]::before {
+  content: "−";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 1;
 }
 
 .actions-container .student-checkbox[data-status="active"] {
-  accent-color: rgb(0, 255, 13);
   border-color: rgb(0, 255, 13);
 }
 
@@ -839,9 +866,60 @@ table th:nth-child(7) #select-all-header {
   border-color: #ff4444;
 }
 
+.actions-container .student-checkbox[data-status="pending"]:checked::before {
+  color: white;
+}
+
+.actions-container .student-checkbox[data-status="pending"]:checked::after {
+  content: "";
+}
+
 .actions-container .student-checkbox[data-status="active"]:checked {
   background-color: rgb(0, 255, 13);
   border-color: rgb(0, 255, 13);
+}
+
+.actions-container .student-checkbox[data-status="active"]:checked::after {
+  content: "✓";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: black;
+  font-size: 10px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+/* Select All checkbox styling */
+#select-all-header {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border: 2px solid #ccc;
+  border-radius: 3px;
+  background-color: transparent;
+  cursor: pointer;
+  position: relative;
+  height: 15px;
+  width: 15px;
+}
+
+#select-all-header:checked {
+  background-color: #4CAF50;
+  border-color: #4CAF50;
+}
+
+#select-all-header:checked::after {
+  content: "✓";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: black;
+  font-size: 10px;
+  font-weight: bold;
+  line-height: 1;
 }
 
 .actions-container .eyeIcon {

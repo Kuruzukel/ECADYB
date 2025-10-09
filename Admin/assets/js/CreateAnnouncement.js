@@ -294,6 +294,10 @@ function submitForm() {
         formData.set("date", today);
       }
 
+      // Show immediate notification for posting operation
+      currentOperation = "posting_announcement";
+      showNotification("Posting announcement...", "info");
+
       fetch("../../Connection/Announcement/SubmitAnnouncement.php", {
         method: "POST",
         body: formData,
@@ -424,26 +428,49 @@ document.addEventListener("DOMContentLoaded", () => {
   applyTheme(savedTheme);
 });
 
+// Smart notification system variables
+let notificationTimeout = null;
+let currentOperation = null;
+
 function showNotification(message, type = "success") {
   const container = document.getElementById("notification-container");
   if (!container) return;
 
+  // Remove any existing notifications to prevent duplicates
+  const existingNotifications = container.querySelectorAll('.notification');
+  existingNotifications.forEach(notif => notif.remove());
+
+  // Clear any existing notification timeout
+  if (notificationTimeout) {
+    clearTimeout(notificationTimeout);
+  }
+
+  // Select icon based on notification type
+  let icon = "fa-check-circle"; // default for success
+  if (type === "error") {
+    icon = "fa-exclamation-circle";
+  } else if (type === "info") {
+    icon = "fa-info-circle";
+  } else if (type === "warning") {
+    icon = "fa-exclamation-triangle";
+  }
+
   const notif = document.createElement("div");
   notif.className = `notification ${type} show`;
   notif.innerHTML = `
-    <i class="fas ${
-      type === "success"
-        ? "fa-check-circle"
-        : type === "warning"
-        ? "fa-exclamation-triangle"
-        : "fa-exclamation-circle"
-    }"></i>
+    <i class="fas ${icon}"></i>
     <span>${message}</span>
   `;
   container.appendChild(notif);
 
-  setTimeout(() => {
+  // Make notification visible for different durations based on type
+  const duration = type === "info" ? 2000 : 5000; // Info notifications disappear faster
+  notificationTimeout = setTimeout(() => {
     notif.classList.remove("show");
-    setTimeout(() => notif.remove(), 500);
-  }, 3000);
+    setTimeout(() => {
+      notif.remove();
+      notificationTimeout = null;
+      currentOperation = null; // Clear current operation
+    }, 500);
+  }, duration);
 }

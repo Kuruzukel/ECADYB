@@ -20,16 +20,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  const deptFilter = document.getElementById("department-filter");
-  if (deptFilter) {
-    deptFilter.addEventListener("change", function () {
-      const dept = this.value;
-      const url = new URL(window.location.href);
-      url.searchParams.set("department", dept);
-      url.searchParams.set("pageNum", "1");
-      window.location.href = url.toString();
-    });
-  }
+  // Department filter is now handled in initializeFilters() with AJAX loading
+  // Removed old full-page reload handler
 
   document.querySelectorAll(".tab-button").forEach((button) => {
     button.addEventListener("click", function () {
@@ -191,6 +183,22 @@ window.addEventListener("DOMContentLoaded", () => {
     applyTheme(savedTheme);
   }
 
+  // Check if template parameter exists in URL, if not, use the one from localStorage
+  const urlParams = new URLSearchParams(window.location.search);
+  const currentTemplate = urlParams.get("template");
+  const savedTemplate = localStorage.getItem("selectedBatchTemplateNumber");
+  
+  // If no template in URL but there's a saved template, redirect with the saved template
+  if (!currentTemplate && savedTemplate) {
+    urlParams.set("template", savedTemplate);
+    const newUrl = window.location.pathname + "?" + urlParams.toString();
+    window.location.href = newUrl;
+    return; // Exit early as we're redirecting
+  }
+
+  // Set initialization flag to prevent notifications during initial load
+  isInitializing = true;
+  
   initializeSelectAll();
   initializeFilters();
   initializeStatusUpdates();
@@ -198,12 +206,22 @@ window.addEventListener("DOMContentLoaded", () => {
   
   // Update select all state on page load
   setTimeout(updateSelectAllState, 100);
+  
+  // Reset initialization flag after page is fully loaded
+  setTimeout(() => {
+    isInitializing = false;
+    console.log("Initialization complete - ready for user interactions");
+  }, 1000);
 });
 
 let isSelectAllActive = false;
 let isSelectAllOperation = false;
 let selectAllProcessedCount = 0;
 let selectAllTotalCount = 0;
+let isInitializing = false; // Flag to prevent notifications during initialization
+let isBulkUpdateInProgress = false; // Flag to prevent multiple bulk updates
+let notificationTimeout = null; // Flag to prevent multiple notifications
+let currentOperation = null; // Track current operation for notification updates
 
 // Function to update the select all checkbox state based on individual checkbox states
 function updateSelectAllState() {
@@ -238,6 +256,7 @@ function initializeSelectAll() {
     isSelectAllActive = true;
 
     setTimeout(() => {
+      isInitializing = true; // Set flag to prevent notifications during initialization
       const visibleStudentCheckboxes = getVisibleStudentCheckboxes();
       visibleStudentCheckboxes.forEach((checkbox) => {
         if (!checkbox.checked) {
@@ -245,11 +264,23 @@ function initializeSelectAll() {
           checkbox.dispatchEvent(new Event("change", { bubbles: true }));
         }
       });
+      // Reset flag after a short delay to allow all change events to complete
+      setTimeout(() => {
+        isInitializing = false;
+      }, 500);
       // Removed notification when select all is clicked
     }, 100);
   }
 
   selectAllCheckbox.addEventListener("change", function () {
+    // Prevent multiple simultaneous bulk updates
+    if (isBulkUpdateInProgress) {
+      console.log("Bulk update already in progress, ignoring click");
+      // Revert the checkbox state
+      this.checked = !this.checked;
+      return;
+    }
+
     console.log("Select all clicked:", this.checked);
 
     isSelectAllActive = this.checked;
@@ -277,6 +308,7 @@ function initializeSelectAll() {
         
         if (department) {
           // Use bulk update for all students in department
+          currentOperation = "activating_all";
           updateAllStudentsStatus(department, "Active", template, status);
         } else {
           // Fall back to individual updates for visible students only
@@ -307,6 +339,7 @@ function initializeSelectAll() {
         
         if (department) {
           // Use bulk update for all students in department
+          currentOperation = "pending_all";
           updateAllStudentsStatus(department, "Pending", template, status);
         } else {
           // Fall back to individual updates for visible students only
@@ -332,6 +365,12 @@ function initializeSelectAll() {
 // New function to update all students in a department
 async function updateAllStudentsStatus(collection, status, template, statusFilter) {
   try {
+    // Set flag to prevent multiple simultaneous requests
+    isBulkUpdateInProgress = true;
+    
+    // Show immediate notification for the current operation
+    _showNotification(`Updating all students to ${status}...`, "info");
+    
     // Ensure we're using the correct base URL
     const baseUrl = window.location.origin + (window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '');
     const endpoint = baseUrl + BULK_STATUS_ENDPOINT;
@@ -352,17 +391,59 @@ async function updateAllStudentsStatus(collection, status, template, statusFilte
     const data = await res.json();
     
     if (data && data.success) {
-      _showNotification(data.message || `All students status updated to ${status}`, "success");
-      // Reload the page to reflect changes
-      setTimeout(() => {
-        window.location.reload();
-      }, 1500);
+      // Clear any existing notification timeout
+      if (notificationTimeout) {
+        clearTimeout(notificationTimeout);
+      }
+      
+      // Show success notification (this will replace the "updating" notification)
+      notificationTimeout = setTimeout(() => {
+        _showNotification(data.message || `All students status updated to ${status}`, "success");
+        notificationTimeout = null;
+        currentOperation = null; // Clear current operation
+      }, 100);
+      
+      // Reload current page with AJAX to reflect changes
+      const urlParams = new URLSearchParams(window.location.search);
+      const template = urlParams.get("template") || "1";
+      const department = urlParams.get("department") || "";
+      const tab = urlParams.get("tab") || "all";
+      const pageNum = urlParams.get("pageNum") || "1";
+      
+      // Use AJAX to reload the current page
+      loadStudentList(parseInt(pageNum), template, department, tab);
     } else {
-      _showNotification(data.message || "Failed to update all students status", "error");
+      // Clear any existing notification timeout
+      if (notificationTimeout) {
+        clearTimeout(notificationTimeout);
+      }
+      
+      // Show error notification (this will replace the "updating" notification)
+      notificationTimeout = setTimeout(() => {
+        _showNotification(data.message || "Failed to update all students status", "error");
+        notificationTimeout = null;
+        currentOperation = null; // Clear current operation
+      }, 100);
     }
   } catch (err) {
     console.error("[BulkUpdateStatus] Fetch error:", err);
-    _showNotification("Error updating all students status. Check console.", "error");
+    
+    // Clear any existing notification timeout
+    if (notificationTimeout) {
+      clearTimeout(notificationTimeout);
+    }
+    
+    // Show error notification (this will replace the "updating" notification)
+    notificationTimeout = setTimeout(() => {
+      _showNotification("Error updating all students status. Check console.", "error");
+      notificationTimeout = null;
+      currentOperation = null; // Clear current operation
+    }, 100);
+  } finally {
+    // Reset flag after operation completes (success or failure)
+    setTimeout(() => {
+      isBulkUpdateInProgress = false;
+    }, 1000); // Add small delay to ensure UI has updated
   }
 }
 
@@ -404,8 +485,36 @@ function initializeFilters() {
   const entriesCount = document.getElementById("entries-count");
   const departmentFilter = document.getElementById("department-filter");
   const statusFilter = document.getElementById("status-filter");
+  const templateFilter = document.getElementById("template-filter");
 
-  [entriesCount, departmentFilter, statusFilter].forEach((filter) => {
+  // Template filter is READ-ONLY - it's locked to the template selected in BatchTemplates.php
+  // Users cannot switch between templates here; they must use BatchTemplates.php
+  if (templateFilter) {
+    // Disable the template filter so users cannot change it
+    templateFilter.disabled = true;
+    templateFilter.style.cursor = "not-allowed";
+    templateFilter.style.opacity = "0.6";
+  }
+
+  // Department filter changes the URL and reloads content with AJAX
+  if (departmentFilter) {
+    departmentFilter.addEventListener("change", function () {
+      const urlParams = new URLSearchParams(window.location.search);
+      const template = urlParams.get("template") || "1";
+      const department = this.value;
+      const tab = urlParams.get("tab") || "all";
+      
+      // Update URL without reloading
+      const newUrl = `?page=student-list&template=${template}&department=${department}&tab=${tab}&pageNum=1`;
+      window.history.pushState({}, "", newUrl);
+      
+      // Load new content with AJAX
+      loadStudentList(1, template, department, tab);
+    });
+  }
+
+  // Status filter is client-side only (filters visible rows)
+  [entriesCount, statusFilter].forEach((filter) => {
     if (filter) filter.addEventListener("change", applyFilters);
   });
 
@@ -487,21 +596,34 @@ function _showNotification(message, type = "success") {
   const container = document.getElementById("notification-container");
   if (!container) return;
 
+  // Remove any existing notifications to prevent duplicates
+  const existingNotifications = container.querySelectorAll('.notification');
+  existingNotifications.forEach(notif => notif.remove());
+
+  // Select icon based on notification type
+  let icon = "fa-check-circle"; // default for success
+  if (type === "error") {
+    icon = "fa-exclamation-circle";
+  } else if (type === "info") {
+    icon = "fa-info-circle";
+  } else if (type === "warning") {
+    icon = "fa-exclamation-triangle";
+  }
+
   const notif = document.createElement("div");
   notif.className = `notification ${type} show`;
   notif.innerHTML = `
-    <i class="fas ${
-      type === "success" ? "fa-check-circle" : "fa-exclamation-circle"
-    }"></i>
+    <i class="fas ${icon}"></i>
     <span>${message}</span>
   `;
   container.appendChild(notif);
 
-  // Make notification visible longer (5 seconds instead of 3)
+  // Make notification visible for different durations based on type
+  const duration = type === "info" ? 2000 : 5000; // Info notifications disappear faster
   setTimeout(() => {
     notif.classList.remove("show");
     setTimeout(() => notif.remove(), 500);
-  }, 5000);
+  }, duration);
 }
 
 const deleteModal = document.getElementById("delete-modal-overlay");
@@ -622,6 +744,12 @@ function initializeStatusUpdates() {
 
       if (!isSelectAllActive) {
         clearSelectAllState();
+      }
+
+      // Skip API calls and notifications during initialization/filtering
+      if (isInitializing) {
+        console.log("Skipping status update - initializing");
+        return;
       }
 
       if (this.dataset.busy === "1") return;
@@ -866,7 +994,7 @@ function changePage(pageNum) {
 function loadStudentList(pageNum, template, department, tab) {
   const tableBody = document.querySelector("tbody");
   if (tableBody) {
-    tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px; color: #fff;">Loading...</td></tr>';
+    tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; vertical-align: middle; padding: 0; height: 400px;"><div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 20px;"><i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: #60a5fa;"></i><span style="font-size: 1.2rem; font-weight: 500; color: #fff;">Loading students...</span></div></td></tr>';
   }
 
   fetch(`?page=student-list&template=${template}&department=${department}&tab=${tab}&pageNum=${pageNum}&ajax=1`)
@@ -892,17 +1020,23 @@ function loadStudentList(pageNum, template, department, tab) {
       updatePaginationButtons(pageNum, template, department, tab, totalPages);
 
       setTimeout(() => {
+        isInitializing = true; // Prevent notifications during reinitialization
         initializeSelectAll();
         initializeFilters();
         initializeStatusUpdates();
         updateSelectAllState();
+        // Reset flag after reinitialization is complete
+        setTimeout(() => {
+          isInitializing = false;
+        }, 500);
       }, 100);
     })
     .catch((error) => {
       console.error("Error loading page:", error);
       if (tableBody) {
-        tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px; color: #ff4444;">Error loading page. Please refresh.</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; vertical-align: middle; padding: 0; height: 400px;"><div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 20px;"><i class="fas fa-exclamation-circle" style="font-size: 3rem; color: #ff4444;"></i><span style="font-size: 1.2rem; font-weight: 500; color: #fff;">Error loading page. Please refresh.</span></div></td></tr>';
       }
+      _showNotification("Error loading students. Please try again.", "error");
     });
 }
 

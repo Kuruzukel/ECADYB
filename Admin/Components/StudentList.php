@@ -144,9 +144,10 @@ try {
             <div class="card">
                 <div class="card-header">
                     <div class="filter-bar">
-                        <label for="template-filter" class="filter-label">
-                            <select id="template-filter" class="filter-select">
-                                <option value="" disabled>Select Batch Template</option>
+                        <label for="template-filter" class="filter-label" style="position: relative;">
+                            <select id="template-filter" class="filter-select" 
+                                title="Template is locked. Change template selection in Batch Templates page.">
+                                <option value="" disabled>Select Batch Template (Locked)</option>
                                 <option value="1" <?php if ($selectedTemplate == 1) echo "selected"; ?>>
                                     Batch Template 1
                                 </option>
@@ -157,6 +158,7 @@ try {
                                     Batch Template 3
                                 </option>
                             </select>
+                            <i class="fas fa-lock" style="position: absolute; right: 30px; top: 50%; transform: translateY(-50%); color: #f39c12; pointer-events: none; font-size: 14px;" title="Locked"></i>
                         </label>
 
                         <label for="department-filter" class="filter-label">
