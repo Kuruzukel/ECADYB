@@ -858,7 +858,6 @@ function loadLargePage(page, pageElement) {
     img.attr("src", coverData.background_url);
   } else {
     console.log("No image available for page:", page, "Showing placeholder");
-    // Create a placeholder with a colored background
     img.attr(
       "src",
       "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23f0f0f0'/%3E%3Ctext x='50' y='55' font-family='Arial' font-size='12' fill='%23999' text-anchor='middle'%3ELarge Page " +
