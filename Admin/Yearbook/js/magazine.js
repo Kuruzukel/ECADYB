@@ -1060,8 +1060,6 @@ function largeMagazineWidth() {
   return 2214;
 }
 
-// decode URL Parameters
-
 function decodeParams(data) {
   var parts = data.split("&"),
     d,
