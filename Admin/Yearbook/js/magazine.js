@@ -1056,8 +1056,6 @@ function setPreview(view) {
   });
 }
 
-// Width of the flipbook when zoomed in
-
 function largeMagazineWidth() {
   return 2214;
 }
