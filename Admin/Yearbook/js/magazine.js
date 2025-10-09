@@ -751,8 +751,6 @@ function addRegion(region, pageElement) {
   reg.appendTo(pageElement);
 }
 
-// Process click on a region
-
 function regionClick(event) {
   //   var region = $(event.target);
   //   if (region.hasClass("region")) {
