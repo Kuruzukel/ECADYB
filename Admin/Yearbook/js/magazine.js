@@ -1124,7 +1124,6 @@ function generatePageThumbnail(page, pageElement) {
       ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 
-    // Add content overlay for management pages (pages 2-6)
     if (page >= 2 && page <= 6 && managementContent.length) {
       // Create semi-transparent overlay
       ctx.fillStyle = "rgba(255, 255, 255, 0.95)";
