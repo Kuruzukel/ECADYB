@@ -672,7 +672,6 @@ function loadPage(page, pageElement) {
 
           pageElement.append(cardsContainer);
 
-          // Generate thumbnail after error fallback content is loaded
           setTimeout(function () {
             waitForImagesAndGenerateThumbnail(page, pageElement);
           }, 500);
