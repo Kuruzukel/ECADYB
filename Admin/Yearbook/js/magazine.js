@@ -1125,7 +1125,6 @@ function generatePageThumbnail(page, pageElement) {
     }
 
     if (page >= 2 && page <= 6 && managementContent.length) {
-      // Create semi-transparent overlay
       ctx.fillStyle = "rgba(255, 255, 255, 0.95)";
       ctx.fillRect(2, 2, canvas.width - 4, canvas.height - 4);
 
