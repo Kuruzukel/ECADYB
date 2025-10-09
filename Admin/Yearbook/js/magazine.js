@@ -789,8 +789,6 @@ function processRegion(region, regionType) {
   }
 }
 
-// Load large page
-
 function loadLargePage(page, pageElement) {
   var img = $("<img />");
 
