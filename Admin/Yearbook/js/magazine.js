@@ -944,8 +944,6 @@ function disableControls(page) {
   else $(".next-button").show();
 }
 
-// Set the width and height for the viewport
-
 function resizeViewport() {
   var width = $(window).width(),
     height = $(window).height(),
