@@ -827,7 +827,6 @@ function loadLargePage(page, pageElement) {
     coverData !== null &&
     coverData.back_url
   ) {
-    // Last page - use back cover
     img.attr("src", coverData.back_url);
   } else if (
     page >= 2 &&
