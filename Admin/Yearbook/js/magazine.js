@@ -1148,7 +1148,6 @@ function generatePageThumbnail(page, pageElement) {
         hasPhoto: managementPhoto.length > 0,
       });
 
-      // Draw management info
       ctx.fillStyle = "#1C1C1E";
       ctx.font = "bold 6px Arial";
       ctx.textAlign = "center";
