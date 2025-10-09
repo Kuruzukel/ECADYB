@@ -1073,8 +1073,6 @@ function decodeParams(data) {
   return obj;
 }
 
-// Calculate the width and height of a square within another square
-
 function calculateBound(d) {
   var bound = { width: d.width, height: d.height };
 
