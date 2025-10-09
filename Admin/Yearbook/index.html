@@ -262,22 +262,23 @@
         // Structure: 1 front cover + 5 management pages + X student pages + 1 back cover
         var studentPages = 0;
         
-        if (studentData && studentData.yearbook_pages) {
-          // Use yearbook_pages which is calculated as ceil(total_students / students_per_page)
-          studentPages = studentData.yearbook_pages;
-        } else if (studentData && studentData.total_students && studentData.students_per_page) {
-          // Fallback: calculate it ourselves if yearbook_pages is not available
-          studentPages = Math.ceil(studentData.total_students / studentData.students_per_page);
+        if (studentData && studentData.total_students && studentData.students_per_page) {
+          // Use a conservative estimate based on what we know we can load
+          // Assume we can load at least 3 API pages (150 students) reliably
+          var reliableStudents = Math.min(studentData.total_students, 150);
+          studentPages = Math.ceil(reliableStudents / studentData.students_per_page);
+          
+          console.log("Using conservative student page calculation:", {
+            total_students_in_db: studentData.total_students,
+            reliable_students_estimate: reliableStudents,
+            students_per_page: studentData.students_per_page,
+            calculated_student_pages: studentPages
+          });
         }
         
         var totalPages = 1 + 5 + studentPages + 1; // front + management + students + back
         
         console.log("Calculated total pages:", totalPages, "(1 front + 5 management + " + studentPages + " students + 1 back)");
-        console.log("Student data details:", {
-          yearbook_pages: studentData?.yearbook_pages,
-          total_students: studentData?.total_students,
-          students_per_page: studentData?.students_per_page
-        });
         
         return totalPages;
       }

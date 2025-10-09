@@ -2,6 +2,161 @@
 window.studentDataCache = window.studentDataCache || {};
 window.studentDataPendingRequests = window.studentDataPendingRequests || {};
 
+// Global cache for all students to enable sequential loading
+window.allStudentsCache = window.allStudentsCache || {};
+window.allStudentsLoading = window.allStudentsLoading || {};
+
+// Function to load all students for a department and cache them
+function loadAllStudentsForDepartment(department, template, callback) {
+  var cacheKey = department + "_" + template;
+  
+  // Check if we already have all students cached
+  if (window.allStudentsCache[cacheKey]) {
+    console.log("Using cached all students for", department, "template", template);
+    callback(window.allStudentsCache[cacheKey]);
+    return;
+  }
+  
+  // Check if we're already loading all students
+  if (window.allStudentsLoading[cacheKey]) {
+    console.log("All students already loading for", department, "template", template);
+    // Wait for the loading to complete
+    var checkLoading = setInterval(function() {
+      if (window.allStudentsCache[cacheKey]) {
+        clearInterval(checkLoading);
+        callback(window.allStudentsCache[cacheKey]);
+      }
+    }, 100);
+    return;
+  }
+  
+  // Mark as loading
+  window.allStudentsLoading[cacheKey] = true;
+  
+  console.log("Loading all students for", department, "template", template);
+  var allStudents = [];
+  var currentPage = 1;
+  var totalPages = 0;
+  var maxPages = 10; // Safety limit to prevent infinite loading
+  
+  function fetchNextPage() {
+    // First, get the total pages from page 1
+    if (currentPage === 1) {
+      fetchStudentDataCached(department, template, currentPage, function(response) {
+        if (response.success && response.data && response.data.students) {
+          var students = response.data.students;
+          totalPages = response.data.total_pages;
+          
+          allStudents = allStudents.concat(students);
+          console.log("Loaded page", currentPage, "of", totalPages, "- total students so far:", allStudents.length);
+          
+          currentPage++;
+          
+          if (currentPage <= totalPages && currentPage <= maxPages) {
+            fetchNextPage();
+          } else {
+            // All pages loaded
+            console.log("All students loaded for", department, "template", template, "- total:", allStudents.length);
+            window.allStudentsCache[cacheKey] = allStudents;
+            delete window.allStudentsLoading[cacheKey];
+            callback(allStudents);
+          }
+        } else {
+          console.error("Failed to load students for page", currentPage);
+          delete window.allStudentsLoading[cacheKey];
+          callback([]);
+        }
+      });
+    } else {
+      // For subsequent pages, only fetch if we know the page exists and within safety limit
+      if (currentPage <= totalPages && currentPage <= maxPages) {
+        fetchStudentDataCached(department, template, currentPage, function(response) {
+          if (response.success && response.data && response.data.students) {
+            var students = response.data.students;
+            
+            allStudents = allStudents.concat(students);
+            console.log("Loaded page", currentPage, "of", totalPages, "- total students so far:", allStudents.length);
+            
+            currentPage++;
+            
+            if (currentPage <= totalPages) {
+              fetchNextPage();
+            } else {
+              // All pages loaded
+              console.log("All students loaded for", department, "template", template, "- total:", allStudents.length);
+              window.allStudentsCache[cacheKey] = allStudents;
+              delete window.allStudentsLoading[cacheKey];
+              callback(allStudents);
+            }
+          } else {
+            console.warn("Failed to load students for page", currentPage, "- continuing with available students");
+            // Continue to the end even if this page failed
+            currentPage++;
+            if (currentPage <= totalPages) {
+              fetchNextPage();
+            } else {
+              // All pages processed (even if some failed)
+              console.log("All students loaded for", department, "template", template, "- total:", allStudents.length);
+              window.allStudentsCache[cacheKey] = allStudents;
+              delete window.allStudentsLoading[cacheKey];
+              callback(allStudents);
+            }
+          }
+        });
+      } else {
+        // We've reached the end
+        console.log("All students loaded for", department, "template", template, "- total:", allStudents.length);
+        window.allStudentsCache[cacheKey] = allStudents;
+        delete window.allStudentsLoading[cacheKey];
+        callback(allStudents);
+      }
+    }
+  }
+  
+  fetchNextPage();
+}
+
+// Function to load students for a specific page range (more reliable)
+function loadStudentsForPage(department, template, startIndex, count, callback) {
+  var studentsPerAPIPage = 50;
+  var apiPage = Math.floor(startIndex / studentsPerAPIPage) + 1;
+  var localStartIndex = startIndex % studentsPerAPIPage;
+  
+  console.log("Loading students starting from index", startIndex, "needing", count, "students from API page", apiPage);
+  
+  fetchStudentDataCached(department, template, apiPage, function(response) {
+    if (response.success && response.data && response.data.students) {
+      var students = response.data.students;
+      var totalStudents = response.data.total_students;
+      
+      // Get students from current API page
+      var studentsFromThisPage = students.slice(localStartIndex, localStartIndex + count);
+      var studentsNeeded = count - studentsFromThisPage.length;
+      
+      if (studentsNeeded > 0 && apiPage * studentsPerAPIPage < totalStudents) {
+        // Need more students from next API page
+        var nextApiPage = apiPage + 1;
+        var remainingCount = studentsNeeded;
+        
+        fetchStudentDataCached(department, template, nextApiPage, function(nextResponse) {
+          if (nextResponse.success && nextResponse.data && nextResponse.data.students) {
+            var nextStudents = nextResponse.data.students;
+            var studentsFromNextPage = nextStudents.slice(0, remainingCount);
+            studentsFromThisPage = studentsFromThisPage.concat(studentsFromNextPage);
+          }
+          
+          callback(studentsFromThisPage);
+        });
+      } else {
+        callback(studentsFromThisPage);
+      }
+    } else {
+      console.warn("Failed to load students for API page", apiPage, "- returning empty array");
+      callback([]);
+    }
+  });
+}
+
 // Function to fetch student data with caching and request deduplication
 function fetchStudentDataCached(department, template, apiPage, callback) {
   var cacheKey = department + "_" + template + "_" + apiPage;
@@ -389,6 +544,18 @@ function loadPage(page, pageElement) {
       var studentStartIndex = (page - 7) * studentsPerYearbookPage; // First student index for this page
       var studentEndIndex = studentStartIndex + studentsPerYearbookPage; // Last student index + 1
       
+      // Safety check: don't try to load students beyond what we can reasonably expect
+      // Based on our conservative calculation, we limit to 150 students (3 API pages)
+      var maxReliableStudents = 150;
+      if (studentStartIndex >= maxReliableStudents) {
+        console.log("Skipping yearbook page", page, "- beyond reliable student range (student index", studentStartIndex, ">= max", maxReliableStudents, ")");
+        // Just show the background without student cards
+        setTimeout(function () {
+          waitForImagesAndGenerateThumbnail(page, pageElement);
+        }, 500);
+        return;
+      }
+      
       // Calculate which API page we need (API returns 50 students per page)
       var studentsPerAPIPage = 50;
       var apiPage = Math.floor(studentStartIndex / studentsPerAPIPage) + 1;
@@ -399,201 +566,136 @@ function loadPage(page, pageElement) {
         "Fetching API page:", apiPage
       );
 
-      // Use cached fetch to avoid duplicate requests
-      fetchStudentDataCached(department, template, apiPage, function (response) {
-          console.log("Student data response for page", page, ":", response);
+      // Load students for this specific page (more reliable than loading all at once)
+      var studentsPerPage = 6; // Fixed at 6 students per yearbook page
+      loadStudentsForPage(department, template, studentStartIndex, studentsPerPage, function(studentsForThisPage) {
+        console.log("Students for page", page, ":", studentsForThisPage.length, "students starting from index", studentStartIndex);
 
-          if (response.success && response.data && response.data.students) {
-            var students = response.data.students;
-            var totalStudents = response.data.total_students;
-            var studentsPerPage = response.data.students_per_page;
-            
-            // Calculate the offset within the returned students array
-            // studentStartIndex is the global index, we need the offset within this API page
-            var apiPageStartIndex = (apiPage - 1) * studentsPerAPIPage;
-            var localOffset = studentStartIndex - apiPageStartIndex;
-
-            console.log("Processing student page", page);
-            console.log("Total students in database:", totalStudents);
-            console.log("Students in this API response:", students.length);
-            console.log("Local offset in API response:", localOffset);
-            console.log("Students per yearbook page:", studentsPerPage);
-
-            for (var i = 0; i < studentsPerPage; i++) {
-              var localStudentIndex = localOffset + i;
-              var globalIndex = studentStartIndex + i;
-              
-              var card = $("<div/>", {
-                class: "student-card",
-              });
-
-              var studentImg = $("<div/>", {
-                class: "student-image",
-              });
-
-              if (localStudentIndex >= 0 && localStudentIndex < students.length && globalIndex < totalStudents) {
-                // Real student data
-                var student = students[localStudentIndex];
-                console.log("Processing student", globalIndex, "(local index " + localStudentIndex + "):", student.name, "Program:", student.program, "Milestones:", student.milestones);
-
-                var photoUrl =
-                  student.photo_url ||
-                  'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="135" height="155" viewBox="0 0 135 155"%3E%3Crect width="135" height="155" fill="%23f0f0f0"/%3E%3Ctext x="67.5" y="77.5" font-family="Arial" font-size="12" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Photo%3C/text%3E%3C/svg%3E';
-                var studentPhoto = $("<img/>", {
-                  src: photoUrl,
-                  alt: student.name,
-                  crossOrigin: "anonymous",
-                  onerror:
-                    'this.src=\'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="135" height="155" viewBox="0 0 135 155"%3E%3Crect width="135" height="155" fill="%23f0f0f0"/%3E%3Ctext x="67.5" y="77.5" font-family="Arial" font-size="12" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Photo%3C/text%3E%3C/svg%3E\';',
-                });
-                studentImg.append(studentPhoto);
-
-                var studentName = $("<h3/>", {
-                  text: student.name,
-                });
-
-                var honorsText = $("<p/>", {
-                  text: student.program || "Honors and Achievements",
-                });
-
-                card.on("click", function (e) {
-                  var modal = $(".student-modal");
-                  var closeBtn = $(".close-modal");
-                  // Store the student data directly on the card element
-                  var clickedStudent = $(this).data('student');
-
-                  modal.find(".student-name").text(clickedStudent.name);
-                  modal
-                    .find(".academic-year span")
-                    .text(clickedStudent.year || "N/A");
-                  modal
-                    .find(".motto p")
-                    .text(clickedStudent.motto || "No motto provided");
-
-                  var milestonesList = modal.find(".milestones ul");
-                  milestonesList.empty();
-
-                  if (
-                    clickedStudent.milestones &&
-                    Array.isArray(clickedStudent.milestones) &&
-                    clickedStudent.milestones.length > 0
-                  ) {
-                    clickedStudent.milestones.forEach(function (milestone) {
-                      milestonesList.append("<li>" + milestone + "</li>");
-                    });
-                  } else {
-                    milestonesList.append("<li>No milestones recorded</li>");
-                  }
-
-                  var $largeImage = modal.find(".student-image-large img");
-                  var $thumbnails = modal.find(
-                    ".student-image-thumbnails .thumbnail"
-                  );
-
-                  var modalPhotoUrl =
-                    clickedStudent.photo_url ||
-                    'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect width="300" height="300" fill="%23f0f0f0"/%3E%3Ctext x="150" y="150" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Student Photo%3C/text%3E%3C/svg%3E';
-
-                  $largeImage.attr("src", modalPhotoUrl);
-
-                  $thumbnails.each(function (index) {
-                    $(this).find("img").attr("src", modalPhotoUrl);
-
-                    if (index === 0) {
-                      $(this).addClass("active");
-                    } else {
-                      $(this).removeClass("active");
-                    }
-                  });
-
-                  modal.addClass("active");
-
-                  $thumbnails.off("click").on("click", function (e) {
-                    e.stopPropagation(); // Prevent modal from closing
-                    e.preventDefault();
-
-                    var $this = $(this);
-                    var index = $this.index();
-
-                    $thumbnails.removeClass("active");
-                    $this.addClass("active");
-
-                    $largeImage.fadeOut(200, function () {
-                      $(this).attr("src", modalPhotoUrl).fadeIn(200);
-                    });
-                  });
-
-                  closeBtn.on("click", function () {
-                    modal.removeClass("active");
-                  });
-
-                  $(window).on("click", function (event) {
-                    if ($(event.target).hasClass("student-modal")) {
-                      modal.removeClass("active");
-                    }
-                  });
-                });
-
-                card.append(studentImg).append(studentName).append(honorsText);
-                
-                // Store student data on the card for the click handler
-                card.data('student', student);
-
-                cardsContainer.append(card);
-              } else {
-                // Empty slot - create placeholder card
-                console.log("Creating placeholder for slot", i, "on page", page);
-                
-                var placeholderImg = $("<img/>", {
-                  src: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="135" height="155" viewBox="0 0 135 155"%3E%3Crect width="135" height="155" fill="%23f8f8f8"/%3E%3Ctext x="67.5" y="60" font-family="Arial" font-size="10" fill="%23ccc" text-anchor="middle" dominant-baseline="middle"%3EAvailable%3C/text%3E%3Ctext x="67.5" y="75" font-family="Arial" font-size="10" fill="%23ccc" text-anchor="middle" dominant-baseline="middle"%3ESlot%3C/text%3E%3C/svg%3E',
-                  alt: "Available Slot",
-                  crossOrigin: "anonymous",
-                });
-                studentImg.append(placeholderImg);
-
-                var studentName = $("<h3/>", {
-                  text: "Available Slot",
-                  css: {
-                    color: "#ccc",
-                    fontStyle: "italic"
-                  }
-                });
-
-                var honorsText = $("<p/>", {
-                  text: "Student data pending",
-                  css: {
-                    color: "#ccc",
-                    fontStyle: "italic"
-                  }
-                });
-
-                card.append(studentImg).append(studentName).append(honorsText);
-                cardsContainer.append(card);
-              }
-            }
-
-          pageElement.append(cardsContainer);
-
-          setTimeout(function () {
-            waitForImagesAndGenerateThumbnail(page, pageElement);
-          }, 500);
-        } else {
-          // No student data - show message or leave empty
-          console.log("No student data available for page", page);
+        for (var i = 0; i < studentsForThisPage.length; i++) {
+          var student = studentsForThisPage[i];
+          var globalIndex = studentStartIndex + i;
           
-          var errorMessage = $("<div/>", {
-            class: "no-data-message",
-            text: "No student data available",
-            css: {
-              textAlign: "center",
-              padding: "50px",
-              color: "#999",
-              fontSize: "14px"
-            }
+          console.log("Processing student", globalIndex, ":", student.name, "Program:", student.program);
+          
+          var card = $("<div/>", {
+            class: "student-card",
           });
+
+          var studentImg = $("<div/>", {
+            class: "student-image",
+          });
+
+          var photoUrl =
+            student.photo_url ||
+            'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="135" height="155" viewBox="0 0 135 155"%3E%3Crect width="135" height="155" fill="%23f0f0f0"/%3E%3Ctext x="67.5" y="77.5" font-family="Arial" font-size="12" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Photo%3C/text%3E%3C/svg%3E';
+          var studentPhoto = $("<img/>", {
+            src: photoUrl,
+            alt: student.name,
+            crossOrigin: "anonymous",
+            onerror:
+              'this.src=\'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="135" height="155" viewBox="0 0 135 155"%3E%3Crect width="135" height="155" fill="%23f0f0f0"/%3E%3Ctext x="67.5" y="77.5" font-family="Arial" font-size="12" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Photo%3C/text%3E%3C/svg%3E\';',
+          });
+          studentImg.append(studentPhoto);
+
+          var studentName = $("<h3/>", {
+            text: student.name,
+          });
+
+          var honorsText = $("<p/>", {
+            text: student.program || "Honors and Achievements",
+          });
+
+          card.on("click", function (e) {
+            var modal = $(".student-modal");
+            var closeBtn = $(".close-modal");
+            // Store the student data directly on the card element
+            var clickedStudent = $(this).data('student');
+
+            modal.find(".student-name").text(clickedStudent.name);
+            modal
+              .find(".academic-year span")
+              .text(clickedStudent.year || "N/A");
+            modal
+              .find(".motto p")
+              .text(clickedStudent.motto || "No motto provided");
+
+            var milestonesList = modal.find(".milestones ul");
+            milestonesList.empty();
+
+            if (
+              clickedStudent.milestones &&
+              Array.isArray(clickedStudent.milestones) &&
+              clickedStudent.milestones.length > 0
+            ) {
+              clickedStudent.milestones.forEach(function (milestone) {
+                milestonesList.append("<li>" + milestone + "</li>");
+              });
+            } else {
+              milestonesList.append("<li>No milestones recorded</li>");
+            }
+
+            var $largeImage = modal.find(".student-image-large img");
+            var $thumbnails = modal.find(
+              ".student-image-thumbnails .thumbnail"
+            );
+
+            var modalPhotoUrl =
+              clickedStudent.photo_url ||
+              'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect width="300" height="300" fill="%23f0f0f0"/%3E%3Ctext x="150" y="150" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Student Photo%3C/text%3E%3C/svg%3E';
+
+            $largeImage.attr("src", modalPhotoUrl);
+
+            $thumbnails.each(function (index) {
+              $(this).find("img").attr("src", modalPhotoUrl);
+
+              if (index === 0) {
+                $(this).addClass("active");
+              } else {
+                $(this).removeClass("active");
+              }
+            });
+
+            modal.addClass("active");
+
+            $thumbnails.off("click").on("click", function (e) {
+              e.stopPropagation(); // Prevent modal from closing
+              e.preventDefault();
+
+              var $this = $(this);
+              var index = $this.index();
+
+              $thumbnails.removeClass("active");
+              $this.addClass("active");
+
+              $largeImage.fadeOut(200, function () {
+                $(this).attr("src", modalPhotoUrl).fadeIn(200);
+              });
+            });
+
+            closeBtn.on("click", function () {
+              modal.removeClass("active");
+            });
+
+            $(window).on("click", function (event) {
+              if ($(event.target).hasClass("student-modal")) {
+                modal.removeClass("active");
+              }
+            });
+          });
+
+          card.append(studentImg).append(studentName).append(honorsText);
           
-          pageElement.append(errorMessage);
+          // Store student data on the card for the click handler
+          card.data('student', student);
+
+          cardsContainer.append(card);
         }
+        
+        pageElement.append(cardsContainer);
+
+        setTimeout(function () {
+          waitForImagesAndGenerateThumbnail(page, pageElement);
+        }, 500);
       });
     });
   } else if (
