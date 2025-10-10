@@ -17,7 +17,6 @@ require_once __DIR__ . '/../Configuration/MongoConnect.php';
 
 function respond($success, $message = '', $data = [])
 {
-    // Clear any existing output buffers
     if (ob_get_level()) {
         ob_clean();
     }
