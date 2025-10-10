@@ -99,7 +99,6 @@ try {
     $collections = $departmentCollections[$department];
     error_log("Processing collections for department $department: " . implode(', ', $collections));
 
-    // First, get total count across all collections
     $totalStudentsCount = 0;
     foreach ($collections as $collectionName) {
         try {
