@@ -245,9 +245,9 @@ function updateSelectAllState() {
     selectAllCheckbox.indeterminate = false;
     localStorage.setItem("selectAllState", "true");
   } else if (noneChecked) {
-    // None are checked (all Pending) - show unchecked
+    // None are checked (all Pending) - show indeterminate (minus sign)
     selectAllCheckbox.checked = false;
-    selectAllCheckbox.indeterminate = false;
+    selectAllCheckbox.indeterminate = true;
     localStorage.removeItem("selectAllState");
   } else {
     // Some are checked, some are not - show minus/indeterminate
@@ -272,6 +272,7 @@ function initializeSelectAll() {
   const visibleCheckboxes = getVisibleStudentCheckboxes();
   const checkedCount = visibleCheckboxes.filter(cb => cb.checked).length;
   const allChecked = checkedCount === visibleCheckboxes.length && visibleCheckboxes.length > 0;
+  const allPending = checkedCount === 0 && visibleCheckboxes.length > 0;
   
   // If select all was previously active, maintain that state
   if (savedSelectAllState === "true") {
@@ -285,14 +286,20 @@ function initializeSelectAll() {
       selectAllCheckbox.indeterminate = false;
       isSelectAllActive = true;
       localStorage.setItem("selectAllState", "true");
-    } else if (checkedCount === 0) {
+    } else if (allPending) {
+      // All students are pending - show indeterminate (minus sign)
       selectAllCheckbox.checked = false;
-      selectAllCheckbox.indeterminate = false;
+      selectAllCheckbox.indeterminate = true;
       isSelectAllActive = false;
     } else if (checkedCount > 0) {
       // Some checked, some not - show indeterminate
       selectAllCheckbox.checked = false;
       selectAllCheckbox.indeterminate = true;
+      isSelectAllActive = false;
+    } else {
+      // No students or other edge case
+      selectAllCheckbox.checked = false;
+      selectAllCheckbox.indeterminate = false;
       isSelectAllActive = false;
     }
   }
@@ -510,7 +517,7 @@ function clearSelectAllState() {
     selectAllCheckbox.indeterminate = false;
   }
   
-  // Update select all state
+  // Update select all state - this will set indeterminate if all are pending
   setTimeout(updateSelectAllState, 0);
 }
 
