@@ -529,7 +529,6 @@
         var urlParams = new URLSearchParams(window.location.search);
         var departmentCode = urlParams.get("department");
 
-        // Get selected template from localStorage (default to 1 if not set)
         var selectedTemplate =
           localStorage.getItem("selectedBatchTemplateNumber") || 1;
         selectedTemplate = parseInt(selectedTemplate);
