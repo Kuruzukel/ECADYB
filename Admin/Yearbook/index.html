@@ -909,7 +909,6 @@
         $("#thumbnailsBtn").on("click", function () {
           $(".thumbnails").addClass("visible");
 
-          // Force refresh thumbnails when opening
           setTimeout(function () {
             if (typeof forceRegenerateThumbnails === "function") {
               forceRegenerateThumbnails();
