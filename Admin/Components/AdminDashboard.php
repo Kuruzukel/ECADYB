@@ -42,7 +42,7 @@ require $mongoPath;
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="../assets/css/AdminDashboard.css" rel="stylesheet">
     
-    <!-- Apply saved theme immediately to prevent flash -->
+    <!-- Apply saved theme and logo immediately to prevent flash -->
     <script>
         (function() {
             const themes = {
@@ -151,6 +151,25 @@ require $mongoPath;
                 document.documentElement.classList.add("theme-light-mode");
             } else if (savedTheme === "Dark Mode") {
                 document.documentElement.classList.add("theme-dark-mode");
+            }
+            
+            // Apply saved admin logo immediately
+            const savedLogoUrl = localStorage.getItem("admin-logo-url");
+            if (savedLogoUrl) {
+                // Wait for DOM to be ready to set the logo
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const adminLogo = document.getElementById("admin-logo");
+                        if (adminLogo) {
+                            adminLogo.src = savedLogoUrl;
+                        }
+                    });
+                } else {
+                    const adminLogo = document.getElementById("admin-logo");
+                    if (adminLogo) {
+                        adminLogo.src = savedLogoUrl;
+                    }
+                }
             }
         })();
     </script>

@@ -594,6 +594,9 @@ window.addEventListener("DOMContentLoaded", () => {
             "success"
           );
 
+          // Save logo URL to localStorage for immediate application on next page load
+          localStorage.setItem("admin-logo-url", changeLogoTarget.logoUrl);
+
           const adminLogo = document.querySelector(".sidebar .logoadmin");
           if (adminLogo) {
             adminLogo.src = changeLogoTarget.logoUrl;

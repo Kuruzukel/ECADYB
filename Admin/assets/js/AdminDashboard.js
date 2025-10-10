@@ -272,6 +272,9 @@ async function loadAdminLogo() {
     if (response.ok) {
       const data = await response.json();
       if (data.success && data.logo_url) {
+        // Save logo URL to localStorage for immediate application on next page load
+        localStorage.setItem("admin-logo-url", data.logo_url);
+        
         const adminLogo = document.getElementById("admin-logo");
         if (adminLogo) {
           adminLogo.src = data.logo_url;
