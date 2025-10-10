@@ -176,7 +176,7 @@ const DELETE_STUDENT_ENDPOINT = "/Connection/Student/DeleteStudent.php";
 const BULK_STATUS_ENDPOINT = "/Connection/Student/BulkUpdateStatus.php";
 
 window.addEventListener("DOMContentLoaded", () => {
-  console.log("StudentList.js loaded successfully");
+  console.log("StudentList.js loaded successfully - v" + new Date().getTime());
 
   const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
   if (savedTheme) {
@@ -259,10 +259,14 @@ function updateSelectAllState() {
 
 function initializeSelectAll() {
   const selectAllCheckbox = document.getElementById("select-all-header");
-  if (!selectAllCheckbox) return;
+  if (!selectAllCheckbox) {
+    console.log("Select all checkbox not found!");
+    return;
+  }
 
   // Check if select all was previously active (user clicked select all)
   const savedSelectAllState = localStorage.getItem("selectAllState");
+  console.log("Select all state from localStorage:", savedSelectAllState);
   
   // Check the actual state of checkboxes on the page
   const visibleCheckboxes = getVisibleStudentCheckboxes();
