@@ -65,7 +65,7 @@ try {
 
     $department = strtoupper($department);
     if ($department === 'BSME' || $department === 'MARITIME') {
-        $department = 'BSME'; // Standardize on BSME for both codes
+        $department = 'BSME';
     }
 
     if (!isset($departmentCollections[$department])) {
