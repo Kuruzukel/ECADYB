@@ -980,7 +980,6 @@
           toggleFullscreen();
         });
 
-        // Hide thumbnails when clicking outside the modal
         $(document).on("click", function (e) {
           if ($(e.target).hasClass("thumbnails")) {
             $(".thumbnails").removeClass("visible");
