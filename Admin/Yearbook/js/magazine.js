@@ -6,6 +6,73 @@ window.studentDataPendingRequests = window.studentDataPendingRequests || {};
 window.allStudentsCache = window.allStudentsCache || {};
 window.allStudentsLoading = window.allStudentsLoading || {};
 
+// Global cache for student photos
+window.studentPhotosCache = window.studentPhotosCache || {};
+
+// Function to fetch student photos from MongoDB
+function fetchStudentPhotos(studentId, callback) {
+  if (!studentId) {
+    console.log("No student ID provided for photo fetch");
+    callback([]);
+    return;
+  }
+
+  // Check cache first
+  if (window.studentPhotosCache[studentId]) {
+    console.log("Using cached photos for student:", studentId);
+    callback(window.studentPhotosCache[studentId]);
+    return;
+  }
+
+  // Get current template
+  var template = 1;
+  if (typeof coverData !== "undefined" && coverData && coverData.template) {
+    template = coverData.template;
+  } else {
+    var savedTemplate = localStorage.getItem("selectedBatchTemplateNumber");
+    if (savedTemplate) {
+      template = parseInt(savedTemplate);
+    }
+  }
+
+  console.log("=== FETCHING PHOTOS ===");
+  console.log("Student ID:", studentId);
+  console.log("Template:", template);
+  console.log("Timestamp:", new Date().toISOString());
+
+  $.ajax({
+    url: "../../Connection/Photos/FetchStudentPhotos.php",
+    method: "GET",
+    data: {
+      student_id: studentId,
+      template: template
+    },
+    dataType: "json",
+    success: function(response) {
+      console.log("=== PHOTOS RESPONSE ===");
+      console.log("Requested ID:", studentId);
+      console.log("Response:", response);
+      if (response.success && response.data && response.data.length > 0) {
+        console.log("Found photos for student ID", studentId);
+        console.log("Photo data:", response.data[0]);
+        // Cache the photos
+        window.studentPhotosCache[studentId] = response.data;
+        callback(response.data);
+      } else {
+        console.log("No photos found for student ID:", studentId);
+        callback([]);
+      }
+    },
+    error: function(xhr, status, error) {
+      console.log("=== PHOTOS ERROR ===");
+      console.log("Student ID:", studentId);
+      console.log("Error:", error);
+      console.log("XHR:", xhr);
+      callback([]);
+    }
+  });
+}
+
 // Function to load all students for a department and cache them
 function loadAllStudentsForDepartment(department, template, callback) {
   var cacheKey = department + "_" + template;
@@ -707,14 +774,13 @@ function loadPage(page, pageElement) {
               var student = studentsForThisPage[i];
               var globalIndex = studentStartIndex + i;
 
-              console.log(
-                "Processing student",
-                globalIndex,
-                ":",
-                student.name,
-                "Program:",
-                student.program
-              );
+              console.log("=== PROCESSING STUDENT ===");
+              console.log("Global Index:", globalIndex);
+              console.log("Student Name:", student.name);
+              console.log("Student ID:", student.student_id);
+              console.log("MongoDB ID:", student.id);
+              console.log("Program:", student.program);
+              console.log("Full Student Object:", student);
 
               var card = $("<div/>", {
                 class: "student-card",
@@ -724,17 +790,37 @@ function loadPage(page, pageElement) {
                 class: "student-image",
               });
 
-              var photoUrl =
-                student.photo_url ||
-                'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="135" height="155" viewBox="0 0 135 155"%3E%3Crect width="135" height="155" fill="%23f0f0f0"/%3E%3Ctext x="67.5" y="77.5" font-family="Arial" font-size="12" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Photo%3C/text%3E%3C/svg%3E';
+              // Default placeholder image
+              var defaultPhotoUrl = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="135" height="155" viewBox="0 0 135 155"%3E%3Crect width="135" height="155" fill="%23f0f0f0"/%3E%3Ctext x="67.5" y="77.5" font-family="Arial" font-size="12" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Photo%3C/text%3E%3C/svg%3E';
+              
               var studentPhoto = $("<img/>", {
-                src: photoUrl,
+                src: defaultPhotoUrl,
                 alt: student.name,
                 crossOrigin: "anonymous",
-                onerror:
-                  'this.src=\'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="135" height="155" viewBox="0 0 135 155"%3E%3Crect width="135" height="155" fill="%23f0f0f0"/%3E%3Ctext x="67.5" y="77.5" font-family="Arial" font-size="12" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Photo%3C/text%3E%3C/svg%3E\';',
+                onerror: 'this.src=\'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="135" height="155" viewBox="0 0 135 155"%3E%3Crect width="135" height="155" fill="%23f0f0f0"/%3E%3Ctext x="67.5" y="77.5" font-family="Arial" font-size="12" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Photo%3C/text%3E%3C/svg%3E\';',
               });
               studentImg.append(studentPhoto);
+
+              // Fetch TOGA photo for the student card
+              // Use student_id (like "2022-004231") not id (MongoDB ObjectId)
+              var studentIdForPhotos = student.student_id;
+              var studentNameForPhotos = student.name;
+              console.log("Fetching TOGA photo for student:", studentNameForPhotos, "with student_id:", studentIdForPhotos);
+              
+              if (studentIdForPhotos) {
+                // Use IIFE to capture the current student data properly
+                (function(currentStudent, currentPhotoElement, currentStudentId, currentStudentName) {
+                  fetchStudentPhotos(currentStudentId, function(photos) {
+                    if (photos && photos.length > 0) {
+                      var togaUrl = photos[0].photos.student_photo_1.url;
+                      if (togaUrl) {
+                        console.log("Setting TOGA photo for", currentStudentName, ":", togaUrl);
+                        currentPhotoElement.attr("src", togaUrl);
+                      }
+                    }
+                  });
+                })(student, studentPhoto, studentIdForPhotos, studentNameForPhotos);
+              }
 
               var studentName = $("<h3/>", {
                 text: student.name,
@@ -778,15 +864,13 @@ function loadPage(page, pageElement) {
                   ".student-image-thumbnails .thumbnail"
                 );
 
-                var modalPhotoUrl =
-                  clickedStudent.photo_url ||
-                  'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect width="300" height="300" fill="%23f0f0f0"/%3E%3Ctext x="150" y="150" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Student Photo%3C/text%3E%3C/svg%3E';
+                // Default placeholder image
+                var defaultPhotoUrl = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect width="300" height="300" fill="%23f0f0f0"/%3E%3Ctext x="150" y="150" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Student Photo%3C/text%3E%3C/svg%3E';
 
-                $largeImage.attr("src", modalPhotoUrl);
-
+                // Initialize with default image
+                $largeImage.attr("src", defaultPhotoUrl);
                 $thumbnails.each(function (index) {
-                  $(this).find("img").attr("src", modalPhotoUrl);
-
+                  $(this).find("img").attr("src", defaultPhotoUrl);
                   if (index === 0) {
                     $(this).addClass("active");
                   } else {
@@ -795,6 +879,41 @@ function loadPage(page, pageElement) {
                 });
 
                 modal.addClass("active");
+
+                // Fetch student photos from MongoDB
+                // Use student_id (like "2022-004231") not id (MongoDB ObjectId)
+                var studentIdForModal = clickedStudent.student_id;
+                console.log("Modal opened for student:", clickedStudent.name, "with student_id:", studentIdForModal);
+                
+                if (studentIdForModal) {
+                  fetchStudentPhotos(studentIdForModal, function(photos) {
+                  var studentPhotos = [];
+                  
+                  if (photos && photos.length > 0) {
+                    var studentPhotoData = photos[0].photos;
+                    studentPhotos = [
+                      studentPhotoData.student_photo_1.url || defaultPhotoUrl, // TOGA
+                      studentPhotoData.student_photo_2.url || defaultPhotoUrl, // UNIFORM
+                      studentPhotoData.student_photo_3.url || defaultPhotoUrl  // FILIPINIANA
+                    ];
+                  } else {
+                    // If no photos found, use default for all
+                    studentPhotos = [defaultPhotoUrl, defaultPhotoUrl, defaultPhotoUrl];
+                  }
+
+                  // Update large image with first photo (TOGA)
+                  $largeImage.attr("src", studentPhotos[0]);
+
+                  // Update thumbnails with all three photos
+                  $thumbnails.each(function (index) {
+                    if (studentPhotos[index]) {
+                      $(this).find("img").attr("src", studentPhotos[index]);
+                    }
+                  });
+                  });
+                } else {
+                  console.log("No student_id found for:", clickedStudent.name);
+                }
 
                 $thumbnails.off("click").on("click", function (e) {
                   e.stopPropagation(); // Prevent modal from closing
@@ -806,9 +925,30 @@ function loadPage(page, pageElement) {
                   $thumbnails.removeClass("active");
                   $this.addClass("active");
 
-                  $largeImage.fadeOut(200, function () {
-                    $(this).attr("src", modalPhotoUrl).fadeIn(200);
-                  });
+                  // Fetch photos again to ensure we have the latest URLs
+                  var studentIdForThumbnail = clickedStudent.student_id;
+                  if (studentIdForThumbnail) {
+                    fetchStudentPhotos(studentIdForThumbnail, function(photos) {
+                    var studentPhotos = [];
+                    
+                    if (photos && photos.length > 0) {
+                      var studentPhotoData = photos[0].photos;
+                      studentPhotos = [
+                        studentPhotoData.student_photo_1.url || defaultPhotoUrl,
+                        studentPhotoData.student_photo_2.url || defaultPhotoUrl,
+                        studentPhotoData.student_photo_3.url || defaultPhotoUrl
+                      ];
+                    } else {
+                      studentPhotos = [defaultPhotoUrl, defaultPhotoUrl, defaultPhotoUrl];
+                    }
+
+                    $largeImage.fadeOut(200, function () {
+                      $(this).attr("src", studentPhotos[index] || defaultPhotoUrl).fadeIn(200);
+                    });
+                    });
+                  } else {
+                    console.log("No student_id found for thumbnail click:", clickedStudent.name);
+                  }
                 });
 
                 closeBtn.on("click", function () {
