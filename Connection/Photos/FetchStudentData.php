@@ -58,7 +58,7 @@ try {
         'BSE' => ['btvted', 'beced'],
         'BSIS' => ['bsis'],
         'BSME' => ['bsme', 'bsmt'],
-        'MARITIME' => ['bsme', 'bsmt'], // Add MARITIME as an alias for BSME
+        'MARITIME' => ['bsme', 'bsmt'],
         'BSN' => ['bsn'],
         'BSTM' => ['bstm']
     ];
