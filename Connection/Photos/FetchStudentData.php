@@ -26,7 +26,6 @@ function respond($success, $message = '', $data = [])
         'message' => $message
     ], $data);
 
-    // Log the response for debugging (truncated to avoid issues)
     error_log("FetchStudentData Response: " . substr(json_encode($response), 0, 200) . "...");
 
     header('Content-Type: application/json');
