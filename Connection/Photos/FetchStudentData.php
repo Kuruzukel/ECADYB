@@ -72,7 +72,6 @@ try {
         respond(false, 'Invalid department code: ' . $department . '. Valid codes are: ' . implode(', ', array_keys($departmentCollections)));
     }
 
-    // Ensure template is between 1 and 3
     $template = max(1, min(3, $template));
     $mongoDbName = "BatchTemplate" . $template;
 
