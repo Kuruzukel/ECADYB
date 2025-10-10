@@ -571,7 +571,6 @@
               }
             } else {
               console.log("Failed to fetch cover data:", response.message);
-              // Still try to load the app even if cover data fails
               if (typeof loadApp === "function") {
                 loadApp();
               }
