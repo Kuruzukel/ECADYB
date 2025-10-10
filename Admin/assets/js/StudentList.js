@@ -274,34 +274,42 @@ function initializeSelectAll() {
   const allChecked = checkedCount === visibleCheckboxes.length && visibleCheckboxes.length > 0;
   const allPending = checkedCount === 0 && visibleCheckboxes.length > 0;
   
-  // If select all was previously active, maintain that state
-  if (savedSelectAllState === "true") {
+  console.log("Select All Debug:", {
+    totalCheckboxes: visibleCheckboxes.length,
+    checkedCount: checkedCount,
+    allChecked: allChecked,
+    allPending: allPending,
+    savedState: savedSelectAllState
+  });
+  
+  // Always prioritize the actual state of students over localStorage
+  // This ensures that after CSV upload, the checkbox reflects the true state
+  if (allChecked) {
     selectAllCheckbox.checked = true;
     selectAllCheckbox.indeterminate = false;
     isSelectAllActive = true;
+    localStorage.setItem("selectAllState", "true");
+  } else if (allPending) {
+    // All students are pending - show indeterminate (minus sign)
+    console.log("Setting select all to INDETERMINATE (minus sign) - all students pending");
+    selectAllCheckbox.checked = false;
+    selectAllCheckbox.indeterminate = true;
+    isSelectAllActive = false;
+    localStorage.removeItem("selectAllState");
+  } else if (checkedCount > 0) {
+    // Some checked, some not - show indeterminate
+    console.log("Setting select all to INDETERMINATE (minus sign) - mixed states");
+    selectAllCheckbox.checked = false;
+    selectAllCheckbox.indeterminate = true;
+    isSelectAllActive = false;
+    localStorage.removeItem("selectAllState");
   } else {
-    // Otherwise, set based on actual checkbox states
-    if (allChecked) {
-      selectAllCheckbox.checked = true;
-      selectAllCheckbox.indeterminate = false;
-      isSelectAllActive = true;
-      localStorage.setItem("selectAllState", "true");
-    } else if (allPending) {
-      // All students are pending - show indeterminate (minus sign)
-      selectAllCheckbox.checked = false;
-      selectAllCheckbox.indeterminate = true;
-      isSelectAllActive = false;
-    } else if (checkedCount > 0) {
-      // Some checked, some not - show indeterminate
-      selectAllCheckbox.checked = false;
-      selectAllCheckbox.indeterminate = true;
-      isSelectAllActive = false;
-    } else {
-      // No students or other edge case
-      selectAllCheckbox.checked = false;
-      selectAllCheckbox.indeterminate = false;
-      isSelectAllActive = false;
-    }
+    // No students or other edge case
+    console.log("Setting select all to UNCHECKED - no students or edge case");
+    selectAllCheckbox.checked = false;
+    selectAllCheckbox.indeterminate = false;
+    isSelectAllActive = false;
+    localStorage.removeItem("selectAllState");
   }
 
   // Remove any existing event listeners to prevent duplicates
