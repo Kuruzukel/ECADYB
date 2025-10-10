@@ -267,7 +267,6 @@
           studentData.total_students &&
           studentData.students_per_page
         ) {
-          // Assume we can load at least 3 API pages (150 students) reliably
           var reliableStudents = Math.min(studentData.total_students, 150);
           studentPages = Math.ceil(
             reliableStudents / studentData.students_per_page
