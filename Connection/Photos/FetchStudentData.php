@@ -89,7 +89,6 @@ try {
         $db->command(['ping' => 1]);
         error_log("MongoDB connection successful to database: " . $mongoDbName);
 
-        // List all collections in the database for debugging
         $allCollections = iterator_to_array($db->listCollectionNames());
         error_log("Available collections in database $mongoDbName: " . implode(', ', $allCollections));
     } catch (Exception $e) {
