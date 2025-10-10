@@ -63,7 +63,6 @@ try {
         'BSTM' => ['bstm']
     ];
 
-    // Normalize department code (handle case sensitivity and aliases)
     $department = strtoupper($department);
     if ($department === 'BSME' || $department === 'MARITIME') {
         $department = 'BSME'; // Standardize on BSME for both codes
