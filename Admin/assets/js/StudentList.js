@@ -204,8 +204,7 @@ window.addEventListener("DOMContentLoaded", () => {
   initializeStatusUpdates();
   initializeDeleteModal();
   
-  // Update select all state on page load
-  setTimeout(updateSelectAllState, 100);
+  // Don't call updateSelectAllState here - initializeSelectAll already handles it
   
   // Reset initialization flag after page is fully loaded
   setTimeout(() => {
@@ -262,34 +261,43 @@ function initializeSelectAll() {
   const selectAllCheckbox = document.getElementById("select-all-header");
   if (!selectAllCheckbox) return;
 
-  // First, check the actual state of checkboxes on the page
-  // This takes priority over localStorage to reflect the true state
+  // Check if select all was previously active (user clicked select all)
+  const savedSelectAllState = localStorage.getItem("selectAllState");
+  
+  // Check the actual state of checkboxes on the page
   const visibleCheckboxes = getVisibleStudentCheckboxes();
   const checkedCount = visibleCheckboxes.filter(cb => cb.checked).length;
   const allChecked = checkedCount === visibleCheckboxes.length && visibleCheckboxes.length > 0;
   
-  // Set the select all checkbox to match the actual state
-  if (allChecked) {
+  // If select all was previously active, maintain that state
+  if (savedSelectAllState === "true") {
     selectAllCheckbox.checked = true;
     selectAllCheckbox.indeterminate = false;
     isSelectAllActive = true;
-  } else if (checkedCount === 0) {
-    selectAllCheckbox.checked = false;
-    selectAllCheckbox.indeterminate = false;
-    isSelectAllActive = false;
-  } else if (checkedCount > 0) {
-    // Some checked, some not - show indeterminate
-    selectAllCheckbox.checked = false;
-    selectAllCheckbox.indeterminate = true;
-    isSelectAllActive = false;
-  }
-  
-  // Clear localStorage if it doesn't match the actual state
-  if (!allChecked) {
-    localStorage.removeItem("selectAllState");
+  } else {
+    // Otherwise, set based on actual checkbox states
+    if (allChecked) {
+      selectAllCheckbox.checked = true;
+      selectAllCheckbox.indeterminate = false;
+      isSelectAllActive = true;
+      localStorage.setItem("selectAllState", "true");
+    } else if (checkedCount === 0) {
+      selectAllCheckbox.checked = false;
+      selectAllCheckbox.indeterminate = false;
+      isSelectAllActive = false;
+    } else if (checkedCount > 0) {
+      // Some checked, some not - show indeterminate
+      selectAllCheckbox.checked = false;
+      selectAllCheckbox.indeterminate = true;
+      isSelectAllActive = false;
+    }
   }
 
-  selectAllCheckbox.addEventListener("change", function () {
+  // Remove any existing event listeners to prevent duplicates
+  const newSelectAllCheckbox = selectAllCheckbox.cloneNode(true);
+  selectAllCheckbox.parentNode.replaceChild(newSelectAllCheckbox, selectAllCheckbox);
+  
+  newSelectAllCheckbox.addEventListener("change", function () {
     // Prevent multiple simultaneous bulk updates
     if (isBulkUpdateInProgress) {
       console.log("Bulk update already in progress, ignoring click");
@@ -587,8 +595,11 @@ function applyFilters() {
     row.style.display = showRow ? "" : "none";
   });
   
-  // Update select all state after filtering
-  setTimeout(updateSelectAllState, 0);
+  // Only update select all state if not initializing
+  // (to avoid overriding localStorage-based state)
+  if (!isInitializing) {
+    setTimeout(updateSelectAllState, 0);
+  }
 }
 
 // Modify the showNotification function to handle select all operations
@@ -760,17 +771,17 @@ function initializeStatusUpdates() {
       console.log("Checkbox changed", this.checked);
       console.log("Dataset:", this.dataset);
 
-      // Update select all state
-      setTimeout(updateSelectAllState, 0);
-
-      if (!isSelectAllActive) {
-        clearSelectAllState();
-      }
-
       // Skip API calls and notifications during initialization/filtering
       if (isInitializing) {
         console.log("Skipping status update - initializing");
         return;
+      }
+
+      // Only clear select all state if user is manually changing checkboxes
+      // (not during initialization or bulk operations)
+      // Note: clearSelectAllState() already calls updateSelectAllState()
+      if (!isSelectAllActive && !isSelectAllOperation) {
+        clearSelectAllState();
       }
 
       if (this.dataset.busy === "1") return;
@@ -1045,7 +1056,7 @@ function loadStudentList(pageNum, template, department, tab) {
         initializeSelectAll();
         initializeFilters();
         initializeStatusUpdates();
-        updateSelectAllState();
+        // Don't call updateSelectAllState here - initializeSelectAll already handles it
         // Reset flag after reinitialization is complete
         setTimeout(() => {
           isInitializing = false;
