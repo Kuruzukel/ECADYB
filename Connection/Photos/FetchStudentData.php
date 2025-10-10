@@ -1,5 +1,4 @@
 <?php
-// Enable error reporting for debugging
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -22,15 +21,15 @@ function respond($success, $message = '', $data = [])
     if (ob_get_level()) {
         ob_clean();
     }
-    
+
     $response = array_merge([
         'success' => $success,
         'message' => $message
     ], $data);
-    
+
     // Log the response for debugging (truncated to avoid issues)
     error_log("FetchStudentData Response: " . substr(json_encode($response), 0, 200) . "...");
-    
+
     header('Content-Type: application/json');
     header('Content-Length: ' . strlen(json_encode($response)));
     echo json_encode($response);
@@ -40,7 +39,7 @@ function respond($success, $message = '', $data = [])
 try {
     // Log the incoming request
     error_log("FetchStudentData Request: " . json_encode($_GET));
-    
+
     $template = isset($_GET['template']) ? (int)$_GET['template'] : 1;
     $department = isset($_GET['department']) ? strtoupper($_GET['department']) : null;
     $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
@@ -66,7 +65,7 @@ try {
         'BSN' => ['bsn'],
         'BSTM' => ['bstm']
     ];
-    
+
     // Normalize department code (handle case sensitivity and aliases)
     $department = strtoupper($department);
     if ($department === 'BSME' || $department === 'MARITIME') {
@@ -80,7 +79,7 @@ try {
     // Ensure template is between 1 and 3
     $template = max(1, min(3, $template));
     $mongoDbName = "BatchTemplate" . $template;
-    
+
     // Log the connection attempt
     error_log("Connecting to MongoDB database: " . $mongoDbName . " for department: " . $department);
     $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
@@ -96,11 +95,10 @@ try {
         // Test the connection
         $db->command(['ping' => 1]);
         error_log("MongoDB connection successful to database: " . $mongoDbName);
-        
+
         // List all collections in the database for debugging
         $allCollections = iterator_to_array($db->listCollectionNames());
         error_log("Available collections in database $mongoDbName: " . implode(', ', $allCollections));
-        
     } catch (Exception $e) {
         error_log("MongoDB connection error: " . $e->getMessage());
         respond(false, 'Database connection error: ' . $e->getMessage());
@@ -115,7 +113,7 @@ try {
         try {
             $collectionNames = iterator_to_array($db->listCollectionNames());
             $collectionExists = in_array($collectionName, $collectionNames);
-            
+
             if ($collectionExists) {
                 $collection = $db->$collectionName;
                 $studentCount = $collection->countDocuments();
@@ -132,7 +130,7 @@ try {
     // Calculate pagination
     $totalPages = ceil($totalStudentsCount / $limit);
     $skip = ($page - 1) * $limit;
-    
+
     error_log("Pagination: Page $page of $totalPages, Skip: $skip, Limit: $limit");
 
     $allStudents = [];
@@ -150,22 +148,22 @@ try {
             error_log("Processing collection: $collectionName");
             $collectionNames = iterator_to_array($db->listCollectionNames());
             $collectionExists = in_array($collectionName, $collectionNames);
-            
+
             error_log("Collection $collectionName exists: " . ($collectionExists ? 'YES' : 'NO'));
 
             if ($collectionExists) {
                 $collection = $db->$collectionName;
                 $collectionCount = $collection->countDocuments();
-                
+
                 // Calculate how many students to skip and take from this collection
                 $collectionSkip = max(0, $targetSkip - $studentsProcessed);
                 $collectionLimit = min($targetLimit - count($allStudents), $collectionCount - $collectionSkip);
-                
+
                 if ($collectionLimit > 0) {
                     error_log("Collection $collectionName: Skip $collectionSkip, Limit $collectionLimit");
-                    
+
                     $students = $collection->find([], [
-                        'sort' => ['department section' => 1, 'last name' => 1], 
+                        'sort' => ['department section' => 1, 'last name' => 1],
                         'skip' => $collectionSkip,
                         'limit' => $collectionLimit
                     ]);
@@ -237,7 +235,7 @@ try {
                             'collection' => $collectionName
                         ];
                     }
-                    
+
                     error_log("Processed $processedCount students from collection $collectionName");
                     $studentsProcessed += $collectionCount; // Add total count for pagination calculation
                 } else {
@@ -250,13 +248,13 @@ try {
             error_log("Error fetching from collection $collectionName: " . $e->getMessage());
         }
     }
-    
+
     error_log("Returning " . count($allStudents) . " students for page $page");
 
     $studentsPerPage = 6;
     $currentPageStudents = count($allStudents);
     $totalStudents = $totalStudentsCount; // Use the total count across all collections
-    
+
     // Calculate actual yearbook pages needed (not API pagination pages)
     $yearbookPagesNeeded = ceil($totalStudents / $studentsPerPage);
 
