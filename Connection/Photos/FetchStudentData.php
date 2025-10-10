@@ -86,7 +86,6 @@ try {
 
     try {
         $db = $mongoClient->selectDatabase($mongoDbName);
-        // Test the connection
         $db->command(['ping' => 1]);
         error_log("MongoDB connection successful to database: " . $mongoDbName);
 
