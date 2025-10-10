@@ -580,7 +580,6 @@
             console.log("Error fetching cover data:", error);
             console.log("XHR:", xhr);
             console.log("Status:", status);
-            // Still try to load the app even if cover data fails
             if (typeof loadApp === "function") {
               loadApp();
             }
