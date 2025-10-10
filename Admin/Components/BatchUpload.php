@@ -338,7 +338,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php if ($flashMessage): ?>
     <div id="flash-data" data-message="<?= htmlspecialchars($flashMessage['message'], ENT_QUOTES) ?>" data-type="<?= htmlspecialchars($flashMessage['type'], ENT_QUOTES) ?>" style="display:none"></div>
     <?php endif; ?>
-    <script src="../assets/js/BatchUpload.js"></script>
+    <script src="../assets/js/BatchUpload.js?v=<?php echo time(); ?>"></script>
 </body>
 
 </html>

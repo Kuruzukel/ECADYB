@@ -521,7 +521,7 @@ try {
 
             
 
-            <script src="../assets/js/StudentList.js"></script>
+            <script src="../assets/js/StudentList.js?v=<?php echo time(); ?>"></script>
 <?php if (!$isAjax): ?>
 </body>
 
