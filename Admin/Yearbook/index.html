@@ -849,7 +849,6 @@
         setTimeout(function () {
           if (typeof generateAllThumbnails === "function") {
             generateAllThumbnails();
-            // Refresh thumbnails after generation with multiple attempts
             setTimeout(function () {
               if (typeof refreshThumbnails === "function") {
                 refreshThumbnails();
