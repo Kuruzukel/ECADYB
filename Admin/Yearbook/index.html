@@ -101,7 +101,6 @@
       var studentData = null;
 
       function fetchCoverData(template, slot) {
-        // Get selected template from localStorage if not provided
         if (!template) {
           template = localStorage.getItem("selectedBatchTemplateNumber") || 1;
           template = parseInt(template);
@@ -156,26 +155,33 @@
       function fetchStudentData() {
         var urlParams = new URLSearchParams(window.location.search);
         var departmentCode = urlParams.get("department") || "BSME"; // Default to Maritime
-        
+
         // Get template from coverData, localStorage, or default to 1
         var template = 1;
         if (coverData && coverData.template) {
           template = coverData.template;
         } else {
-          var savedTemplate = localStorage.getItem("selectedBatchTemplateNumber");
+          var savedTemplate = localStorage.getItem(
+            "selectedBatchTemplateNumber"
+          );
           if (savedTemplate) {
             template = parseInt(savedTemplate);
           }
         }
 
-        console.log("Fetching student data for department:", departmentCode, "template:", template);
+        console.log(
+          "Fetching student data for department:",
+          departmentCode,
+          "template:",
+          template
+        );
 
         $.ajax({
           url: "../../Connection/Photos/FetchStudentData.php",
           method: "GET",
           data: {
             department: departmentCode,
-            template: template
+            template: template,
           },
           dataType: "json",
           success: function (response) {
@@ -185,7 +191,10 @@
               console.log("Student data loaded:", studentData);
               console.log("Total students:", studentData.total_students);
               console.log("Students array:", studentData.students);
-              console.log("First few students:", studentData.students.slice(0, 3));
+              console.log(
+                "First few students:",
+                studentData.students.slice(0, 3)
+              );
               populateThumbnails();
             } else {
               console.log("Failed to fetch student data:", response.message);
@@ -203,21 +212,21 @@
       function getCurrentYearbook() {
         var urlParams = new URLSearchParams(window.location.search);
         var departmentCode = urlParams.get("department") || "BSME";
-        
+
         // Map department codes to yearbook names
         var yearbookMap = {
-          "BSME": "Maritime Education",
-          "BSCJE": "College of Criminology", 
-          "BSTM": "Tourism Management",
-          "BSE": "College of Education",
-          "BSN": "College of Nursing",
-          "BSIS": "Information System",
-          "BSBA": "Business Administration"
+          BSME: "Maritime Education",
+          BSCJE: "College of Criminology",
+          BSTM: "Tourism Management",
+          BSE: "College of Education",
+          BSN: "College of Nursing",
+          BSIS: "Information System",
+          BSBA: "Business Administration",
         };
-        
+
         return {
           code: departmentCode,
-          name: yearbookMap[departmentCode] || "Unknown Department"
+          name: yearbookMap[departmentCode] || "Unknown Department",
         };
       }
 
@@ -226,34 +235,39 @@
         var yearbook = getCurrentYearbook();
         var departmentCode = yearbook.code;
         var totalPages = calculateTotalPages();
-        
-        console.log("Getting page description for page", pageNumber, "in yearbook:", yearbook.name);
-        
+
+        console.log(
+          "Getting page description for page",
+          pageNumber,
+          "in yearbook:",
+          yearbook.name
+        );
+
         // Page 1 - Front Cover
         if (pageNumber === 1) {
           return "FRONT COVER";
         }
-        
+
         // Pages 2-6 - Top Management
         if (pageNumber >= 2 && pageNumber <= 6) {
           return "TOP MANAGEMENT MESSAGE";
         }
-        
+
         // Last Page - Back Cover
         if (pageNumber === totalPages) {
           return "BACK COVER";
         }
-        
+
         // Student pages (pages 7 to totalPages - 1)
         if (pageNumber >= 7 && pageNumber < totalPages) {
           var studentPageNumber = pageNumber - 6; // Calculate which student page this is
-          
+
           // Get department name for the description
           var departmentName = yearbook.name.toUpperCase();
-          
+
           return departmentName + " STUDENTS P" + studentPageNumber;
         }
-        
+
         return "PAGE " + pageNumber;
       }
 
@@ -261,25 +275,35 @@
       function calculateTotalPages() {
         // Structure: 1 front cover + 5 management pages + X student pages + 1 back cover
         var studentPages = 0;
-        
-        if (studentData && studentData.total_students && studentData.students_per_page) {
+
+        if (
+          studentData &&
+          studentData.total_students &&
+          studentData.students_per_page
+        ) {
           // Use a conservative estimate based on what we know we can load
           // Assume we can load at least 3 API pages (150 students) reliably
           var reliableStudents = Math.min(studentData.total_students, 150);
-          studentPages = Math.ceil(reliableStudents / studentData.students_per_page);
-          
+          studentPages = Math.ceil(
+            reliableStudents / studentData.students_per_page
+          );
+
           console.log("Using conservative student page calculation:", {
             total_students_in_db: studentData.total_students,
             reliable_students_estimate: reliableStudents,
             students_per_page: studentData.students_per_page,
-            calculated_student_pages: studentPages
+            calculated_student_pages: studentPages,
           });
         }
-        
+
         var totalPages = 1 + 5 + studentPages + 1; // front + management + students + back
-        
-        console.log("Calculated total pages:", totalPages, "(1 front + 5 management + " + studentPages + " students + 1 back)");
-        
+
+        console.log(
+          "Calculated total pages:",
+          totalPages,
+          "(1 front + 5 management + " + studentPages + " students + 1 back)"
+        );
+
         return totalPages;
       }
 
@@ -289,10 +313,10 @@
 
         var thumbnailList = $("#thumbnail-list");
         thumbnailList.empty();
-        
+
         // Calculate total pages dynamically
         var totalPages = calculateTotalPages();
-        
+
         // Add header to thumbnails modal
         var headerHtml = `
           <div class="thumbnails-header">
@@ -306,23 +330,23 @@
             <button class="close-thumbnails">×</button>
           </div>
         `;
-        
+
         // Wrap everything in a modal container
         var modalContainer = $('<div class="thumbnails-modal"></div>');
         modalContainer.append(headerHtml);
         modalContainer.append(thumbnailList);
-        
+
         // Replace the existing thumbnails content
-        $('.thumbnails').html(modalContainer);
-        
+        $(".thumbnails").html(modalContainer);
+
         console.log("Total pages for", yearbook.name, ":", totalPages);
-        
+
         // Create horizontal thumbnail divs for all pages
         for (var pageNum = 1; pageNum <= totalPages; pageNum++) {
           var thumbnailDiv = $('<div class="thumbnail-item"></div>');
           thumbnailDiv.text(pageNum);
-          thumbnailDiv.attr('data-page', pageNum);
-          
+          thumbnailDiv.attr("data-page", pageNum);
+
           thumbnailList.append(thumbnailDiv);
         }
 
@@ -330,18 +354,20 @@
         $(".thumbnails")
           .off("click")
           .on("click", function (event) {
-            var thumbnailElement = $(event.target).closest('.thumbnail-item');
+            var thumbnailElement = $(event.target).closest(".thumbnail-item");
             if (thumbnailElement.length) {
-              var pageNumber = thumbnailElement.attr('data-page');
+              var pageNumber = thumbnailElement.attr("data-page");
               $(".magazine").turn("page", pageNumber);
               // Close thumbnails modal after clicking
-              $('.thumbnails').removeClass('visible');
+              $(".thumbnails").removeClass("visible");
             }
           });
-          
+
         // Add close button handler
-        $(".close-thumbnails").off("click").on("click", function() {
-          $('.thumbnails').removeClass('visible');
+        $(".close-thumbnails")
+          .off("click")
+          .on("click", function () {
+            $(".thumbnails").removeClass("visible");
           });
 
         $(".thumbnails li")
@@ -358,41 +384,51 @@
       // Function to refresh thumbnails with generated content
       function refreshThumbnails() {
         if (!window.pageThumbnails) return;
-        
+
         // Update existing thumbnails with generated content
         for (var pageNum in window.pageThumbnails) {
           var thumbnailSrc = window.pageThumbnails[pageNum];
-          var existingThumbnail = $('.thumbnails .page-' + pageNum);
+          var existingThumbnail = $(".thumbnails .page-" + pageNum);
           if (existingThumbnail.length) {
-            existingThumbnail.attr('src', thumbnailSrc);
+            existingThumbnail.attr("src", thumbnailSrc);
           }
         }
-        
-        console.log('Refreshed thumbnails with generated content');
+
+        console.log("Refreshed thumbnails with generated content");
       }
 
       // Function to create management thumbnail with actual content
       function createManagementThumbnail(managementIndex, dataToUse) {
         // For now, use the background image but with a management indicator
-        var backgroundSrc = dataToUse.background_thumb_url || dataToUse.background_url;
+        var backgroundSrc =
+          dataToUse.background_thumb_url || dataToUse.background_url;
         if (backgroundSrc) {
           return backgroundSrc;
         }
-        
+
         // Create a placeholder that indicates management content
-        return 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="76" height="100" viewBox="0 0 76 100"%3E%3Crect width="76" height="100" fill="%23e8f4fd"/%3E%3Ccircle cx="38" cy="30" r="15" fill="%23ffffff" stroke="%23cccccc"/%3E%3Ctext x="38" y="35" font-family="Arial" font-size="8" fill="%23666" text-anchor="middle"%3EMGT%3C/text%3E%3Ctext x="38" y="60" font-family="Arial" font-size="6" fill="%23999" text-anchor="middle"%3EPage ' + (managementIndex + 2) + '%3C/text%3E%3C/svg%3E';
+        return (
+          'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="76" height="100" viewBox="0 0 76 100"%3E%3Crect width="76" height="100" fill="%23e8f4fd"/%3E%3Ccircle cx="38" cy="30" r="15" fill="%23ffffff" stroke="%23cccccc"/%3E%3Ctext x="38" y="35" font-family="Arial" font-size="8" fill="%23666" text-anchor="middle"%3EMGT%3C/text%3E%3Ctext x="38" y="60" font-family="Arial" font-size="6" fill="%23999" text-anchor="middle"%3EPage ' +
+          (managementIndex + 2) +
+          "%3C/text%3E%3C/svg%3E"
+        );
       }
 
       // Function to create student thumbnail with actual content
       function createStudentThumbnail(studentPageIndex, dataToUse) {
         // For now, use the background image but with a student indicator
-        var backgroundSrc = dataToUse.background_thumb_url || dataToUse.background_url;
+        var backgroundSrc =
+          dataToUse.background_thumb_url || dataToUse.background_url;
         if (backgroundSrc) {
           return backgroundSrc;
         }
-        
+
         // Create a placeholder that indicates student content
-        return 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="76" height="100" viewBox="0 0 76 100"%3E%3Crect width="76" height="100" fill="%23f0f8ff"/%3E%3Ccircle cx="38" cy="30" r="15" fill="%23ffffff" stroke="%23cccccc"/%3E%3Ctext x="38" y="35" font-family="Arial" font-size="8" fill="%23666" text-anchor="middle"%3ESTU%3C/text%3E%3Ctext x="38" y="60" font-family="Arial" font-size="6" fill="%23999" text-anchor="middle"%3EPage ' + (studentPageIndex + 7) + '%3C/text%3E%3C/svg%3E';
+        return (
+          'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="76" height="100" viewBox="0 0 76 100"%3E%3Crect width="76" height="100" fill="%23f0f8ff"/%3E%3Ccircle cx="38" cy="30" r="15" fill="%23ffffff" stroke="%23cccccc"/%3E%3Ctext x="38" y="35" font-family="Arial" font-size="8" fill="%23666" text-anchor="middle"%3ESTU%3C/text%3E%3Ctext x="38" y="60" font-family="Arial" font-size="6" fill="%23999" text-anchor="middle"%3EPage ' +
+          (studentPageIndex + 7) +
+          "%3C/text%3E%3C/svg%3E"
+        );
       }
     </script>
   </head>
@@ -400,8 +436,7 @@
     <div id="canvas">
       <div class="magazine-viewport">
         <div class="container">
-          <div class="magazine">
-          </div>
+          <div class="magazine"></div>
         </div>
       </div>
 
@@ -410,25 +445,71 @@
       <!-- Navigation Control Bar -->
       <div class="nav-controls">
         <button class="nav-btn prev-btn" id="prevBtn" title="Previous Page">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <polyline points="15,18 9,12 15,6"></polyline>
           </svg>
         </button>
-        <button class="nav-btn thumbnails-btn" id="thumbnailsBtn" title="Show Thumbnails">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <button
+          class="nav-btn thumbnails-btn"
+          id="thumbnailsBtn"
+          title="Show Thumbnails"
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <rect x="3" y="3" width="7" height="7"></rect>
             <rect x="14" y="3" width="7" height="7"></rect>
             <rect x="14" y="14" width="7" height="7"></rect>
             <rect x="3" y="14" width="7" height="7"></rect>
           </svg>
         </button>
-        <button class="nav-btn fullscreen-btn" id="fullscreenBtn" title="Toggle Fullscreen">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+        <button
+          class="nav-btn fullscreen-btn"
+          id="fullscreenBtn"
+          title="Toggle Fullscreen"
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path
+              d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"
+            ></path>
           </svg>
         </button>
         <button class="nav-btn next-btn" id="nextBtn" title="Next Page">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <polyline points="9,18 15,12 9,6"></polyline>
           </svg>
         </button>
@@ -482,9 +563,10 @@
       $(document).ready(function () {
         var urlParams = new URLSearchParams(window.location.search);
         var departmentCode = urlParams.get("department");
-        
+
         // Get selected template from localStorage (default to 1 if not set)
-        var selectedTemplate = localStorage.getItem("selectedBatchTemplateNumber") || 1;
+        var selectedTemplate =
+          localStorage.getItem("selectedBatchTemplateNumber") || 1;
         selectedTemplate = parseInt(selectedTemplate);
         console.log("Using template from localStorage:", selectedTemplate);
 
@@ -572,7 +654,7 @@
 
         // Calculate pages dynamically based on student data
         var totalPages = calculateTotalPages();
-        
+
         console.log("Setting total pages to:", totalPages);
 
         flipbook.turn({
@@ -594,12 +676,12 @@
 
               disableControls(page);
 
-              $(".thumbnails .thumbnail-item")
-                .removeClass("current");
+              $(".thumbnails .thumbnail-item").removeClass("current");
 
-              $(".thumbnails .thumbnail-item[data-page='" + page + "']")
-                .addClass("current");
-                
+              $(
+                ".thumbnails .thumbnail-item[data-page='" + page + "']"
+              ).addClass("current");
+
               // Update current page display in thumbnails modal
               $("#current-page-display").text(page);
             },
@@ -613,7 +695,7 @@
               for (var i = 0; i < pages.length; i++) {
                 addPage(pages[i], $(this));
               }
-              
+
               // Note: Don't call addStudentPages here - pages are already initialized
               // The 'missing' event will call addPage for each missing page automatically
             },
@@ -734,8 +816,8 @@
             (page = /page-([0-9]+)/.exec($(event.target).attr("class")))
           ) {
             $(".magazine").turn("page", page[1]);
-              // Close thumbnails modal after clicking a thumbnail
-            $('.thumbnails').removeClass('visible');
+            // Close thumbnails modal after clicking a thumbnail
+            $(".thumbnails").removeClass("visible");
           }
         });
 
@@ -803,31 +885,31 @@
         resizeViewport();
 
         $(".magazine").addClass("animated");
-        
+
         // Initialize corner hover for page peel effect
         if (typeof initializeCornerHover === "function") {
           initializeCornerHover();
         }
-        
+
         // Generate thumbnails after everything is loaded
-        setTimeout(function() {
+        setTimeout(function () {
           if (typeof generateAllThumbnails === "function") {
             generateAllThumbnails();
             // Refresh thumbnails after generation with multiple attempts
-            setTimeout(function() {
+            setTimeout(function () {
               if (typeof refreshThumbnails === "function") {
                 refreshThumbnails();
               }
             }, 3000);
-            
+
             // Additional refresh attempts
-            setTimeout(function() {
+            setTimeout(function () {
               if (typeof refreshThumbnails === "function") {
                 refreshThumbnails();
               }
             }, 5000);
-            
-            setTimeout(function() {
+
+            setTimeout(function () {
               if (typeof refreshThumbnails === "function") {
                 refreshThumbnails();
               }
@@ -866,23 +948,23 @@
       // Hover functionality removed - thumbnails now controlled by button only
 
       // Navigation Controls Functionality
-      $(document).ready(function() {
+      $(document).ready(function () {
         // Previous button
-        $('#prevBtn').on('click', function() {
-          $('.magazine').turn('previous');
+        $("#prevBtn").on("click", function () {
+          $(".magazine").turn("previous");
         });
 
         // Next button
-        $('#nextBtn').on('click', function() {
-          $('.magazine').turn('next');
+        $("#nextBtn").on("click", function () {
+          $(".magazine").turn("next");
         });
 
         // Thumbnails toggle button
-        $('#thumbnailsBtn').on('click', function() {
-          $('.thumbnails').addClass('visible');
-          
+        $("#thumbnailsBtn").on("click", function () {
+          $(".thumbnails").addClass("visible");
+
           // Force refresh thumbnails when opening
-          setTimeout(function() {
+          setTimeout(function () {
             if (typeof forceRegenerateThumbnails === "function") {
               forceRegenerateThumbnails();
             } else if (typeof refreshThumbnails === "function") {
@@ -895,8 +977,8 @@
         });
 
         // Close thumbnails button
-        $('#closeThumbnails').on('click', function() {
-          $('.thumbnails').removeClass('visible');
+        $("#closeThumbnails").on("click", function () {
+          $(".thumbnails").removeClass("visible");
         });
 
         // Fullscreen functionality
@@ -924,11 +1006,12 @@
 
         // Update fullscreen button icon based on state
         function updateFullscreenIcon() {
-          var fullscreenBtn = document.getElementById('fullscreenBtn');
-          var isFullscreen = document.fullscreenElement || 
-                            document.webkitFullscreenElement || 
-                            document.msFullscreenElement;
-          
+          var fullscreenBtn = document.getElementById("fullscreenBtn");
+          var isFullscreen =
+            document.fullscreenElement ||
+            document.webkitFullscreenElement ||
+            document.msFullscreenElement;
+
           if (isFullscreen) {
             // Show exit fullscreen icon
             fullscreenBtn.innerHTML = `
@@ -949,19 +1032,22 @@
         }
 
         // Add event listeners for fullscreen changes
-        document.addEventListener('fullscreenchange', updateFullscreenIcon);
-        document.addEventListener('webkitfullscreenchange', updateFullscreenIcon);
-        document.addEventListener('msfullscreenchange', updateFullscreenIcon);
+        document.addEventListener("fullscreenchange", updateFullscreenIcon);
+        document.addEventListener(
+          "webkitfullscreenchange",
+          updateFullscreenIcon
+        );
+        document.addEventListener("msfullscreenchange", updateFullscreenIcon);
 
         // Fullscreen button click handler
-        $('#fullscreenBtn').on('click', function() {
+        $("#fullscreenBtn").on("click", function () {
           toggleFullscreen();
         });
 
         // Hide thumbnails when clicking outside the modal
-        $(document).on('click', function(e) {
-          if ($(e.target).hasClass('thumbnails')) {
-            $('.thumbnails').removeClass('visible');
+        $(document).on("click", function (e) {
+          if ($(e.target).hasClass("thumbnails")) {
+            $(".thumbnails").removeClass("visible");
           }
         });
       });
