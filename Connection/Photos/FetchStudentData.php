@@ -35,7 +35,6 @@ function respond($success, $message = '', $data = [])
 }
 
 try {
-    // Log the incoming request
     error_log("FetchStudentData Request: " . json_encode($_GET));
 
     $template = isset($_GET['template']) ? (int)$_GET['template'] : 1;
