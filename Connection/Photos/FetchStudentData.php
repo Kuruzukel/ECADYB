@@ -118,7 +118,6 @@ try {
 
     error_log("Total students across all collections: $totalStudentsCount");
 
-    // Calculate pagination
     $totalPages = ceil($totalStudentsCount / $limit);
     $skip = ($page - 1) * $limit;
 
@@ -129,10 +128,9 @@ try {
     $targetSkip = $skip;
     $targetLimit = $limit;
 
-    // Process collections in order, skipping students until we reach our target page
     foreach ($collections as $collectionName) {
         if ($studentsProcessed >= $targetSkip + $targetLimit) {
-            break; // We have enough students
+            break;
         }
 
         try {
@@ -146,7 +144,6 @@ try {
                 $collection = $db->$collectionName;
                 $collectionCount = $collection->countDocuments();
 
-                // Calculate how many students to skip and take from this collection
                 $collectionSkip = max(0, $targetSkip - $studentsProcessed);
                 $collectionLimit = min($targetLimit - count($allStudents), $collectionCount - $collectionSkip);
 
@@ -228,9 +225,9 @@ try {
                     }
 
                     error_log("Processed $processedCount students from collection $collectionName");
-                    $studentsProcessed += $collectionCount; // Add total count for pagination calculation
+                    $studentsProcessed += $collectionCount;
                 } else {
-                    $studentsProcessed += $collectionCount; // Skip this collection, add to processed count
+                    $studentsProcessed += $collectionCount;
                 }
             } else {
                 error_log("Collection $collectionName does not exist in database $mongoDbName");
@@ -244,9 +241,8 @@ try {
 
     $studentsPerPage = 6;
     $currentPageStudents = count($allStudents);
-    $totalStudents = $totalStudentsCount; // Use the total count across all collections
+    $totalStudents = $totalStudentsCount;
 
-    // Calculate actual yearbook pages needed (not API pagination pages)
     $yearbookPagesNeeded = ceil($totalStudents / $studentsPerPage);
 
     $response = [
@@ -256,8 +252,8 @@ try {
             'students' => $allStudents,
             'total_students' => $totalStudents,
             'current_page' => $page,
-            'total_pages' => $totalPages, // API pagination pages
-            'yearbook_pages' => $yearbookPagesNeeded, // Actual yearbook pages needed
+            'total_pages' => $totalPages,
+            'yearbook_pages' => $yearbookPagesNeeded,
             'students_per_page' => $studentsPerPage,
             'limit_per_request' => $limit,
             'students_returned' => $currentPageStudents,
