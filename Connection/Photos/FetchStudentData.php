@@ -75,7 +75,6 @@ try {
     $template = max(1, min(3, $template));
     $mongoDbName = "BatchTemplate" . $template;
 
-    // Log the connection attempt
     error_log("Connecting to MongoDB database: " . $mongoDbName . " for department: " . $department);
     $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 
