@@ -286,6 +286,11 @@ const themes = {
                 const notificationScript = tempDiv.querySelector('script[data-notification]');
                 if (notificationScript) {
                   eval(notificationScript.textContent);
+                  
+                  // Clear the select all checkbox state when CSV is successfully uploaded
+                  // This ensures the select all checkbox is unchecked on the StudentList page
+                  // since all newly uploaded students have "Pending" status
+                  localStorage.removeItem('selectAllState');
                 }
               }
               

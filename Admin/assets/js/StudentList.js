@@ -231,17 +231,29 @@ function updateSelectAllState() {
   const visibleCheckboxes = getVisibleStudentCheckboxes();
   if (visibleCheckboxes.length === 0) {
     selectAllCheckbox.checked = false;
+    selectAllCheckbox.indeterminate = false;
     return;
   }
 
-  // Check if all visible checkboxes are checked
-  const allChecked = visibleCheckboxes.every(checkbox => checkbox.checked);
-  selectAllCheckbox.checked = allChecked;
+  // Count checked and unchecked
+  const checkedCount = visibleCheckboxes.filter(checkbox => checkbox.checked).length;
+  const allChecked = checkedCount === visibleCheckboxes.length;
+  const noneChecked = checkedCount === 0;
   
-  // Also update localStorage
   if (allChecked) {
+    // All are checked (Active) - show checked
+    selectAllCheckbox.checked = true;
+    selectAllCheckbox.indeterminate = false;
     localStorage.setItem("selectAllState", "true");
+  } else if (noneChecked) {
+    // None are checked (all Pending) - show unchecked
+    selectAllCheckbox.checked = false;
+    selectAllCheckbox.indeterminate = false;
+    localStorage.removeItem("selectAllState");
   } else {
+    // Some are checked, some are not - show minus/indeterminate
+    selectAllCheckbox.checked = false;
+    selectAllCheckbox.indeterminate = true;
     localStorage.removeItem("selectAllState");
   }
 }
@@ -250,26 +262,31 @@ function initializeSelectAll() {
   const selectAllCheckbox = document.getElementById("select-all-header");
   if (!selectAllCheckbox) return;
 
-  const savedSelectAllState = localStorage.getItem("selectAllState");
-  if (savedSelectAllState === "true") {
+  // First, check the actual state of checkboxes on the page
+  // This takes priority over localStorage to reflect the true state
+  const visibleCheckboxes = getVisibleStudentCheckboxes();
+  const checkedCount = visibleCheckboxes.filter(cb => cb.checked).length;
+  const allChecked = checkedCount === visibleCheckboxes.length && visibleCheckboxes.length > 0;
+  
+  // Set the select all checkbox to match the actual state
+  if (allChecked) {
     selectAllCheckbox.checked = true;
+    selectAllCheckbox.indeterminate = false;
     isSelectAllActive = true;
-
-    setTimeout(() => {
-      isInitializing = true; // Set flag to prevent notifications during initialization
-      const visibleStudentCheckboxes = getVisibleStudentCheckboxes();
-      visibleStudentCheckboxes.forEach((checkbox) => {
-        if (!checkbox.checked) {
-          checkbox.checked = true;
-          checkbox.dispatchEvent(new Event("change", { bubbles: true }));
-        }
-      });
-      // Reset flag after a short delay to allow all change events to complete
-      setTimeout(() => {
-        isInitializing = false;
-      }, 500);
-      // Removed notification when select all is clicked
-    }, 100);
+  } else if (checkedCount === 0) {
+    selectAllCheckbox.checked = false;
+    selectAllCheckbox.indeterminate = false;
+    isSelectAllActive = false;
+  } else if (checkedCount > 0) {
+    // Some checked, some not - show indeterminate
+    selectAllCheckbox.checked = false;
+    selectAllCheckbox.indeterminate = true;
+    isSelectAllActive = false;
+  }
+  
+  // Clear localStorage if it doesn't match the actual state
+  if (!allChecked) {
+    localStorage.removeItem("selectAllState");
   }
 
   selectAllCheckbox.addEventListener("change", function () {
@@ -282,6 +299,9 @@ function initializeSelectAll() {
     }
 
     console.log("Select all clicked:", this.checked);
+    
+    // Clear indeterminate state when clicked
+    this.indeterminate = false;
 
     isSelectAllActive = this.checked;
 
@@ -475,6 +495,7 @@ function clearSelectAllState() {
   const selectAllCheckbox = document.getElementById("select-all-header");
   if (selectAllCheckbox) {
     selectAllCheckbox.checked = false;
+    selectAllCheckbox.indeterminate = false;
   }
   
   // Update select all state
