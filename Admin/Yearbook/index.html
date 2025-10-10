@@ -360,7 +360,6 @@
       function refreshThumbnails() {
         if (!window.pageThumbnails) return;
 
-        // Update existing thumbnails with generated content
         for (var pageNum in window.pageThumbnails) {
           var thumbnailSrc = window.pageThumbnails[pageNum];
           var existingThumbnail = $(".thumbnails .page-" + pageNum);
