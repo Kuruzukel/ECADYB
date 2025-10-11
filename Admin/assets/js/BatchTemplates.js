@@ -614,7 +614,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
           let detectedSlot = slot;
 
-          // Check for slot prefix in filename
           for (const [prefix, slotNum] of Object.entries(slotMapping)) {
             if (fileName.startsWith(prefix)) {
               detectedSlot = slotNum;
