@@ -630,7 +630,6 @@ window.addEventListener("DOMContentLoaded", () => {
             return;
           }
 
-          // If we couldn't detect a slot for slots 1-7, show error and cancel
           if (
             slot >= 1 &&
             slot <= 7 &&
