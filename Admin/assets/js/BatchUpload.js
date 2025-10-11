@@ -291,7 +291,6 @@ window.addEventListener("DOMContentLoaded", () => {
               if (notificationScript) {
                 eval(notificationScript.textContent);
 
-                // since all newly uploaded students have "Pending" status
                 localStorage.removeItem("selectAllState");
               }
             }
