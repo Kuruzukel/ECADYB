@@ -188,14 +188,14 @@ function showUploadOverlay(uploadType = "files") {
   
   if (overlay && uploadText) {
     uploadText.textContent = `Please wait while we upload your ${uploadType}`;
-    overlay.style.display = "flex";
+    overlay.classList.add("show");
   }
 }
 
 function hideUploadOverlay() {
   const overlay = document.getElementById("upload-overlay");
   if (overlay) {
-    overlay.style.display = "none";
+    overlay.classList.remove("show");
   }
 }
 
