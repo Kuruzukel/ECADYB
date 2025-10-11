@@ -724,7 +724,6 @@ window.addEventListener("DOMContentLoaded", () => {
           currentXhr = null;
         }
 
-        // Show cancellation notification
         showNotification("Cancelled upload", "error");
 
         // Reset UI elements
