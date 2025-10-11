@@ -600,7 +600,6 @@ window.addEventListener("DOMContentLoaded", () => {
             detectedSide = "back";
           }
 
-          // Update form with detected side
           form.set("side", detectedSide);
 
           // Auto-detect slot based on filename prefix
