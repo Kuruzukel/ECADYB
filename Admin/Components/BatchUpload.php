@@ -6,7 +6,6 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 use MongoDB\Client;
 
-// Handle flash messages and redirection
 $flashMessage = null;
 if (isset($_SESSION['upload_status'])) {
     if ($_SESSION['upload_status'] === 'success') {
@@ -260,7 +259,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($uploadStatus['top_management_message'] !== null || $uploadStatus['student_info'] !== null) {
         $message = '';
         $type = '';
-        
+
         if ($uploadStatus['top_management_message'] || $uploadStatus['student_info']) {
             $message = 'Upload successful!';
             $type = 'success';
@@ -268,7 +267,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $message = "Upload failed. CSV file must have these columns: name, position, message, academicyear";
             $type = 'error';
         }
-        
+
         // Add notification script with a data attribute for AJAX detection
         echo '<script data-notification>
             if (typeof showNotification === "function") {
@@ -321,11 +320,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="section-header">Student and Top Management Photos</div>
                         <div class="file-card">
                             <label class="custom-upload" for="student-photos">Upload Student Photos</label>
-                            <input type="file" name="student_photos[]" id="student-photos" class="upload-input" accept="image/*" multiple>
+                            <input type="file" name="student_photos[]" id="student-photos" class="upload-input"
+                                accept="image/*" multiple>
                         </div>
                         <div class="file-card" style="margin-top: 20px;">
                             <label class="custom-upload" for="management-photos">Upload Top Management Photos</label>
-                            <input type="file" name="management_photos[]" id="management-photos" class="upload-input" accept="image/*" multiple>
+                            <input type="file" name="management_photos[]" id="management-photos" class="upload-input"
+                                accept="image/*" multiple>
                         </div>
                     </div>
                 </div>
@@ -336,7 +337,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <?php if ($flashMessage): ?>
-    <div id="flash-data" data-message="<?= htmlspecialchars($flashMessage['message'], ENT_QUOTES) ?>" data-type="<?= htmlspecialchars($flashMessage['type'], ENT_QUOTES) ?>" style="display:none"></div>
+        <div id="flash-data" data-message="<?= htmlspecialchars($flashMessage['message'], ENT_QUOTES) ?>"
+            data-type="<?= htmlspecialchars($flashMessage['type'], ENT_QUOTES) ?>" style="display:none"></div>
     <?php endif; ?>
     <script src="../assets/js/BatchUpload.js?v=<?php echo time(); ?>"></script>
 </body>
