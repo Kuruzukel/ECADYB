@@ -175,7 +175,7 @@ function showNotification(message, type = "success") {
     setTimeout(() => {
       notif.remove();
       notificationTimeout = null;
-      currentOperation = null; // Clear current operation
+      currentOperation = null;
     }, 500);
   }, duration);
 }
