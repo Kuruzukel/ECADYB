@@ -244,7 +244,6 @@ window.addEventListener("DOMContentLoaded", () => {
                 "success"
               );
 
-              // Show upload details
               if (result.uploaded > 0) {
                 showNotification(
                   `Successfully uploaded ${result.uploaded} of ${result.total} images.`,
