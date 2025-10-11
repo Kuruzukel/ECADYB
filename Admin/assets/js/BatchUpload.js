@@ -206,7 +206,6 @@ window.addEventListener("DOMContentLoaded", () => {
         const selectedTemplate = document.getElementById("selected_template");
 
         if (input.id === "student-photos" || input.id === "management-photos") {
-          // Show immediate notification for upload operation
           currentOperation = "uploading_photos";
           showNotification("Uploading photos...", "info");
 
