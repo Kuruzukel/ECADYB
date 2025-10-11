@@ -530,7 +530,7 @@ window.addEventListener("DOMContentLoaded", () => {
           });
 
           xhr.open("POST", url, true);
-          xhr.timeout = 60000; // 60 seconds - reasonable for file uploads
+          xhr.timeout = 60000;
 
           xhr.onabort = () => {
             resolve({ aborted: true });
