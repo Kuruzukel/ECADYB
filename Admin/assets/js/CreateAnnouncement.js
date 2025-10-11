@@ -294,7 +294,6 @@ function submitForm() {
         formData.set("date", today);
       }
 
-      // Show immediate notification for posting operation
       currentOperation = "posting_announcement";
       showNotification("Posting announcement...", "info");
 
@@ -437,8 +436,8 @@ function showNotification(message, type = "success") {
   if (!container) return;
 
   // Remove any existing notifications to prevent duplicates
-  const existingNotifications = container.querySelectorAll('.notification');
-  existingNotifications.forEach(notif => notif.remove());
+  const existingNotifications = container.querySelectorAll(".notification");
+  existingNotifications.forEach((notif) => notif.remove());
 
   // Clear any existing notification timeout
   if (notificationTimeout) {
