@@ -16,7 +16,6 @@ if (isset($_SESSION['upload_status'])) {
     unset($_SESSION['upload_status']);
 }
 
-// Clear return URL after use
 if (isset($_SESSION['return_url'])) {
     unset($_SESSION['return_url']);
 }
