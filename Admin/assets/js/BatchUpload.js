@@ -291,7 +291,6 @@ window.addEventListener("DOMContentLoaded", () => {
               if (notificationScript) {
                 eval(notificationScript.textContent);
 
-                // This ensures the select all checkbox is unchecked on the StudentList page
                 // since all newly uploaded students have "Pending" status
                 localStorage.removeItem("selectAllState");
               }
