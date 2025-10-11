@@ -650,7 +650,6 @@ window.addEventListener("DOMContentLoaded", () => {
             `Auto-detected - Slot: ${detectedSlot}, Side: ${detectedSide} from filename: ${fileName}`
           );
 
-          // Immediate UI update
           await new Promise((resolve) => setTimeout(resolve, 10));
 
           const data = await xhrUpload(UPLOAD_ENDPOINT, form);
