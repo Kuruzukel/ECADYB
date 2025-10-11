@@ -190,7 +190,6 @@ window.addEventListener("DOMContentLoaded", () => {
     if (hidden) hidden.value = selectedTemplate;
   }
 
-  // Show flash message via hidden data element
   const flash = document.getElementById("flash-data");
   if (flash && typeof showNotification === "function") {
     const msg = flash.getAttribute("data-message");
