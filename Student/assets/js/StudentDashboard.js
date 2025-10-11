@@ -636,6 +636,10 @@ function initializeYearbookItems() {
   const sliderMain = document.querySelector(".yearbook-slider-main");
 
   if (!itemsContainer || !sliderMain) {
+    // Check if we're on the yearbook page - if not, don't retry
+    if (!document.querySelector(".yearbooks-section")) {
+      return; // Not on yearbook page, exit silently
+    }
     console.warn("Required yearbook elements not found, retrying...");
     setTimeout(initializeYearbookItems, 200);
     return;
