@@ -621,7 +621,6 @@ window.addEventListener("DOMContentLoaded", () => {
             }
           }
 
-          // If detected slot doesn't match provided slot, show error and cancel
           if (detectedSlot != slot) {
             showNotification(
               `Filename doesn't match slot. Expected slot ${detectedSlot} for this filename.`,
