@@ -644,7 +644,6 @@ window.addEventListener("DOMContentLoaded", () => {
             return;
           }
 
-          // Update form with detected slot
           form.set("slot", String(detectedSlot));
 
           console.log(
