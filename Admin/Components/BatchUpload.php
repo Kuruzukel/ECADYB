@@ -267,7 +267,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $type = 'error';
         }
 
-        // Add notification script with a data attribute for AJAX detection
         echo '<script data-notification>
             if (typeof showNotification === "function") {
                 showNotification("' . $message . '", "' . $type . '");
