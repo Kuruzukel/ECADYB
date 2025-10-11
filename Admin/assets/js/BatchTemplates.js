@@ -659,7 +659,6 @@ window.addEventListener("DOMContentLoaded", () => {
             return;
           }
 
-          // Handle Error 0 specifically
           if (data && data.message === "Cancelled upload") {
             if (uploadOverlay) uploadOverlay.style.display = "none";
             showNotification("Cancelled upload", "error");
@@ -672,7 +671,7 @@ window.addEventListener("DOMContentLoaded", () => {
           }
 
           const img = document.createElement("img");
-          img.src = data.url || data.public_url; // Handle both possible response formats
+          img.src = data.url || data.public_url;
           img.classList.add(
             detectedSide === "front" ? "front-img" : "back-img"
           );
