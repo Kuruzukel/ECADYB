@@ -437,7 +437,6 @@ function showNotification(message, type = "success") {
   const existingNotifications = container.querySelectorAll(".notification");
   existingNotifications.forEach((notif) => notif.remove());
 
-  // Clear any existing notification timeout
   if (notificationTimeout) {
     clearTimeout(notificationTimeout);
   }
