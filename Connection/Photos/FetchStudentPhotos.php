@@ -36,8 +36,7 @@ try {
     $mongoClient = new MongoDB\Client($mongoUrl);
 
     $photosCollection = $mongoClient->$mongoDbName->StudentPhotos;
-    
-    // Build query filter
+
     $filter = ['template' => $template];
     if ($studentId) {
         $filter['student_id'] = $studentId;
