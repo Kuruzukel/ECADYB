@@ -284,7 +284,6 @@ window.addEventListener("DOMContentLoaded", () => {
             const tempDiv = document.createElement("div");
             tempDiv.innerHTML = result;
 
-            // Check if there's a notification message in the response
             if (tempDiv.querySelector("#notification-container")) {
               const notificationScript = tempDiv.querySelector(
                 "script[data-notification]"
