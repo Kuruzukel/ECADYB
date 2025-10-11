@@ -579,7 +579,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
         console.log("Sending upload request with template:", template);
 
-        // Show immediate notification for upload operation
         currentOperation = "uploading_image";
         showNotification(`Uploading image to Slot ${slot} ${side}...`, "info");
 
