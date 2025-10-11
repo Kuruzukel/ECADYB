@@ -295,7 +295,6 @@ window.addEventListener("DOMContentLoaded", () => {
               }
             }
 
-            // Reset only the current file input
             input.value = "";
           } catch (error) {
             console.error("Upload error:", error);
