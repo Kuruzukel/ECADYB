@@ -531,8 +531,7 @@ function showNotification(message, type = "success") {
     clearTimeout(notificationTimeout);
   }
 
-  // Select icon based on notification type
-  let icon = "fa-check-circle"; // default for success
+  let icon = "fa-check-circle";
   if (type === "error") {
     icon = "fa-exclamation-circle";
   } else if (type === "info") {
@@ -549,14 +548,13 @@ function showNotification(message, type = "success") {
   `;
   container.appendChild(notif);
 
-  // Make notification visible for different durations based on type
-  const duration = type === "info" ? 2000 : 5000; // Info notifications disappear faster
+  const duration = type === "info" ? 2000 : 5000;
   notificationTimeout = setTimeout(() => {
     notif.classList.remove("show");
     setTimeout(() => {
       notif.remove();
       notificationTimeout = null;
-      currentOperation = null; // Clear current operation
+      currentOperation = null;
     }, 500);
   }, duration);
 }
