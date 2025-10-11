@@ -251,7 +251,6 @@ window.addEventListener("DOMContentLoaded", () => {
                 );
               }
 
-              // Show any failed uploads
               if (result.failed > 0) {
                 showNotification(
                   `Failed to upload ${result.failed} images. Check file names and try again.`,
