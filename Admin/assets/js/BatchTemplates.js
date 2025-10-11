@@ -773,7 +773,7 @@ window.addEventListener("DOMContentLoaded", () => {
           const res = await fetch(
             `${CONNECTION_PATH}/Cover/FetchCovers.php?template=${template}`,
             {
-              signal: AbortSignal.timeout(10000), // 10 second timeout
+              signal: AbortSignal.timeout(10000),
             }
           );
 
