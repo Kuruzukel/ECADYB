@@ -298,7 +298,6 @@ window.addEventListener("DOMContentLoaded", () => {
         .textContent.trim();
       localStorage.setItem("selectedBatchTemplate", templateName);
 
-      // Extract template number and store it
       const templateMatch = templateName.match(/Batch Template (\d+)/);
       if (templateMatch && templateMatch[1]) {
         const templateNumber = parseInt(templateMatch[1]);
