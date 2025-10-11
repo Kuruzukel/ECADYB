@@ -209,7 +209,6 @@ window.addEventListener("DOMContentLoaded", () => {
           currentOperation = "uploading_photos";
           showNotification("Uploading photos...", "info");
 
-          // Handle image uploads
           Array.from(input.files).forEach((file) => {
             formData.append("files[]", file);
           });
