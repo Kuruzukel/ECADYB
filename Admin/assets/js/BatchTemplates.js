@@ -138,7 +138,6 @@ function applyTheme(theme) {
   document.body.style.display = "";
 }
 
-// Smart notification system variables
 let notificationTimeout = null;
 let currentOperation = null;
 
@@ -147,8 +146,8 @@ function showNotification(message, type = "success") {
   if (!container) return;
 
   // Remove any existing notifications to prevent duplicates
-  const existingNotifications = container.querySelectorAll('.notification');
-  existingNotifications.forEach(notif => notif.remove());
+  const existingNotifications = container.querySelectorAll(".notification");
+  existingNotifications.forEach((notif) => notif.remove());
 
   // Clear any existing notification timeout
   if (notificationTimeout) {
@@ -302,7 +301,7 @@ window.addEventListener("DOMContentLoaded", () => {
         .querySelector(".section-header")
         .textContent.trim();
       localStorage.setItem("selectedBatchTemplate", templateName);
-      
+
       // Extract template number and store it
       const templateMatch = templateName.match(/Batch Template (\d+)/);
       if (templateMatch && templateMatch[1]) {
@@ -522,31 +521,33 @@ window.addEventListener("DOMContentLoaded", () => {
         return new Promise((resolve) => {
           const xhr = new XMLHttpRequest();
           currentXhr = xhr;
-          
+
           // Add upload progress tracking
-          xhr.upload.addEventListener("progress", function(e) {
+          xhr.upload.addEventListener("progress", function (e) {
             if (e.lengthComputable) {
               const percentComplete = (e.loaded / e.total) * 100;
               const progressBar = document.getElementById("progressBar");
-              const progressPercent = document.getElementById("progressPercent");
+              const progressPercent =
+                document.getElementById("progressPercent");
               if (progressBar) progressBar.style.width = percentComplete + "%";
-              if (progressPercent) progressPercent.textContent = Math.round(percentComplete) + "%";
+              if (progressPercent)
+                progressPercent.textContent = Math.round(percentComplete) + "%";
             }
           });
-          
+
           xhr.open("POST", url, true);
           // Reasonable timeout settings
           xhr.timeout = 60000; // 60 seconds - reasonable for file uploads
-          
+
           xhr.onabort = () => {
             resolve({ aborted: true });
           };
-          
+
           xhr.ontimeout = () => {
             resolve({ success: false, message: "Upload timed out" });
             currentXhr = null;
           };
-          
+
           xhr.onreadystatechange = () => {
             if (xhr.readyState === 4) {
               try {
@@ -567,12 +568,12 @@ window.addEventListener("DOMContentLoaded", () => {
               currentXhr = null;
             }
           };
-          
+
           xhr.onerror = () => {
             resolve({ success: false, message: "Connection failed" });
             currentXhr = null;
           };
-          
+
           xhr.send(formData);
         });
       }
@@ -602,30 +603,30 @@ window.addEventListener("DOMContentLoaded", () => {
           // Auto-detect side based on filename
           const fileName = file.name.toUpperCase();
           let detectedSide = side; // Default to provided side
-          
+
           // New rule: detect FRONT/BACK from filename
-          if (fileName.includes('FRONT')) {
+          if (fileName.includes("FRONT")) {
             detectedSide = "front";
-          } else if (fileName.includes('BACK')) {
+          } else if (fileName.includes("BACK")) {
             detectedSide = "back";
           }
-          
+
           // Update form with detected side
           form.set("side", detectedSide);
-          
+
           // Auto-detect slot based on filename prefix
           const slotMapping = {
-            'BSME': 1,
-            'BSCJ': 2,
-            'BSTM': 3,
-            'BSE': 4,
-            'BSN': 5,
-            'BSIS': 6,
-            'BSBA': 7
+            BSME: 1,
+            BSCJ: 2,
+            BSTM: 3,
+            BSE: 4,
+            BSN: 5,
+            BSIS: 6,
+            BSBA: 7,
           };
-          
+
           let detectedSlot = slot; // Default to provided slot
-          
+
           // Check for slot prefix in filename
           for (const [prefix, slotNum] of Object.entries(slotMapping)) {
             if (fileName.startsWith(prefix)) {
@@ -633,43 +634,56 @@ window.addEventListener("DOMContentLoaded", () => {
               break;
             }
           }
-          
+
           // If detected slot doesn't match provided slot, show error and cancel
           if (detectedSlot != slot) {
-            showNotification(`Filename doesn't match slot. Expected slot ${detectedSlot} for this filename.`, "error");
+            showNotification(
+              `Filename doesn't match slot. Expected slot ${detectedSlot} for this filename.`,
+              "error"
+            );
             if (uploadOverlay) uploadOverlay.style.display = "none";
             return;
           }
-          
+
           // If we couldn't detect a slot for slots 1-7, show error and cancel
-          if (slot >= 1 && slot <= 7 && detectedSlot == slot && !fileName.startsWith('BS')) {
-            showNotification("Filename must start with a valid prefix (BSME, BSCJ, BSTM, BSE, BSN, BSIS, BSBA).", "error");
+          if (
+            slot >= 1 &&
+            slot <= 7 &&
+            detectedSlot == slot &&
+            !fileName.startsWith("BS")
+          ) {
+            showNotification(
+              "Filename must start with a valid prefix (BSME, BSCJ, BSTM, BSE, BSN, BSIS, BSBA).",
+              "error"
+            );
             if (uploadOverlay) uploadOverlay.style.display = "none";
             return;
           }
-          
+
           // Update form with detected slot
           form.set("slot", String(detectedSlot));
-          
-          console.log(`Auto-detected - Slot: ${detectedSlot}, Side: ${detectedSide} from filename: ${fileName}`);
+
+          console.log(
+            `Auto-detected - Slot: ${detectedSlot}, Side: ${detectedSide} from filename: ${fileName}`
+          );
 
           // Immediate UI update
-          await new Promise(resolve => setTimeout(resolve, 10));
-          
+          await new Promise((resolve) => setTimeout(resolve, 10));
+
           const data = await xhrUpload(UPLOAD_ENDPOINT, form);
           if (data && data.aborted) {
             if (uploadOverlay) uploadOverlay.style.display = "none";
             showNotification("Cancelled upload", "error");
             return;
           }
-          
+
           // Handle Error 0 specifically
           if (data && data.message === "Cancelled upload") {
             if (uploadOverlay) uploadOverlay.style.display = "none";
             showNotification("Cancelled upload", "error");
             return;
           }
-          
+
           if (!data?.success) {
             showNotification(data?.message || "Upload failed", "error");
             return;
@@ -677,7 +691,9 @@ window.addEventListener("DOMContentLoaded", () => {
 
           const img = document.createElement("img");
           img.src = data.url || data.public_url; // Handle both possible response formats
-          img.classList.add(detectedSide === "front" ? "front-img" : "back-img");
+          img.classList.add(
+            detectedSide === "front" ? "front-img" : "back-img"
+          );
           if (detectedSide === "front") frontImg = img;
           else backImg = img;
 
@@ -696,9 +712,15 @@ window.addEventListener("DOMContentLoaded", () => {
 
           // Show success notification (replaces the uploading notification)
           if (detectedSlot === 8) {
-            showNotification("Yearbook Backgrounds have been uploaded successfully!", "success");
+            showNotification(
+              "Yearbook Backgrounds have been uploaded successfully!",
+              "success"
+            );
           } else {
-            showNotification(`Uploaded to Slot ${detectedSlot} ${detectedSide} successfully!`, "success");
+            showNotification(
+              `Uploaded to Slot ${detectedSlot} ${detectedSide} successfully!`,
+              "success"
+            );
           }
         } catch (err) {
           console.error("Upload error:", err);
@@ -714,7 +736,7 @@ window.addEventListener("DOMContentLoaded", () => {
         const progressBar = document.getElementById("progressBar");
         const uploadText = document.getElementById("uploadText");
         const progressPercent = document.getElementById("progressPercent");
-        
+
         // Abort the current upload request if exists
         if (currentXhr) {
           try {
@@ -722,10 +744,10 @@ window.addEventListener("DOMContentLoaded", () => {
           } catch (_) {}
           currentXhr = null;
         }
-        
+
         // Show cancellation notification
         showNotification("Cancelled upload", "error");
-        
+
         // Reset UI elements
         if (progressBar) progressBar.style.width = "0%";
         if (uploadOverlay) uploadOverlay.style.display = "none";
@@ -770,12 +792,13 @@ window.addEventListener("DOMContentLoaded", () => {
       (async function loadExisting() {
         try {
           // Add a small delay to prevent UI blocking
-          await new Promise(resolve => setTimeout(resolve, 50));
-          
+          await new Promise((resolve) => setTimeout(resolve, 50));
+
           const res = await fetch(
-            `${CONNECTION_PATH}/Cover/FetchCovers.php?template=${template}`, {
+            `${CONNECTION_PATH}/Cover/FetchCovers.php?template=${template}`,
+            {
               // Add timeout to fetch request
-              signal: AbortSignal.timeout(10000) // 10 second timeout
+              signal: AbortSignal.timeout(10000), // 10 second timeout
             }
           );
 
@@ -814,12 +837,14 @@ window.addEventListener("DOMContentLoaded", () => {
               if (backImg && !isBackgroundSlot) backImg.style.opacity = 0;
             }
           }
-
         } catch (e) {
           // Handle timeout errors specifically
-          if (e.name === 'TimeoutError' || e.name === 'AbortError') {
+          if (e.name === "TimeoutError" || e.name === "AbortError") {
             console.warn("Fetch covers request timed out");
-            showNotification("Loading covers timed out. Please try again.", "error");
+            showNotification(
+              "Loading covers timed out. Please try again.",
+              "error"
+            );
           } else {
             console.error("Failed to load existing covers:", e);
             showNotification("Failed to load existing covers", "error");
