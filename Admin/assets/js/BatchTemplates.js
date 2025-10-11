@@ -768,7 +768,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
       (async function loadExisting() {
         try {
-          // Add a small delay to prevent UI blocking
           await new Promise((resolve) => setTimeout(resolve, 50));
 
           const res = await fetch(
