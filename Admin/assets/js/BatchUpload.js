@@ -268,7 +268,6 @@ window.addEventListener("DOMContentLoaded", () => {
             showNotification("Upload failed. Please try again.", "error");
           }
         } else {
-          // Handle CSV uploads
           formData.append(input.name, input.files[0]);
           if (selectedTemplate) {
             formData.append("selected_template", selectedTemplate.value);
