@@ -717,7 +717,6 @@ window.addEventListener("DOMContentLoaded", () => {
         const uploadText = document.getElementById("uploadText");
         const progressPercent = document.getElementById("progressPercent");
 
-        // Abort the current upload request if exists
         if (currentXhr) {
           try {
             currentXhr.abort();
