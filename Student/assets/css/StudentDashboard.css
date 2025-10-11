@@ -1,37 +1,46 @@
-/* Modern Page Transitions */
-@keyframes modernPageIn {
-  0% {
-    opacity: 0;
-    transform: scale(0.95) translateY(20px);
-    filter: blur(5px);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-    filter: blur(0px);
-  }
-}
-
-@keyframes modernPageOut {
+@keyframes zoomPageOut {
   0% {
     opacity: 1;
-    transform: scale(1) rotate(0deg);
+    transform: scale(1);
     filter: blur(0px) brightness(1) saturate(1);
   }
   30% {
     opacity: 0.9;
-    transform: scale(1.02) rotate(0.5deg);
+    transform: scale(1.05);
     filter: blur(1px) brightness(1.05) saturate(1.1);
   }
   60% {
     opacity: 0.6;
-    transform: scale(1.08) rotate(1.5deg);
+    transform: scale(1.1);
     filter: blur(4px) brightness(1.15) saturate(1.3);
   }
   100% {
     opacity: 0;
-    transform: scale(1.15) rotate(3deg);
+    transform: scale(1.2);
     filter: blur(12px) brightness(1.4) saturate(1.6);
+  }
+}
+
+@keyframes zoomHeaderOut {
+  0% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+    filter: blur(0px) brightness(1);
+  }
+  30% {
+    opacity: 0.9;
+    transform: translateX(-50%) scale(1.05);
+    filter: blur(1px) brightness(1.05);
+  }
+  60% {
+    opacity: 0.6;
+    transform: translateX(-50%) scale(1.1);
+    filter: blur(3px) brightness(1.1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) scale(1.15);
+    filter: blur(8px) brightness(1.2);
   }
 }
 
@@ -49,44 +58,32 @@
   }
 }
 
-@keyframes headerTransitionOut {
+@keyframes particleFloat {
   0% {
+    transform: translateY(100vh) translateX(0);
+    opacity: 0;
+  }
+  10% {
     opacity: 1;
-    transform: translateX(-50%) scale(1);
-    filter: blur(0px) brightness(1);
   }
-  30% {
-    opacity: 0.9;
-    transform: translateX(-50%) scale(1.02);
-    filter: blur(1px) brightness(1.05);
-  }
-  60% {
-    opacity: 0.6;
-    transform: translateX(-50%) scale(1.05);
-    filter: blur(3px) brightness(1.1);
+  90% {
+    opacity: 1;
   }
   100% {
+    transform: translateY(-100vh) translateX(50px);
     opacity: 0;
-    transform: translateX(-50%) scale(1.08);
-    filter: blur(8px) brightness(1.2);
   }
 }
 
-/* Page entrance animation */
-body {
-  animation: modernPageIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-/* Page exit transition */
 .page-transition-out {
-  animation: modernPageOut 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: zoomPageOut 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   pointer-events: none;
   position: relative;
   overflow: hidden;
 }
 
 .page-transition-out::before {
-  content: '';
+  content: "";
   position: fixed;
   top: 0;
   left: 0;
@@ -106,15 +103,42 @@ body {
   pointer-events: none;
 }
 
-/* Enhanced transition for header */
+.page-transition-out::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(
+    circle at center,
+    rgba(99, 102, 241, 0.1) 0%,
+    rgba(112, 44, 180, 0.05) 30%,
+    transparent 70%
+  );
+  z-index: 9999;
+  pointer-events: none;
+  animation: particleFloat 1s ease-out;
+}
+
 .page-transition-out header {
-  animation: headerTransitionOut 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: zoomHeaderOut 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   animation-delay: 0.1s;
   position: fixed !important;
   top: 1rem !important;
   left: 50% !important;
   z-index: 10000 !important;
   transform-origin: center center;
+}
+
+.page-transition-out .main-hero {
+  animation: zoomPageOut 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation-delay: 0.05s;
+}
+
+.page-transition-out .section {
+  animation: zoomPageOut 0.9s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation-delay: 0.15s;
 }
 
 * {
@@ -149,43 +173,28 @@ body::-webkit-scrollbar {
 }
 
 header {
+  position: fixed;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: fixed;
   width: 80%;
-  left: 0;
-  right: 0;
-  top: 1rem;
-  margin-left: auto;
-  margin-right: auto;
   height: 62px;
   padding: 0 0.7rem;
   background: #000042;
   border-radius: 999px;
-  z-index: 10;
-  animation: fadeIn 1s ease forwards;
-  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-    transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid #0c27be;
+  transition: all 0.3s ease-in-out;
   opacity: 1;
   visibility: visible;
-  transform: translateY(0);
-  border: 1px solid #0c27be;
-}
-
-header.header-hidden {
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(-100%);
+  pointer-events: auto;
 }
 
 header.fading {
   transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-header.hidden {
-  opacity: 0 !important;
-  pointer-events: none !important;
 }
 
 .logo {
@@ -258,35 +267,20 @@ header.hidden {
   }
 }
 
-.profile-dropdown {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-}
-
-.profile-icon {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background-color: #f8f8f8;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.login-btn {
+  background-color: #112d4e;
+  color: rgb(255, 255, 255);
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 999px;
   cursor: pointer;
-  border: 2px solid #ccc;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s, box-shadow 0.2s;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 12px rgba(99, 102, 241, 0.18);
+  border: 1px solid #0c27be;
 }
 
-.profile-icon img {
-  width: 70%;
-  height: 70%;
-  object-fit: contain;
-  border-radius: 50%;
-}
-
-.profile-icon:hover {
-  transform: scale(1.05);
+.login-btn:hover {
   background: linear-gradient(135deg, #0d39d9 0%, #112d4e 100%);
   color: #ffffff !important;
   border-radius: 2rem;
@@ -299,102 +293,17 @@ header.hidden {
   position: relative;
 }
 
-.profile-icon.clicked {
+.login-btn.clicked {
   background: linear-gradient(135deg, #0d39d9 0%, #112d4e 100%);
   color: #ffffff !important;
   border-radius: 999px;
   box-shadow: 0 4px 20px rgba(99, 102, 241, 0.25),
     0 0 0 2px rgba(252, 218, 21, 0.3);
-  border: 2px solid #0d39d9;
+  border: 2px solid #fcda15;
   transform: scale(1.05);
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
-}
-
-.profile-dropdown {
-  position: relative;
-  display: flex;
-  align-items: center;
-  margin-left: auto;
-}
-
-.profile-icon {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  cursor: pointer;
-  object-fit: cover;
-  border: 2px solid #ccc;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.profile-icon:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.dropdown-menu {
-  display: none;
-  flex-direction: column;
-  position: absolute;
-  top: 60px;
-  right: 0;
-  width: 200px;
-  background: linear-gradient(135deg, #112d4e 0%, #1a237e 100%);
-  border-radius: 20px;
-  overflow: hidden;
-  opacity: 0;
-  transform: translateY(-15px) scale(0.98);
-  pointer-events: none;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 12px rgba(17, 45, 78, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease-in-out;
-  z-index: 1000;
-}
-
-.dropdown-item {
-  padding: 12px 18px;
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 15px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border-radius: 12px;
-  margin: 4px 8px;
-}
-
-.dropdown-item:hover {
-  background-color: rgba(255, 255, 255, 0.15);
-  font-weight: 600;
-  font-size: 15.5px;
-  transform: translateX(5px) scale();
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25), 0 0 8px rgba(252, 218, 21, 0.25);
-}
-
-.dropdown-menu.show {
-  display: flex;
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  pointer-events: auto;
-  animation: slideDown 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-20px) scale(0.95);
-  }
-  50% {
-    transform: translateY(-10px) scale(1.02);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
 }
 
 .main-hero {
@@ -438,24 +347,29 @@ header.hidden {
 .hero-category {
   font-size: 1.1rem;
   letter-spacing: 2px;
-  color: #e0e7ff;
+  color: #fcda15;
   margin-bottom: 1.2rem;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", sans-serif;
+  font-weight: 600;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
   opacity: 0.85;
 }
 .hero-heading {
   font-size: 3.2rem;
-  font-family: "Georgia", "Times New Roman", serif;
+  font-family: "arial-black", sans-serif;
   font-weight: bold;
   line-height: 1.1;
   margin-bottom: 1.2rem;
-  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 2px;
 }
 .hero-publish-date {
   font-size: 1.1rem;
   color: #e0e7ff;
   opacity: 0.8;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", sans-serif;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 .hero-welcome-text {
   font-size: 1.25rem;
@@ -463,6 +377,8 @@ header.hidden {
   color: #e0e7ff;
   opacity: 0.95;
   max-width: 600px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  font-family: "Segoe UI", sans-serif;
 }
 .hero-buttons {
   display: flex;
@@ -559,8 +475,10 @@ header.hidden {
   text-align: center;
   margin-bottom: 5rem;
   color: #ffffff;
-  font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
-    BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  font-family: "arial-black", sans-serif;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 2px;
 }
 
 @keyframes fadeIn {
@@ -576,69 +494,9 @@ header.hidden {
 
 .yearbooks-section {
   background: #021326;
-}
-
-.yearbooks-section .section-title {
-  color: #ffffff;
-  margin-top: 3rem;
-  text-align: center;
-  margin-bottom: 4rem;
-}
-
-.yearbooks-row {
-  width: 100%;
-  padding: 0 2.5rem;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-  align-items: flex-start;
-  box-sizing: border-box;
-}
-
-.yearbook-card {
-  width: 280px;
-  max-width: 280px;
-  height: 480px;
-  transition: transform 0.2s, box-shadow 0.2s;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
+  position: relative;
   overflow: hidden;
-  margin-bottom: 2rem;
-  z-index: 3;
-}
-
-.yearbook-card:nth-child(n + 1) {
-  margin-top: 1rem;
-}
-
-.yearbooks-row {
-  gap: 2rem;
-}
-.yearbook-card:hover {
-  transform: translateY(-8px) scale(1.05);
-}
-
-.yearbook-cover {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.yearbook-title {
-  margin-top: 1.5rem;
-  color: #fff;
-  font-size: 1.5rem;
-  font-weight: 600;
-  text-align: center;
-  line-height: 1.3;
-  min-height: 2.5em;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 1.5rem;
+  min-height: 100vh;
 }
 
 .yearbooks-background {
@@ -647,11 +505,12 @@ header.hidden {
   left: 0;
   width: 100%;
   height: 100%;
-  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY.png") center
+  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center
     center/cover no-repeat;
-
   pointer-events: none;
+  filter: blur(6px);
 }
+
 .yearbooks-section .section-title {
   position: relative;
   z-index: 2;
@@ -659,6 +518,15 @@ header.hidden {
 .yearbooks-section > *:not(.yearbooks-background) {
   position: relative;
   z-index: 2;
+}
+
+.yearbook-slider-main {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 3 !important;
 }
 .yearbooks-alt-curl {
   width: 100%;
@@ -673,10 +541,10 @@ header.hidden {
 }
 
 .yearbook-lower-curl {
-  position: fixed;
+  position: absolute;
   left: 0;
   bottom: 0;
-  width: 100vw;
+  width: 100%;
   height: 60px;
   z-index: 1000;
   pointer-events: none;
@@ -688,6 +556,444 @@ header.hidden {
   height: 100%;
 }
 
+.yearbook-slider-main {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0;
+  z-index: 3 !important;
+  pointer-events: auto;
+}
+
+.yearbook-intro-content {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+  z-index: 4;
+  width: 80%;
+  padding: 2rem;
+}
+
+.yearbook-main-title {
+  font-size: 3.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
+  font-family: "arial-black", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.yearbook-subtitle {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+  color: #fcda15;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.yearbook-intro-content .yearbook-description {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  font-family: "Segoe UI", sans-serif;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
+}
+
+.yearbook-slider-main.show-yearbook-bg {
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  transition: background-image 0.5s ease;
+}
+
+.yearbook-slider-main.background-loaded {
+  transition: background-image 0.3s ease-in-out;
+}
+
+.yearbook-slider-main.show-yearbook-bg .yearbook-intro-content {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.9);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+}
+
+.yearbook-detail-display {
+  position: absolute;
+  top: 41%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  width: 90%;
+  max-width: 1000px;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.yearbook-detail-container {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 20px;
+  padding: 0.8rem;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.yearbook-detail-close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background-color: #112d4e;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 12px rgba(99, 102, 241, 0.18);
+  border: 1px solid #0c27be;
+  z-index: 10;
+}
+
+.yearbook-detail-close-btn:hover {
+  background: linear-gradient(135deg, #0d39d9 0%, #112d4e 100%);
+  color: #ffffff !important;
+  border-radius: 50%;
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.25),
+    0 0 0 2px rgba(252, 218, 21, 0.3);
+  border: 2px solid #fcda15;
+  transform: scale(1.1);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.yearbook-detail-close-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2;
+}
+
+.yearbook-cover-large {
+  flex-shrink: 0;
+}
+
+.yearbook-cover-image {
+  width: 250px;
+  height: 380px;
+}
+
+.yearbook-info {
+  flex: 1;
+  color: white;
+  text-align: left;
+}
+
+.yearbook-detail-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
+  font-family: "arial-black", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #ffffff;
+}
+
+.yearbook-detail-subtitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+  color: #fcda15;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.yearbook-detail-description {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  color: #e0e7ff;
+  font-family: "Segoe UI", sans-serif;
+}
+
+@media (width < 900px) {
+  .yearbook-detail-container {
+    flex-direction: column;
+    text-align: center;
+    gap: 1.5rem;
+  }
+
+  .yearbook-detail-close-btn {
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 36px;
+    height: 36px;
+  }
+
+  .yearbook-detail-close-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .yearbook-cover-image {
+    width: 200px;
+    height: 260px;
+  }
+
+  .yearbook-detail-title {
+    font-size: 2rem;
+  }
+
+  .yearbook-detail-subtitle {
+    font-size: 1.3rem;
+  }
+
+  .yearbook-detail-description {
+    font-size: 1rem;
+  }
+}
+
+@media (width < 650px) {
+  .yearbook-detail-display {
+    padding: 1rem;
+  }
+
+  .yearbook-detail-container {
+    padding: 1.5rem;
+  }
+
+  .yearbook-detail-close-btn {
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 32px;
+    height: 32px;
+  }
+
+  .yearbook-detail-close-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .yearbook-cover-image {
+    width: 200px;
+    height: 260px;
+  }
+
+  .yearbook-detail-title {
+    font-size: 1.8rem;
+  }
+
+  .yearbook-detail-subtitle {
+    font-size: 1.2rem;
+  }
+
+  .yearbook-detail-description {
+    font-size: 0.9rem;
+  }
+}
+
+.yearbook-slider-main.show-yearbook-bg .yearbook-items-container {
+  bottom: 2rem;
+  gap: 30px;
+}
+
+.yearbook-slider-main.show-yearbook-bg .yearbook-item {
+  opacity: 0.7;
+  transform: translateY(-10px) scale(0.8);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.yearbook-slider-main.show-yearbook-bg .yearbook-item.active {
+  opacity: 1;
+  transform: translateY(-15px) scale(0.95);
+}
+
+.yearbook-items-container {
+  position: absolute;
+  bottom: 3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  z-index: 2;
+  will-change: auto;
+  backface-visibility: hidden;
+}
+
+.yearbook-slider {
+  display: flex;
+  gap: inherit;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  will-change: auto;
+  backface-visibility: hidden;
+}
+
+.yearbook-item {
+  width: 120px;
+  height: 180px;
+  position: static;
+  background-position: center;
+  background-size: cover;
+  transition: transform 0.3s ease-out;
+  cursor: pointer;
+  list-style-type: none;
+  transform-origin: center center;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.yearbook-content {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  text-align: center;
+  padding: 1rem 0.5rem;
+  color: white;
+  opacity: 1;
+}
+
+.yearbook-content .yearbook-title {
+  font-family: "arial-black";
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.yearbook-content .yearbook-description {
+  display: none;
+}
+
+.yearbook-content .yearbook-btn {
+  display: none;
+}
+
+.yearbook-item:hover {
+  transform: translateY(-10px) scale(1.05);
+  z-index: 100;
+}
+
+.yearbook-slider-main.show-yearbook-bg .yearbook-item:hover {
+  transform: translateY(-10px) scale(0.8);
+}
+
+.yearbook-item {
+  transform: translateZ(0);
+}
+
+.yearbook-item:not(.active):hover {
+  transform: translateY(-10px) scale(1.05) translateZ(0);
+}
+
+.yearbook-item.active:hover {
+  transform: scale(0.9) translateZ(0);
+}
+
+.yearbook-item.active {
+  transform: scale(0.9);
+  opacity: 0.8;
+}
+
+@media (width > 650px) and (width < 900px) {
+  .yearbook-main-title {
+    font-size: 2.8rem;
+  }
+
+  .yearbook-subtitle {
+    font-size: 1.6rem;
+  }
+
+  .yearbook-intro-content .yearbook-description {
+    font-size: 1rem;
+  }
+
+  .yearbook-items-container {
+    gap: 15px;
+    bottom: 2rem;
+  }
+
+  .yearbook-slider-main.show-yearbook-bg .yearbook-items-container {
+    bottom: 2rem;
+    gap: 8px;
+  }
+
+  .yearbook-item {
+    width: 120px;
+    height: 160px;
+  }
+
+  .yearbook-content .yearbook-title {
+    font-size: 0.8rem;
+  }
+}
+
+@media (width < 650px) {
+  .yearbook-intro-content {
+    padding: 1rem;
+    max-width: 90%;
+  }
+
+  .yearbook-main-title {
+    font-size: 2.2rem;
+  }
+
+  .yearbook-subtitle {
+    font-size: 1.3rem;
+  }
+
+  .yearbook-intro-content .yearbook-description {
+    font-size: 0.9rem;
+  }
+
+  .yearbook-items-container {
+    gap: 1px;
+    bottom: 2rem;
+  }
+
+  .yearbook-slider-main.show-yearbook-bg .yearbook-items-container {
+    bottom: 2rem;
+    gap: 5px;
+  }
+
+  .yearbook-item {
+    width: 100px;
+    height: 130px;
+  }
+
+  .yearbook-content .yearbook-title {
+    font-size: 0.7rem;
+  }
+}
+
 .hero-message {
   text-align: center;
   font-size: 1.5rem;
@@ -697,6 +1003,8 @@ header.hidden {
   line-height: 1.3;
   max-width: 1000px;
   width: 100%;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  font-family: "Segoe UI", sans-serif;
 }
 .hero-message div {
   margin-bottom: 0.15em;
@@ -705,9 +1013,13 @@ header.hidden {
   margin-bottom: 0;
 }
 .hero-message-bold {
-  font-weight: 700;
+  font-weight: bold;
   color: #fff;
   font-size: 1.5rem;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
+  font-family: "Segoe UI", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 2px;
 }
 
 .grid-overlay {
@@ -778,6 +1090,299 @@ header.hidden {
   position: relative;
 }
 
+.profile-dropdown {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+.profile-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+  object-fit: cover;
+  border: 2px solid #ccc;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.profile-icon:hover {
+  transform: scale(1.05);
+  background: linear-gradient(135deg, #0d39d9 0%, #112d4e 100%);
+  color: #ffffff !important;
+  border-radius: 2rem;
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.25),
+    0 0 0 2px rgba(252, 218, 21, 0.3);
+  border: 2px solid #fcda15;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.profile-icon.clicked {
+  background: linear-gradient(135deg, #0d39d9 0%, #112d4e 100%);
+  color: #ffffff !important;
+  border-radius: 999px;
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.25),
+    0 0 0 2px rgba(252, 218, 21, 0.3);
+  border: 2px solid #0d39d9;
+  transform: scale(1.05);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.dropdown-menu {
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  top: 60px;
+  right: 0;
+  width: 200px;
+  background: linear-gradient(135deg, #112d4e 0%, #1a237e 100%);
+  border-radius: 20px;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-15px) scale(0.98);
+  pointer-events: none;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 12px rgba(17, 45, 78, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease-in-out;
+  z-index: 1000;
+}
+
+.dropdown-item {
+  padding: 12px 18px;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 15px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 12px;
+  margin: 4px 8px;
+}
+
+.dropdown-item:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  font-weight: 600;
+  font-size: 15.5px;
+  transform: translateX(5px) scale(1.02);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25), 0 0 8px rgba(252, 218, 21, 0.25);
+}
+
+.dropdown-menu.show {
+  display: flex;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+  animation: slideDown 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  50% {
+    transform: translateY(-10px) scale(1.02);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.notification-icon-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-right: 1rem;
+}
+
+.notification-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 1.5rem;
+  color: #ffffff;
+  padding: 0.5rem;
+}
+
+.notification-icon:hover {
+  color: #fcda15;
+  transform: scale(1.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.notification-icon.clicked {
+  color: #fcda15;
+  transform: scale(1.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
+  color: white;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: bold;
+  border: 2px solid #000042;
+  box-shadow: 0 2px 8px rgba(255, 68, 68, 0.4);
+  z-index: 10;
+}
+
+.notification-badge.hidden {
+  display: none;
+}
+
+.notification-dropdown {
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  top: 60px;
+  right: 0;
+  width: 350px;
+  max-height: 450px;
+  background: linear-gradient(135deg, #112d4e 0%, #1a237e 100%);
+  border-radius: 20px;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-15px) scale(0.98);
+  pointer-events: none;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 12px rgba(17, 45, 78, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1000;
+}
+
+.notification-dropdown.show {
+  display: flex;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+  animation: slideDown 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.notification-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.notification-header h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+}
+
+.mark-all-read {
+  background: none;
+  border: none;
+  color: #fcda15;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0.3rem 0.6rem;
+  border-radius: 8px;
+}
+
+.mark-all-read:hover {
+  background: rgba(252, 218, 21, 0.1);
+  transform: scale(1.05);
+}
+
+.notification-list {
+  max-height: 380px;
+  overflow-y: auto;
+  padding: 0.5rem 0;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(252, 218, 21, 0.3) rgba(255, 255, 255, 0.05);
+}
+
+.notification-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.notification-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+.notification-list::-webkit-scrollbar-thumb {
+  background: rgba(252, 218, 21, 0.3);
+  border-radius: 10px;
+}
+
+.notification-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(252, 218, 21, 0.5);
+}
+
+.notification-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  padding: 0.9rem 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-left: 3px solid transparent;
+}
+
+.notification-item.unread {
+  background: rgba(252, 218, 21, 0.05);
+  border-left-color: #fcda15;
+}
+
+.notification-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateX(3px);
+}
+
+.notification-item-icon {
+  font-size: 1.2rem;
+  color: #fcda15;
+  margin-top: 0.2rem;
+  flex-shrink: 0;
+}
+
+.notification-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.notification-text {
+  color: #ffffff;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.notification-time {
+  color: #bfcfff;
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
 .logo-container {
   width: 430px;
   height: 430px;
@@ -829,9 +1434,11 @@ header.hidden {
   font-size: 1.6rem;
   margin: 0 auto;
   line-height: 1.7;
-  color: white;
+  color: #e0e7ff;
   margin-left: 5.1rem;
   margin-right: 5.1rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  font-family: "Segoe UI", sans-serif;
 }
 
 .about-blur-vignette {
@@ -864,16 +1471,16 @@ header.hidden {
   overflow: hidden;
 }
 
+.yearbooks-section .main-hero-lower-curl {
+  top: 0;
+  bottom: auto;
+  z-index: 2;
+}
+
 .main-hero-lower-curl svg {
   display: block;
   width: 100%;
   height: 100%;
-}
-
-.about-section .section-title,
-.yearbooks-section .section-title {
-  font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
-    BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
 }
 
 .carousel-section {
@@ -923,13 +1530,14 @@ header.hidden {
 }
 
 .carousel-subtitle {
-  color: white;
+  color: #fcda15;
   font-size: 1.3rem;
   margin-bottom: 2.5rem;
   margin-top: 0.5rem;
   letter-spacing: 1px;
-  font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
-    BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  font-family: "Segoe UI", sans-serif;
+  font-weight: 600;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
 }
 
 .carousel-section .section-title {
@@ -938,10 +1546,10 @@ header.hidden {
   font-weight: bold;
   margin-bottom: 0.5rem;
   margin-top: 3.5rem;
-  letter-spacing: 1px;
-  text-shadow: none;
-  font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
-    BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  letter-spacing: 2px;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
+  font-family: "arial-black", sans-serif;
+  text-transform: uppercase;
   border-bottom: none;
   display: block;
   padding-bottom: 0;
@@ -985,15 +1593,15 @@ header.hidden {
 .footer-inner-container {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   border: 2px solid #0c27be;
   border-radius: 18px;
-  max-width: 1490px;
   margin: 0 auto;
-  padding: 1.5rem 2rem;
+  padding: 1.5rem 0.5rem;
   background: #000042;
-
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  box-sizing: border-box;
 }
 .footer-logo-container {
   display: flex;
@@ -1020,10 +1628,12 @@ header.hidden {
 }
 .footer-logo-container.left {
   margin-right: 1.5rem;
+  margin-left: 1rem;
 }
 .footer-logo-container.right {
   margin-left: 1.5rem;
   margin-top: 0.5rem;
+  margin-right: 1.5rem;
 }
 .footer-content {
   flex: 1 1 auto;
@@ -1059,7 +1669,6 @@ header.hidden {
   word-break: break-word;
 }
 
-/* Hamburger Menu Icon */
 .hamburger-menu {
   display: none;
   background: none;
@@ -1083,7 +1692,6 @@ header.hidden {
   transition: all 0.3s ease;
 }
 
-/* Hamburger lines */
 .hamburger-line {
   transition: all 0.3s ease;
   transform-origin: center;
@@ -1134,9 +1742,6 @@ header.hidden {
   }
 }
 
-/* MEDIA QUERIES */
-
-/* Large desktop */
 @media (min-width: 1440px) {
   #mobileLoginDropdownBtn,
   #mobileLoginDropdownMenu {
@@ -1144,7 +1749,6 @@ header.hidden {
   }
 }
 
-/* Desktop / Laptop */
 @media (max-width: 1439px) and (min-width: 1200px) {
   #mobileLoginDropdownBtn,
   #mobileLoginDropdownMenu {
@@ -1299,7 +1903,6 @@ header.hidden {
   }
 }
 
-/* Small laptop / Large tablet */
 @media (max-width: 1199px) and (min-width: 1120px) {
   #mobileLoginDropdownBtn,
   #mobileLoginDropdownMenu {
@@ -1349,22 +1952,25 @@ header.hidden {
     width: 88%;
   }
 
-  .yearbook-card {
-    width: calc(30% - 1rem);
-    max-width: none;
-    height: auto;
-    margin-bottom: -1rem;
+  .yearbook-intro-content {
+    font-size: 1rem;
+    width: 80%;
+    margin: 0 auto;
+    color: white;
   }
 
-  .yearbooks-row {
-    padding: 0 1rem;
-    gap: 1rem;
-  }
-
-  .yearbook-title {
-    font-size: 1.8rem;
-    margin-top: 1rem;
-    margin-bottom: 3rem;
+  .yearbook-item {
+    width: 110px;
+    height: 155px;
+    position: static;
+    background-position: center;
+    background-size: cover;
+    transition: transform 0.3s ease-out;
+    cursor: pointer;
+    list-style-type: none;
+    transform-origin: center center;
+    will-change: transform;
+    backface-visibility: hidden;
   }
 
   .footer-content {
@@ -1562,22 +2168,25 @@ header.hidden {
     width: 88%;
   }
 
-  .yearbook-card {
-    width: calc(30% - 1rem);
-    max-width: none;
-    height: auto;
-    margin-bottom: -1rem;
+  .yearbook-intro-content {
+    font-size: 1rem;
+    width: 80%;
+    margin: 0 auto;
+    color: white;
   }
 
-  .yearbooks-row {
-    padding: 0 1rem;
-    gap: 1rem;
-  }
-
-  .yearbook-title {
-    font-size: 1.5rem;
-    margin-top: 1rem;
-    margin-bottom: 3rem;
+  .yearbook-item {
+    width: 100px;
+    height: 140px;
+    position: static;
+    background-position: center;
+    background-size: cover;
+    transition: transform 0.3s ease-out;
+    cursor: pointer;
+    list-style-type: none;
+    transform-origin: center center;
+    will-change: transform;
+    backface-visibility: hidden;
   }
 
   .carousel-subtitle {
@@ -1619,12 +2228,12 @@ header.hidden {
   .carousel-track img {
     width: 100%;
     max-width: 600px;
-    height: 100%; /* fills the container height */
-    object-fit: contain; /* keeps full image */
+    height: 100%;
+    object-fit: contain;
     border-radius: 12px;
     margin: 0 1rem;
     flex-shrink: 0;
-    background: #021326; /* fills gaps */
+    background: #021326;
   }
 
   .footer-inner-container {
@@ -1641,7 +2250,6 @@ header.hidden {
   }
 }
 
-/* Tablet */
 @media (max-width: 991px) and (min-width: 768px) {
   #mobileLoginDropdownBtn,
   #mobileLoginDropdownMenu {
@@ -1748,28 +2356,30 @@ header.hidden {
     width: 88%;
   }
 
-  .yearbooks-section .section-title {
-    font-size: 2.2rem;
-    text-align: center;
-    margin-top: 1.6rem;
-  }
-
-  .yearbook-card {
-    width: calc(28% - 1rem);
-    max-width: none;
-    height: auto;
-    margin-bottom: -1rem;
-  }
-
-  .yearbooks-row {
-    padding: 0 1rem;
-    gap: 1rem;
-  }
-
-  .yearbook-title {
+  .yearbook-intro-content {
     font-size: 1rem;
-    margin-top: 0.5rem;
-    margin-bottom: 3rem;
+    width: 90%;
+    margin: 0 auto;
+    color: white;
+  }
+
+  .yearbook-items-container {
+    padding: 1rem 1rem;
+    bottom: 2rem;
+  }
+
+  .yearbook-item {
+    width: 85px;
+    height: 130px;
+    position: static;
+    background-position: center;
+    background-size: cover;
+    transition: transform 0.3s ease-out;
+    cursor: pointer;
+    list-style-type: none;
+    transform-origin: center center;
+    will-change: transform;
+    backface-visibility: hidden;
   }
 
   .carousel-subtitle {
@@ -1811,364 +2421,12 @@ header.hidden {
   .carousel-track img {
     width: 100%;
     max-width: 550px;
-    height: 100%; /* fills the container height */
-    object-fit: contain; /* keeps full image */
-    border-radius: 12px;
-    margin: 0 1rem;
-    flex-shrink: 0;
-    background: #021326; /* fills gaps */
-  }
-
-  .footer-inner-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border: 2px solid #0c27be;
-    border-radius: 18px;
-    margin: 0 auto;
-    padding: 1.5rem 2rem;
-    background: #000042;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
-  }
-}
-
-/* Large phone */
-@media (max-width: 767px) and (min-width: 600px) {
-  header {
-    width: 80%;
-    height: 55px;
-    padding: 0 0.3rem;
-  }
-
-  .logo-img {
-    width: 45px;
-    height: 45px;
-  }
-
-  .logo span {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    font-size: 1.2rem;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
-  .center-nav {
-    display: none;
-  }
-
-  .center-nav a {
-    font-size: 0.8rem;
-    margin: auto;
-  }
-
-  .login-btn {
-    display: none;
-  }
-
-  .hamburger-menu {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .hamburger-menu.active + .center-nav,
-  .center-nav.mobile-active {
-    display: flex;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: linear-gradient(135deg, #112d4e 0%, #1a237e 100%);
-    flex-direction: column;
-    padding: 1.5rem;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-    border-radius: 16px;
-    z-index: 1000;
-    transform: translateX(0);
-    animation: slideDown 0.3s ease;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    margin: 0.5rem;
-  }
-  .center-nav.mobile-active a {
-    padding: 1rem 1.2rem;
-    margin: 0.3rem 0;
-    border-radius: 12px;
-    text-align: center;
-    font-size: 1rem;
-    font-weight: 500;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
-    letter-spacing: 0.5px;
-  }
-  .center-nav.mobile-active a::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.1),
-      transparent
-    );
-    transition: left 0.5s ease;
-  }
-  .center-nav.mobile-active a:hover::before {
-    left: 100%;
-  }
-  .center-nav.mobile-active a:hover {
-    background-color: rgba(255, 255, 255, 0.15);
-    transform: translateX(8px) scale(1.02);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  }
-
-  .mobile-login-dropdown {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 0.5rem;
-  }
-  .mobile-login-btn {
-    width: 90%;
-    margin: 0.5rem auto 0 auto;
-    padding: 0.8rem 1.5rem;
-    background: none;
-    border: 2px solid #000042;
-    border-radius: 999px;
-    color: white;
-    font-size: 1rem;
-    font-weight: 600;
-    text-align: center;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 12px #112d4e;
-    cursor: pointer;
-    position: relative;
-    z-index: 1100;
-  }
-
-  .mobile-login-btn:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    transform: translateX(5px);
-  }
-  .mobile-login-dropdown-menu {
-    display: none;
-    flex-direction: column;
-    width: 100%;
-    align-self: center;
-    margin: 1.5rem auto 0 auto;
-    background: linear-gradient(135deg, #112d4e 0%, #1a237e 100%);
-    border-radius: 16px;
-    position: relative;
-    z-index: 1100;
-    overflow: hidden;
-    opacity: 0;
-    transform: translateY(-10px);
-    pointer-events: none;
-    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-      transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .mobile-login-dropdown-item:hover {
-    font-size: 1.1rem;
-    font-weight: 600;
-    transform: none !important;
-  }
-
-  .mobile-login-btn {
-    width: 90%;
-    margin: 0.5rem auto 0 auto;
-    padding: 0.8rem 1.5rem;
-    background: none;
-    border: 2px solid #000042;
-    border-radius: 999px;
-    color: white;
-    font-size: 1rem;
-    font-weight: 600;
-    text-align: center;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 12px #112d4e;
-    cursor: pointer;
-    position: relative;
-    z-index: 1100;
-  }
-
-  .mobile-login-dropdown-item:hover {
-    background-color: rgba(255, 255, 255, 0.15);
-    color: #fff;
-    transform: translateX(8px) scale(1.02);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  }
-
-  @keyframes slideDown {
-    from {
-      opacity: 0;
-      transform: translateY(-20px) scale(0.95);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-  }
-
-  .main-hero-text .logo-container .logo-img {
-    width: 100%;
     height: 100%;
     object-fit: contain;
-    margin-top: -3rem;
-  }
-
-  .main-hero-text {
-    margin-top: 0rem;
-    margin-bottom: 1.6rem;
-  }
-
-  .logo-container {
-    width: 370px;
-    height: 370px;
-  }
-
-  .hero-message {
-    font-size: 1.2rem;
-    margin-bottom: 3.5rem;
-    max-width: 93%;
-  }
-
-  .hero-message-bold {
-    font-size: 1.2rem;
-    font-weight: 600;
-    max-width: 96%;
-    margin-top: 0.8rem;
-  }
-
-  .hero-btn {
-    background: #000042;
-    color: #fff;
-    padding: 0.85rem 2rem;
-    border: none;
-    border-radius: 999px;
-    font-size: 0.89rem;
-    font-weight: 505;
-    cursor: pointer;
-    text-decoration: none;
-    box-shadow: 0 4px 16px rgba(0, 0, 66, 0.13);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1.5px solid #112d4e;
-    position: relative;
-    width: 200px;
-    height: 50px;
-  }
-
-  .hero-btn-secondary {
-    background: #112d4e;
-    color: white;
-    box-shadow: 0 2px 12px rgba(99, 102, 241, 0.18);
-    border: 1.5px solid #0c27be;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-  }
-
-  .about-image {
-    display: none;
-  }
-
-  .about-section {
-    padding: none;
-  }
-
-  .about-section .section-title {
-    font-size: 2.5rem;
-    text-align: center;
-    margin-top: 1.6rem;
-  }
-
-  .about-description {
-    width: 100%;
-    text-align: center;
-    font-size: 1.85rem;
-    margin-left: 0;
-    margin-right: 0;
-  }
-
-  .yearbooks-section .section-title {
-    font-size: 2.2rem;
-    text-align: center;
-    margin-top: 1.6rem;
-  }
-
-  .yearbook-card {
-    width: calc(30% - 1rem);
-    max-width: none;
-    height: auto;
-    margin-bottom: -1rem;
-  }
-
-  .yearbooks-row {
-    padding: 0 1rem;
-    gap: 1rem;
-  }
-
-  .yearbook-title {
-    font-size: 0.9rem;
-    margin-top: 0.5rem;
-    margin-bottom: 3rem;
-  }
-
-  .carousel-subtitle {
-    text-align: center;
-    color: white;
-    font-size: 1rem;
-    margin-bottom: 2.5rem;
-    margin-top: 0.5rem;
-    letter-spacing: 1px;
-    font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
-      BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-  }
-
-  .carousel-section .section-title {
-    color: white;
-    font-size: 2rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-    margin-top: 1.8rem;
-    letter-spacing: 1px;
-    text-shadow: none;
-    font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
-      BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-    border-bottom: none;
-    display: block;
-    padding-bottom: 0;
-    text-align: center;
-  }
-
-  @keyframes carousel-scroll {
-    0% {
-      transform: translateX(0);
-    }
-    100% {
-      transform: translateX(-1000%);
-    }
-  }
-
-  .carousel-track img {
-    width: 100%;
-    max-width: 480px;
-    height: 100%; /* fills the container height */
-    object-fit: contain; /* keeps full image */
     border-radius: 12px;
     margin: 0 1rem;
     flex-shrink: 0;
-    background: #021326; /* fills gaps */
+    background: #021326;
   }
 
   .footer-inner-container {
@@ -2184,8 +2442,17 @@ header.hidden {
   }
 }
 
-/* Medium phone */
-@media (max-width: 599px) and (min-width: 480px) {
+@media (max-width: 768px) and (min-width: 600px) {
+  .main-hero {
+    position: relative;
+    width: 100%;
+    min-height: 88vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
   header {
     width: 80%;
     height: 50px;
@@ -2193,8 +2460,8 @@ header.hidden {
   }
 
   .logo-img {
-    width: 40px;
-    height: 40px;
+    width: 38px;
+    height: 38px;
   }
 
   .logo span {
@@ -2382,6 +2649,7 @@ header.hidden {
   .main-hero-text {
     margin-top: 0rem;
     margin-bottom: 1.6rem;
+    bottom: 0vh;
   }
 
   .logo-container {
@@ -2390,13 +2658,13 @@ header.hidden {
   }
 
   .hero-message {
-    font-size: 1.2rem;
+    font-size: 1rem;
     margin-bottom: 3.5rem;
     max-width: 93%;
   }
 
   .hero-message-bold {
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 600;
     max-width: 96%;
     margin-top: 0.8rem;
@@ -2438,7 +2706,7 @@ header.hidden {
   }
 
   .about-section .section-title {
-    font-size: 2.3rem;
+    font-size: 2rem;
     text-align: center;
     margin-top: 1.6rem;
   }
@@ -2446,33 +2714,36 @@ header.hidden {
   .about-description {
     width: 100%;
     text-align: center;
-    font-size: 1.59rem;
+    font-size: 1.4rem;
     margin-left: 0;
     margin-right: 0;
   }
 
-  .yearbooks-section .section-title {
-    font-size: 2.2rem;
-    text-align: center;
-    margin-top: 1.6rem;
+  .yearbook-intro-content {
+    font-size: 1rem;
+    width: 90%;
+    margin: 0 auto;
+    color: white;
   }
 
-  .yearbook-card {
-    width: calc(30% - 1rem);
-    max-width: none;
-    height: auto;
-    margin-bottom: -1rem;
+  .yearbook-items-container {
+    padding: 1rem 1rem;
+    gap: 10px;
+    bottom: 2rem;
   }
 
-  .yearbooks-row {
-    padding: 0 1rem;
-    gap: 1rem;
-  }
-
-  .yearbook-title {
-    font-size: 0.7rem;
-    margin-top: 0.5rem;
-    margin-bottom: 3rem;
+  .yearbook-item {
+    width: 65px;
+    height: 95px;
+    position: static;
+    background-position: center;
+    background-size: cover;
+    transition: transform 0.3s ease-out;
+    cursor: pointer;
+    list-style-type: none;
+    transform-origin: center center;
+    will-change: transform;
+    backface-visibility: hidden;
   }
 
   .carousel-subtitle {
@@ -2514,12 +2785,12 @@ header.hidden {
   .carousel-track img {
     width: 100%;
     max-width: 430px;
-    height: 100%; /* fills the container height */
-    object-fit: contain; /* keeps full image */
+    height: 100%;
+    object-fit: contain;
     border-radius: 12px;
     margin: 0 1rem;
     flex-shrink: 0;
-    background: #021326; /* fills gaps */
+    background: #021326;
   }
 
   .footer-inner-container {
@@ -2533,13 +2804,31 @@ header.hidden {
     background: #000042;
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
   }
+
+  .footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+  }
+
   .footer-logo-img {
     display: none;
   }
 }
 
-/* Small phone */
-@media (max-width: 479px) and (min-width: 320px) {
+@media (max-width: 600px) and (min-width: 480px) {
+  .main-hero {
+    position: relative;
+    width: 100%;
+    min-height: 88vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
   header {
     width: 80%;
     height: 50px;
@@ -2547,8 +2836,425 @@ header.hidden {
   }
 
   .logo-img {
-    width: 40px;
-    height: 40px;
+    width: 38px;
+    height: 38px;
+  }
+
+  .logo span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 0.94rem;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .center-nav {
+    display: none;
+  }
+
+  .center-nav a {
+    font-size: 0.8rem;
+    margin: auto;
+  }
+
+  .login-btn {
+    display: none;
+  }
+
+  .hamburger-menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hamburger-menu.active + .center-nav,
+  .center-nav.mobile-active {
+    display: flex;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, #112d4e 0%, #1a237e 100%);
+    flex-direction: column;
+    padding: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    border-radius: 16px;
+    z-index: 1000;
+    transform: translateX(0);
+    animation: slideDown 0.3s ease;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin: 0.5rem;
+  }
+  .center-nav.mobile-active a {
+    padding: 1rem 1.2rem;
+    margin: 0.3rem 0;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    letter-spacing: 0.5px;
+  }
+  .center-nav.mobile-active a::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.1),
+      transparent
+    );
+    transition: left 0.5s ease;
+  }
+  .center-nav.mobile-active a:hover::before {
+    left: 100%;
+  }
+  .center-nav.mobile-active a:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    transform: translateX(8px) scale(1.02);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  .mobile-login-dropdown {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 0.5rem;
+  }
+  .mobile-login-btn {
+    width: 90%;
+    margin: 0.5rem auto 0 auto;
+    padding: 0.8rem 1.5rem;
+    background: none;
+    border: 2px solid #000042;
+    border-radius: 999px;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 12px #112d4e;
+    cursor: pointer;
+    position: relative;
+    z-index: 1100;
+  }
+
+  .mobile-login-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateX(5px);
+  }
+  .mobile-login-dropdown-menu {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    align-self: center;
+    margin: 1.5rem auto 0 auto;
+    background: linear-gradient(135deg, #112d4e 0%, #1a237e 100%);
+    border-radius: 16px;
+    position: relative;
+    z-index: 1100;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .mobile-login-dropdown-item:hover {
+    font-size: 1.1rem;
+    font-weight: 600;
+    transform: none !important;
+  }
+
+  .mobile-login-btn {
+    width: 90%;
+    margin: 0.5rem auto 0 auto;
+    padding: 0.8rem 1.5rem;
+    background: none;
+    border: 2px solid #000042;
+    border-radius: 999px;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 12px #112d4e;
+    cursor: pointer;
+    position: relative;
+    z-index: 1100;
+  }
+
+  .mobile-login-dropdown-item:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    transform: translateX(8px) scale(1.02);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  .main-hero-text .logo-container .logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    margin-top: -3rem;
+  }
+
+  .main-hero-text {
+    margin-top: 0rem;
+    margin-bottom: 1.6rem;
+    bottom: 0vh;
+  }
+
+  .logo-container {
+    width: 330px;
+    height: 330px;
+  }
+
+  .hero-message {
+    font-size: 1rem;
+    margin-bottom: 3.5rem;
+    max-width: 93%;
+  }
+
+  .hero-message-bold {
+    font-size: 1rem;
+    font-weight: 600;
+    max-width: 96%;
+    margin-top: 0.8rem;
+  }
+
+  .hero-btn {
+    background: #000042;
+    color: #fff;
+    padding: 0.85rem 2rem;
+    border: none;
+    border-radius: 999px;
+    font-size: 0.89rem;
+    font-weight: 505;
+    cursor: pointer;
+    text-decoration: none;
+    box-shadow: 0 4px 16px rgba(0, 0, 66, 0.13);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1.5px solid #112d4e;
+    position: relative;
+    width: 195px;
+    height: 50px;
+  }
+
+  .hero-btn-secondary {
+    background: #112d4e;
+    color: white;
+    box-shadow: 0 2px 12px rgba(99, 102, 241, 0.18);
+    border: 1.5px solid #0c27be;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+  }
+
+  .about-image {
+    display: none;
+  }
+
+  .about-section {
+    padding: none;
+  }
+
+  .about-section .section-title {
+    font-size: 2rem;
+    text-align: center;
+    margin-top: 1.6rem;
+  }
+
+  .about-description {
+    width: 100%;
+    text-align: center;
+    font-size: 1.4rem;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .yearbook-intro-content {
+    font-size: 1rem;
+    width: 90%;
+    margin: 0 auto;
+    color: white;
+  }
+
+  .yearbook-items-container {
+    padding: 1rem 1rem;
+    gap: 10px;
+    bottom: 2rem;
+  }
+
+  .yearbook-item {
+    width: 50px;
+    height: 75px;
+    position: static;
+    background-position: center;
+    background-size: cover;
+    transition: transform 0.3s ease-out;
+    cursor: pointer;
+    list-style-type: none;
+    transform-origin: center center;
+    will-change: transform;
+    backface-visibility: hidden;
+  }
+
+  .carousel-subtitle {
+    text-align: center;
+    color: white;
+    font-size: 1rem;
+    margin-bottom: 2.5rem;
+    margin-top: 0.5rem;
+    letter-spacing: 1px;
+    font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
+      BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  }
+
+  .carousel-section .section-title {
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    margin-top: 1.8rem;
+    letter-spacing: 1px;
+    text-shadow: none;
+    font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
+      BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    border-bottom: none;
+    display: block;
+    padding-bottom: 0;
+    text-align: center;
+  }
+
+  @keyframes carousel-scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-1000%);
+    }
+  }
+
+  .carousel-track img {
+    width: 100%;
+    max-width: 430px;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 12px;
+    margin: 0 1rem;
+    flex-shrink: 0;
+    background: #021326;
+  }
+
+  .footer-inner-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 2px solid #0c27be;
+    border-radius: 18px;
+    margin: 0 auto;
+    padding: 1.5rem 2rem;
+    background: #000042;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+  }
+
+  .footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .footer-contact-info {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    margin: 1rem 0;
+    width: 100%;
+    max-width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .footer-contact-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 120px;
+    margin-bottom: 0.5rem;
+  }
+
+  .footer-contact-icon {
+    font-size: 1.5rem;
+    color: #bfcfff;
+    margin-bottom: 0.3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .footer-contact-desc {
+    color: #bfcfff;
+    font-size: 0.8rem;
+    text-align: center;
+    margin-top: 0.1rem;
+    white-space: nowrap;
+    line-height: 1.3;
+    width: 100%;
+    max-width: 100%;
+    padding: 0 0.3rem;
+  }
+
+  .footer-logo-img {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) and (min-width: 320px) {
+  .main-hero {
+    position: relative;
+    width: 100%;
+    min-height: 88vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  header {
+    width: 80%;
+    height: 50px;
+    padding: 0 0.3rem;
+  }
+
+  .logo-img {
+    width: 38px;
+    height: 38px;
   }
 
   .logo span {
@@ -2736,6 +3442,7 @@ header.hidden {
   .main-hero-text {
     margin-top: 0rem;
     margin-bottom: 1.6rem;
+    bottom: 0vh;
   }
 
   .logo-container {
@@ -2744,13 +3451,13 @@ header.hidden {
   }
 
   .hero-message {
-    font-size: 1.2rem;
+    font-size: 1rem;
     margin-bottom: 3.2rem;
     max-width: 93%;
   }
 
   .hero-message-bold {
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 600;
     max-width: 96%;
     margin-top: 0.8rem;
@@ -2796,7 +3503,7 @@ header.hidden {
   }
 
   .about-section .section-title {
-    font-size: 2.2rem;
+    font-size: 2rem;
     text-align: center;
     margin-top: 1.6rem;
   }
@@ -2804,32 +3511,49 @@ header.hidden {
   .about-description {
     width: 100%;
     text-align: center;
-    font-size: 1.45rem;
+    font-size: 1.2rem;
     margin-left: 0;
     margin-right: 0;
   }
 
-  .yearbooks-section .section-title {
-    font-size: 2.2rem;
+  .yearbooks-section {
+    background: #021326;
+    position: relative;
+    overflow: hidden;
+    min-height: 90vh;
+  }
+
+  .yearbook-main-title {
+    font-size: 2rem;
     text-align: center;
-    margin-top: 1.6rem;
+    letter-spacing: 5px;
   }
 
-  .yearbook-card {
-    width: calc(48% - 1rem);
-    max-width: none;
-    height: auto;
-    margin-bottom: -1rem;
+  .yearbook-intro-content {
+    font-size: 1rem;
+    width: 95%;
+    margin: 0 auto;
+    color: white;
   }
 
-  .yearbooks-row {
-    padding: 0 1rem;
-    gap: 1rem;
+  .yearbook-items-container {
+    padding: 1rem 1rem;
+    gap: 10px;
+    bottom: 2rem;
   }
 
-  .yearbook-title {
-    font-size: 0.7rem;
-    margin-top: 0.5rem;
+  .yearbook-item {
+    width: 33px;
+    height: 48px;
+    position: static;
+    background-position: center;
+    background-size: cover;
+    transition: transform 0.3s ease-out;
+    cursor: pointer;
+    list-style-type: none;
+    transform-origin: center center;
+    will-change: transform;
+    backface-visibility: hidden;
   }
 
   .carousel-subtitle {
@@ -2871,12 +3595,12 @@ header.hidden {
   .carousel-track img {
     width: 100%;
     max-width: 380px;
-    height: 100%; /* fills the container height */
-    object-fit: contain; /* keeps full image */
+    height: 100%;
+    object-fit: contain;
     border-radius: 12px;
     margin: 0 1rem;
     flex-shrink: 0;
-    background: #021326; /* fills gaps */
+    background: #021326;
   }
 
   .footer-logo-img {
@@ -2885,27 +3609,34 @@ header.hidden {
 
   .footer-content {
     display: flex;
+    flex-direction: column;
+    align-items: center;
     width: 100%;
   }
 
   .footer-inner-container {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     border: 2px solid #0c27be;
     border-radius: 18px;
     margin: 0 auto;
-    padding: 1.5rem 2rem;
+    padding: 1rem 0.5rem;
     background: #000042;
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .footer-contact-info {
     display: flex;
+    flex-direction: row;
     justify-content: center;
-    align-items: flex-start;
-    gap: 3rem;
-    margin: 2rem 0 1.2rem 0;
+    align-items: center;
+    gap: 1.5rem;
+    margin: 1rem 0;
+    width: 100%;
+    max-width: 100%;
     flex-wrap: wrap;
   }
 
@@ -2914,12 +3645,13 @@ header.hidden {
     flex-direction: column;
     align-items: center;
     min-width: 120px;
+    margin-bottom: 0.5rem;
   }
 
   .footer-contact-icon {
-    font-size: 2.1rem;
+    font-size: 1.5rem;
     color: #bfcfff;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.3rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2927,280 +3659,25 @@ header.hidden {
 
   .footer-contact-desc {
     color: #bfcfff;
-    font-size: 1.05rem;
+    font-size: 0.8rem;
     text-align: center;
     margin-top: 0.1rem;
-    word-break: break-word;
-  }
-}
-
-/* Tablet - Landscape */
-@media only screen and (min-width: 768px) and (max-width: 1280px) and (orientation: landscape) {
-  /* styles for tablets in landscape */
-}
-
-/* Large Phone - Landscape */
-@media only screen and (min-width: 600px) and (max-width: 767px) and (orientation: landscape) {
-  /* styles for large phones in landscape */
-  header {
-    width: 80%;
-    height: 50px;
+    white-space: nowrap;
+    line-height: 1.3;
+    width: 100%;
+    max-width: 100%;
     padding: 0 0.3rem;
   }
-
-  .logo-img {
-    width: 40px;
-    height: 40px;
-  }
-
-  .logo span {
-    display: none;
-  }
-
-  .center-nav {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transform: translateX(-53%);
-  }
-
-  .center-nav a {
-    font-size: 0.6rem;
-    margin: auto;
-  }
-
-  .center-nav a:hover {
-    transform: translateX(8px) scale(1.02);
-    width: 100%;
-  }
-
-  .login-btn {
-    display: block;
-  }
-
-  .hamburger-menu {
-    display: none;
-  }
-
-  .hamburger-menu.active + .center-nav,
-  .center-nav.mobile-active {
-    display: none;
-  }
-  .center-nav.mobile-active a {
-    display: none;
-  }
-  .center-nav.mobile-active a::before {
-    display: none;
-  }
-  .center-nav.mobile-active a:hover::before {
-    display: none;
-  }
-  .center-nav.mobile-active a:hover {
-    display: none;
-  }
-
-  .mobile-login-dropdown {
-    display: none;
-  }
-  .mobile-login-btn {
-    display: none;
-  }
-
-  .mobile-login-btn:hover {
-    display: none;
-  }
-  .mobile-login-dropdown-menu {
-    display: none;
-  }
-  .mobile-login-dropdown-menu.active {
-    display: none;
-  }
-  .mobile-login-dropdown-item {
-    display: none;
-  }
-  .mobile-login-dropdown-item:hover {
-    display: none;
-  }
-
-  .mobile-login-btn {
-    display: none;
-  }
-
-  .mobile-login-dropdown-item {
-    display: none;
-  }
-
-  .mobile-login-dropdown-item:hover {
-    display: none;
-  }
-
-  @keyframes slideDown {
-    from {
-      opacity: 0;
-      transform: translateY(-20px) scale(0.95);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-  }
-  .main-hero-text .logo-container .logo-img {
-    display: none;
-  }
-
-  .main-hero-text {
-    margin-top: 0rem;
-    margin-bottom: 1.6rem;
-  }
-
-  .logo-container {
-    width: 150px;
-    height: 150px;
-  }
-
-  .hero-message {
-    font-size: 0.6rem;
-    margin-bottom: 3.2rem;
-    max-width: 93%;
-  }
-
-  .hero-message-bold {
-    font-size: 1.2rem;
-    font-weight: 600;
-    max-width: 96%;
-  }
-
-  .hero-buttons {
-    margin-bottom: 3.5rem;
-  }
-
-  .hero-btn {
-    background: #000042;
-    color: #fff;
-    padding: 0.8rem 2rem;
-    border: none;
-    border-radius: 999px;
-    font-size: 0.7rem;
-    font-weight: 505;
-    cursor: pointer;
-    text-decoration: none;
-    box-shadow: 0 4px 16px rgba(0, 0, 66, 0.13);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1.5px solid #112d4e;
-    position: relative;
-    width: 195px;
-    height: 45px;
-  }
-
-  .hero-btn-secondary {
-    background: #112d4e;
-    color: white;
-    box-shadow: 0 2px 12px rgba(99, 102, 241, 0.18);
-    border: 1.5px solid #0c27be;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-  }
-
-  .about-image {
-    display: none;
-  }
-
-  .about-section {
-    padding: none;
-  }
-
-  .about-section .section-title {
-    font-size: 1.8rem;
-    text-align: center;
-    margin-top: 0.7rem;
-  }
-
-  .about-description {
-    width: 100%;
-    text-align: center;
-    font-size: 1.5rem;
-    margin-left: 0;
-    margin-right: 0;
-  }
-
-  .yearbooks-section .section-title {
-    font-size: 1.8rem;
-    text-align: center;
-    margin-top: 1.6rem;
-    margin-bottom: 1rem;
-  }
-
-  .yearbook-card {
-    width: calc(30% - 1rem);
-    max-width: none;
-    height: auto;
-    margin-bottom: -1rem;
-  }
-
-  .yearbooks-row {
-    padding: 0 1rem;
-    gap: 1rem;
-  }
-
-  .yearbook-title {
-    font-size: 0.7rem;
-    margin-top: 0.5rem;
-  }
-
-  .carousel-subtitle {
-    text-align: center;
-    color: white;
-    font-size: 1rem;
-    margin-bottom: 2.5rem;
-    margin-top: 0.5rem;
-    letter-spacing: 1px;
-    font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
-      BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-  }
-
-  .carousel-section .section-title {
-    color: white;
-    font-size: 2rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-    margin-top: 1.8rem;
-    letter-spacing: 1px;
-    text-shadow: none;
-    font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
-      BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-    border-bottom: none;
-    display: block;
-    padding-bottom: 0;
-    text-align: center;
-  }
-
-  @keyframes carousel-scroll {
-    0% {
-      transform: translateX(0);
-    }
-    100% {
-      transform: translateX(-1000%);
-    }
-  }
-
-  .carousel-track img {
-    width: 100%;
-    max-width: 380px;
-    height: 100%; /* fills the container height */
-    object-fit: contain; /* keeps full image */
-    border-radius: 12px;
-    margin: 0 1rem;
-    flex-shrink: 0;
-    background: #021326; /* fills gaps */
-  }
 }
 
-/* Medium Phone - Landscape */
+@media only screen and (min-width: 768px) and (max-width: 1280px) and (orientation: landscape) {
+}
+
+@media only screen and (min-width: 600px) and (max-width: 767px) and (orientation: landscape) {
+}
+
 @media only screen and (min-width: 480px) and (max-width: 599px) and (orientation: landscape) {
-  /* styles for medium phones in landscape */
 }
 
-/* Small Phone - Landscape */
 @media only screen and (min-width: 320px) and (max-width: 479px) and (orientation: landscape) {
-  /* styles for small phones in landscape */
 }
