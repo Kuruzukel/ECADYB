@@ -138,7 +138,6 @@ function applyTheme(theme) {
   document.body.style.display = "";
 }
 
-// Smart notification system variables
 let notificationTimeout = null;
 let currentOperation = null;
 
