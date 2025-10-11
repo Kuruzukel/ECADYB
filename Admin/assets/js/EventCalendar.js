@@ -524,7 +524,6 @@ function showNotification(message, type = "success") {
   const container = document.getElementById("notification-container");
   if (!container) return;
 
-  // Remove any existing notifications to prevent duplicates
   const existingNotifications = container.querySelectorAll(".notification");
   existingNotifications.forEach((notif) => notif.remove());
 
