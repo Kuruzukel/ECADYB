@@ -54,7 +54,6 @@ $skip = ($page - 1) * $perPage;
 $allStudents = [];
 $totalStudents = 0;
 
-// Check if this is an AJAX request
 $isAjax = isset($_GET['ajax']) && $_GET['ajax'] == '1';
 
 try {
@@ -121,19 +120,19 @@ try {
 ?>
 
 <?php if (!$isAjax): ?>
-<!DOCTYPE html>
-<html lang="en">
+    <!DOCTYPE html>
+    <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student List</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="../assets/css/StudentList.css">
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Student List</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+        <link rel="stylesheet" href="../assets/css/StudentList.css">
+    </head>
 
-<body>
-<?php endif; ?>
+    <body>
+    <?php endif; ?>
     <div class="container">
         <div class="header-container">
             <h1><i class="fas fa-home"></i> <span class="chevron"><i class="fas fa-chevron-right"></i></span> Student
@@ -145,7 +144,7 @@ try {
                 <div class="card-header">
                     <div class="filter-bar">
                         <label for="template-filter" class="filter-label" style="position: relative;">
-                            <select id="template-filter" class="filter-select" 
+                            <select id="template-filter" class="filter-select"
                                 title="Template is locked. Change template selection in Batch Templates page.">
                                 <option value="" disabled>Select Batch Template (Locked)</option>
                                 <option value="1" <?php if ($selectedTemplate == 1) echo "selected"; ?>>
@@ -158,7 +157,9 @@ try {
                                     Batch Template 3
                                 </option>
                             </select>
-                            <i class="fas fa-lock" style="position: absolute; right: 30px; top: 50%; transform: translateY(-50%); color: #f39c12; pointer-events: none; font-size: 14px;" title="Locked"></i>
+                            <i class="fas fa-lock"
+                                style="position: absolute; right: 30px; top: 50%; transform: translateY(-50%); color: #f39c12; pointer-events: none; font-size: 14px;"
+                                title="Locked"></i>
                         </label>
 
                         <label for="department-filter" class="filter-label">
@@ -519,11 +520,11 @@ try {
 
             <div id="notification-container"></div>
 
-            
+
 
             <script src="../assets/js/StudentList.js?v=<?php echo time(); ?>"></script>
-<?php if (!$isAjax): ?>
-</body>
+            <?php if (!$isAjax): ?>
+    </body>
 
-</html>
+    </html>
 <?php endif; ?>
