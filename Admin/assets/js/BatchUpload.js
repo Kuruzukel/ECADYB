@@ -140,6 +140,7 @@ function applyTheme(theme) {
 
 let notificationTimeout = null;
 let currentOperation = null;
+let currentUploadController = null;
 
 function showNotification(message, type = "success") {
   const container = document.getElementById("notification-container");
@@ -180,9 +181,65 @@ function showNotification(message, type = "success") {
   }, duration);
 }
 
+// Upload overlay functions
+function showUploadOverlay(uploadType = "files") {
+  const overlay = document.getElementById("upload-overlay");
+  const uploadText = document.getElementById("uploadText");
+  
+  if (overlay && uploadText) {
+    uploadText.textContent = `Please wait while we upload your ${uploadType}`;
+    overlay.style.display = "flex";
+  }
+}
+
+function hideUploadOverlay() {
+  const overlay = document.getElementById("upload-overlay");
+  if (overlay) {
+    overlay.style.display = "none";
+  }
+}
+
+function cancelUpload() {
+  console.log("Cancel upload triggered");
+  
+  // Abort current upload immediately
+  if (currentUploadController) {
+    currentUploadController.abort();
+    currentUploadController = null;
+  }
+  
+  // Hide overlay immediately
+  hideUploadOverlay();
+  
+  // Reset all file inputs and UI state
+  document.querySelectorAll(".upload-input").forEach((input) => {
+    if (input.files && input.files.length > 0) {
+      input.value = "";
+      input.files = new DataTransfer().files;
+      forceResetFileUI(input.id);
+    }
+  });
+  
+  // Reset operation state
+  currentOperation = null;
+  
+  // Show notification immediately
+  showNotification("Upload cancelled", "error");
+}
+
 window.addEventListener("DOMContentLoaded", () => {
   const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
   applyTheme(savedTheme);
+
+  // Add event listener for cancel button
+  const cancelBtn = document.getElementById("cancel-upload-btn");
+  if (cancelBtn) {
+    cancelBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      cancelUpload();
+    });
+  }
 
   const selectedTemplateNumber = localStorage.getItem("selectedBatchTemplateNumber");
   const selectedTemplate = localStorage.getItem("selectedBatchTemplate");
@@ -296,7 +353,7 @@ window.addEventListener("DOMContentLoaded", () => {
       if (input.files.length === 1) {
         fileNameSpan.textContent = input.files[0].name;
       } else {
-        fileNameSpan.textContent = `${input.files.length} files selected`;
+        fileNameSpan.textContent = `${input.files.length} images selected`;
       }
       
       // Show the file info with animation
@@ -353,6 +410,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
         if (input.id === "student-photos" || input.id === "management-photos") {
           currentOperation = "uploading_photos";
+          showUploadOverlay("photos");
 
           Array.from(input.files).forEach((file) => {
             formData.append("files[]", file);
@@ -372,9 +430,13 @@ window.addEventListener("DOMContentLoaded", () => {
               : "../../Connection/Photos/UPloadTopManagementPhotos.php";
 
           try {
+            // Create AbortController for cancellation
+            currentUploadController = new AbortController();
+            
             const response = await fetch(uploadEndpoint, {
               method: "POST",
               body: formData,
+              signal: currentUploadController.signal,
             });
 
             const result = await response.json();
@@ -410,20 +472,39 @@ window.addEventListener("DOMContentLoaded", () => {
                 "error"
               );
             }
+            
+            // Hide overlay after upload completion
+            hideUploadOverlay();
           } catch (error) {
+            if (error.name === 'AbortError') {
+              console.log("Upload cancelled");
+              // Reset UI state for cancelled upload
+              forceResetFileUI(input.id);
+              // Show cancel notification
+              showNotification("Upload cancelled", "error");
+              return; // Don't show error notification for cancelled uploads
+            }
             console.error("Upload error:", error);
             showNotification("Upload failed. Please try again.", "error");
+            hideUploadOverlay();
+          } finally {
+            currentUploadController = null;
           }
         } else {
+          showUploadOverlay("CSV file");
           formData.append(input.name, input.files[0]);
           if (selectedTemplate) {
             formData.append("selected_template", selectedTemplate.value);
           }
 
           try {
+            // Create AbortController for cancellation
+            currentUploadController = new AbortController();
+            
             const response = await fetch(form.action, {
               method: "POST",
               body: formData,
+              signal: currentUploadController.signal,
             });
 
             const result = await response.text();
@@ -445,8 +526,20 @@ window.addEventListener("DOMContentLoaded", () => {
             // Force reset after successful upload
             forceResetFileUI(input.id);
           } catch (error) {
+            if (error.name === 'AbortError') {
+              console.log("Upload cancelled");
+              // Reset UI state for cancelled upload
+              forceResetFileUI(input.id);
+              // Show cancel notification
+              showNotification("Upload cancelled", "error");
+              return; // Don't show error notification for cancelled uploads
+            }
             console.error("Upload error:", error);
             showNotification("Upload failed. Please try again.", "error");
+          } finally {
+            // Hide overlay after upload completion
+            hideUploadOverlay();
+            currentUploadController = null;
           }
         }
       }

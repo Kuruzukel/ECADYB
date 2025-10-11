@@ -352,6 +352,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </form>
     </div>
 
+    <!-- Upload Overlay -->
+    <div class="upload-overlay" id="upload-overlay">
+        <div class="upload-modal" id="uploadModal">
+            <h2>Uploading...</h2>
+            <p id="uploadText">Please wait while we upload your files</p>
+
+            <div class="loader">
+                <div class="loading-bar-background">
+                    <div class="loading-bar">
+                        <div class="white-bars-container">
+                            <div class="white-bar"></div>
+                            <div class="white-bar"></div>
+                            <div class="white-bar"></div>
+                            <div class="white-bar"></div>
+                            <div class="white-bar"></div>
+                            <div class="white-bar"></div>
+                            <div class="white-bar"></div>
+                            <div class="white-bar"></div>
+                            <div class="white-bar"></div>
+                            <div class="white-bar"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-buttons">
+                <button class="modal-btn cancel" id="cancel-upload-btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <?php if ($flashMessage): ?>
         <div id="flash-data" data-message="<?= htmlspecialchars($flashMessage['message'], ENT_QUOTES) ?>"
             data-type="<?= htmlspecialchars($flashMessage['type'], ENT_QUOTES) ?>" style="display:none"></div>
