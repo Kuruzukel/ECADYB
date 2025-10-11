@@ -41,7 +41,7 @@ require $mongoPath;
     <link rel="icon" href="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png" type="image/png" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="../assets/css/AdminDashboard.css" rel="stylesheet">
-    
+
     <!-- Apply saved theme and logo immediately to prevent flash -->
     <script>
         (function() {
@@ -138,22 +138,21 @@ require $mongoPath;
                     "--menu-hover-bg": "#1c1c84",
                 }
             };
-            
+
             const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
             const selectedTheme = themes[savedTheme] || themes["Default"];
             const root = document.documentElement;
-            
+
             for (const [varName, color] of Object.entries(selectedTheme)) {
                 root.style.setProperty(varName, color);
             }
-            
+
             if (savedTheme === "Light Mode") {
                 document.documentElement.classList.add("theme-light-mode");
             } else if (savedTheme === "Dark Mode") {
                 document.documentElement.classList.add("theme-dark-mode");
             }
-            
-            // Apply saved admin logo immediately
+
             const savedLogoUrl = localStorage.getItem("admin-logo-url");
             if (savedLogoUrl) {
                 // Wait for DOM to be ready to set the logo
