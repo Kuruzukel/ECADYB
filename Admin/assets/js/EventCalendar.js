@@ -517,7 +517,6 @@ class EventCalendar {
   }
 }
 
-// Smart notification system variables
 let notificationTimeout = null;
 let currentOperation = null;
 
@@ -526,8 +525,8 @@ function showNotification(message, type = "success") {
   if (!container) return;
 
   // Remove any existing notifications to prevent duplicates
-  const existingNotifications = container.querySelectorAll('.notification');
-  existingNotifications.forEach(notif => notif.remove());
+  const existingNotifications = container.querySelectorAll(".notification");
+  existingNotifications.forEach((notif) => notif.remove());
 
   // Clear any existing notification timeout
   if (notificationTimeout) {
