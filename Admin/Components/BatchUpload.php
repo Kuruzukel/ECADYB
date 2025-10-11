@@ -294,7 +294,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         class="fas fa-chevron-right"></i></span>Batch Upload</h1>
         </div>
         <form method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="selected_template" id="selected_template" value="">
+            <input type="hidden" name="selected_template" id="selected_template" value="1">
             <div class="form-content">
                 <div class="form-group">
                     <div class="section">
@@ -315,23 +315,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
 
                     <div class="section">
-                        <div class="section-header">Student and Top Management Photos</div>
+                        <div class="section-header">Student Photos</div>
                         <div class="file-card">
                             <label class="custom-upload" for="student-photos">Upload Student Photos</label>
                             <input type="file" name="student_photos[]" id="student-photos" class="upload-input"
                                 accept="image/*" multiple>
                         </div>
-                        <div class="file-card" style="margin-top: 20px;">
+                    </div>
+
+                    <div class="section">
+                        <div class="section-header">Top Management Photos</div>
+                        <div class="file-card">
                             <label class="custom-upload" for="management-photos">Upload Top Management Photos</label>
                             <input type="file" name="management_photos[]" id="management-photos" class="upload-input"
                                 accept="image/*" multiple>
                         </div>
                     </div>
-                </div>
 
-                <div id="notification-container"></div>
+                </div>
             </div>
-        </form>
+
+            <div id="notification-container"></div>
+    </div>
+    </form>
     </div>
 
     <?php if ($flashMessage): ?>

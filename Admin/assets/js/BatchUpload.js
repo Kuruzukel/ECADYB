@@ -184,10 +184,16 @@ window.addEventListener("DOMContentLoaded", () => {
   const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
   applyTheme(savedTheme);
 
+  const selectedTemplateNumber = localStorage.getItem("selectedBatchTemplateNumber");
   const selectedTemplate = localStorage.getItem("selectedBatchTemplate");
-  if (selectedTemplate) {
-    const hidden = document.getElementById("selected_template");
-    if (hidden) hidden.value = selectedTemplate;
+  
+  const hidden = document.getElementById("selected_template");
+  if (hidden) {
+    if (selectedTemplateNumber) {
+      hidden.value = selectedTemplateNumber;
+    } else if (selectedTemplate) {
+      hidden.value = selectedTemplate;
+    }
   }
 
   const flash = document.getElementById("flash-data");
@@ -213,12 +219,13 @@ window.addEventListener("DOMContentLoaded", () => {
             formData.append("files[]", file);
           });
 
-          if (selectedTemplate) {
-            formData.append(
-              "template",
-              selectedTemplate.value.replace(/[^0-9]/g, "")
-            );
+          let templateNumber = "1";
+          if (selectedTemplate && selectedTemplate.value) {
+            const extracted = selectedTemplate.value.replace(/[^0-9]/g, "");
+            templateNumber = extracted || "1";
           }
+          formData.append("template", templateNumber);
+          console.log("Uploading with template number:", templateNumber);
 
           const uploadEndpoint =
             input.id === "student-photos"
@@ -236,11 +243,9 @@ window.addEventListener("DOMContentLoaded", () => {
             if (result.success) {
               const uploadType =
                 input.id === "student-photos" ? "Student" : "Top Management";
-              const template = selectedTemplate
-                ? selectedTemplate.value
-                : "Batch Template 1";
+              const templateName = `Batch Template ${templateNumber}`;
               showNotification(
-                `${uploadType} photos uploaded successfully to ${template}!`,
+                `${uploadType} photos uploaded successfully to ${templateName}!`,
                 "success"
               );
 
