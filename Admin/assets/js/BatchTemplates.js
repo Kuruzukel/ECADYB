@@ -591,7 +591,6 @@ window.addEventListener("DOMContentLoaded", () => {
         }
 
         try {
-          // Auto-detect side based on filename
           const fileName = file.name.toUpperCase();
           let detectedSide = side; // Default to provided side
 
