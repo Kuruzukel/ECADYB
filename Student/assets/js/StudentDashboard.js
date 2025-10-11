@@ -33,6 +33,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const notificationIcon = document.getElementById("notificationIcon");
   const notificationDropdown = document.getElementById("notificationDropdown");
   const notificationBadge = document.getElementById("notificationBadge");
+  const profileIcon = document.getElementById("profileIcon");
+  const dropdownMenu = document.getElementById("profileDropdownMenu");
 
   if (!notificationIcon || !notificationDropdown) return;
 
@@ -40,6 +42,12 @@ document.addEventListener("DOMContentLoaded", function () {
     e.stopPropagation();
     this.classList.toggle("clicked");
     notificationDropdown.classList.toggle("show");
+    
+    // Close profile dropdown if it's open
+    if (profileIcon && dropdownMenu) {
+      profileIcon.classList.remove("clicked");
+      dropdownMenu.classList.remove("show");
+    }
   });
 
   document.addEventListener("click", function (event) {
@@ -80,6 +88,8 @@ document.addEventListener("DOMContentLoaded", function () {
 document.addEventListener("DOMContentLoaded", function () {
   const profileIcon = document.getElementById("profileIcon");
   const dropdownMenu = document.getElementById("profileDropdownMenu");
+  const notificationIcon = document.getElementById("notificationIcon");
+  const notificationDropdown = document.getElementById("notificationDropdown");
 
   if (!profileIcon || !dropdownMenu) return;
 
@@ -87,6 +97,12 @@ document.addEventListener("DOMContentLoaded", function () {
     e.stopPropagation();
     this.classList.toggle("clicked");
     dropdownMenu.classList.toggle("show");
+    
+    // Close notification dropdown if it's open
+    if (notificationIcon && notificationDropdown) {
+      notificationIcon.classList.remove("clicked");
+      notificationDropdown.classList.remove("show");
+    }
   });
 
   document.addEventListener("click", function (event) {
