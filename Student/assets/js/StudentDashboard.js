@@ -108,66 +108,83 @@ document.addEventListener("DOMContentLoaded", function () {
 
   navLinks.forEach((link) => {
     link.addEventListener("click", function (e) {
-      e.preventDefault();
+      const targetHref = this.getAttribute("href");
+      
+      // Only prevent default and smooth scroll if it's an anchor link (starts with #)
+      if (targetHref && targetHref.startsWith("#")) {
+        e.preventDefault();
 
-      navLinks.forEach((navLink) => navLink.classList.remove("clicked"));
+        navLinks.forEach((navLink) => navLink.classList.remove("clicked"));
+        this.classList.add("clicked");
 
-      this.classList.add("clicked");
+        const targetSection = document.querySelector(targetHref);
 
-      const targetId = this.getAttribute("href");
-      const targetSection = document.querySelector(targetId);
-
-      if (targetSection) {
-        targetSection.scrollIntoView({
-          behavior: "smooth",
-        });
+        if (targetSection) {
+          targetSection.scrollIntoView({
+            behavior: "smooth",
+          });
+        }
       }
+      // For regular page links, allow normal navigation
     });
   });
 
   heroButtons.forEach((button) => {
     button.addEventListener("click", function (e) {
-      e.preventDefault();
+      const targetHref = this.getAttribute("href");
+      
+      // Only prevent default and smooth scroll if it's an anchor link (starts with #)
+      if (targetHref && targetHref.startsWith("#")) {
+        e.preventDefault();
 
-      this.classList.add("clicked");
+        this.classList.add("clicked");
 
-      setTimeout(() => {
-        this.classList.remove("clicked");
-      }, 300);
+        setTimeout(() => {
+          this.classList.remove("clicked");
+        }, 300);
 
-      const targetId = this.getAttribute("href");
-      const targetSection = document.querySelector(targetId);
+        const targetSection = document.querySelector(targetHref);
 
-      if (targetSection) {
-        targetSection.scrollIntoView({
-          behavior: "smooth",
-        });
+        if (targetSection) {
+          targetSection.scrollIntoView({
+            behavior: "smooth",
+          });
+        }
+      } else {
+        // For page links, just add visual feedback
+        this.classList.add("clicked");
+        setTimeout(() => {
+          this.classList.remove("clicked");
+        }, 300);
       }
     });
   });
 });
 
 const track = document.getElementById("carousel-track");
-let carouselImageElements = Array.from(track.querySelectorAll(".carousel-img"));
-let carouselImages = carouselImageElements.map((img) => img.src);
 
-let currentIndex = 0;
+// Only run carousel code if the carousel element exists
+if (track) {
+  let carouselImageElements = Array.from(track.querySelectorAll(".carousel-img"));
+  let carouselImages = carouselImageElements.map((img) => img.src);
 
-function renderImages() {
-  const images = [
-    carouselImages[carouselImages.length - 1],
-    ...carouselImages,
-    carouselImages[0],
-  ];
+  let currentIndex = 0;
 
-  track.innerHTML = images
-    .map(
-      (src, i) =>
-        `<img src="${src}" class="carousel-img" data-index="${
-          i - 1
-        }" draggable="false" />`
-    )
-    .join("");
+  function renderImages() {
+    const images = [
+      carouselImages[carouselImages.length - 1],
+      ...carouselImages,
+      carouselImages[0],
+    ];
+
+    track.innerHTML = images
+      .map(
+        (src, i) =>
+          `<img src="${src}" class="carousel-img" data-index="${
+            i - 1
+          }" draggable="false" />`
+      )
+      .join("");
 
   carouselImageElements = Array.from(track.querySelectorAll(".carousel-img"));
 
@@ -261,8 +278,9 @@ function resetCarouselAfterTimeout() {
   }, 60000);
 }
 
-startAutoSlide();
-resetCarouselAfterTimeout();
+  startAutoSlide();
+  resetCarouselAfterTimeout();
+}
 
 document.addEventListener("DOMContentLoaded", function () {
   const carousel = document.querySelector(".carousel-3d");
