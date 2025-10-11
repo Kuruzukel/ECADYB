@@ -594,7 +594,6 @@ window.addEventListener("DOMContentLoaded", () => {
           const fileName = file.name.toUpperCase();
           let detectedSide = side;
 
-          // New rule: detect FRONT/BACK from filename
           if (fileName.includes("FRONT")) {
             detectedSide = "front";
           } else if (fileName.includes("BACK")) {
