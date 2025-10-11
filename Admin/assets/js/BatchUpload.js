@@ -184,7 +184,6 @@ window.addEventListener("DOMContentLoaded", () => {
   const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
   applyTheme(savedTheme);
 
-  // Set selected_template hidden field from localStorage
   const selectedTemplate = localStorage.getItem("selectedBatchTemplate");
   if (selectedTemplate) {
     const hidden = document.getElementById("selected_template");
