@@ -285,7 +285,6 @@ async function loadAdminLogo() {
   }
 }
 
-// Theme application system - only define if not already defined by Themes.js
 if (typeof window.themes === "undefined") {
   window.themes = {
     "Light Mode": {
