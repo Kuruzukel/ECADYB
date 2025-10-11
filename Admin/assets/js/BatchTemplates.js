@@ -602,7 +602,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
           form.set("side", detectedSide);
 
-          // Auto-detect slot based on filename prefix
           const slotMapping = {
             BSME: 1,
             BSCJ: 2,
