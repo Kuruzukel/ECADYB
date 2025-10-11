@@ -726,7 +726,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
         showNotification("Cancelled upload", "error");
 
-        // Reset UI elements
         if (progressBar) progressBar.style.width = "0%";
         if (uploadOverlay) uploadOverlay.style.display = "none";
         if (uploadText)
