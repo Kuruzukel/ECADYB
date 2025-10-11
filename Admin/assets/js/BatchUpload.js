@@ -220,7 +220,6 @@ window.addEventListener("DOMContentLoaded", () => {
             );
           }
 
-          // Determine which upload endpoint to use
           const uploadEndpoint =
             input.id === "student-photos"
               ? "../../Connection/Photos/UploadStudentPhotos.php"
