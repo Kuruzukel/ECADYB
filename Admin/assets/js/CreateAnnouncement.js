@@ -441,7 +441,6 @@ function showNotification(message, type = "success") {
     clearTimeout(notificationTimeout);
   }
 
-  // Select icon based on notification type
   let icon = "fa-check-circle"; // default for success
   if (type === "error") {
     icon = "fa-exclamation-circle";
