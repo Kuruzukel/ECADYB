@@ -517,7 +517,6 @@ window.addEventListener("DOMContentLoaded", () => {
           const xhr = new XMLHttpRequest();
           currentXhr = xhr;
 
-          // Add upload progress tracking
           xhr.upload.addEventListener("progress", function (e) {
             if (e.lengthComputable) {
               const percentComplete = (e.loaded / e.total) * 100;
