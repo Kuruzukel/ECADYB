@@ -281,7 +281,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
             const result = await response.text();
 
-            // Create a temporary div to parse the response
             const tempDiv = document.createElement("div");
             tempDiv.innerHTML = result;
 
