@@ -813,7 +813,6 @@ window.addEventListener("DOMContentLoaded", () => {
             }
           }
         } catch (e) {
-          // Handle timeout errors specifically
           if (e.name === "TimeoutError" || e.name === "AbortError") {
             console.warn("Fetch covers request timed out");
             showNotification(
