@@ -691,7 +691,6 @@ window.addEventListener("DOMContentLoaded", () => {
             if (backImg && !isBackgroundSlot) backImg.style.opacity = 0;
           }
 
-          // Show success notification (replaces the uploading notification)
           if (detectedSlot === 8) {
             showNotification(
               "Yearbook Backgrounds have been uploaded successfully!",
