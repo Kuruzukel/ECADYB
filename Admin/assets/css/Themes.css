@@ -133,11 +133,28 @@ h1 .chevron i {
   transform: scale(1.05);
 }
 
-.upload-modal {
+/* Upload Overlay Styles */
+.upload-overlay {
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(1px);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1500;
+  animation: fadeInUp 0.4s ease-out;
+}
+
+.upload-overlay.show {
+  display: flex;
+}
+
+.upload-modal {
+  position: relative;
   background: radial-gradient(
       1200px 600px at 10% -10%,
       rgba(33, 150, 243, 0.07),
@@ -155,7 +172,7 @@ h1 .chevron i {
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
   text-align: center;
   width: 380px;
-  display: block;
+  max-width: 90vw;
   z-index: 2000;
   font-family: Arial, Helvetica, sans-serif;
   animation: slideIn 0.35s ease;
@@ -177,6 +194,60 @@ h1 .chevron i {
   font-weight: 500;
 }
 
+.upload-modal .loader {
+  margin-top: 12px;
+  margin-bottom: 18px;
+}
+
+.upload-modal .loading-bar-background {
+  width: 100%;
+  height: 16px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.upload-modal .loading-bar {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(34, 197, 94, 0.25),
+    rgba(16, 185, 129, 0.3)
+  );
+  position: relative;
+}
+
+.upload-modal .white-bars-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 200%;
+  display: grid;
+  grid-template-columns: repeat(20, 1fr);
+  gap: 8px;
+  transform: translateX(-50%);
+  animation: shimmer 1.4s linear infinite;
+}
+
+.upload-modal .white-bar {
+  background: rgba(255, 255, 255, 0.65);
+  height: 60%;
+  align-self: center;
+  border-radius: 2px;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
 .upload-modal .modal-buttons {
   display: flex;
   gap: 0.9rem;
@@ -193,6 +264,7 @@ h1 .chevron i {
   font-weight: 700;
   letter-spacing: 0.2px;
   transition: transform 0.15s ease, background 0.2s ease;
+  cursor: pointer;
 }
 
 .upload-modal .modal-btn.cancel:hover {
@@ -200,51 +272,6 @@ h1 .chevron i {
   transform: translateY(-1px);
 }
 
-.loader .loading-bar-background {
-  width: 100%;
-  height: 16px;
-  background: rgba(255, 255, 255, 0.06);
-  border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-.loader .loading-bar {
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    rgba(34, 197, 94, 0.25),
-    rgba(16, 185, 129, 0.3)
-  );
-  position: relative;
-}
-.loader .white-bars-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 200%;
-  display: grid;
-  grid-template-columns: repeat(20, 1fr);
-  gap: 8px;
-  transform: translateX(-50%);
-  animation: shimmer 1.4s linear infinite;
-}
-.loader .white-bar {
-  background: rgba(255, 255, 255, 0.65);
-  height: 60%;
-  align-self: center;
-  border-radius: 2px;
-}
-
-@keyframes shimmer {
-  0% {
-    transform: translateX(-50%);
-  }
-  100% {
-    transform: translateX(0);
-  }
-}
 
 .logo-upload-grid {
   display: grid;
@@ -267,7 +294,6 @@ h1 .chevron i {
   position: relative;
   cursor: pointer;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.02);
   transition: all 0.3s ease;
 }
 
@@ -742,13 +768,11 @@ h1 .chevron i {
 }
 
 .notification.error {
-  background-color: #ef4444;
-  border-left: 4px solid #dc2626;
+  background: linear-gradient(135deg, #f87171, #b91c1c);
 }
 
 .notification.warning {
-  background-color: #f59e0b;
-  border-left: 4px solid #d97706;
+  background: linear-gradient(135deg, #f87171, #b91c1c);
 }
 
 @keyframes fadeInUp {

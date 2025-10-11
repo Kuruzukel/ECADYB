@@ -580,7 +580,6 @@ window.addEventListener("DOMContentLoaded", () => {
         console.log("Sending upload request with template:", template);
 
         currentOperation = "uploading_image";
-        showNotification(`Uploading image to Slot ${slot} ${side}...`, "info");
 
         const uploadOverlay = document.getElementById("upload-overlay");
         const uploadText = document.getElementById("uploadText");

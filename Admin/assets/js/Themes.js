@@ -200,7 +200,7 @@ async function cancelUpload() {
 
   await new Promise((resolve) => setTimeout(resolve, 100));
 
-  showNotification("Upload cancelled", "warning");
+  showNotification("Upload cancelled", "error");
 
   uploadCompleted = false;
   currentUploadSlot = null;
@@ -281,13 +281,10 @@ async function uploadLogoToBunny(file, slot, box, input, deleteBtn) {
 
     pendingUploadData = null;
     cancelPendingUpload = false;
-    showNotification("Upload cancelled", "warning");
+    showNotification("Upload cancelled", "error");
     return;
   }
 
-  // Show immediate notification for upload operation
-  currentOperation = "uploading_logo";
-  showNotification(`Uploading logo to slot ${slot}...`, "info");
 
   const form = new FormData();
   form.append("file", file);
@@ -358,7 +355,7 @@ async function uploadLogoToBunny(file, slot, box, input, deleteBtn) {
       controller.signal.aborted ||
       cancelPendingUpload
     ) {
-      showNotification("Upload cancelled", "warning");
+      showNotification("Upload cancelled", "error");
       box.innerHTML = "";
       const newPlus = document.createElement("span");
       newPlus.className = "plus-icon";
