@@ -612,7 +612,7 @@ window.addEventListener("DOMContentLoaded", () => {
             BSBA: 7,
           };
 
-          let detectedSlot = slot; // Default to provided slot
+          let detectedSlot = slot;
 
           // Check for slot prefix in filename
           for (const [prefix, slotNum] of Object.entries(slotMapping)) {
