@@ -547,7 +547,6 @@ window.addEventListener("DOMContentLoaded", () => {
                 if (xhr.status >= 200 && xhr.status < 300) {
                   resolve(JSON.parse(xhr.responseText));
                 } else if (xhr.status === 0) {
-                  // Handle Error 0 - usually caused by cancellation or network issues
                   resolve({ success: false, message: "Upload cancelled" });
                 } else {
                   resolve({
