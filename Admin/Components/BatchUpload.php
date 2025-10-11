@@ -299,36 +299,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="form-group">
                     <div class="section">
                         <div class="section-header">Top Management Message</div>
-                        <div class="file-card">
-                            <label class="custom-upload" for="top_management_message">Upload CSV File</label>
+                        <div class="file-card" id="card-top-management">
+                            <label class="custom-upload" for="top_management_message">Upload Top Management Message CSV File</label>
                             <input type="file" name="top_management_message" id="top_management_message"
                                 class="upload-input" accept=".csv">
+                            <div class="file-info" id="info-top-management">
+                                <p><i class="fas fa-file-csv"></i> <span class="file-name"></span></p>
+                            </div>
                         </div>
                     </div>
 
                     <div class="section">
                         <div class="section-header">Student Information</div>
-                        <div class="file-card">
-                            <label class="custom-upload" for="student-info">Upload CSV File</label>
+                        <div class="file-card" id="card-student-info">
+                            <label class="custom-upload" for="student-info">Upload Student Information CSV File</label>
                             <input type="file" name="student_info" id="student-info" class="upload-input" accept=".csv">
+                            <div class="file-info" id="info-student-info">
+                                <p><i class="fas fa-file-csv"></i> <span class="file-name"></span></p>
+                            </div>
                         </div>
                     </div>
 
                     <div class="section">
                         <div class="section-header">Student Photos</div>
-                        <div class="file-card">
+                        <div class="file-card" id="card-student-photos">
                             <label class="custom-upload" for="student-photos">Upload Student Photos</label>
                             <input type="file" name="student_photos[]" id="student-photos" class="upload-input"
                                 accept="image/*" multiple>
+                            <div class="file-info" id="info-student-photos">
+                                <p><i class="fas fa-images"></i> <span class="file-name"></span></p>
+                            </div>
                         </div>
                     </div>
 
                     <div class="section">
                         <div class="section-header">Top Management Photos</div>
-                        <div class="file-card">
+                        <div class="file-card" id="card-management-photos">
                             <label class="custom-upload" for="management-photos">Upload Top Management Photos</label>
                             <input type="file" name="management_photos[]" id="management-photos" class="upload-input"
                                 accept="image/*" multiple>
+                            <div class="file-info" id="info-management-photos">
+                                <p><i class="fas fa-images"></i> <span class="file-name"></span></p>
+                            </div>
                         </div>
                     </div>
 

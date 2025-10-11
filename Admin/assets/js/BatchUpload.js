@@ -203,9 +203,149 @@ window.addEventListener("DOMContentLoaded", () => {
     if (msg) showNotification(msg, type);
   }
 
+  // Add drag and drop functionality to file cards
+  document.querySelectorAll('.file-card').forEach(card => {
+    const inputId = card.id.replace('card-', '');
+    let fileInput;
+    
+    if (inputId === 'top-management') {
+      fileInput = document.getElementById('top_management_message');
+    } else if (inputId === 'student-info') {
+      fileInput = document.getElementById('student-info');
+    } else if (inputId === 'student-photos') {
+      fileInput = document.getElementById('student-photos');
+    } else if (inputId === 'management-photos') {
+      fileInput = document.getElementById('management-photos');
+    }
+    
+    if (!fileInput) return;
+    
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      card.addEventListener(eventName, preventDefaults, false);
+    });
+    
+    function preventDefaults(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    
+    ['dragenter', 'dragover'].forEach(eventName => {
+      card.addEventListener(eventName, () => {
+        card.classList.add('drag-over');
+      }, false);
+    });
+    
+    ['dragleave', 'drop'].forEach(eventName => {
+      card.addEventListener(eventName, () => {
+        card.classList.remove('drag-over');
+      }, false);
+    });
+    
+    card.addEventListener('drop', (e) => {
+      const dt = e.dataTransfer;
+      const files = dt.files;
+      
+      // Create a new FileList-like object
+      const dataTransfer = new DataTransfer();
+      Array.from(files).forEach(file => {
+        dataTransfer.items.add(file);
+      });
+      
+      fileInput.files = dataTransfer.files;
+      
+      // Trigger change event
+      const event = new Event('change', { bubbles: true });
+      fileInput.dispatchEvent(event);
+    }, false);
+  });
+
+  // Handle file selection UI updates
+  function updateFileUI(input) {
+    const inputId = input.id;
+    let cardId, infoId;
+    
+    // Map input IDs to their corresponding card and info elements
+    if (inputId === 'top_management_message') {
+      cardId = 'card-top-management';
+      infoId = 'info-top-management';
+    } else if (inputId === 'student-info') {
+      cardId = 'card-student-info';
+      infoId = 'info-student-info';
+    } else if (inputId === 'student-photos') {
+      cardId = 'card-student-photos';
+      infoId = 'info-student-photos';
+    } else if (inputId === 'management-photos') {
+      cardId = 'card-management-photos';
+      infoId = 'info-management-photos';
+    }
+    
+    const card = document.getElementById(cardId);
+    const info = document.getElementById(infoId);
+    
+    if (!card || !info) return;
+    
+    // Check if input has files (including after clearing)
+    const hasFiles = input.files && input.files.length > 0;
+    
+    if (hasFiles) {
+      // Add has-file class to card
+      card.classList.add('has-file');
+      
+      // Update file info display
+      const fileNameSpan = info.querySelector('.file-name');
+      if (input.files.length === 1) {
+        fileNameSpan.textContent = input.files[0].name;
+      } else {
+        fileNameSpan.textContent = `${input.files.length} files selected`;
+      }
+      
+      // Show the file info with animation
+      info.classList.add('show');
+    } else {
+      // Force complete reset
+      card.classList.remove('has-file');
+      info.classList.remove('show');
+      
+      // Clear the file name text completely
+      const fileNameSpan = info.querySelector('.file-name');
+      if (fileNameSpan) {
+        fileNameSpan.textContent = '';
+      }
+      
+      // Force a small delay to ensure DOM updates
+      setTimeout(() => {
+        if (fileNameSpan) {
+          fileNameSpan.textContent = '';
+        }
+      }, 100);
+    }
+  }
+
+  // Force reset function for complete UI cleanup
+  function forceResetFileUI(inputId) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    
+    // Clear input completely
+    input.value = '';
+    input.files = new DataTransfer().files;
+    
+    // Update UI
+    updateFileUI(input);
+    
+    // Double-check after a short delay
+    setTimeout(() => {
+      updateFileUI(input);
+    }, 200);
+  }
+
   document.querySelectorAll(".upload-input").forEach((input) => {
     input.addEventListener("change", async (e) => {
       e.preventDefault();
+      
+      // Update UI immediately when file is selected
+      updateFileUI(input);
+      
       if (input.files.length > 0) {
         const form = input.form;
         const formData = new FormData();
@@ -213,7 +353,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
         if (input.id === "student-photos" || input.id === "management-photos") {
           currentOperation = "uploading_photos";
-          showNotification("Uploading photos...", "info");
 
           Array.from(input.files).forEach((file) => {
             formData.append("files[]", file);
@@ -262,6 +401,9 @@ window.addEventListener("DOMContentLoaded", () => {
                   "error"
                 );
               }
+              
+              // Force reset after successful photo upload
+              forceResetFileUI(input.id);
             } else {
               showNotification(
                 result.message || "Upload failed. Please try again.",
@@ -300,7 +442,8 @@ window.addEventListener("DOMContentLoaded", () => {
               }
             }
 
-            input.value = "";
+            // Force reset after successful upload
+            forceResetFileUI(input.id);
           } catch (error) {
             console.error("Upload error:", error);
             showNotification("Upload failed. Please try again.", "error");
