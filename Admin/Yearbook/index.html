@@ -846,28 +846,18 @@
           initializeCornerHover();
         }
 
+        // Optimize thumbnail generation - only generate when needed
         setTimeout(function () {
           if (typeof generateAllThumbnails === "function") {
             generateAllThumbnails();
-            setTimeout(function () {
-              if (typeof refreshThumbnails === "function") {
-                refreshThumbnails();
-              }
-            }, 3000);
-
+            // Reduce refresh calls to improve performance
             setTimeout(function () {
               if (typeof refreshThumbnails === "function") {
                 refreshThumbnails();
               }
             }, 5000);
-
-            setTimeout(function () {
-              if (typeof refreshThumbnails === "function") {
-                refreshThumbnails();
-              }
-            }, 8000);
           }
-        }, 3000);
+        }, 5000);
       }
 
       $(".zoom-icon")

@@ -9,6 +9,73 @@ window.allStudentsLoading = window.allStudentsLoading || {};
 // Global cache for student photos
 window.studentPhotosCache = window.studentPhotosCache || {};
 
+// Global cache for top management data
+window.topManagementCache = window.topManagementCache || {};
+window.topManagementPendingRequests = window.topManagementPendingRequests || {};
+
+// Function to fetch top management data with caching
+function fetchTopManagementCached(template, callback) {
+  var cacheKey = "template_" + template;
+  
+  // Check if we already have this data cached
+  if (window.topManagementCache[cacheKey]) {
+    console.log("Using cached top management data for template", template);
+    callback(window.topManagementCache[cacheKey]);
+    return;
+  }
+  
+  // Check if there's already a pending request for this data
+  if (window.topManagementPendingRequests[cacheKey]) {
+    console.log("Request already pending for template", template, "- waiting for it to complete");
+    // Add this callback to the list of callbacks waiting for this request
+    window.topManagementPendingRequests[cacheKey].push(callback);
+    return;
+  }
+  
+  // Create a new pending request
+  window.topManagementPendingRequests[cacheKey] = [callback];
+  
+  console.log("Fetching top management data for template", template);
+  
+  $.ajax({
+    url: "../../Connection/Photos/FetchTopManagement.php",
+    method: "GET",
+    data: {
+      template: template,
+    },
+    dataType: "json",
+    success: function(response) {
+      // Cache the response
+      window.topManagementCache[cacheKey] = response;
+      
+      // Call all waiting callbacks
+      var callbacks = window.topManagementPendingRequests[cacheKey];
+      delete window.topManagementPendingRequests[cacheKey];
+      
+      callbacks.forEach(function(cb) {
+        cb(response);
+      });
+    },
+    error: function(xhr, status, error) {
+      console.log("Error fetching top management data:", error);
+      
+      // Call all waiting callbacks with an error response
+      var callbacks = window.topManagementPendingRequests[cacheKey];
+      delete window.topManagementPendingRequests[cacheKey];
+      
+      var errorResponse = {
+        success: false,
+        message: "Failed to fetch top management data",
+        data: [],
+      };
+      
+      callbacks.forEach(function(cb) {
+        cb(errorResponse);
+      });
+    },
+  });
+}
+
 // Function to fetch student photos from MongoDB
 function fetchStudentPhotos(studentId, callback) {
   if (!studentId) {
@@ -522,19 +589,12 @@ function loadPage(page, pageElement) {
 
       var managementIndex = page - 2;
 
-      $.ajax({
-        url: "../../Connection/Photos/FetchTopManagement.php",
-        method: "GET",
-        data: {
-          template: template,
-        },
-        dataType: "json",
-        success: function (response) {
-          console.log("Top management data response:", response);
+      fetchTopManagementCached(template, function(response) {
+        console.log("Top management data response:", response);
 
-          loadingIndicator.remove();
+        loadingIndicator.remove();
 
-          if (response.success && response.data && response.data.length > 0) {
+        if (response.success && response.data && response.data.length > 0) {
             if (managementIndex < response.data.length) {
               var currentManager = response.data[managementIndex];
 
@@ -568,18 +628,14 @@ function loadPage(page, pageElement) {
                 text: currentManager.position || "Position Title",
               });
 
+              var namePositionContainer = $("<div/>", {
+                class: "management-name-position",
+              });
+
+              namePositionContainer.append(name).append(position);
+
               var messageContainer = $("<div/>", {
                 class: "message-container",
-              });
-
-              var quoteOpen = $("<span/>", {
-                class: "quote-mark open",
-                text: "❝",
-              });
-
-              var quoteClose = $("<span/>", {
-                class: "quote-mark close",
-                text: "❞",
               });
 
               var messageText =
@@ -594,18 +650,22 @@ function loadPage(page, pageElement) {
                 class: "message-wrapper",
               });
 
-              message.prepend(quoteOpen);
-              message.append(quoteClose);
-
               messageWrapper.append(message);
               messageContainer.append(messageWrapper);
 
-              infoContainer
-                .append(name)
-                .append(position)
-                .append(messageContainer);
+              infoContainer.append(namePositionContainer);
 
-              managementPage.append(photoContainer).append(infoContainer);
+              var photoAndInfoContainer = $("<div/>", {
+                class: "photo-and-info-container",
+              });
+
+              photoAndInfoContainer
+                .append(photoContainer)
+                .append(infoContainer);
+
+              managementPage
+                .append(photoAndInfoContainer)
+                .append(messageContainer);
 
               setTimeout(function () {
                 waitForImagesAndGenerateThumbnail(page, pageElement);
@@ -639,6 +699,12 @@ function loadPage(page, pageElement) {
                 text: "Position Title",
               });
 
+              var namePositionContainer = $("<div/>", {
+                class: "management-name-position",
+              });
+
+              namePositionContainer.append(name).append(position);
+
               var messageContainer = $("<div/>", {
                 class: "message-container",
               });
@@ -655,12 +721,19 @@ function loadPage(page, pageElement) {
               messageWrapper.append(message);
               messageContainer.append(messageWrapper);
 
-              infoContainer
-                .append(name)
-                .append(position)
-                .append(messageContainer);
+              infoContainer.append(namePositionContainer);
 
-              placeholderContainer.append(photoContainer).append(infoContainer);
+              var photoAndInfoContainer = $("<div/>", {
+                class: "photo-and-info-container",
+              });
+
+              photoAndInfoContainer
+                .append(photoContainer)
+                .append(infoContainer);
+
+              placeholderContainer
+                .append(photoAndInfoContainer)
+                .append(messageContainer);
 
               managementPage.append(placeholderContainer);
 
@@ -675,19 +748,7 @@ function loadPage(page, pageElement) {
             });
             managementPage.append(errorMessage);
           }
-        },
-        error: function (xhr, status, error) {
-          console.log("Error fetching top management data:", error);
-
-          loadingIndicator.remove();
-
-          var errorMessage = $("<div/>", {
-            class: "management-error",
-            text: "Error connecting to server. Please try again later.",
-          });
-          managementPage.append(errorMessage);
-        },
-      });
+        });
     } else if (
       page >= 7 &&
       page < totalPages &&
@@ -1652,7 +1713,7 @@ function generateAllThumbnails() {
     window.pageThumbnails = {};
   }
 
-  console.log("Starting thumbnail generation for all pages...");
+  console.log("Starting optimized thumbnail generation...");
 
   setTimeout(function () {
     $(".magazine .page").each(function (index) {
@@ -1665,15 +1726,17 @@ function generateAllThumbnails() {
         pageElement.find(".cards-container").length > 0;
 
       if (hasContent) {
+        // Generate thumbnails for visible pages first, then others
+        var delay = pageNumber <= 3 ? index * 200 : index * 800;
         setTimeout(function () {
           console.log("Generating thumbnail for page", pageNumber);
           generatePageThumbnail(pageNumber, pageElement);
-        }, index * 500); // Stagger thumbnail generation with more delay
+        }, delay);
       } else {
         console.log("Skipping page", pageNumber, "- no content found");
       }
     });
-  }, 1000);
+  }, 2000); // Increased initial delay
 }
 
 function waitForImagesAndGenerateThumbnail(page, pageElement) {
