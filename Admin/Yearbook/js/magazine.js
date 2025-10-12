@@ -274,7 +274,6 @@ function loadAllStudentsForDepartment(department, template, callback) {
           }
         );
       } else {
-        // We've reached the end
         console.log(
           "All students loaded for",
           department,
