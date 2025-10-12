@@ -1861,7 +1861,6 @@ function createStudentThumbnail(studentPageIndex, dataToUse) {
   );
 }
 
-// Corner hover detection for page peel effect
 function initializeCornerHover() {
   var $magazine = $(".magazine");
   var cornerSize = 100; // Size of the corner detection area in pixels
