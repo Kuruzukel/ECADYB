@@ -369,7 +369,6 @@ function fetchStudentDataCached(department, template, apiPage, callback) {
     return;
   }
 
-  // Check if there's already a pending request for this data
   if (window.studentDataPendingRequests[cacheKey]) {
     console.log(
       "Request already pending for API page",
