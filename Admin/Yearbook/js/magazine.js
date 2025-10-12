@@ -1763,7 +1763,6 @@ function generateAllThumbnails() {
         pageElement.find(".cards-container").length > 0;
 
       if (hasContent) {
-        // Generate thumbnails for visible pages first, then others
         var delay = pageNumber <= 3 ? index * 200 : index * 800;
         setTimeout(function () {
           console.log("Generating thumbnail for page", pageNumber);
