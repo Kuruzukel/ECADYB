@@ -18,7 +18,6 @@ function fetchTopManagementCached(template, callback) {
     return;
   }
 
-  // Check if there's already a pending request for this data
   if (window.topManagementPendingRequests[cacheKey]) {
     console.log(
       "Request already pending for template",
