@@ -1905,7 +1905,6 @@ function initializeCornerHover() {
     }
 
     if (inCorner && corner !== currentPeelCorner) {
-      // Clear any existing timer
       if (peelTimer) {
         clearTimeout(peelTimer);
       }
