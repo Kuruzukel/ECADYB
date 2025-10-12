@@ -1,4 +1,3 @@
-// Global cache for student data API responses
 window.studentDataCache = window.studentDataCache || {};
 window.studentDataPendingRequests = window.studentDataPendingRequests || {};
 
