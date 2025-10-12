@@ -40,7 +40,6 @@ function fetchTopManagementCached(template, callback) {
     },
     dataType: "json",
     success: function (response) {
-      // Cache the response
       window.topManagementCache[cacheKey] = response;
 
       // Call all waiting callbacks
