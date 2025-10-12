@@ -1142,7 +1142,6 @@ function loadRegions(page, element) {
     return;
   }
 
-  // Load regions silently - fail gracefully if files don't exist
   $.getJSON("pages/" + page + "-regions.json")
     .done(function (data) {
       $.each(data, function (key, region) {
