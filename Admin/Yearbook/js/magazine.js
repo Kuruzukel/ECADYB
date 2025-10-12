@@ -16,27 +16,31 @@ window.topManagementPendingRequests = window.topManagementPendingRequests || {};
 // Function to fetch top management data with caching
 function fetchTopManagementCached(template, callback) {
   var cacheKey = "template_" + template;
-  
+
   // Check if we already have this data cached
   if (window.topManagementCache[cacheKey]) {
     console.log("Using cached top management data for template", template);
     callback(window.topManagementCache[cacheKey]);
     return;
   }
-  
+
   // Check if there's already a pending request for this data
   if (window.topManagementPendingRequests[cacheKey]) {
-    console.log("Request already pending for template", template, "- waiting for it to complete");
+    console.log(
+      "Request already pending for template",
+      template,
+      "- waiting for it to complete"
+    );
     // Add this callback to the list of callbacks waiting for this request
     window.topManagementPendingRequests[cacheKey].push(callback);
     return;
   }
-  
+
   // Create a new pending request
   window.topManagementPendingRequests[cacheKey] = [callback];
-  
+
   console.log("Fetching top management data for template", template);
-  
+
   $.ajax({
     url: "../../Connection/Photos/FetchTopManagement.php",
     method: "GET",
@@ -44,32 +48,32 @@ function fetchTopManagementCached(template, callback) {
       template: template,
     },
     dataType: "json",
-    success: function(response) {
+    success: function (response) {
       // Cache the response
       window.topManagementCache[cacheKey] = response;
-      
+
       // Call all waiting callbacks
       var callbacks = window.topManagementPendingRequests[cacheKey];
       delete window.topManagementPendingRequests[cacheKey];
-      
-      callbacks.forEach(function(cb) {
+
+      callbacks.forEach(function (cb) {
         cb(response);
       });
     },
-    error: function(xhr, status, error) {
+    error: function (xhr, status, error) {
       console.log("Error fetching top management data:", error);
-      
+
       // Call all waiting callbacks with an error response
       var callbacks = window.topManagementPendingRequests[cacheKey];
       delete window.topManagementPendingRequests[cacheKey];
-      
+
       var errorResponse = {
         success: false,
         message: "Failed to fetch top management data",
         data: [],
       };
-      
-      callbacks.forEach(function(cb) {
+
+      callbacks.forEach(function (cb) {
         cb(errorResponse);
       });
     },
@@ -112,10 +116,10 @@ function fetchStudentPhotos(studentId, callback) {
     method: "GET",
     data: {
       student_id: studentId,
-      template: template
+      template: template,
     },
     dataType: "json",
-    success: function(response) {
+    success: function (response) {
       console.log("=== PHOTOS RESPONSE ===");
       console.log("Requested ID:", studentId);
       console.log("Response:", response);
@@ -130,13 +134,13 @@ function fetchStudentPhotos(studentId, callback) {
         callback([]);
       }
     },
-    error: function(xhr, status, error) {
+    error: function (xhr, status, error) {
       console.log("=== PHOTOS ERROR ===");
       console.log("Student ID:", studentId);
       console.log("Error:", error);
       console.log("XHR:", xhr);
       callback([]);
-    }
+    },
   });
 }
 
@@ -589,166 +593,162 @@ function loadPage(page, pageElement) {
 
       var managementIndex = page - 2;
 
-      fetchTopManagementCached(template, function(response) {
+      fetchTopManagementCached(template, function (response) {
         console.log("Top management data response:", response);
 
         loadingIndicator.remove();
 
         if (response.success && response.data && response.data.length > 0) {
-            if (managementIndex < response.data.length) {
-              var currentManager = response.data[managementIndex];
+          if (managementIndex < response.data.length) {
+            var currentManager = response.data[managementIndex];
 
-              var photoContainer = $("<div/>", {
-                class: "management-photo",
-              });
-
-              var infoContainer = $("<div/>", {
-                class: "management-info",
-              });
-
-              var photoUrl =
-                currentManager.photo_url ||
-                'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="270" height="270" viewBox="0 0 270 270"%3E%3Crect width="270" height="270" fill="%23f0f0f0"/%3E%3Ctext x="135" y="135" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Image Available%3C/text%3E%3C/svg%3E';
-              var photo = $("<img/>", {
-                src: photoUrl,
-                alt: currentManager.name,
-                crossOrigin: "anonymous",
-                onerror:
-                  'this.src=\'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="270" height="270" viewBox="0 0 270 270"%3E%3Crect width="270" height="270" fill="%23f0f0f0"/%3E%3Ctext x="135" y="135" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Image Available%3C/text%3E%3C/svg%3E\';',
-              });
-              photoContainer.append(photo);
-
-              var name = $("<h2/>", {
-                class: "management-name",
-                text: currentManager.name || "Top Management Name",
-              });
-
-              var position = $("<h3/>", {
-                class: "management-position",
-                text: currentManager.position || "Position Title",
-              });
-
-              var namePositionContainer = $("<div/>", {
-                class: "management-name-position",
-              });
-
-              namePositionContainer.append(name).append(position);
-
-              var messageContainer = $("<div/>", {
-                class: "message-container",
-              });
-
-              var messageText =
-                currentManager.message ||
-                "No message available for this top management position. Messages typically contain inspirational words, guidance, or congratulations for the graduating class.";
-              var message = $("<div/>", {
-                class: "management-message",
-                text: messageText,
-              });
-
-              var messageWrapper = $("<div/>", {
-                class: "message-wrapper",
-              });
-
-              messageWrapper.append(message);
-              messageContainer.append(messageWrapper);
-
-              infoContainer.append(namePositionContainer);
-
-              var photoAndInfoContainer = $("<div/>", {
-                class: "photo-and-info-container",
-              });
-
-              photoAndInfoContainer
-                .append(photoContainer)
-                .append(infoContainer);
-
-              managementPage
-                .append(photoAndInfoContainer)
-                .append(messageContainer);
-
-              setTimeout(function () {
-                waitForImagesAndGenerateThumbnail(page, pageElement);
-              }, 500);
-            } else {
-              var placeholderContainer = $("<div/>", {
-                class: "top-management-page",
-              });
-
-              var photoContainer = $("<div/>", {
-                class: "management-photo",
-              });
-
-              var photo = $("<img/>", {
-                src: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="270" height="270" viewBox="0 0 270 270"%3E%3Crect width="270" height="270" fill="%23f0f0f0"/%3E%3Ctext x="135" y="135" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Image Available%3C/text%3E%3C/svg%3E',
-                alt: "Top Management Placeholder",
-              });
-              photoContainer.append(photo);
-
-              var infoContainer = $("<div/>", {
-                class: "management-info",
-              });
-
-              var name = $("<h2/>", {
-                class: "management-name",
-                text: "Top Management Name",
-              });
-
-              var position = $("<h3/>", {
-                class: "management-position",
-                text: "Position Title",
-              });
-
-              var namePositionContainer = $("<div/>", {
-                class: "management-name-position",
-              });
-
-              namePositionContainer.append(name).append(position);
-
-              var messageContainer = $("<div/>", {
-                class: "message-container",
-              });
-
-              var messageWrapper = $("<div/>", {
-                class: "message-wrapper",
-              });
-
-              var message = $("<div/>", {
-                class: "management-message",
-                text: "No top management data available for this page. Messages typically contain inspirational words, guidance, or congratulations for the graduating class.",
-              });
-
-              messageWrapper.append(message);
-              messageContainer.append(messageWrapper);
-
-              infoContainer.append(namePositionContainer);
-
-              var photoAndInfoContainer = $("<div/>", {
-                class: "photo-and-info-container",
-              });
-
-              photoAndInfoContainer
-                .append(photoContainer)
-                .append(infoContainer);
-
-              placeholderContainer
-                .append(photoAndInfoContainer)
-                .append(messageContainer);
-
-              managementPage.append(placeholderContainer);
-
-              setTimeout(function () {
-                waitForImagesAndGenerateThumbnail(page, pageElement);
-              }, 500);
-            }
-          } else {
-            var errorMessage = $("<div/>", {
-              class: "management-error",
-              text: response.message || "Failed to load top management data.",
+            var photoContainer = $("<div/>", {
+              class: "management-photo",
             });
-            managementPage.append(errorMessage);
+
+            var infoContainer = $("<div/>", {
+              class: "management-info",
+            });
+
+            var photoUrl =
+              currentManager.photo_url ||
+              'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="270" height="270" viewBox="0 0 270 270"%3E%3Crect width="270" height="270" fill="%23f0f0f0"/%3E%3Ctext x="135" y="135" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Image Available%3C/text%3E%3C/svg%3E';
+            var photo = $("<img/>", {
+              src: photoUrl,
+              alt: currentManager.name,
+              crossOrigin: "anonymous",
+              onerror:
+                'this.src=\'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="270" height="270" viewBox="0 0 270 270"%3E%3Crect width="270" height="270" fill="%23f0f0f0"/%3E%3Ctext x="135" y="135" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Image Available%3C/text%3E%3C/svg%3E\';',
+            });
+            photoContainer.append(photo);
+
+            var name = $("<h2/>", {
+              class: "management-name",
+              text: currentManager.name || "Top Management Name",
+            });
+
+            var position = $("<h3/>", {
+              class: "management-position",
+              text: currentManager.position || "Position Title",
+            });
+
+            var namePositionContainer = $("<div/>", {
+              class: "management-name-position",
+            });
+
+            namePositionContainer.append(name).append(position);
+
+            var messageContainer = $("<div/>", {
+              class: "message-container",
+            });
+
+            var messageText =
+              currentManager.message ||
+              "No message available for this top management position. Messages typically contain inspirational words, guidance, or congratulations for the graduating class.";
+            var message = $("<div/>", {
+              class: "management-message",
+              text: messageText,
+            });
+
+            var messageWrapper = $("<div/>", {
+              class: "message-wrapper",
+            });
+
+            messageWrapper.append(message);
+            messageContainer.append(messageWrapper);
+
+            infoContainer.append(namePositionContainer);
+
+            var photoAndInfoContainer = $("<div/>", {
+              class: "photo-and-info-container",
+            });
+
+            photoAndInfoContainer.append(photoContainer).append(infoContainer);
+
+            managementPage
+              .append(photoAndInfoContainer)
+              .append(messageContainer);
+
+            setTimeout(function () {
+              waitForImagesAndGenerateThumbnail(page, pageElement);
+            }, 500);
+          } else {
+            var placeholderContainer = $("<div/>", {
+              class: "top-management-page",
+            });
+
+            var photoContainer = $("<div/>", {
+              class: "management-photo",
+            });
+
+            var photo = $("<img/>", {
+              src: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="270" height="270" viewBox="0 0 270 270"%3E%3Crect width="270" height="270" fill="%23f0f0f0"/%3E%3Ctext x="135" y="135" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Image Available%3C/text%3E%3C/svg%3E',
+              alt: "Top Management Placeholder",
+            });
+            photoContainer.append(photo);
+
+            var infoContainer = $("<div/>", {
+              class: "management-info",
+            });
+
+            var name = $("<h2/>", {
+              class: "management-name",
+              text: "Top Management Name",
+            });
+
+            var position = $("<h3/>", {
+              class: "management-position",
+              text: "Position Title",
+            });
+
+            var namePositionContainer = $("<div/>", {
+              class: "management-name-position",
+            });
+
+            namePositionContainer.append(name).append(position);
+
+            var messageContainer = $("<div/>", {
+              class: "message-container",
+            });
+
+            var messageWrapper = $("<div/>", {
+              class: "message-wrapper",
+            });
+
+            var message = $("<div/>", {
+              class: "management-message",
+              text: "No top management data available for this page. Messages typically contain inspirational words, guidance, or congratulations for the graduating class.",
+            });
+
+            messageWrapper.append(message);
+            messageContainer.append(messageWrapper);
+
+            infoContainer.append(namePositionContainer);
+
+            var photoAndInfoContainer = $("<div/>", {
+              class: "photo-and-info-container",
+            });
+
+            photoAndInfoContainer.append(photoContainer).append(infoContainer);
+
+            placeholderContainer
+              .append(photoAndInfoContainer)
+              .append(messageContainer);
+
+            managementPage.append(placeholderContainer);
+
+            setTimeout(function () {
+              waitForImagesAndGenerateThumbnail(page, pageElement);
+            }, 500);
           }
-        });
+        } else {
+          var errorMessage = $("<div/>", {
+            class: "management-error",
+            text: response.message || "Failed to load top management data.",
+          });
+          managementPage.append(errorMessage);
+        }
+      });
     } else if (
       page >= 7 &&
       page < totalPages &&
@@ -852,13 +852,15 @@ function loadPage(page, pageElement) {
               });
 
               // Default placeholder image
-              var defaultPhotoUrl = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="135" height="155" viewBox="0 0 135 155"%3E%3Crect width="135" height="155" fill="%23f0f0f0"/%3E%3Ctext x="67.5" y="77.5" font-family="Arial" font-size="12" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Photo%3C/text%3E%3C/svg%3E';
-              
+              var defaultPhotoUrl =
+                'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="135" height="155" viewBox="0 0 135 155"%3E%3Crect width="135" height="155" fill="%23f0f0f0"/%3E%3Ctext x="67.5" y="77.5" font-family="Arial" font-size="12" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Photo%3C/text%3E%3C/svg%3E';
+
               var studentPhoto = $("<img/>", {
                 src: defaultPhotoUrl,
                 alt: student.name,
                 crossOrigin: "anonymous",
-                onerror: 'this.src=\'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="135" height="155" viewBox="0 0 135 155"%3E%3Crect width="135" height="155" fill="%23f0f0f0"/%3E%3Ctext x="67.5" y="77.5" font-family="Arial" font-size="12" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Photo%3C/text%3E%3C/svg%3E\';',
+                onerror:
+                  'this.src=\'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="135" height="155" viewBox="0 0 135 155"%3E%3Crect width="135" height="155" fill="%23f0f0f0"/%3E%3Ctext x="67.5" y="77.5" font-family="Arial" font-size="12" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Photo%3C/text%3E%3C/svg%3E\';',
               });
 
               // Container size is now fixed at 135px x 153px for consistency
@@ -869,21 +871,41 @@ function loadPage(page, pageElement) {
               // Use student_id (like "2022-004231") not id (MongoDB ObjectId)
               var studentIdForPhotos = student.student_id;
               var studentNameForPhotos = student.name;
-              console.log("Fetching TOGA photo for student:", studentNameForPhotos, "with student_id:", studentIdForPhotos);
-              
+              console.log(
+                "Fetching TOGA photo for student:",
+                studentNameForPhotos,
+                "with student_id:",
+                studentIdForPhotos
+              );
+
               if (studentIdForPhotos) {
                 // Use IIFE to capture the current student data properly
-                (function(currentStudent, currentPhotoElement, currentStudentId, currentStudentName) {
-                  fetchStudentPhotos(currentStudentId, function(photos) {
+                (function (
+                  currentStudent,
+                  currentPhotoElement,
+                  currentStudentId,
+                  currentStudentName
+                ) {
+                  fetchStudentPhotos(currentStudentId, function (photos) {
                     if (photos && photos.length > 0) {
                       var togaUrl = photos[0].photos.student_photo_1.url;
                       if (togaUrl) {
-                        console.log("Setting TOGA photo for", currentStudentName, ":", togaUrl);
+                        console.log(
+                          "Setting TOGA photo for",
+                          currentStudentName,
+                          ":",
+                          togaUrl
+                        );
                         currentPhotoElement.attr("src", togaUrl);
                       }
                     }
                   });
-                })(student, studentPhoto, studentIdForPhotos, studentNameForPhotos);
+                })(
+                  student,
+                  studentPhoto,
+                  studentIdForPhotos,
+                  studentNameForPhotos
+                );
               }
 
               var studentName = $("<h3/>", {
@@ -929,7 +951,8 @@ function loadPage(page, pageElement) {
                 );
 
                 // Default placeholder image
-                var defaultPhotoUrl = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect width="300" height="300" fill="%23f0f0f0"/%3E%3Ctext x="150" y="150" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Student Photo%3C/text%3E%3C/svg%3E';
+                var defaultPhotoUrl =
+                  'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect width="300" height="300" fill="%23f0f0f0"/%3E%3Ctext x="150" y="150" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Student Photo%3C/text%3E%3C/svg%3E';
 
                 // Initialize with default image
                 $largeImage.attr("src", defaultPhotoUrl);
@@ -947,33 +970,42 @@ function loadPage(page, pageElement) {
                 // Fetch student photos from MongoDB
                 // Use student_id (like "2022-004231") not id (MongoDB ObjectId)
                 var studentIdForModal = clickedStudent.student_id;
-                console.log("Modal opened for student:", clickedStudent.name, "with student_id:", studentIdForModal);
-                
+                console.log(
+                  "Modal opened for student:",
+                  clickedStudent.name,
+                  "with student_id:",
+                  studentIdForModal
+                );
+
                 if (studentIdForModal) {
-                  fetchStudentPhotos(studentIdForModal, function(photos) {
-                  var studentPhotos = [];
-                  
-                  if (photos && photos.length > 0) {
-                    var studentPhotoData = photos[0].photos;
-                    studentPhotos = [
-                      studentPhotoData.student_photo_1.url || defaultPhotoUrl, // TOGA
-                      studentPhotoData.student_photo_2.url || defaultPhotoUrl, // UNIFORM
-                      studentPhotoData.student_photo_3.url || defaultPhotoUrl  // FILIPINIANA
-                    ];
-                  } else {
-                    // If no photos found, use default for all
-                    studentPhotos = [defaultPhotoUrl, defaultPhotoUrl, defaultPhotoUrl];
-                  }
+                  fetchStudentPhotos(studentIdForModal, function (photos) {
+                    var studentPhotos = [];
 
-                  // Update large image with first photo (TOGA)
-                  $largeImage.attr("src", studentPhotos[0]);
-
-                  // Update thumbnails with all three photos
-                  $thumbnails.each(function (index) {
-                    if (studentPhotos[index]) {
-                      $(this).find("img").attr("src", studentPhotos[index]);
+                    if (photos && photos.length > 0) {
+                      var studentPhotoData = photos[0].photos;
+                      studentPhotos = [
+                        studentPhotoData.student_photo_1.url || defaultPhotoUrl, // TOGA
+                        studentPhotoData.student_photo_2.url || defaultPhotoUrl, // UNIFORM
+                        studentPhotoData.student_photo_3.url || defaultPhotoUrl, // FILIPINIANA
+                      ];
+                    } else {
+                      // If no photos found, use default for all
+                      studentPhotos = [
+                        defaultPhotoUrl,
+                        defaultPhotoUrl,
+                        defaultPhotoUrl,
+                      ];
                     }
-                  });
+
+                    // Update large image with first photo (TOGA)
+                    $largeImage.attr("src", studentPhotos[0]);
+
+                    // Update thumbnails with all three photos
+                    $thumbnails.each(function (index) {
+                      if (studentPhotos[index]) {
+                        $(this).find("img").attr("src", studentPhotos[index]);
+                      }
+                    });
                   });
                 } else {
                   console.log("No student_id found for:", clickedStudent.name);
@@ -992,26 +1024,44 @@ function loadPage(page, pageElement) {
                   // Fetch photos again to ensure we have the latest URLs
                   var studentIdForThumbnail = clickedStudent.student_id;
                   if (studentIdForThumbnail) {
-                    fetchStudentPhotos(studentIdForThumbnail, function(photos) {
-                    var studentPhotos = [];
-                    
-                    if (photos && photos.length > 0) {
-                      var studentPhotoData = photos[0].photos;
-                      studentPhotos = [
-                        studentPhotoData.student_photo_1.url || defaultPhotoUrl,
-                        studentPhotoData.student_photo_2.url || defaultPhotoUrl,
-                        studentPhotoData.student_photo_3.url || defaultPhotoUrl
-                      ];
-                    } else {
-                      studentPhotos = [defaultPhotoUrl, defaultPhotoUrl, defaultPhotoUrl];
-                    }
+                    fetchStudentPhotos(
+                      studentIdForThumbnail,
+                      function (photos) {
+                        var studentPhotos = [];
 
-                    $largeImage.fadeOut(200, function () {
-                      $(this).attr("src", studentPhotos[index] || defaultPhotoUrl).fadeIn(200);
-                    });
-                    });
+                        if (photos && photos.length > 0) {
+                          var studentPhotoData = photos[0].photos;
+                          studentPhotos = [
+                            studentPhotoData.student_photo_1.url ||
+                              defaultPhotoUrl,
+                            studentPhotoData.student_photo_2.url ||
+                              defaultPhotoUrl,
+                            studentPhotoData.student_photo_3.url ||
+                              defaultPhotoUrl,
+                          ];
+                        } else {
+                          studentPhotos = [
+                            defaultPhotoUrl,
+                            defaultPhotoUrl,
+                            defaultPhotoUrl,
+                          ];
+                        }
+
+                        $largeImage.fadeOut(200, function () {
+                          $(this)
+                            .attr(
+                              "src",
+                              studentPhotos[index] || defaultPhotoUrl
+                            )
+                            .fadeIn(200);
+                        });
+                      }
+                    );
                   } else {
-                    console.log("No student_id found for thumbnail click:", clickedStudent.name);
+                    console.log(
+                      "No student_id found for thumbnail click:",
+                      clickedStudent.name
+                    );
                   }
                 });
 
@@ -1070,8 +1120,6 @@ function loadPage(page, pageElement) {
     console.log("Error loading page", page, ":", e);
   }
 }
-
-// Zoom in / Zoom out
 
 function zoomTo(event) {
   setTimeout(function () {
