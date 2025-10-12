@@ -1904,7 +1904,6 @@ function initializeCornerHover() {
       }
     }
 
-    // Apply peel and auto-return based on corner detection
     if (inCorner && corner !== currentPeelCorner) {
       // Clear any existing timer
       if (peelTimer) {
