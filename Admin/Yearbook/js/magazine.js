@@ -360,7 +360,6 @@ function loadStudentsForPage(
   });
 }
 
-// Function to fetch student data with caching and request deduplication
 function fetchStudentDataCached(department, template, apiPage, callback) {
   var cacheKey = department + "_" + template + "_" + apiPage;
 
