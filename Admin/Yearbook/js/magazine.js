@@ -9,7 +9,6 @@ window.studentPhotosCache = window.studentPhotosCache || {};
 window.topManagementCache = window.topManagementCache || {};
 window.topManagementPendingRequests = window.topManagementPendingRequests || {};
 
-// Function to fetch top management data with caching
 function fetchTopManagementCached(template, callback) {
   var cacheKey = "template_" + template;
 
