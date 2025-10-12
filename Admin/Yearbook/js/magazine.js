@@ -52,7 +52,6 @@ function fetchTopManagementCached(template, callback) {
     error: function (xhr, status, error) {
       console.log("Error fetching top management data:", error);
 
-      // Call all waiting callbacks with an error response
       var callbacks = window.topManagementPendingRequests[cacheKey];
       delete window.topManagementPendingRequests[cacheKey];
 
