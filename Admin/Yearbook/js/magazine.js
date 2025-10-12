@@ -1138,7 +1138,6 @@ function zoomTo(event) {
 function loadRegions(page, element) {
   var totalPages = $(".magazine").turn("pages");
 
-  // Only load regions if you have actual region files for specific pages
   if (page === 1 || page === totalPages || page >= 2) {
     return; // Skip region loading for all pages - they're dynamically generated
   }
