@@ -1927,7 +1927,6 @@ function initializeCornerHover() {
     }
   });
 
-  // Remove peel when mouse leaves the magazine
   $magazine.on("mouseleave", function () {
     if (peelTimer) {
       clearTimeout(peelTimer);
