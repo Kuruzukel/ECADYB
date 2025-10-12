@@ -1882,7 +1882,6 @@ function initializeCornerHover() {
     var inCorner = false;
     var corner = null;
 
-    // Check bottom-right corner (for odd pages on the right side)
     if (relX > width - cornerSize && relY > height - cornerSize) {
       if (page < pages) {
         corner = "br";
