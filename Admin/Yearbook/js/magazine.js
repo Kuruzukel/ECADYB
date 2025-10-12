@@ -1148,9 +1148,7 @@ function loadRegions(page, element) {
         addRegion(region, element);
       });
     })
-    .fail(function () {
-      // No need to log errors for non-existent region files
-    });
+    .fail(function () {});
 }
 
 function addRegion(region, pageElement) {
