@@ -28,7 +28,6 @@ function fetchTopManagementCached(template, callback) {
     return;
   }
 
-  // Create a new pending request
   window.topManagementPendingRequests[cacheKey] = [callback];
 
   console.log("Fetching top management data for template", template);
