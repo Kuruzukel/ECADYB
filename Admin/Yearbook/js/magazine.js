@@ -149,7 +149,6 @@ function loadAllStudentsForDepartment(department, template, callback) {
       "template",
       template
     );
-    // Wait for the loading to complete
     var checkLoading = setInterval(function () {
       if (window.allStudentsCache[cacheKey]) {
         clearInterval(checkLoading);
