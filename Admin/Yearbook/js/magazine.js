@@ -192,7 +192,6 @@ function loadAllStudentsForDepartment(department, template, callback) {
             if (currentPage <= totalPages && currentPage <= maxPages) {
               fetchNextPage();
             } else {
-              // All pages loaded
               console.log(
                 "All students loaded for",
                 department,
