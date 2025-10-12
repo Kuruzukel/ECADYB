@@ -131,7 +131,6 @@ function fetchStudentPhotos(studentId, callback) {
 function loadAllStudentsForDepartment(department, template, callback) {
   var cacheKey = department + "_" + template;
 
-  // Check if we already have all students cached
   if (window.allStudentsCache[cacheKey]) {
     console.log(
       "Using cached all students for",
