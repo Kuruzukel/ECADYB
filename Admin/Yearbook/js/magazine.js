@@ -379,7 +379,6 @@ function fetchStudentDataCached(department, template, apiPage, callback) {
     return;
   }
 
-  // Create a new pending request
   window.studentDataPendingRequests[cacheKey] = [callback];
 
   var studentsPerAPIPage = 50;
