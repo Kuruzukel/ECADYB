@@ -75,7 +75,6 @@ function fetchStudentPhotos(studentId, callback) {
     return;
   }
 
-  // Check cache first
   if (window.studentPhotosCache[studentId]) {
     console.log("Using cached photos for student:", studentId);
     callback(window.studentPhotosCache[studentId]);
