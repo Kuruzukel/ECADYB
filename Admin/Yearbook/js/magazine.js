@@ -1866,7 +1866,7 @@ function initializeCornerHover() {
   var cornerSize = 100;
   var currentPeelCorner = null;
   var peelTimer = null;
-  var peelDuration = 600; // Duration in milliseconds before peel returns to normal
+  var peelDuration = 600;
 
   $magazine.on("mousemove", function (e) {
     if (!$magazine.turn("is")) return;
