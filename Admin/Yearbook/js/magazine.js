@@ -42,7 +42,6 @@ function fetchTopManagementCached(template, callback) {
     success: function (response) {
       window.topManagementCache[cacheKey] = response;
 
-      // Call all waiting callbacks
       var callbacks = window.topManagementPendingRequests[cacheKey];
       delete window.topManagementPendingRequests[cacheKey];
 
