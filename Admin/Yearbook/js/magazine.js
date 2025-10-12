@@ -1149,7 +1149,6 @@ function loadRegions(page, element) {
       });
     })
     .fail(function () {
-      // Silently ignore missing region files - they're optional
       // No need to log errors for non-existent region files
     });
 }
