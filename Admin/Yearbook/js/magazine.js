@@ -1139,7 +1139,7 @@ function loadRegions(page, element) {
   var totalPages = $(".magazine").turn("pages");
 
   if (page === 1 || page === totalPages || page >= 2) {
-    return; // Skip region loading for all pages - they're dynamically generated
+    return;
   }
 
   // Load regions silently - fail gracefully if files don't exist
