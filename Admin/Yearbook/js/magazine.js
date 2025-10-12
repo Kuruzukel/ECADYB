@@ -1811,7 +1811,6 @@ function forceRegenerateThumbnails() {
     var pageElement = $(this);
     var pageNumber = index + 1;
 
-    // Wait for images to load before generating thumbnail
     setTimeout(function () {
       waitForImagesAndGenerateThumbnail(pageNumber, pageElement);
     }, index * 300);
