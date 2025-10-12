@@ -1918,7 +1918,6 @@ function initializeCornerHover() {
         peelTimer = null;
       }, peelDuration);
     } else if (!inCorner && currentPeelCorner) {
-      // Clear timer and remove peel immediately when leaving corner
       if (peelTimer) {
         clearTimeout(peelTimer);
         peelTimer = null;
