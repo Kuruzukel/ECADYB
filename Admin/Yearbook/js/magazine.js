@@ -1843,7 +1843,6 @@ function createManagementThumbnail(managementIndex, dataToUse) {
 }
 
 function createStudentThumbnail(studentPageIndex, dataToUse) {
-  // Check if we have a generated thumbnail for this student page
   var pageNumber = studentPageIndex + 7;
   if (window.pageThumbnails && window.pageThumbnails[pageNumber]) {
     return window.pageThumbnails[pageNumber];
