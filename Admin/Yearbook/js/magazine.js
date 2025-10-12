@@ -1824,7 +1824,6 @@ function forceRegenerateThumbnails() {
 }
 
 function createManagementThumbnail(managementIndex, dataToUse) {
-  // Check if we have a generated thumbnail for this management page
   var pageNumber = managementIndex + 2;
   if (window.pageThumbnails && window.pageThumbnails[pageNumber]) {
     return window.pageThumbnails[pageNumber];
