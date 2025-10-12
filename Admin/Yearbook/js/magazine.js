@@ -363,7 +363,6 @@ function loadStudentsForPage(
 function fetchStudentDataCached(department, template, apiPage, callback) {
   var cacheKey = department + "_" + template + "_" + apiPage;
 
-  // Check if we already have this data cached
   if (window.studentDataCache[cacheKey]) {
     console.log("Using cached student data for API page", apiPage);
     callback(window.studentDataCache[cacheKey]);
