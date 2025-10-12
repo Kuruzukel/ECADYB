@@ -164,7 +164,7 @@ function loadAllStudentsForDepartment(department, template, callback) {
   var allStudents = [];
   var currentPage = 1;
   var totalPages = 0;
-  var maxPages = 10; // Safety limit to prevent infinite loading
+  var maxPages = 10;
 
   function fetchNextPage() {
     // First, get the total pages from page 1
