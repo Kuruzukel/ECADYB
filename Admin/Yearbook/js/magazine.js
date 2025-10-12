@@ -1823,7 +1823,6 @@ function forceRegenerateThumbnails() {
   }, 3000);
 }
 
-// Update thumbnail generation functions to use actual page content
 function createManagementThumbnail(managementIndex, dataToUse) {
   // Check if we have a generated thumbnail for this management page
   var pageNumber = managementIndex + 2;
