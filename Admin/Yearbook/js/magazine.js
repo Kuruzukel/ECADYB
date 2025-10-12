@@ -12,7 +12,6 @@ window.topManagementPendingRequests = window.topManagementPendingRequests || {};
 function fetchTopManagementCached(template, callback) {
   var cacheKey = "template_" + template;
 
-  // Check if we already have this data cached
   if (window.topManagementCache[cacheKey]) {
     console.log("Using cached top management data for template", template);
     callback(window.topManagementCache[cacheKey]);
