@@ -1804,7 +1804,6 @@ function waitForImagesAndGenerateThumbnail(page, pageElement) {
   }
 }
 
-// Force regenerate all thumbnails with current content
 function forceRegenerateThumbnails() {
   console.log("Force regenerating all thumbnails...");
 
