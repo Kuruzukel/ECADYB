@@ -1848,7 +1848,6 @@ function createStudentThumbnail(studentPageIndex, dataToUse) {
     return window.pageThumbnails[pageNumber];
   }
 
-  // Fallback to background image or placeholder
   var backgroundSrc =
     dataToUse.background_thumb_url || dataToUse.background_url;
   if (backgroundSrc) {
