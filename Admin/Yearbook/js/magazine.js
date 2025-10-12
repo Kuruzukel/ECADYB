@@ -24,7 +24,6 @@ function fetchTopManagementCached(template, callback) {
       template,
       "- waiting for it to complete"
     );
-    // Add this callback to the list of callbacks waiting for this request
     window.topManagementPendingRequests[cacheKey].push(callback);
     return;
   }
