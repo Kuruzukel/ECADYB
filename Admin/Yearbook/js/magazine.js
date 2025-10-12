@@ -1887,9 +1887,7 @@ function initializeCornerHover() {
         corner = "br";
         inCorner = true;
       }
-    }
-    // Check bottom-left corner (for even pages on the left side)
-    else if (relX < cornerSize && relY > height - cornerSize) {
+    } else if (relX < cornerSize && relY > height - cornerSize) {
       if (page > 1) {
         corner = "bl";
         inCorner = true;
