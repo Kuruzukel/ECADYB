@@ -142,7 +142,6 @@ function loadAllStudentsForDepartment(department, template, callback) {
     return;
   }
 
-  // Check if we're already loading all students
   if (window.allStudentsLoading[cacheKey]) {
     console.log(
       "All students already loading for",
