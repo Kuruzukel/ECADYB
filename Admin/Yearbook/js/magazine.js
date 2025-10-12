@@ -158,7 +158,6 @@ function loadAllStudentsForDepartment(department, template, callback) {
     return;
   }
 
-  // Mark as loading
   window.allStudentsLoading[cacheKey] = true;
 
   console.log("Loading all students for", department, "template", template);
