@@ -128,7 +128,6 @@ function fetchStudentPhotos(studentId, callback) {
   });
 }
 
-// Function to load all students for a department and cache them
 function loadAllStudentsForDepartment(department, template, callback) {
   var cacheKey = department + "_" + template;
 
