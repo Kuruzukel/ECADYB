@@ -1816,7 +1816,6 @@ function forceRegenerateThumbnails() {
     }, index * 300);
   });
 
-  // Refresh thumbnails after generation
   setTimeout(function () {
     if (typeof refreshThumbnails === "function") {
       refreshThumbnails();
