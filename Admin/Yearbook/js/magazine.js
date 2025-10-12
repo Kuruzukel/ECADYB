@@ -317,7 +317,6 @@ function loadStudentsForPage(
       var students = response.data.students;
       var totalStudents = response.data.total_students;
 
-      // Get students from current API page
       var studentsFromThisPage = students.slice(
         localStartIndex,
         localStartIndex + count
