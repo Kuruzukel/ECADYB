@@ -375,7 +375,6 @@ function fetchStudentDataCached(department, template, apiPage, callback) {
       apiPage,
       "- waiting for it to complete"
     );
-    // Add this callback to the list of callbacks waiting for this request
     window.studentDataPendingRequests[cacheKey].push(callback);
     return;
   }
