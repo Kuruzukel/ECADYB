@@ -81,7 +81,6 @@ function fetchStudentPhotos(studentId, callback) {
     return;
   }
 
-  // Get current template
   var template = 1;
   if (typeof coverData !== "undefined" && coverData && coverData.template) {
     template = coverData.template;
