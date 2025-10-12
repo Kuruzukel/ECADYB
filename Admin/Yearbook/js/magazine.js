@@ -68,7 +68,6 @@ function fetchTopManagementCached(template, callback) {
   });
 }
 
-// Function to fetch student photos from MongoDB
 function fetchStudentPhotos(studentId, callback) {
   if (!studentId) {
     console.log("No student ID provided for photo fetch");
