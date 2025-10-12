@@ -254,7 +254,6 @@ function loadAllStudentsForDepartment(department, template, callback) {
                 currentPage,
                 "- continuing with available students"
               );
-              // Continue to the end even if this page failed
               currentPage++;
               if (currentPage <= totalPages) {
                 fetchNextPage();
