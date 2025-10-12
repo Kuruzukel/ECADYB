@@ -1909,7 +1909,6 @@ function initializeCornerHover() {
         clearTimeout(peelTimer);
       }
 
-      // Apply the peel
       $magazine.turn("peel", corner);
       currentPeelCorner = corner;
 
