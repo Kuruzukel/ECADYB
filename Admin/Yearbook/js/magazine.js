@@ -1772,7 +1772,7 @@ function generateAllThumbnails() {
         console.log("Skipping page", pageNumber, "- no content found");
       }
     });
-  }, 2000); // Increased initial delay
+  }, 2000);
 }
 
 function waitForImagesAndGenerateThumbnail(page, pageElement) {
