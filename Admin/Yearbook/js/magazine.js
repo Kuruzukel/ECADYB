@@ -292,7 +292,6 @@ function loadAllStudentsForDepartment(department, template, callback) {
   fetchNextPage();
 }
 
-// Function to load students for a specific page range (more reliable)
 function loadStudentsForPage(
   department,
   template,
