@@ -1912,7 +1912,6 @@ function initializeCornerHover() {
       $magazine.turn("peel", corner);
       currentPeelCorner = corner;
 
-      // Set timer to automatically return peel to normal
       peelTimer = setTimeout(function () {
         $magazine.turn("peel", false);
         currentPeelCorner = null;
