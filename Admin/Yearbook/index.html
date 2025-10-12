@@ -849,7 +849,6 @@
         setTimeout(function () {
           if (typeof generateAllThumbnails === "function") {
             generateAllThumbnails();
-            // Reduce refresh calls to improve performance
             setTimeout(function () {
               if (typeof refreshThumbnails === "function") {
                 refreshThumbnails();
