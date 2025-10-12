@@ -4,7 +4,6 @@ window.studentDataPendingRequests = window.studentDataPendingRequests || {};
 window.allStudentsCache = window.allStudentsCache || {};
 window.allStudentsLoading = window.allStudentsLoading || {};
 
-// Global cache for student photos
 window.studentPhotosCache = window.studentPhotosCache || {};
 
 // Global cache for top management data
