@@ -167,7 +167,6 @@ function loadAllStudentsForDepartment(department, template, callback) {
   var maxPages = 10;
 
   function fetchNextPage() {
-    // First, get the total pages from page 1
     if (currentPage === 1) {
       fetchStudentDataCached(
         department,
