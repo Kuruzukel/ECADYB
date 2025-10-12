@@ -324,7 +324,6 @@ function loadStudentsForPage(
       var studentsNeeded = count - studentsFromThisPage.length;
 
       if (studentsNeeded > 0 && apiPage * studentsPerAPIPage < totalStudents) {
-        // Need more students from next API page
         var nextApiPage = apiPage + 1;
         var remainingCount = studentsNeeded;
 
