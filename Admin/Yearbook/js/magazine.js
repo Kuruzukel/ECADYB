@@ -111,7 +111,6 @@ function fetchStudentPhotos(studentId, callback) {
       if (response.success && response.data && response.data.length > 0) {
         console.log("Found photos for student ID", studentId);
         console.log("Photo data:", response.data[0]);
-        // Cache the photos
         window.studentPhotosCache[studentId] = response.data;
         callback(response.data);
       } else {
