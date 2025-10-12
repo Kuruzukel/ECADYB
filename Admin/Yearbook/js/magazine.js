@@ -212,7 +212,6 @@ function loadAllStudentsForDepartment(department, template, callback) {
         }
       );
     } else {
-      // For subsequent pages, only fetch if we know the page exists and within safety limit
       if (currentPage <= totalPages && currentPage <= maxPages) {
         fetchStudentDataCached(
           department,
