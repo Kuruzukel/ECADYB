@@ -6,7 +6,6 @@ window.allStudentsLoading = window.allStudentsLoading || {};
 
 window.studentPhotosCache = window.studentPhotosCache || {};
 
-// Global cache for top management data
 window.topManagementCache = window.topManagementCache || {};
 window.topManagementPendingRequests = window.topManagementPendingRequests || {};
 
