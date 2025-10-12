@@ -772,7 +772,6 @@
             (page = /page-([0-9]+)/.exec($(event.target).attr("class")))
           ) {
             $(".magazine").turn("page", page[1]);
-            // Close thumbnails modal after clicking a thumbnail
             $(".thumbnails").removeClass("visible");
           }
         });
