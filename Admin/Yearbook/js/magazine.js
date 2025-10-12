@@ -1405,7 +1405,6 @@ function resizeViewport() {
     boundH = height - magazineOffset.top - $(".magazine").height(),
     marginTop = (boundH - $(".thumbnails > div").height()) / 2;
 
-  // Disable thumbnail positioning - let CSS handle centering
   // if (marginTop < 0) {
   //   $(".thumbnails").css({ height: 1 });
   // } else {
