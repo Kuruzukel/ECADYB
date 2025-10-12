@@ -1,7 +1,6 @@
 window.studentDataCache = window.studentDataCache || {};
 window.studentDataPendingRequests = window.studentDataPendingRequests || {};
 
-// Global cache for all students to enable sequential loading
 window.allStudentsCache = window.allStudentsCache || {};
 window.allStudentsLoading = window.allStudentsLoading || {};
 
