@@ -1863,7 +1863,7 @@ function createStudentThumbnail(studentPageIndex, dataToUse) {
 
 function initializeCornerHover() {
   var $magazine = $(".magazine");
-  var cornerSize = 100; // Size of the corner detection area in pixels
+  var cornerSize = 100;
   var currentPeelCorner = null;
   var peelTimer = null;
   var peelDuration = 600; // Duration in milliseconds before peel returns to normal
