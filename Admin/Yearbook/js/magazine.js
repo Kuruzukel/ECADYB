@@ -770,7 +770,7 @@ function loadPage(page, pageElement) {
           apiPage
         );
 
-        var studentsPerPage = 6; // Fixed at 6 students per yearbook page
+        var studentsPerPage = 6;
         loadStudentsForPage(
           department,
           template,
