@@ -445,7 +445,6 @@ function addPage(page, book) {
 }
 
 function addStudentPages(book, studentData) {
-  // NOTE: This function is no longer needed since pages are pre-initialized
   // in index.html with pages: totalPages. Turn.js will call addPage()
   // automatically via the 'missing' event for each page that needs content.
   // Keeping this function for backward compatibility but it does nothing.
