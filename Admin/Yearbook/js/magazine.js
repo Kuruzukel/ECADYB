@@ -474,7 +474,7 @@ function loadPage(page, pageElement) {
 
     var totalPages = $(".magazine").turn("pages");
 
-    var maxWaitTime = 5000; // 5 seconds
+    var maxWaitTime = 5000;
     var waitStartTime = Date.now();
 
     if (
