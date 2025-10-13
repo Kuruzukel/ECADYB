@@ -930,7 +930,7 @@ function loadPage(page, pageElement) {
                       studentPhotos = [
                         studentPhotoData.student_photo_1.url || defaultPhotoUrl,
                         studentPhotoData.student_photo_2.url || defaultPhotoUrl,
-                        studentPhotoData.student_photo_3.url || defaultPhotoUrl, // FILIPINIANA
+                        studentPhotoData.student_photo_3.url || defaultPhotoUrl,
                       ];
                     } else {
                       // If no photos found, use default for all
