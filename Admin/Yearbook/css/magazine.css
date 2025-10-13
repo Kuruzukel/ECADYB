@@ -826,7 +826,6 @@
   display: none;
 }
 
-/* Add subtle watermark effect */
 .management-info::before {
   content: "COLLEGES OF ASIA";
   position: absolute;
