@@ -898,7 +898,6 @@ function loadPage(page, pageElement) {
                   ".student-image-thumbnails .thumbnail"
                 );
 
-                // Default placeholder image
                 var defaultPhotoUrl =
                   'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect width="300" height="300" fill="%23f0f0f0"/%3E%3Ctext x="150" y="150" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Student Photo%3C/text%3E%3C/svg%3E';
 
