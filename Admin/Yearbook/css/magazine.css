@@ -71,8 +71,6 @@
   transition: margin-left 0.5s;
 }
 
-/* All thumbnail CSS removed - no styling for thumbnails */
-
 .thumbnails.visible {
   opacity: 1;
   visibility: visible;
