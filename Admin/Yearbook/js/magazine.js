@@ -445,7 +445,6 @@ function addPage(page, book) {
 }
 
 function addStudentPages(book, studentData) {
-  // automatically via the 'missing' event for each page that needs content.
   // Keeping this function for backward compatibility but it does nothing.
 
   console.log(
