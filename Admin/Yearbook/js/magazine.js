@@ -933,7 +933,6 @@ function loadPage(page, pageElement) {
                         studentPhotoData.student_photo_3.url || defaultPhotoUrl,
                       ];
                     } else {
-                      // If no photos found, use default for all
                       studentPhotos = [
                         defaultPhotoUrl,
                         defaultPhotoUrl,
