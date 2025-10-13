@@ -101,7 +101,6 @@
   margin-bottom: 0 !important;
 }
 
-/* Ensure thumbnails content is centered */
 .thumbnails .thumbnail-content {
   display: flex;
   align-items: center;
