@@ -984,7 +984,6 @@
   background: #1d4ed8;
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
   .nav-controls {
     bottom: 0.5rem;
