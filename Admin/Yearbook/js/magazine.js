@@ -396,7 +396,6 @@ function fetchStudentDataCached(department, template, apiPage, callback) {
     success: function (response) {
       window.studentDataCache[cacheKey] = response;
 
-      // Call all waiting callbacks
       var callbacks = window.studentDataPendingRequests[cacheKey];
       delete window.studentDataPendingRequests[cacheKey];
 
