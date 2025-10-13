@@ -953,7 +953,7 @@ function loadPage(page, pageElement) {
                 }
 
                 $thumbnails.off("click").on("click", function (e) {
-                  e.stopPropagation(); // Prevent modal from closing
+                  e.stopPropagation();
                   e.preventDefault();
 
                   var $this = $(this);
