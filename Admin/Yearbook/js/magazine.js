@@ -819,7 +819,6 @@ function loadPage(page, pageElement) {
 
               studentImg.append(studentPhoto);
 
-              // Fetch TOGA photo for the student card
               // Use student_id (like "2022-004231") not id (MongoDB ObjectId)
               var studentIdForPhotos = student.student_id;
               var studentNameForPhotos = student.name;
