@@ -829,7 +829,6 @@ function loadPage(page, pageElement) {
               );
 
               if (studentIdForPhotos) {
-                // Use IIFE to capture the current student data properly
                 (function (
                   currentStudent,
                   currentPhotoElement,
