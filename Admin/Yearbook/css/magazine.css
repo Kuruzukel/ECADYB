@@ -83,7 +83,6 @@
   height: auto !important;
 }
 
-/* Force centering for thumbnails */
 .thumbnails {
   position: fixed !important;
   top: 0 !important;
