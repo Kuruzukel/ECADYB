@@ -750,7 +750,6 @@ function loadPage(page, pageElement) {
             maxReliableStudents,
             ")"
           );
-          // Just show the background without student cards
           setTimeout(function () {
             waitForImagesAndGenerateThumbnail(page, pageElement);
           }, 500);
