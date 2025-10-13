@@ -942,7 +942,6 @@ function loadPage(page, pageElement) {
 
                     $largeImage.attr("src", studentPhotos[0]);
 
-                    // Update thumbnails with all three photos
                     $thumbnails.each(function (index) {
                       if (studentPhotos[index]) {
                         $(this).find("img").attr("src", studentPhotos[index]);
