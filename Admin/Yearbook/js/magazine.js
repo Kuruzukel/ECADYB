@@ -1018,7 +1018,6 @@ function loadPage(page, pageElement) {
 
               card.append(studentImg).append(studentName).append(honorsText);
 
-              // Store student data on the card for the click handler
               card.data("student", student);
 
               cardsContainer.append(card);
