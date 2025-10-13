@@ -940,7 +940,6 @@ function loadPage(page, pageElement) {
                       ];
                     }
 
-                    // Update large image with first photo (TOGA)
                     $largeImage.attr("src", studentPhotos[0]);
 
                     // Update thumbnails with all three photos
