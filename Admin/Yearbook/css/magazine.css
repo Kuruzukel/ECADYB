@@ -386,7 +386,6 @@
   color: white;
 }
 
-/* Styles for merged thumbnail spreads */
 .thumbnails li.d {
   display: flex;
   flex-direction: row;
