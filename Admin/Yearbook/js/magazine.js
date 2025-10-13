@@ -929,7 +929,7 @@ function loadPage(page, pageElement) {
                       var studentPhotoData = photos[0].photos;
                       studentPhotos = [
                         studentPhotoData.student_photo_1.url || defaultPhotoUrl,
-                        studentPhotoData.student_photo_2.url || defaultPhotoUrl, // UNIFORM
+                        studentPhotoData.student_photo_2.url || defaultPhotoUrl,
                         studentPhotoData.student_photo_3.url || defaultPhotoUrl, // FILIPINIANA
                       ];
                     } else {
