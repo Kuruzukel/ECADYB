@@ -822,7 +822,6 @@
   word-wrap: break-word;
 }
 
-/* Remove quote marks - not needed for this design */
 .quote-mark {
   display: none;
 }
