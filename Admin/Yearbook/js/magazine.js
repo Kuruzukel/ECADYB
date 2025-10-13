@@ -928,7 +928,7 @@ function loadPage(page, pageElement) {
                     if (photos && photos.length > 0) {
                       var studentPhotoData = photos[0].photos;
                       studentPhotos = [
-                        studentPhotoData.student_photo_1.url || defaultPhotoUrl, // TOGA
+                        studentPhotoData.student_photo_1.url || defaultPhotoUrl,
                         studentPhotoData.student_photo_2.url || defaultPhotoUrl, // UNIFORM
                         studentPhotoData.student_photo_3.url || defaultPhotoUrl, // FILIPINIANA
                       ];
