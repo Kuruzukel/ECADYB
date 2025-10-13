@@ -868,7 +868,6 @@ function loadPage(page, pageElement) {
               card.on("click", function (e) {
                 var modal = $(".student-modal");
                 var closeBtn = $(".close-modal");
-                // Store the student data directly on the card element
                 var clickedStudent = $(this).data("student");
 
                 modal.find(".student-name").text(clickedStudent.name);
