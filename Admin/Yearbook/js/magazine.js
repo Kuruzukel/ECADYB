@@ -913,7 +913,6 @@ function loadPage(page, pageElement) {
 
                 modal.addClass("active");
 
-                // Use student_id (like "2022-004231") not id (MongoDB ObjectId)
                 var studentIdForModal = clickedStudent.student_id;
                 console.log(
                   "Modal opened for student:",
