@@ -411,7 +411,6 @@ function fetchStudentDataCached(department, template, apiPage, callback) {
         error
       );
 
-      // Call all waiting callbacks with an error response
       var callbacks = window.studentDataPendingRequests[cacheKey];
       delete window.studentDataPendingRequests[cacheKey];
 
