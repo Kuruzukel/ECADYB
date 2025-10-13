@@ -737,7 +737,7 @@ function loadPage(page, pageElement) {
 
         var studentsPerYearbookPage = 6;
         var studentStartIndex = (page - 7) * studentsPerYearbookPage;
-        var studentEndIndex = studentStartIndex + studentsPerYearbookPage; // Last student index + 1
+        var studentEndIndex = studentStartIndex + studentsPerYearbookPage;
 
         // Safety check: don't try to load students beyond what we can reasonably expect
         // Based on our conservative calculation, we limit to 150 students (3 API pages)
