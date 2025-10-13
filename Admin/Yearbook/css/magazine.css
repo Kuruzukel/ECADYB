@@ -78,7 +78,6 @@
   height: 100% !important;
 }
 
-/* Override any inline styles */
 .thumbnails.visible > div {
   margin-top: 0 !important;
   height: auto !important;
