@@ -756,7 +756,6 @@ function loadPage(page, pageElement) {
           return;
         }
 
-        // Calculate which API page we need (API returns 50 students per page)
         var studentsPerAPIPage = 50;
         var apiPage = Math.floor(studentStartIndex / studentsPerAPIPage) + 1;
 
