@@ -445,8 +445,6 @@ function addPage(page, book) {
 }
 
 function addStudentPages(book, studentData) {
-  // Keeping this function for backward compatibility but it does nothing.
-
   console.log(
     "Student pages are managed by turn.js 'missing' event - no manual addition needed"
   );
