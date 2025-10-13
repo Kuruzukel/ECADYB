@@ -394,7 +394,6 @@ function fetchStudentDataCached(department, template, apiPage, callback) {
     },
     dataType: "json",
     success: function (response) {
-      // Cache the response
       window.studentDataCache[cacheKey] = response;
 
       // Call all waiting callbacks
