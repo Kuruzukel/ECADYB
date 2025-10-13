@@ -962,7 +962,6 @@ function loadPage(page, pageElement) {
                   $thumbnails.removeClass("active");
                   $this.addClass("active");
 
-                  // Fetch photos again to ensure we have the latest URLs
                   var studentIdForThumbnail = clickedStudent.student_id;
                   if (studentIdForThumbnail) {
                     fetchStudentPhotos(
