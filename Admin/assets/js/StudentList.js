@@ -235,7 +235,6 @@ function updateSelectAllState() {
     selectAllCheckbox.indeterminate = false;
     localStorage.setItem("selectAllState", "true");
   } else if (noneChecked) {
-    // None are checked (all Pending) - show indeterminate (minus sign)
     selectAllCheckbox.checked = false;
     selectAllCheckbox.indeterminate = true;
     localStorage.removeItem("selectAllState");
