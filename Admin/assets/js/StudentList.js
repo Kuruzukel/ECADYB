@@ -269,7 +269,6 @@ function initializeSelectAll() {
     savedState: savedSelectAllState,
   });
 
-  // Always prioritize the actual state of students over localStorage
   // This ensures that after CSV upload, the checkbox reflects the true state
   if (allChecked) {
     selectAllCheckbox.checked = true;
