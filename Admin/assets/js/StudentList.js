@@ -340,7 +340,6 @@ function initializeSelectAll() {
           currentOperation = "activating_all";
           updateAllStudentsStatus(department, "Active", template, status);
         } else {
-          // Fall back to individual updates for visible students only
           // Set up for select all operation
           isSelectAllOperation = true;
           selectAllProcessedCount = 0;
