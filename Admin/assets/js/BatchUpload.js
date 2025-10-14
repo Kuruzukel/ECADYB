@@ -377,7 +377,6 @@ window.addEventListener("DOMContentLoaded", () => {
     const input = document.getElementById(inputId);
     if (!input) return;
 
-    // Clear input completely
     input.value = "";
     input.files = new DataTransfer().files;
 
