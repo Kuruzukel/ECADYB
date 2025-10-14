@@ -348,7 +348,6 @@ window.addEventListener("DOMContentLoaded", () => {
     if (hasFiles) {
       card.classList.add("has-file");
 
-      // Update file info display
       const fileNameSpan = info.querySelector(".file-name");
       if (input.files.length === 1) {
         fileNameSpan.textContent = input.files[0].name;
