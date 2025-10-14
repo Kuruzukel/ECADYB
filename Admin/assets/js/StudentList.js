@@ -351,7 +351,6 @@ function initializeSelectAll() {
               checkbox.dispatchEvent(new Event("change", { bubbles: true }));
             }
           });
-          // Removed notification when select all is clicked
         }
       } else {
         // For unselect all, we want to update ALL students in the department, not just visible ones
