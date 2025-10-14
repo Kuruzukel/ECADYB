@@ -181,11 +181,10 @@ function showNotification(message, type = "success") {
   }, duration);
 }
 
-// Upload overlay functions
 function showUploadOverlay(uploadType = "files") {
   const overlay = document.getElementById("upload-overlay");
   const uploadText = document.getElementById("uploadText");
-  
+
   if (overlay && uploadText) {
     uploadText.textContent = `Please wait while we upload your ${uploadType}`;
     overlay.classList.add("show");
@@ -201,16 +200,16 @@ function hideUploadOverlay() {
 
 function cancelUpload() {
   console.log("Cancel upload triggered");
-  
+
   // Abort current upload immediately
   if (currentUploadController) {
     currentUploadController.abort();
     currentUploadController = null;
   }
-  
+
   // Hide overlay immediately
   hideUploadOverlay();
-  
+
   // Reset all file inputs and UI state
   document.querySelectorAll(".upload-input").forEach((input) => {
     if (input.files && input.files.length > 0) {
@@ -219,10 +218,10 @@ function cancelUpload() {
       forceResetFileUI(input.id);
     }
   });
-  
+
   // Reset operation state
   currentOperation = null;
-  
+
   // Show notification immediately
   showNotification("Upload cancelled", "error");
 }
@@ -241,9 +240,11 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  const selectedTemplateNumber = localStorage.getItem("selectedBatchTemplateNumber");
+  const selectedTemplateNumber = localStorage.getItem(
+    "selectedBatchTemplateNumber"
+  );
   const selectedTemplate = localStorage.getItem("selectedBatchTemplate");
-  
+
   const hidden = document.getElementById("selected_template");
   if (hidden) {
     if (selectedTemplateNumber) {
@@ -261,118 +262,130 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   // Add drag and drop functionality to file cards
-  document.querySelectorAll('.file-card').forEach(card => {
-    const inputId = card.id.replace('card-', '');
+  document.querySelectorAll(".file-card").forEach((card) => {
+    const inputId = card.id.replace("card-", "");
     let fileInput;
-    
-    if (inputId === 'top-management') {
-      fileInput = document.getElementById('top_management_message');
-    } else if (inputId === 'student-info') {
-      fileInput = document.getElementById('student-info');
-    } else if (inputId === 'student-photos') {
-      fileInput = document.getElementById('student-photos');
-    } else if (inputId === 'management-photos') {
-      fileInput = document.getElementById('management-photos');
+
+    if (inputId === "top-management") {
+      fileInput = document.getElementById("top_management_message");
+    } else if (inputId === "student-info") {
+      fileInput = document.getElementById("student-info");
+    } else if (inputId === "student-photos") {
+      fileInput = document.getElementById("student-photos");
+    } else if (inputId === "management-photos") {
+      fileInput = document.getElementById("management-photos");
     }
-    
+
     if (!fileInput) return;
-    
-    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+
+    ["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
       card.addEventListener(eventName, preventDefaults, false);
     });
-    
+
     function preventDefaults(e) {
       e.preventDefault();
       e.stopPropagation();
     }
-    
-    ['dragenter', 'dragover'].forEach(eventName => {
-      card.addEventListener(eventName, () => {
-        card.classList.add('drag-over');
-      }, false);
+
+    ["dragenter", "dragover"].forEach((eventName) => {
+      card.addEventListener(
+        eventName,
+        () => {
+          card.classList.add("drag-over");
+        },
+        false
+      );
     });
-    
-    ['dragleave', 'drop'].forEach(eventName => {
-      card.addEventListener(eventName, () => {
-        card.classList.remove('drag-over');
-      }, false);
+
+    ["dragleave", "drop"].forEach((eventName) => {
+      card.addEventListener(
+        eventName,
+        () => {
+          card.classList.remove("drag-over");
+        },
+        false
+      );
     });
-    
-    card.addEventListener('drop', (e) => {
-      const dt = e.dataTransfer;
-      const files = dt.files;
-      
-      // Create a new FileList-like object
-      const dataTransfer = new DataTransfer();
-      Array.from(files).forEach(file => {
-        dataTransfer.items.add(file);
-      });
-      
-      fileInput.files = dataTransfer.files;
-      
-      // Trigger change event
-      const event = new Event('change', { bubbles: true });
-      fileInput.dispatchEvent(event);
-    }, false);
+
+    card.addEventListener(
+      "drop",
+      (e) => {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+
+        // Create a new FileList-like object
+        const dataTransfer = new DataTransfer();
+        Array.from(files).forEach((file) => {
+          dataTransfer.items.add(file);
+        });
+
+        fileInput.files = dataTransfer.files;
+
+        // Trigger change event
+        const event = new Event("change", { bubbles: true });
+        fileInput.dispatchEvent(event);
+      },
+      false
+    );
   });
 
   // Handle file selection UI updates
   function updateFileUI(input) {
     const inputId = input.id;
     let cardId, infoId;
-    
+
     // Map input IDs to their corresponding card and info elements
-    if (inputId === 'top_management_message') {
-      cardId = 'card-top-management';
-      infoId = 'info-top-management';
-    } else if (inputId === 'student-info') {
-      cardId = 'card-student-info';
-      infoId = 'info-student-info';
-    } else if (inputId === 'student-photos') {
-      cardId = 'card-student-photos';
-      infoId = 'info-student-photos';
-    } else if (inputId === 'management-photos') {
-      cardId = 'card-management-photos';
-      infoId = 'info-management-photos';
+    if (inputId === "top_management_message") {
+      cardId = "card-top-management";
+      infoId = "info-top-management";
+    } else if (inputId === "student-info") {
+      cardId = "card-student-info";
+      infoId = "info-student-info";
+    } else if (inputId === "student-photos") {
+      cardId = "card-student-photos";
+      infoId = "info-student-photos";
+    } else if (inputId === "management-photos") {
+      cardId = "card-management-photos";
+      infoId = "info-management-photos";
     }
-    
+
     const card = document.getElementById(cardId);
     const info = document.getElementById(infoId);
-    
+
     if (!card || !info) return;
-    
+
     // Check if input has files (including after clearing)
     const hasFiles = input.files && input.files.length > 0;
-    
+
     if (hasFiles) {
       // Add has-file class to card
-      card.classList.add('has-file');
-      
+      card.classList.add("has-file");
+
       // Update file info display
-      const fileNameSpan = info.querySelector('.file-name');
+      const fileNameSpan = info.querySelector(".file-name");
       if (input.files.length === 1) {
         fileNameSpan.textContent = input.files[0].name;
       } else {
         fileNameSpan.textContent = `${input.files.length} images selected`;
       }
-      
+
       // Show the file info with animation
-      info.classList.add('show');
+      info.classList.add("show");
     } else {
       // Force complete reset
-      card.classList.remove('has-file');
-      info.classList.remove('show');
-      
+      card.classList.remove("has-file");
+      info.classList.remove("show");
+
       // Clear the file name text completely
-      const fileNameSpan = info.querySelector('.file-name');
+      const fileNameSpan = info.querySelector(".file-name");
       if (fileNameSpan) {
-        fileNameSpan.textContent = '';
+        fileNameSpan.textContent = "";
       }
-      
+
       // Force a small delay to ensure DOM updates
       setTimeout(() => {
         if (fileNameSpan) {
-          fileNameSpan.textContent = '';
+          fileNameSpan.textContent = "";
         }
       }, 100);
     }
@@ -382,14 +395,14 @@ window.addEventListener("DOMContentLoaded", () => {
   function forceResetFileUI(inputId) {
     const input = document.getElementById(inputId);
     if (!input) return;
-    
+
     // Clear input completely
-    input.value = '';
+    input.value = "";
     input.files = new DataTransfer().files;
-    
+
     // Update UI
     updateFileUI(input);
-    
+
     // Double-check after a short delay
     setTimeout(() => {
       updateFileUI(input);
@@ -399,10 +412,10 @@ window.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".upload-input").forEach((input) => {
     input.addEventListener("change", async (e) => {
       e.preventDefault();
-      
+
       // Update UI immediately when file is selected
       updateFileUI(input);
-      
+
       if (input.files.length > 0) {
         const form = input.form;
         const formData = new FormData();
@@ -432,7 +445,7 @@ window.addEventListener("DOMContentLoaded", () => {
           try {
             // Create AbortController for cancellation
             currentUploadController = new AbortController();
-            
+
             const response = await fetch(uploadEndpoint, {
               method: "POST",
               body: formData,
@@ -463,7 +476,7 @@ window.addEventListener("DOMContentLoaded", () => {
                   "error"
                 );
               }
-              
+
               // Force reset after successful photo upload
               forceResetFileUI(input.id);
             } else {
@@ -472,11 +485,11 @@ window.addEventListener("DOMContentLoaded", () => {
                 "error"
               );
             }
-            
+
             // Hide overlay after upload completion
             hideUploadOverlay();
           } catch (error) {
-            if (error.name === 'AbortError') {
+            if (error.name === "AbortError") {
               console.log("Upload cancelled");
               // Reset UI state for cancelled upload
               forceResetFileUI(input.id);
@@ -500,7 +513,7 @@ window.addEventListener("DOMContentLoaded", () => {
           try {
             // Create AbortController for cancellation
             currentUploadController = new AbortController();
-            
+
             const response = await fetch(form.action, {
               method: "POST",
               body: formData,
@@ -526,7 +539,7 @@ window.addEventListener("DOMContentLoaded", () => {
             // Force reset after successful upload
             forceResetFileUI(input.id);
           } catch (error) {
-            if (error.name === 'AbortError') {
+            if (error.name === "AbortError") {
               console.log("Upload cancelled");
               // Reset UI state for cancelled upload
               forceResetFileUI(input.id);
