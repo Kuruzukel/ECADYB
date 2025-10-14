@@ -180,7 +180,6 @@ window.addEventListener("DOMContentLoaded", () => {
     applyTheme(savedTheme);
   }
 
-  // Check if template parameter exists in URL, if not, use the one from localStorage
   const urlParams = new URLSearchParams(window.location.search);
   const currentTemplate = urlParams.get("template");
   const savedTemplate = localStorage.getItem("selectedBatchTemplateNumber");
