@@ -218,7 +218,6 @@ function cancelUpload() {
 
   currentOperation = null;
 
-  // Show notification immediately
   showNotification("Upload cancelled", "error");
 }
 
