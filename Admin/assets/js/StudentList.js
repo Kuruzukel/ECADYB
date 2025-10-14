@@ -231,7 +231,6 @@ function updateSelectAllState() {
   const noneChecked = checkedCount === 0;
 
   if (allChecked) {
-    // All are checked (Active) - show checked
     selectAllCheckbox.checked = true;
     selectAllCheckbox.indeterminate = false;
     localStorage.setItem("selectAllState", "true");
