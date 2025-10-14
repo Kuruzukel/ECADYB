@@ -343,7 +343,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
     if (!card || !info) return;
 
-    // Check if input has files (including after clearing)
     const hasFiles = input.files && input.files.length > 0;
 
     if (hasFiles) {
