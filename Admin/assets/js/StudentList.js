@@ -371,7 +371,6 @@ function initializeSelectAll() {
               checkbox.dispatchEvent(new Event("change", { bubbles: true }));
             }
           });
-          // Removed notification when unselect all is clicked
         }
       }
     } else {
