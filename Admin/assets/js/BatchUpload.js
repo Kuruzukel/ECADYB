@@ -360,7 +360,6 @@ window.addEventListener("DOMContentLoaded", () => {
       card.classList.remove("has-file");
       info.classList.remove("show");
 
-      // Clear the file name text completely
       const fileNameSpan = info.querySelector(".file-name");
       if (fileNameSpan) {
         fileNameSpan.textContent = "";
