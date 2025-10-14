@@ -453,7 +453,6 @@ window.addEventListener("DOMContentLoaded", () => {
                 );
               }
 
-              // Force reset after successful photo upload
               forceResetFileUI(input.id);
             } else {
               showNotification(
