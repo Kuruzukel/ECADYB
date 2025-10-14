@@ -225,7 +225,6 @@ window.addEventListener("DOMContentLoaded", () => {
   const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
   applyTheme(savedTheme);
 
-  // Add event listener for cancel button
   const cancelBtn = document.getElementById("cancel-upload-btn");
   if (cancelBtn) {
     cancelBtn.addEventListener("click", (e) => {
