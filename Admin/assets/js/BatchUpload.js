@@ -313,7 +313,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
         fileInput.files = dataTransfer.files;
 
-        // Trigger change event
         const event = new Event("change", { bubbles: true });
         fileInput.dispatchEvent(event);
       },
