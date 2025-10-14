@@ -291,7 +291,6 @@ function initializeSelectAll() {
     isSelectAllActive = false;
     localStorage.removeItem("selectAllState");
   } else {
-    // No students or other edge case
     console.log("Setting select all to UNCHECKED - no students or edge case");
     selectAllCheckbox.checked = false;
     selectAllCheckbox.indeterminate = false;
