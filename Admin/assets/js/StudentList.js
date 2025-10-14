@@ -305,7 +305,6 @@ function initializeSelectAll() {
   );
 
   newSelectAllCheckbox.addEventListener("change", function () {
-    // Prevent multiple simultaneous bulk updates
     if (isBulkUpdateInProgress) {
       console.log("Bulk update already in progress, ignoring click");
       // Revert the checkbox state
