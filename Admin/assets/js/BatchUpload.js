@@ -306,7 +306,6 @@ window.addEventListener("DOMContentLoaded", () => {
         const dt = e.dataTransfer;
         const files = dt.files;
 
-        // Create a new FileList-like object
         const dataTransfer = new DataTransfer();
         Array.from(files).forEach((file) => {
           dataTransfer.items.add(file);
