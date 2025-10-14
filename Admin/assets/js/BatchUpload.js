@@ -355,7 +355,6 @@ window.addEventListener("DOMContentLoaded", () => {
         fileNameSpan.textContent = `${input.files.length} images selected`;
       }
 
-      // Show the file info with animation
       info.classList.add("show");
     } else {
       // Force complete reset
