@@ -337,7 +337,6 @@ function initializeSelectAll() {
         const template = templateFilter ? templateFilter.value : "1";
 
         if (department) {
-          // Use bulk update for all students in department
           currentOperation = "activating_all";
           updateAllStudentsStatus(department, "Active", template, status);
         } else {
