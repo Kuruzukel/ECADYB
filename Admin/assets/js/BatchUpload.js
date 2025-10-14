@@ -373,7 +373,6 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Force reset function for complete UI cleanup
   function forceResetFileUI(inputId) {
     const input = document.getElementById(inputId);
     if (!input) return;
