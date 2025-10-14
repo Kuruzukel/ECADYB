@@ -340,7 +340,6 @@ function initializeSelectAll() {
           currentOperation = "activating_all";
           updateAllStudentsStatus(department, "Active", template, status);
         } else {
-          // Set up for select all operation
           isSelectAllOperation = true;
           selectAllProcessedCount = 0;
           selectAllTotalCount = visibleStudentCheckboxes.length;
