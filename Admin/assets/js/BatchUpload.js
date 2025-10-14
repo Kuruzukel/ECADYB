@@ -513,7 +513,7 @@ window.addEventListener("DOMContentLoaded", () => {
               console.log("Upload cancelled");
               forceResetFileUI(input.id);
               showNotification("Upload cancelled", "error");
-              return; // Don't show error notification for cancelled uploads
+              return;
             }
             console.error("Upload error:", error);
             showNotification("Upload failed. Please try again.", "error");
