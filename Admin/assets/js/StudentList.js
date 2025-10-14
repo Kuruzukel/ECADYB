@@ -213,7 +213,6 @@ let isBulkUpdateInProgress = false;
 let notificationTimeout = null;
 let currentOperation = null;
 
-// Function to update the select all checkbox state based on individual checkbox states
 function updateSelectAllState() {
   const selectAllCheckbox = document.getElementById("select-all-header");
   if (!selectAllCheckbox) return;
