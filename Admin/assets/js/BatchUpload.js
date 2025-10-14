@@ -208,7 +208,6 @@ function cancelUpload() {
 
   hideUploadOverlay();
 
-  // Reset all file inputs and UI state
   document.querySelectorAll(".upload-input").forEach((input) => {
     if (input.files && input.files.length > 0) {
       input.value = "";
