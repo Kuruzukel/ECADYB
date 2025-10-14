@@ -307,7 +307,6 @@ function initializeSelectAll() {
   newSelectAllCheckbox.addEventListener("change", function () {
     if (isBulkUpdateInProgress) {
       console.log("Bulk update already in progress, ignoring click");
-      // Revert the checkbox state
       this.checked = !this.checked;
       return;
     }
