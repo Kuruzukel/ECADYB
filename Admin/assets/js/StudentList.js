@@ -353,7 +353,6 @@ function initializeSelectAll() {
           });
         }
       } else {
-        // Get current department and template from filters
         const departmentFilter = document.getElementById("department-filter");
         const statusFilter = document.getElementById("status-filter");
         const templateFilter = document.getElementById("template-filter");
