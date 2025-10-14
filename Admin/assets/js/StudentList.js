@@ -224,7 +224,6 @@ function updateSelectAllState() {
     return;
   }
 
-  // Count checked and unchecked
   const checkedCount = visibleCheckboxes.filter(
     (checkbox) => checkbox.checked
   ).length;
