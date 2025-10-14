@@ -465,7 +465,6 @@ window.addEventListener("DOMContentLoaded", () => {
           } catch (error) {
             if (error.name === "AbortError") {
               console.log("Upload cancelled");
-              // Reset UI state for cancelled upload
               forceResetFileUI(input.id);
               // Show cancel notification
               showNotification("Upload cancelled", "error");
