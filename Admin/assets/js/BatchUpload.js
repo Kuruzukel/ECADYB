@@ -507,7 +507,6 @@ window.addEventListener("DOMContentLoaded", () => {
               }
             }
 
-            // Force reset after successful upload
             forceResetFileUI(input.id);
           } catch (error) {
             if (error.name === "AbortError") {
