@@ -20,8 +20,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Removed old full-page reload handler
-
   document.querySelectorAll(".tab-button").forEach((button) => {
     button.addEventListener("click", function () {
       const tabName = this.getAttribute("data-tab");
