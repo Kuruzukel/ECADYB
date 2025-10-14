@@ -269,7 +269,6 @@ function initializeSelectAll() {
     savedState: savedSelectAllState,
   });
 
-  // This ensures that after CSV upload, the checkbox reflects the true state
   if (allChecked) {
     selectAllCheckbox.checked = true;
     selectAllCheckbox.indeterminate = false;
