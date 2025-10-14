@@ -346,7 +346,6 @@ window.addEventListener("DOMContentLoaded", () => {
     const hasFiles = input.files && input.files.length > 0;
 
     if (hasFiles) {
-      // Add has-file class to card
       card.classList.add("has-file");
 
       // Update file info display
