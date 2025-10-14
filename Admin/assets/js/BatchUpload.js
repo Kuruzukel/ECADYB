@@ -206,7 +206,6 @@ function cancelUpload() {
     currentUploadController = null;
   }
 
-  // Hide overlay immediately
   hideUploadOverlay();
 
   // Reset all file inputs and UI state
