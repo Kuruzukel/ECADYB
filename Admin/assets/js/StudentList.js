@@ -275,7 +275,6 @@ function initializeSelectAll() {
     isSelectAllActive = true;
     localStorage.setItem("selectAllState", "true");
   } else if (allPending) {
-    // All students are pending - show indeterminate (minus sign)
     console.log(
       "Setting select all to INDETERMINATE (minus sign) - all students pending"
     );
