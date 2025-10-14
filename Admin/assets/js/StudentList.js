@@ -353,7 +353,6 @@ function initializeSelectAll() {
           });
         }
       } else {
-        // For unselect all, we want to update ALL students in the department, not just visible ones
         // Get current department and template from filters
         const departmentFilter = document.getElementById("department-filter");
         const statusFilter = document.getElementById("status-filter");
