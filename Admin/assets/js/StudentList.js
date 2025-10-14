@@ -388,13 +388,10 @@ async function updateAllStudentsStatus(
   statusFilter
 ) {
   try {
-    // Set flag to prevent multiple simultaneous requests
     isBulkUpdateInProgress = true;
 
-    // Show immediate notification for the current operation
     _showNotification(`Updating all students to ${status}...`, "info");
 
-    // Ensure we're using the correct base URL
     const baseUrl =
       window.location.origin +
       (window.location.pathname.includes("/ECADYB/") ? "/ECADYB" : "");
@@ -416,68 +413,59 @@ async function updateAllStudentsStatus(
     const data = await res.json();
 
     if (data && data.success) {
-      // Clear any existing notification timeout
       if (notificationTimeout) {
         clearTimeout(notificationTimeout);
       }
 
-      // Show success notification (this will replace the "updating" notification)
       notificationTimeout = setTimeout(() => {
         _showNotification(
           data.message || `All students status updated to ${status}`,
           "success"
         );
         notificationTimeout = null;
-        currentOperation = null; // Clear current operation
+        currentOperation = null;
       }, 100);
 
-      // Reload current page with AJAX to reflect changes
       const urlParams = new URLSearchParams(window.location.search);
       const template = urlParams.get("template") || "1";
       const department = urlParams.get("department") || "";
       const tab = urlParams.get("tab") || "all";
       const pageNum = urlParams.get("pageNum") || "1";
 
-      // Use AJAX to reload the current page
       loadStudentList(parseInt(pageNum), template, department, tab);
     } else {
-      // Clear any existing notification timeout
       if (notificationTimeout) {
         clearTimeout(notificationTimeout);
       }
 
-      // Show error notification (this will replace the "updating" notification)
       notificationTimeout = setTimeout(() => {
         _showNotification(
           data.message || "Failed to update all students status",
           "error"
         );
         notificationTimeout = null;
-        currentOperation = null; // Clear current operation
+        currentOperation = null;
       }, 100);
     }
   } catch (err) {
     console.error("[BulkUpdateStatus] Fetch error:", err);
 
-    // Clear any existing notification timeout
     if (notificationTimeout) {
       clearTimeout(notificationTimeout);
     }
 
-    // Show error notification (this will replace the "updating" notification)
     notificationTimeout = setTimeout(() => {
       _showNotification(
         "Error updating all students status. Check console.",
         "error"
       );
       notificationTimeout = null;
-      currentOperation = null; // Clear current operation
+      currentOperation = null;
     }, 100);
   } finally {
-    // Reset flag after operation completes (success or failure)
     setTimeout(() => {
       isBulkUpdateInProgress = false;
-    }, 1000); // Add small delay to ensure UI has updated
+    }, 1000);
   }
 }
 
@@ -512,7 +500,6 @@ function clearSelectAllState() {
     selectAllCheckbox.indeterminate = false;
   }
 
-  // Update select all state - this will set indeterminate if all are pending
   setTimeout(updateSelectAllState, 0);
 }
 
@@ -522,16 +509,12 @@ function initializeFilters() {
   const statusFilter = document.getElementById("status-filter");
   const templateFilter = document.getElementById("template-filter");
 
-  // Template filter is READ-ONLY - it's locked to the template selected in BatchTemplates.php
-  // Users cannot switch between templates here; they must use BatchTemplates.php
   if (templateFilter) {
-    // Disable the template filter so users cannot change it
     templateFilter.disabled = true;
     templateFilter.style.cursor = "not-allowed";
     templateFilter.style.opacity = "0.6";
   }
 
-  // Department filter changes the URL and reloads content with AJAX
   if (departmentFilter) {
     departmentFilter.addEventListener("change", function () {
       const urlParams = new URLSearchParams(window.location.search);
@@ -539,16 +522,13 @@ function initializeFilters() {
       const department = this.value;
       const tab = urlParams.get("tab") || "all";
 
-      // Update URL without reloading
       const newUrl = `?page=student-list&template=${template}&department=${department}&tab=${tab}&pageNum=1`;
       window.history.pushState({}, "", newUrl);
 
-      // Load new content with AJAX
       loadStudentList(1, template, department, tab);
     });
   }
 
-  // Status filter is client-side only (filters visible rows)
   [entriesCount, statusFilter].forEach((filter) => {
     if (filter) filter.addEventListener("change", applyFilters);
   });
@@ -601,45 +581,36 @@ function applyFilters() {
     row.style.display = showRow ? "" : "none";
   });
 
-  // Only update select all state if not initializing
-  // (to avoid overriding localStorage-based state)
   if (!isInitializing) {
     setTimeout(updateSelectAllState, 0);
   }
 }
 
-// Modify the showNotification function to handle select all operations
 function showNotification(message, type = "success") {
-  // If this is a select all operation, suppress individual notifications
   if (isSelectAllOperation && message.includes("Status updated")) {
     selectAllProcessedCount++;
 
-    // When all operations are complete, show a single summary notification
     if (selectAllProcessedCount >= selectAllTotalCount) {
       const finalMessage = `All ${selectAllTotalCount} student statuses updated successfully`;
       _showNotification(finalMessage, type);
-      isSelectAllOperation = false; // Reset for next operation
+      isSelectAllOperation = false;
       selectAllProcessedCount = 0;
       selectAllTotalCount = 0;
     }
-    return; // Don't show individual notifications during select all
+    return;
   }
 
-  // For all other cases, show the notification normally
   _showNotification(message, type);
 }
 
-// The actual notification display function
 function _showNotification(message, type = "success") {
   const container = document.getElementById("notification-container");
   if (!container) return;
 
-  // Remove any existing notifications to prevent duplicates
   const existingNotifications = container.querySelectorAll(".notification");
   existingNotifications.forEach((notif) => notif.remove());
 
-  // Select icon based on notification type
-  let icon = "fa-check-circle"; // default for success
+  let icon = "fa-check-circle";
   if (type === "error") {
     icon = "fa-exclamation-circle";
   } else if (type === "info") {
@@ -656,8 +627,7 @@ function _showNotification(message, type = "success") {
   `;
   container.appendChild(notif);
 
-  // Make notification visible for different durations based on type
-  const duration = type === "info" ? 2000 : 5000; // Info notifications disappear faster
+  const duration = type === "info" ? 2000 : 5000;
   setTimeout(() => {
     notif.classList.remove("show");
     setTimeout(() => notif.remove(), 500);
@@ -689,11 +659,9 @@ async function confirmDeleteStudent() {
   confirmDeleteBtn.disabled = true;
 
   try {
-    // Get template information from URL or default to 1
     const urlParams = new URLSearchParams(window.location.search);
     const template = urlParams.get("template") || "1";
 
-    // Ensure we're using the correct base URL
     const baseUrl =
       window.location.origin +
       (window.location.pathname.includes("/ECADYB/") ? "/ECADYB" : "");
@@ -779,15 +747,11 @@ function initializeStatusUpdates() {
       console.log("Checkbox changed", this.checked);
       console.log("Dataset:", this.dataset);
 
-      // Skip API calls and notifications during initialization/filtering
       if (isInitializing) {
         console.log("Skipping status update - initializing");
         return;
       }
 
-      // Only clear select all state if user is manually changing checkboxes
-      // (not during initialization or bulk operations)
-      // Note: clearSelectAllState() already calls updateSelectAllState()
       if (!isSelectAllActive && !isSelectAllOperation) {
         clearSelectAllState();
       }
@@ -811,11 +775,9 @@ function initializeStatusUpdates() {
       }
 
       try {
-        // Get template information from URL or default to 1
         const urlParams = new URLSearchParams(window.location.search);
         const template = urlParams.get("template") || "1";
 
-        // Ensure we're using the correct base URL
         const baseUrl =
           window.location.origin +
           (window.location.pathname.includes("/ECADYB/") ? "/ECADYB" : "");
@@ -867,7 +829,6 @@ function initializeStatusUpdates() {
           }
           applyFilters();
 
-          // Only show individual notifications if not in select all mode
           if (!isSelectAllOperation) {
             _showNotification(
               data.message || "Status updated successfully",
@@ -910,13 +871,11 @@ async function updateStudentDetails(studentId, fields) {
   );
   if (collectionEl) fields["collection"] = collectionEl.value;
 
-  // Get template information from URL or default to 1
   const urlParams = new URLSearchParams(window.location.search);
   const template = urlParams.get("template") || "1";
   fields["template"] = template;
 
   try {
-    // Ensure we're using the correct base URL
     const baseUrl =
       window.location.origin +
       (window.location.pathname.includes("/ECADYB/") ? "/ECADYB" : "");
@@ -975,7 +934,6 @@ function submitStudentForm(studentId) {
     status: "status",
   };
 
-  // Get current values
   for (const [key, mongoKey] of Object.entries(fieldMapping)) {
     const el = document.getElementById(`${key}${studentId}`);
     if (el) {
@@ -1028,7 +986,6 @@ function removeSpaces(input) {
   input.value = input.value.replace(/\s+/g, "");
 }
 
-// Pagination and content loading helpers migrated from inline script
 function changePage(pageNum) {
   const urlParams = new URLSearchParams(window.location.search);
   urlParams.set("pageNum", pageNum);
@@ -1080,12 +1037,10 @@ function loadStudentList(pageNum, template, department, tab) {
       updatePaginationButtons(pageNum, template, department, tab, totalPages);
 
       setTimeout(() => {
-        isInitializing = true; // Prevent notifications during reinitialization
+        isInitializing = true;
         initializeSelectAll();
         initializeFilters();
         initializeStatusUpdates();
-        // Don't call updateSelectAllState here - initializeSelectAll already handles it
-        // Reset flag after reinitialization is complete
         setTimeout(() => {
           isInitializing = false;
         }, 500);
