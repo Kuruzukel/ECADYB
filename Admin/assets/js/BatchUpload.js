@@ -483,7 +483,6 @@ window.addEventListener("DOMContentLoaded", () => {
           }
 
           try {
-            // Create AbortController for cancellation
             currentUploadController = new AbortController();
 
             const response = await fetch(form.action, {
