@@ -890,7 +890,6 @@ table th:nth-child(7) #select-all-header {
   line-height: 1;
 }
 
-/* Select All checkbox styling */
 #select-all-header {
   appearance: none;
   -webkit-appearance: none;
