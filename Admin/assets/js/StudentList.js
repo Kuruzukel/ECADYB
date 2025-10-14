@@ -208,10 +208,10 @@ let isSelectAllActive = false;
 let isSelectAllOperation = false;
 let selectAllProcessedCount = 0;
 let selectAllTotalCount = 0;
-let isInitializing = false; // Flag to prevent notifications during initialization
-let isBulkUpdateInProgress = false; // Flag to prevent multiple bulk updates
-let notificationTimeout = null; // Flag to prevent multiple notifications
-let currentOperation = null; // Track current operation for notification updates
+let isInitializing = false;
+let isBulkUpdateInProgress = false;
+let notificationTimeout = null;
+let currentOperation = null;
 
 // Function to update the select all checkbox state based on individual checkbox states
 function updateSelectAllState() {
