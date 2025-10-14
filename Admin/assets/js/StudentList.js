@@ -255,7 +255,6 @@ function initializeSelectAll() {
   const savedSelectAllState = localStorage.getItem("selectAllState");
   console.log("Select all state from localStorage:", savedSelectAllState);
 
-  // Check the actual state of checkboxes on the page
   const visibleCheckboxes = getVisibleStudentCheckboxes();
   const checkedCount = visibleCheckboxes.filter((cb) => cb.checked).length;
   const allChecked =
