@@ -191,7 +191,6 @@ window.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  // Set initialization flag to prevent notifications during initial load
   isInitializing = true;
 
   initializeSelectAll();
