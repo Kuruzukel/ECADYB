@@ -365,7 +365,6 @@ function initializeSelectAll() {
           currentOperation = "pending_all";
           updateAllStudentsStatus(department, "Pending", template, status);
         } else {
-          // Uncheck all
           visibleStudentCheckboxes.forEach((checkbox) => {
             if (checkbox.checked) {
               checkbox.checked = false;
