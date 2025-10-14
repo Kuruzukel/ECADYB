@@ -283,7 +283,6 @@ function initializeSelectAll() {
     isSelectAllActive = false;
     localStorage.removeItem("selectAllState");
   } else if (checkedCount > 0) {
-    // Some checked, some not - show indeterminate
     console.log(
       "Setting select all to INDETERMINATE (minus sign) - mixed states"
     );
