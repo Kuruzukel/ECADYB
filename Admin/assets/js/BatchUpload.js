@@ -201,7 +201,6 @@ function hideUploadOverlay() {
 function cancelUpload() {
   console.log("Cancel upload triggered");
 
-  // Abort current upload immediately
   if (currentUploadController) {
     currentUploadController.abort();
     currentUploadController = null;
