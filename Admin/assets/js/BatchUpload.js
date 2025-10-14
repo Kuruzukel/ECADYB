@@ -320,7 +320,6 @@ window.addEventListener("DOMContentLoaded", () => {
     );
   });
 
-  // Handle file selection UI updates
   function updateFileUI(input) {
     const inputId = input.id;
     let cardId, infoId;
