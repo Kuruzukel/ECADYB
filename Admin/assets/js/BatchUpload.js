@@ -255,7 +255,6 @@ window.addEventListener("DOMContentLoaded", () => {
     if (msg) showNotification(msg, type);
   }
 
-  // Add drag and drop functionality to file cards
   document.querySelectorAll(".file-card").forEach((card) => {
     const inputId = card.id.replace("card-", "");
     let fileInput;
