@@ -188,7 +188,7 @@ window.addEventListener("DOMContentLoaded", () => {
     urlParams.set("template", savedTemplate);
     const newUrl = window.location.pathname + "?" + urlParams.toString();
     window.location.href = newUrl;
-    return; // Exit early as we're redirecting
+    return;
   }
 
   // Set initialization flag to prevent notifications during initial load
