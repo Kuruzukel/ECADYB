@@ -114,7 +114,11 @@ h1 .chevron i {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(145deg, rgba(52, 73, 94, 0.4), rgba(44, 62, 80, 0.6));
+  background: linear-gradient(
+    145deg,
+    rgba(52, 73, 94, 0.4),
+    rgba(44, 62, 80, 0.6)
+  );
   backdrop-filter: blur(10px);
   border: 2px dashed rgba(33, 150, 243, 0.3);
   min-height: 200px;
@@ -125,24 +129,31 @@ h1 .chevron i {
 }
 
 .file-card::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -50%;
   left: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle, rgba(33, 150, 243, 0.1) 0%, transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(33, 150, 243, 0.1) 0%,
+    transparent 70%
+  );
   opacity: 0;
   transition: opacity 0.4s ease;
   pointer-events: none;
 }
 
-
 .file-card:hover {
   border-color: rgba(33, 150, 243, 0.8);
-  background: linear-gradient(145deg, rgba(33, 150, 243, 0.15), rgba(44, 62, 80, 0.7));
-  box-shadow: 0 12px 40px rgba(33, 150, 243, 0.2), 
-              inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  background: linear-gradient(
+    145deg,
+    rgba(33, 150, 243, 0.15),
+    rgba(44, 62, 80, 0.7)
+  );
+  box-shadow: 0 12px 40px rgba(33, 150, 243, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
   transform: translateY(-5px);
 }
 
@@ -150,22 +161,27 @@ h1 .chevron i {
   opacity: 1;
 }
 
-
 .file-card.has-file {
   border-color: rgba(76, 175, 80, 0.8);
-  background: linear-gradient(145deg, rgba(76, 175, 80, 0.1), rgba(44, 62, 80, 0.6));
+  background: linear-gradient(
+    145deg,
+    rgba(76, 175, 80, 0.1),
+    rgba(44, 62, 80, 0.6)
+  );
   box-shadow: 0 8px 32px rgba(76, 175, 80, 0.2);
 }
 
-
 .file-card.drag-over {
   border-color: rgba(252, 218, 21, 0.9);
-  background: linear-gradient(145deg, rgba(252, 218, 21, 0.15), rgba(44, 62, 80, 0.7));
-  box-shadow: 0 12px 40px rgba(252, 218, 21, 0.3), 
-              inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  background: linear-gradient(
+    145deg,
+    rgba(252, 218, 21, 0.15),
+    rgba(44, 62, 80, 0.7)
+  );
+  box-shadow: 0 12px 40px rgba(252, 218, 21, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
   transform: scale(1.02);
 }
-
 
 .custom-upload {
   position: relative;
@@ -187,9 +203,8 @@ h1 .chevron i {
   overflow: hidden;
 }
 
-
 .custom-upload::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 50%;
   left: 50%;
@@ -280,7 +295,8 @@ h1 .chevron i {
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
@@ -288,8 +304,6 @@ h1 .chevron i {
   }
 }
 
-
-/* Notification styles copied from BatchTemplates.css */
 .notification {
   position: fixed;
   top: 20px;
