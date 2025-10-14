@@ -298,7 +298,6 @@ function initializeSelectAll() {
     localStorage.removeItem("selectAllState");
   }
 
-  // Remove any existing event listeners to prevent duplicates
   const newSelectAllCheckbox = selectAllCheckbox.cloneNode(true);
   selectAllCheckbox.parentNode.replaceChild(
     newSelectAllCheckbox,
