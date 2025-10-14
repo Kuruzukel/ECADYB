@@ -518,7 +518,6 @@ window.addEventListener("DOMContentLoaded", () => {
             console.error("Upload error:", error);
             showNotification("Upload failed. Please try again.", "error");
           } finally {
-            // Hide overlay after upload completion
             hideUploadOverlay();
             currentUploadController = null;
           }
