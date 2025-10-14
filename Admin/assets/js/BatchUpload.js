@@ -216,7 +216,6 @@ function cancelUpload() {
     }
   });
 
-  // Reset operation state
   currentOperation = null;
 
   // Show notification immediately
