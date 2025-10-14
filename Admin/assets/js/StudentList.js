@@ -239,7 +239,6 @@ function updateSelectAllState() {
     selectAllCheckbox.indeterminate = true;
     localStorage.removeItem("selectAllState");
   } else {
-    // Some are checked, some are not - show minus/indeterminate
     selectAllCheckbox.checked = false;
     selectAllCheckbox.indeterminate = true;
     localStorage.removeItem("selectAllState");
