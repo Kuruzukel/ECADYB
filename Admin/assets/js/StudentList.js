@@ -20,7 +20,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Department filter is now handled in initializeFilters() with AJAX loading
   // Removed old full-page reload handler
 
   document.querySelectorAll(".tab-button").forEach((button) => {
@@ -187,7 +186,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const urlParams = new URLSearchParams(window.location.search);
   const currentTemplate = urlParams.get("template");
   const savedTemplate = localStorage.getItem("selectedBatchTemplateNumber");
-  
+
   // If no template in URL but there's a saved template, redirect with the saved template
   if (!currentTemplate && savedTemplate) {
     urlParams.set("template", savedTemplate);
@@ -198,14 +197,14 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // Set initialization flag to prevent notifications during initial load
   isInitializing = true;
-  
+
   initializeSelectAll();
   initializeFilters();
   initializeStatusUpdates();
   initializeDeleteModal();
-  
+
   // Don't call updateSelectAllState here - initializeSelectAll already handles it
-  
+
   // Reset initialization flag after page is fully loaded
   setTimeout(() => {
     isInitializing = false;
@@ -235,10 +234,12 @@ function updateSelectAllState() {
   }
 
   // Count checked and unchecked
-  const checkedCount = visibleCheckboxes.filter(checkbox => checkbox.checked).length;
+  const checkedCount = visibleCheckboxes.filter(
+    (checkbox) => checkbox.checked
+  ).length;
   const allChecked = checkedCount === visibleCheckboxes.length;
   const noneChecked = checkedCount === 0;
-  
+
   if (allChecked) {
     // All are checked (Active) - show checked
     selectAllCheckbox.checked = true;
@@ -267,21 +268,22 @@ function initializeSelectAll() {
   // Check if select all was previously active (user clicked select all)
   const savedSelectAllState = localStorage.getItem("selectAllState");
   console.log("Select all state from localStorage:", savedSelectAllState);
-  
+
   // Check the actual state of checkboxes on the page
   const visibleCheckboxes = getVisibleStudentCheckboxes();
-  const checkedCount = visibleCheckboxes.filter(cb => cb.checked).length;
-  const allChecked = checkedCount === visibleCheckboxes.length && visibleCheckboxes.length > 0;
+  const checkedCount = visibleCheckboxes.filter((cb) => cb.checked).length;
+  const allChecked =
+    checkedCount === visibleCheckboxes.length && visibleCheckboxes.length > 0;
   const allPending = checkedCount === 0 && visibleCheckboxes.length > 0;
-  
+
   console.log("Select All Debug:", {
     totalCheckboxes: visibleCheckboxes.length,
     checkedCount: checkedCount,
     allChecked: allChecked,
     allPending: allPending,
-    savedState: savedSelectAllState
+    savedState: savedSelectAllState,
   });
-  
+
   // Always prioritize the actual state of students over localStorage
   // This ensures that after CSV upload, the checkbox reflects the true state
   if (allChecked) {
@@ -291,14 +293,18 @@ function initializeSelectAll() {
     localStorage.setItem("selectAllState", "true");
   } else if (allPending) {
     // All students are pending - show indeterminate (minus sign)
-    console.log("Setting select all to INDETERMINATE (minus sign) - all students pending");
+    console.log(
+      "Setting select all to INDETERMINATE (minus sign) - all students pending"
+    );
     selectAllCheckbox.checked = false;
     selectAllCheckbox.indeterminate = true;
     isSelectAllActive = false;
     localStorage.removeItem("selectAllState");
   } else if (checkedCount > 0) {
     // Some checked, some not - show indeterminate
-    console.log("Setting select all to INDETERMINATE (minus sign) - mixed states");
+    console.log(
+      "Setting select all to INDETERMINATE (minus sign) - mixed states"
+    );
     selectAllCheckbox.checked = false;
     selectAllCheckbox.indeterminate = true;
     isSelectAllActive = false;
@@ -314,8 +320,11 @@ function initializeSelectAll() {
 
   // Remove any existing event listeners to prevent duplicates
   const newSelectAllCheckbox = selectAllCheckbox.cloneNode(true);
-  selectAllCheckbox.parentNode.replaceChild(newSelectAllCheckbox, selectAllCheckbox);
-  
+  selectAllCheckbox.parentNode.replaceChild(
+    newSelectAllCheckbox,
+    selectAllCheckbox
+  );
+
   newSelectAllCheckbox.addEventListener("change", function () {
     // Prevent multiple simultaneous bulk updates
     if (isBulkUpdateInProgress) {
@@ -326,7 +335,7 @@ function initializeSelectAll() {
     }
 
     console.log("Select all clicked:", this.checked);
-    
+
     // Clear indeterminate state when clicked
     this.indeterminate = false;
 
@@ -348,11 +357,11 @@ function initializeSelectAll() {
         const departmentFilter = document.getElementById("department-filter");
         const statusFilter = document.getElementById("status-filter");
         const templateFilter = document.getElementById("template-filter");
-        
+
         const department = departmentFilter ? departmentFilter.value : "";
         const status = statusFilter ? statusFilter.value : "";
         const template = templateFilter ? templateFilter.value : "1";
-        
+
         if (department) {
           // Use bulk update for all students in department
           currentOperation = "activating_all";
@@ -379,11 +388,11 @@ function initializeSelectAll() {
         const departmentFilter = document.getElementById("department-filter");
         const statusFilter = document.getElementById("status-filter");
         const templateFilter = document.getElementById("template-filter");
-        
+
         const department = departmentFilter ? departmentFilter.value : "";
         const status = statusFilter ? statusFilter.value : "";
         const template = templateFilter ? templateFilter.value : "1";
-        
+
         if (department) {
           // Use bulk update for all students in department
           currentOperation = "pending_all";
@@ -410,53 +419,63 @@ function initializeSelectAll() {
 }
 
 // New function to update all students in a department
-async function updateAllStudentsStatus(collection, status, template, statusFilter) {
+async function updateAllStudentsStatus(
+  collection,
+  status,
+  template,
+  statusFilter
+) {
   try {
     // Set flag to prevent multiple simultaneous requests
     isBulkUpdateInProgress = true;
-    
+
     // Show immediate notification for the current operation
     _showNotification(`Updating all students to ${status}...`, "info");
-    
+
     // Ensure we're using the correct base URL
-    const baseUrl = window.location.origin + (window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '');
+    const baseUrl =
+      window.location.origin +
+      (window.location.pathname.includes("/ECADYB/") ? "/ECADYB" : "");
     const endpoint = baseUrl + BULK_STATUS_ENDPOINT;
-    
+
     const res = await fetch(endpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ 
-        collection: collection, 
-        status: status, 
+      body: JSON.stringify({
+        collection: collection,
+        status: status,
         template: template,
-        status_filter: statusFilter
+        status_filter: statusFilter,
       }),
     });
 
     if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
 
     const data = await res.json();
-    
+
     if (data && data.success) {
       // Clear any existing notification timeout
       if (notificationTimeout) {
         clearTimeout(notificationTimeout);
       }
-      
+
       // Show success notification (this will replace the "updating" notification)
       notificationTimeout = setTimeout(() => {
-        _showNotification(data.message || `All students status updated to ${status}`, "success");
+        _showNotification(
+          data.message || `All students status updated to ${status}`,
+          "success"
+        );
         notificationTimeout = null;
         currentOperation = null; // Clear current operation
       }, 100);
-      
+
       // Reload current page with AJAX to reflect changes
       const urlParams = new URLSearchParams(window.location.search);
       const template = urlParams.get("template") || "1";
       const department = urlParams.get("department") || "";
       const tab = urlParams.get("tab") || "all";
       const pageNum = urlParams.get("pageNum") || "1";
-      
+
       // Use AJAX to reload the current page
       loadStudentList(parseInt(pageNum), template, department, tab);
     } else {
@@ -464,25 +483,31 @@ async function updateAllStudentsStatus(collection, status, template, statusFilte
       if (notificationTimeout) {
         clearTimeout(notificationTimeout);
       }
-      
+
       // Show error notification (this will replace the "updating" notification)
       notificationTimeout = setTimeout(() => {
-        _showNotification(data.message || "Failed to update all students status", "error");
+        _showNotification(
+          data.message || "Failed to update all students status",
+          "error"
+        );
         notificationTimeout = null;
         currentOperation = null; // Clear current operation
       }, 100);
     }
   } catch (err) {
     console.error("[BulkUpdateStatus] Fetch error:", err);
-    
+
     // Clear any existing notification timeout
     if (notificationTimeout) {
       clearTimeout(notificationTimeout);
     }
-    
+
     // Show error notification (this will replace the "updating" notification)
     notificationTimeout = setTimeout(() => {
-      _showNotification("Error updating all students status. Check console.", "error");
+      _showNotification(
+        "Error updating all students status. Check console.",
+        "error"
+      );
       notificationTimeout = null;
       currentOperation = null; // Clear current operation
     }, 100);
@@ -524,7 +549,7 @@ function clearSelectAllState() {
     selectAllCheckbox.checked = false;
     selectAllCheckbox.indeterminate = false;
   }
-  
+
   // Update select all state - this will set indeterminate if all are pending
   setTimeout(updateSelectAllState, 0);
 }
@@ -551,11 +576,11 @@ function initializeFilters() {
       const template = urlParams.get("template") || "1";
       const department = this.value;
       const tab = urlParams.get("tab") || "all";
-      
+
       // Update URL without reloading
       const newUrl = `?page=student-list&template=${template}&department=${department}&tab=${tab}&pageNum=1`;
       window.history.pushState({}, "", newUrl);
-      
+
       // Load new content with AJAX
       loadStudentList(1, template, department, tab);
     });
@@ -613,7 +638,7 @@ function applyFilters() {
     console.log("Row", index, "will be", showRow ? "shown" : "hidden");
     row.style.display = showRow ? "" : "none";
   });
-  
+
   // Only update select all state if not initializing
   // (to avoid overriding localStorage-based state)
   if (!isInitializing) {
@@ -626,7 +651,7 @@ function showNotification(message, type = "success") {
   // If this is a select all operation, suppress individual notifications
   if (isSelectAllOperation && message.includes("Status updated")) {
     selectAllProcessedCount++;
-    
+
     // When all operations are complete, show a single summary notification
     if (selectAllProcessedCount >= selectAllTotalCount) {
       const finalMessage = `All ${selectAllTotalCount} student statuses updated successfully`;
@@ -637,7 +662,7 @@ function showNotification(message, type = "success") {
     }
     return; // Don't show individual notifications during select all
   }
-  
+
   // For all other cases, show the notification normally
   _showNotification(message, type);
 }
@@ -648,8 +673,8 @@ function _showNotification(message, type = "success") {
   if (!container) return;
 
   // Remove any existing notifications to prevent duplicates
-  const existingNotifications = container.querySelectorAll('.notification');
-  existingNotifications.forEach(notif => notif.remove());
+  const existingNotifications = container.querySelectorAll(".notification");
+  existingNotifications.forEach((notif) => notif.remove());
 
   // Select icon based on notification type
   let icon = "fa-check-circle"; // default for success
@@ -704,19 +729,21 @@ async function confirmDeleteStudent() {
   try {
     // Get template information from URL or default to 1
     const urlParams = new URLSearchParams(window.location.search);
-    const template = urlParams.get('template') || '1';
-    
+    const template = urlParams.get("template") || "1";
+
     // Ensure we're using the correct base URL
-    const baseUrl = window.location.origin + (window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '');
+    const baseUrl =
+      window.location.origin +
+      (window.location.pathname.includes("/ECADYB/") ? "/ECADYB" : "");
     const endpoint = baseUrl + DELETE_STUDENT_ENDPOINT;
-    
+
     const res = await fetch(endpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         student_id: selectedStudentId,
         collection: selectedCollection,
-        template: template
+        template: template,
       }),
     });
 
@@ -824,16 +851,23 @@ function initializeStatusUpdates() {
       try {
         // Get template information from URL or default to 1
         const urlParams = new URLSearchParams(window.location.search);
-        const template = urlParams.get('template') || '1';
-        
+        const template = urlParams.get("template") || "1";
+
         // Ensure we're using the correct base URL
-        const baseUrl = window.location.origin + (window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '');
+        const baseUrl =
+          window.location.origin +
+          (window.location.pathname.includes("/ECADYB/") ? "/ECADYB" : "");
         const endpoint = baseUrl + STATUS_ENDPOINT;
-        
+
         const res = await fetch(endpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ student_id: studentId, collection, status, template }),
+          body: JSON.stringify({
+            student_id: studentId,
+            collection,
+            status,
+            template,
+          }),
         });
 
         if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
@@ -870,7 +904,7 @@ function initializeStatusUpdates() {
             console.log("New status cell className:", statusCell.className);
           }
           applyFilters();
-          
+
           // Only show individual notifications if not in select all mode
           if (!isSelectAllOperation) {
             _showNotification(
@@ -880,7 +914,10 @@ function initializeStatusUpdates() {
           }
         } else {
           if (!isSelectAllOperation) {
-            _showNotification(data.message || "Failed to update status", "error");
+            _showNotification(
+              data.message || "Failed to update status",
+              "error"
+            );
           }
           this.checked = !this.checked;
         }
@@ -913,14 +950,16 @@ async function updateStudentDetails(studentId, fields) {
 
   // Get template information from URL or default to 1
   const urlParams = new URLSearchParams(window.location.search);
-  const template = urlParams.get('template') || '1';
+  const template = urlParams.get("template") || "1";
   fields["template"] = template;
 
   try {
     // Ensure we're using the correct base URL
-    const baseUrl = window.location.origin + (window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '');
+    const baseUrl =
+      window.location.origin +
+      (window.location.pathname.includes("/ECADYB/") ? "/ECADYB" : "");
     const endpoint = baseUrl + STUDENT_UPDATE_ENDPOINT;
-    
+
     const res = await fetch(endpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -1045,10 +1084,13 @@ function changePage(pageNum) {
 function loadStudentList(pageNum, template, department, tab) {
   const tableBody = document.querySelector("tbody");
   if (tableBody) {
-    tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; vertical-align: middle; padding: 0; height: 400px;"><div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 20px;"><i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: #60a5fa;"></i><span style="font-size: 1.2rem; font-weight: 500; color: #fff;">Loading students...</span></div></td></tr>';
+    tableBody.innerHTML =
+      '<tr><td colspan="7" style="text-align: center; vertical-align: middle; padding: 0; height: 400px;"><div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 20px;"><i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: #60a5fa;"></i><span style="font-size: 1.2rem; font-weight: 500; color: #fff;">Loading students...</span></div></td></tr>';
   }
 
-  fetch(`?page=student-list&template=${template}&department=${department}&tab=${tab}&pageNum=${pageNum}&ajax=1`)
+  fetch(
+    `?page=student-list&template=${template}&department=${department}&tab=${tab}&pageNum=${pageNum}&ajax=1`
+  )
     .then((response) => response.text())
     .then((data) => {
       const parser = new DOMParser();
@@ -1061,12 +1103,17 @@ function loadStudentList(pageNum, template, department, tab) {
       }
 
       if (newPageInfo) {
-        const currentPageInfo = document.querySelector(".pagination-controls span");
-        if (currentPageInfo) currentPageInfo.textContent = newPageInfo.textContent;
+        const currentPageInfo = document.querySelector(
+          ".pagination-controls span"
+        );
+        if (currentPageInfo)
+          currentPageInfo.textContent = newPageInfo.textContent;
       }
 
       const totalPagesInput = doc.getElementById("total-pages");
-      const totalPages = totalPagesInput ? parseInt(totalPagesInput.value) : null;
+      const totalPages = totalPagesInput
+        ? parseInt(totalPagesInput.value)
+        : null;
 
       updatePaginationButtons(pageNum, template, department, tab, totalPages);
 
@@ -1085,13 +1132,20 @@ function loadStudentList(pageNum, template, department, tab) {
     .catch((error) => {
       console.error("Error loading page:", error);
       if (tableBody) {
-        tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; vertical-align: middle; padding: 0; height: 400px;"><div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 20px;"><i class="fas fa-exclamation-circle" style="font-size: 3rem; color: #ff4444;"></i><span style="font-size: 1.2rem; font-weight: 500; color: #fff;">Error loading page. Please refresh.</span></div></td></tr>';
+        tableBody.innerHTML =
+          '<tr><td colspan="7" style="text-align: center; vertical-align: middle; padding: 0; height: 400px;"><div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 20px;"><i class="fas fa-exclamation-circle" style="font-size: 3rem; color: #ff4444;"></i><span style="font-size: 1.2rem; font-weight: 500; color: #fff;">Error loading page. Please refresh.</span></div></td></tr>';
       }
       _showNotification("Error loading students. Please try again.", "error");
     });
 }
 
-function updatePaginationButtons(pageNum, template, department, tab, totalPages = null) {
+function updatePaginationButtons(
+  pageNum,
+  template,
+  department,
+  tab,
+  totalPages = null
+) {
   const prevBtn = document.getElementById("prev-btn");
   const nextBtn = document.getElementById("next-btn");
 
