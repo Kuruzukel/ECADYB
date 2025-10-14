@@ -380,7 +380,6 @@ window.addEventListener("DOMContentLoaded", () => {
     input.value = "";
     input.files = new DataTransfer().files;
 
-    // Update UI
     updateFileUI(input);
 
     // Double-check after a short delay
