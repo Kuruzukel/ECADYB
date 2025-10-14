@@ -420,7 +420,6 @@ window.addEventListener("DOMContentLoaded", () => {
               : "../../Connection/Photos/UPloadTopManagementPhotos.php";
 
           try {
-            // Create AbortController for cancellation
             currentUploadController = new AbortController();
 
             const response = await fetch(uploadEndpoint, {
