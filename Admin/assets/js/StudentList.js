@@ -381,7 +381,6 @@ function initializeSelectAll() {
   });
 }
 
-// New function to update all students in a department
 async function updateAllStudentsStatus(
   collection,
   status,
