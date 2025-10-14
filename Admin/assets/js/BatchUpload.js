@@ -391,7 +391,6 @@ window.addEventListener("DOMContentLoaded", () => {
     input.addEventListener("change", async (e) => {
       e.preventDefault();
 
-      // Update UI immediately when file is selected
       updateFileUI(input);
 
       if (input.files.length > 0) {
