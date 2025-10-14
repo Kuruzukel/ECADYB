@@ -198,8 +198,6 @@ window.addEventListener("DOMContentLoaded", () => {
   initializeStatusUpdates();
   initializeDeleteModal();
 
-  // Don't call updateSelectAllState here - initializeSelectAll already handles it
-
   // Reset initialization flag after page is fully loaded
   setTimeout(() => {
     isInitializing = false;
