@@ -243,8 +243,14 @@ window.addEventListener("DOMContentLoaded", () => {
   if (hidden) {
     if (selectedTemplateNumber) {
       hidden.value = selectedTemplateNumber;
+      console.log("BatchUpload: Using template number from localStorage:", selectedTemplateNumber);
     } else if (selectedTemplate) {
       hidden.value = selectedTemplate;
+      console.log("BatchUpload: Using template from localStorage:", selectedTemplate);
+    } else {
+      // Default to template 1 if nothing is selected
+      hidden.value = "1";
+      console.log("BatchUpload: No template selected, defaulting to 1");
     }
   }
 

@@ -192,22 +192,36 @@ function importCSVByMessage($tmpName, $collection)
 
 function getSelectedTemplateDatabase($client)
 {
-    $selectedTemplate = !empty($_POST['selected_template']) ? $_POST['selected_template'] : 'Batch Template 1';
+    $selectedTemplate = !empty($_POST['selected_template']) ? $_POST['selected_template'] : '1';
 
     $selectedTemplate = trim($selectedTemplate);
 
-    $dbName = str_replace(' ', '', $selectedTemplate);
-
-    if (strpos($dbName, 'BatchTemplate') !== 0) {
-        $dbName = 'BatchTemplate1';
+    // If it's just a number (e.g., "1", "2", "3"), convert to "BatchTemplate1", "BatchTemplate2", etc.
+    if (is_numeric($selectedTemplate)) {
+        $templateNumber = intval($selectedTemplate);
+        if ($templateNumber >= 1 && $templateNumber <= 3) {
+            $dbName = 'BatchTemplate' . $templateNumber;
+        } else {
+            $dbName = 'BatchTemplate1';
+        }
+    } else {
+        // If it's in format "Batch Template 1", convert to "BatchTemplate1"
+        $dbName = str_replace(' ', '', $selectedTemplate);
+        
+        if (strpos($dbName, 'BatchTemplate') !== 0) {
+            $dbName = 'BatchTemplate1';
+        }
     }
 
     return $client->$dbName;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
+    $mongoUrl = getenv('MONGODB_URI') ?: getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
     $client = new Client($mongoUrl);
+    
+    $selectedTemplateValue = isset($_POST['selected_template']) ? $_POST['selected_template'] : 'NOT SET';
+    error_log("BatchUpload.php processing upload - selected_template: $selectedTemplateValue");
 
     if (!empty($_FILES['top_management_message']['tmp_name'])) {
         $tmpName = $_FILES['top_management_message']['tmp_name'];
@@ -229,6 +243,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($actualHeaders === $validTopManagementHeaders) {
             try {
                 $templateDB = getSelectedTemplateDatabase($client);
+                $dbName = $templateDB->getDatabaseName();
+                error_log("BatchUpload.php: Importing top management message to database: $dbName");
                 $uploadStatus['top_management_message'] = importCSVByMessage($tmpName, $templateDB->top_management_message);
             } catch (Exception $e) {
                 error_log("Error importing top management message: " . $e->getMessage());
@@ -243,6 +259,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!empty($_FILES['student_info']['tmp_name'])) {
         try {
             $templateDB = getSelectedTemplateDatabase($client);
+            $dbName = $templateDB->getDatabaseName();
+            error_log("BatchUpload.php: Importing student info to database: $dbName");
 
             $uploadStatus['student_info'] = importCSVToTemplateDepartments(
                 $_FILES['student_info']['tmp_name'],
@@ -294,7 +312,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         class="fas fa-chevron-right"></i></span>Batch Upload</h1>
         </div>
         <form method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="selected_template" id="selected_template" value="1">
+            <input type="hidden" name="selected_template" id="selected_template" value="">
             <div class="form-content">
                 <div class="form-group">
                     <div class="section">

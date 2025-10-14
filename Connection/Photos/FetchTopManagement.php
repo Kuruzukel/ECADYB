@@ -96,7 +96,12 @@ try {
         return strcmp($posA, $posB);
     });
 
-    respond(true, 'Top management data retrieved successfully', ['data' => $result]);
+    // Check if data exists
+    if (empty($result)) {
+        respond(true, 'Please upload csv and photos of the Top Management to the Batch Upload Section first.', ['data' => $result]);
+    } else {
+        respond(true, 'Top management data retrieved successfully', ['data' => $result]);
+    }
 } catch (Exception $e) {
     error_log("FetchTopManagement.php exception: " . $e->getMessage());
     respond(false, 'Server error: ' . $e->getMessage());
