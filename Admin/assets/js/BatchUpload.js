@@ -461,7 +461,6 @@ window.addEventListener("DOMContentLoaded", () => {
               );
             }
 
-            // Hide overlay after upload completion
             hideUploadOverlay();
           } catch (error) {
             if (error.name === "AbortError") {
