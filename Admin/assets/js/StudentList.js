@@ -374,7 +374,6 @@ function initializeSelectAll() {
         }
       }
     } else {
-      // Show notification immediately if no checkboxes found
       if (this.checked) {
         _showNotification("No students found to update", "info");
       }
