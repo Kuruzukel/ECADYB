@@ -284,7 +284,6 @@ th {
   background-color: #0c27be;
 }
 
-/* No Students Message */
 .no-students-message {
   text-align: center;
   padding: 60px 20px;
@@ -906,8 +905,8 @@ table th:nth-child(7) #select-all-header {
 }
 
 #select-all-header:checked {
-  background-color: #4CAF50;
-  border-color: #4CAF50;
+  background-color: #4caf50;
+  border-color: #4caf50;
 }
 
 #select-all-header:checked::after {
