@@ -382,7 +382,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
     updateFileUI(input);
 
-    // Double-check after a short delay
     setTimeout(() => {
       updateFileUI(input);
     }, 200);
