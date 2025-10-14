@@ -357,7 +357,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
       info.classList.add("show");
     } else {
-      // Force complete reset
       card.classList.remove("has-file");
       info.classList.remove("show");
 
