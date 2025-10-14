@@ -198,7 +198,6 @@ window.addEventListener("DOMContentLoaded", () => {
   initializeStatusUpdates();
   initializeDeleteModal();
 
-  // Reset initialization flag after page is fully loaded
   setTimeout(() => {
     isInitializing = false;
     console.log("Initialization complete - ready for user interactions");
