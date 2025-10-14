@@ -313,7 +313,6 @@ function initializeSelectAll() {
 
     console.log("Select all clicked:", this.checked);
 
-    // Clear indeterminate state when clicked
     this.indeterminate = false;
 
     isSelectAllActive = this.checked;
