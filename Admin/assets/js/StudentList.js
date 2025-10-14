@@ -184,7 +184,6 @@ window.addEventListener("DOMContentLoaded", () => {
   const currentTemplate = urlParams.get("template");
   const savedTemplate = localStorage.getItem("selectedBatchTemplateNumber");
 
-  // If no template in URL but there's a saved template, redirect with the saved template
   if (!currentTemplate && savedTemplate) {
     urlParams.set("template", savedTemplate);
     const newUrl = window.location.pathname + "?" + urlParams.toString();
