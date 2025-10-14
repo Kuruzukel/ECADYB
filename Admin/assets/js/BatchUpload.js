@@ -324,7 +324,6 @@ window.addEventListener("DOMContentLoaded", () => {
     const inputId = input.id;
     let cardId, infoId;
 
-    // Map input IDs to their corresponding card and info elements
     if (inputId === "top_management_message") {
       cardId = "card-top-management";
       infoId = "info-top-management";
