@@ -365,7 +365,6 @@ window.addEventListener("DOMContentLoaded", () => {
         fileNameSpan.textContent = "";
       }
 
-      // Force a small delay to ensure DOM updates
       setTimeout(() => {
         if (fileNameSpan) {
           fileNameSpan.textContent = "";
