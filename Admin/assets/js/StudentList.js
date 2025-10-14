@@ -252,7 +252,6 @@ function initializeSelectAll() {
     return;
   }
 
-  // Check if select all was previously active (user clicked select all)
   const savedSelectAllState = localStorage.getItem("selectAllState");
   console.log("Select all state from localStorage:", savedSelectAllState);
 
