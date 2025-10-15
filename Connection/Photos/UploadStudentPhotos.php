@@ -117,7 +117,6 @@ try {
 
         $studentId = pathinfo($fileName, PATHINFO_FILENAME);
 
-        // Extract the actual student ID by removing the suffix if present
         $baseStudentId = $studentId; // Default to the full filename without extension
         if (preg_match('/^(\d{4}-\d{6})(?:-(?:FILIPINIANA|TOGA|UNIFORM))?$/', $studentId, $matches)) {
             $studentId = $matches[1]; // This is the clean student ID (2019-003088)
