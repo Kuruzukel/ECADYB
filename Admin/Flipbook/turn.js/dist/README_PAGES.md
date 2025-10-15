@@ -24,7 +24,6 @@ FlipbookSettings = {
   shareMessage: "Your flipbook message here.",
   pageFolder: "/YB COVER",
   loadRegions: true,
-  // Add your page sources
   pageSources: [
     "/YB COVER/20.png",
     "/YB COVER/21.png",
