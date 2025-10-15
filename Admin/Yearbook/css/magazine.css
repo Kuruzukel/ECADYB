@@ -694,7 +694,7 @@
     inset -3px -3px 8px rgba(0, 0, 0, 0.3),
     inset 3px 3px 8px rgba(255, 255, 255, 0.5);
   transform: translateZ(20px);
-  z-index: 10;
+  z-index: 100000;
   border-top: 3px solid #f4e4a6;
   border-left: 3px solid #f4e4a6;
   border-radius: 4px 0 0 0;
@@ -715,54 +715,13 @@
     inset -3px -3px 8px rgba(255, 255, 255, 0.5),
     inset 3px 3px 8px rgba(0, 0, 0, 0.3);
   transform: translateZ(20px);
-  z-index: 10;
+  z-index: 100000;
   border-bottom: 3px solid #f4e4a6;
   border-right: 3px solid #f4e4a6;
   border-radius: 0 0 4px 0;
 }
 
-/* Additional Frame Decorations - Creating wrapper for more pseudo-elements */
-.student-details::before {
-  content: '';
-  position: absolute;
-  top: -35px;
-  right: -35px;
-  width: 120px;
-  height: 120px;
-  background: linear-gradient(225deg, #d4af37 0%, #f4e4a6 50%, #d4af37 100%);
-  clip-path: polygon(100% 0, 100% 100%, 0 0);
-  box-shadow: 
-    0 8px 20px rgba(0, 0, 0, 0.3),
-    inset -3px -3px 8px rgba(0, 0, 0, 0.3),
-    inset 3px 3px 8px rgba(255, 255, 255, 0.5);
-  transform: translateZ(20px);
-  z-index: 10;
-  border-top: 3px solid #f4e4a6;
-  border-right: 3px solid #f4e4a6;
-  border-radius: 0 4px 0 0;
-  pointer-events: none;
-}
 
-.student-details::after {
-  content: '';
-  position: absolute;
-  bottom: -35px;
-  left: -35px;
-  width: 120px;
-  height: 120px;
-  background: linear-gradient(225deg, #d4af37 0%, #f4e4a6 50%, #d4af37 100%);
-  clip-path: polygon(0 0, 100% 100%, 0 100%);
-  box-shadow: 
-    0 8px 20px rgba(0, 0, 0, 0.3),
-    inset -3px -3px 8px rgba(255, 255, 255, 0.5),
-    inset 3px 3px 8px rgba(0, 0, 0, 0.3);
-  transform: translateZ(20px);
-  z-index: 10;
-  border-bottom: 3px solid #f4e4a6;
-  border-left: 3px solid #f4e4a6;
-  border-radius: 0 0 0 4px;
-  pointer-events: none;
-}
 
 /* Enhanced 3D Frame Border Effect */
 .modal-content .student-details {
@@ -771,11 +730,9 @@
 
 /* Decorative Academic Accents on Frame */
 .modal-content .close-modal::before {
-  content: '🎓';
   position: absolute;
-  top: -50px;
-  left: 50%;
-  transform: translateX(-50%);
+  top: -60px;
+  right: -20px;
   font-size: 36px;
   filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.4));
   z-index: 11;
@@ -784,21 +741,19 @@
 
 @keyframes floatCap {
   0%, 100% {
-    transform: translateX(-50%) translateY(0px);
+    transform: translateY(0px);
   }
   50% {
-    transform: translateX(-50%) translateY(-10px);
+    transform: translateY(-10px);
   }
 }
 
 
 /* Bottom Laurel Decoration */
 .modal-content .student-info::after {
-  content: '🏆';
   position: absolute;
-  bottom: -50px;
-  left: 50%;
-  transform: translateX(-50%);
+  bottom: -15px;
+  left: -15px;
   font-size: 40px;
   filter: drop-shadow(0 6px 12px rgba(212, 175, 55, 0.6));
   z-index: 11;
@@ -810,57 +765,6 @@
   border-image-source: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><rect width="20" height="20" fill="%23d4af37" opacity="0.1"/><circle cx="10" cy="10" r="2" fill="%23f4e4a6"/></svg>');
 }
 
-/* Side Ornamental Bars - Left */
-.student-images::before {
-  content: '';
-  position: absolute;
-  left: -40px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 8px;
-  height: 60%;
-  background: linear-gradient(180deg, 
-    transparent 0%, 
-    #d4af37 10%, 
-    #f4e4a6 30%, 
-    #d4af37 50%, 
-    #f4e4a6 70%, 
-    #d4af37 90%, 
-    transparent 100%);
-  box-shadow: 
-    0 0 15px rgba(212, 175, 55, 0.5),
-    inset 2px 0 4px rgba(255, 255, 255, 0.5),
-    inset -2px 0 4px rgba(0, 0, 0, 0.3);
-  border-radius: 4px;
-  z-index: 5;
-  pointer-events: none;
-}
-
-/* Side Ornamental Bars - Right */
-.student-info::before {
-  content: '';
-  position: absolute;
-  right: -40px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 8px;
-  height: 60%;
-  background: linear-gradient(180deg, 
-    transparent 0%, 
-    #d4af37 10%, 
-    #f4e4a6 30%, 
-    #d4af37 50%, 
-    #f4e4a6 70%, 
-    #d4af37 90%, 
-    transparent 100%);
-  box-shadow: 
-    0 0 15px rgba(212, 175, 55, 0.5),
-    inset 2px 0 4px rgba(255, 255, 255, 0.5),
-    inset -2px 0 4px rgba(0, 0, 0, 0.3);
-  border-radius: 4px;
-  z-index: 5;
-  pointer-events: none;
-}
 
 @keyframes modalSlideIn {
   from {
@@ -920,67 +824,96 @@
   max-height: 100%;
   padding-bottom: 12px;
   position: relative;
+  background: transparent;
+  padding: 20px;
+  transform-style: preserve-3d;
+  transform: translateZ(10px);
 }
 
 .student-image-large {
   width: 100%;
-  height: 350px;
+  height: 380px;
   border-radius: 18px;
   overflow: hidden;
-  background: #f2f2f7;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  box-shadow: 
+    0 12px 25px rgba(0, 0, 0, 0.2),
+    0 6px 15px rgba(0, 0, 0, 0.15),
+    inset 0 0 0 3px #d4af37,
+    inset 0 0 0 5px rgba(139, 69, 19, 0.3),
+    inset 0 0 15px rgba(212, 175, 55, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 12px;
+  position: relative;
+  transform-style: preserve-3d;
+  transform: translateZ(15px);
+  border: 2px solid #d4af37;
 }
 
 .student-image-large img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: center top;
+  object-fit: contain;
+  object-position: center;
 }
 
 .student-image-thumbnails {
   display: flex;
-  gap: 8px;
+  gap: 12px;
   justify-content: center;
-  height: 50px;
+  height: 80px;
   margin-top: auto;
+  padding: 8px;
 }
 
 .thumbnail {
-  width: 50px;
-  height: 50px;
-  border-radius: 10px;
+  width: 70px;
+  height: 70px;
+  border-radius: 12px;
   overflow: hidden;
   cursor: pointer;
-  opacity: 0.7;
+  opacity: 0.8;
   transition: all 0.3s ease;
-  background: #f2f2f7;
-  border: 2px solid transparent;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border: 2px solid #d4af37;
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.15),
+    0 2px 4px rgba(0, 0, 0, 0.1),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+  transform-style: preserve-3d;
+  transform: translateZ(5px);
 }
 
 .thumbnail.active {
   opacity: 1;
-  border: 2px solid #007aff;
-  box-shadow: 0 2px 8px rgba(0, 122, 255, 0.2);
+  border: 3px solid #d4af37;
+  box-shadow: 
+    0 6px 12px rgba(212, 175, 55, 0.4),
+    0 3px 6px rgba(212, 175, 55, 0.2),
+    inset 0 0 0 2px rgba(255, 255, 255, 0.8);
+  transform: translateZ(8px) scale(1.05);
 }
 
 .thumbnail:hover {
-  opacity: 0.9;
-  transform: scale(1.05);
+  opacity: 0.95;
+  transform: translateZ(8px) scale(1.08);
+  box-shadow: 
+    0 6px 12px rgba(212, 175, 55, 0.3),
+    0 3px 6px rgba(212, 175, 55, 0.15),
+    inset 0 0 0 2px rgba(255, 255, 255, 0.7);
 }
 
 .thumbnail img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
 }
 
 .student-info {
@@ -989,49 +922,103 @@
   flex-direction: column;
   height: 100%;
   overflow-y: auto;
-  padding-right: 10px;
+  padding: 25px;
   position: relative;
+  background: transparent;
+  transform-style: preserve-3d;
+  transform: translateZ(10px);
 }
 
 .student-name {
-  font-size: 28px;
-  font-weight: 600;
-  margin: 0 0 4px 0;
-  color: #1c1c1e;
-  letter-spacing: -0.5px;
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  color: #2c1810;
+  letter-spacing: -0.8px;
   position: relative;
+  text-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.1),
+    0 1px 2px rgba(212, 175, 55, 0.3);
+  font-family: 'Times New Roman', serif;
+  background: linear-gradient(135deg, #2c1810 0%, #8b4513 50%, #2c1810 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  transform: translateZ(5px);
 }
 
 .academic-year {
-  font-size: 15px;
-  color: #8e8e93;
-  margin-bottom: 16px;
-  font-weight: 400;
+  font-size: 16px;
+  color: #8b4513;
+  margin-bottom: 20px;
+  font-weight: 500;
+  font-style: italic;
+  position: relative;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(139, 69, 19, 0.1) 100%);
+  border-radius: 12px;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.1),
+    inset 0 1px 2px rgba(255, 255, 255, 0.5);
+  text-align: center;
+  transform: translateZ(3px);
+  font-family: 'Times New Roman', serif;
 }
 
 .motto,
 .milestones {
-  background: #f2f2f7;
-  padding: 16px;
-  border-radius: 16px;
-  margin-bottom: 16px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(250, 248, 245, 0.9) 100%);
+  padding: 20px;
+  margin-bottom: 20px;
+  position: relative;
+  box-shadow: 
+    0 8px 20px rgba(0, 0, 0, 0.15),
+    0 4px 10px rgba(0, 0, 0, 0.1),
+    inset 0 0 0 2px #d4af37,
+    inset 0 0 0 3px rgba(139, 69, 19, 0.2),
+    inset 0 0 15px rgba(212, 175, 55, 0.1);
+  border: 2px solid transparent;
+  border-image: linear-gradient(135deg, #d4af37 0%, #f4e4a6 50%, #d4af37 100%) 1;
+  transform-style: preserve-3d;
+  transform: translateZ(8px);
 }
 
 .motto h3,
 .milestones h3 {
-  font-size: 17px;
-  font-weight: 600;
-  color: #1c1c1e;
-  margin-bottom: 12px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #2c1810;
+  margin-bottom: 15px;
   letter-spacing: -0.3px;
+  font-family: 'Times New Roman', serif;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  position: relative;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #d4af37;
+  background: linear-gradient(135deg, #2c1810 0%, #8b4513 50%, #2c1810 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  transform: translateZ(3px);
 }
 
 .motto p {
   font-style: italic;
-  color: #636366;
-  line-height: 1.4;
-  font-size: 15px;
-  font-weight: 400;
+  color: #5a4520;
+  line-height: 1.6;
+  font-size: 16px;
+  font-weight: 500;
+  text-align: center;
+  padding: 12px;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.05) 0%, rgba(139, 69, 19, 0.05) 100%);
+  border-radius: 8px;
+  border-left: 4px solid #d4af37;
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.1),
+    inset 0 1px 2px rgba(255, 255, 255, 0.5);
+  font-family: 'Times New Roman', serif;
+  transform: translateZ(2px);
 }
 
 .milestones ul {
@@ -1041,13 +1028,24 @@
 }
 
 .milestones li {
-  padding: 8px 0;
-  border-bottom: 1px solid rgba(142, 142, 147, 0.2);
-  color: #636366;
-  font-size: 15px;
-  font-weight: 400;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  color: #5a4520;
+  font-size: 16px;
+  font-weight: 500;
   display: flex;
   align-items: center;
+  position: relative;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(250, 248, 245, 0.3) 100%);
+  margin-bottom: 8px;
+  border-radius: 8px;
+  padding-left: 16px;
+  padding-right: 16px;
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.05),
+    inset 0 1px 2px rgba(255, 255, 255, 0.5);
+  transform: translateZ(1px);
+  font-family: 'Times New Roman', serif;
 }
 
 .milestones li:last-child {
@@ -1056,10 +1054,11 @@
 }
 
 .milestones li::before {
-  content: "•";
-  color: #007aff;
-  font-weight: bold;
-  margin-right: 8px;
+  content: "🏆";
+  font-size: 18px;
+  margin-right: 12px;
+  filter: drop-shadow(0 2px 4px rgba(212, 175, 55, 0.5));
+  transform: translateZ(2px);
 }
 
 .cards-container {
