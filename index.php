@@ -16,7 +16,6 @@ define('BASE_PATH', __DIR__);
 if (getenv('RAILWAY_PUBLIC_URL')) {
     define('BASE_URL', '/');
 } else {
-    // Local development
     define('BASE_URL', '/ECADYB/');
 }
 
