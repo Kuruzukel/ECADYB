@@ -117,7 +117,7 @@ try {
 
         $studentId = pathinfo($fileName, PATHINFO_FILENAME);
 
-        $baseStudentId = $studentId; // Default to the full filename without extension
+        $baseStudentId = $studentId;
         if (preg_match('/^(\d{4}-\d{6})(?:-(?:FILIPINIANA|TOGA|UNIFORM))?$/', $studentId, $matches)) {
             $studentId = $matches[1]; // This is the clean student ID (2019-003088)
             $baseStudentId = $studentId; // For use in filename
