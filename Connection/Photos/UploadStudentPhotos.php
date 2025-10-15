@@ -119,7 +119,7 @@ try {
 
         $baseStudentId = $studentId;
         if (preg_match('/^(\d{4}-\d{6})(?:-(?:FILIPINIANA|TOGA|UNIFORM))?$/', $studentId, $matches)) {
-            $studentId = $matches[1]; // This is the clean student ID (2019-003088)
+            $studentId = $matches[1];
             $baseStudentId = $studentId; // For use in filename
         } else if (!preg_match('/^\d{4}-\d{6}$/', $studentId) && !is_numeric($studentId)) {
             $results[] = [
