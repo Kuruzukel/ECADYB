@@ -107,7 +107,7 @@ function selectColor(el) {
 
 window.applyTheme = function (theme) {
   console.log("Applying theme:", theme);
-  
+
   const root = document.documentElement;
   const selectedTheme = window.themes[theme] || window.themes["Default"];
 
@@ -217,8 +217,8 @@ function showNotification(message, type = "success") {
   if (!container) return;
 
   // Remove any existing notifications to prevent duplicates
-  const existingNotifications = container.querySelectorAll('.notification');
-  existingNotifications.forEach(notif => notif.remove());
+  const existingNotifications = container.querySelectorAll(".notification");
+  existingNotifications.forEach((notif) => notif.remove());
 
   // Clear any existing notification timeout
   if (notificationTimeout) {
@@ -284,7 +284,6 @@ async function uploadLogoToBunny(file, slot, box, input, deleteBtn) {
     showNotification("Upload cancelled", "error");
     return;
   }
-
 
   const form = new FormData();
   form.append("file", file);
@@ -591,7 +590,6 @@ window.addEventListener("DOMContentLoaded", () => {
             "success"
           );
 
-          // Save logo URL to localStorage for immediate application on next page load
           localStorage.setItem("admin-logo-url", changeLogoTarget.logoUrl);
 
           const adminLogo = document.querySelector(".sidebar .logoadmin");
