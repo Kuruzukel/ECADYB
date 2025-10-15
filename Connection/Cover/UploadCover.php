@@ -365,8 +365,6 @@ try {
         curl_exec($deleteCh);
         curl_close($deleteCh);
 
-        // Thumbnail deletion removed
-
         $collection->deleteOne(['_id' => $document['_id']]);
         respond(false, 'Upload cancelled');
     }
