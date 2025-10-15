@@ -672,8 +672,19 @@ function loadPage(page, pageElement) {
             });
 
             var message = $("<div/>", {
-              class: "management-message",
-              text: "No top management data available for this page. Messages typically contain inspirational words, guidance, or congratulations for the graduating class.",
+              class: "management-message modern-empty-state",
+              html: `
+                <div class="empty-state-container">
+                  <div class="empty-state-icon">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                      <path d="M8 12h8M12 8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                  </div>
+                  <h3 class="empty-state-title">Top Management Data Required</h3>
+                  <p class="empty-state-description">Please upload CSV of the Top Management to the Batch Upload Section first.</p>
+                </div>
+              `
             });
 
             messageWrapper.append(message);
@@ -699,8 +710,19 @@ function loadPage(page, pageElement) {
           }
         } else {
           var errorMessage = $("<div/>", {
-            class: "management-error",
-            text: response.message || "Failed to load top management data.",
+            class: "management-message modern-empty-state",
+            html: `
+              <div class="empty-state-container">
+                <div class="empty-state-icon">
+                  <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                    <path d="M8 12h8M12 8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                </div>
+                <h3 class="empty-state-title">Top Management Data Required</h3>
+                <p class="empty-state-description">${response.message || "Please upload CSV of the Top Management to the Batch Upload Section first."}</p>
+              </div>
+            `
           });
           managementPage.append(errorMessage);
         }
