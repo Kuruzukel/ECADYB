@@ -1,4 +1,3 @@
-// Define themes globally to share across all scripts
 window.themes = {
   "Light Mode": {
     "--primary-bg": "#ffffff",
