@@ -288,7 +288,7 @@ try {
         $document = [
             'student_id' => $studentId,
             'filename' => $filename, // This will preserve the full filename with suffix
-            'original_name' => $fileName, // This preserves the original uploaded filename
+            'original_name' => $fileName,
             'template' => $template,
             'url' => $publicUrl,
             'upload_time' => new \MongoDB\BSON\UTCDateTime()
