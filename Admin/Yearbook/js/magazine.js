@@ -888,10 +888,14 @@ function loadPage(page, pageElement) {
                 text: student.program || "Honors and Achievements",
               });
 
-              card.on("click", function (e) {
+              card.off("click").on("click", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
                 var modal = $(".student-modal");
-                var closeBtn = $(".close-modal");
                 var clickedStudent = $(this).data("student");
+
+                console.log("Card clicked for student:", clickedStudent);
 
                 modal.find(".student-name").text(clickedStudent.name);
                 modal
@@ -934,7 +938,9 @@ function loadPage(page, pageElement) {
                   }
                 });
 
+                // Show modal
                 modal.addClass("active");
+                console.log("Modal should be visible now");
 
                 var studentIdForModal = clickedStudent.student_id;
                 console.log(
@@ -1025,16 +1031,6 @@ function loadPage(page, pageElement) {
                       "No student_id found for thumbnail click:",
                       clickedStudent.name
                     );
-                  }
-                });
-
-                closeBtn.on("click", function () {
-                  modal.removeClass("active");
-                });
-
-                $(window).on("click", function (event) {
-                  if ($(event.target).hasClass("student-modal")) {
-                    modal.removeClass("active");
                   }
                 });
               });

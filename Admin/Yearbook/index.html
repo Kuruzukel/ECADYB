@@ -977,6 +977,25 @@
             $(".thumbnails").removeClass("visible");
           }
         });
+
+        // Global modal close handlers (set once)
+        $(".close-modal").on("click", function (e) {
+          e.stopPropagation();
+          $(".student-modal").removeClass("active");
+          console.log("Modal closed via close button");
+        });
+
+        $(".student-modal").on("click", function (e) {
+          if ($(e.target).hasClass("student-modal")) {
+            $(this).removeClass("active");
+            console.log("Modal closed via background click");
+          }
+        });
+
+        // Prevent clicks inside modal content from closing modal
+        $(".modal-content").on("click", function (e) {
+          e.stopPropagation();
+        });
       });
     </script>
   </body>
