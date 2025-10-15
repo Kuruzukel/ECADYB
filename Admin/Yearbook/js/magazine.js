@@ -1039,40 +1039,43 @@ function loadPage(page, pageElement) {
 
                     $largeImage.attr("src", studentPhotos[0]);
 
-                    $thumbnails.each(function (index) {
-                      if (studentPhotos[index]) {
-                        $(this).find("img").attr("src", studentPhotos[index]);
-                        // Store photo URL in data attribute for quick access
-                        $(this).data("photo-url", studentPhotos[index]);
-                      }
-                    });
+                    // Store photos globally for navigation
+                    window.currentStudentPhotos = studentPhotos;
+                    window.currentPhotoIndex = 0;
 
-                    // Set up thumbnail click handler with cached photos
-                    $thumbnails.off("click").on("click", function (e) {
+                    // Set up navigation buttons
+                    $(".nav-prev").off("click").on("click", function (e) {
                       e.stopPropagation();
                       e.preventDefault();
                       
-                      console.log("Thumbnail clicked!");
-
-                      var $this = $(this);
-                      var photoUrl = $this.data("photo-url");
-                      var index = $this.index();
+                      console.log("Previous button clicked!");
                       
-                      console.log("Thumbnail index:", index, "Photo URL:", photoUrl);
+                      // Move to previous photo (loop backwards)
+                      window.currentPhotoIndex = (window.currentPhotoIndex - 1 + studentPhotos.length) % studentPhotos.length;
+                      
+                      var photoUrl = studentPhotos[window.currentPhotoIndex];
+                      console.log("Switching to previous photo:", photoUrl, "Index:", window.currentPhotoIndex);
+                      
+                      $largeImage.fadeOut(200, function () {
+                        $(this).attr("src", photoUrl).fadeIn(200);
+                      });
+                    });
 
-                      // Update active state
-                      $thumbnails.removeClass("active");
-                      $this.addClass("active");
-
-                      // Switch to the clicked photo
-                      if (photoUrl) {
-                        console.log("Switching to photo:", photoUrl);
-                        $largeImage.fadeOut(200, function () {
-                          $(this).attr("src", photoUrl).fadeIn(200);
-                        });
-                      } else {
-                        console.log("No photo URL found for this thumbnail");
-                      }
+                    $(".nav-next").off("click").on("click", function (e) {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      
+                      console.log("Next button clicked!");
+                      
+                      // Move to next photo (loop forwards)
+                      window.currentPhotoIndex = (window.currentPhotoIndex + 1) % studentPhotos.length;
+                      
+                      var photoUrl = studentPhotos[window.currentPhotoIndex];
+                      console.log("Switching to next photo:", photoUrl, "Index:", window.currentPhotoIndex);
+                      
+                      $largeImage.fadeOut(200, function () {
+                        $(this).attr("src", photoUrl).fadeIn(200);
+                      });
                     });
                   });
                 } else {
