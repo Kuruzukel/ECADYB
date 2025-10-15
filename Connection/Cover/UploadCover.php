@@ -231,7 +231,6 @@ try {
         respond(false, 'Failed to upload to Bunny: ' . ($curlErr ?: 'HTTP ' . $httpCode));
     }
 
-    // Thumbnail upload removed
 
     $publicUrl = rtrim($bunnyCdnHost, '/') . '/' . str_replace(' ', '%20', $path);
 
