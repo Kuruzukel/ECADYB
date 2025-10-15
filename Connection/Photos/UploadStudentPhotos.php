@@ -287,7 +287,7 @@ try {
 
         $document = [
             'student_id' => $studentId,
-            'filename' => $filename, // This will preserve the full filename with suffix
+            'filename' => $filename,
             'original_name' => $fileName,
             'template' => $template,
             'url' => $publicUrl,
