@@ -231,7 +231,7 @@ $staticPaths = [
     '/Admin/Yearbook/pages/'            => '/Admin/Yearbook/pages/',
     '/Admin/Yearbook/pics/'             => '/Admin/Yearbook/pics/',
     '/Admin/Yearbook/css/'              => '/Admin/Yearbook/css/',
-    '/Admin/Yearbook/js/'               => '/Admin/Yearbook/js/',  // Add this line
+    '/Admin/Yearbook/js/'               => '/Admin/Yearbook/js/',
     '/Turn.js/'                         => '/Turn.js/'  // Add this line
 ];
 
