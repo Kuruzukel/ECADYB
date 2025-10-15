@@ -134,7 +134,6 @@ window.applyTheme = function (theme) {
 
   console.log("Theme applied and saved:", theme);
 
-  // Force a repaint
   body.style.display = "none";
   body.offsetHeight;
   body.style.display = "";
