@@ -189,7 +189,6 @@ try {
         respond(false, 'Upload cancelled');
     }
 
-    // Thumbnail generation removed
 
     $ch = curl_init($storageUrl);
     curl_setopt_array($ch, [
