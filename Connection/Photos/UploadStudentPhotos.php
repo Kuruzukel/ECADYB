@@ -169,7 +169,6 @@ try {
         }
 
         $ext = pathinfo($fileName, PATHINFO_EXTENSION) ?: 'jpg';
-        // Use the original filename (with suffix) for storage, but extract student ID for metadata
         $originalNameWithoutExt = pathinfo($fileName, PATHINFO_FILENAME);
         $safeFileName = preg_replace('/[^A-Za-z0-9 _.-]/', '', $originalNameWithoutExt) ?: ('student_' . time());
         $safeExt = preg_replace('/[^A-Za-z0-9]/', '', $ext) ?: 'jpg';
