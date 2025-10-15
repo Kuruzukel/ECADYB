@@ -250,7 +250,6 @@ try {
         curl_exec($deleteCh);
         curl_close($deleteCh);
 
-        // Thumbnail deletion removed
         respond(false, 'Upload cancelled');
     }
 
