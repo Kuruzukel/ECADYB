@@ -1146,13 +1146,12 @@
   flex-direction: column;
   align-items: center;
   gap: 5px;
-  transition: box-shadow 0.3s ease;
+  transition: all 0.3s ease;
   cursor: pointer;
 }
 
 .student-card:hover {
-  /* Removed transform to prevent peel effect */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px) scale(1.02);
 }
 
 .student-image {
