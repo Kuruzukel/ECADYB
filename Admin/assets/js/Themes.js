@@ -236,7 +236,6 @@ function showNotification(message, type = "success") {
   `;
   container.appendChild(notif);
 
-  // Make notification visible for different durations based on type
   const duration = type === "info" ? 2000 : 5000; // Info notifications disappear faster
   notificationTimeout = setTimeout(() => {
     notif.classList.remove("show");
