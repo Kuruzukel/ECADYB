@@ -112,7 +112,6 @@ window.applyTheme = function (theme) {
 
   console.log("Selected theme data:", selectedTheme);
 
-  // Apply CSS variables to the root element
   for (const [varName, color] of Object.entries(selectedTheme)) {
     root.style.setProperty(varName, color);
   }
