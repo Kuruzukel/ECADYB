@@ -164,7 +164,6 @@ function loadAllStudentsForDepartment(department, template, callback) {
   var allStudents = [];
   var currentPage = 1;
   var totalPages = 0;
-  var maxPages = 10;
 
   function fetchNextPage() {
     if (currentPage === 1) {
@@ -189,7 +188,7 @@ function loadAllStudentsForDepartment(department, template, callback) {
 
             currentPage++;
 
-            if (currentPage <= totalPages && currentPage <= maxPages) {
+            if (currentPage <= totalPages) {
               fetchNextPage();
             } else {
               console.log(
@@ -212,7 +211,7 @@ function loadAllStudentsForDepartment(department, template, callback) {
         }
       );
     } else {
-      if (currentPage <= totalPages && currentPage <= maxPages) {
+      if (currentPage <= totalPages) {
         fetchStudentDataCached(
           department,
           template,
@@ -509,7 +508,7 @@ function loadPage(page, pageElement) {
       img.attr("src", coverData.back_url);
     } else if (
       page >= 2 &&
-      page <= 6 &&
+      page <= 5 &&
       typeof coverData !== "undefined" &&
       coverData !== null
     ) {
@@ -728,7 +727,7 @@ function loadPage(page, pageElement) {
         }
       });
     } else if (
-      page >= 7 &&
+      page >= 6 &&
       page < totalPages &&
       typeof coverData !== "undefined" &&
       coverData !== null &&
@@ -753,25 +752,8 @@ function loadPage(page, pageElement) {
         var template = coverData && coverData.template ? coverData.template : 1;
 
         var studentsPerYearbookPage = 6;
-        var studentStartIndex = (page - 7) * studentsPerYearbookPage;
+        var studentStartIndex = (page - 6) * studentsPerYearbookPage;
         var studentEndIndex = studentStartIndex + studentsPerYearbookPage;
-
-        var maxReliableStudents = 150;
-        if (studentStartIndex >= maxReliableStudents) {
-          console.log(
-            "Skipping yearbook page",
-            page,
-            "- beyond reliable student range (student index",
-            studentStartIndex,
-            ">= max",
-            maxReliableStudents,
-            ")"
-          );
-          setTimeout(function () {
-            waitForImagesAndGenerateThumbnail(page, pageElement);
-          }, 500);
-          return;
-        }
 
         var studentsPerAPIPage = 50;
         var apiPage = Math.floor(studentStartIndex / studentsPerAPIPage) + 1;
@@ -1227,7 +1209,7 @@ function loadLargePage(page, pageElement) {
     img.attr("src", coverData.back_url);
   } else if (
     page >= 2 &&
-    page <= 6 &&
+    page <= 5 &&
     typeof coverData !== "undefined" &&
     coverData !== null
   ) {
@@ -1240,7 +1222,7 @@ function loadLargePage(page, pageElement) {
       );
     }
   } else if (
-    page >= 7 &&
+    page >= 6 &&
     page < totalPages &&
     typeof coverData !== "undefined" &&
     coverData !== null &&
@@ -1298,7 +1280,7 @@ function loadSmallPage(page, pageElement) {
     img.attr("src", coverData.back_url);
   } else if (
     page >= 2 &&
-    page <= 6 &&
+    page <= 5 &&
     typeof coverData !== "undefined" &&
     coverData !== null
   ) {
@@ -1311,7 +1293,7 @@ function loadSmallPage(page, pageElement) {
       );
     }
   } else if (
-    page >= 7 &&
+    page >= 6 &&
     page < totalPages &&
     typeof coverData !== "undefined" &&
     coverData !== null &&
@@ -1507,7 +1489,7 @@ function generatePageThumbnail(page, pageElement) {
       ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 
-    if (page >= 2 && page <= 6 && managementContent.length) {
+    if (page >= 2 && page <= 5 && managementContent.length) {
       ctx.fillStyle = "rgba(255, 255, 255, 0.95)";
       ctx.fillRect(2, 2, canvas.width - 4, canvas.height - 4);
 
@@ -1584,7 +1566,7 @@ function generatePageThumbnail(page, pageElement) {
       ctx.fillText(displayPosition, canvas.width / 2, 58);
     }
 
-    if (page >= 7 && studentContent.length) {
+    if (page >= 6 && studentContent.length) {
       ctx.fillStyle = "rgba(255, 255, 255, 0.95)";
       ctx.fillRect(2, 2, canvas.width - 4, canvas.height - 4);
 
@@ -1822,7 +1804,7 @@ function createManagementThumbnail(managementIndex, dataToUse) {
 }
 
 function createStudentThumbnail(studentPageIndex, dataToUse) {
-  var pageNumber = studentPageIndex + 7;
+  var pageNumber = studentPageIndex + 6;
   if (window.pageThumbnails && window.pageThumbnails[pageNumber]) {
     return window.pageThumbnails[pageNumber];
   }

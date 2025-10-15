@@ -240,7 +240,7 @@
           return "FRONT COVER";
         }
 
-        if (pageNumber >= 2 && pageNumber <= 6) {
+        if (pageNumber >= 2 && pageNumber <= 5) {
           return "TOP MANAGEMENT MESSAGE";
         }
 
@@ -248,8 +248,8 @@
           return "BACK COVER";
         }
 
-        if (pageNumber >= 7 && pageNumber < totalPages) {
-          var studentPageNumber = pageNumber - 6;
+        if (pageNumber >= 6 && pageNumber < totalPages) {
+          var studentPageNumber = pageNumber - 5;
 
           var departmentName = yearbook.name.toUpperCase();
 
@@ -267,31 +267,30 @@
           studentData.total_students &&
           studentData.students_per_page
         ) {
-          var reliableStudents = Math.min(studentData.total_students, 150);
+          // Use actual student count without the 150 limit
           studentPages = Math.ceil(
-            reliableStudents / studentData.students_per_page
+            studentData.total_students / studentData.students_per_page
           );
 
-          console.log("Using conservative student page calculation:", {
+          console.log("Using actual student page calculation:", {
             total_students_in_db: studentData.total_students,
-            reliable_students_estimate: reliableStudents,
             students_per_page: studentData.students_per_page,
             calculated_student_pages: studentPages,
           });
         }
 
-        // Always show at least 5 student pages, even if no data is uploaded
-        if (studentPages < 5) {
-          studentPages = 5;
-          console.log("Setting minimum 5 student pages for empty state display");
+        // Only show minimum 4 student pages if there are NO students at all
+        if (studentPages === 0) {
+          studentPages = 4;
+          console.log("No students found - Setting minimum 4 student pages for empty state display");
         }
 
-        var totalPages = 1 + 5 + studentPages + 1;
+        var totalPages = 1 + 4 + studentPages + 1;
 
         console.log(
           "Calculated total pages:",
           totalPages,
-          "(1 front + 5 management + " + studentPages + " students + 1 back)"
+          "(1 front + 4 management + " + studentPages + " students + 1 back)"
         );
 
         return totalPages;
@@ -400,7 +399,7 @@
 
         return (
           'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="76" height="100" viewBox="0 0 76 100"%3E%3Crect width="76" height="100" fill="%23f0f8ff"/%3E%3Ccircle cx="38" cy="30" r="15" fill="%23ffffff" stroke="%23cccccc"/%3E%3Ctext x="38" y="35" font-family="Arial" font-size="8" fill="%23666" text-anchor="middle"%3ESTU%3C/text%3E%3Ctext x="38" y="60" font-family="Arial" font-size="6" fill="%23999" text-anchor="middle"%3EPage ' +
-          (studentPageIndex + 7) +
+          (studentPageIndex + 6) +
           "%3C/text%3E%3C/svg%3E"
         );
       }
