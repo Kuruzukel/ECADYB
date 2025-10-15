@@ -67,7 +67,6 @@ Modify the `_getPageElement` function in `script.js`:
 _getPageElement: function (pageNumber) {
   var $el = $("<div />");
 
-  // Load HTML content
   $.get('/pages/page' + pageNumber + '.html', function(data) {
     $el.html(data);
   });
