@@ -205,7 +205,6 @@ async function cancelUpload() {
   hideUploadOverlay();
 }
 
-// Smart notification system variables
 let notificationTimeout = null;
 let currentOperation = null;
 
