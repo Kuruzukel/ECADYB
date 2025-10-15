@@ -175,7 +175,7 @@ try {
 
         $safeFolder = 'Student Photos';
         $templateFolder = sprintf('Batch Template %d', $template);
-        $filename = sprintf('%s.%s', $safeFileName, $safeExt); // This preserves the full filename with suffix
+        $filename = sprintf('%s.%s', $safeFileName, $safeExt);
         $path = $safeFolder . '/' . $templateFolder . '/' . $filename;
         $storageUrl = "https://storage.bunnycdn.com/{$bunnyStorageZone}/" . str_replace(' ', '%20', $path);
 
