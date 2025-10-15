@@ -173,19 +173,51 @@ function importCSVByMessage($tmpName, $collection)
     if (($handle = fopen($tmpName, 'r')) !== false) {
         while (($row = fgetcsv($handle, 1000, ',')) !== false) {
             $row = array_map('trim', $row);
+            // Clean UTF-8 encoding issues
+            $row = array_map(function($field) {
+                // Fix common encoding issues
+                $field = str_replace(["\x92", "\x93", "\x94", "\x96", "\x97"], ["'", '"', '"', '-', '-'], $field);
+                // Convert to proper UTF-8
+                $field = mb_convert_encoding($field, 'UTF-8', 'UTF-8');
+                return $field;
+            }, $row);
+            
             if (!$header) {
                 $header = array_map('cleanHeader', $row);
             } elseif (count($row) === count($header)) {
-                $dataByMessage[] = array_combine($header, $row);
+                $record = array_combine($header, $row);
+                
+                // Validate message word limit (117 words maximum)
+                if (isset($record['message'])) {
+                    $wordCount = str_word_count($record['message']);
+                    if ($wordCount > 117) {
+                        error_log("Message word limit exceeded for " . ($record['name'] ?? 'Unknown') . ": $wordCount words (max 117)");
+                        throw new Exception("Message for " . ($record['name'] ?? 'Unknown') . " exceeds 117 words limit. Current: $wordCount words.");
+                    }
+                }
+                
+                $dataByMessage[] = $record;
             }
         }
         fclose($handle);
     }
 
     if (!empty($dataByMessage)) {
-        $collection->drop();
-        $collection->insertMany($dataByMessage);
-        return true;
+        try {
+            // Drop the old collection to ensure fresh data
+            $collection->drop();
+            error_log("Dropped old top_management_message collection");
+            
+            // Insert new data
+            $result = $collection->insertMany($dataByMessage);
+            $insertedCount = count($dataByMessage);
+            error_log("Inserted $insertedCount new top management records");
+            
+            return true;
+        } catch (Exception $e) {
+            error_log("Error replacing top management data: " . $e->getMessage());
+            return false;
+        }
     }
     return false;
 }
@@ -233,6 +265,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (($handle = fopen($tmpName, 'r')) !== false) {
             if (($row = fgetcsv($handle, 1000, ',')) !== false) {
                 $actualHeaders = array_map('cleanHeader', $row);
+                error_log("Raw headers from CSV: " . json_encode($row));
+                error_log("Cleaned headers: " . json_encode($actualHeaders));
             }
             fclose($handle);
         }
@@ -240,11 +274,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         sort($validTopManagementHeaders);
         sort($actualHeaders);
 
+        error_log("Expected headers (sorted): " . json_encode($validTopManagementHeaders));
+        error_log("Actual headers (sorted): " . json_encode($actualHeaders));
+
         if ($actualHeaders === $validTopManagementHeaders) {
             try {
                 $templateDB = getSelectedTemplateDatabase($client);
                 $dbName = $templateDB->getDatabaseName();
                 error_log("BatchUpload.php: Importing top management message to database: $dbName");
+                
+                // First, get the names from the CSV to clean up photos collection
+                $csvNames = [];
+                if (($handle = fopen($tmpName, 'r')) !== false) {
+                    $header = null;
+                    while (($row = fgetcsv($handle, 1000, ',')) !== false) {
+                        $row = array_map('trim', $row);
+                        if (!$header) {
+                            $header = array_map('cleanHeader', $row);
+                        } elseif (count($row) === count($header)) {
+                            $record = array_combine($header, $row);
+                            if (isset($record['name'])) {
+                                $csvNames[] = $record['name'];
+                            }
+                        }
+                    }
+                    fclose($handle);
+                }
+                
+                // Clean up photos collection - remove photos that don't have matching CSV entries
+                if (!empty($csvNames)) {
+                    $photosCollection = $templateDB->top_management_photos;
+                    $deleteResult = $photosCollection->deleteMany([
+                        'name' => ['$nin' => $csvNames]
+                    ]);
+                    error_log("Cleaned up " . $deleteResult->getDeletedCount() . " orphaned top management photos");
+                }
+                
                 $uploadStatus['top_management_message'] = importCSVByMessage($tmpName, $templateDB->top_management_message);
             } catch (Exception $e) {
                 error_log("Error importing top management message: " . $e->getMessage());
@@ -278,10 +343,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $type = '';
 
         if ($uploadStatus['top_management_message'] || $uploadStatus['student_info']) {
-            $message = 'Upload successful!';
+            // Build specific success messages
+            $messages = [];
+            if ($uploadStatus['top_management_message']) {
+                $messages[] = 'Top Management CSV uploaded successfully! Previous messages and orphaned photos have been replaced.';
+            }
+            if ($uploadStatus['student_info']) {
+                $messages[] = 'Student Information CSV uploaded successfully! Previous data has been replaced.';
+            }
+            $message = implode(' ', $messages);
             $type = 'success';
         } else {
-            $message = "Upload failed. CSV file must have these columns: name, position, message, academicyear";
+            $message = "Upload failed. CSV file must have these columns: name, position, message (max 117 words), academicyear";
             $type = 'error';
         }
 

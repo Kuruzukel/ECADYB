@@ -3,6 +3,10 @@ header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
+// Prevent caching to ensure fresh data after CSV upload
+header('Cache-Control: no-cache, no-store, must-revalidate');
+header('Pragma: no-cache');
+header('Expires: 0');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
@@ -33,6 +37,13 @@ try {
     $mongoUrl = getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 
     $mongoClient = new MongoDB\Client($mongoUrl);
+
+    // First check if there are any CSV messages - if not, don't show any photos
+    $messageCollection = $mongoClient->$mongoDbName->top_management_message;
+    $messageCount = $messageCollection->countDocuments([]);
+    if ($messageCount === 0) {
+        respond(true, 'Please upload CSV of the Top Management to the Batch Upload Section first.', ['data' => []]);
+    }
 
     $photosCollection = $mongoClient->$mongoDbName->top_management_photos;
     $photos = $photosCollection->find([], ['sort' => ['position' => 1]]);

@@ -3,6 +3,10 @@ header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
+// Prevent caching to ensure fresh data after CSV upload
+header('Cache-Control: no-cache, no-store, must-revalidate');
+header('Pragma: no-cache');
+header('Expires: 0');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
@@ -34,14 +38,21 @@ try {
 
     $mongoClient = new MongoDB\Client($mongoUrl);
 
+    $messageCollection = $mongoClient->$mongoDbName->top_management_message;
+
+    // First check if there are any CSV messages - if not, return empty result
+    $messageCount = $messageCollection->countDocuments([]);
+    if ($messageCount === 0) {
+        respond(true, 'Please upload CSV of the Top Management to the Batch Upload Section first.', ['data' => []]);
+    }
+
     $photosCollection = $mongoClient->$mongoDbName->top_management_photos;
     $photos = $photosCollection->find([], ['sort' => ['position' => 1]]);
-
-    $messageCollection = $mongoClient->$mongoDbName->top_management_message;
 
     $result = [];
     $photoMap = [];
 
+    // Only process photos if there are CSV messages
     foreach ($photos as $photo) {
         $name = $photo['name'] ?? '';
         $photoMap[$name] = [
@@ -97,7 +108,7 @@ try {
     });
 
     if (empty($result)) {
-        respond(true, 'Please upload csv and photos of the Top Management to the Batch Upload Section first.', ['data' => $result]);
+        respond(true, 'Please upload CSV of the Top Management to the Batch Upload Section first.', ['data' => $result]);
     } else {
         respond(true, 'Top management data retrieved successfully', ['data' => $result]);
     }
