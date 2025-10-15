@@ -1824,9 +1824,10 @@ function initializeCornerHover() {
   var currentPeelCorner = null;
   var peelTimer = null;
   var peelDuration = 600;
+  var isPageTurning = false;
 
   $magazine.on("mousemove", function (e) {
-    if (!$magazine.turn("is")) return;
+    if (!$magazine.turn("is") || isPageTurning) return;
 
     var offset = $magazine.offset();
     var relX = e.pageX - offset.left;
@@ -1884,6 +1885,68 @@ function initializeCornerHover() {
     }
   });
 
+  $magazine.on("click", function (e) {
+    if (!$magazine.turn("is") || isPageTurning) return;
+
+    var offset = $magazine.offset();
+    var relX = e.pageX - offset.left;
+    var relY = e.pageY - offset.top;
+    var width = $magazine.width();
+    var height = $magazine.height();
+    var page = $magazine.turn("page");
+    var pages = $magazine.turn("pages");
+
+    var inCorner = false;
+    var shouldGoNext = false;
+    var shouldGoPrevious = false;
+
+    // Check which corner was clicked
+    if (relX > width - cornerSize && relY > height - cornerSize) {
+      if (page < pages) {
+        inCorner = true;
+        shouldGoNext = true;
+      }
+    } else if (relX < cornerSize && relY > height - cornerSize) {
+      if (page > 1) {
+        inCorner = true;
+        shouldGoPrevious = true;
+      }
+    } else if (relX > width - cornerSize && relY < cornerSize) {
+      if (page < pages) {
+        inCorner = true;
+        shouldGoNext = true;
+      }
+    } else if (relX < cornerSize && relY < cornerSize) {
+      if (page > 1) {
+        inCorner = true;
+        shouldGoPrevious = true;
+      }
+    }
+
+    if (inCorner) {
+      // Clear peel effect
+      if (peelTimer) {
+        clearTimeout(peelTimer);
+        peelTimer = null;
+      }
+      $magazine.turn("peel", false);
+      currentPeelCorner = null;
+
+      // Turn page
+      isPageTurning = true;
+      if (shouldGoNext) {
+        $magazine.turn("next");
+      } else if (shouldGoPrevious) {
+        $magazine.turn("previous");
+      }
+
+      // Reset turning flag after animation
+      setTimeout(function () {
+        isPageTurning = false;
+      }, 1000);
+    }
+  });
+
   $magazine.on("mouseleave", function () {
     if (peelTimer) {
       clearTimeout(peelTimer);
@@ -1893,5 +1956,22 @@ function initializeCornerHover() {
       $magazine.turn("peel", false);
       currentPeelCorner = null;
     }
+  });
+
+  // Clear peel when page is turning
+  $magazine.on("turning", function () {
+    if (peelTimer) {
+      clearTimeout(peelTimer);
+      peelTimer = null;
+    }
+    if (currentPeelCorner) {
+      $magazine.turn("peel", false);
+      currentPeelCorner = null;
+    }
+    isPageTurning = true;
+  });
+
+  $magazine.on("turned", function () {
+    isPageTurning = false;
   });
 }
