@@ -318,7 +318,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="section">
                         <div class="section-header">Top Management Message</div>
                         <div class="file-card" id="card-top-management">
-                            <label class="custom-upload" for="top_management_message">Upload Top Management Message CSV File</label>
+                            <label class="custom-upload" for="top_management_message">Upload Top Management Message CSV
+                                File</label>
                             <input type="file" name="top_management_message" id="top_management_message"
                                 class="upload-input" accept=".csv">
                             <div class="file-info" id="info-top-management">
@@ -370,7 +371,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </form>
     </div>
 
-    <!-- Upload Overlay -->
     <div class="upload-overlay" id="upload-overlay">
         <div class="upload-modal" id="uploadModal">
             <h2>Uploading...</h2>
@@ -402,8 +402,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <?php if ($flashMessage): ?>
-        <div id="flash-data" data-message="<?= htmlspecialchars($flashMessage['message'], ENT_QUOTES) ?>"
-            data-type="<?= htmlspecialchars($flashMessage['type'], ENT_QUOTES) ?>" style="display:none"></div>
+    <div id="flash-data" data-message="<?= htmlspecialchars($flashMessage['message'], ENT_QUOTES) ?>"
+        data-type="<?= htmlspecialchars($flashMessage['type'], ENT_QUOTES) ?>" style="display:none"></div>
     <?php endif; ?>
     <script src="../assets/js/BatchUpload.js?v=<?php echo time(); ?>"></script>
 </body>
