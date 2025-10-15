@@ -96,7 +96,6 @@ try {
         return strcmp($posA, $posB);
     });
 
-    // Check if data exists
     if (empty($result)) {
         respond(true, 'Please upload csv and photos of the Top Management to the Batch Upload Section first.', ['data' => $result]);
     } else {
