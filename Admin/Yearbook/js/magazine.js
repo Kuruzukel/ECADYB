@@ -979,10 +979,34 @@ function loadPage(page, pageElement) {
                 // Show modal
                 modal.addClass("active");
                 
+                // Add body class to disable magazine interactions
+                $("body").addClass("modal-active");
+                
                 // Clear any existing peel effect when modal opens
-                if ($(".magazine").turn("is")) {
-                  $(".magazine").turn("peel", false);
+                if (typeof window.clearAllPeels === "function") {
+                  window.clearAllPeels();
                 }
+                
+                // Force disable magazine interactions
+                if (typeof window.disableMagazineInteractions === "function") {
+                  window.disableMagazineInteractions();
+                }
+                
+                // Set up periodic check to clear peels while modal is active
+                if (window.peelClearInterval) {
+                  clearInterval(window.peelClearInterval);
+                }
+                window.peelClearInterval = setInterval(function() {
+                  if ($(".student-modal").hasClass("active")) {
+                    if (typeof window.clearAllPeels === "function") {
+                      window.clearAllPeels();
+                    }
+                  } else {
+                    clearInterval(window.peelClearInterval);
+                    window.peelClearInterval = null;
+                    $("body").removeClass("modal-active");
+                  }
+                }, 100);
                 
                 console.log("Modal should be visible now");
 
@@ -1846,10 +1870,91 @@ function initializeCornerHover() {
   var peelTimer = null;
   var peelDuration = 600;
   var isPageTurning = false;
+  var isModalActive = false;
+  var mouseMoveHandler = null;
+  var clickHandler = null;
+  
+  // Function to clear all peels - can be called externally
+  window.clearAllPeels = function() {
+    if (peelTimer) {
+      clearTimeout(peelTimer);
+      peelTimer = null;
+    }
+    if (currentPeelCorner) {
+      $magazine.turn("peel", false);
+      currentPeelCorner = null;
+    }
+  };
 
-  $magazine.on("mousemove", function (e) {
-    // Don't allow peel when student modal is active
-    if (!$magazine.turn("is") || isPageTurning || $(".student-modal").hasClass("active")) return;
+  // Expose disable/enable functions globally
+  window.disableMagazineInteractions = disableMagazineInteractions;
+  window.enableMagazineInteractions = enableMagazineInteractions;
+
+  // Function to disable magazine interactions
+  function disableMagazineInteractions() {
+    if (mouseMoveHandler) {
+      $magazine.off("mousemove", mouseMoveHandler);
+    }
+    if (clickHandler) {
+      $magazine.off("click", clickHandler);
+    }
+    window.clearAllPeels();
+    console.log("Magazine interactions disabled");
+  }
+
+  // Function to enable magazine interactions
+  function enableMagazineInteractions() {
+    if (mouseMoveHandler) {
+      $magazine.on("mousemove", mouseMoveHandler);
+    }
+    if (clickHandler) {
+      $magazine.on("click", clickHandler);
+    }
+    console.log("Magazine interactions enabled");
+  }
+
+  // Monitor modal state changes
+  $(document).on('DOMSubtreeModified', function() {
+    var modalActive = $(".student-modal").hasClass("active");
+    if (modalActive !== isModalActive) {
+      isModalActive = modalActive;
+      if (isModalActive) {
+        disableMagazineInteractions();
+        console.log("Modal opened - disabling page interactions");
+      } else {
+        enableMagazineInteractions();
+        console.log("Modal closed - enabling page interactions");
+      }
+    }
+  });
+
+  // Also check on mouse events
+  function checkModalState() {
+    var modalActive = $(".student-modal").hasClass("active");
+    if (modalActive !== isModalActive) {
+      isModalActive = modalActive;
+      if (isModalActive) {
+        disableMagazineInteractions();
+      } else {
+        enableMagazineInteractions();
+      }
+    }
+    return isModalActive;
+  }
+
+  // Define the mousemove handler
+  mouseMoveHandler = function (e) {
+    // Always check modal state first
+    if (checkModalState()) {
+      window.clearAllPeels();
+      return;
+    }
+    
+    // Don't allow peel when student modal is active or page is turning
+    if (!$magazine.turn("is") || isPageTurning) {
+      window.clearAllPeels();
+      return;
+    }
 
     var offset = $magazine.offset();
     var relX = e.pageX - offset.left;
@@ -1885,6 +1990,19 @@ function initializeCornerHover() {
     }
 
     if (inCorner && corner !== currentPeelCorner) {
+      // Double check modal is not active before peeling
+      if ($(".student-modal").hasClass("active")) {
+        if (currentPeelCorner) {
+          $magazine.turn("peel", false);
+          currentPeelCorner = null;
+        }
+        if (peelTimer) {
+          clearTimeout(peelTimer);
+          peelTimer = null;
+        }
+        return;
+      }
+      
       if (peelTimer) {
         clearTimeout(peelTimer);
       }
@@ -1905,11 +2023,23 @@ function initializeCornerHover() {
       $magazine.turn("peel", false);
       currentPeelCorner = null;
     }
-  });
+  };
 
-  $magazine.on("click", function (e) {
+  // Define the click handler
+  clickHandler = function (e) {
+    // Always check modal state first
+    if (checkModalState()) {
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    }
+    
     // Don't allow page turn when student modal is active
-    if (!$magazine.turn("is") || isPageTurning || $(".student-modal").hasClass("active")) return;
+    if (!$magazine.turn("is") || isPageTurning) {
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    }
 
     var offset = $magazine.offset();
     var relX = e.pageX - offset.left;
@@ -1968,7 +2098,7 @@ function initializeCornerHover() {
         isPageTurning = false;
       }, 1000);
     }
-  });
+  };
 
   $magazine.on("mouseleave", function () {
     if (peelTimer) {
@@ -1980,6 +2110,10 @@ function initializeCornerHover() {
       currentPeelCorner = null;
     }
   });
+
+  // Add the event listeners
+  $magazine.on("mousemove", mouseMoveHandler);
+  $magazine.on("click", clickHandler);
 
   // Clear peel when page is turning
   $magazine.on("turning", function () {

@@ -982,12 +982,42 @@
         $(".close-modal").on("click", function (e) {
           e.stopPropagation();
           $(".student-modal").removeClass("active");
+          
+          // Remove body class to enable magazine interactions
+          $("body").removeClass("modal-active");
+          
+          // Re-enable magazine interactions
+          if (typeof window.enableMagazineInteractions === "function") {
+            window.enableMagazineInteractions();
+          }
+          
+          // Clear the peel check interval
+          if (window.peelClearInterval) {
+            clearInterval(window.peelClearInterval);
+            window.peelClearInterval = null;
+          }
+          
           console.log("Modal closed via close button");
         });
 
         $(".student-modal").on("click", function (e) {
           if ($(e.target).hasClass("student-modal")) {
             $(this).removeClass("active");
+            
+            // Remove body class to enable magazine interactions
+            $("body").removeClass("modal-active");
+            
+            // Re-enable magazine interactions
+            if (typeof window.enableMagazineInteractions === "function") {
+              window.enableMagazineInteractions();
+            }
+            
+            // Clear the peel check interval
+            if (window.peelClearInterval) {
+              clearInterval(window.peelClearInterval);
+              window.peelClearInterval = null;
+            }
+            
             console.log("Modal closed via background click");
           }
         });
@@ -995,6 +1025,27 @@
         // Prevent clicks inside modal content from closing modal
         $(".modal-content").on("click", function (e) {
           e.stopPropagation();
+        });
+
+        // ESC key to close modal
+        $(document).on("keydown", function(e) {
+          if (e.keyCode === 27 && $(".student-modal").hasClass("active")) {
+            $(".student-modal").removeClass("active");
+            $("body").removeClass("modal-active");
+            
+            // Re-enable magazine interactions
+            if (typeof window.enableMagazineInteractions === "function") {
+              window.enableMagazineInteractions();
+            }
+            
+            // Clear the peel check interval
+            if (window.peelClearInterval) {
+              clearInterval(window.peelClearInterval);
+              window.peelClearInterval = null;
+            }
+            
+            console.log("Modal closed via ESC key");
+          }
         });
       });
     </script>
