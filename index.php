@@ -14,7 +14,6 @@ require $mongoPath;
 
 define('BASE_PATH', __DIR__);
 
-// Configure base URL for different environments
 if (getenv('RAILWAY_PUBLIC_URL')) {
     // Railway deployment
     define('BASE_URL', '/');
