@@ -1969,9 +1969,15 @@ function initializeCornerHover() {
       currentPeelCorner = null;
     }
     isPageTurning = true;
+    
+    // Hide book binding shadow during page turning
+    $magazine.addClass("turning");
   });
 
   $magazine.on("turned", function () {
     isPageTurning = false;
+    
+    // Show book binding shadow after page turn is complete
+    $magazine.removeClass("turning");
   });
 }
