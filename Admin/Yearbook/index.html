@@ -261,20 +261,20 @@
 
       function calculateTotalPages() {
         var studentPages = 0;
+        var studentsPerPage = 4; // Fixed: 4 students per page
 
         if (
           studentData &&
-          studentData.total_students &&
-          studentData.students_per_page
+          studentData.total_students
         ) {
-          // Use actual student count without the 150 limit
+          // Use actual student count with 4 students per page
           studentPages = Math.ceil(
-            studentData.total_students / studentData.students_per_page
+            studentData.total_students / studentsPerPage
           );
 
           console.log("Using actual student page calculation:", {
             total_students_in_db: studentData.total_students,
-            students_per_page: studentData.students_per_page,
+            students_per_page: studentsPerPage,
             calculated_student_pages: studentPages,
           });
         }

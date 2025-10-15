@@ -751,7 +751,7 @@ function loadPage(page, pageElement) {
 
         var template = coverData && coverData.template ? coverData.template : 1;
 
-        var studentsPerYearbookPage = 6;
+        var studentsPerYearbookPage = 4;
         var studentStartIndex = (page - 6) * studentsPerYearbookPage;
         var studentEndIndex = studentStartIndex + studentsPerYearbookPage;
 
@@ -769,7 +769,7 @@ function loadPage(page, pageElement) {
           apiPage
         );
 
-        var studentsPerPage = 6;
+        var studentsPerPage = 4;
         loadStudentsForPage(
           department,
           template,
