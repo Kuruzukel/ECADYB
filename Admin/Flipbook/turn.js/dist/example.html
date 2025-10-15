@@ -1,132 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Turn.js Example - Adding Pages</title>
-  <link rel="stylesheet" href="./style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-  <style>
-    body {
-      margin: 0;
-      padding: 20px;
-      background: #f0f0f0;
-      font-family: Arial, sans-serif;
-    }
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      text-align: center;
-    }
-    .instructions {
-      background: white;
-      padding: 20px;
-      margin-bottom: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    .flipbook-container {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="instructions">
-      <h1>Turn.js Flipbook - Adding Pages Example</h1>
-      <p>This example shows how to add pages to your Turn.js flipbook using images from the YB COVER folder.</p>
-      <p><strong>Current pages:</strong> 8 images (20.png through 27.png)</p>
-      <p><strong>To add more pages:</strong></p>
-      <ol>
-        <li>Add new images to the YB COVER folder (e.g., 28.png, 29.png)</li>
-        <li>Update the 'pages' count in FlipbookSettings</li>
-        <li>Add the new image paths to the pageSources array</li>
-      </ol>
-    </div>
-
-    <div class="flipbook-container">
-      <div id="viewer">
-        <div id="flipbook" class="ui-flipbook">
-          <!-- Pages will be loaded dynamically -->
-          <a ignore="1" class="ui-arrow-control ui-arrow-next-page"></a>
-          <a ignore="1" class="ui-arrow-control ui-arrow-previous-page"></a>
-        </div>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Turn.js Example - Adding Pages</title>
+    <link rel="stylesheet" href="./style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <style>
+      body {
+        margin: 0;
+        padding: 20px;
+        background: #f0f0f0;
+        font-family: Arial, sans-serif;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        text-align: center;
+      }
+      .instructions {
+        background: white;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .flipbook-container {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="instructions">
+        <h1>Turn.js Flipbook - Adding Pages Example</h1>
+        <p>
+          This example shows how to add pages to your Turn.js flipbook using
+          images from the YB COVER folder.
+        </p>
+        <p><strong>Current pages:</strong> 8 images (20.png through 27.png)</p>
+        <p><strong>To add more pages:</strong></p>
+        <ol>
+          <li>Add new images to the YB COVER folder (e.g., 28.png, 29.png)</li>
+          <li>Update the 'pages' count in FlipbookSettings</li>
+          <li>Add the new image paths to the pageSources array</li>
+        </ol>
       </div>
 
-      <!-- Controls -->
-      <div id="controls">
-        <div class="all">
-          <div class="bar">
-            <div class="progress-width">
-              <div class="progress">
-                <div class="handler"></div>
-              </div>
-            </div>
+      <div class="flipbook-container">
+        <div id="viewer">
+          <div id="flipbook" class="ui-flipbook">
+            <!-- Pages will be loaded dynamically -->
+            <a ignore="1" class="ui-arrow-control ui-arrow-next-page"></a>
+            <a ignore="1" class="ui-arrow-control ui-arrow-previous-page"></a>
           </div>
         </div>
 
-        <div class="ui-options" id="options">
-          <a class="ui-icon" id="ui-icon-table-contents">
-            <i class="fa fa-bars"></i>
-          </a>
-          <a class="ui-icon show-hint" title="Miniatures" id="ui-icon-miniature">
-            <i class="fa fa-th"></i>
-          </a>
-          <a class="ui-icon show-hint" title="Full Screen" id="ui-icon-full-screen">
-            <i class="fa fa-expand"></i>
-          </a>
-          <a class="ui-icon show-hint" id="ui-icon-toggle">
-            <i class="fa fa-ellipsis-v"></i>
-          </a>
+        <!-- Controls -->
+        <div id="controls">
+          <div class="all">
+            <div class="bar">
+              <div class="progress-width">
+                <div class="progress">
+                  <div class="handler"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ui-options" id="options">
+            <a class="ui-icon" id="ui-icon-table-contents">
+              <i class="fa fa-bars"></i>
+            </a>
+            <a
+              class="ui-icon show-hint"
+              title="Miniatures"
+              id="ui-icon-miniature"
+            >
+              <i class="fa fa-th"></i>
+            </a>
+            <a
+              class="ui-icon show-hint"
+              title="Full Screen"
+              id="ui-icon-full-screen"
+            >
+              <i class="fa fa-expand"></i>
+            </a>
+            <a class="ui-icon show-hint" id="ui-icon-toggle">
+              <i class="fa fa-ellipsis-v"></i>
+            </a>
+          </div>
+
+          <div id="ui-icon-expand-options">
+            <a class="ui-icon show-hint">
+              <i class="fa fa-ellipsis-h"></i>
+            </a>
+          </div>
         </div>
-      
-        <div id="ui-icon-expand-options">
-          <a class="ui-icon show-hint">
-            <i class="fa fa-ellipsis-h"></i>
-          </a>
-        </div>
+
+        <!-- Miniatures -->
+        <div id="miniatures" class="ui-miniatures-slider"></div>
       </div>
-
-      <!-- Miniatures -->
-      <div id="miniatures" class="ui-miniatures-slider"></div>
     </div>
-  </div>
 
-  <!-- Scripts -->
-  <script src='https://code.jquery.com/jquery-2.0.3.min.js'></script>
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js'></script>
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.4.0/backbone-min.js'></script>
-  <script src="./script.js"></script>
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-2.0.3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.4.0/backbone-min.js"></script>
+    <script src="./script.js"></script>
 
-  <script>
-    // Override FlipbookSettings for this example
-    window.FlipbookSettings = {
-      options: {
-        pageWidth: 500,
-        pageHeight: 600,
-        pages: 8,
-        responsive: true,
-        animatedAutoCenter: true,
-        smartFlip: true,
-        autoScaleContent: true,
-        swipe: true
-      },
-      shareMessage: "ECADYB Yearbook 2024 - Turn.js Example",
-      pageFolder: "/YB COVER",
-      loadRegions: true,
-      pageSources: [
-        "/YB COVER/20.png",
-        "/YB COVER/21.png", 
-        "/YB COVER/22.png",
-        "/YB COVER/23.png",
-        "/YB COVER/24.png",
-        "/YB COVER/25.png",
-        "/YB COVER/26.png",
-        "/YB COVER/27.png"
-      ]
-    };
-  </script>
-</body>
-</html> 
+    <script>
+      window.FlipbookSettings = {
+        options: {
+          pageWidth: 500,
+          pageHeight: 600,
+          pages: 8,
+          responsive: true,
+          animatedAutoCenter: true,
+          smartFlip: true,
+          autoScaleContent: true,
+          swipe: true,
+        },
+        shareMessage: "ECADYB Yearbook 2024 - Turn.js Example",
+        pageFolder: "/YB COVER",
+        loadRegions: true,
+        pageSources: [
+          "/YB COVER/20.png",
+          "/YB COVER/21.png",
+          "/YB COVER/22.png",
+          "/YB COVER/23.png",
+          "/YB COVER/24.png",
+          "/YB COVER/25.png",
+          "/YB COVER/26.png",
+          "/YB COVER/27.png",
+        ],
+      };
+    </script>
+  </body>
+</html>
