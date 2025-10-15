@@ -232,7 +232,7 @@ $staticPaths = [
     '/Admin/Yearbook/pics/'             => '/Admin/Yearbook/pics/',
     '/Admin/Yearbook/css/'              => '/Admin/Yearbook/css/',
     '/Admin/Yearbook/js/'               => '/Admin/Yearbook/js/',
-    '/Turn.js/'                         => '/Turn.js/'  // Add this line
+    '/Turn.js/'                         => '/Turn.js/'
 ];
 
 foreach ($staticPaths as $uriPrefix => $folder) {
