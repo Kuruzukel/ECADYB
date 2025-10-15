@@ -906,18 +906,56 @@ function loadPage(page, pageElement) {
                   .text(clickedStudent.motto || "No motto provided");
 
                 var milestonesList = modal.find(".milestones ul");
+                var milestonesContainer = modal.find(".milestones");
+                var milestonesTitle = modal.find(".milestones h3");
                 milestonesList.empty();
 
-                if (
-                  clickedStudent.milestones &&
-                  Array.isArray(clickedStudent.milestones) &&
-                  clickedStudent.milestones.length > 0
-                ) {
-                  clickedStudent.milestones.forEach(function (milestone) {
-                    milestonesList.append("<li>" + milestone + "</li>");
-                  });
+                // Check if student has milestones or honors
+                var hasMilestones = clickedStudent.milestones && 
+                                   Array.isArray(clickedStudent.milestones) && 
+                                   clickedStudent.milestones.length > 0;
+                
+                var hasHonors = clickedStudent.honors && 
+                               Array.isArray(clickedStudent.honors) && 
+                               clickedStudent.honors.length > 0;
+
+                console.log("Student milestones/honors check:", {
+                  name: clickedStudent.name,
+                  hasMilestones: hasMilestones,
+                  hasHonors: hasHonors,
+                  milestones: clickedStudent.milestones,
+                  honors: clickedStudent.honors
+                });
+
+                if (hasMilestones || hasHonors) {
+                  // Show milestones container and populate list
+                  milestonesContainer.show();
+                  
+                  // Update title based on what's available
+                  if (hasMilestones && hasHonors) {
+                    milestonesTitle.text("Milestones & Honors");
+                  } else if (hasMilestones) {
+                    milestonesTitle.text("Milestones");
+                  } else {
+                    milestonesTitle.text("Honors");
+                  }
+                  
+                  // Add milestones
+                  if (hasMilestones) {
+                    clickedStudent.milestones.forEach(function (milestone) {
+                      milestonesList.append("<li>" + milestone + "</li>");
+                    });
+                  }
+                  
+                  // Add honors
+                  if (hasHonors) {
+                    clickedStudent.honors.forEach(function (honor) {
+                      milestonesList.append("<li>" + honor + "</li>");
+                    });
+                  }
                 } else {
-                  milestonesList.append("<li>No milestones recorded</li>");
+                  // Hide milestones container when no milestones/honors exist
+                  milestonesContainer.hide();
                 }
 
                 var $largeImage = modal.find(".student-image-large img");
