@@ -280,6 +280,12 @@
           });
         }
 
+        // Always show at least 6 student pages, even if no data is uploaded
+        if (studentPages < 6) {
+          studentPages = 6;
+          console.log("Setting minimum 6 student pages for empty state display");
+        }
+
         var totalPages = 1 + 5 + studentPages + 1;
 
         console.log(

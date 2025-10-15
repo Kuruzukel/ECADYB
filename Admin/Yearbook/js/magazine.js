@@ -803,6 +803,30 @@ function loadPage(page, pageElement) {
               studentStartIndex
             );
 
+            if (studentsForThisPage.length === 0) {
+              var emptyMessage = $("<div/>", {
+                class: "modern-empty-state",
+                html: `
+                  <div class="empty-state-container">
+                    <div class="empty-state-icon">
+                      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                        <path d="M8 12h8M12 8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                      </svg>
+                    </div>
+                    <h3 class="empty-state-title">No Students Available</h3>
+                    <p class="empty-state-description">There are no students registered for this page.</p>
+                  </div>
+                `
+              });
+              pageElement.append(emptyMessage);
+              
+              setTimeout(function () {
+                waitForImagesAndGenerateThumbnail(page, pageElement);
+              }, 500);
+              return;
+            }
+
             for (var i = 0; i < studentsForThisPage.length; i++) {
               var student = studentsForThisPage[i];
               var globalIndex = studentStartIndex + i;
