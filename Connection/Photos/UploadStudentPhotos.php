@@ -286,7 +286,7 @@ try {
         }
 
         $document = [
-            'student_id' => $studentId, // This will be the clean student ID (2019-003088)
+            'student_id' => $studentId,
             'filename' => $filename, // This will preserve the full filename with suffix
             'original_name' => $fileName, // This preserves the original uploaded filename
             'template' => $template,
