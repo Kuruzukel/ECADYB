@@ -640,6 +640,47 @@
   display: flex;
 }
 
+/* Disable magazine interactions when modal is active */
+body:has(.student-modal.active) .magazine-viewport .magazine {
+  pointer-events: none !important;
+  user-select: none !important;
+}
+
+body:has(.student-modal.active) .magazine-viewport .magazine .page {
+  pointer-events: none !important;
+  cursor: default !important;
+}
+
+/* Ensure modal and its contents are always clickable */
+.student-modal {
+  pointer-events: all !important;
+}
+
+.student-modal.active {
+  pointer-events: all !important;
+}
+
+.student-modal .modal-content {
+  pointer-events: all !important;
+}
+
+.student-modal .thumbnail {
+  pointer-events: all !important;
+  cursor: pointer !important;
+}
+
+.student-modal .student-image-thumbnails {
+  pointer-events: all !important;
+}
+
+.student-modal .student-images {
+  pointer-events: all !important;
+}
+
+.student-modal .student-details {
+  pointer-events: all !important;
+}
+
 @keyframes fadeInBackdrop {
   from {
     opacity: 0;
@@ -862,6 +903,8 @@
   height: 80px;
   margin-top: auto;
   padding: 8px;
+  position: relative;
+  z-index: 100;
 }
 
 .thumbnail {
@@ -884,6 +927,8 @@
     inset 0 0 0 1px rgba(255, 255, 255, 0.5);
   transform-style: preserve-3d;
   transform: translateZ(5px);
+  position: relative;
+  z-index: 101;
 }
 
 .thumbnail.active {
@@ -910,6 +955,8 @@
   height: 100%;
   object-fit: contain;
   object-position: center;
+  pointer-events: none;
+  user-select: none;
 }
 
 .student-info {

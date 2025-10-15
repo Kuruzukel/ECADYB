@@ -978,6 +978,12 @@ function loadPage(page, pageElement) {
 
                 // Show modal
                 modal.addClass("active");
+                
+                // Clear any existing peel effect when modal opens
+                if ($(".magazine").turn("is")) {
+                  $(".magazine").turn("peel", false);
+                }
+                
                 console.log("Modal should be visible now");
 
                 var studentIdForModal = clickedStudent.student_id;
@@ -1012,65 +1018,42 @@ function loadPage(page, pageElement) {
                     $thumbnails.each(function (index) {
                       if (studentPhotos[index]) {
                         $(this).find("img").attr("src", studentPhotos[index]);
+                        // Store photo URL in data attribute for quick access
+                        $(this).data("photo-url", studentPhotos[index]);
+                      }
+                    });
+
+                    // Set up thumbnail click handler with cached photos
+                    $thumbnails.off("click").on("click", function (e) {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      
+                      console.log("Thumbnail clicked!");
+
+                      var $this = $(this);
+                      var photoUrl = $this.data("photo-url");
+                      var index = $this.index();
+                      
+                      console.log("Thumbnail index:", index, "Photo URL:", photoUrl);
+
+                      // Update active state
+                      $thumbnails.removeClass("active");
+                      $this.addClass("active");
+
+                      // Switch to the clicked photo
+                      if (photoUrl) {
+                        console.log("Switching to photo:", photoUrl);
+                        $largeImage.fadeOut(200, function () {
+                          $(this).attr("src", photoUrl).fadeIn(200);
+                        });
+                      } else {
+                        console.log("No photo URL found for this thumbnail");
                       }
                     });
                   });
                 } else {
                   console.log("No student_id found for:", clickedStudent.name);
                 }
-
-                $thumbnails.off("click").on("click", function (e) {
-                  e.stopPropagation();
-                  e.preventDefault();
-
-                  var $this = $(this);
-                  var index = $this.index();
-
-                  $thumbnails.removeClass("active");
-                  $this.addClass("active");
-
-                  var studentIdForThumbnail = clickedStudent.student_id;
-                  if (studentIdForThumbnail) {
-                    fetchStudentPhotos(
-                      studentIdForThumbnail,
-                      function (photos) {
-                        var studentPhotos = [];
-
-                        if (photos && photos.length > 0) {
-                          var studentPhotoData = photos[0].photos;
-                          studentPhotos = [
-                            studentPhotoData.student_photo_1.url ||
-                              defaultPhotoUrl,
-                            studentPhotoData.student_photo_2.url ||
-                              defaultPhotoUrl,
-                            studentPhotoData.student_photo_3.url ||
-                              defaultPhotoUrl,
-                          ];
-                        } else {
-                          studentPhotos = [
-                            defaultPhotoUrl,
-                            defaultPhotoUrl,
-                            defaultPhotoUrl,
-                          ];
-                        }
-
-                        $largeImage.fadeOut(200, function () {
-                          $(this)
-                            .attr(
-                              "src",
-                              studentPhotos[index] || defaultPhotoUrl
-                            )
-                            .fadeIn(200);
-                        });
-                      }
-                    );
-                  } else {
-                    console.log(
-                      "No student_id found for thumbnail click:",
-                      clickedStudent.name
-                    );
-                  }
-                });
               });
 
               card.append(studentImg).append(studentName).append(honorsText);
@@ -1865,7 +1848,8 @@ function initializeCornerHover() {
   var isPageTurning = false;
 
   $magazine.on("mousemove", function (e) {
-    if (!$magazine.turn("is") || isPageTurning) return;
+    // Don't allow peel when student modal is active
+    if (!$magazine.turn("is") || isPageTurning || $(".student-modal").hasClass("active")) return;
 
     var offset = $magazine.offset();
     var relX = e.pageX - offset.left;
@@ -1924,7 +1908,8 @@ function initializeCornerHover() {
   });
 
   $magazine.on("click", function (e) {
-    if (!$magazine.turn("is") || isPageTurning) return;
+    // Don't allow page turn when student modal is active
+    if (!$magazine.turn("is") || isPageTurning || $(".student-modal").hasClass("active")) return;
 
     var offset = $magazine.offset();
     var relX = e.pageX - offset.left;
