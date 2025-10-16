@@ -46,7 +46,6 @@
   transition: opacity 0.2s ease-in-out;
 }
 
-/* Hide shadow during page turning */
 .magazine-viewport .magazine.turning::before {
   opacity: 0;
   transition: opacity 0.15s ease-in;
