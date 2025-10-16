@@ -198,6 +198,13 @@ window.addEventListener("DOMContentLoaded", () => {
   initializeStatusUpdates();
   initializeDeleteModal();
 
+  // Prevent form submissions that could cause page refresh
+  document.addEventListener('submit', function(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    console.log('Form submission prevented');
+  });
+
   setTimeout(() => {
     isInitializing = false;
     console.log("Initialization complete - ready for user interactions");
@@ -653,8 +660,14 @@ function closeDeleteModal() {
   if (deleteModal) deleteModal.style.display = "none";
 }
 
-async function confirmDeleteStudent() {
+async function confirmDeleteStudent(event) {
   if (!selectedStudentId || !selectedCollection) return;
+
+  // Prevent any form submission or page refresh
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
 
   confirmDeleteBtn.disabled = true;
 
@@ -733,7 +746,7 @@ function initializeDeleteModal() {
   deleteModal.addEventListener("click", (e) => {
     if (e.target === deleteModal) closeDeleteModal();
   });
-  confirmDeleteBtn.addEventListener("click", confirmDeleteStudent);
+  confirmDeleteBtn.addEventListener("click", (event) => confirmDeleteStudent(event));
 }
 
 function togglePass(icon) {
@@ -931,12 +944,18 @@ async function updateStudentDetails(studentId, fields) {
   }
 }
 
-function submitStudentForm(studentId) {
+function submitStudentForm(studentId, event) {
   console.log("submitStudentForm called with studentId:", studentId);
 
   if (!studentId) {
     console.error("No studentId provided");
     return;
+  }
+
+  // Prevent any form submission
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
   }
 
   const fields = {};

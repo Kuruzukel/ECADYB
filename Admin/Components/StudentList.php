@@ -300,7 +300,7 @@ try {
                                                     </div>
 
                                                     <div class="modal-body">
-                                                        <form id="edit-student-form-<?php echo $student['student_id']; ?>">
+                                                        <form id="edit-student-form-<?php echo $student['student_id']; ?>" onsubmit="return false;">
                                                             <input type="hidden"
                                                                 id="collection-hidden-<?php echo $student['student_id']; ?>"
                                                                 value="<?php echo htmlspecialchars($student['collection'] ?? 'students'); ?>">
@@ -465,7 +465,7 @@ try {
 
                                                                     <div class="modal-buttons">
                                                                         <button type="button" class="modal-btn confirm"
-                                                                            onclick="submitStudentForm('<?php echo $student['student_id']; ?>')">Save</button>
+                                                                            onclick="event.preventDefault(); event.stopPropagation(); submitStudentForm('<?php echo $student['student_id']; ?>', event)">Save</button>
                                                                         <button type="button" class="modal-btn cancel"
                                                                             onclick="closeModal('editModal_<?php echo $student['student_id']; ?>')">Cancel</button>
                                                                     </div>
