@@ -2049,7 +2049,6 @@ function initializeCornerHover() {
       return false;
     }
 
-    // Don't allow page turn when student modal is active
     if (!$magazine.turn("is") || isPageTurning) {
       e.preventDefault();
       e.stopPropagation();
