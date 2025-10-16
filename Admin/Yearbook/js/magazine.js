@@ -1950,7 +1950,6 @@ function initializeCornerHover() {
     }
   });
 
-  // Also check on mouse events
   function checkModalState() {
     var modalActive = $(".student-modal").hasClass("active");
     if (modalActive !== isModalActive) {
