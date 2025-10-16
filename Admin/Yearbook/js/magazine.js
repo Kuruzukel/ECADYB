@@ -1936,7 +1936,6 @@ function initializeCornerHover() {
     console.log("Magazine interactions enabled");
   }
 
-  // Monitor modal state changes
   $(document).on("DOMSubtreeModified", function () {
     var modalActive = $(".student-modal").hasClass("active");
     if (modalActive !== isModalActive) {
