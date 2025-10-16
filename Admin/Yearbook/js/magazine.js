@@ -2042,7 +2042,6 @@ function initializeCornerHover() {
     }
   };
 
-  // Define the click handler
   clickHandler = function (e) {
     // Always check modal state first
     if (checkModalState()) {
