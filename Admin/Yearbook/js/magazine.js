@@ -1963,7 +1963,6 @@ function initializeCornerHover() {
     return isModalActive;
   }
 
-  // Define the mousemove handler
   mouseMoveHandler = function (e) {
     // Always check modal state first
     if (checkModalState()) {
