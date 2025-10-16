@@ -490,6 +490,15 @@ function loadPage(page, pageElement) {
       coverData
     );
 
+    // Add page number to bottom of page (excluding front and back covers)
+    if (page > 1 && page < totalPages) {
+      var pageNumberDiv = $("<div/>", {
+        class: "page-number",
+        text: page
+      });
+      pageElement.append(pageNumberDiv);
+    }
+
     if (
       page === 1 &&
       typeof coverData !== "undefined" &&
@@ -1261,6 +1270,16 @@ function loadLargePage(page, pageElement) {
     return;
   }
 
+  // Add page number to bottom of page (excluding front and back covers)
+  if (page > 1 && page < totalPages) {
+    pageElement.find(".page-number").remove();
+    var pageNumberDiv = $("<div/>", {
+      class: "page-number",
+      text: page
+    });
+    pageElement.append(pageNumberDiv);
+  }
+
   if (
     page === 1 &&
     typeof coverData !== "undefined" &&
@@ -1330,6 +1349,16 @@ function loadSmallPage(page, pageElement) {
       loadSmallPage(page, pageElement);
     }, 100);
     return;
+  }
+
+  // Add page number to bottom of page (excluding front and back covers)
+  if (page > 1 && page < totalPages) {
+    pageElement.find(".page-number").remove();
+    var pageNumberDiv = $("<div/>", {
+      class: "page-number",
+      text: page
+    });
+    pageElement.append(pageNumberDiv);
   }
 
   if (
