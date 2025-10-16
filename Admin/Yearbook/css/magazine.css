@@ -126,7 +126,6 @@
   transform: translateZ(5px);
 }
 
-/* Right page edge (odd pages) */
 .magazine .page:nth-child(odd):nth-child(n + 2)::after {
   left: -4px;
   background: linear-gradient(
