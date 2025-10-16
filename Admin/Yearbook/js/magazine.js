@@ -1915,7 +1915,6 @@ function initializeCornerHover() {
   window.disableMagazineInteractions = disableMagazineInteractions;
   window.enableMagazineInteractions = enableMagazineInteractions;
 
-  // Function to disable magazine interactions
   function disableMagazineInteractions() {
     if (mouseMoveHandler) {
       $magazine.off("mousemove", mouseMoveHandler);
