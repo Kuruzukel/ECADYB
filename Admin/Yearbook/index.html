@@ -284,6 +284,94 @@
         return null;
       }
 
+      function getStudentSectionForPage(pageNumber) {
+        try {
+          var yearbook = getCurrentYearbook();
+          var studentsPerPage = 4;
+          var studentStartIndex = (pageNumber - 6) * studentsPerPage;
+          
+          // Get template number
+          var template = 1;
+          if (coverData && coverData.template) {
+            template = coverData.template;
+          } else {
+            var savedTemplate = localStorage.getItem("selectedBatchTemplateNumber");
+            if (savedTemplate) {
+              template = parseInt(savedTemplate);
+            }
+          }
+          
+          // Calculate which API page contains the student we need
+          var studentsPerAPIPage = 50;
+          var apiPage = Math.floor(studentStartIndex / studentsPerAPIPage) + 1;
+          var localStartIndex = studentStartIndex % studentsPerAPIPage;
+          
+          var cacheKey = yearbook.code + "_" + template + "_" + apiPage;
+          
+          // Check if we have cached student data for this API page
+          if (window.studentDataCache && window.studentDataCache[cacheKey]) {
+            var studentData = window.studentDataCache[cacheKey];
+            if (studentData && studentData.success && studentData.data && studentData.data.students) {
+              var students = studentData.data.students;
+              if (students.length > localStartIndex) {
+                var firstStudent = students[localStartIndex];
+                if (firstStudent) {
+                  // Try different possible field names for section
+                  var section = firstStudent.section || firstStudent.program || firstStudent.course || firstStudent.department;
+                  if (section) {
+                    // Just return the section name without department code
+                    return section.toUpperCase();
+                  }
+                }
+              }
+            }
+          }
+          
+          // If no cached data, try to load it asynchronously
+          console.log("No cached student data found for page", pageNumber, "- attempting to load");
+          
+          // Try to trigger loading of student data
+          if (typeof loadStudentsForPage === 'function') {
+            loadStudentsForPage(yearbook.code, template, studentStartIndex, 1, function(students) {
+              if (students && students.length > 0) {
+                var firstStudent = students[0];
+                var section = firstStudent.section || firstStudent.program || firstStudent.course || firstStudent.department;
+                if (section) {
+                  // Just return the section name without department code
+                  return section.toUpperCase();
+                }
+              }
+            });
+          }
+          
+          // Fallback: try to get from localStorage
+          if (typeof localStorage !== 'undefined') {
+            var savedStudentData = localStorage.getItem('studentData_' + yearbook.code);
+            if (savedStudentData) {
+              try {
+                var parsedData = JSON.parse(savedStudentData);
+                if (parsedData && parsedData.data && parsedData.data.length > studentStartIndex) {
+                  var firstStudent = parsedData.data[studentStartIndex];
+                  if (firstStudent) {
+                    var section = firstStudent.section || firstStudent.program || firstStudent.course || firstStudent.department;
+                    if (section) {
+                      // Just return the section name without department code
+                      return section.toUpperCase();
+                    }
+                  }
+                }
+              } catch (e) {
+                console.log("Error parsing student data:", e);
+              }
+            }
+          }
+        } catch (e) {
+          console.log("Error getting student section for page", pageNumber, ":", e);
+        }
+        
+        return null;
+      }
+
       function getPageDescription(pageNumber) {
         var yearbook = getCurrentYearbook();
         var departmentCode = yearbook.code;
@@ -321,7 +409,15 @@
         if (pageNumber >= 6 && pageNumber < totalPages) {
           // Calculate which student page this is
           var studentPageNumber = pageNumber - 5; // Page 6 = Student page 1, Page 7 = Student page 2, etc.
-          return "Student Graduates - Page " + studentPageNumber;
+          
+          // Try to get the student section for this page
+          var studentSection = getStudentSectionForPage(pageNumber);
+          console.log("Student section for page", pageNumber, ":", studentSection);
+          if (studentSection) {
+            return "Student Graduates - " + studentSection + " - Page " + studentPageNumber;
+          } else {
+            return "Student Graduates - Page " + studentPageNumber;
+          }
         }
 
         return "PAGE " + pageNumber;
