@@ -14,6 +14,24 @@ $studentName = $_SESSION['name'] ?? '';
 $studentDepartment = $_SESSION['department'] ?? '';
 $studentSection = $_SESSION['section'] ?? '';
 $studentProfilePhoto = $_SESSION['profile_photo'] ?? '';
+
+// Map department full names to department codes for yearbook URL
+$departmentCodes = [
+    'BS Marine Engineering' => 'BSME',
+    'BS Marine Transportation' => 'BSMT',
+    'BS Criminal Justice Education' => 'BSCJE',
+    'BS Tourism Management' => 'BSTM',
+    'BS Technical-Vocational Teacher Education' => 'BTVTED',
+    'BS Early Childhood Education' => 'BSECED',
+    'BS Nursing' => 'BSN',
+    'BS Information System' => 'BSIS',
+    'BS Management Accounting' => 'BSMA',
+    'BS Entrepreneurship' => 'BSE',
+    'BS Business Administration' => 'BSBA'
+];
+
+// Get the department code for the yearbook URL
+$departmentCode = $departmentCodes[$studentDepartment] ?? 'BSME';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -84,127 +102,14 @@ $studentProfilePhoto = $_SESSION['profile_photo'] ?? '';
       <div class="yearbooks-background"></div>
 
       <main class="yearbook-slider-main">
-        <div class="yearbook-intro-content">
-          <h1 class="yearbook-main-title">Digital Yearbook</h1>
-          <h2 class="yearbook-subtitle">Exact Colleges of Asia</h2>
-          <p class="yearbook-description">
-            Click on any yearbook below to explore the department yearbook and
-            its description.
-          </p>
-        </div>
-
-        <div class="yearbook-detail-display" style="display: none">
-          <div class="yearbook-detail-container">
-            <button
-              class="yearbook-detail-close-btn"
-              onclick="closeYearbookView()"
-            >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M18 6L6 18M6 6L18 18"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-            </button>
-            <div class="yearbook-cover-large">
-              <img src="" alt="Yearbook Cover" class="yearbook-cover-image" />
-            </div>
-            <div class="yearbook-info">
-              <h1 class="yearbook-detail-title"></h1>
-              <h2 class="yearbook-detail-subtitle">Exact Colleges of Asia</h2>
-              <p class="yearbook-detail-description"></p>
-            </div>
-          </div>
-        </div>
-        <div class="yearbook-items-container">
-          <ul class="yearbook-slider">
-            <li
-              class="yearbook-item"
-              style="
-                background-image: url('https://ECADYB.b-cdn.net/img/YB%20COVER/MaritimeEducation.png');
-              "
-              onclick="showYearbookBackground(this, 'https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png')"
-            >
-              <div class="yearbook-content">
-                <button class="yearbook-btn">Explore Now</button>
-              </div>
-            </li>
-            <li
-              class="yearbook-item"
-              style="
-                background-image: url('https://ECADYB.b-cdn.net/img/YB%20COVER/TourismManagement.png');
-              "
-              onclick="showYearbookBackground(this, 'https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png')"
-            >
-              <div class="yearbook-content">
-                <button class="yearbook-btn">View Gallery</button>
-              </div>
-            </li>
-            <li
-              class="yearbook-item"
-              style="
-                background-image: url('https://ECADYB.b-cdn.net/img/YB%20COVER/CriminalJusticeEducation.png');
-              "
-              onclick="showYearbookBackground(this, 'https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png')"
-            >
-              <div class="yearbook-content">
-                <button class="yearbook-btn">Discover More</button>
-              </div>
-            </li>
-            <li
-              class="yearbook-item"
-              style="
-                background-image: url('https://ECADYB.b-cdn.net/img/YB%20COVER/InformationSystem.png');
-              "
-              onclick="showYearbookBackground(this, 'https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png')"
-            >
-              <div class="yearbook-content">
-                <button class="yearbook-btn">Meet Graduates</button>
-              </div>
-            </li>
-            <li
-              class="yearbook-item"
-              style="
-                background-image: url('https://ECADYB.b-cdn.net/img/YB%20COVER/Education.png');
-              "
-              onclick="showYearbookBackground(this, 'https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png')"
-            >
-              <div class="yearbook-content">
-                <button class="yearbook-btn">View Moments</button>
-              </div>
-            </li>
-            <li
-              class="yearbook-item"
-              style="
-                background-image: url('https://ECADYB.b-cdn.net/img/YB%20COVER/BusinessAdministration.png');
-              "
-              onclick="showYearbookBackground(this, 'https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png')"
-            >
-              <div class="yearbook-content">
-                <button class="yearbook-btn">See Graduates</button>
-              </div>
-            </li>
-            <li
-              class="yearbook-item"
-              style="
-                background-image: url('https://ECADYB.b-cdn.net/img/YB%20COVER/Nursing.png');
-              "
-              onclick="showYearbookBackground(this, 'https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png')"
-            >
-              <div class="yearbook-content">
-                <button class="yearbook-btn">Connect Now</button>
-              </div>
-            </li>
-          </ul>
+        <div class="yearbook-iframe-container">
+          <iframe 
+            src="/ECADYB/Admin/Yearbook/index.html?department=<?php echo htmlspecialchars($departmentCode); ?>" 
+            width="100%" 
+            height="100%"
+            style="border: none;"
+            title="Digital Yearbook - <?php echo htmlspecialchars($studentDepartment); ?>"
+          ></iframe>
         </div>
 
         <div class="yearbook-lower-curl">
