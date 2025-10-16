@@ -184,9 +184,14 @@ if (track) {
   let carouselImageElements = Array.from(track.querySelectorAll(".carousel-img"));
   let carouselImages = carouselImageElements.map((img) => img.src);
 
+  // Remove duplicates - get only unique images
+  carouselImages = [...new Set(carouselImages)];
+
   let currentIndex = 0;
+  let isTransitioning = false;
 
   function renderImages() {
+    // Clone first and last images for seamless loop
     const images = [
       carouselImages[carouselImages.length - 1],
       ...carouselImages,
@@ -202,100 +207,97 @@ if (track) {
       )
       .join("");
 
-  carouselImageElements = Array.from(track.querySelectorAll(".carousel-img"));
+    carouselImageElements = Array.from(track.querySelectorAll(".carousel-img"));
 
-  track.style.transition = "none";
-  track.style.transform = `translateX(-100%)`;
-  currentIndex = 0;
-}
-
-function moveToIndex(index) {
-  currentIndex = index;
-  track.style.transition = "transform 0.5s ease";
-  track.style.transform = `translateX(-${(index + 1) * 100}%)`;
-}
-
-function handleTransitionEnd() {
-  if (currentIndex < 0) {
-    currentIndex = carouselImages.length - 1;
-    track.style.transition = "none";
-    track.style.transform = `translateX(-${(currentIndex + 1) * 100}%)`;
-  } else if (currentIndex >= carouselImages.length) {
-    currentIndex = 0;
     track.style.transition = "none";
     track.style.transform = `translateX(-100%)`;
-  }
-}
-
-function nextImage() {
-  moveToIndex(currentIndex + 1);
-}
-
-function prevImage() {
-  moveToIndex(currentIndex - 1);
-}
-
-track.addEventListener("transitionend", handleTransitionEnd);
-
-let startX = 0;
-let isDragging = false;
-
-track.addEventListener("touchstart", (e) => {
-  startX = e.touches[0].clientX;
-  isDragging = true;
-});
-
-track.addEventListener("touchmove", (e) => {
-  if (!isDragging) return;
-  const diff = e.touches[0].clientX - startX;
-  track.style.transition = "none";
-  track.style.transform = `translateX(calc(-${
-    (currentIndex + 1) * 100
-  }% + ${diff}px))`;
-});
-
-track.addEventListener("touchend", (e) => {
-  isDragging = false;
-  const diff = e.changedTouches[0].clientX - startX;
-  if (diff > 50) {
-    prevImage();
-  } else if (diff < -50) {
-    nextImage();
-  } else {
-    moveToIndex(currentIndex);
-  }
-});
-
-renderImages();
-
-let autoSlideInterval = null;
-let timeoutId = null;
-
-function startAutoSlide() {
-  autoSlideInterval = setInterval(() => {
-    nextImage();
-  }, 3000);
-}
-
-function stopAutoSlide() {
-  clearInterval(autoSlideInterval);
-}
-
-function resetCarouselAfterTimeout() {
-  timeoutId = setTimeout(() => {
-    stopAutoSlide();
     currentIndex = 0;
+  }
+
+  function moveToIndex(index) {
+    if (isTransitioning) return;
+    
+    currentIndex = index;
+    isTransitioning = true;
+    track.style.transition = "transform 0.6s ease-in-out";
+    track.style.transform = `translateX(-${(index + 1) * 100}%)`;
+  }
+
+  function handleTransitionEnd() {
+    isTransitioning = false;
+    
+    // If we're at the cloned last image, jump to the real first image
+    if (currentIndex >= carouselImages.length) {
+      track.style.transition = "none";
+      track.style.transform = `translateX(-100%)`;
+      currentIndex = 0;
+    }
+    // If we're at the cloned first image, jump to the real last image
+    else if (currentIndex < 0) {
+      track.style.transition = "none";
+      track.style.transform = `translateX(-${carouselImages.length * 100}%)`;
+      currentIndex = carouselImages.length - 1;
+    }
+  }
+
+  function nextImage() {
+    moveToIndex(currentIndex + 1);
+  }
+
+  function prevImage() {
+    moveToIndex(currentIndex - 1);
+  }
+
+  track.addEventListener("transitionend", handleTransitionEnd);
+
+  let startX = 0;
+  let isDragging = false;
+
+  track.addEventListener("touchstart", (e) => {
+    startX = e.touches[0].clientX;
+    isDragging = true;
+  });
+
+  track.addEventListener("touchmove", (e) => {
+    if (!isDragging) return;
+    const diff = e.touches[0].clientX - startX;
     track.style.transition = "none";
-    track.style.transform = `translateX(-100%)`;
-    setTimeout(() => {
-      startAutoSlide();
-    }, 100);
-    resetCarouselAfterTimeout();
-  }, 60000);
-}
+    track.style.transform = `translateX(calc(-${
+      (currentIndex + 1) * 100
+    }% + ${diff}px))`;
+  });
+
+  track.addEventListener("touchend", (e) => {
+    isDragging = false;
+    const diff = e.changedTouches[0].clientX - startX;
+    if (diff > 50) {
+      prevImage();
+    } else if (diff < -50) {
+      nextImage();
+    } else {
+      moveToIndex(currentIndex);
+    }
+  });
+
+  renderImages();
+
+  let autoSlideInterval = null;
+
+  function startAutoSlide() {
+    autoSlideInterval = setInterval(() => {
+      nextImage();
+    }, 3000);
+  }
+
+  function stopAutoSlide() {
+    clearInterval(autoSlideInterval);
+  }
+
+  // Pause auto-slide on hover
+  track.addEventListener("mouseenter", stopAutoSlide);
+  track.addEventListener("mouseleave", startAutoSlide);
 
   startAutoSlide();
-  resetCarouselAfterTimeout();
 }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -306,9 +308,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const pagination = document.querySelector(".carousel-3d-pagination");
 
   if (!carousel || !items.length || !pagination) {
-    console.log(
-      "3D carousel elements not found - skipping 3D carousel initialization"
-    );
+    // 3D carousel not present on this page - skip initialization
     return;
   }
 
@@ -895,11 +895,17 @@ function logout() {
 // Load announcements from MongoDB
 async function loadAnnouncements() {
   try {
-    const response = await fetch('/ECADYB/Connection/Announcement/FetchAnnouncements.php');
-    const result = await response.json();
-    
     const notificationList = document.getElementById('notificationList');
     const notificationBadge = document.getElementById('notificationBadge');
+    
+    // Check if elements exist before proceeding
+    // (Silently exit if not on StudentDashboard page)
+    if (!notificationList || !notificationBadge) {
+      return;
+    }
+    
+    const response = await fetch('/ECADYB/Connection/Announcement/FetchAnnouncements.php');
+    const result = await response.json();
     
     if (result.success && result.data.length > 0) {
       // Update notification badge count
@@ -922,7 +928,9 @@ async function loadAnnouncements() {
   } catch (error) {
     console.error('Error loading announcements:', error);
     const notificationList = document.getElementById('notificationList');
-    notificationList.innerHTML = '<div class="notification-item"><div class="notification-content"><p class="notification-text">Error loading announcements</p></div></div>';
+    if (notificationList) {
+      notificationList.innerHTML = '<div class="notification-item"><div class="notification-content"><p class="notification-text">Error loading announcements</p></div></div>';
+    }
   }
 }
 
@@ -976,5 +984,8 @@ function formatAnnouncementDate(date, time) {
 
 // Load announcements when page loads
 document.addEventListener('DOMContentLoaded', function() {
-  loadAnnouncements();
+  // Add a small delay to ensure DOM is fully ready
+  setTimeout(() => {
+    loadAnnouncements();
+  }, 100);
 });
