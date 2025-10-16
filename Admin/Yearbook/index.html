@@ -264,7 +264,6 @@
         var studentsPerPage = 4;
 
         if (studentData && studentData.total_students) {
-          // Use actual student count with 4 students per page
           studentPages = Math.ceil(
             studentData.total_students / studentsPerPage
           );
