@@ -52,7 +52,7 @@
       type="image/png"
     />
 
-    <link rel="stylesheet" href="/ECADYB/Student/assets/css/StudentDashboard.css" />
+    <link rel="stylesheet" href="../assets/css/StudentDashboard.css" />
 
     <link
       rel="stylesheet"
@@ -71,10 +71,10 @@
         <span>GRADUATION GALLERY</span>
       </div>
       <nav class="center-nav">
-        <a href="/ECADYB/Student/Components/StudentDashboard.html">Home</a>
-        <a href="/ECADYB/Student/Components/About.html">About</a>
-        <a href="/ECADYB/Student/Components/Yearbook.html">Yearbooks</a>
-        <a href="/ECADYB/Student/Components/Memories.html">Memories</a>
+        <a href="StudentDashboard.html">Home</a>
+        <a href="About.html">About</a>
+        <a href="Yearbook.html">Yearbooks</a>
+        <a href="Memories.html">Memories</a>
         <div class="mobile-login-dropdown">
           <button
             class="mobile-login-btn"
@@ -114,7 +114,7 @@
         <div class="dropdown-menu" id="profileDropdownMenu">
           <button
             class="dropdown-item"
-            onclick="window.location.href='/ECADYB/Student/Components/ChangePassword.html'"
+            onclick="window.location.href='ChangePassword.html'"
           >
             Change Password
           </button>
@@ -195,8 +195,8 @@
           </div>
         </div>
         <div class="hero-buttons">
-          <a href="/ECADYB/Student/Components/Yearbook.html" class="hero-btn">Explore Yearbooks</a>
-          <a href="/ECADYB/Student/Components/Memories.html" class="hero-btn hero-btn-secondary"
+          <a href="Yearbook.html" class="hero-btn">Explore Yearbooks</a>
+          <a href="Memories.html" class="hero-btn hero-btn-secondary"
             >Captured Moments
           </a>
         </div>
@@ -291,94 +291,6 @@
         </div>
       </div>
     </footer>
-    <script src="/ECADYB/Student/assets/js/StudentDashboard.js"></script>
-    <script>
-      // Load announcements from MongoDB
-      async function loadAnnouncements() {
-        try {
-          const response = await fetch('/ECADYB/Connection/Announcement/FetchAnnouncements.php');
-          const result = await response.json();
-          
-          const notificationList = document.getElementById('notificationList');
-          const notificationBadge = document.getElementById('notificationBadge');
-          
-          if (result.success && result.data.length > 0) {
-            // Update notification badge count
-            notificationBadge.textContent = result.count;
-            notificationBadge.classList.remove('hidden');
-            
-            // Clear loading message
-            notificationList.innerHTML = '';
-            
-            // Add each announcement
-            result.data.forEach(announcement => {
-              const notificationItem = createNotificationItem(announcement);
-              notificationList.appendChild(notificationItem);
-            });
-          } else {
-            // No announcements or error
-            notificationList.innerHTML = '<div class="notification-item"><div class="notification-content"><p class="notification-text">No new announcements</p></div></div>';
-            notificationBadge.classList.add('hidden');
-          }
-        } catch (error) {
-          console.error('Error loading announcements:', error);
-          const notificationList = document.getElementById('notificationList');
-          notificationList.innerHTML = '<div class="notification-item"><div class="notification-content"><p class="notification-text">Error loading announcements</p></div></div>';
-        }
-      }
-      
-      // Create notification item element
-      function createNotificationItem(announcement) {
-        const item = document.createElement('div');
-        item.className = 'notification-item unread';
-        
-        // Determine icon based on type
-        let iconClass = 'fa-solid fa-info-circle';
-        if (announcement.type === 'announcement') {
-          iconClass = 'fa-solid fa-bullhorn';
-        } else if (announcement.type === 'event') {
-          iconClass = 'fa-solid fa-calendar';
-        }
-        
-        // Format date
-        const formattedDate = formatAnnouncementDate(announcement.date, announcement.time);
-        
-        item.innerHTML = `
-          <i class="${iconClass} notification-item-icon"></i>
-          <div class="notification-content">
-            <p class="notification-text"><strong>${announcement.title}</strong><br>${announcement.message}</p>
-            <span class="notification-time">${formattedDate}</span>
-          </div>
-        `;
-        
-        return item;
-      }
-      
-      // Format announcement date and time
-      function formatAnnouncementDate(date, time) {
-        if (!date) return 'Recently';
-        
-        const announcementDate = new Date(date + ' ' + time);
-        const now = new Date();
-        const diffMs = now - announcementDate;
-        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-        
-        if (diffHours < 1) {
-          return 'Just now';
-        } else if (diffHours < 24) {
-          return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
-        } else if (diffDays < 7) {
-          return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
-        } else {
-          return announcementDate.toLocaleDateString();
-        }
-      }
-      
-      // Load announcements when page loads
-      document.addEventListener('DOMContentLoaded', function() {
-        loadAnnouncements();
-      });
-    </script>
+    <script src="../assets/js/StudentDashboard.js"></script>
   </body>
 </html>

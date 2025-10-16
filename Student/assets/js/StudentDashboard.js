@@ -616,14 +616,15 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker
-      .register("./service-worker.js")
-      .then((reg) => console.log("✅ Service Worker registered:", reg.scope))
-      .catch((err) => console.log("❌ Service Worker failed:", err));
-  });
-}
+// Service Worker registration disabled - file not found
+// if ("serviceWorker" in navigator) {
+//   window.addEventListener("load", () => {
+//     navigator.serviceWorker
+//       .register("./service-worker.js")
+//       .then((reg) => console.log("✅ Service Worker registered:", reg.scope))
+//       .catch((err) => console.log("❌ Service Worker failed:", err));
+//   });
+// }
 
 document.addEventListener("DOMContentLoaded", function () {
   setTimeout(() => {
@@ -890,3 +891,90 @@ function logout() {
   // Add your logout functionality here
   // For example: window.location.href = '/logout' or clear session
 }
+
+// Load announcements from MongoDB
+async function loadAnnouncements() {
+  try {
+    const response = await fetch('/ECADYB/Connection/Announcement/FetchAnnouncements.php');
+    const result = await response.json();
+    
+    const notificationList = document.getElementById('notificationList');
+    const notificationBadge = document.getElementById('notificationBadge');
+    
+    if (result.success && result.data.length > 0) {
+      // Update notification badge count
+      notificationBadge.textContent = result.count;
+      notificationBadge.classList.remove('hidden');
+      
+      // Clear loading message
+      notificationList.innerHTML = '';
+      
+      // Add each announcement
+      result.data.forEach(announcement => {
+        const notificationItem = createNotificationItem(announcement);
+        notificationList.appendChild(notificationItem);
+      });
+    } else {
+      // No announcements or error
+      notificationList.innerHTML = '<div class="notification-item"><div class="notification-content"><p class="notification-text">No new announcements</p></div></div>';
+      notificationBadge.classList.add('hidden');
+    }
+  } catch (error) {
+    console.error('Error loading announcements:', error);
+    const notificationList = document.getElementById('notificationList');
+    notificationList.innerHTML = '<div class="notification-item"><div class="notification-content"><p class="notification-text">Error loading announcements</p></div></div>';
+  }
+}
+
+// Create notification item element
+function createNotificationItem(announcement) {
+  const item = document.createElement('div');
+  item.className = 'notification-item unread';
+  
+  // Determine icon based on type
+  let iconClass = 'fa-solid fa-info-circle';
+  if (announcement.type === 'announcement') {
+    iconClass = 'fa-solid fa-bullhorn';
+  } else if (announcement.type === 'event') {
+    iconClass = 'fa-solid fa-calendar';
+  }
+  
+  // Format date
+  const formattedDate = formatAnnouncementDate(announcement.date, announcement.time);
+  
+  item.innerHTML = `
+    <i class="${iconClass} notification-item-icon"></i>
+    <div class="notification-content">
+      <p class="notification-text"><strong>${announcement.title}</strong><br>${announcement.message}</p>
+      <span class="notification-time">${formattedDate}</span>
+    </div>
+  `;
+  
+  return item;
+}
+
+// Format announcement date and time
+function formatAnnouncementDate(date, time) {
+  if (!date) return 'Recently';
+  
+  const announcementDate = new Date(date + ' ' + time);
+  const now = new Date();
+  const diffMs = now - announcementDate;
+  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  
+  if (diffHours < 1) {
+    return 'Just now';
+  } else if (diffHours < 24) {
+    return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+  } else if (diffDays < 7) {
+    return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+  } else {
+    return announcementDate.toLocaleDateString();
+  }
+}
+
+// Load announcements when page loads
+document.addEventListener('DOMContentLoaded', function() {
+  loadAnnouncements();
+});
