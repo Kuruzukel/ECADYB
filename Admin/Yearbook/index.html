@@ -224,6 +224,66 @@
         };
       }
 
+      function getTopManagementNameForPage(pageNumber) {
+        try {
+          // Get template number
+          var template = 1;
+          if (coverData && coverData.template) {
+            template = coverData.template;
+          } else {
+            var savedTemplate = localStorage.getItem("selectedBatchTemplateNumber");
+            if (savedTemplate) {
+              template = parseInt(savedTemplate);
+            }
+          }
+          
+          var cacheKey = "template_" + template;
+          
+          // Check if topManagementCache is available
+          if (window.topManagementCache && window.topManagementCache[cacheKey]) {
+            var topManagementData = window.topManagementCache[cacheKey];
+            if (topManagementData && topManagementData.data && topManagementData.data.length > 0) {
+              // Calculate which top management index this page corresponds to
+              var topMgmtIndex = pageNumber - 2; // Page 2 = index 0, Page 3 = index 1, etc.
+              
+              if (topMgmtIndex >= 0 && topMgmtIndex < topManagementData.data.length) {
+                var topMgmt = topManagementData.data[topMgmtIndex];
+                if (topMgmt && topMgmt.name && topMgmt.position) {
+                  return topMgmt.name + " (" + topMgmt.position + ")";
+                } else if (topMgmt && topMgmt.name) {
+                  return topMgmt.name;
+                }
+              }
+            }
+          }
+          
+          // Fallback: try to get from localStorage or other sources
+          if (typeof localStorage !== 'undefined') {
+            var savedTopMgmt = localStorage.getItem('topManagementData');
+            if (savedTopMgmt) {
+              try {
+                var parsedData = JSON.parse(savedTopMgmt);
+                var topMgmtIndex = pageNumber - 2;
+                if (topMgmtIndex >= 0 && topMgmtIndex < parsedData.length) {
+                  var topMgmt = parsedData[topMgmtIndex];
+                  if (topMgmt && topMgmt.name && topMgmt.position) {
+                    return topMgmt.name + " (" + topMgmt.position + ")";
+                  } else if (topMgmt && topMgmt.name) {
+                    return topMgmt.name;
+                  }
+                }
+              } catch (e) {
+                console.log("Error parsing top management data:", e);
+              }
+            }
+          }
+        } catch (e) {
+          console.log("Error getting top management name for page", pageNumber, ":", e);
+        }
+        
+        return null;
+      }
+
       function getPageDescription(pageNumber) {
         var yearbook = getCurrentYearbook();
         var departmentCode = yearbook.code;
@@ -243,7 +303,15 @@
         if (pageNumber >= 2 && pageNumber <= 5) {
           // Calculate which top management page this is
           var topMgmtPageNumber = pageNumber - 1; // Page 2 = Top Management page 1, Page 3 = Top Management page 2, etc.
-          return "Top Management Message - Page " + topMgmtPageNumber;
+          
+          // Try to get the top management name for this page
+          var topMgmtName = getTopManagementNameForPage(pageNumber);
+          console.log("Top management name for page", pageNumber, ":", topMgmtName);
+          if (topMgmtName) {
+            return "Top Management Message - " + topMgmtName + " - Page " + topMgmtPageNumber;
+          } else {
+            return "Top Management Message - Page " + topMgmtPageNumber;
+          }
         }
 
         if (pageNumber === totalPages) {
