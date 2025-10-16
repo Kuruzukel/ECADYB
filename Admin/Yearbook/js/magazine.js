@@ -2097,7 +2097,6 @@ function initializeCornerHover() {
       $magazine.turn("peel", false);
       currentPeelCorner = null;
 
-      // Turn page
       isPageTurning = true;
       if (shouldGoNext) {
         $magazine.turn("next");
