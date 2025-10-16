@@ -720,7 +720,6 @@
   position: relative;
 }
 
-/* Decorative Academic Accents on Frame */
 .modal-content .close-modal::before {
   position: absolute;
   top: -60px;
