@@ -169,7 +169,6 @@
   z-index: 0;
 }
 
-/* Keep front and back covers flat */
 .magazine .page:first-child,
 .magazine .page:last-child {
   box-shadow: none;
