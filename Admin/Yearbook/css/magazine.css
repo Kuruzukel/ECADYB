@@ -100,7 +100,6 @@
     inset 0 0 0 2px rgba(255, 255, 255, 0.3);
 }
 
-/* Page edge thickness for 3D effect */
 .magazine .page:nth-child(n + 2)::after {
   content: "";
   position: absolute;
