@@ -2,6 +2,27 @@
 require __DIR__ . '/../../vendor/autoload.php';
 
 use MongoDB\Client;
+
+// Character sets for password generation
+$upper = 'ABCDEFGHIJKLMNPQRSTUVWXYZ';
+$lower = 'abcdefghijkmnopqrstuvwxyz';
+$digits = '123456789';
+$special = '!@#_$';
+
+function generateRandomPassword($length = 8)
+{
+    global $upper, $lower, $digits, $special;
+    
+    $characters = $upper . $lower . $digits . $special;
+    $password = '';
+    $charactersLength = strlen($characters);
+    
+    for ($i = 0; $i < $length; $i++) {
+        $password .= $characters[rand(0, $charactersLength - 1)];
+    }
+    
+    return $password;
+}
 use MongoDB\BSON\ObjectId;
 
 ini_set('display_errors', 1);
@@ -90,6 +111,24 @@ try {
     );
 
     foreach ($cursor as $student) {
+        // Generate password if student doesn't have one
+        $studentPassword = $student['password'] ?? '';
+        if (empty($studentPassword)) {
+            $studentPassword = generateRandomPassword(8);
+            
+            // Update the database with the generated password
+            try {
+                $collection = $db->$selectedDepartment;
+                $collection->updateOne(
+                    ['student id' => $student['student id'] ?? $student['student_id'] ?? ''],
+                    ['$set' => ['password' => $studentPassword]]
+                );
+                error_log("Generated and saved password for student: " . ($student['first name'] ?? '') . ' ' . ($student['last name'] ?? ''));
+            } catch (Exception $e) {
+                error_log("Error updating password for student: " . $e->getMessage());
+            }
+        }
+
         $allStudents[] = [
             'id' => $student['id'] ?? 0,
             'student_id' => $student['student id'] ?? '',
@@ -106,7 +145,7 @@ try {
             'milestone' => $student['milestone'] ?? '',
             'status' => $student['status'] ?? 'Pending',
             'collection' => $selectedDepartment,
-            'password' => $student['password'] ?? ''
+            'password' => $studentPassword
         ];
     }
 } catch (Exception $e) {

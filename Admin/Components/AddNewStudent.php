@@ -15,6 +15,27 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Only load vendor AFTER clearing buffers and setting headers
     require_once __DIR__ . '/../../vendor/autoload.php';
     
+    // Character sets for password generation
+    $upper = 'ABCDEFGHIJKLMNPQRSTUVWXYZ';
+    $lower = 'abcdefghijkmnopqrstuvwxyz';
+    $digits = '123456789';
+    $special = '!@#_$';
+
+    function generateRandomPassword($length = 8)
+    {
+        global $upper, $lower, $digits, $special;
+        
+        $characters = $upper . $lower . $digits . $special;
+        $password = '';
+        $charactersLength = strlen($characters);
+        
+        for ($i = 0; $i < $length; $i++) {
+            $password .= $characters[rand(0, $charactersLength - 1)];
+        }
+        
+        return $password;
+    }
+    
     $programMap = [
         "bsme" => "BS Marine Engineering",
         "bsmt" => "BS Marine Transportation",
@@ -81,6 +102,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         "program" => $programName,
         "section" => $section,
         "department section" => strtoupper($programKey) . ' - ' . strtoupper($section),
+        "password" => generateRandomPassword(8),
+        "status" => "Pending"
     ];
 
     $optionalFields = ["motto", "honors", "milestone"];
