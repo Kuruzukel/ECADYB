@@ -38,7 +38,6 @@ try {
 
     $mongoClient = new MongoDB\Client($mongoUrl);
 
-    // First check if there are any CSV messages - if not, don't show any photos
     $messageCollection = $mongoClient->$mongoDbName->top_management_message;
     $messageCount = $messageCollection->countDocuments([]);
     if ($messageCount === 0) {
