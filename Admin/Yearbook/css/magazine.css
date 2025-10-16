@@ -640,7 +640,6 @@
   pointer-events: none !important;
 }
 
-/* Ensure modal and its contents are always clickable */
 .student-modal {
   pointer-events: all !important;
 }
