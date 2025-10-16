@@ -261,12 +261,9 @@
 
       function calculateTotalPages() {
         var studentPages = 0;
-        var studentsPerPage = 4; // Fixed: 4 students per page
+        var studentsPerPage = 4;
 
-        if (
-          studentData &&
-          studentData.total_students
-        ) {
+        if (studentData && studentData.total_students) {
           // Use actual student count with 4 students per page
           studentPages = Math.ceil(
             studentData.total_students / studentsPerPage
@@ -282,7 +279,9 @@
         // Only show minimum 4 student pages if there are NO students at all
         if (studentPages === 0) {
           studentPages = 4;
-          console.log("No students found - Setting minimum 4 student pages for empty state display");
+          console.log(
+            "No students found - Setting minimum 4 student pages for empty state display"
+          );
         }
 
         var totalPages = 1 + 4 + studentPages + 1;
@@ -495,12 +494,22 @@
               </div>
               <div class="student-image-navigation">
                 <button class="nav-prev">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
                     <polyline points="15,18 9,12 15,6"></polyline>
                   </svg>
                 </button>
                 <button class="nav-next">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
                     <polyline points="9,18 15,12 9,6"></polyline>
                   </svg>
                 </button>
@@ -983,42 +992,42 @@
         $(".close-modal").on("click", function (e) {
           e.stopPropagation();
           $(".student-modal").removeClass("active");
-          
+
           // Remove body class to enable magazine interactions
           $("body").removeClass("modal-active");
-          
+
           // Re-enable magazine interactions
           if (typeof window.enableMagazineInteractions === "function") {
             window.enableMagazineInteractions();
           }
-          
+
           // Clear the peel check interval
           if (window.peelClearInterval) {
             clearInterval(window.peelClearInterval);
             window.peelClearInterval = null;
           }
-          
+
           console.log("Modal closed via close button");
         });
 
         $(".student-modal").on("click", function (e) {
           if ($(e.target).hasClass("student-modal")) {
             $(this).removeClass("active");
-            
+
             // Remove body class to enable magazine interactions
             $("body").removeClass("modal-active");
-            
+
             // Re-enable magazine interactions
             if (typeof window.enableMagazineInteractions === "function") {
               window.enableMagazineInteractions();
             }
-            
+
             // Clear the peel check interval
             if (window.peelClearInterval) {
               clearInterval(window.peelClearInterval);
               window.peelClearInterval = null;
             }
-            
+
             console.log("Modal closed via background click");
           }
         });
@@ -1029,22 +1038,22 @@
         });
 
         // ESC key to close modal
-        $(document).on("keydown", function(e) {
+        $(document).on("keydown", function (e) {
           if (e.keyCode === 27 && $(".student-modal").hasClass("active")) {
             $(".student-modal").removeClass("active");
             $("body").removeClass("modal-active");
-            
+
             // Re-enable magazine interactions
             if (typeof window.enableMagazineInteractions === "function") {
               window.enableMagazineInteractions();
             }
-            
+
             // Clear the peel check interval
             if (window.peelClearInterval) {
               clearInterval(window.peelClearInterval);
               window.peelClearInterval = null;
             }
-            
+
             console.log("Modal closed via ESC key");
           }
         });
