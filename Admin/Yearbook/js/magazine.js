@@ -2067,7 +2067,6 @@ function initializeCornerHover() {
     var shouldGoNext = false;
     var shouldGoPrevious = false;
 
-    // Check which corner was clicked
     if (relX > width - cornerSize && relY > height - cornerSize) {
       if (page < pages) {
         inCorner = true;
