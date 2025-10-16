@@ -39,13 +39,12 @@ try {
     $mongoClient = new MongoDB\Client($mongoUrl);
 
     $messageCollection = $mongoClient->$mongoDbName->top_management_message;
-    
-    // Check if there are any CSV messages - if not, return empty result
+
     $messageCount = $messageCollection->countDocuments([]);
     if ($messageCount === 0) {
         respond(true, 'Please upload CSV of the Top Management to the Batch Upload Section first.', ['data' => []]);
     }
-    
+
     $messages = $messageCollection->find([], ['sort' => ['position' => 1]]);
 
     $result = [];
