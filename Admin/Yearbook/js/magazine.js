@@ -2135,7 +2135,6 @@ function initializeCornerHover() {
     }
     isPageTurning = true;
 
-    // Hide book binding shadow during page turning
     $magazine.addClass("turning");
   });
 
