@@ -683,7 +683,7 @@ function loadPage(page, pageElement) {
                   <h3 class="empty-state-title">Top Management Data Required</h3>
                   <p class="empty-state-description">Please upload CSV of the Top Management to the Batch Upload Section first.</p>
                 </div>
-              `
+              `,
             });
 
             messageWrapper.append(message);
@@ -719,9 +719,12 @@ function loadPage(page, pageElement) {
                   </svg>
                 </div>
                 <h3 class="empty-state-title">Top Management Data Required</h3>
-                <p class="empty-state-description">${response.message || "Please upload CSV of the Top Management to the Batch Upload Section first."}</p>
+                <p class="empty-state-description">${
+                  response.message ||
+                  "Please upload CSV of the Top Management to the Batch Upload Section first."
+                }</p>
               </div>
-            `
+            `,
           });
           managementPage.append(errorMessage);
         }
@@ -799,10 +802,10 @@ function loadPage(page, pageElement) {
                     <h3 class="empty-state-title">No Students Available</h3>
                     <p class="empty-state-description">There are no students registered for this page.</p>
                   </div>
-                `
+                `,
               });
               pageElement.append(emptyMessage);
-              
+
               setTimeout(function () {
                 waitForImagesAndGenerateThumbnail(page, pageElement);
               }, 500);
@@ -891,7 +894,7 @@ function loadPage(page, pageElement) {
               card.off("click").on("click", function (e) {
                 e.preventDefault();
                 e.stopPropagation();
-                
+
                 var modal = $(".student-modal");
                 var clickedStudent = $(this).data("student");
 
@@ -911,26 +914,28 @@ function loadPage(page, pageElement) {
                 milestonesList.empty();
 
                 // Check if student has milestones or honors
-                var hasMilestones = clickedStudent.milestones && 
-                                   Array.isArray(clickedStudent.milestones) && 
-                                   clickedStudent.milestones.length > 0;
-                
-                var hasHonors = clickedStudent.honors && 
-                               Array.isArray(clickedStudent.honors) && 
-                               clickedStudent.honors.length > 0;
+                var hasMilestones =
+                  clickedStudent.milestones &&
+                  Array.isArray(clickedStudent.milestones) &&
+                  clickedStudent.milestones.length > 0;
+
+                var hasHonors =
+                  clickedStudent.honors &&
+                  Array.isArray(clickedStudent.honors) &&
+                  clickedStudent.honors.length > 0;
 
                 console.log("Student milestones/honors check:", {
                   name: clickedStudent.name,
                   hasMilestones: hasMilestones,
                   hasHonors: hasHonors,
                   milestones: clickedStudent.milestones,
-                  honors: clickedStudent.honors
+                  honors: clickedStudent.honors,
                 });
 
                 if (hasMilestones || hasHonors) {
                   // Show milestones container and populate list
                   milestonesContainer.show();
-                  
+
                   // Update title based on what's available
                   if (hasMilestones && hasHonors) {
                     milestonesTitle.text("Milestones & Honors");
@@ -939,14 +944,14 @@ function loadPage(page, pageElement) {
                   } else {
                     milestonesTitle.text("Honors");
                   }
-                  
+
                   // Add milestones
                   if (hasMilestones) {
                     clickedStudent.milestones.forEach(function (milestone) {
                       milestonesList.append("<li>" + milestone + "</li>");
                     });
                   }
-                  
+
                   // Add honors
                   if (hasHonors) {
                     clickedStudent.honors.forEach(function (honor) {
@@ -978,25 +983,25 @@ function loadPage(page, pageElement) {
 
                 // Show modal
                 modal.addClass("active");
-                
+
                 // Add body class to disable magazine interactions
                 $("body").addClass("modal-active");
-                
+
                 // Clear any existing peel effect when modal opens
                 if (typeof window.clearAllPeels === "function") {
                   window.clearAllPeels();
                 }
-                
+
                 // Force disable magazine interactions
                 if (typeof window.disableMagazineInteractions === "function") {
                   window.disableMagazineInteractions();
                 }
-                
+
                 // Set up periodic check to clear peels while modal is active
                 if (window.peelClearInterval) {
                   clearInterval(window.peelClearInterval);
                 }
-                window.peelClearInterval = setInterval(function() {
+                window.peelClearInterval = setInterval(function () {
                   if ($(".student-modal").hasClass("active")) {
                     if (typeof window.clearAllPeels === "function") {
                       window.clearAllPeels();
@@ -1007,7 +1012,7 @@ function loadPage(page, pageElement) {
                     $("body").removeClass("modal-active");
                   }
                 }, 100);
-                
+
                 console.log("Modal should be visible now");
 
                 var studentIdForModal = clickedStudent.student_id;
@@ -1044,39 +1049,58 @@ function loadPage(page, pageElement) {
                     window.currentPhotoIndex = 0;
 
                     // Set up navigation buttons
-                    $(".nav-prev").off("click").on("click", function (e) {
-                      e.stopPropagation();
-                      e.preventDefault();
-                      
-                      console.log("Previous button clicked!");
-                      
-                      // Move to previous photo (loop backwards)
-                      window.currentPhotoIndex = (window.currentPhotoIndex - 1 + studentPhotos.length) % studentPhotos.length;
-                      
-                      var photoUrl = studentPhotos[window.currentPhotoIndex];
-                      console.log("Switching to previous photo:", photoUrl, "Index:", window.currentPhotoIndex);
-                      
-                      $largeImage.fadeOut(200, function () {
-                        $(this).attr("src", photoUrl).fadeIn(200);
-                      });
-                    });
+                    $(".nav-prev")
+                      .off("click")
+                      .on("click", function (e) {
+                        e.stopPropagation();
+                        e.preventDefault();
 
-                    $(".nav-next").off("click").on("click", function (e) {
-                      e.stopPropagation();
-                      e.preventDefault();
-                      
-                      console.log("Next button clicked!");
-                      
-                      // Move to next photo (loop forwards)
-                      window.currentPhotoIndex = (window.currentPhotoIndex + 1) % studentPhotos.length;
-                      
-                      var photoUrl = studentPhotos[window.currentPhotoIndex];
-                      console.log("Switching to next photo:", photoUrl, "Index:", window.currentPhotoIndex);
-                      
-                      $largeImage.fadeOut(200, function () {
-                        $(this).attr("src", photoUrl).fadeIn(200);
+                        console.log("Previous button clicked!");
+
+                        // Move to previous photo (loop backwards)
+                        window.currentPhotoIndex =
+                          (window.currentPhotoIndex -
+                            1 +
+                            studentPhotos.length) %
+                          studentPhotos.length;
+
+                        var photoUrl = studentPhotos[window.currentPhotoIndex];
+                        console.log(
+                          "Switching to previous photo:",
+                          photoUrl,
+                          "Index:",
+                          window.currentPhotoIndex
+                        );
+
+                        $largeImage.fadeOut(200, function () {
+                          $(this).attr("src", photoUrl).fadeIn(200);
+                        });
                       });
-                    });
+
+                    $(".nav-next")
+                      .off("click")
+                      .on("click", function (e) {
+                        e.stopPropagation();
+                        e.preventDefault();
+
+                        console.log("Next button clicked!");
+
+                        // Move to next photo (loop forwards)
+                        window.currentPhotoIndex =
+                          (window.currentPhotoIndex + 1) % studentPhotos.length;
+
+                        var photoUrl = studentPhotos[window.currentPhotoIndex];
+                        console.log(
+                          "Switching to next photo:",
+                          photoUrl,
+                          "Index:",
+                          window.currentPhotoIndex
+                        );
+
+                        $largeImage.fadeOut(200, function () {
+                          $(this).attr("src", photoUrl).fadeIn(200);
+                        });
+                      });
                   });
                 } else {
                   console.log("No student_id found for:", clickedStudent.name);
@@ -1876,9 +1900,8 @@ function initializeCornerHover() {
   var isModalActive = false;
   var mouseMoveHandler = null;
   var clickHandler = null;
-  
-  // Function to clear all peels - can be called externally
-  window.clearAllPeels = function() {
+
+  window.clearAllPeels = function () {
     if (peelTimer) {
       clearTimeout(peelTimer);
       peelTimer = null;
@@ -1917,7 +1940,7 @@ function initializeCornerHover() {
   }
 
   // Monitor modal state changes
-  $(document).on('DOMSubtreeModified', function() {
+  $(document).on("DOMSubtreeModified", function () {
     var modalActive = $(".student-modal").hasClass("active");
     if (modalActive !== isModalActive) {
       isModalActive = modalActive;
@@ -1952,7 +1975,7 @@ function initializeCornerHover() {
       window.clearAllPeels();
       return;
     }
-    
+
     // Don't allow peel when student modal is active or page is turning
     if (!$magazine.turn("is") || isPageTurning) {
       window.clearAllPeels();
@@ -2005,7 +2028,7 @@ function initializeCornerHover() {
         }
         return;
       }
-      
+
       if (peelTimer) {
         clearTimeout(peelTimer);
       }
@@ -2036,7 +2059,7 @@ function initializeCornerHover() {
       e.stopPropagation();
       return false;
     }
-    
+
     // Don't allow page turn when student modal is active
     if (!$magazine.turn("is") || isPageTurning) {
       e.preventDefault();
@@ -2129,14 +2152,14 @@ function initializeCornerHover() {
       currentPeelCorner = null;
     }
     isPageTurning = true;
-    
+
     // Hide book binding shadow during page turning
     $magazine.addClass("turning");
   });
 
   $magazine.on("turned", function () {
     isPageTurning = false;
-    
+
     // Show book binding shadow after page turn is complete
     $magazine.removeClass("turning");
   });
