@@ -2090,7 +2090,6 @@ function initializeCornerHover() {
     }
 
     if (inCorner) {
-      // Clear peel effect
       if (peelTimer) {
         clearTimeout(peelTimer);
         peelTimer = null;
