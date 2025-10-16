@@ -223,9 +223,11 @@ const confirmBtn = document.getElementById("confirm-btn");
 const cancelBtn = document.getElementById("cancel-btn");
 const addStudentBtn = document.getElementById("add-student-btn");
 const form = document.getElementById("addStudentForm");
-const responseMessage = document.getElementById("responseMessage");
+
+let notificationTimeout = null;
 
 addStudentBtn.addEventListener("click", () => {
+  // Show modal without validation - validation happens on confirm
   modalOverlay.style.display = "flex";
 });
 
@@ -233,9 +235,49 @@ cancelBtn.addEventListener("click", () => {
   modalOverlay.style.display = "none";
 });
 
+function showNotification(message, type = "success") {
+  const container = document.getElementById("notification-container");
+  if (!container) return;
+
+  const existingNotifications = container.querySelectorAll(".notification");
+  existingNotifications.forEach((notif) => notif.remove());
+
+  if (notificationTimeout) {
+    clearTimeout(notificationTimeout);
+  }
+
+  let icon = "fa-check-circle";
+  if (type === "error") {
+    icon = "fa-exclamation-circle";
+  } else if (type === "info") {
+    icon = "fa-info-circle";
+  } else if (type === "warning") {
+    icon = "fa-exclamation-triangle";
+  }
+
+  const notif = document.createElement("div");
+  notif.className = `notification ${type} show`;
+  notif.innerHTML = `
+    <i class="fas ${icon}"></i>
+    <span>${message}</span>
+  `;
+  container.appendChild(notif);
+
+  const duration = type === "info" ? 2000 : 5000;
+  notificationTimeout = setTimeout(() => {
+    notif.classList.remove("show");
+    setTimeout(() => {
+      notif.remove();
+      notificationTimeout = null;
+    }, 500);
+  }, duration);
+}
+
 confirmBtn.addEventListener("click", () => {
+  // Validate form when confirming
   if (!validateForm()) {
     modalOverlay.style.display = "none";
+    showNotification("Please fill in all required fields.", "error");
     return;
   }
 
@@ -245,40 +287,58 @@ confirmBtn.addEventListener("click", () => {
   const selectedTemplate = localStorage.getItem("selectedBatchTemplateNumber") || "1";
   formData.append("batch_template", selectedTemplate);
 
-  fetch("", {
+  // Debug: Log form data
+  console.log("=== FORM DATA ===");
+  for (let [key, value] of formData.entries()) {
+    console.log(key + ": " + value);
+  }
+  console.log("=================");
+
+  modalOverlay.style.display = "none";
+
+  // Fetch AddNewStudent.php directly, not through AdminDashboard.php
+  fetch("AddNewStudent.php", {
     method: "POST",
     body: formData,
   })
-    .then((response) => response.json())
-    .then((data) => {
-      modalOverlay.style.display = "none";
+    .then((response) => {
+      console.log("Response status:", response.status);
+      console.log("Response ok:", response.ok);
+      console.log("Response headers:", response.headers.get('Content-Type'));
+      return response.text();
+    })
+    .then((text) => {
+      console.log("Response text:", text);
+      
+      // Try to parse JSON
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (e) {
+        console.error("JSON parse error:", e);
+        console.error("Response was:", text);
+        
+        // Check if it's a PHP error
+        if (text.includes("Fatal error") || text.includes("Warning") || text.includes("Notice")) {
+          showNotification("Server error: Check PHP configuration.", "error");
+        } else if (text.includes("<!DOCTYPE") || text.includes("<html")) {
+          showNotification("Server returned HTML instead of JSON. Check server logs.", "error");
+        } else {
+          showNotification("Invalid server response. Check console.", "error");
+        }
+        return;
+      }
+      
+      // Handle the response
       if (data.success) {
-        responseMessage.textContent = data.message;
-        responseMessage.style.color = "green";
-        responseMessage.style.animation = "none";
-        responseMessage.offsetHeight;
-        responseMessage.style.animation = "fadeOut 3s forwards";
-        responseMessage.style.animationDelay = "2s";
+        showNotification("Student added successfully!", "success");
         form.reset();
       } else {
-        responseMessage.textContent = data.message;
-        responseMessage.style.color = "green";
-        responseMessage.style.animation = "none";
-        responseMessage.offsetHeight;
-        responseMessage.style.animation = "fadeOut 3s forwards";
-        responseMessage.style.animationDelay = "2s";
-        form.reset();
+        showNotification(data.message || "Failed to add student.", "error");
       }
     })
     .catch((error) => {
-      modalOverlay.style.display = "none";
-      responseMessage.textContent = "Student added successfully!";
-      responseMessage.style.color = "green";
-      responseMessage.style.animation = "none";
-      responseMessage.offsetHeight;
-      responseMessage.style.animation = "fadeOut 3s forwards";
-      responseMessage.style.animationDelay = "2s";
-      form.reset();
-      console.error("Error:", error);
+      console.error("Fetch error:", error);
+      showNotification("Network error: " + error.message, "error");
     });
 });

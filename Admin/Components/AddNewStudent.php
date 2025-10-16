@@ -1,23 +1,32 @@
 <?php
-require __DIR__ . '/../../vendor/autoload.php';
-
-use MongoDB\Client;
-
-$programMap = [
-    "bsme" => "BS Marine Engineering",
-    "bsmt" => "BS Marine Transportation",
-    "bscje" => "BS Criminal Justice Education",
-    "bstm" => "BS Tourism Management",
-    "btvted" => "BS Technical-Vocational Teacher Education",
-    "beced" => "BS Early Childhood Education",
-    "bsn" => "BS Nursing",
-    "bsis" => "BS Information System",
-    "bsma" => "BS Management Accounting",
-    "bse" => "BS Entrepreneurship"
-];
-
+// Handle POST request FIRST - before ANY output or includes
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    header('Content-Type: application/json');
+    // Absolutely no output before this point
+    while (ob_get_level()) {
+        ob_end_clean();
+    }
+    
+    ob_start();
+    error_reporting(0);
+    ini_set('display_errors', 0);
+    
+    header('Content-Type: application/json; charset=UTF-8');
+    
+    // Only load vendor AFTER clearing buffers and setting headers
+    require_once __DIR__ . '/../../vendor/autoload.php';
+    
+    $programMap = [
+        "bsme" => "BS Marine Engineering",
+        "bsmt" => "BS Marine Transportation",
+        "bscje" => "BS Criminal Justice Education",
+        "bstm" => "BS Tourism Management",
+        "btvted" => "BS Technical-Vocational Teacher Education",
+        "beced" => "BS Early Childhood Education",
+        "bsn" => "BS Nursing",
+        "bsis" => "BS Information System",
+        "bsma" => "BS Management Accounting",
+        "bse" => "BS Entrepreneurship"
+    ];
 
     $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
     
@@ -29,14 +38,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $dbName = "BatchTemplate" . $selectedTemplate;
     
     try {
-        $client = new Client($mongoUrl);
+        $client = new MongoDB\Client($mongoUrl);
         $db = $client->$dbName;
     } catch (Exception $e) {
         echo json_encode([
             "success" => false,
             "message" => "MongoDB connection failed: " . $e->getMessage()
         ]);
-        exit;
+        die();
     }
 
     $programKey = trim($_POST["program"] ?? '');
@@ -50,7 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 "success" => false,
                 "message" => ucfirst(str_replace("_", " ", $field)) . " is required."
             ]);
-            exit;
+            die();
         }
     }
 
@@ -59,7 +68,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             "success" => false,
             "message" => "Invalid program selected."
         ]);
-        exit;
+        die();
     }
 
     $student = [
@@ -89,26 +98,49 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $insertResult = $collection->insertOne($student);
 
         if ($insertResult->getInsertedCount() > 0) {
-            echo json_encode([
+            ob_end_clean();
+            die(json_encode([
                 "success" => true,
-                "message" => "Student added successfully to Batch Template $selectedTemplate - '$programKey' collection with ID {$student['id']}."
-            ]);
+                "message" => "Student added successfully!"
+            ]));
         } else {
-            echo json_encode([
+            ob_end_clean();
+            die(json_encode([
                 "success" => false,
                 "message" => "Failed to add student."
-            ]);
+            ]));
         }
     } catch (Exception $e) {
-        echo json_encode([
+        ob_end_clean();
+        die(json_encode([
             "success" => false,
             "message" => "Error inserting student: " . $e->getMessage()
-        ]);
+        ]));
     }
 
-    exit;
+    ob_end_clean();
+    die();
 }
 
+// If we got here, it's not a POST request - show the HTML form
+error_reporting(0);
+ini_set('display_errors', 0);
+
+require __DIR__ . '/../../vendor/autoload.php';
+use MongoDB\Client;
+
+$programMap = [
+    "bsme" => "BS Marine Engineering",
+    "bsmt" => "BS Marine Transportation",
+    "bscje" => "BS Criminal Justice Education",
+    "bstm" => "BS Tourism Management",
+    "btvted" => "BS Technical-Vocational Teacher Education",
+    "beced" => "BS Early Childhood Education",
+    "bsn" => "BS Nursing",
+    "bsis" => "BS Information System",
+    "bsma" => "BS Management Accounting",
+    "bse" => "BS Entrepreneurship"
+];
 ?>
 
 <!DOCTYPE html>
@@ -184,11 +216,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         <button type="button" class="submit-btn" id="add-student-btn">
                             <i class="fas fa-user-plus"></i> Add Student
                         </button>
-                        <p id="responseMessage" class="success" style="text-align: center; margin-top: 10px;"></p>
                     </div>
                 </div>
             </div>
         </form>
+
+        <div id="notification-container"></div>
 
         <div class="modal-overlay" id="modal-overlay" style="display: none;">
             <div class="modal" style="font-family: Arial, sans-serif;">
