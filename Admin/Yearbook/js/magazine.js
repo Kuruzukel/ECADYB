@@ -2124,7 +2124,6 @@ function initializeCornerHover() {
   $magazine.on("mousemove", mouseMoveHandler);
   $magazine.on("click", clickHandler);
 
-  // Clear peel when page is turning
   $magazine.on("turning", function () {
     if (peelTimer) {
       clearTimeout(peelTimer);
