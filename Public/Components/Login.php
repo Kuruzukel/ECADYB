@@ -45,6 +45,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['username'] = $username;
             $_SESSION['login_success'] = 'admin';
             $_SESSION['redirect_to'] = '../../Admin/Components/AdminDashboard.php';
+            
+            // Redirect to admin dashboard
+            header('Location: /ECADYB/Admin/Components/AdminDashboard.php');
+            exit();
         } else {
             $loginFound = false;
             
@@ -70,7 +74,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $_SESSION['login_success'] = 'student';
                         $_SESSION['redirect_to'] = '../../Student/Components/StudentDashboard.php';
                         $loginFound = true;
-                        break 2; // Break out of both loops
+                        
+                        // Redirect to student dashboard
+                        header('Location: /ECADYB/Student');
+                        exit();
                     }
                 }
             }

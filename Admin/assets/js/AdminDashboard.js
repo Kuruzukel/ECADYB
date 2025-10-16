@@ -419,12 +419,7 @@ document.addEventListener("DOMContentLoaded", () => {
     logoutTab.addEventListener("click", function (e) {
       e.preventDefault();
       e.stopPropagation();
-      const isLocalhost = window.location.hostname === "localhost";
-      const logoutPath = isLocalhost
-        ? "/ECADYB/Admin/Components/AdminLogout.php"
-        : "/Admin/Components/AdminLogout.php";
-
-      window.location.href = logoutPath;
+      window.location.href = "/ECADYB/Admin/Components/AdminLogout.php";
     });
   }
 });
