@@ -1329,29 +1329,30 @@ header.fading {
 }
 
 .notification-list {
-  max-height: 380px;
+  max-height: 350px;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 0.5rem ;
   scrollbar-width: thin;
-  scrollbar-color: rgba(252, 218, 21, 0.3) rgba(255, 255, 255, 0.05);
+  scrollbar-color: rgba(252, 218, 21, 0.6) rgba(255, 255, 255, 0.1);
 }
 
 .notification-list::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 
 .notification-list::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 10px;
 }
 
 .notification-list::-webkit-scrollbar-thumb {
-  background: rgba(252, 218, 21, 0.3);
+  background: rgba(252, 218, 21, 0.6);
   border-radius: 10px;
 }
 
 .notification-list::-webkit-scrollbar-thumb:hover {
-  background: rgba(252, 218, 21, 0.5);
+  background: rgba(252, 218, 21, 0.8);
 }
 
 .notification-item {
@@ -1366,6 +1367,7 @@ header.fading {
   box-sizing: border-box;
   min-height: fit-content;
   overflow: visible;
+  margin-bottom: 0.5rem;
 }
 
 .notification-item.unread {
