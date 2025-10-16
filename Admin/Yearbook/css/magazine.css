@@ -142,7 +142,6 @@
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.2), inset 0 0 2px rgba(255, 255, 255, 0.3);
 }
 
-/* Enhanced paper texture for raised pages */
 .magazine .page:nth-child(n + 2)::before {
   content: "";
   position: absolute;
