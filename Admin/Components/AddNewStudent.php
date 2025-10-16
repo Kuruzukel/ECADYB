@@ -105,6 +105,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         "password" => generateRandomPassword(8),
         "status" => "Pending"
     ];
+    
+    // Log password generation for debugging
+    $studentName = $student["first name"] . ' ' . $student["last name"];
+    error_log("Generated password for new student: " . $studentName . " - Password: " . $student["password"]);
 
     $optionalFields = ["motto", "honors", "milestone"];
     foreach ($optionalFields as $field) {
