@@ -414,7 +414,7 @@ window.addEventListener("DOMContentLoaded", () => {
           showUploadOverlay("photos");
 
           Array.from(input.files).forEach((file) => {
-            formData.append("files[]", file);
+            formData.append("files", file);
           });
 
           let templateNumber = "1";
