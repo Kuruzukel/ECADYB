@@ -1964,7 +1964,6 @@ function initializeCornerHover() {
   }
 
   mouseMoveHandler = function (e) {
-    // Always check modal state first
     if (checkModalState()) {
       window.clearAllPeels();
       return;
