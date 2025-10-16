@@ -2121,7 +2121,6 @@ function initializeCornerHover() {
     }
   });
 
-  // Add the event listeners
   $magazine.on("mousemove", mouseMoveHandler);
   $magazine.on("click", clickHandler);
 
