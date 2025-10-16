@@ -1969,7 +1969,6 @@ function initializeCornerHover() {
       return;
     }
 
-    // Don't allow peel when student modal is active or page is turning
     if (!$magazine.turn("is") || isPageTurning) {
       window.clearAllPeels();
       return;
