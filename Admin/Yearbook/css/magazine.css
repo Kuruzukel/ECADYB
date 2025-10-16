@@ -7,7 +7,6 @@
   margin: auto;
 }
 
-
 .magazine-viewport .magazine {
   width: 100%;
   height: 100%;
@@ -16,9 +15,8 @@
   perspective: 1200px;
 }
 
-/* Detailed book binding shadow effect */
 .magazine-viewport .magazine::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 50%;
@@ -39,11 +37,8 @@
   );
   z-index: 1000;
   pointer-events: none;
-  box-shadow: 
-    -3px 0 8px rgba(0, 0, 0, 0.25),
-    3px 0 8px rgba(0, 0, 0, 0.25),
-    inset -1px 0 3px rgba(0, 0, 0, 0.3),
-    inset 1px 0 3px rgba(0, 0, 0, 0.3),
+  box-shadow: -3px 0 8px rgba(0, 0, 0, 0.25), 3px 0 8px rgba(0, 0, 0, 0.25),
+    inset -1px 0 3px rgba(0, 0, 0, 0.3), inset 1px 0 3px rgba(0, 0, 0, 0.3),
     inset 0 0 1px rgba(255, 255, 255, 0.15);
   border-left: 1px solid rgba(0, 0, 0, 0.1);
   border-right: 1px solid rgba(0, 0, 0, 0.1);
@@ -82,12 +77,9 @@
 }
 
 /* 3D raised effect for management and student pages (pages 2 onwards) */
-.magazine .page:nth-child(n+2) {
-  box-shadow: 
-    0 8px 24px rgba(0, 0, 0, 0.25),
-    0 16px 48px rgba(0, 0, 0, 0.2),
-    0 4px 12px rgba(0, 0, 0, 0.15),
-    inset 0 -2px 8px rgba(0, 0, 0, 0.1),
+.magazine .page:nth-child(n + 2) {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25), 0 16px 48px rgba(0, 0, 0, 0.2),
+    0 4px 12px rgba(0, 0, 0, 0.15), inset 0 -2px 8px rgba(0, 0, 0, 0.1),
     inset 0 0 0 2px rgba(255, 255, 255, 0.3);
   border: 2px solid rgba(0, 0, 0, 0.08);
   transform: translateZ(15px);
@@ -95,34 +87,26 @@
 }
 
 /* Enhanced 3D effect for even pages (left side) */
-.magazine .page:nth-child(even):nth-child(n+2) {
-  box-shadow: 
-    -8px 0 20px rgba(0, 0, 0, 0.35),
-    -4px 0 12px rgba(0, 0, 0, 0.25),
-    0 8px 24px rgba(0, 0, 0, 0.25),
-    0 16px 48px rgba(0, 0, 0, 0.2),
-    0 4px 12px rgba(0, 0, 0, 0.15),
-    inset 4px 0 12px rgba(0, 0, 0, 0.15),
+.magazine .page:nth-child(even):nth-child(n + 2) {
+  box-shadow: -8px 0 20px rgba(0, 0, 0, 0.35), -4px 0 12px rgba(0, 0, 0, 0.25),
+    0 8px 24px rgba(0, 0, 0, 0.25), 0 16px 48px rgba(0, 0, 0, 0.2),
+    0 4px 12px rgba(0, 0, 0, 0.15), inset 4px 0 12px rgba(0, 0, 0, 0.15),
     inset 0 -2px 8px rgba(0, 0, 0, 0.1),
     inset 0 0 0 2px rgba(255, 255, 255, 0.3);
 }
 
 /* Enhanced 3D effect for odd pages (right side) */
-.magazine .page:nth-child(odd):nth-child(n+2) {
-  box-shadow: 
-    8px 0 20px rgba(0, 0, 0, 0.35),
-    4px 0 12px rgba(0, 0, 0, 0.25),
-    0 8px 24px rgba(0, 0, 0, 0.25),
-    0 16px 48px rgba(0, 0, 0, 0.2),
-    0 4px 12px rgba(0, 0, 0, 0.15),
-    inset -4px 0 12px rgba(0, 0, 0, 0.15),
+.magazine .page:nth-child(odd):nth-child(n + 2) {
+  box-shadow: 8px 0 20px rgba(0, 0, 0, 0.35), 4px 0 12px rgba(0, 0, 0, 0.25),
+    0 8px 24px rgba(0, 0, 0, 0.25), 0 16px 48px rgba(0, 0, 0, 0.2),
+    0 4px 12px rgba(0, 0, 0, 0.15), inset -4px 0 12px rgba(0, 0, 0, 0.15),
     inset 0 -2px 8px rgba(0, 0, 0, 0.1),
     inset 0 0 0 2px rgba(255, 255, 255, 0.3);
 }
 
 /* Page edge thickness for 3D effect */
-.magazine .page:nth-child(n+2)::after {
-  content: '';
+.magazine .page:nth-child(n + 2)::after {
+  content: "";
   position: absolute;
   top: 0;
   bottom: 0;
@@ -139,19 +123,17 @@
   );
   pointer-events: none;
   z-index: 1;
-  box-shadow: 
-    0 0 4px rgba(0, 0, 0, 0.2),
-    inset 0 0 2px rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2), inset 0 0 2px rgba(255, 255, 255, 0.3);
 }
 
 /* Left page edge (even pages) */
-.magazine .page:nth-child(even):nth-child(n+2)::after {
+.magazine .page:nth-child(even):nth-child(n + 2)::after {
   right: -4px;
   transform: translateZ(5px);
 }
 
 /* Right page edge (odd pages) */
-.magazine .page:nth-child(odd):nth-child(n+2)::after {
+.magazine .page:nth-child(odd):nth-child(n + 2)::after {
   left: -4px;
   background: linear-gradient(
     to left,
@@ -164,22 +146,31 @@
     rgba(0, 0, 0, 0.25) 100%
   );
   transform: translateZ(5px);
-  box-shadow: 
-    0 0 4px rgba(0, 0, 0, 0.2),
-    inset 0 0 2px rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2), inset 0 0 2px rgba(255, 255, 255, 0.3);
 }
 
 /* Enhanced paper texture for raised pages */
-.magazine .page:nth-child(n+2)::before {
-  content: '';
+.magazine .page:nth-child(n + 2)::before {
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: 
-    repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,.02) 2px, rgba(0,0,0,.02) 4px),
-    repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,.02) 2px, rgba(0,0,0,.02) 4px);
+  background-image: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.02) 2px,
+      rgba(0, 0, 0, 0.02) 4px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.02) 2px,
+      rgba(0, 0, 0, 0.02) 4px
+    );
   background-color: rgba(255, 255, 255, 0.05);
   opacity: 0.6;
   pointer-events: none;
@@ -703,7 +694,11 @@
 }
 
 .modal-content {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(250, 248, 245, 0.98) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(250, 248, 245, 0.98) 100%
+  );
   backdrop-filter: blur(20px);
   padding: 30px;
   border-radius: 8px;
@@ -711,24 +706,26 @@
   height: 70%;
   margin-bottom: 3.2rem;
   position: relative;
-  box-shadow: 
-    0 30px 60px rgba(0, 0, 0, 0.3),
-    0 15px 30px rgba(0, 0, 0, 0.2),
-    inset 0 0 0 2px #d4af37,
-    inset 0 0 0 6px rgba(139, 69, 19, 0.3),
-    inset 0 0 0 8px #d4af37,
-    inset 0 0 30px rgba(212, 175, 55, 0.1);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3), 0 15px 30px rgba(0, 0, 0, 0.2),
+    inset 0 0 0 2px #d4af37, inset 0 0 0 6px rgba(139, 69, 19, 0.3),
+    inset 0 0 0 8px #d4af37, inset 0 0 30px rgba(212, 175, 55, 0.1);
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text",
     "Helvetica Neue", sans-serif;
   border: 8px solid transparent;
-  border-image: linear-gradient(135deg, #d4af37 0%, #f4e4a6 25%, #d4af37 50%, #b8941e 75%, #d4af37 100%) 1;
+  border-image: linear-gradient(
+      135deg,
+      #d4af37 0%,
+      #f4e4a6 25%,
+      #d4af37 50%,
+      #b8941e 75%,
+      #d4af37 100%
+    )
+    1;
   animation: modalSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   transform-origin: center;
   transform-style: preserve-3d;
   overflow: visible;
 }
-
-
 
 /* Enhanced 3D Frame Border Effect */
 .modal-content .student-details {
@@ -747,14 +744,14 @@
 }
 
 @keyframes floatCap {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0px);
   }
   50% {
     transform: translateY(-10px);
   }
 }
-
 
 /* Bottom Laurel Decoration */
 .modal-content .student-info::after {
@@ -771,7 +768,6 @@
 .modal-content::after {
   border-image-source: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><rect width="20" height="20" fill="%23d4af37" opacity="0.1"/><circle cx="10" cy="10" r="2" fill="%23f4e4a6"/></svg>');
 }
-
 
 @keyframes modalSlideIn {
   from {
@@ -800,8 +796,7 @@
   justify-content: center;
   border-radius: 50%;
   background: linear-gradient(135deg, #d4af37 0%, #f4e4a6 100%);
-  box-shadow: 
-    0 4px 12px rgba(0, 0, 0, 0.3),
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3),
     inset 2px 2px 4px rgba(255, 255, 255, 0.5),
     inset -2px -2px 4px rgba(0, 0, 0, 0.3);
   border: 2px solid #f4e4a6;
@@ -812,8 +807,7 @@
   background: linear-gradient(135deg, #f4e4a6 0%, #d4af37 100%);
   color: #3a2910;
   transform: rotate(90deg) scale(1.1);
-  box-shadow: 
-    0 6px 16px rgba(0, 0, 0, 0.4),
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4),
     inset 2px 2px 6px rgba(255, 255, 255, 0.6),
     inset -2px -2px 6px rgba(0, 0, 0, 0.4);
 }
@@ -834,18 +828,14 @@
   pointer-events: auto !important;
 }
 
-
 .student-image-large {
   width: 100%;
   height: 430px;
   border-radius: 18px;
   overflow: hidden;
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  box-shadow: 
-    0 12px 25px rgba(0, 0, 0, 0.2),
-    0 6px 15px rgba(0, 0, 0, 0.15),
-    inset 0 0 0 3px #d4af37,
-    inset 0 0 0 5px rgba(139, 69, 19, 0.3),
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2), 0 6px 15px rgba(0, 0, 0, 0.15),
+    inset 0 0 0 3px #d4af37, inset 0 0 0 5px rgba(139, 69, 19, 0.3),
     inset 0 0 15px rgba(212, 175, 55, 0.1);
   display: flex;
   align-items: center;
@@ -889,8 +879,7 @@
   justify-content: center;
   cursor: pointer !important;
   transition: all 0.3s ease;
-  box-shadow: 
-    0 4px 12px rgba(0, 0, 0, 0.3),
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3),
     inset 0 1px 2px rgba(255, 255, 255, 0.5);
   pointer-events: all !important;
   z-index: 1001 !important;
@@ -900,8 +889,7 @@
 .student-image-navigation button:hover {
   background: rgba(212, 175, 55, 1);
   transform: scale(1.1);
-  box-shadow: 
-    0 6px 16px rgba(0, 0, 0, 0.4),
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4),
     inset 0 1px 3px rgba(255, 255, 255, 0.7);
 }
 
@@ -945,9 +933,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 
-    0 4px 8px rgba(0, 0, 0, 0.15),
-    0 2px 4px rgba(0, 0, 0, 0.1),
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1),
     inset 0 0 0 1px rgba(255, 255, 255, 0.5);
   transform-style: preserve-3d;
   transform: translateZ(5px);
@@ -958,20 +944,16 @@
 .thumbnail.active {
   opacity: 1;
   border: 3px solid #d4af37;
-  box-shadow: 
-    0 6px 12px rgba(212, 175, 55, 0.4),
-    0 3px 6px rgba(212, 175, 55, 0.2),
-    inset 0 0 0 2px rgba(255, 255, 255, 0.8);
+  box-shadow: 0 6px 12px rgba(212, 175, 55, 0.4),
+    0 3px 6px rgba(212, 175, 55, 0.2), inset 0 0 0 2px rgba(255, 255, 255, 0.8);
   transform: translateZ(8px) scale(1.05);
 }
 
 .thumbnail:hover {
   opacity: 0.95;
   transform: translateZ(8px) scale(1.08);
-  box-shadow: 
-    0 6px 12px rgba(212, 175, 55, 0.3),
-    0 3px 6px rgba(212, 175, 55, 0.15),
-    inset 0 0 0 2px rgba(255, 255, 255, 0.7);
+  box-shadow: 0 6px 12px rgba(212, 175, 55, 0.3),
+    0 3px 6px rgba(212, 175, 55, 0.15), inset 0 0 0 2px rgba(255, 255, 255, 0.7);
 }
 
 .thumbnail img {
@@ -1003,10 +985,8 @@
   color: #2c1810;
   letter-spacing: -0.8px;
   position: relative;
-  text-shadow: 
-    0 2px 4px rgba(0, 0, 0, 0.1),
-    0 1px 2px rgba(212, 175, 55, 0.3);
-  font-family: 'Times New Roman', serif;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(212, 175, 55, 0.3);
+  font-family: "Times New Roman", serif;
   background: linear-gradient(135deg, #2c1810 0%, #8b4513 50%, #2c1810 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -1022,29 +1002,33 @@
   font-style: italic;
   position: relative;
   padding: 8px 16px;
-  background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(139, 69, 19, 0.1) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(212, 175, 55, 0.1) 0%,
+    rgba(139, 69, 19, 0.1) 100%
+  );
   border-radius: 12px;
   border: 1px solid rgba(212, 175, 55, 0.3);
-  box-shadow: 
-    0 4px 8px rgba(0, 0, 0, 0.1),
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1),
     inset 0 1px 2px rgba(255, 255, 255, 0.5);
   text-align: center;
   transform: translateZ(3px);
-  font-family: 'Times New Roman', serif;
+  font-family: "Times New Roman", serif;
 }
 
 .motto,
 .milestones {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(250, 248, 245, 0.9) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(250, 248, 245, 0.9) 100%
+  );
   padding: 20px;
   margin-bottom: 20px;
   border-radius: 12px;
   position: relative;
-  box-shadow: 
-    0 8px 20px rgba(0, 0, 0, 0.15),
-    0 4px 10px rgba(0, 0, 0, 0.1),
-    inset 0 0 0 2px #d4af37,
-    inset 0 0 0 3px rgba(139, 69, 19, 0.2),
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15), 0 4px 10px rgba(0, 0, 0, 0.1),
+    inset 0 0 0 2px #d4af37, inset 0 0 0 3px rgba(139, 69, 19, 0.2),
     inset 0 0 15px rgba(212, 175, 55, 0.1);
   border-image: linear-gradient(135deg, #d4af37 0%, #f4e4a6 50%, #d4af37 100%) 1;
   transform-style: preserve-3d;
@@ -1058,7 +1042,7 @@
   color: #2c1810;
   margin-bottom: 15px;
   letter-spacing: -0.3px;
-  font-family: 'Times New Roman', serif;
+  font-family: "Times New Roman", serif;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   position: relative;
   padding-bottom: 8px;
@@ -1078,13 +1062,16 @@
   font-weight: 500;
   text-align: center;
   padding: 12px;
-  background: linear-gradient(135deg, rgba(212, 175, 55, 0.05) 0%, rgba(139, 69, 19, 0.05) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(212, 175, 55, 0.05) 0%,
+    rgba(139, 69, 19, 0.05) 100%
+  );
   border-radius: 8px;
   border-left: 4px solid #d4af37;
-  box-shadow: 
-    0 2px 4px rgba(0, 0, 0, 0.1),
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1),
     inset 0 1px 2px rgba(255, 255, 255, 0.5);
-  font-family: 'Times New Roman', serif;
+  font-family: "Times New Roman", serif;
   transform: translateZ(2px);
 }
 
@@ -1103,16 +1090,19 @@
   display: flex;
   align-items: center;
   position: relative;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(250, 248, 245, 0.3) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.3) 0%,
+    rgba(250, 248, 245, 0.3) 100%
+  );
   margin-bottom: 8px;
   border-radius: 8px;
   padding-left: 16px;
   padding-right: 16px;
-  box-shadow: 
-    0 2px 4px rgba(0, 0, 0, 0.05),
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05),
     inset 0 1px 2px rgba(255, 255, 255, 0.5);
   transform: translateZ(1px);
-  font-family: 'Times New Roman', serif;
+  font-family: "Times New Roman", serif;
 }
 
 .milestones li:last-child {
@@ -1349,8 +1339,6 @@
   animation: fadeInUp 0.6s ease-out;
 }
 
-
-
 .empty-state-container {
   text-align: center;
   max-width: 320px;
@@ -1364,7 +1352,8 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
@@ -1377,7 +1366,7 @@
   font-weight: 600;
   color: #1f2937;
   margin: 0 0 12px 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   letter-spacing: -0.025em;
 }
 
@@ -1386,9 +1375,8 @@
   color: #6b7280;
   margin: 0 0 24px 0;
   line-height: 1.5;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
-
 
 .nav-controls {
   position: fixed;
