@@ -52,7 +52,7 @@
       type="image/png"
     />
 
-    <link rel="stylesheet" href="../assets/css/StudentDashboard.css" />
+    <link rel="stylesheet" href="/ECADYB/Student/assets/css/StudentDashboard.css" />
 
     <link
       rel="stylesheet"
@@ -71,10 +71,10 @@
         <span>GRADUATION GALLERY</span>
       </div>
       <nav class="center-nav">
-        <a href="StudentDashboard.html">Home</a>
-        <a href="About.html">About</a>
-        <a href="Yearbook.html">Yearbooks</a>
-        <a href="Memories.html">Memories</a>
+        <a href="/ECADYB/Student/Components/StudentDashboard.php">Home</a>
+        <a href="/ECADYB/Student/Components/About.php">About</a>
+        <a href="/ECADYB/Student/Components/Yearbook.php">Yearbooks</a>
+        <a href="/ECADYB/Student/Components/Memories.php">Memories</a>
         <div class="mobile-login-dropdown">
           <button
             class="mobile-login-btn"
@@ -131,7 +131,7 @@
         <div class="dropdown-menu" id="profileDropdownMenu">
           <button
             class="dropdown-item"
-            onclick="window.location.href='ChangePassword.html'"
+            onclick="window.location.href='/ECADYB/Student/Components/ChangePassword.php'"
           >
             Change Password
           </button>
@@ -406,7 +406,7 @@
         </div>
       </div>
     </footer>
-    <script src="../assets/js/StudentDashboard.js"></script>
+    <script src="/ECADYB/Student/assets/js/StudentDashboard.js"></script>
   </body>
 </html>
 

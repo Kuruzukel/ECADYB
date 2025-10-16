@@ -89,6 +89,20 @@ if (!empty($error_message)) {
 
 $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
+// Redirect .html requests to .php files
+$htmlToPhpRedirects = [
+    '/Student/Components/StudentDashboard.html' => '/Student/Components/StudentDashboard.php',
+    '/Student/Components/About.html' => '/Student/Components/About.php',
+    '/Student/Components/Yearbook.html' => '/Student/Components/Yearbook.php',
+    '/Student/Components/Memories.html' => '/Student/Components/Memories.php',
+    '/Student/Components/ChangePassword.html' => '/Student/Components/ChangePassword.php',
+];
+
+if (isset($htmlToPhpRedirects[$requestUri])) {
+    header('Location: ' . $htmlToPhpRedirects[$requestUri], true, 301);
+    exit();
+}
+
 $routes = [
     '/LandingPage'        => BASE_PATH . '/LandingPage/index.html',
     '/login'              => BASE_PATH . '/Public/Components/Login.php',
@@ -96,6 +110,10 @@ $routes = [
     '/Admin'              => BASE_PATH . '/Admin/Components/AdminDashboard.php',
     '/Admin/Components/AdminLogout.php' => BASE_PATH . '/Admin/Components/AdminLogout.php',
     '/Student'            => BASE_PATH . '/Student/Components/StudentDashboard.php',
+    '/Student/Components/StudentDashboard.php' => BASE_PATH . '/Student/Components/StudentDashboard.php',
+    '/Student/Components/About.php' => BASE_PATH . '/Student/Components/About.php',
+    '/Student/Components/Yearbook.php' => BASE_PATH . '/Student/Components/Yearbook.php',
+    '/Student/Components/Memories.php' => BASE_PATH . '/Student/Components/Memories.php',
     '/Student/Components/Logout.php' => BASE_PATH . '/Student/Components/Logout.php',
     '/'                   => BASE_PATH . '/Public/Components/Loader.html',
 ];

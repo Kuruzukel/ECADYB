@@ -3,17 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>About - Graduation Gallery</title>
+    <title>Captured Moments - Graduation Gallery</title>
 
     <meta property="fb:app_id" content="1767810860531321" />
     <meta property="og:locale" content="en_US" />
     <meta
       property="og:title"
-      content="About - Graduation Gallery"
+      content="Captured Moments - Graduation Gallery"
     />
     <meta
       property="og:description"
-      content="Learn about our Digital Yearbook: Graduation Gallery."
+      content="View captured moments from our journey together."
     />
     <meta
       property="og:image"
@@ -31,11 +31,11 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta
       name="twitter:title"
-      content="About - Graduation Gallery"
+      content="Captured Moments - Graduation Gallery"
     />
     <meta
       name="twitter:description"
-      content="Learn about our Digital Yearbook: Graduation Gallery."
+      content="View captured moments from our journey together."
     />
     <meta
       name="twitter:image"
@@ -52,7 +52,7 @@
       type="image/png"
     />
 
-    <link rel="stylesheet" href="../assets/css/StudentDashboard.css" />
+    <link rel="stylesheet" href="/ECADYB/Student/assets/css/StudentDashboard.css" />
 
     <link
       rel="stylesheet"
@@ -71,10 +71,10 @@
         <span>GRADUATION GALLERY</span>
       </div>
       <nav class="center-nav">
-        <a href="StudentDashboard.html">Home</a>
-        <a href="About.html">About</a>
-        <a href="Yearbook.html">Yearbooks</a>
-        <a href="Memories.html">Memories</a>
+        <a href="/ECADYB/Student/Components/StudentDashboard.php">Home</a>
+        <a href="/ECADYB/Student/Components/About.php">About</a>
+        <a href="/ECADYB/Student/Components/Yearbook.php">Yearbooks</a>
+        <a href="/ECADYB/Student/Components/Memories.php">Memories</a>
         <div class="mobile-login-dropdown">
           <button
             class="mobile-login-btn"
@@ -131,7 +131,7 @@
         <div class="dropdown-menu" id="profileDropdownMenu">
           <button
             class="dropdown-item"
-            onclick="window.location.href='ChangePassword.html'"
+            onclick="window.location.href='/ECADYB/Student/Components/ChangePassword.php'"
           >
             Change Password
           </button>
@@ -188,31 +188,74 @@
       </button>
     </header>
 
-    <section class="about-hero-section" id="about">
-      <div class="main_blur_overlay"></div>
-      <div class="about-hero-background"></div>
-      <div class="about-hero-content">
-        <div class="about-content-flex">
-          <div>
-            <img
-              src="https://ECADYB.b-cdn.net/img/ABOUTIMG.png"
-              class="about-image"
-              alt="Yearbook Preview"
-            />
-          </div>
-          <div>
-            <h2 class="section-title">About</h2>
-            <p class="about-description">
-              Welcome to our Digital Yearbook: Graduation Gallery, a space created
-              to celebrate the incredible journey of our graduates. This virtual
-              gallery captures memories, milestones, and meaningful moments from
-              the academic year. A tribute to the resilience, growth, and
-              achievements of every student. Whether you're looking back at your
-              own story or exploring the journey of classmates, this digital
-              yearbook is a living reminder that while graduation marks the end of
-              a chapter, the memories last forever.
-            </p>
-          </div>
+    <section class="carousel-section" id="captured-moments">
+      <div class="carousel-background"></div>
+      <h2 class="section-title">Captured Moments</h2>
+      <p class="carousel-subtitle">
+        A collection of unforgettable memories from our journey together.
+      </p>
+      <div class="carousel-container">
+        <div class="carousel-track" id="carousel-track">
+          <img
+            src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample1.jpg"
+            class="carousel-img"
+          />
+          <img
+            src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample2.jpg"
+            class="carousel-img"
+          />
+          <img
+            src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample3.jpg"
+            class="carousel-img"
+          />
+          <img
+            src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample4.jpg"
+            class="carousel-img"
+          />
+          <img
+            src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample5.jpg"
+            class="carousel-img"
+          />
+          <img
+            src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample6.jpg"
+            class="carousel-img"
+          />
+          <img
+            src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample7.jpg"
+            class="carousel-img"
+          />
+          <img
+            src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample8.jpg"
+            class="carousel-img"
+          />
+          <img
+            src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample9.jpg"
+            class="carousel-img"
+          />
+          <img
+            src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample10.jpg"
+            class="carousel-img"
+          />
+          <img
+            src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample11.jpg"
+            class="carousel-img"
+          />
+          <img
+            src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample12.jpg"
+            class="carousel-img"
+          />
+          <img
+            src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample13.jpg"
+            class="carousel-img"
+          />
+          <img
+            src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample14.jpg"
+            class="carousel-img"
+          />
+          <img
+            src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample15.jpg"
+            class="carousel-img"
+          />
         </div>
       </div>
       <div class="main-hero-lower-curl">
@@ -305,7 +348,7 @@
         </div>
       </div>
     </footer>
-    <script src="../assets/js/StudentDashboard.js"></script>
+    <script src="/ECADYB/Student/assets/js/StudentDashboard.js"></script>
   </body>
 </html>
 

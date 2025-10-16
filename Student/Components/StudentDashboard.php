@@ -176,10 +176,10 @@ try {
         <span>GRADUATION GALLERY</span>
       </div>
       <nav class="center-nav">
-        <a href="/ECADYB/Student/Components/StudentDashboard.html">Home</a>
-        <a href="/ECADYB/Student/Components/About.html">About</a>
-        <a href="/ECADYB/Student/Components/Yearbook.html">Yearbooks</a>
-        <a href="/ECADYB/Student/Components/Memories.html">Memories</a>
+        <a href="/ECADYB/Student/Components/StudentDashboard.php">Home</a>
+        <a href="/ECADYB/Student/Components/About.php">About</a>
+        <a href="/ECADYB/Student/Components/Yearbook.php">Yearbooks</a>
+        <a href="/ECADYB/Student/Components/Memories.php">Memories</a>
         <div class="mobile-login-dropdown">
           <button
             class="mobile-login-btn"
