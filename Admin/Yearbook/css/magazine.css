@@ -740,7 +740,6 @@
   }
 }
 
-/* Bottom Laurel Decoration */
 .modal-content .student-info::after {
   position: absolute;
   bottom: -15px;
