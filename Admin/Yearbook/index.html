@@ -318,7 +318,7 @@
               Table of Contents
             </div>
             <div class="thumbnails-subtitle">
-              ${totalPages} pages • Currently on page <span id="current-page-display">${$(".magazine").turn("page") || 1}</span>
+              ${totalPages} pages • Currently on page <span id="current-page-display">Loading...</span>
             </div>
           </div>
           <button class="close-thumbnails">×</button>
@@ -351,9 +351,10 @@
         $(".thumbnails").html(modalContainer);
         console.log("Modal container created and appended");
 
-        // Update current page display
+        // Update current page display with page description
         var currentPage = $(".magazine").turn("page") || 1;
-        $("#current-page-display").text(currentPage);
+        var currentPageDescription = getPageDescription(currentPage);
+        $("#current-page-display").text(currentPage + " • " + currentPageDescription);
 
         $(".thumbnails")
           .off("click")
