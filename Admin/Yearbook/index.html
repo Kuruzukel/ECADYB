@@ -241,7 +241,9 @@
         }
 
         if (pageNumber >= 2 && pageNumber <= 5) {
-          return "Top Management Message";
+          // Calculate which top management page this is
+          var topMgmtPageNumber = pageNumber - 1; // Page 2 = Top Management page 1, Page 3 = Top Management page 2, etc.
+          return "Top Management Message - Page " + topMgmtPageNumber;
         }
 
         if (pageNumber === totalPages) {
@@ -249,40 +251,14 @@
         }
 
         if (pageNumber >= 6 && pageNumber < totalPages) {
-          return "Student Graduates";
+          // Calculate which student page this is
+          var studentPageNumber = pageNumber - 5; // Page 6 = Student page 1, Page 7 = Student page 2, etc.
+          return "Student Graduates - Page " + studentPageNumber;
         }
 
         return "PAGE " + pageNumber;
       }
 
-      function getPageDescriptionWithSection(pageNumber, callback) {
-        var yearbook = getCurrentYearbook();
-        var totalPages = calculateTotalPages();
-
-        if (pageNumber === 1) {
-          callback("Front Cover");
-          return;
-        }
-
-        if (pageNumber >= 2 && pageNumber <= 5) {
-          callback("Top Management Message");
-          return;
-        }
-
-        if (pageNumber === totalPages) {
-          callback("Back Cover");
-          return;
-        }
-
-        if (pageNumber >= 6 && pageNumber < totalPages) {
-          // For now, just show generic student graduates
-          // We can enhance this later to fetch actual sections
-          callback("Student Graduates");
-          return;
-        }
-
-        callback("PAGE " + pageNumber);
-      }
 
       function calculateTotalPages() {
         var studentPages = 0;
@@ -351,23 +327,13 @@
 
         console.log("Total pages for", yearbook.name, ":", totalPages);
 
-        // Add some hardcoded test items to ensure display works
-        console.log("Adding hardcoded test items");
-        var testPages = [
-          "Front Cover",
-          "Top Management Message", 
-          "Top Management Message",
-          "Top Management Message",
-          "Top Management Message",
-          "Student Graduates",
-          "Student Graduates",
-          "Student Graduates"
-        ];
-
-        for (var i = 0; i < testPages.length; i++) {
-          var pageNum = i + 1;
+        // Create items with actual data for all pages
+        for (var pageNum = 1; pageNum <= totalPages; pageNum++) {
+          var pageName = getPageDescription(pageNum);
+          console.log("Creating page", pageNum, "with name:", pageName);
+          
           var thumbnailDiv = $('<div class="thumbnail-item"></div>');
-          var pageNameDiv = $('<div class="thumbnail-page-name"></div>').text(testPages[i]);
+          var pageNameDiv = $('<div class="thumbnail-page-name"></div>').text(pageName);
           var pageNumberDiv = $('<div class="thumbnail-page-number"></div>').text(pageNum);
           
           thumbnailDiv.append(pageNameDiv);
