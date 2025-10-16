@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Maritime Yearbook - Graduation Gallery</title>
+    <title>Yearbook - Graduation Gallery</title>
     <meta name="viewport" content="width = 1050, user-scalable = no" />
     <style>
       body {
@@ -237,26 +237,51 @@
         );
 
         if (pageNumber === 1) {
-          return "FRONT COVER";
+          return "Front Cover";
         }
 
         if (pageNumber >= 2 && pageNumber <= 5) {
-          return "TOP MANAGEMENT MESSAGE";
+          return "Top Management Message";
         }
 
         if (pageNumber === totalPages) {
-          return "BACK COVER";
+          return "Back Cover";
         }
 
         if (pageNumber >= 6 && pageNumber < totalPages) {
-          var studentPageNumber = pageNumber - 5;
-
-          var departmentName = yearbook.name.toUpperCase();
-
-          return departmentName + " STUDENTS P" + studentPageNumber;
+          return "Student Graduates";
         }
 
         return "PAGE " + pageNumber;
+      }
+
+      function getPageDescriptionWithSection(pageNumber, callback) {
+        var yearbook = getCurrentYearbook();
+        var totalPages = calculateTotalPages();
+
+        if (pageNumber === 1) {
+          callback("Front Cover");
+          return;
+        }
+
+        if (pageNumber >= 2 && pageNumber <= 5) {
+          callback("Top Management Message");
+          return;
+        }
+
+        if (pageNumber === totalPages) {
+          callback("Back Cover");
+          return;
+        }
+
+        if (pageNumber >= 6 && pageNumber < totalPages) {
+          // For now, just show generic student graduates
+          // We can enhance this later to fetch actual sections
+          callback("Student Graduates");
+          return;
+        }
+
+        callback("PAGE " + pageNumber);
       }
 
       function calculateTotalPages() {
@@ -294,42 +319,75 @@
       }
 
       function populateThumbnails() {
+        console.log("=== POPULATE THUMBNAILS CALLED ===");
         var yearbook = getCurrentYearbook();
         console.log("Populating text-based thumbnails for:", yearbook.name);
 
         var thumbnailList = $("#thumbnail-list");
+        console.log("Thumbnail list element found:", thumbnailList.length);
         thumbnailList.empty();
 
+        // Create the thumbnail list if it doesn't exist
+        if (thumbnailList.length === 0) {
+          console.log("Creating thumbnail list element");
+          thumbnailList = $('<div id="thumbnail-list"></div>');
+        }
+
         var totalPages = calculateTotalPages();
+        console.log("Total pages calculated:", totalPages);
 
         var headerHtml = `
           <div class="thumbnails-header">
             <div class="thumbnails-title">
-              <span class="thumbnails-icon">☰</span>
               Table of Contents
             </div>
             <div class="thumbnails-subtitle">
-              ${totalPages} pages • Currently on page <span id="current-page-display">1</span>
+              ${totalPages} pages • Currently on page <span id="current-page-display">${$(".magazine").turn("page") || 1}</span>
             </div>
-            <button class="close-thumbnails">×</button>
           </div>
+          <button class="close-thumbnails">×</button>
         `;
+
+
+        console.log("Total pages for", yearbook.name, ":", totalPages);
+
+        // Add some hardcoded test items to ensure display works
+        console.log("Adding hardcoded test items");
+        var testPages = [
+          "Front Cover",
+          "Top Management Message", 
+          "Top Management Message",
+          "Top Management Message",
+          "Top Management Message",
+          "Student Graduates",
+          "Student Graduates",
+          "Student Graduates"
+        ];
+
+        for (var i = 0; i < testPages.length; i++) {
+          var pageNum = i + 1;
+          var thumbnailDiv = $('<div class="thumbnail-item"></div>');
+          var pageNameDiv = $('<div class="thumbnail-page-name"></div>').text(testPages[i]);
+          var pageNumberDiv = $('<div class="thumbnail-page-number"></div>').text(pageNum);
+          
+          thumbnailDiv.append(pageNameDiv);
+          thumbnailDiv.append(pageNumberDiv);
+          thumbnailDiv.attr("data-page", pageNum);
+          thumbnailList.append(thumbnailDiv);
+        }
+
+        console.log("Final thumbnail items count:", thumbnailList.find('.thumbnail-item').length);
 
         var modalContainer = $('<div class="thumbnails-modal"></div>');
         modalContainer.append(headerHtml);
         modalContainer.append(thumbnailList);
 
         $(".thumbnails").html(modalContainer);
+        console.log("Modal container created and appended");
 
-        console.log("Total pages for", yearbook.name, ":", totalPages);
-
-        for (var pageNum = 1; pageNum <= totalPages; pageNum++) {
-          var thumbnailDiv = $('<div class="thumbnail-item"></div>');
-          thumbnailDiv.text(pageNum);
-          thumbnailDiv.attr("data-page", pageNum);
-
-          thumbnailList.append(thumbnailDiv);
-        }
+        // Update current page display
+        var currentPage = $(".magazine").turn("page") || 1;
+        $("#current-page-display").text(currentPage);
 
         $(".thumbnails")
           .off("click")
@@ -344,18 +402,17 @@
 
         $(".close-thumbnails")
           .off("click")
-          .on("click", function () {
+          .on("click", function (e) {
+            e.stopPropagation();
             $(".thumbnails").removeClass("visible");
           });
 
-        $(".thumbnails li")
-          .off($.mouseEvents.over)
-          .off($.mouseEvents.out)
-          .on($.mouseEvents.over, function () {
-            $(this).addClass("thumb-hover");
-          })
-          .on($.mouseEvents.out, function () {
-            $(this).removeClass("thumb-hover");
+        $(".thumbnails")
+          .off("click.background")
+          .on("click.background", function (e) {
+            if ($(e.target).hasClass("thumbnails")) {
+              $(".thumbnails").removeClass("visible");
+            }
           });
       }
 
@@ -426,9 +483,9 @@
           </svg>
         </button>
         <button
-          class="nav-btn thumbnails-btn"
-          id="thumbnailsBtn"
-          title="Show Thumbnails"
+          class="nav-btn toc-btn"
+          id="tocBtn"
+          title="Table of Contents"
         >
           <svg
             width="16"
@@ -535,6 +592,8 @@
           </div>
         </div>
       </div>
+
+      <div class="thumbnails"></div>
     </div>
 
     <script type="text/javascript">
@@ -906,7 +965,9 @@
           $(".magazine").turn("next");
         });
 
-        $("#thumbnailsBtn").on("click", function () {
+        $("#tocBtn").on("click", function () {
+          console.log("Table of Contents button clicked");
+          populateThumbnails();
           $(".thumbnails").addClass("visible");
 
           setTimeout(function () {
