@@ -14,7 +14,7 @@ require $mongoPath;
 define('BASE_PATH', __DIR__);
 
 if (getenv('RAILWAY_PUBLIC_URL')) {
-    define('BASE_URL', '/');
+    define('BASE_URL', '/ECADYB/');
 } else {
     define('BASE_URL', '/ECADYB/');
 }
@@ -96,6 +96,12 @@ $htmlToPhpRedirects = [
     '/Student/Components/Yearbook.html' => '/Student/Components/Yearbook.php',
     '/Student/Components/Memories.html' => '/Student/Components/Memories.php',
     '/Student/Components/ChangePassword.html' => '/Student/Components/ChangePassword.php',
+    // ECADYB prefixed redirects for Railway
+    '/ECADYB/Student/Components/StudentDashboard.html' => '/ECADYB/Student/Components/StudentDashboard.php',
+    '/ECADYB/Student/Components/About.html' => '/ECADYB/Student/Components/About.php',
+    '/ECADYB/Student/Components/Yearbook.html' => '/ECADYB/Student/Components/Yearbook.php',
+    '/ECADYB/Student/Components/Memories.html' => '/ECADYB/Student/Components/Memories.php',
+    '/ECADYB/Student/Components/ChangePassword.html' => '/ECADYB/Student/Components/ChangePassword.php',
 ];
 
 if (isset($htmlToPhpRedirects[$requestUri])) {
@@ -116,6 +122,19 @@ $routes = [
     '/Student/Components/Memories.php' => BASE_PATH . '/Student/Components/Memories.php',
     '/Student/Components/Logout.php' => BASE_PATH . '/Student/Components/Logout.php',
     '/'                   => BASE_PATH . '/Public/Components/Loader.html',
+    // ECADYB prefixed routes for Railway
+    '/ECADYB/LandingPage'        => BASE_PATH . '/LandingPage/index.html',
+    '/ECADYB/login'              => BASE_PATH . '/Public/Components/Login.php',
+    '/ECADYB/Login'              => BASE_PATH . '/Public/Components/Login.php',
+    '/ECADYB/Admin'              => BASE_PATH . '/Admin/Components/AdminDashboard.php',
+    '/ECADYB/Admin/Components/AdminLogout.php' => BASE_PATH . '/Admin/Components/AdminLogout.php',
+    '/ECADYB/Student'            => BASE_PATH . '/Student/Components/StudentDashboard.php',
+    '/ECADYB/Student/Components/StudentDashboard.php' => BASE_PATH . '/Student/Components/StudentDashboard.php',
+    '/ECADYB/Student/Components/About.php' => BASE_PATH . '/Student/Components/About.php',
+    '/ECADYB/Student/Components/Yearbook.php' => BASE_PATH . '/Student/Components/Yearbook.php',
+    '/ECADYB/Student/Components/Memories.php' => BASE_PATH . '/Student/Components/Memories.php',
+    '/ECADYB/Student/Components/Logout.php' => BASE_PATH . '/Student/Components/Logout.php',
+    '/ECADYB/'                   => BASE_PATH . '/Public/Components/Loader.html',
 ];
 
 if (array_key_exists($requestUri, $routes)) {
@@ -256,7 +275,25 @@ $staticPaths = [
     '/Student/assets/css/'              => '/Student/assets/css/',
     '/Student/assets/js/'               => '/Student/assets/js/',
     '/Connection/'                      => '/Connection/',
-    '/Turn.js/'                         => '/Turn.js/'
+    '/Turn.js/'                         => '/Turn.js/',
+    // ECADYB prefixed static paths for Railway
+    '/ECADYB/img/'                             => '/img/',
+    '/ECADYB/LandingPage/'                     => '/LandingPage/',
+    '/ECADYB/Public/assets/css/'               => '/Public/assets/css/',
+    '/ECADYB/Public/assets/js/'                => '/Public/assets/js/',
+    '/ECADYB/Admin/assets/css/'                => '/Admin/assets/css/',
+    '/ECADYB/Admin/assets/js/'                 => '/Admin/assets/js/',
+    '/ECADYB/Admin/Departments/assets/css/'    => '/Admin/Departments/assets/css/',
+    '/ECADYB/Admin/Departments/assets/js/'     => '/Admin/Departments/assets/js/',
+    '/ECADYB/Admin/Yearbook/'                  => '/Admin/Yearbook/',
+    '/ECADYB/Admin/Yearbook/pages/'            => '/Admin/Yearbook/pages/',
+    '/ECADYB/Admin/Yearbook/pics/'             => '/Admin/Yearbook/pics/',
+    '/ECADYB/Admin/Yearbook/css/'              => '/Admin/Yearbook/css/',
+    '/ECADYB/Admin/Yearbook/js/'               => '/Admin/Yearbook/js/',
+    '/ECADYB/Student/assets/css/'              => '/Student/assets/css/',
+    '/ECADYB/Student/assets/js/'               => '/Student/assets/js/',
+    '/ECADYB/Connection/'                      => '/Connection/',
+    '/ECADYB/Turn.js/'                         => '/Turn.js/'
 ];
 
 foreach ($staticPaths as $uriPrefix => $folder) {
