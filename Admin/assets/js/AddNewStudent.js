@@ -175,7 +175,7 @@ function validateForm() {
   let isValid = true;
 
   const requiredInputs = document.querySelectorAll(
-    "#addStudentForm input:not(#motto):not(#honors):not(#milestone):not(#batch-name)"
+    "#addStudentForm input:not(#motto):not(#honors):not(#milestone)"
   );
 
   requiredInputs.forEach((input) => input.classList.remove("input-error"));
@@ -240,6 +240,10 @@ confirmBtn.addEventListener("click", () => {
   }
 
   const formData = new FormData(form);
+  
+  // Get selected batch template from localStorage
+  const selectedTemplate = localStorage.getItem("selectedBatchTemplateNumber") || "1";
+  formData.append("batch_template", selectedTemplate);
 
   fetch("", {
     method: "POST",

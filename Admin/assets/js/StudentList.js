@@ -929,7 +929,6 @@ function submitStudentForm(studentId) {
     motto: "motto",
     honors: "honors",
     milestone: "milestone",
-    batch_name: "batch name",
     department_section: "department section",
     status: "status",
   };

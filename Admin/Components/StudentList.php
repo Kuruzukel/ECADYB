@@ -80,7 +80,6 @@ try {
                 'motto' => 1,
                 'honors' => 1,
                 'milestone' => 1,
-                'batch name' => 1,
                 'status' => 1,
                 'password' => 1
             ],
@@ -105,7 +104,6 @@ try {
             'motto' => $student['motto'] ?? '',
             'honors' => $student['honors'] ?? '',
             'milestone' => $student['milestone'] ?? '',
-            'batch_name' => $student['batch name'] ?? '',
             'status' => $student['status'] ?? 'Pending',
             'collection' => $selectedDepartment,
             'password' => $student['password'] ?? ''
@@ -464,18 +462,6 @@ try {
                                                                         name="milestone"
                                                                         value="<?php echo htmlspecialchars($student['milestone'] ?? ''); ?>"
                                                                         placeholder="Career Highlights">
-
-                                                                    <label
-                                                                        for="batch_name<?php echo $student['student_id']; ?>">Batch
-                                                                        Name:</label>
-                                                                    <input type="text"
-                                                                        id="batch_name<?php echo $student['student_id']; ?>"
-                                                                        name="batch_name"
-                                                                        value="<?php echo htmlspecialchars($student['batch_name'] ?? ''); ?>"
-                                                                        placeholder="Batch Name"
-                                                                        oninput="allowOnlyLetters(this)">
-
-
 
                                                                     <div class="modal-buttons">
                                                                         <button type="button" class="modal-btn confirm"

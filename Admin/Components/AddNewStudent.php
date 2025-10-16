@@ -20,9 +20,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     header('Content-Type: application/json');
 
     $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
+    
+    // Get selected batch template from POST data
+    $selectedTemplate = isset($_POST['batch_template']) ? (int)$_POST['batch_template'] : 1;
+    if ($selectedTemplate < 1 || $selectedTemplate > 3) {
+        $selectedTemplate = 1;
+    }
+    $dbName = "BatchTemplate" . $selectedTemplate;
+    
     try {
         $client = new Client($mongoUrl);
-        $db = $client->Departments;
+        $db = $client->$dbName;
     } catch (Exception $e) {
         echo json_encode([
             "success" => false,
@@ -66,11 +74,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         "department section" => strtoupper($programKey) . ' - ' . strtoupper($section),
     ];
 
-    $optionalFields = ["motto", "honors", "milestone", "batch_name"];
+    $optionalFields = ["motto", "honors", "milestone"];
     foreach ($optionalFields as $field) {
         if (!empty(trim($_POST[$field] ?? ''))) {
-            $key = $field === "batch_name" ? "batch name" : $field;
-            $student[$key] = trim($_POST[$field]);
+            $student[$field] = trim($_POST[$field]);
         }
     }
 
@@ -84,7 +91,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         if ($insertResult->getInsertedCount() > 0) {
             echo json_encode([
                 "success" => true,
-                "message" => "Student added successfully to '$programKey' collection with ID {$student['id']}."
+                "message" => "Student added successfully to Batch Template $selectedTemplate - '$programKey' collection with ID {$student['id']}."
             ]);
         } else {
             echo json_encode([
@@ -111,6 +118,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Add New Student</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/AddNewStudent.css">
 </head>
 
@@ -173,21 +181,31 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         <label for="milestone">Career Highlights:</label>
                         <input type="text" id="milestone" name="milestone" placeholder="Career Highlights">
 
-                        <label for="batch-name">Batch Name:</label>
-                        <input type="text" id="batch-name" name="batch_name" placeholder="Batch Name">
+                        <button type="button" class="submit-btn" id="add-student-btn">
+                            <i class="fas fa-user-plus"></i> Add Student
+                        </button>
+                        <p id="responseMessage" class="success" style="text-align: center; margin-top: 10px;"></p>
                     </div>
                 </div>
-                <button type="button" class="submit-btn" id="add-student-btn">Add Student</button>
-                <p id="responseMessage" class="success" style="text-align: center; margin-top: 10px;"></p>
             </div>
         </form>
 
         <div class="modal-overlay" id="modal-overlay" style="display: none;">
             <div class="modal" style="font-family: Arial, sans-serif;">
-                <h2>Are you sure you want to add this student?</h2>
+                <div class="modal-header">
+                    <i class="fas fa-question-circle modal-icon"></i>
+                    <h2>Confirm Student Addition</h2>
+                </div>
+                <div class="modal-content">
+                    <p>Are you sure you want to add this student?</p>
+                </div>
                 <div class="modal-buttons">
-                    <button class="modal-btn confirm" id="confirm-btn">Yes, Add</button>
-                    <button class="modal-btn cancel" id="cancel-btn">Cancel</button>
+                    <button class="modal-btn confirm" id="confirm-btn">
+                        <i class="fas fa-check"></i> Yes, Add
+                    </button>
+                    <button class="modal-btn cancel" id="cancel-btn">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
                 </div>
             </div>
         </div>

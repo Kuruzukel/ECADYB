@@ -83,7 +83,6 @@ function importCSVToTemplateDepartments($tmpName, $templateDB, $programMap)
                         'honors' => 'honors',
                         'milestone' => 'milestone',
                         'email' => 'email',
-                        'batchname' => 'batch name',
                         default => cleanHeader($col)
                     };
                 }, $row);
