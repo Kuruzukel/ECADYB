@@ -888,8 +888,8 @@ function editProfile() {
 
 function logout() {
   console.log("Logout clicked");
-  // Add your logout functionality here
-  // For example: window.location.href = '/logout' or clear session
+  // Redirect to logout page to destroy session
+  window.location.href = '/ECADYB/Student/Components/Logout.php';
 }
 
 // Load announcements from MongoDB

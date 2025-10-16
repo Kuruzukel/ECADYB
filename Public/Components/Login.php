@@ -5,9 +5,11 @@ require __DIR__ . '/../../vendor/autoload.php';
 use MongoDB\Client;
 
 $client = new Client("mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957/");
-$departmentsDB = $client->Departments;
 $adminDB = $client->admin;
 $adminCollection = $adminDB->accounts;
+
+// Array of batch template databases
+$batchTemplates = ['BatchTemplate1', 'BatchTemplate2', 'BatchTemplate3'];
 
 $collections = [
     "bsme"   => "BS Marine Engineering",
@@ -45,24 +47,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['redirect_to'] = '../../Admin/Components/AdminDashboard.php';
         } else {
             $loginFound = false;
-            foreach ($collections as $collectionName => $course) {
-                $collection = $departmentsDB->{$collectionName};
+            
+            // Search across all batch template databases
+            foreach ($batchTemplates as $batchTemplate) {
+                $departmentsDB = $client->$batchTemplate;
+                
+                foreach ($collections as $collectionName => $course) {
+                    $collection = $departmentsDB->{$collectionName};
 
-                $student = $collection->findOne([
-                    'student id' => $username,
-                    'password'   => $password
-                ]);
+                    $student = $collection->findOne([
+                        'student id' => $username,
+                        'password'   => $password
+                    ]);
 
-                if ($student) {
-                    $_SESSION['role']       = 'student';
-                    $_SESSION['student_id'] = $student['student id'];
-                    $_SESSION['name']       = trim(($student['first name'] ?? '') . ' ' . ($student['middle name'] ?? '') . ' ' . ($student['last name'] ?? ''));
-                    $_SESSION['department'] = $course;
-                    $_SESSION['section']    = $student['department section'] ?? '';
-                    $_SESSION['login_success'] = 'student';
-                    $_SESSION['redirect_to'] = '../../Student/Components/StudentDashboard.php';
-                    $loginFound = true;
-                    break;
+                    if ($student) {
+                        $_SESSION['role']       = 'student';
+                        $_SESSION['student_id'] = $student['student id'];
+                        $_SESSION['name']       = trim(($student['first name'] ?? '') . ' ' . ($student['middle name'] ?? '') . ' ' . ($student['last name'] ?? ''));
+                        $_SESSION['department'] = $course;
+                        $_SESSION['section']    = $student['department section'] ?? '';
+                        $_SESSION['batch_template'] = $batchTemplate; // Store which batch template was found
+                        $_SESSION['login_success'] = 'student';
+                        $_SESSION['redirect_to'] = '../../Student/Components/StudentDashboard.php';
+                        $loginFound = true;
+                        break 2; // Break out of both loops
+                    }
                 }
             }
 

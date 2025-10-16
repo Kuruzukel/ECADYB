@@ -397,81 +397,6 @@ header.fading {
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
   font-family: "Segoe UI", sans-serif;
 }
-.hero-buttons {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0;
-  margin-top: -2.5rem;
-  margin-bottom: 1rem;
-  width: 100%;
-}
-.hero-btn,
-.hero-btn-secondary {
-  margin-top: 0.5rem;
-}
-.hero-btn {
-  background: #000042;
-  color: #fff;
-  padding: 0.85rem 2rem;
-  border: none;
-  border-radius: 999px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  cursor: pointer;
-  text-decoration: none;
-  box-shadow: 0 4px 16px rgba(0, 0, 66, 0.13);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1.5px solid #112d4e;
-  position: relative;
-}
-.hero-btn:hover {
-  background: rgb(13, 57, 217);
-  transform: translateY(-2px) scale(1.04);
-  box-shadow: 0 6px 20px rgba(0, 0, 66, 0.2);
-  border: 1.5px solid #0c27be;
-}
-.hero-btn-secondary {
-  background: #112d4e;
-  color: white;
-  box-shadow: 0 2px 12px rgba(99, 102, 241, 0.18);
-  border: 1.5px solid #0c27be;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-}
-.hero-btn-secondary:hover {
-  background: #e0e7ff;
-  color: rgb(13, 57, 217);
-  transform: translateY(-2px) scale(1.04);
-  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.25);
-  border: 1.5px solid #112d4e;
-}
-
-.hero-btn.clicked {
-  background: linear-gradient(135deg, #0d39d9 0%, #112d4e 100%);
-  color: #ffffff !important;
-  border-radius: 999px;
-  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.25),
-    0 0 0 2px rgba(252, 218, 21, 0.3);
-  border: 1px solid #fcda15;
-  transform: scale(1.05);
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-}
-
-.hero-btn-secondary.clicked {
-  background: linear-gradient(135deg, #0d39d9 0%, #112d4e 100%);
-  color: #ffffff !important;
-  border-radius: 999px;
-  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.25),
-    0 0 0 2px rgba(252, 218, 21, 0.3);
-  border: 1px solid #fcda15;
-  transform: scale(1.05);
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-}
 
 .content-sections {
   position: relative;
@@ -2310,32 +2235,6 @@ header.fading {
     margin-top: 0.8rem;
   }
 
-  .hero-btn {
-    background: #000042;
-    color: #fff;
-    padding: 0.85rem 2rem;
-    border: none;
-    border-radius: 999px;
-    font-size: 0.89rem;
-    font-weight: 505;
-    cursor: pointer;
-    text-decoration: none;
-    box-shadow: 0 4px 16px rgba(0, 0, 66, 0.13);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1.5px solid #112d4e;
-    position: relative;
-    width: 200px;
-    height: 50px;
-  }
-
-  .hero-btn-secondary {
-    background: #112d4e;
-    color: white;
-    box-shadow: 0 2px 12px rgba(99, 102, 241, 0.18);
-    border: 1.5px solid #0c27be;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-  }
 
   .about-image {
     width: 350px;
@@ -2498,32 +2397,6 @@ header.fading {
     margin-top: 0.8rem;
   }
 
-  .hero-btn {
-    background: #000042;
-    color: #fff;
-    padding: 0.85rem 2rem;
-    border: none;
-    border-radius: 999px;
-    font-size: 0.89rem;
-    font-weight: 505;
-    cursor: pointer;
-    text-decoration: none;
-    box-shadow: 0 4px 16px rgba(0, 0, 66, 0.13);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1.5px solid #112d4e;
-    position: relative;
-    width: 200px;
-    height: 50px;
-  }
-
-  .hero-btn-secondary {
-    background: #112d4e;
-    color: white;
-    box-shadow: 0 2px 12px rgba(99, 102, 241, 0.18);
-    border: 1.5px solid #0c27be;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-  }
 
   .about-image {
     width: 300px;
@@ -2865,32 +2738,6 @@ header.fading {
     margin-top: 0.8rem;
   }
 
-  .hero-btn {
-    background: #000042;
-    color: #fff;
-    padding: 0.85rem 2rem;
-    border: none;
-    border-radius: 999px;
-    font-size: 0.89rem;
-    font-weight: 505;
-    cursor: pointer;
-    text-decoration: none;
-    box-shadow: 0 4px 16px rgba(0, 0, 66, 0.13);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1.5px solid #112d4e;
-    position: relative;
-    width: 195px;
-    height: 50px;
-  }
-
-  .hero-btn-secondary {
-    background: #112d4e;
-    color: white;
-    box-shadow: 0 2px 12px rgba(99, 102, 241, 0.18);
-    border: 1.5px solid #0c27be;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-  }
 
   .about-image {
     display: none;
@@ -3241,32 +3088,6 @@ header.fading {
     margin-top: 0.8rem;
   }
 
-  .hero-btn {
-    background: #000042;
-    color: #fff;
-    padding: 0.85rem 2rem;
-    border: none;
-    border-radius: 999px;
-    font-size: 0.89rem;
-    font-weight: 505;
-    cursor: pointer;
-    text-decoration: none;
-    box-shadow: 0 4px 16px rgba(0, 0, 66, 0.13);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1.5px solid #112d4e;
-    position: relative;
-    width: 195px;
-    height: 50px;
-  }
-
-  .hero-btn-secondary {
-    background: #112d4e;
-    color: white;
-    box-shadow: 0 2px 12px rgba(99, 102, 241, 0.18);
-    border: 1.5px solid #0c27be;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-  }
 
   .about-image {
     display: none;
@@ -3658,36 +3479,7 @@ header.fading {
     margin-top: 0.8rem;
   }
 
-  .hero-buttons {
-    margin-bottom: 1.5rem;
-  }
 
-  .hero-btn {
-    background: #000042;
-    color: #fff;
-    padding: 0.8rem 2rem;
-    border: none;
-    border-radius: 999px;
-    font-size: 0.7rem;
-    font-weight: 505;
-    cursor: pointer;
-    text-decoration: none;
-    box-shadow: 0 4px 16px rgba(0, 0, 66, 0.13);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1.5px solid #112d4e;
-    position: relative;
-    width: 195px;
-    height: 45px;
-  }
-
-  .hero-btn-secondary {
-    background: #112d4e;
-    color: white;
-    box-shadow: 0 2px 12px rgba(99, 102, 241, 0.18);
-    border: 1.5px solid #0c27be;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-  }
 
   .about-image {
     display: none;

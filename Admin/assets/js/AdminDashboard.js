@@ -421,10 +421,10 @@ document.addEventListener("DOMContentLoaded", () => {
       e.stopPropagation();
       const isLocalhost = window.location.hostname === "localhost";
       const logoutPath = isLocalhost
-        ? "../../Public/Components/Login.php"
-        : "/Public/Components/Login.php";
+        ? "/ECADYB/Admin/Components/AdminLogout.php"
+        : "/Admin/Components/AdminLogout.php";
 
-      window.location.replace(logoutPath);
+      window.location.href = logoutPath;
     });
   }
 });

@@ -96,6 +96,7 @@ $routes = [
     '/Admin'              => BASE_PATH . '/Admin/Components/AdminDashboard.php',
     '/Admin/Components/AdminLogout.php' => BASE_PATH . '/Admin/Components/AdminLogout.php',
     '/Student'            => BASE_PATH . '/Student/Components/StudentDashboard.php',
+    '/Student/Components/Logout.php' => BASE_PATH . '/Student/Components/Logout.php',
     '/'                   => BASE_PATH . '/Public/Components/Loader.html',
 ];
 
@@ -225,6 +226,8 @@ $staticPaths = [
     '/LandingPage/'                     => '/LandingPage/',
     '/Public/assets/css/'               => '/Public/assets/css/',
     '/Public/assets/js/'                => '/Public/assets/js/',
+    '/Admin/assets/css/'                => '/Admin/assets/css/',
+    '/Admin/assets/js/'                 => '/Admin/assets/js/',
     '/Admin/Departments/assets/css/'    => '/Admin/Departments/assets/css/',
     '/Admin/Departments/assets/js/'     => '/Admin/Departments/assets/js/',
     '/Admin/Yearbook/'                  => '/Admin/Yearbook/',
@@ -232,6 +235,9 @@ $staticPaths = [
     '/Admin/Yearbook/pics/'             => '/Admin/Yearbook/pics/',
     '/Admin/Yearbook/css/'              => '/Admin/Yearbook/css/',
     '/Admin/Yearbook/js/'               => '/Admin/Yearbook/js/',
+    '/Student/assets/css/'              => '/Student/assets/css/',
+    '/Student/assets/js/'               => '/Student/assets/js/',
+    '/Connection/'                      => '/Connection/',
     '/Turn.js/'                         => '/Turn.js/'
 ];
 

@@ -1,3 +1,77 @@
+<?php
+session_start();
+
+// Check if user is logged in and is a student
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'student') {
+    // Redirect to login page if not logged in or not a student
+    header('Location: /ECADYB/login');
+    exit();
+}
+
+// Get student information from session
+$studentId = $_SESSION['student_id'] ?? '';
+$studentName = $_SESSION['name'] ?? '';
+$studentDepartment = $_SESSION['department'] ?? '';
+$studentSection = $_SESSION['section'] ?? '';
+
+// Fetch additional student details from MongoDB
+require __DIR__ . '/../../vendor/autoload.php';
+use MongoDB\Client;
+
+$studentAcademicYear = '';
+$studentProgram = '';
+$studentStatus = '';
+$studentProfilePhoto = '';
+
+try {
+    $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
+    $client = new Client($mongoUrl);
+    
+    // Collections mapping
+    $collections = [
+        "BS Marine Engineering" => "bsme",
+        "BS Marine Transportation" => "bsmt",
+        "BS Criminal Justice Education" => "bscje",
+        "BS Tourism Management" => "bstm",
+        "BS Technical-Vocational Teacher Education" => "btvted",
+        "BS Early Childhood Education" => "beced",
+        "BS Nursing" => "bsn",
+        "BS Information System" => "bsis",
+        "BS Management Accounting" => "bsma",
+        "BS Entrepreneurship" => "bse"
+    ];
+    
+    // Determine which database and collection to use
+    $dbName = $_SESSION['batch_template'] ?? "BatchTemplate1"; // Use batch template from session
+    $collectionName = $collections[$studentDepartment] ?? 'bsme';
+    
+    $db = $client->$dbName;
+    $collection = $db->$collectionName;
+    
+    // Find the student by student ID
+    $student = $collection->findOne([
+        '$or' => [
+            ['student id' => $studentId],
+            ['student_id' => $studentId]
+        ]
+    ]);
+    
+    if ($student) {
+        $studentAcademicYear = $student['academic year'] ?? '';
+        $studentProgram = $student['program'] ?? '';
+        $studentStatus = $student['status'] ?? 'Pending';
+        $studentProfilePhoto = $student['photo_url'] ?? '';
+        
+        // Update session with additional info
+        $_SESSION['academic_year'] = $studentAcademicYear;
+        $_SESSION['program'] = $studentProgram;
+        $_SESSION['status'] = $studentStatus;
+        $_SESSION['profile_photo'] = $studentProfilePhoto;
+    }
+} catch (Exception $e) {
+    error_log("Error fetching student data: " . $e->getMessage());
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -58,6 +132,21 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
     />
+    
+    <script>
+      // Pass student information to JavaScript
+      window.studentData = {
+        studentId: <?php echo json_encode($studentId); ?>,
+        studentName: <?php echo json_encode($studentName); ?>,
+        studentDepartment: <?php echo json_encode($studentDepartment); ?>,
+        studentSection: <?php echo json_encode($studentSection); ?>,
+        studentAcademicYear: <?php echo json_encode($studentAcademicYear); ?>,
+        studentProgram: <?php echo json_encode($studentProgram); ?>,
+        studentStatus: <?php echo json_encode($studentStatus); ?>
+      };
+      
+      console.log('Student Data Loaded:', window.studentData);
+    </script>
   </head>
 
   <body>
@@ -106,7 +195,7 @@
 
       <div class="profile-dropdown">
         <img
-          src="https://ECADYB.b-cdn.net/Top Management Photos/Batch Template 1/ERONBAKLA.jpg"
+          src="<?php echo htmlspecialchars($studentProfilePhoto ?: 'https://ECADYB.b-cdn.net/img/Profile.png'); ?>"
           alt="Profile"
           class="profile-icon"
           id="profileIcon"
@@ -184,21 +273,20 @@
         </div>
         <div class="hero-message">
           <div>
-            Welcome to the Exact Colleges of Asia Digital Yearbook Grallery.
+            Welcome, <strong><?php echo htmlspecialchars($studentName); ?></strong>!
           </div>
-          <div>
+          <div style="font-size: 0.9em; margin-top: 0.5em; opacity: 0.9;">
+            <i class="fas fa-id-card"></i> Student ID: <?php echo htmlspecialchars($studentId); ?> | 
+            <i class="fas fa-graduation-cap"></i> <?php echo htmlspecialchars($studentDepartment); ?> | 
+            <i class="fas fa-calendar"></i> <?php echo htmlspecialchars($studentAcademicYear); ?>
+          </div>
+          <div style="margin-top: 1em;">
             Step into your digital yearbook. Every achievement and memory comes
             alive.
           </div>
           <div class="hero-message-bold">
             Explore memories, connect the present, inspire the future.
           </div>
-        </div>
-        <div class="hero-buttons">
-          <a href="Yearbook.html" class="hero-btn">Explore Yearbooks</a>
-          <a href="Memories.html" class="hero-btn hero-btn-secondary"
-            >Captured Moments
-          </a>
         </div>
       </div>
       <div class="main-hero-lower-curl">

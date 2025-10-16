@@ -88,6 +88,7 @@ try {
         [],
         [
             'projection' => [
+                '_id' => 1,
                 'id' => 1,
                 'student id' => 1,
                 'first name' => 1,
@@ -113,19 +114,26 @@ try {
     foreach ($cursor as $student) {
         // Generate password if student doesn't have one
         $studentPassword = $student['password'] ?? '';
-        if (empty($studentPassword)) {
+        $studentObjectId = $student['_id'] ?? null;
+        
+        if (empty($studentPassword) && $studentObjectId) {
             $studentPassword = generateRandomPassword(8);
             
-            // Update the database with the generated password
+            // Update the database with the generated password using _id
             try {
-                $collection = $db->$selectedDepartment;
-                $collection->updateOne(
-                    ['student id' => $student['student id'] ?? $student['student_id'] ?? ''],
+                $updateCollection = $db->$selectedDepartment;
+                $result = $updateCollection->updateOne(
+                    ['_id' => $studentObjectId],
                     ['$set' => ['password' => $studentPassword]]
                 );
-                error_log("Generated and saved password for student: " . ($student['first name'] ?? '') . ' ' . ($student['last name'] ?? ''));
+                
+                if ($result->getModifiedCount() > 0) {
+                    error_log("✓ Generated and saved password for student: " . ($student['first name'] ?? '') . ' ' . ($student['last name'] ?? ''));
+                } else {
+                    error_log("⚠ Password update returned 0 modified documents for student: " . ($student['first name'] ?? '') . ' ' . ($student['last name'] ?? ''));
+                }
             } catch (Exception $e) {
-                error_log("Error updating password for student: " . $e->getMessage());
+                error_log("✗ Error updating password for student: " . $e->getMessage());
             }
         }
 
