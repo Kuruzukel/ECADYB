@@ -75,7 +75,6 @@
   filter: alpha(opacity=20);
 }
 
-/* 3D raised effect for management and student pages (pages 2 onwards) */
 .magazine .page:nth-child(n + 2) {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25), 0 16px 48px rgba(0, 0, 0, 0.2),
     0 4px 12px rgba(0, 0, 0, 0.15), inset 0 -2px 8px rgba(0, 0, 0, 0.1),
