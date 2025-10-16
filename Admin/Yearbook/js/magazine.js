@@ -2008,7 +2008,6 @@ function initializeCornerHover() {
     }
 
     if (inCorner && corner !== currentPeelCorner) {
-      // Double check modal is not active before peeling
       if ($(".student-modal").hasClass("active")) {
         if (currentPeelCorner) {
           $magazine.turn("peel", false);
