@@ -1912,7 +1912,6 @@ function initializeCornerHover() {
     }
   };
 
-  // Expose disable/enable functions globally
   window.disableMagazineInteractions = disableMagazineInteractions;
   window.enableMagazineInteractions = enableMagazineInteractions;
 
