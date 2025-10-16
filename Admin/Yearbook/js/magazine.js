@@ -2104,7 +2104,6 @@ function initializeCornerHover() {
         $magazine.turn("previous");
       }
 
-      // Reset turning flag after animation
       setTimeout(function () {
         isPageTurning = false;
       }, 1000);
