@@ -750,7 +750,6 @@
   pointer-events: none;
 }
 
-/* Frame Embossed Pattern */
 .modal-content::after {
   border-image-source: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><rect width="20" height="20" fill="%23d4af37" opacity="0.1"/><circle cx="10" cy="10" r="2" fill="%23f4e4a6"/></svg>');
 }
