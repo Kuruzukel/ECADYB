@@ -1,3 +1,20 @@
+<?php
+session_start();
+
+// Check if user is logged in and is a student
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'student') {
+    // Redirect to login page if not logged in or not a student
+    header('Location: /ECADYB/Public/Components/Login.php');
+    exit();
+}
+
+// Get student information from session
+$studentId = $_SESSION['student_id'] ?? '';
+$studentName = $_SESSION['name'] ?? '';
+$studentDepartment = $_SESSION['department'] ?? '';
+$studentSection = $_SESSION['section'] ?? '';
+$studentProfilePhoto = $_SESSION['profile_photo'] ?? '';
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -61,132 +78,7 @@
   </head>
 
   <body>
-    <header>
-      <div class="logo">
-        <img
-          src="https://ECADYB.b-cdn.net/img/ADMINGRALLERYLOGO.png"
-          alt="Logo"
-          class="logo-img"
-        />
-        <span>GRADUATION GALLERY</span>
-      </div>
-      <nav class="center-nav">
-        <a href="/ECADYB/Student/Components/StudentDashboard.php">Home</a>
-        <a href="/ECADYB/Student/Components/About.php">About</a>
-        <a href="/ECADYB/Student/Components/Yearbook.php">Yearbooks</a>
-        <a href="/ECADYB/Student/Components/Memories.php">Memories</a>
-        <div class="mobile-login-dropdown">
-          <button
-            class="mobile-login-btn"
-            id="mobileLoginDropdownBtn"
-            onclick="window.location.href='/ECADYB/login'"
-          >
-            Log In
-          </button>
-        </div>
-      </nav>
-      <div class="notification-icon-container">
-        <i class="fa-solid fa-bell notification-icon" id="notificationIcon"></i>
-        <span class="notification-badge" id="notificationBadge">3</span>
-        <div class="notification-dropdown" id="notificationDropdown">
-          <div class="notification-header">
-            <h3>Notifications</h3>
-            <button class="mark-all-read" onclick="markAllAsRead()">
-              Mark all as read
-            </button>
-          </div>
-          <div class="notification-list">
-            <div class="notification-item unread">
-              <i class="fa-solid fa-info-circle notification-item-icon"></i>
-              <div class="notification-content">
-                <p class="notification-text">Your profile has been updated successfully</p>
-                <span class="notification-time">2 hours ago</span>
-              </div>
-            </div>
-            <div class="notification-item unread">
-              <i class="fa-solid fa-calendar notification-item-icon"></i>
-              <div class="notification-content">
-                <p class="notification-text">New event added to the yearbook</p>
-                <span class="notification-time">5 hours ago</span>
-              </div>
-            </div>
-            <div class="notification-item unread">
-              <i class="fa-solid fa-image notification-item-icon"></i>
-              <div class="notification-content">
-                <p class="notification-text">New photos have been added to your gallery</p>
-                <span class="notification-time">1 day ago</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="profile-dropdown">
-        <img
-          src="https://ECADYB.b-cdn.net/Top Management Photos/Batch Template 1/ERONBAKLA.jpg"
-          alt="Profile"
-          class="profile-icon"
-          id="profileIcon"
-        />
-        <div class="dropdown-menu" id="profileDropdownMenu">
-          <button
-            class="dropdown-item"
-            onclick="window.location.href='/ECADYB/Student/Components/ChangePassword.php'"
-          >
-            Change Password
-          </button>
-          <button class="dropdown-item" onclick="editProfile()">
-            Edit Milestone
-          </button>
-          <button class="dropdown-item" onclick="logout()">Logout</button>
-        </div>
-      </div>
-
-      <button class="hamburger-menu" id="hamburgerMenu">
-        <svg
-          class="hamburger-icon"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            class="hamburger-line line-1"
-            d="M3 6h18"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-          />
-          <path
-            class="hamburger-line line-2"
-            d="M3 12h18"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-          />
-          <path
-            class="hamburger-line line-3"
-            d="M3 18h18"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-          />
-          <path
-            class="close-line close-1"
-            d="M18 6L6 18"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-          />
-          <path
-            class="close-line close-2"
-            d="M6 6L18 18"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-          />
-        </svg>
-      </button>
-    </header>
+    <?php include __DIR__ . '/Header.php'; ?>
 
     <section class="carousel-section" id="captured-moments">
       <div class="carousel-background"></div>
