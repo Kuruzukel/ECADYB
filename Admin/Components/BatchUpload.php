@@ -59,6 +59,26 @@ function cleanHeader($col)
     return strtolower(preg_replace('/[\s_]+/', '', trim($col)));
 }
 
+$upper = 'ABCDEFGHIJKLMNPQRSTUVWXYZ';
+$lower = 'abcdefghijkmnopqrstuvwxyz';
+$digits = '123456789';
+$special = '!@#_$';
+
+function generateRandomPassword($length = 8)
+{
+    global $upper, $lower, $digits, $special;
+    
+    $characters = $upper . $lower . $digits . $special;
+    $password = '';
+    $charactersLength = strlen($characters);
+    
+    for ($i = 0; $i < $length; $i++) {
+        $password .= $characters[rand(0, $charactersLength - 1)];
+    }
+    
+    return $password;
+}
+
 function importCSVToTemplateDepartments($tmpName, $templateDB, $programMap)
 {
     if (!isValidCSV($tmpName)) return false;
@@ -88,6 +108,18 @@ function importCSVToTemplateDepartments($tmpName, $templateDB, $programMap)
                 }, $row);
             } elseif (count($row) === count($header)) {
                 $record = array_combine($header, $row);
+
+                // Generate a random password for each student
+                $record['password'] = generateRandomPassword(8);
+                
+                // Set default status to 'Pending' if not provided
+                if (!isset($record['status']) || empty($record['status'])) {
+                    $record['status'] = 'Pending';
+                }
+                
+                // Log password generation for debugging
+                $studentName = ($record['first name'] ?? '') . ' ' . ($record['last name'] ?? '');
+                error_log("Generated password for student: " . trim($studentName) . " - Password: " . $record['password']);
 
                 if (!isset($record['department section'])) continue;
 
@@ -348,7 +380,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $messages[] = 'Top Management CSV uploaded successfully! Previous messages and orphaned photos have been replaced.';
             }
             if ($uploadStatus['student_info']) {
-                $messages[] = 'Student Information CSV uploaded successfully! Previous data has been replaced.';
+                $messages[] = 'Student Information CSV uploaded successfully! Random passwords have been generated for all students and previous data has been replaced.';
             }
             $message = implode(' ', $messages);
             $type = 'success';
