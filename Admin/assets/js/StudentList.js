@@ -691,7 +691,30 @@ async function confirmDeleteStudent() {
           `.student-checkbox[data-student-id="${selectedStudentId}"]`
         )
         ?.closest("tr");
-      if (row) row.remove();
+      if (row) {
+        row.remove();
+        
+        // Check if there are any students left in the table
+        const tbody = document.querySelector("tbody");
+        const remainingRows = tbody?.querySelectorAll("tr:not(.no-students-message)");
+        
+        if (remainingRows && remainingRows.length === 0) {
+          // Get current template number from URL
+          const urlParams = new URLSearchParams(window.location.search);
+          const template = urlParams.get("template") || "1";
+          
+          // Show "No students found" message
+          const noStudentsRow = document.createElement("tr");
+          noStudentsRow.innerHTML = `
+            <td colspan="7" class="no-students-message">
+              <div class="no-students-content">
+                <p>No students found in this department for Batch Template <strong>${template}</strong>.</p>
+              </div>
+            </td>
+          `;
+          tbody.appendChild(noStudentsRow);
+        }
+      }
     } else {
       _showNotification(data?.message || "Failed to delete student", "error");
     }
