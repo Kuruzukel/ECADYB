@@ -1331,7 +1331,7 @@ header.fading {
 .notification-list {
   max-height: 380px;
   overflow-y: auto;
-  padding: 0.5rem 0;
+  padding: 0.5rem ;
   scrollbar-width: thin;
   scrollbar-color: rgba(252, 218, 21, 0.3) rgba(255, 255, 255, 0.05);
 }
@@ -1362,16 +1362,21 @@ header.fading {
   cursor: pointer;
   transition: all 0.3s ease;
   border-left: 3px solid transparent;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: fit-content;
+  overflow: visible;
 }
 
 .notification-item.unread {
   background: rgba(252, 218, 21, 0.05);
-  border-left-color: #fcda15;
+  border-radius: 8px;
 }
 
 .notification-item:hover {
   background: rgba(255, 255, 255, 0.1);
-  transform: translateX(3px);
+  border-radius: 8px;
+ 
 }
 
 .notification-item-icon {
@@ -1399,6 +1404,20 @@ header.fading {
   color: #bfcfff;
   font-size: 0.8rem;
   opacity: 0.8;
+}
+
+.notification-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 2rem;
+  color: #bfcfff;
+  font-size: 0.9rem;
+}
+
+.notification-loading i {
+  color: #fcda15;
 }
 
 .logo-container {
