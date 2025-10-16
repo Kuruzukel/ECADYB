@@ -1027,7 +1027,6 @@
           e.stopPropagation();
         });
 
-        // ESC key to close modal
         $(document).on("keydown", function (e) {
           if (e.keyCode === 27 && $(".student-modal").hasClass("active")) {
             $(".student-modal").removeClass("active");
