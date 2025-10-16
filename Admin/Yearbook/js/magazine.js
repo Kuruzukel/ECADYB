@@ -2043,7 +2043,6 @@ function initializeCornerHover() {
   };
 
   clickHandler = function (e) {
-    // Always check modal state first
     if (checkModalState()) {
       e.preventDefault();
       e.stopPropagation();
