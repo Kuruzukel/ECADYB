@@ -12,4 +12,7 @@ Thumbs.db
 *.temp
 
 # Test files
-test-mongodb.php 
+test-mongodb.php
+
+# Don't ignore conf directory
+!conf/

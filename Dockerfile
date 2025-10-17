@@ -26,7 +26,7 @@ COPY docker/php.ini /usr/local/etc/php/conf.d/custom.ini
 RUN chown -R www-data:www-data /var/www/html
 
 RUN a2enmod rewrite
-COPY docker/apache.conf /etc/apache2/sites-available/000-default.conf
+COPY conf/httpd.conf /etc/apache2/sites-available/000-default.conf
 
 EXPOSE 80
 

@@ -1,5 +1,5 @@
 [phases.setup]
-nixPkgs = ["php"]
+nixPkgs = ["php", "apacheHttpd"]
 
 [phases.install]
 cmds = ["composer install --optimize-autoloader --no-scripts --no-interaction --ignore-platform-reqs"]
@@ -8,4 +8,4 @@ cmds = ["composer install --optimize-autoloader --no-scripts --no-interaction --
 cmds = ["echo 'Build complete'"]
 
 [start]
-cmd = "php -S 0.0.0.0:$PORT -t ." 
+cmd = "httpd -f /var/www/html/conf/httpd.conf -D FOREGROUND"
