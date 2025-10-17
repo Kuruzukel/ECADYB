@@ -231,22 +231,33 @@
           if (coverData && coverData.template) {
             template = coverData.template;
           } else {
-            var savedTemplate = localStorage.getItem("selectedBatchTemplateNumber");
+            var savedTemplate = localStorage.getItem(
+              "selectedBatchTemplateNumber"
+            );
             if (savedTemplate) {
               template = parseInt(savedTemplate);
             }
           }
-          
+
           var cacheKey = "template_" + template;
-          
-          // Check if topManagementCache is available
-          if (window.topManagementCache && window.topManagementCache[cacheKey]) {
+
+          if (
+            window.topManagementCache &&
+            window.topManagementCache[cacheKey]
+          ) {
             var topManagementData = window.topManagementCache[cacheKey];
-            if (topManagementData && topManagementData.data && topManagementData.data.length > 0) {
+            if (
+              topManagementData &&
+              topManagementData.data &&
+              topManagementData.data.length > 0
+            ) {
               // Calculate which top management index this page corresponds to
               var topMgmtIndex = pageNumber - 2; // Page 2 = index 0, Page 3 = index 1, etc.
-              
-              if (topMgmtIndex >= 0 && topMgmtIndex < topManagementData.data.length) {
+
+              if (
+                topMgmtIndex >= 0 &&
+                topMgmtIndex < topManagementData.data.length
+              ) {
                 var topMgmt = topManagementData.data[topMgmtIndex];
                 if (topMgmt && topMgmt.name && topMgmt.position) {
                   return topMgmt.name + " (" + topMgmt.position + ")";
@@ -256,10 +267,10 @@
               }
             }
           }
-          
+
           // Fallback: try to get from localStorage or other sources
-          if (typeof localStorage !== 'undefined') {
-            var savedTopMgmt = localStorage.getItem('topManagementData');
+          if (typeof localStorage !== "undefined") {
+            var savedTopMgmt = localStorage.getItem("topManagementData");
             if (savedTopMgmt) {
               try {
                 var parsedData = JSON.parse(savedTopMgmt);
@@ -278,9 +289,14 @@
             }
           }
         } catch (e) {
-          console.log("Error getting top management name for page", pageNumber, ":", e);
+          console.log(
+            "Error getting top management name for page",
+            pageNumber,
+            ":",
+            e
+          );
         }
-        
+
         return null;
       }
 
@@ -289,35 +305,46 @@
           var yearbook = getCurrentYearbook();
           var studentsPerPage = 4;
           var studentStartIndex = (pageNumber - 6) * studentsPerPage;
-          
+
           // Get template number
           var template = 1;
           if (coverData && coverData.template) {
             template = coverData.template;
           } else {
-            var savedTemplate = localStorage.getItem("selectedBatchTemplateNumber");
+            var savedTemplate = localStorage.getItem(
+              "selectedBatchTemplateNumber"
+            );
             if (savedTemplate) {
               template = parseInt(savedTemplate);
             }
           }
-          
+
           // Calculate which API page contains the student we need
           var studentsPerAPIPage = 50;
           var apiPage = Math.floor(studentStartIndex / studentsPerAPIPage) + 1;
           var localStartIndex = studentStartIndex % studentsPerAPIPage;
-          
+
           var cacheKey = yearbook.code + "_" + template + "_" + apiPage;
-          
+
           // Check if we have cached student data for this API page
           if (window.studentDataCache && window.studentDataCache[cacheKey]) {
             var studentData = window.studentDataCache[cacheKey];
-            if (studentData && studentData.success && studentData.data && studentData.data.students) {
+            if (
+              studentData &&
+              studentData.success &&
+              studentData.data &&
+              studentData.data.students
+            ) {
               var students = studentData.data.students;
               if (students.length > localStartIndex) {
                 var firstStudent = students[localStartIndex];
                 if (firstStudent) {
                   // Try different possible field names for section
-                  var section = firstStudent.section || firstStudent.program || firstStudent.course || firstStudent.department;
+                  var section =
+                    firstStudent.section ||
+                    firstStudent.program ||
+                    firstStudent.course ||
+                    firstStudent.department;
                   if (section) {
                     // Just return the section name without department code
                     return section.toUpperCase();
@@ -326,34 +353,58 @@
               }
             }
           }
-          
+
           // If no cached data, try to load it asynchronously
-          console.log("No cached student data found for page", pageNumber, "- attempting to load");
-          
+          console.log(
+            "No cached student data found for page",
+            pageNumber,
+            "- attempting to load"
+          );
+
           // Try to trigger loading of student data
-          if (typeof loadStudentsForPage === 'function') {
-            loadStudentsForPage(yearbook.code, template, studentStartIndex, 1, function(students) {
-              if (students && students.length > 0) {
-                var firstStudent = students[0];
-                var section = firstStudent.section || firstStudent.program || firstStudent.course || firstStudent.department;
-                if (section) {
-                  // Just return the section name without department code
-                  return section.toUpperCase();
+          if (typeof loadStudentsForPage === "function") {
+            loadStudentsForPage(
+              yearbook.code,
+              template,
+              studentStartIndex,
+              1,
+              function (students) {
+                if (students && students.length > 0) {
+                  var firstStudent = students[0];
+                  var section =
+                    firstStudent.section ||
+                    firstStudent.program ||
+                    firstStudent.course ||
+                    firstStudent.department;
+                  if (section) {
+                    // Just return the section name without department code
+                    return section.toUpperCase();
+                  }
                 }
               }
-            });
+            );
           }
-          
+
           // Fallback: try to get from localStorage
-          if (typeof localStorage !== 'undefined') {
-            var savedStudentData = localStorage.getItem('studentData_' + yearbook.code);
+          if (typeof localStorage !== "undefined") {
+            var savedStudentData = localStorage.getItem(
+              "studentData_" + yearbook.code
+            );
             if (savedStudentData) {
               try {
                 var parsedData = JSON.parse(savedStudentData);
-                if (parsedData && parsedData.data && parsedData.data.length > studentStartIndex) {
+                if (
+                  parsedData &&
+                  parsedData.data &&
+                  parsedData.data.length > studentStartIndex
+                ) {
                   var firstStudent = parsedData.data[studentStartIndex];
                   if (firstStudent) {
-                    var section = firstStudent.section || firstStudent.program || firstStudent.course || firstStudent.department;
+                    var section =
+                      firstStudent.section ||
+                      firstStudent.program ||
+                      firstStudent.course ||
+                      firstStudent.department;
                     if (section) {
                       // Just return the section name without department code
                       return section.toUpperCase();
@@ -366,9 +417,14 @@
             }
           }
         } catch (e) {
-          console.log("Error getting student section for page", pageNumber, ":", e);
+          console.log(
+            "Error getting student section for page",
+            pageNumber,
+            ":",
+            e
+          );
         }
-        
+
         return null;
       }
 
@@ -391,12 +447,22 @@
         if (pageNumber >= 2 && pageNumber <= 5) {
           // Calculate which top management page this is
           var topMgmtPageNumber = pageNumber - 1; // Page 2 = Top Management page 1, Page 3 = Top Management page 2, etc.
-          
+
           // Try to get the top management name for this page
           var topMgmtName = getTopManagementNameForPage(pageNumber);
-          console.log("Top management name for page", pageNumber, ":", topMgmtName);
+          console.log(
+            "Top management name for page",
+            pageNumber,
+            ":",
+            topMgmtName
+          );
           if (topMgmtName) {
-            return "Top Management Message - " + topMgmtName + " - Page " + topMgmtPageNumber;
+            return (
+              "Top Management Message - " +
+              topMgmtName +
+              " - Page " +
+              topMgmtPageNumber
+            );
           } else {
             return "Top Management Message - Page " + topMgmtPageNumber;
           }
@@ -409,12 +475,22 @@
         if (pageNumber >= 6 && pageNumber < totalPages) {
           // Calculate which student page this is
           var studentPageNumber = pageNumber - 5; // Page 6 = Student page 1, Page 7 = Student page 2, etc.
-          
+
           // Try to get the student section for this page
           var studentSection = getStudentSectionForPage(pageNumber);
-          console.log("Student section for page", pageNumber, ":", studentSection);
+          console.log(
+            "Student section for page",
+            pageNumber,
+            ":",
+            studentSection
+          );
           if (studentSection) {
-            return "Student Graduates - " + studentSection + " - Page " + studentPageNumber;
+            return (
+              "Student Graduates - " +
+              studentSection +
+              " - Page " +
+              studentPageNumber
+            );
           } else {
             return "Student Graduates - Page " + studentPageNumber;
           }
@@ -422,7 +498,6 @@
 
         return "PAGE " + pageNumber;
       }
-
 
       function calculateTotalPages() {
         var studentPages = 0;
@@ -488,25 +563,31 @@
           <button class="close-thumbnails">×</button>
         `;
 
-
         console.log("Total pages for", yearbook.name, ":", totalPages);
 
         // Create items with actual data for all pages
         for (var pageNum = 1; pageNum <= totalPages; pageNum++) {
           var pageName = getPageDescription(pageNum);
           console.log("Creating page", pageNum, "with name:", pageName);
-          
+
           var thumbnailDiv = $('<div class="thumbnail-item"></div>');
-          var pageNameDiv = $('<div class="thumbnail-page-name"></div>').text(pageName);
-          var pageNumberDiv = $('<div class="thumbnail-page-number"></div>').text(pageNum);
-          
+          var pageNameDiv = $('<div class="thumbnail-page-name"></div>').text(
+            pageName
+          );
+          var pageNumberDiv = $(
+            '<div class="thumbnail-page-number"></div>'
+          ).text(pageNum);
+
           thumbnailDiv.append(pageNameDiv);
           thumbnailDiv.append(pageNumberDiv);
           thumbnailDiv.attr("data-page", pageNum);
           thumbnailList.append(thumbnailDiv);
         }
 
-        console.log("Final thumbnail items count:", thumbnailList.find('.thumbnail-item').length);
+        console.log(
+          "Final thumbnail items count:",
+          thumbnailList.find(".thumbnail-item").length
+        );
 
         var modalContainer = $('<div class="thumbnails-modal"></div>');
         modalContainer.append(headerHtml);
@@ -518,7 +599,9 @@
         // Update current page display with page description
         var currentPage = $(".magazine").turn("page") || 1;
         var currentPageDescription = getPageDescription(currentPage);
-        $("#current-page-display").text(currentPage + " • " + currentPageDescription);
+        $("#current-page-display").text(
+          currentPage + " • " + currentPageDescription
+        );
 
         $(".thumbnails")
           .off("click")
@@ -613,11 +696,7 @@
             <polyline points="15,18 9,12 15,6"></polyline>
           </svg>
         </button>
-        <button
-          class="nav-btn toc-btn"
-          id="tocBtn"
-          title="Table of Contents"
-        >
+        <button class="nav-btn toc-btn" id="tocBtn" title="Table of Contents">
           <svg
             width="16"
             height="16"
