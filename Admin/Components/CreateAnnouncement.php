@@ -96,8 +96,8 @@
         <div id="notification-container"></div>
         
     </div>
-    <script src="/Admin/assets/js/CreateAnnouncement.js"></script>
 <?php if ($outputFullHtml): ?>
+    <script src="/Admin/assets/js/CreateAnnouncement.js"></script>
 </body>
 
 </html>

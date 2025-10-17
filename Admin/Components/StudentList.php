@@ -9,6 +9,13 @@ if (!defined('ADMIN_DASHBOARD_INCLUDED')) {
 // Check if this is being included in AdminDashboard (not AJAX request)
 $isIncludedInDashboard = defined('ADMIN_DASHBOARD_INCLUDED');
 
+// Enable error display for localhost debugging
+if (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false || strpos($_SERVER['HTTP_HOST'], '127.0.0.1') !== false) {
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
+}
+
 require __DIR__ . '/../../vendor/autoload.php';
 
 use MongoDB\Client;
@@ -35,10 +42,10 @@ function generateRandomPassword($length = 8)
 
 use MongoDB\BSON\ObjectId;
 
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
-ob_start();
+// Only start output buffering if not included in dashboard
+if (!$isIncludedInDashboard) {
+    ob_start();
+}
 
 date_default_timezone_set('Asia/Manila');
 
@@ -171,8 +178,31 @@ try {
     error_log("Database error: " . $e->getMessage());
     $allStudents = [];
     $totalPages = 1;
+    
+    // Display error on localhost for debugging
+    if ($isIncludedInDashboard && (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false || strpos($_SERVER['HTTP_HOST'], '127.0.0.1') !== false)) {
+        echo '<div style="padding: 20px; background: #fee; border: 2px solid #f00; margin: 20px; border-radius: 5px;">';
+        echo '<h3 style="color: #f00; margin-top: 0;">Database Connection Error</h3>';
+        echo '<p><strong>Error:</strong> ' . htmlspecialchars($e->getMessage()) . '</p>';
+        echo '<p><strong>MongoDB URL:</strong> ' . htmlspecialchars($mongoUrl) . '</p>';
+        echo '<p><strong>Database:</strong> ' . htmlspecialchars($dbName) . '</p>';
+        echo '<p><strong>Collection:</strong> ' . htmlspecialchars($selectedDepartment) . '</p>';
+        echo '<p style="color: #666; font-size: 12px; margin-bottom: 0;">This error is only visible on localhost for debugging purposes.</p>';
+        echo '</div>';
+    }
 }
 
+?>
+
+<?php 
+// Debug output for localhost
+if ($isIncludedInDashboard && (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false || strpos($_SERVER['HTTP_HOST'], '127.0.0.1') !== false)) {
+    echo '<!-- DEBUG: StudentList.php loaded successfully -->';
+    echo '<!-- DEBUG: Total students: ' . $totalStudents . ' -->';
+    echo '<!-- DEBUG: Total pages: ' . $totalPages . ' -->';
+    echo '<!-- DEBUG: isIncludedInDashboard: ' . ($isIncludedInDashboard ? 'true' : 'false') . ' -->';
+    echo '<!-- DEBUG: outputFullHtml: ' . ($outputFullHtml ? 'true' : 'false') . ' -->';
+}
 ?>
 
 <?php if ($outputFullHtml): ?>
@@ -567,8 +597,8 @@ try {
 
 
 
-            <script src="/Admin/assets/js/StudentList.js?v=<?php echo time(); ?>"></script>
 <?php if ($outputFullHtml): ?>
+            <script src="/Admin/assets/js/StudentList.js?v=<?php echo time(); ?>"></script>
     </body>
 
     </html>

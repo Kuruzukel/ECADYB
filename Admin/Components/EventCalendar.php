@@ -94,8 +94,8 @@
     
     <div id="notification-container"></div>
     
-    <script src="/Admin/assets/js/EventCalendar.js"></script>
 <?php if ($outputFullHtml): ?>
+    <script src="/Admin/assets/js/EventCalendar.js"></script>
 </body>
 
 </html>

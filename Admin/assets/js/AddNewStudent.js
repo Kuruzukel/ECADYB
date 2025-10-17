@@ -294,7 +294,11 @@ confirmBtn.addEventListener("click", () => {
   modalOverlay.style.display = "none";
 
   // Use absolute path that works on both localhost and Railway
-  const baseUrl = window.location.origin;
+  // Force HTTPS on Railway to avoid mixed content issues
+  let baseUrl = window.location.origin;
+  if (window.location.hostname.includes('railway') || window.location.hostname.includes('up.railway.app')) {
+    baseUrl = 'https://' + window.location.hostname;
+  }
   const basePath = window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '';
   const endpoint = baseUrl + basePath + '/Admin/Components/AddNewStudent.php';
   

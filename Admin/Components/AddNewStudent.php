@@ -278,8 +278,8 @@ if ($outputFullHtml):
         </div>
     </div>
 
-    <script src="/Admin/assets/js/AddNewStudent.js"></script>
 <?php if ($outputFullHtml): ?>
+    <script src="/Admin/assets/js/AddNewStudent.js"></script>
 </body>
 
 </html>

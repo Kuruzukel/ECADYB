@@ -168,8 +168,8 @@
             </div>
         </div>
 
-        <script src="/Admin/assets/js/ChangePassword.js"></script>
 <?php if ($outputFullHtml): ?>
+        <script src="/Admin/assets/js/ChangePassword.js"></script>
 </body>
 
 </html>

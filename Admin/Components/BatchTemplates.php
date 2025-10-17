@@ -269,8 +269,8 @@
             </div>
         </div>
     </div>
-    <script src="/Admin/assets/js/BatchTemplates.js"></script>
 <?php if ($outputFullHtml): ?>
+    <script src="/Admin/assets/js/BatchTemplates.js"></script>
 </body>
 
 </html>

@@ -255,8 +255,8 @@
         </div>
     </div>
 
-    <script src="/Admin/assets/js/Themes.js"></script>
 <?php if ($outputFullHtml): ?>
+    <script src="/Admin/assets/js/Themes.js"></script>
 </body>
 
 </html>

@@ -54,6 +54,25 @@ require $mongoPath;
     <link rel="icon" href="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png" type="image/png" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="/Admin/assets/css/AdminDashboard.css" rel="stylesheet">
+    
+    <?php
+    // Load page-specific CSS based on current page
+    $currentPage = isset($_GET['page']) ? $_GET['page'] : 'student-list';
+    $pageCSS = [
+        'student-list' => '/Admin/assets/css/StudentList.css',
+        'add-new-student' => '/Admin/assets/css/AddNewStudent.css',
+        'create-announcement' => '/Admin/assets/css/CreateAnnouncement.css',
+        'event-calendar' => '/Admin/assets/css/EventCalendar.css',
+        'batchupload' => '/Admin/assets/css/BatchUpload.css',
+        'themes' => '/Admin/assets/css/Themes.css',
+        'template' => '/Admin/assets/css/BatchTemplates.css',
+        'changepassword' => '/Admin/assets/css/ChangePassword.css',
+    ];
+    
+    if (isset($pageCSS[$currentPage])) {
+        echo '<link rel="stylesheet" href="' . $pageCSS[$currentPage] . '">';
+    }
+    ?>
 
     <script>
         (function() {
@@ -397,6 +416,24 @@ require $mongoPath;
 
     </main>
     <script src="/Admin/assets/js/AdminDashboard.js"></script>
+    
+    <?php
+    // Load page-specific JS based on current page
+    $pageJS = [
+        'student-list' => '/Admin/assets/js/StudentList.js?v=' . time(),
+        'add-new-student' => '/Admin/assets/js/AddNewStudent.js',
+        'create-announcement' => '/Admin/assets/js/CreateAnnouncement.js',
+        'event-calendar' => '/Admin/assets/js/EventCalendar.js',
+        'batchupload' => '/Admin/assets/js/BatchUpload.js?v=' . time(),
+        'themes' => '/Admin/assets/js/Themes.js',
+        'template' => '/Admin/assets/js/BatchTemplates.js',
+        'changepassword' => '/Admin/assets/js/ChangePassword.js',
+    ];
+    
+    if (isset($pageJS[$currentPage])) {
+        echo '<script src="' . $pageJS[$currentPage] . '"></script>';
+    }
+    ?>
 </body>
 
 </html>
