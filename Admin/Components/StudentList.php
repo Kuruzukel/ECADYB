@@ -118,7 +118,6 @@ try {
         if (empty($studentPassword) && $studentObjectId) {
             $studentPassword = generateRandomPassword(8);
 
-            // Update the database with the generated password using _id
             try {
                 $updateCollection = $db->$selectedDepartment;
                 $result = $updateCollection->updateOne(
