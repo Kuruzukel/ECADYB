@@ -705,7 +705,6 @@ async function confirmDeleteStudent(event) {
       if (row) {
         row.remove();
 
-        // Check if there are any students left in the table
         const tbody = document.querySelector("tbody");
         const remainingRows = tbody?.querySelectorAll(
           "tr:not(.no-students-message)"
