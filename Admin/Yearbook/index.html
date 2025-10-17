@@ -1147,6 +1147,109 @@
       $("#canvas").hide();
 
       $(document).ready(function () {
+        // Event delegation for student card clicks - works even after page navigation
+        $(document).on("click", ".student-card", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          var card = $(this);
+          var modal = $(".student-modal");
+
+          // Get student data from data attributes
+          var clickedStudent = {
+            student_id: card.attr("data-student-id"),
+            name: card.attr("data-student-name"),
+            year: card.attr("data-student-year"),
+            motto: card.attr("data-student-motto"),
+            milestones: JSON.parse(card.attr("data-student-milestones") || "[]"),
+            honors: JSON.parse(card.attr("data-student-honors") || "[]"),
+            program: card.attr("data-student-program"),
+            section: card.attr("data-student-section")
+          };
+
+          console.log("Card clicked for student:", clickedStudent);
+          
+          // Ensure modal is properly closed before reopening
+          if (modal.hasClass("active")) {
+            modal.removeClass("active");
+            $("body").removeClass("modal-active");
+          }
+
+          // Populate modal with student data
+          modal.find(".student-name").text(clickedStudent.name);
+          modal.find(".academic-year span").text(clickedStudent.year || "N/A");
+          modal.find(".motto p").text(clickedStudent.motto || "No motto provided");
+
+          var milestonesList = modal.find(".milestones ul");
+          var milestonesContainer = modal.find(".milestones");
+          var milestonesTitle = modal.find(".milestones h3");
+          milestonesList.empty();
+
+          // Check if student has milestones or honors
+          var hasMilestones = clickedStudent.milestones && clickedStudent.milestones.length > 0;
+          var hasHonors = clickedStudent.honors && clickedStudent.honors.length > 0;
+
+          if (hasMilestones || hasHonors) {
+            milestonesContainer.show();
+            if (hasMilestones && hasHonors) {
+              milestonesTitle.text("Milestones & Honors");
+            } else if (hasMilestones) {
+              milestonesTitle.text("Milestones");
+            } else {
+              milestonesTitle.text("Honors");
+            }
+
+            if (hasMilestones) {
+              clickedStudent.milestones.forEach(function (milestone) {
+                milestonesList.append("<li>" + milestone + "</li>");
+              });
+            }
+
+            if (hasHonors) {
+              clickedStudent.honors.forEach(function (honor) {
+                milestonesList.append("<li>" + honor + "</li>");
+              });
+            }
+          } else {
+            milestonesContainer.hide();
+          }
+
+          // Reset images
+          var defaultPhotoUrl = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect width="300" height="300" fill="%23f0f0f0"/%3E%3Ctext x="150" y="150" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Student Photo%3C/text%3E%3C/svg%3E';
+          modal.find(".student-image-large img").attr("src", defaultPhotoUrl);
+
+          // Show modal with a small delay
+          setTimeout(function() {
+            modal.addClass("active");
+            $("body").addClass("modal-active");
+
+            if (typeof window.clearAllPeels === "function") {
+              window.clearAllPeels();
+            }
+
+            if (typeof window.disableMagazineInteractions === "function") {
+              window.disableMagazineInteractions();
+            }
+
+            if (window.peelClearInterval) {
+              clearInterval(window.peelClearInterval);
+            }
+            window.peelClearInterval = setInterval(function () {
+              if ($(".student-modal").hasClass("active")) {
+                if (typeof window.clearAllPeels === "function") {
+                  window.clearAllPeels();
+                }
+              } else {
+                clearInterval(window.peelClearInterval);
+                window.peelClearInterval = null;
+                $("body").removeClass("modal-active");
+              }
+            }, 100);
+          }, 50);
+
+          console.log("Modal opened for student:", clickedStudent.name);
+        });
+
         $("#prevBtn").on("click", function () {
           $(".magazine").turn("previous");
         });
