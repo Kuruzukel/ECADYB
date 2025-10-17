@@ -293,18 +293,26 @@ confirmBtn.addEventListener("click", () => {
 
   modalOverlay.style.display = "none";
 
-  // Use window.location.origin which automatically includes the correct protocol (http:// or https://)
-  // This ensures HTTPS is used on Railway and HTTP on localhost
-  const baseUrl = window.location.origin;
-  const basePath = window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '';
-  const endpoint = baseUrl + basePath + '/Admin/Components/AddNewStudent.php' + '?v=' + Date.now();
+  // Force HTTPS on Railway to avoid mixed content errors
+  let baseUrl = window.location.origin;
   
+  // Explicitly ensure HTTPS on Railway
+  if (window.location.hostname.includes('railway') || 
+      window.location.hostname.includes('up.railway.app')) {
+    baseUrl = 'https://' + window.location.hostname;
+  }
+  
+  const basePath = window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '';
+  const endpoint = baseUrl + basePath + '/Admin/Components/AddNewStudent.php' + '?v=' + Date.now() + '&_=' + Math.random();
+  
+  console.log("=== DEBUG INFO ===");
   console.log("Current origin:", window.location.origin);
   console.log("Current protocol:", window.location.protocol);
   console.log("Current hostname:", window.location.hostname);
   console.log("Base URL:", baseUrl);
   console.log("Base path:", basePath);
   console.log("Fetching from:", endpoint);
+  console.log("==================");
 
   fetch(endpoint, {
     method: "POST",
