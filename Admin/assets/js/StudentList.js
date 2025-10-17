@@ -198,11 +198,10 @@ window.addEventListener("DOMContentLoaded", () => {
   initializeStatusUpdates();
   initializeDeleteModal();
 
-  // Prevent form submissions that could cause page refresh
-  document.addEventListener('submit', function(event) {
+  document.addEventListener("submit", function (event) {
     event.preventDefault();
     event.stopPropagation();
-    console.log('Form submission prevented');
+    console.log("Form submission prevented");
   });
 
   setTimeout(() => {
@@ -706,16 +705,18 @@ async function confirmDeleteStudent(event) {
         ?.closest("tr");
       if (row) {
         row.remove();
-        
+
         // Check if there are any students left in the table
         const tbody = document.querySelector("tbody");
-        const remainingRows = tbody?.querySelectorAll("tr:not(.no-students-message)");
-        
+        const remainingRows = tbody?.querySelectorAll(
+          "tr:not(.no-students-message)"
+        );
+
         if (remainingRows && remainingRows.length === 0) {
           // Get current template number from URL
           const urlParams = new URLSearchParams(window.location.search);
           const template = urlParams.get("template") || "1";
-          
+
           // Show "No students found" message
           const noStudentsRow = document.createElement("tr");
           noStudentsRow.innerHTML = `
@@ -746,7 +747,9 @@ function initializeDeleteModal() {
   deleteModal.addEventListener("click", (e) => {
     if (e.target === deleteModal) closeDeleteModal();
   });
-  confirmDeleteBtn.addEventListener("click", (event) => confirmDeleteStudent(event));
+  confirmDeleteBtn.addEventListener("click", (event) =>
+    confirmDeleteStudent(event)
+  );
 }
 
 function togglePass(icon) {
