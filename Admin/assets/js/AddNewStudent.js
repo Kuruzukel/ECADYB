@@ -293,25 +293,10 @@ confirmBtn.addEventListener("click", () => {
 
   modalOverlay.style.display = "none";
 
-  // Force HTTPS on Railway to avoid mixed content errors
-  // Always use HTTPS on Railway, never HTTP
-  let protocol = window.location.protocol;
-  if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-    protocol = 'https:';
-  }
+  // Use relative path for the endpoint to avoid routing issues
+  const endpoint = '/ECADYB/Admin/Components/AddNewStudent.php';
   
-  const baseUrl = protocol + '//' + window.location.host;
-  const basePath = window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '';
-  const endpoint = baseUrl + basePath + '/Admin/Components/AddNewStudent.php';
-  
-  console.log("=== DEBUG INFO ===");
-  console.log("Current origin:", window.location.origin);
-  console.log("Current protocol:", window.location.protocol);
-  console.log("Current hostname:", window.location.hostname);
-  console.log("Base URL:", baseUrl);
-  console.log("Base path:", basePath);
   console.log("Fetching from:", endpoint);
-  console.log("==================");
 
   fetch(endpoint, {
     method: "POST",
