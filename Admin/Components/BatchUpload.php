@@ -361,7 +361,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $type = '';
 
         if ($uploadStatus['top_management_message'] || $uploadStatus['student_info']) {
-            // Build specific success messages
             $messages = [];
             if ($uploadStatus['top_management_message']) {
                 $messages[] = 'Top Management CSV uploaded successfully! Previous messages and orphaned photos have been replaced.';
