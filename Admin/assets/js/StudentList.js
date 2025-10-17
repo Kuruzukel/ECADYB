@@ -662,7 +662,6 @@ function closeDeleteModal() {
 async function confirmDeleteStudent(event) {
   if (!selectedStudentId || !selectedCollection) return;
 
-  // Prevent any form submission or page refresh
   if (event) {
     event.preventDefault();
     event.stopPropagation();
