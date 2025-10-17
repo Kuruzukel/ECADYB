@@ -23,7 +23,6 @@ try {
 
     echo "Valid names in CSV: " . implode(', ', $validNames) . "<br><br>";
 
-    // Find orphaned photos
     $photosCollection = $mongoClient->$mongoDbName->top_management_photos;
     $orphanedPhotos = $photosCollection->find([
         'name' => ['$nin' => $validNames]
