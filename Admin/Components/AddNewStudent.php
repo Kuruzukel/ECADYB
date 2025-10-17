@@ -1,4 +1,11 @@
 <?php
+// Prevent direct access to this file
+if (!defined('ADMIN_DASHBOARD_INCLUDED')) {
+    // If accessed directly, redirect to the proper route
+    header('Location: /ECADYB/Admin');
+    exit;
+}
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     while (ob_get_level()) {
         ob_end_clean();
@@ -172,7 +179,7 @@ $programMap = [
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Add New Student</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="../assets/css/AddNewStudent.css">
+    <link rel="stylesheet" href="/ECADYB/Admin/assets/css/AddNewStudent.css">
 </head>
 
 <body>
@@ -265,7 +272,7 @@ $programMap = [
         </div>
     </div>
 
-    <script src="../assets/js/AddNewStudent.js"></script>
+    <script src="/ECADYB/Admin/assets/js/AddNewStudent.js"></script>
 </body>
 
 </html>

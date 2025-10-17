@@ -1,5 +1,11 @@
 <?php
-session_start();
+// Define constant to indicate this file is being included
+define('ADMIN_DASHBOARD_INCLUDED', true);
+
+// Check if session is already started to avoid warnings
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 
 $mongoPath = realpath(__DIR__ . '/../../Connection/Configuration/MongoConnect.php');
 
@@ -187,11 +193,11 @@ require $mongoPath;
 
                 <div id="dashboard-submenu" class="submenu">
 
-                    <a href="AdminDashboard.php?page=student-list" class="tab sub-tab">
+                    <a href="/ECADYB/Admin?page=student-list" class="tab sub-tab">
                         </i> Student List
                     </a>
 
-                    <a href="AdminDashboard.php?page=add-new-student" class="tab sub-tab">
+                    <a href="/ECADYB/Admin?page=add-new-student" class="tab sub-tab">
                         </i> Add New Student
                     </a>
 
@@ -204,11 +210,11 @@ require $mongoPath;
 
                 <div id="announcement-submenu" class="submenu">
 
-                    <a href="AdminDashboard.php?page=create-announcement" class="tab sub-tab">
+                    <a href="/ECADYB/Admin?page=create-announcement" class="tab sub-tab">
                         </i> Create Announcement
                     </a>
 
-                    <a href="AdminDashboard.php?page=event-calendar" class="tab sub-tab">
+                    <a href="/ECADYB/Admin?page=event-calendar" class="tab sub-tab">
                         </i> Event Calendar
                     </a>
 
@@ -220,36 +226,36 @@ require $mongoPath;
                 </a>
 
                 <div id="yearbook-submenu" class="submenu">
-                    <a href="AdminDashboard.php?page=maritime" class="tab sub-tab">
+                    <a href="/ECADYB/Admin?page=maritime" class="tab sub-tab">
                         </i>Maritime Education
                     </a>
 
-                    <a href="AdminDashboard.php?page=criminology" class="tab sub-tab">
+                    <a href="/ECADYB/Admin?page=criminology" class="tab sub-tab">
                         </i>College of Criminology
                     </a>
 
-                    <a href="AdminDashboard.php?page=tourism" class="tab sub-tab">
+                    <a href="/ECADYB/Admin?page=tourism" class="tab sub-tab">
                         </i>Tourism Management
                     </a>
 
-                    <a href="AdminDashboard.php?page=education" class="tab sub-tab">
+                    <a href="/ECADYB/Admin?page=education" class="tab sub-tab">
                         </i>College of Education
                     </a>
 
-                    <a href="AdminDashboard.php?page=nursing" class="tab sub-tab">
+                    <a href="/ECADYB/Admin?page=nursing" class="tab sub-tab">
                         </i>College of Nursing
                     </a>
 
-                    <a href="AdminDashboard.php?page=informationsys" class="tab sub-tab">
+                    <a href="/ECADYB/Admin?page=informationsys" class="tab sub-tab">
                         </i>Information System
                     </a>
 
-                    <a href="AdminDashboard.php?page=businessad" class="tab sub-tab">
+                    <a href="/ECADYB/Admin?page=businessad" class="tab sub-tab">
                         </i>Business Administration
                     </a>
                 </div>
 
-                <a href="AdminDashboard.php?page=batchupload" class="tab" id="batchupload-tab"
+                <a href="/ECADYB/Admin?page=batchupload" class="tab" id="batchupload-tab"
                     onclick="setTabActive('batchupload-tab');">
                     <i class="fas fa-cloud-upload-alt"></i> Batch Upload
                 </a>
@@ -261,17 +267,17 @@ require $mongoPath;
                 </a>
 
                 <div id="customize-submenu" class="submenu">
-                    <a href="AdminDashboard.php?page=themes" class="tab sub-tab">
+                    <a href="/ECADYB/Admin?page=themes" class="tab sub-tab">
                         </i>Themes
                     </a>
 
-                    <a href="AdminDashboard.php?page=template" class="tab sub-tab">
+                    <a href="/ECADYB/Admin?page=template" class="tab sub-tab">
                         </i>Batch Templates
                     </a>
 
                 </div>
 
-                <a href="AdminDashboard.php?page=changepassword" class="tab" id="changepassword-tab"
+                <a href="/ECADYB/Admin?page=changepassword" class="tab" id="changepassword-tab"
                     onclick="setTabActive('changepassword-tab');">
                     <i class="fas fa-key"></i> Change password
                 </a>
@@ -330,52 +336,52 @@ require $mongoPath;
                 switch ($page) {
 
                     case 'student-list':
-                        include('StudentList.php');
+                        include(__DIR__ . '/StudentList.php');
                         break;
                     case 'add-new-student':
-                        include('AddNewStudent.php');
+                        include(__DIR__ . '/AddNewStudent.php');
                         break;
                     case 'create-announcement':
-                        include('CreateAnnouncement.php');
+                        include(__DIR__ . '/CreateAnnouncement.php');
                         break;
                     case 'event-calendar':
-                        include('EventCalendar.php');
+                        include(__DIR__ . '/EventCalendar.php');
                         break;
                     case 'batchupload':
-                        include('BatchUpload.php');
+                        include(__DIR__ . '/BatchUpload.php');
                         break;
                     case 'themes':
-                        include('Themes.php');
+                        include(__DIR__ . '/Themes.php');
                         break;
                     case 'template':
-                        include('BatchTemplates.php');
+                        include(__DIR__ . '/BatchTemplates.php');
                         break;
                     case 'changepassword':
-                        include('ChangePassword.php');
+                        include(__DIR__ . '/ChangePassword.php');
                         break;
                     case 'maritime':
-                        include('../Departments/Maritime.php');
+                        include(__DIR__ . '/../Departments/Maritime.php');
                         break;
                     case 'criminology':
-                        include('../Departments/Criminology.php');
+                        include(__DIR__ . '/../Departments/Criminology.php');
                         break;
                     case 'tourism':
-                        include('../Departments/Tourism.php');
+                        include(__DIR__ . '/../Departments/Tourism.php');
                         break;
                     case 'education':
-                        include('../Departments/Education.php');
+                        include(__DIR__ . '/../Departments/Education.php');
                         break;
                     case 'nursing':
-                        include('../Departments/Nursing.php');
+                        include(__DIR__ . '/../Departments/Nursing.php');
                         break;
                     case 'informationsys':
-                        include('../Departments/InformationSystem.php');
+                        include(__DIR__ . '/../Departments/InformationSystem.php');
                         break;
                     case 'businessad':
-                        include('../Departments/BusinessAdministration.php');
+                        include(__DIR__ . '/../Departments/BusinessAdministration.php');
                         break;
                     default:
-                        include('StudentList.php');
+                        include(__DIR__ . '/StudentList.php');
                         break;
                 }
                 ?>

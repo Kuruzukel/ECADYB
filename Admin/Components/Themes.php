@@ -6,10 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard Theme Selector</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="../assets/css/Themes.css">
+    <link rel="stylesheet" href="/ECADYB/Admin/assets/css/Themes.css">
 </head>
 
 <body>
+    <?php
+    // Prevent direct access to this file
+    if (!defined('ADMIN_DASHBOARD_INCLUDED')) {
+        // If accessed directly, redirect to the proper route
+        header('Location: /ECADYB/Admin');
+        exit;
+    }
+    ?>
     <div class="container">
         <div class="header-container">
             <h1><i class="fas fa-sliders-h"></i> <span class="chevron"><i
@@ -228,7 +236,7 @@
         </div>
     </div>
 
-    <script src="../assets/js/Themes.js"></script>
+    <script src="/ECADYB/Admin/assets/js/Themes.js"></script>
 </body>
 
 </html>

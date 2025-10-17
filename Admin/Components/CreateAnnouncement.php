@@ -5,12 +5,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Create Announcement</title>
-    <link rel="stylesheet" href="../assets/css/CreateAnnouncement.css">
+    <link rel="stylesheet" href="/ECADYB/Admin/assets/css/CreateAnnouncement.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body>
+    <?php
+    // Prevent direct access to this file
+    if (!defined('ADMIN_DASHBOARD_INCLUDED')) {
+        // If accessed directly, redirect to the proper route
+        header('Location: /ECADYB/Admin');
+        exit;
+    }
+    ?>
     <div class="container" style="font-family: Arial;">
         <div class="header-container" style="width: 100%;">
             <h1><i class="fas fa-bullhorn"></i> <span class="chevron"><i class="fas fa-chevron-right"></i></span>Create
@@ -68,7 +76,7 @@
         <div id="notification-container"></div>
         
     </div>
-    <script src="../assets/js/CreateAnnouncement.js"></script>
+    <script src="/ECADYB/Admin/assets/js/CreateAnnouncement.js"></script>
 </body>
 
 </html>
