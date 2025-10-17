@@ -34,6 +34,36 @@ function respond($success, $message = '', $data = [])
     exit;
 }
 
+// Global error handler to ensure JSON response even on errors
+set_error_handler(function($errno, $errstr, $errfile, $errline) {
+    error_log("PHP Error: $errstr in $errfile on line $errline");
+    http_response_code(500);
+    while (ob_get_level()) {
+        ob_end_clean();
+    }
+    header('Content-Type: application/json');
+    echo json_encode([
+        'success' => false,
+        'message' => 'Server error: ' . $errstr
+    ]);
+    exit;
+});
+
+// Global exception handler
+set_exception_handler(function($exception) {
+    error_log("PHP Exception: " . $exception->getMessage());
+    http_response_code(500);
+    while (ob_get_level()) {
+        ob_end_clean();
+    }
+    header('Content-Type: application/json');
+    echo json_encode([
+        'success' => false,
+        'message' => 'Server error: ' . $exception->getMessage()
+    ]);
+    exit;
+});
+
 try {
     $template = isset($_GET['template']) ? (int)$_GET['template'] : 1;
     $studentId = isset($_GET['student_id']) ? $_GET['student_id'] : null;

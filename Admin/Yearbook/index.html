@@ -1231,9 +1231,60 @@
             milestonesContainer.hide();
           }
 
-          // Reset images
+          // Fetch and display student photos
           var defaultPhotoUrl = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect width="300" height="300" fill="%23f0f0f0"/%3E%3Ctext x="150" y="150" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Student Photo%3C/text%3E%3C/svg%3E';
           modal.find(".student-image-large img").attr("src", defaultPhotoUrl);
+
+          // Determine base path for API calls
+          var basePath = window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '';
+          
+          // Fetch student photos
+          $.ajax({
+            url: basePath + '/Connection/Photos/FetchStudentPhotos.php',
+            method: 'GET',
+            data: {
+              student_id: clickedStudent.student_id,
+              template: localStorage.getItem('selectedBatchTemplateNumber') || 1
+            },
+            dataType: 'json',
+            success: function(response) {
+              console.log('Student photos response:', response);
+              
+              if (response.success && response.data && response.data.length > 0) {
+                var photos = response.data[0].photos;
+                var photoUrls = [];
+                
+                // Collect all available photo URLs
+                if (photos.student_photo_1 && photos.student_photo_1.url) {
+                  photoUrls.push(photos.student_photo_1.url);
+                }
+                if (photos.student_photo_2 && photos.student_photo_2.url) {
+                  photoUrls.push(photos.student_photo_2.url);
+                }
+                if (photos.student_photo_3 && photos.student_photo_3.url) {
+                  photoUrls.push(photos.student_photo_3.url);
+                }
+                
+                console.log('Available photo URLs:', photoUrls);
+                
+                // Set the first available photo
+                if (photoUrls.length > 0) {
+                  modal.find(".student-image-large img").attr("src", photoUrls[0]);
+                  modal.data('student-photos', photoUrls);
+                  modal.data('current-photo-index', 0);
+                  console.log('Set student photo:', photoUrls[0]);
+                } else {
+                  console.log('No photos available for student');
+                }
+              } else {
+                console.log('No photos found for student');
+              }
+            },
+            error: function(xhr, status, error) {
+              console.error('Error fetching student photos:', error);
+              console.error('Response:', xhr.responseText);
+            }
+          });
 
           // Show modal with a small delay
           setTimeout(function() {
@@ -1349,6 +1400,39 @@
 
         $("#fullscreenBtn").on("click", function () {
           toggleFullscreen();
+        });
+
+        // Student photo navigation
+        $(".nav-prev").on("click", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          var modal = $(".student-modal");
+          var photos = modal.data('student-photos');
+          var currentIndex = modal.data('current-photo-index') || 0;
+          
+          if (photos && photos.length > 0) {
+            currentIndex = (currentIndex - 1 + photos.length) % photos.length;
+            modal.data('current-photo-index', currentIndex);
+            modal.find(".student-image-large img").attr("src", photos[currentIndex]);
+            console.log('Previous photo:', photos[currentIndex]);
+          }
+        });
+
+        $(".nav-next").on("click", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          var modal = $(".student-modal");
+          var photos = modal.data('student-photos');
+          var currentIndex = modal.data('current-photo-index') || 0;
+          
+          if (photos && photos.length > 0) {
+            currentIndex = (currentIndex + 1) % photos.length;
+            modal.data('current-photo-index', currentIndex);
+            modal.find(".student-image-large img").attr("src", photos[currentIndex]);
+            console.log('Next photo:', photos[currentIndex]);
+          }
         });
 
         $(document).on("click", function (e) {
