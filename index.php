@@ -1,9 +1,6 @@
 <?php
 session_start();
 
-// Include headers configuration for Railway
-require __DIR__ . '/Connection/Configuration/HeadersConfig.php';
-
 require __DIR__ . '/vendor/autoload.php';
 
 use MongoDB\Client;

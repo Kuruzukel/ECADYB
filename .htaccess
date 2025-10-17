@@ -1,13 +1,15 @@
 RewriteEngine On
 
-# Allow iframe embedding
-Header always set X-Frame-Options "SAMEORIGIN"
-Header always set Content-Security-Policy "frame-ancestors 'self' *;"
-
-# CORS Headers
-Header always set Access-Control-Allow-Origin "*"
-Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
-Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
+# Allow iframe embedding (if mod_headers is available)
+<IfModule mod_headers.c>
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Content-Security-Policy "frame-ancestors 'self' *;"
+    
+    # CORS Headers
+    Header always set Access-Control-Allow-Origin "*"
+    Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+    Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
+</IfModule>
 
 # Handle Authorization Header
 RewriteCond %{HTTP:Authorization} .
