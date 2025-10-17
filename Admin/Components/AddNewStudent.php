@@ -47,7 +47,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 
-    // Get selected batch template from POST data
     $selectedTemplate = isset($_POST['batch_template']) ? (int)$_POST['batch_template'] : 1;
     if ($selectedTemplate < 1 || $selectedTemplate > 3) {
         $selectedTemplate = 1;
