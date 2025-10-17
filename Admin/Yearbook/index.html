@@ -459,9 +459,8 @@
         }
 
         if (pageNumber >= 6 && pageNumber < totalPages) {
-          var studentPageNumber = pageNumber - 5; // Page 6 = Student page 1, Page 7 = Student page 2, etc.
+          var studentPageNumber = pageNumber - 5;
 
-          // Try to get the student section for this page
           var studentSection = getStudentSectionForPage(pageNumber);
           console.log(
             "Student section for page",
