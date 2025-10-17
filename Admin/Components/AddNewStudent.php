@@ -143,7 +143,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     die();
 }
 
-// If we got here, it's not a POST request - show the HTML form
 error_reporting(0);
 ini_set('display_errors', 0);
 
