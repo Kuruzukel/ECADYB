@@ -5,7 +5,7 @@ require __DIR__ . '/../../vendor/autoload.php';
 use MongoDB\Client;
 
 try {
-    $template = isset($_GET['template']) ? (int)$_GET['template'] : 2; // Default to template 2 based on your screenshot
+    $template = isset($_GET['template']) ? (int)$_GET['template'] : 2;
     $mongoDbName = "BatchTemplate" . $template;
     $mongoUrl = getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 
