@@ -1,14 +1,19 @@
 <?php
-// Prevent direct access to this file
-if (!defined('ADMIN_DASHBOARD_INCLUDED')) {
-    // If accessed directly, redirect to the proper route
-    header('Location: /ECADYB/Admin');
-    exit;
-}
-
 // Check if this is being included in AdminDashboard
 $isIncludedInDashboard = defined('ADMIN_DASHBOARD_INCLUDED');
 $outputFullHtml = !$isIncludedInDashboard;
+
+// Allow POST requests to be processed directly (for AJAX/fetch calls)
+// Only redirect GET requests when not included in dashboard
+if (!defined('ADMIN_DASHBOARD_INCLUDED') && $_SERVER["REQUEST_METHOD"] !== "POST") {
+    // If accessed directly via GET, redirect to the proper route
+    // Detect if running on localhost (with /ECADYB/) or Railway
+    $redirectPath = strpos($_SERVER['REQUEST_URI'], '/ECADYB/') !== false 
+        ? '/ECADYB/Admin' 
+        : '/Admin';
+    header('Location: ' . $redirectPath);
+    exit;
+}
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     while (ob_get_level()) {
