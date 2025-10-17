@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard Theme Selector</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="../assets/css/Themes.css">
+    <link rel="stylesheet" href="/Admin/assets/css/Themes.css">
 </head>
 
 <body>
@@ -236,7 +236,7 @@
         </div>
     </div>
 
-    <script src="../assets/js/Themes.js"></script>
+    <script src="/Admin/assets/js/Themes.js"></script>
 </body>
 
 </html>

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Batch Templates</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="../assets/css/BatchTemplates.css">
+    <link rel="stylesheet" href="/Admin/assets/css/BatchTemplates.css">
 </head>
 
 <body>
@@ -250,7 +250,7 @@
             </div>
         </div>
     </div>
-    <script src="../assets/js/BatchTemplates.js"></script>
+    <script src="/Admin/assets/js/BatchTemplates.js"></script>
 </body>
 
 </html>

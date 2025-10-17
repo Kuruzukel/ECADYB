@@ -53,7 +53,7 @@ require $mongoPath;
 
     <link rel="icon" href="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png" type="image/png" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="../assets/css/AdminDashboard.css" rel="stylesheet">
+    <link href="/Admin/assets/css/AdminDashboard.css" rel="stylesheet">
 
     <script>
         (function() {
@@ -396,7 +396,7 @@ require $mongoPath;
             </div>
 
     </main>
-    <script src="../assets/js/AdminDashboard.js"></script>
+    <script src="/Admin/assets/js/AdminDashboard.js"></script>
 </body>
 
 </html>
