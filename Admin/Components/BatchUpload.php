@@ -203,7 +203,6 @@ function importCSVByMessage($tmpName, $collection)
             $row = array_map('trim', $row);
             $row = array_map(function ($field) {
                 $field = str_replace(["\x92", "\x93", "\x94", "\x96", "\x97"], ["'", '"', '"', '-', '-'], $field);
-                // Convert to proper UTF-8
                 $field = mb_convert_encoding($field, 'UTF-8', 'UTF-8');
                 return $field;
             }, $row);
