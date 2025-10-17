@@ -306,7 +306,6 @@ confirmBtn.addEventListener("click", () => {
     .then((text) => {
       console.log("Response text:", text);
 
-      // Try to parse JSON
       let data;
       try {
         data = JSON.parse(text);
