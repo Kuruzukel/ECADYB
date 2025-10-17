@@ -320,7 +320,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     fclose($handle);
                 }
 
-                // Clean up photos collection - remove photos that don't have matching CSV entries
                 if (!empty($csvNames)) {
                     $photosCollection = $templateDB->top_management_photos;
                     $deleteResult = $photosCollection->deleteMany([
