@@ -135,6 +135,25 @@ try {
     $failedCount = 0;
     $results = [];
 
+    // Connect to MongoDB once for all files
+    $mongoDbName = "BatchTemplate{$template}";
+    $mongoUrl = getenv('MONGO_URL') ?: getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
+    error_log("UploadStudentPhotos.php using MongoDB URL: $mongoUrl");
+    error_log("UploadStudentPhotos.php using database: $mongoDbName, collection: StudentPhotos");
+
+    try {
+        $mongoClient = new Client($mongoUrl, [
+            'serverSelectionTimeoutMS' => 5000,
+            'connectTimeoutMS' => 5000,
+            'socketTimeoutMS' => 10000,
+            'retryReads' => true
+        ]);
+        $collection = $mongoClient->$mongoDbName->StudentPhotos;
+    } catch (Exception $e) {
+        error_log("UploadStudentPhotos.php MongoDB connection error: " . $e->getMessage());
+        respond(false, 'Database connection failed: ' . $e->getMessage());
+    }
+
     for ($i = 0; $i < count($uploadedFiles['name']); $i++) {
         if (connection_aborted()) {
             $uploadCancelled = true;
@@ -165,12 +184,15 @@ try {
         }
 
         $studentId = pathinfo($fileName, PATHINFO_FILENAME);
+        error_log("Processing file: $fileName, extracted student ID: $studentId");
 
         $baseStudentId = $studentId;
         if (preg_match('/^(\d{4}-\d{6})(?:-(?:FILIPINIANA|TOGA|UNIFORM))?$/', $studentId, $matches)) {
             $studentId = $matches[1];
             $baseStudentId = $studentId;
+            error_log("Matched regex for $fileName, student ID: $studentId");
         } else if (!preg_match('/^\d{4}-\d{6}$/', $studentId) && !is_numeric($studentId)) {
+            error_log("Invalid filename format: $fileName");
             $results[] = [
                 'filename' => $fileName,
                 'success' => false,
@@ -298,43 +320,6 @@ try {
             respond(false, 'Upload cancelled');
         }
 
-        $mongoDbName = "BatchTemplate{$template}";
-        // Use MONGO_URL or MONGODB_URI (Railway standard) with fallback
-        $mongoUrl = getenv('MONGO_URL') ?: getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
-        error_log("UploadStudentPhotos.php using MongoDB URL: $mongoUrl");
-        error_log("UploadStudentPhotos.php using database: $mongoDbName, collection: StudentPhotos");
-
-        try {
-            $mongoClient = new Client($mongoUrl, [
-                'serverSelectionTimeoutMS' => 5000,
-                'connectTimeoutMS' => 5000,
-                'socketTimeoutMS' => 10000,
-                'retryReads' => true
-            ]);
-            $collection = $mongoClient->$mongoDbName->StudentPhotos;
-        } catch (Exception $e) {
-            error_log("UploadStudentPhotos.php MongoDB connection error: " . $e->getMessage());
-            $results[] = [
-                'filename' => $fileName,
-                'success' => false,
-                'message' => 'Database connection failed: ' . $e->getMessage()
-            ];
-            $failedCount++;
-
-            error_log("UploadStudentPhotos.php deleting file from BunnyCDN due to MongoDB connection error: $storageUrl");
-            $deleteCh = curl_init($storageUrl);
-            curl_setopt_array($deleteCh, [
-                CURLOPT_CUSTOMREQUEST  => 'DELETE',
-                CURLOPT_HTTPHEADER     => ['AccessKey: ' . $bunnyAccessKey],
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_TIMEOUT        => 10,
-                CURLOPT_CONNECTTIMEOUT => 3
-            ]);
-            curl_exec($deleteCh);
-            curl_close($deleteCh);
-            continue;
-        }
-
         $document = [
             'student_id' => $studentId,
             'filename' => $filename,
@@ -370,19 +355,29 @@ try {
                 $updateData = ['$set' => ['upload_time' => new \MongoDB\BSON\UTCDateTime()]];
 
                 $originalNameWithoutExt = pathinfo($fileName, PATHINFO_FILENAME);
+                error_log("Updating existing document for $fileName, checking photo type in: $originalNameWithoutExt");
+                
+                // Check which photo type this is and update ONLY that specific field
+                // This preserves other photo types (FILIPINIANA, TOGA, UNIFORM)
                 if (strpos($originalNameWithoutExt, '-FILIPINIANA') !== false) {
+                    error_log("Detected FILIPINIANA photo for $fileName");
                     $updateData['$set']['filipiniana_url'] = $publicUrl;
                     $updateData['$set']['filipiniana_filename'] = $filename;
                     $updateData['$set']['filipiniana_original_name'] = $fileName;
                 } elseif (strpos($originalNameWithoutExt, '-TOGA') !== false) {
+                    error_log("Detected TOGA photo for $fileName");
                     $updateData['$set']['toga_url'] = $publicUrl;
                     $updateData['$set']['toga_filename'] = $filename;
                     $updateData['$set']['toga_original_name'] = $fileName;
                 } elseif (strpos($originalNameWithoutExt, '-UNIFORM') !== false) {
+                    error_log("Detected UNIFORM photo for $fileName");
                     $updateData['$set']['uniform_url'] = $publicUrl;
                     $updateData['$set']['uniform_filename'] = $filename;
                     $updateData['$set']['uniform_original_name'] = $fileName;
                 } else {
+                    error_log("No photo type detected for $fileName, using default fields");
+                    // For regular photos (no suffix), update the default fields
+                    // But don't overwrite FILIPINIANA, TOGA, or UNIFORM if they exist
                     $updateData['$set']['url'] = $publicUrl;
                     $updateData['$set']['filename'] = $filename;
                     $updateData['$set']['original_name'] = $fileName;
@@ -465,6 +460,8 @@ try {
             respond(false, 'Upload cancelled');
         }
 
+        error_log("Successfully processed file: $fileName for student ID: $studentId");
+        
         $results[] = [
             'filename' => $fileName,
             'success' => true,
