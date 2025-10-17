@@ -111,7 +111,6 @@ function importCSVToTemplateDepartments($tmpName, $templateDB, $programMap)
 
                 $record['password'] = generateRandomPassword(8);
 
-                // Set default status to 'Pending' if not provided
                 if (!isset($record['status']) || empty($record['status'])) {
                     $record['status'] = 'Pending';
                 }
