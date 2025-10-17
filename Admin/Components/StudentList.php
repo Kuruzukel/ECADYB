@@ -112,7 +112,6 @@ try {
     );
 
     foreach ($cursor as $student) {
-        // Generate password if student doesn't have one
         $studentPassword = $student['password'] ?? '';
         $studentObjectId = $student['_id'] ?? null;
 
