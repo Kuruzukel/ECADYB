@@ -1,6 +1,29 @@
 <?php
+// Set headers first to allow CORS
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type');
+
+// Handle preflight OPTIONS request
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
+// Turn off error display for production
+ini_set('display_errors', 0);
 error_reporting(E_ALL);
-ini_set('display_errors', 1);
+
+// Global error handler to ensure JSON response
+set_error_handler(function($errno, $errstr, $errfile, $errline) {
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Server error: ' . $errstr
+    ]);
+    exit;
+});
 
 require __DIR__ . '/../../vendor/autoload.php';
 
@@ -52,11 +75,13 @@ try {
     error_log("Delete result - deleted count: " . $result->getDeletedCount());
 
     if ($result->getDeletedCount() > 0) {
+        http_response_code(200);
         echo json_encode([
             'success' => true,
             'message' => 'Announcement deleted successfully'
         ]);
     } else {
+        http_response_code(404);
         echo json_encode([
             'success' => false,
             'message' => 'Announcement not found or already deleted'

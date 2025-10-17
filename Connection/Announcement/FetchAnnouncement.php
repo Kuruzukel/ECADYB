@@ -1,14 +1,35 @@
 <?php
+// Set headers first to allow CORS
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type');
+
+// Handle preflight OPTIONS request
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
+// Turn off error display for production
+ini_set('display_errors', 0);
 error_reporting(E_ALL);
-ini_set('display_errors', 1);
+
+// Global error handler to ensure JSON response
+set_error_handler(function($errno, $errstr, $errfile, $errline) {
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Server error: ' . $errstr
+    ]);
+    exit;
+});
 
 date_default_timezone_set('Asia/Manila');
 
 require __DIR__ . '/../../vendor/autoload.php';
 
 use MongoDB\Client;
-
-header('Content-Type: application/json');
 
 try {
     $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
@@ -37,13 +58,14 @@ try {
         ];
     }
 
+    http_response_code(200);
     echo json_encode([
         'success' => true,
         'announcements' => $announcements
     ]);
 } catch (Exception $e) {
     error_log("Fetch announcements error: " . $e->getMessage());
-
+    http_response_code(500);
     echo json_encode([
         'success' => false,
         'message' => 'Error fetching announcements: ' . $e->getMessage()

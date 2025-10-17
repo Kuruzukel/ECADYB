@@ -1,17 +1,40 @@
 <?php
+// Set headers first to allow CORS
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type');
+
+// Handle preflight OPTIONS request
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
+// Turn off error display for production
+ini_set('display_errors', 0);
+error_reporting(E_ALL);
+
+// Global error handler to ensure JSON response
+set_error_handler(function($errno, $errstr, $errfile, $errline) {
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Server error: ' . $errstr
+    ]);
+    exit;
+});
+
 require __DIR__ . '/../../vendor/autoload.php';
 
 use MongoDB\Client;
 
-header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: POST');
-header('Access-Control-Allow-Headers: Content-Type');
-
-$mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
+// Use MONGO_URL or MONGODB_URI (Railway standard) with fallback
+$mongoUrl = getenv('MONGO_URL') ?: getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 try {
     $client = new Client($mongoUrl);
 } catch (Exception $e) {
+    http_response_code(500);
     echo json_encode([
         "success" => false,
         "message" => "Failed to connect to MongoDB: " . $e->getMessage()
@@ -25,6 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $input = json_decode($inputRaw, true);
 
     if (!is_array($input)) {
+        http_response_code(400);
         echo json_encode([
             "success" => false,
             "message" => "Invalid JSON input",
@@ -39,6 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $template   = trim($input['template'] ?? '1');
 
     if (!$studentId || !$collection || !$status) {
+        http_response_code(400);
         echo json_encode([
             "success" => false,
             "message" => "Missing required data",
@@ -68,6 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         error_log("UpdateStatus - Matched: " . $result->getMatchedCount() . ", Modified: " . $result->getModifiedCount());
 
         if ($result->getMatchedCount() > 0) {
+            http_response_code(200);
             echo json_encode([
                 "success"    => true,
                 "message"    => "Status updated successfully",
@@ -95,6 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             error_log("UpdateStatus - No matching student found. Available IDs in $collection: " . implode(', ', $ids));
 
+            http_response_code(404);
             echo json_encode([
                 "success"    => false,
                 "message"    => "No matching student found",
@@ -106,6 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     } catch (Exception $e) {
         error_log("UpdateStatus Error: " . $e->getMessage());
+        http_response_code(500);
         echo json_encode([
             "success" => false,
             "message" => "Database error: " . $e->getMessage()
@@ -115,6 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
+http_response_code(405);
 echo json_encode([
     "success" => false,
     "message" => "Invalid request method"

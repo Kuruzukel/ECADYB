@@ -916,15 +916,39 @@ async function updateStudentDetails(studentId, fields) {
       (window.location.pathname.includes("/ECADYB/") ? "/ECADYB" : "");
     const endpoint = baseUrl + STUDENT_UPDATE_ENDPOINT;
 
+    console.log("Sending update request to:", endpoint);
+    console.log("Update data:", { original_student_id: studentId, ...fields });
+
     const res = await fetch(endpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ original_student_id: studentId, ...fields }),
     });
 
-    const data = await res.json().catch(() => null);
+    console.log("Response status:", res.status);
+    console.log("Response ok:", res.ok);
 
-    if (data?.success) {
+    // Check if response is ok
+    if (!res.ok) {
+      const errorText = await res.text();
+      console.error("Response error:", errorText);
+      _showNotification("Failed to save student details. Server error: " + res.status, "error");
+      return;
+    }
+
+    // Parse JSON response
+    let data;
+    try {
+      data = await res.json();
+      console.log("Response data:", data);
+    } catch (jsonError) {
+      console.error("JSON parse error:", jsonError);
+      _showNotification("Failed to parse server response", "error");
+      return;
+    }
+
+    // Check if data exists and has success property
+    if (data && data.success) {
       _showNotification(
         data.message || "Student Details Saved Successfully",
         "success"
@@ -938,8 +962,9 @@ async function updateStudentDetails(studentId, fields) {
         "error"
       );
     }
-  } catch {
-    _showNotification("Error saving student details", "error");
+  } catch (error) {
+    console.error("Fetch error:", error);
+    _showNotification("Error saving student details: " + error.message, "error");
   }
 }
 
