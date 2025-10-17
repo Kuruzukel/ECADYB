@@ -297,7 +297,7 @@ confirmBtn.addEventListener("click", () => {
   // This ensures HTTPS is used on Railway and HTTP on localhost
   const baseUrl = window.location.origin;
   const basePath = window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '';
-  const endpoint = baseUrl + basePath + '/Admin/Components/AddNewStudent.php';
+  const endpoint = baseUrl + basePath + '/Admin/Components/AddNewStudent.php' + '?v=' + Date.now();
   
   console.log("Current origin:", window.location.origin);
   console.log("Current protocol:", window.location.protocol);

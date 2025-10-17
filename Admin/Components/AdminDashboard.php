@@ -421,7 +421,7 @@ require $mongoPath;
     // Load page-specific JS based on current page
     $pageJS = [
         'student-list' => '/Admin/assets/js/StudentList.js?v=' . time(),
-        'add-new-student' => '/Admin/assets/js/AddNewStudent.js',
+        'add-new-student' => '/Admin/assets/js/AddNewStudent.js?v=' . time(),
         'create-announcement' => '/Admin/assets/js/CreateAnnouncement.js',
         'event-calendar' => '/Admin/assets/js/EventCalendar.js',
         'batchupload' => '/Admin/assets/js/BatchUpload.js?v=' . time(),
