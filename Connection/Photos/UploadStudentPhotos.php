@@ -165,13 +165,16 @@ try {
         }
 
         $studentId = pathinfo($fileName, PATHINFO_FILENAME);
+        error_log("Processing file: $fileName, extracted student ID: $studentId");
 
         $baseStudentId = $studentId;
         // Case-insensitive regex to match student ID with optional photo type suffix
         if (preg_match('/^(\d{4}-\d{6})(?:-(?:FILIPINIANA|TOGA|UNIFORM))?$/i', $studentId, $matches)) {
             $studentId = $matches[1];
             $baseStudentId = $studentId;
+            error_log("Matched regex for $fileName, student ID: $studentId");
         } else if (!preg_match('/^\d{4}-\d{6}$/', $studentId) && !is_numeric($studentId)) {
+            error_log("Invalid filename format: $fileName");
             $results[] = [
                 'filename' => $fileName,
                 'success' => false,
@@ -373,20 +376,26 @@ try {
                 $updateData = ['$set' => ['upload_time' => new \MongoDB\BSON\UTCDateTime()]];
 
                 $originalNameWithoutExt = pathinfo($fileName, PATHINFO_FILENAME);
+                error_log("Updating existing document for $fileName, checking photo type in: $originalNameWithoutExt");
+                
                 // Case-insensitive matching for photo types
                 if (stripos($originalNameWithoutExt, '-FILIPINIANA') !== false) {
+                    error_log("Detected FILIPINIANA photo for $fileName");
                     $updateData['$set']['filipiniana_url'] = $publicUrl;
                     $updateData['$set']['filipiniana_filename'] = $filename;
                     $updateData['$set']['filipiniana_original_name'] = $fileName;
                 } elseif (stripos($originalNameWithoutExt, '-TOGA') !== false) {
+                    error_log("Detected TOGA photo for $fileName");
                     $updateData['$set']['toga_url'] = $publicUrl;
                     $updateData['$set']['toga_filename'] = $filename;
                     $updateData['$set']['toga_original_name'] = $fileName;
                 } elseif (stripos($originalNameWithoutExt, '-UNIFORM') !== false) {
+                    error_log("Detected UNIFORM photo for $fileName");
                     $updateData['$set']['uniform_url'] = $publicUrl;
                     $updateData['$set']['uniform_filename'] = $filename;
                     $updateData['$set']['uniform_original_name'] = $fileName;
                 } else {
+                    error_log("No photo type detected for $fileName, using default fields");
                     $updateData['$set']['url'] = $publicUrl;
                     $updateData['$set']['filename'] = $filename;
                     $updateData['$set']['original_name'] = $fileName;
@@ -406,20 +415,26 @@ try {
                 ];
 
                 $originalNameWithoutExt = pathinfo($fileName, PATHINFO_FILENAME);
+                error_log("Creating new document for $fileName, checking photo type in: $originalNameWithoutExt");
+                
                 // Case-insensitive matching for photo types
                 if (stripos($originalNameWithoutExt, '-FILIPINIANA') !== false) {
+                    error_log("Detected FILIPINIANA photo for $fileName");
                     $newDocument['filipiniana_url'] = $publicUrl;
                     $newDocument['filipiniana_filename'] = $filename;
                     $newDocument['filipiniana_original_name'] = $fileName;
                 } elseif (stripos($originalNameWithoutExt, '-TOGA') !== false) {
+                    error_log("Detected TOGA photo for $fileName");
                     $newDocument['toga_url'] = $publicUrl;
                     $newDocument['toga_filename'] = $filename;
                     $newDocument['toga_original_name'] = $fileName;
                 } elseif (stripos($originalNameWithoutExt, '-UNIFORM') !== false) {
+                    error_log("Detected UNIFORM photo for $fileName");
                     $newDocument['uniform_url'] = $publicUrl;
                     $newDocument['uniform_filename'] = $filename;
                     $newDocument['uniform_original_name'] = $fileName;
                 } else {
+                    error_log("No photo type detected for $fileName, using default fields");
                     $newDocument['url'] = $publicUrl;
                     $newDocument['filename'] = $filename;
                     $newDocument['original_name'] = $fileName;
