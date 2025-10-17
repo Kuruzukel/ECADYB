@@ -1,20 +1,19 @@
 <?php
-// Handle POST request FIRST - before ANY output or includes
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Absolutely no output before this point
     while (ob_get_level()) {
         ob_end_clean();
     }
-    
+
     ob_start();
     error_reporting(0);
     ini_set('display_errors', 0);
-    
+
     header('Content-Type: application/json; charset=UTF-8');
-    
+
     // Only load vendor AFTER clearing buffers and setting headers
     require_once __DIR__ . '/../../vendor/autoload.php';
-    
+
     // Character sets for password generation
     $upper = 'ABCDEFGHIJKLMNPQRSTUVWXYZ';
     $lower = 'abcdefghijkmnopqrstuvwxyz';
@@ -24,18 +23,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     function generateRandomPassword($length = 8)
     {
         global $upper, $lower, $digits, $special;
-        
+
         $characters = $upper . $lower . $digits . $special;
         $password = '';
         $charactersLength = strlen($characters);
-        
+
         for ($i = 0; $i < $length; $i++) {
             $password .= $characters[rand(0, $charactersLength - 1)];
         }
-        
+
         return $password;
     }
-    
+
     $programMap = [
         "bsme" => "BS Marine Engineering",
         "bsmt" => "BS Marine Transportation",
@@ -50,14 +49,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     ];
 
     $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
-    
+
     // Get selected batch template from POST data
     $selectedTemplate = isset($_POST['batch_template']) ? (int)$_POST['batch_template'] : 1;
     if ($selectedTemplate < 1 || $selectedTemplate > 3) {
         $selectedTemplate = 1;
     }
     $dbName = "BatchTemplate" . $selectedTemplate;
-    
+
     try {
         $client = new MongoDB\Client($mongoUrl);
         $db = $client->$dbName;
@@ -105,7 +104,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         "password" => generateRandomPassword(8),
         "status" => "Pending"
     ];
-    
+
     // Log password generation for debugging
     $studentName = $student["first name"] . ' ' . $student["last name"];
     error_log("Generated password for new student: " . $studentName . " - Password: " . $student["password"]);
@@ -154,6 +153,7 @@ error_reporting(0);
 ini_set('display_errors', 0);
 
 require __DIR__ . '/../../vendor/autoload.php';
+
 use MongoDB\Client;
 
 $programMap = [
@@ -216,7 +216,7 @@ $programMap = [
                         <select id="program" name="program">
                             <option value="" disabled selected>Select a program</option>
                             <?php foreach ($programMap as $key => $name) : ?>
-                            <option value="<?= $key ?>"><?= $name ?></option>
+                                <option value="<?= $key ?>"><?= $name ?></option>
                             <?php endforeach; ?>
                         </select>
 
