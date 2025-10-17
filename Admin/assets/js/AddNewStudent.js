@@ -293,7 +293,6 @@ confirmBtn.addEventListener("click", () => {
 
   modalOverlay.style.display = "none";
 
-  // Fetch AddNewStudent.php directly, not through AdminDashboard.php
   fetch("AddNewStudent.php", {
     method: "POST",
     body: formData,
