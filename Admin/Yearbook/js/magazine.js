@@ -908,6 +908,12 @@ function loadPage(page, pageElement) {
                 var clickedStudent = $(this).data("student");
 
                 console.log("Card clicked for student:", clickedStudent);
+                
+                // Ensure modal is properly closed before reopening
+                if (modal.hasClass("active")) {
+                  modal.removeClass("active");
+                  $("body").removeClass("modal-active");
+                }
 
                 modal.find(".student-name").text(clickedStudent.name);
                 modal
@@ -990,37 +996,39 @@ function loadPage(page, pageElement) {
                   }
                 });
 
-                // Show modal
-                modal.addClass("active");
+                // Show modal with a small delay to ensure it's fully closed
+                setTimeout(function() {
+                  modal.addClass("active");
 
-                // Add body class to disable magazine interactions
-                $("body").addClass("modal-active");
+                  // Add body class to disable magazine interactions
+                  $("body").addClass("modal-active");
 
-                // Clear any existing peel effect when modal opens
-                if (typeof window.clearAllPeels === "function") {
-                  window.clearAllPeels();
-                }
-
-                // Force disable magazine interactions
-                if (typeof window.disableMagazineInteractions === "function") {
-                  window.disableMagazineInteractions();
-                }
-
-                // Set up periodic check to clear peels while modal is active
-                if (window.peelClearInterval) {
-                  clearInterval(window.peelClearInterval);
-                }
-                window.peelClearInterval = setInterval(function () {
-                  if ($(".student-modal").hasClass("active")) {
-                    if (typeof window.clearAllPeels === "function") {
-                      window.clearAllPeels();
-                    }
-                  } else {
-                    clearInterval(window.peelClearInterval);
-                    window.peelClearInterval = null;
-                    $("body").removeClass("modal-active");
+                  // Clear any existing peel effect when modal opens
+                  if (typeof window.clearAllPeels === "function") {
+                    window.clearAllPeels();
                   }
-                }, 100);
+
+                  // Force disable magazine interactions
+                  if (typeof window.disableMagazineInteractions === "function") {
+                    window.disableMagazineInteractions();
+                  }
+
+                  // Set up periodic check to clear peels while modal is active
+                  if (window.peelClearInterval) {
+                    clearInterval(window.peelClearInterval);
+                  }
+                  window.peelClearInterval = setInterval(function () {
+                    if ($(".student-modal").hasClass("active")) {
+                      if (typeof window.clearAllPeels === "function") {
+                        window.clearAllPeels();
+                      }
+                    } else {
+                      clearInterval(window.peelClearInterval);
+                      window.peelClearInterval = null;
+                      $("body").removeClass("modal-active");
+                    }
+                  }, 100);
+                }, 50);
 
                 console.log("Modal should be visible now");
 
