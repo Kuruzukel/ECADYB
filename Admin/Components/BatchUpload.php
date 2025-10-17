@@ -212,7 +212,6 @@ function importCSVByMessage($tmpName, $collection)
             } elseif (count($row) === count($header)) {
                 $record = array_combine($header, $row);
 
-                // Validate message word limit (117 words maximum)
                 if (isset($record['message'])) {
                     $wordCount = str_word_count($record['message']);
                     if ($wordCount > 117) {
