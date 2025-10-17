@@ -101,6 +101,9 @@ if (!empty($error_message)) {
 
 $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
+// Add debug information to help troubleshoot routing issues
+// error_log("Request URI: " . $requestUri);
+
 // Redirect .html requests to .php files
 $htmlToPhpRedirects = [
     '/Student/Components/StudentDashboard.html' => '/Student/Components/StudentDashboard.php',
@@ -115,6 +118,18 @@ $htmlToPhpRedirects = [
     '/ECADYB/Student/Components/Memories.html' => '/ECADYB/Student/Components/Memories.php',
     '/ECADYB/Student/Components/ChangePassword.html' => '/ECADYB/Student/Components/ChangePassword.php',
 ];
+
+// Add additional route redirects to handle direct file access
+$additionalRedirects = [
+    '/ECADYB/Admin/Components/AdminDashboard.php' => '/ECADYB/Admin',
+    '/ECADYB/Student/Components/StudentDashboard.php' => '/ECADYB/Student',
+];
+
+// Check for additional redirects first
+if (isset($additionalRedirects[$requestUri])) {
+    header('Location: ' . $additionalRedirects[$requestUri], true, 301);
+    exit();
+}
 
 if (isset($htmlToPhpRedirects[$requestUri])) {
     header('Location: ' . $htmlToPhpRedirects[$requestUri], true, 301);
