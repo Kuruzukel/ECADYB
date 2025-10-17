@@ -1,6 +1,5 @@
 <?php
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    // Absolutely no output before this point
     while (ob_get_level()) {
         ob_end_clean();
     }
