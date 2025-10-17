@@ -35,7 +35,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
             $_SESSION['role']     = 'admin';
             $_SESSION['username'] = $studentId;
 
-            header("Location: " . BASE_URL . "Admin");
+            // Fixed redirect for Railway environment - use absolute URL when available
+            if (getenv('RAILWAY_PUBLIC_URL')) {
+                $railwayUrl = rtrim(getenv('RAILWAY_PUBLIC_URL'), '/');
+                header("Location: " . $railwayUrl . "/ECADYB/Admin");
+            } else {
+                header("Location: " . BASE_URL . "Admin");
+            }
             exit;
         }
 
@@ -70,7 +76,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
 
                 $foundStudent = true;
 
-                header("Location: " . BASE_URL . "Student");
+                // Fixed redirect for Railway environment - use absolute URL when available
+                if (getenv('RAILWAY_PUBLIC_URL')) {
+                    $railwayUrl = rtrim(getenv('RAILWAY_PUBLIC_URL'), '/');
+                    header("Location: " . $railwayUrl . "/ECADYB/Student");
+                } else {
+                    header("Location: " . BASE_URL . "Student");
+                }
                 exit;
             }
         }
