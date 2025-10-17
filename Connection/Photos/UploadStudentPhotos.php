@@ -119,6 +119,18 @@ try {
     }
 
     $uploadedFiles = $_FILES['files'];
+    
+    // Normalize single file upload to array format
+    if (!is_array($uploadedFiles['name'])) {
+        $uploadedFiles = [
+            'name' => [$uploadedFiles['name']],
+            'type' => [$uploadedFiles['type']],
+            'tmp_name' => [$uploadedFiles['tmp_name']],
+            'error' => [$uploadedFiles['error']],
+            'size' => [$uploadedFiles['size']]
+        ];
+    }
+    
     $uploadedCount = 0;
     $failedCount = 0;
     $results = [];
