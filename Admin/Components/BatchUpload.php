@@ -250,7 +250,6 @@ function getSelectedTemplateDatabase($client)
 
     $selectedTemplate = trim($selectedTemplate);
 
-    // If it's just a number (e.g., "1", "2", "3"), convert to "BatchTemplate1", "BatchTemplate2", etc.
     if (is_numeric($selectedTemplate)) {
         $templateNumber = intval($selectedTemplate);
         if ($templateNumber >= 1 && $templateNumber <= 3) {
