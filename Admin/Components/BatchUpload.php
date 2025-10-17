@@ -258,7 +258,6 @@ function getSelectedTemplateDatabase($client)
             $dbName = 'BatchTemplate1';
         }
     } else {
-        // If it's in format "Batch Template 1", convert to "BatchTemplate1"
         $dbName = str_replace(' ', '', $selectedTemplate);
 
         if (strpos($dbName, 'BatchTemplate') !== 0) {
