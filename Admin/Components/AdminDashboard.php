@@ -10,7 +10,7 @@ if (session_status() == PHP_SESSION_NONE) {
 // Check if user is logged in and is an admin
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     // Redirect to login page if not logged in or not an admin
-    header('Location: /ECADYB/Public/Components/Login.php');
+    header('Location: ../../Public/Components/Login.php');
     exit();
 }
 
@@ -53,7 +53,7 @@ require $mongoPath;
 
     <link rel="icon" href="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png" type="image/png" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="/ECADYB/Admin/assets/css/AdminDashboard.css" rel="stylesheet">
+    <link href="../assets/css/AdminDashboard.css" rel="stylesheet">
 
     <script>
         (function() {
@@ -396,7 +396,7 @@ require $mongoPath;
             </div>
 
     </main>
-    <script src="/ECADYB/Admin/assets/js/AdminDashboard.js"></script>
+    <script src="../assets/js/AdminDashboard.js"></script>
 </body>
 
 </html>

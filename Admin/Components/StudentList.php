@@ -2,7 +2,7 @@
 // Only include this file if it's being accessed through AdminDashboard.php
 if (!defined('ADMIN_DASHBOARD_INCLUDED')) {
     // If accessed directly, redirect to the proper route
-    header('Location: /ECADYB/Admin');
+    header('Location: ../');
     exit;
 }
 
@@ -178,7 +178,7 @@ try {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Student List</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-        <link rel="stylesheet" href="/ECADYB/Admin/assets/css/StudentList.css">
+        <link rel="stylesheet" href="../assets/css/StudentList.css">
     </head>
 
     <body>
@@ -561,7 +561,7 @@ try {
 
 
 
-            <script src="/ECADYB/Admin/assets/js/StudentList.js?v=<?php echo time(); ?>"></script>
+            <script src="../assets/js/StudentList.js?v=<?php echo time(); ?>"></script>
             <?php if (!$isAjax): ?>
     </body>
 

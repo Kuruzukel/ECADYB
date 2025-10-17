@@ -7,7 +7,7 @@
     <title>Change Password</title>
     <script src="https://kit.fontawesome.com/a2e0f5f0b2.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="/ECADYB/Admin/assets/css/ChangePassword.css">
+    <link rel="stylesheet" href="../assets/css/ChangePassword.css">
 </head>
 
 <body>
@@ -15,7 +15,7 @@
     // Prevent direct access to this file
     if (!defined('ADMIN_DASHBOARD_INCLUDED')) {
         // If accessed directly, redirect to the proper route
-        header('Location: /ECADYB/Admin');
+        header('Location: ../');
         exit;
     }
     ?>
@@ -149,7 +149,7 @@
             </div>
         </div>
 
-        <script src="/ECADYB/Admin/assets/js/ChangePassword.js"></script>
+        <script src="../assets/js/ChangePassword.js"></script>
 </body>
 
 </html>

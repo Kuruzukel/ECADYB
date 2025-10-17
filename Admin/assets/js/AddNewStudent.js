@@ -293,7 +293,7 @@ confirmBtn.addEventListener("click", () => {
 
   modalOverlay.style.display = "none";
 
-  fetch("AddNewStudent.php", {
+  fetch("Components/AddNewStudent.php", {
     method: "POST",
     body: formData,
   })
