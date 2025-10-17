@@ -294,12 +294,12 @@ confirmBtn.addEventListener("click", () => {
   modalOverlay.style.display = "none";
 
   // Force HTTPS on Railway to avoid mixed content errors
-  let baseUrl = window.location.origin;
+  // Always use HTTPS on Railway, never HTTP
+  let baseUrl = 'https://' + window.location.hostname;
   
-  // Explicitly ensure HTTPS on Railway
-  if (window.location.hostname.includes('railway') || 
-      window.location.hostname.includes('up.railway.app')) {
-    baseUrl = 'https://' + window.location.hostname;
+  // Only use HTTP on localhost
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    baseUrl = 'http://' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
   }
   
   const basePath = window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '';
