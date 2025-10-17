@@ -1,0 +1,17 @@
+<?php
+session_start();
+
+// Check if user is logged in and is an admin
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+    // Redirect to login page if not logged in or not an admin
+    header('Location: /ECADYB/Public/Components/Login.php');
+    exit();
+}
+
+// Include headers configuration for Railway
+require __DIR__ . '/../Connection/Configuration/HeadersConfig.php';
+
+// Include the AdminDashboard component
+require __DIR__ . '/Components/AdminDashboard.php';
+?>
+

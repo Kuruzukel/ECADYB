@@ -332,7 +332,7 @@ require $mongoPath;
                 </header>
 
                 <?php
-                $page = isset($_GET['page']) ? $_GET['page'] : 'studentlist';
+                $page = isset($_GET['page']) ? $_GET['page'] : 'student-list';
                 switch ($page) {
 
                     case 'student-list':
