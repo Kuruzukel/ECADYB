@@ -120,8 +120,21 @@ try {
 
     $uploadedFiles = $_FILES['files'];
     
+    // Debug: Log what we received
+    error_log("UploadStudentPhotos.php - Files received:");
+    error_log("  - Total files in _FILES: " . count($_FILES));
+    error_log("  - Files array structure: " . print_r($_FILES, true));
+    error_log("  - uploadedFiles['name'] is array: " . (is_array($uploadedFiles['name']) ? 'YES' : 'NO'));
+    if (is_array($uploadedFiles['name'])) {
+        error_log("  - Number of files: " . count($uploadedFiles['name']));
+        error_log("  - File names: " . implode(', ', $uploadedFiles['name']));
+    } else {
+        error_log("  - Single file name: " . $uploadedFiles['name']);
+    }
+    
     // Normalize single file upload to array format
     if (!is_array($uploadedFiles['name'])) {
+        error_log("Normalizing single file to array format");
         $uploadedFiles = [
             'name' => [$uploadedFiles['name']],
             'type' => [$uploadedFiles['type']],

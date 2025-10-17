@@ -413,9 +413,26 @@ window.addEventListener("DOMContentLoaded", () => {
           currentOperation = "uploading_photos";
           showUploadOverlay("photos");
 
-          Array.from(input.files).forEach((file) => {
+          // Debug: Log files being uploaded
+          console.log("=== UPLOAD DEBUG ===");
+          console.log("Input ID:", input.id);
+          console.log("Number of files selected:", input.files.length);
+          console.log("File names:", Array.from(input.files).map(f => f.name));
+          
+          Array.from(input.files).forEach((file, index) => {
+            console.log(`Appending file ${index + 1}:`, file.name);
             formData.append("files", file);
           });
+
+          // Debug: Verify FormData
+          console.log("FormData entries:");
+          for (let [key, value] of formData.entries()) {
+            if (value instanceof File) {
+              console.log(`  ${key}: [File] ${value.name}`);
+            } else {
+              console.log(`  ${key}: ${value}`);
+            }
+          }
 
           let templateNumber = "1";
           if (selectedTemplate && selectedTemplate.value) {
