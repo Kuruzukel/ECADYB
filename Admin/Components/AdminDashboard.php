@@ -2,7 +2,6 @@
 session_start();
 
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
-    // Redirect to login page if not logged in or not an admin
     header('Location: /ECADYB/Public/Components/Login.php');
     exit();
 }
