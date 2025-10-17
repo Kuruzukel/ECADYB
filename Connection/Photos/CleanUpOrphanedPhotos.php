@@ -1,5 +1,4 @@
 <?php
-// Run this if you want to immediately clean up photos without matching CSV entries
 
 require __DIR__ . '/../../vendor/autoload.php';
 
