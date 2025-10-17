@@ -231,7 +231,6 @@ function importCSVByMessage($tmpName, $collection)
             $collection->drop();
             error_log("Dropped old top_management_message collection");
 
-            // Insert new data
             $result = $collection->insertMany($dataByMessage);
             $insertedCount = count($dataByMessage);
             error_log("Inserted $insertedCount new top management records");
