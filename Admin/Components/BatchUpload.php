@@ -201,7 +201,6 @@ function importCSVByMessage($tmpName, $collection)
     if (($handle = fopen($tmpName, 'r')) !== false) {
         while (($row = fgetcsv($handle, 1000, ',')) !== false) {
             $row = array_map('trim', $row);
-            // Clean UTF-8 encoding issues
             $row = array_map(function ($field) {
                 // Fix common encoding issues
                 $field = str_replace(["\x92", "\x93", "\x94", "\x96", "\x97"], ["'", '"', '"', '-', '-'], $field);
