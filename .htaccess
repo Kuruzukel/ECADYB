@@ -1,0 +1,12 @@
+RewriteEngine On
+
+# Handle the ECADYB base path
+RewriteBase /ECADYB/
+
+# Don't rewrite if the file or directory exists
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Route all other requests to index.php
+RewriteRule ^(.*)$ index.php [QSA,L]
+
