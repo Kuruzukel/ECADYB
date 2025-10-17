@@ -22,7 +22,7 @@
   <div class="container">
     <div class="catalog-root">
       <div class="catalog-app">
-        <iframe src="../Yearbook/index.html?department=BSCJ" width="100%" height="100%"
+        <iframe src="/Admin/Yearbook/index.html?department=BSCJ" width="100%" height="100%"
           style="border: none; min-height: 670px;"></iframe>
       </div>
     </div>

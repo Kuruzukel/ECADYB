@@ -88,11 +88,9 @@
     />
     <script
       type="text/javascript"
-      src="../../Turn.js/extras/jquery.min.js"
+      src="/Admin/Flipbook/turn.js/dist/jquery.js"
     ></script>
-    <script type="text/javascript" src="../../Turn.js/lib/hash.js"></script>
-    <script type="text/javascript" src="../../Turn.js/lib/turn.min.js"></script>
-    <script type="text/javascript" src="../../Turn.js/lib/zoom.min.js"></script>
+    <script type="text/javascript" src="/Admin/Flipbook/turn.js/dist/turn.min.js"></script>
     <script type="text/javascript" src="js/magazine.js?v=1736979600"></script>
     <link rel="stylesheet" href="css/magazine.css?v=1736979600" />
 
@@ -173,7 +171,7 @@
         );
 
         $.ajax({
-          url: "../../Connection/Photos/FetchStudentData.php",
+          url: "/Connection/Photos/FetchStudentData.php",
           method: "GET",
           data: {
             department: departmentCode,
@@ -814,7 +812,7 @@
             ) {
               if (response.data.department_page) {
                 var redirectUrl =
-                  "../Departments/" + response.data.department_page + ".php";
+                  "/Admin/Departments/" + response.data.department_page + ".php";
                 window.location.href =
                   redirectUrl + "?department=" + response.data.department;
                 return;
