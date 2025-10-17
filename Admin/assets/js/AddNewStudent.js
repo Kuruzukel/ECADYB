@@ -285,7 +285,6 @@ confirmBtn.addEventListener("click", () => {
     localStorage.getItem("selectedBatchTemplateNumber") || "1";
   formData.append("batch_template", selectedTemplate);
 
-  // Debug: Log form data
   console.log("=== FORM DATA ===");
   for (let [key, value] of formData.entries()) {
     console.log(key + ": " + value);
