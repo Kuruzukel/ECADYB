@@ -3,7 +3,6 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 use MongoDB\Client;
 
-// Character sets for password generation
 $upper = 'ABCDEFGHIJKLMNPQRSTUVWXYZ';
 $lower = 'abcdefghijkmnopqrstuvwxyz';
 $digits = '123456789';
@@ -12,17 +11,18 @@ $special = '!@#_$';
 function generateRandomPassword($length = 8)
 {
     global $upper, $lower, $digits, $special;
-    
+
     $characters = $upper . $lower . $digits . $special;
     $password = '';
     $charactersLength = strlen($characters);
-    
+
     for ($i = 0; $i < $length; $i++) {
         $password .= $characters[rand(0, $charactersLength - 1)];
     }
-    
+
     return $password;
 }
+
 use MongoDB\BSON\ObjectId;
 
 ini_set('display_errors', 1);
@@ -115,10 +115,10 @@ try {
         // Generate password if student doesn't have one
         $studentPassword = $student['password'] ?? '';
         $studentObjectId = $student['_id'] ?? null;
-        
+
         if (empty($studentPassword) && $studentObjectId) {
             $studentPassword = generateRandomPassword(8);
-            
+
             // Update the database with the generated password using _id
             try {
                 $updateCollection = $db->$selectedDepartment;
@@ -126,7 +126,7 @@ try {
                     ['_id' => $studentObjectId],
                     ['$set' => ['password' => $studentPassword]]
                 );
-                
+
                 if ($result->getModifiedCount() > 0) {
                     error_log("✓ Generated and saved password for student: " . ($student['first name'] ?? '') . ' ' . ($student['last name'] ?? ''));
                 } else {
@@ -347,7 +347,8 @@ try {
                                                     </div>
 
                                                     <div class="modal-body">
-                                                        <form id="edit-student-form-<?php echo $student['student_id']; ?>" onsubmit="return false;">
+                                                        <form id="edit-student-form-<?php echo $student['student_id']; ?>"
+                                                            onsubmit="return false;">
                                                             <input type="hidden"
                                                                 id="collection-hidden-<?php echo $student['student_id']; ?>"
                                                                 value="<?php echo htmlspecialchars($student['collection'] ?? 'students'); ?>">
