@@ -297,7 +297,14 @@ confirmBtn.addEventListener("click", () => {
   modalOverlay.style.display = "none";
 
   // Fetch AddNewStudent.php directly, not through AdminDashboard.php
-  fetch("AddNewStudent.php", {
+  // Use absolute path that works on both localhost and Railway
+  const endpoint = window.location.pathname.includes('/ECADYB/') 
+    ? '/ECADYB/Admin/Components/AddNewStudent.php'
+    : '/Admin/Components/AddNewStudent.php';
+  
+  console.log("Fetching from:", endpoint);
+  
+  fetch(endpoint, {
     method: "POST",
     body: formData,
   })
