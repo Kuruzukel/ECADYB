@@ -293,7 +293,14 @@ confirmBtn.addEventListener("click", () => {
 
   modalOverlay.style.display = "none";
 
-  fetch("Components/AddNewStudent.php", {
+  // Use absolute path that works on both localhost and Railway
+  const baseUrl = window.location.origin;
+  const basePath = window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '';
+  const endpoint = baseUrl + basePath + '/Admin/Components/AddNewStudent.php';
+  
+  console.log("Fetching from:", endpoint);
+
+  fetch(endpoint, {
     method: "POST",
     body: formData,
   })
