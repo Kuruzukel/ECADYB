@@ -248,6 +248,15 @@ $routes = [
     '/ECADYB/'                   => BASE_PATH . '/Public/Components/Loader.html',
 ];
 
+// Special handling for ECADYB/Admin route
+if ($requestUri === '/ECADYB/Admin') {
+    $filePath = BASE_PATH . '/Admin/Components/AdminDashboard.php';
+    if (file_exists($filePath)) {
+        include $filePath;
+        exit;
+    }
+}
+
 if (array_key_exists($requestUri, $routes)) {
     $filePath = $routes[$requestUri];
     if (file_exists($filePath)) {
