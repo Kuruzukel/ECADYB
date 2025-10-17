@@ -44,7 +44,9 @@ try {
 
     $otp = str_pad(random_int(100000, 999999), 6, '0', STR_PAD_LEFT);
 
-    session_start();
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
     $_SESSION['otp_' . $email] = [
         'code' => $otp,
         'expires' => time() + 300,

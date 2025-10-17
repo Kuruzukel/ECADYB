@@ -15,16 +15,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
-// Global error handler to ensure JSON response
-set_error_handler(function($errno, $errstr, $errfile, $errline) {
-    http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'message' => 'Server error: ' . $errstr
-    ]);
-    exit;
-});
-
 require __DIR__ . '/../../vendor/autoload.php';
 
 use MongoDB\Client;
