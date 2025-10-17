@@ -67,15 +67,15 @@ $special = '!@#_$';
 function generateRandomPassword($length = 8)
 {
     global $upper, $lower, $digits, $special;
-    
+
     $characters = $upper . $lower . $digits . $special;
     $password = '';
     $charactersLength = strlen($characters);
-    
+
     for ($i = 0; $i < $length; $i++) {
         $password .= $characters[rand(0, $charactersLength - 1)];
     }
-    
+
     return $password;
 }
 
@@ -109,14 +109,13 @@ function importCSVToTemplateDepartments($tmpName, $templateDB, $programMap)
             } elseif (count($row) === count($header)) {
                 $record = array_combine($header, $row);
 
-                // Generate a random password for each student
                 $record['password'] = generateRandomPassword(8);
-                
+
                 // Set default status to 'Pending' if not provided
                 if (!isset($record['status']) || empty($record['status'])) {
                     $record['status'] = 'Pending';
                 }
-                
+
                 // Log password generation for debugging
                 $studentName = ($record['first name'] ?? '') . ' ' . ($record['last name'] ?? '');
                 error_log("Generated password for student: " . trim($studentName) . " - Password: " . $record['password']);
@@ -205,19 +204,19 @@ function importCSVByMessage($tmpName, $collection)
         while (($row = fgetcsv($handle, 1000, ',')) !== false) {
             $row = array_map('trim', $row);
             // Clean UTF-8 encoding issues
-            $row = array_map(function($field) {
+            $row = array_map(function ($field) {
                 // Fix common encoding issues
                 $field = str_replace(["\x92", "\x93", "\x94", "\x96", "\x97"], ["'", '"', '"', '-', '-'], $field);
                 // Convert to proper UTF-8
                 $field = mb_convert_encoding($field, 'UTF-8', 'UTF-8');
                 return $field;
             }, $row);
-            
+
             if (!$header) {
                 $header = array_map('cleanHeader', $row);
             } elseif (count($row) === count($header)) {
                 $record = array_combine($header, $row);
-                
+
                 // Validate message word limit (117 words maximum)
                 if (isset($record['message'])) {
                     $wordCount = str_word_count($record['message']);
@@ -226,7 +225,7 @@ function importCSVByMessage($tmpName, $collection)
                         throw new Exception("Message for " . ($record['name'] ?? 'Unknown') . " exceeds 117 words limit. Current: $wordCount words.");
                     }
                 }
-                
+
                 $dataByMessage[] = $record;
             }
         }
@@ -238,12 +237,12 @@ function importCSVByMessage($tmpName, $collection)
             // Drop the old collection to ensure fresh data
             $collection->drop();
             error_log("Dropped old top_management_message collection");
-            
+
             // Insert new data
             $result = $collection->insertMany($dataByMessage);
             $insertedCount = count($dataByMessage);
             error_log("Inserted $insertedCount new top management records");
-            
+
             return true;
         } catch (Exception $e) {
             error_log("Error replacing top management data: " . $e->getMessage());
@@ -270,7 +269,7 @@ function getSelectedTemplateDatabase($client)
     } else {
         // If it's in format "Batch Template 1", convert to "BatchTemplate1"
         $dbName = str_replace(' ', '', $selectedTemplate);
-        
+
         if (strpos($dbName, 'BatchTemplate') !== 0) {
             $dbName = 'BatchTemplate1';
         }
@@ -282,7 +281,7 @@ function getSelectedTemplateDatabase($client)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $mongoUrl = getenv('MONGODB_URI') ?: getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
     $client = new Client($mongoUrl);
-    
+
     $selectedTemplateValue = isset($_POST['selected_template']) ? $_POST['selected_template'] : 'NOT SET';
     error_log("BatchUpload.php processing upload - selected_template: $selectedTemplateValue");
 
@@ -313,7 +312,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $templateDB = getSelectedTemplateDatabase($client);
                 $dbName = $templateDB->getDatabaseName();
                 error_log("BatchUpload.php: Importing top management message to database: $dbName");
-                
+
                 // First, get the names from the CSV to clean up photos collection
                 $csvNames = [];
                 if (($handle = fopen($tmpName, 'r')) !== false) {
@@ -331,7 +330,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                     fclose($handle);
                 }
-                
+
                 // Clean up photos collection - remove photos that don't have matching CSV entries
                 if (!empty($csvNames)) {
                     $photosCollection = $templateDB->top_management_photos;
@@ -340,7 +339,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ]);
                     error_log("Cleaned up " . $deleteResult->getDeletedCount() . " orphaned top management photos");
                 }
-                
+
                 $uploadStatus['top_management_message'] = importCSVByMessage($tmpName, $templateDB->top_management_message);
             } catch (Exception $e) {
                 error_log("Error importing top management message: " . $e->getMessage());
@@ -506,8 +505,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <?php if ($flashMessage): ?>
-    <div id="flash-data" data-message="<?= htmlspecialchars($flashMessage['message'], ENT_QUOTES) ?>"
-        data-type="<?= htmlspecialchars($flashMessage['type'], ENT_QUOTES) ?>" style="display:none"></div>
+        <div id="flash-data" data-message="<?= htmlspecialchars($flashMessage['message'], ENT_QUOTES) ?>"
+            data-type="<?= htmlspecialchars($flashMessage['type'], ENT_QUOTES) ?>" style="display:none"></div>
     <?php endif; ?>
     <script src="../assets/js/BatchUpload.js?v=<?php echo time(); ?>"></script>
 </body>
