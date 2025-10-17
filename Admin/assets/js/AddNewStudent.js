@@ -273,7 +273,6 @@ function showNotification(message, type = "success") {
 }
 
 confirmBtn.addEventListener("click", () => {
-  // Validate form when confirming
   if (!validateForm()) {
     modalOverlay.style.display = "none";
     showNotification("Please fill in all required fields.", "error");
