@@ -202,7 +202,6 @@ function importCSVByMessage($tmpName, $collection)
         while (($row = fgetcsv($handle, 1000, ',')) !== false) {
             $row = array_map('trim', $row);
             $row = array_map(function ($field) {
-                // Fix common encoding issues
                 $field = str_replace(["\x92", "\x93", "\x94", "\x96", "\x97"], ["'", '"', '"', '-', '-'], $field);
                 // Convert to proper UTF-8
                 $field = mb_convert_encoding($field, 'UTF-8', 'UTF-8');
