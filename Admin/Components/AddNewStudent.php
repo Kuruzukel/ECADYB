@@ -10,7 +10,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     header('Content-Type: application/json; charset=UTF-8');
 
-    // Only load vendor AFTER clearing buffers and setting headers
     require_once __DIR__ . '/../../vendor/autoload.php';
 
     // Character sets for password generation
