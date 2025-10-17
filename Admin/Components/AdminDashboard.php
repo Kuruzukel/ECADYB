@@ -1,11 +1,6 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
-    header('Location: /ECADYB/Public/Components/Login.php');
-    exit();
-}
-
 $mongoPath = realpath(__DIR__ . '/../../Connection/Configuration/MongoConnect.php');
 
 if (!$mongoPath || !file_exists($mongoPath)) {
