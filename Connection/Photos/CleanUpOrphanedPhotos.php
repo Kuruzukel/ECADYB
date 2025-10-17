@@ -36,7 +36,6 @@ try {
     }
 
     if ($orphanedCount > 0) {
-        // Delete orphaned photos
         $deleteResult = $photosCollection->deleteMany([
             'name' => ['$nin' => $validNames]
         ]);
