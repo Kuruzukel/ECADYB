@@ -1,8 +1,4 @@
 <?php
-// Enable error reporting for debugging
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
 session_start();
 
 require __DIR__ . '/vendor/autoload.php';
@@ -93,16 +89,6 @@ if (!empty($error_message)) {
 
 $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-// Debug output (remove after fixing)
-if (isset($_GET['debug'])) {
-    echo "<pre>";
-    echo "REQUEST_URI: " . $_SERVER['REQUEST_URI'] . "\n";
-    echo "Parsed URI: " . $requestUri . "\n";
-    echo "BASE_PATH: " . BASE_PATH . "\n";
-    echo "BASE_URL: " . BASE_URL . "\n";
-    echo "</pre>";
-}
-
 // Redirect .html requests to .php files
 $htmlToPhpRedirects = [
     '/Student/Components/StudentDashboard.html' => '/Student/Components/StudentDashboard.php',
@@ -150,12 +136,6 @@ $routes = [
     '/ECADYB/Student/Components/Logout.php' => BASE_PATH . '/Student/Components/Logout.php',
     '/ECADYB/'                   => BASE_PATH . '/Public/Components/Loader.html',
 ];
-
-if (isset($_GET['debug'])) {
-    echo "<pre>Checking route: $requestUri\n";
-    echo "Available routes: " . implode(", ", array_keys($routes)) . "\n";
-    echo "Route exists: " . (array_key_exists($requestUri, $routes) ? "YES" : "NO") . "\n</pre>";
-}
 
 if (array_key_exists($requestUri, $routes)) {
     $filePath = $routes[$requestUri];
