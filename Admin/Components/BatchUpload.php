@@ -228,7 +228,6 @@ function importCSVByMessage($tmpName, $collection)
 
     if (!empty($dataByMessage)) {
         try {
-            // Drop the old collection to ensure fresh data
             $collection->drop();
             error_log("Dropped old top_management_message collection");
 
