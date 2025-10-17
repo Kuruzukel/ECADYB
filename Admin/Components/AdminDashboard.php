@@ -7,6 +7,13 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
+// Check if user is logged in and is an admin
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+    // Redirect to login page if not logged in or not an admin
+    header('Location: /ECADYB/Public/Components/Login.php');
+    exit();
+}
+
 $mongoPath = realpath(__DIR__ . '/../../Connection/Configuration/MongoConnect.php');
 
 if (!$mongoPath || !file_exists($mongoPath)) {
