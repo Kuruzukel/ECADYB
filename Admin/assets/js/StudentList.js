@@ -951,7 +951,6 @@ function submitStudentForm(studentId, event) {
     return;
   }
 
-  // Prevent any form submission
   if (event) {
     event.preventDefault();
     event.stopPropagation();
