@@ -1,6 +1,10 @@
 <?php
+// Turn off error display for production
+ini_set('display_errors', 0);
 error_reporting(E_ALL);
-ini_set('display_errors', 1);
+
+// Start output buffering to catch any errors
+ob_start();
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');

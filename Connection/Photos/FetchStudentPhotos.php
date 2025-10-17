@@ -1,4 +1,11 @@
 <?php
+// Turn off error display for production
+ini_set('display_errors', 0);
+error_reporting(E_ALL);
+
+// Start output buffering to catch any errors
+ob_start();
+
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, OPTIONS');
@@ -14,6 +21,11 @@ require_once __DIR__ . '/../Configuration/MongoConnect.php';
 
 function respond($success, $message = '', $data = [])
 {
+    // Clean output buffer
+    while (ob_get_level()) {
+        ob_end_clean();
+    }
+    
     header('Content-Type: application/json');
     echo json_encode(array_merge([
         'success' => $success,
