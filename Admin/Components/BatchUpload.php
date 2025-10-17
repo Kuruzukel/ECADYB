@@ -303,7 +303,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $dbName = $templateDB->getDatabaseName();
                 error_log("BatchUpload.php: Importing top management message to database: $dbName");
 
-                // First, get the names from the CSV to clean up photos collection
                 $csvNames = [];
                 if (($handle = fopen($tmpName, 'r')) !== false) {
                     $header = null;
