@@ -403,6 +403,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 
 <body>
+    <?php
+    // Check if this is being included in AdminDashboard
+    $isIncludedInDashboard = defined('ADMIN_DASHBOARD_INCLUDED');
+    $outputFullHtml = !$isIncludedInDashboard;
+    
+    if ($outputFullHtml):
+    ?>
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Batch Upload</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+        <link rel="stylesheet" href="/Admin/assets/css/BatchUpload.css">
+    </head>
+
+    <body>
+    <?php endif; ?>
     <div class="container">
         <div class="header-container">
             <h1><i class="fas fa-cloud-upload-alt"></i> <span class="chevron"><i
@@ -503,6 +523,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             data-type="<?= htmlspecialchars($flashMessage['type'], ENT_QUOTES) ?>" style="display:none"></div>
     <?php endif; ?>
     <script src="/Admin/assets/js/BatchUpload.js?v=<?php echo time(); ?>"></script>
+<?php if ($outputFullHtml): ?>
 </body>
 
 </html>
+<?php endif; ?>

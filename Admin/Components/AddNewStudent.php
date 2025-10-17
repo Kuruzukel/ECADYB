@@ -6,6 +6,10 @@ if (!defined('ADMIN_DASHBOARD_INCLUDED')) {
     exit;
 }
 
+// Check if this is being included in AdminDashboard
+$isIncludedInDashboard = defined('ADMIN_DASHBOARD_INCLUDED');
+$outputFullHtml = !$isIncludedInDashboard;
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     while (ob_get_level()) {
         ob_end_clean();
@@ -169,8 +173,9 @@ $programMap = [
     "bsma" => "BS Management Accounting",
     "bse" => "BS Entrepreneurship"
 ];
-?>
 
+if ($outputFullHtml):
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -183,6 +188,7 @@ $programMap = [
 </head>
 
 <body>
+<?php endif; ?>
     <div class="container" style="font-family: Arial, sans-serif;">
         <div class="header-container" style="width: 100%;">
             <h1><i class="fas fa-home"></i> <span class="chevron"><i class="fas fa-chevron-right"></i></span> Add New
@@ -273,6 +279,8 @@ $programMap = [
     </div>
 
     <script src="/Admin/assets/js/AddNewStudent.js"></script>
+<?php if ($outputFullHtml): ?>
 </body>
 
 </html>
+<?php endif; ?>

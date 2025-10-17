@@ -17,7 +17,26 @@
         header('Location: ../');
         exit;
     }
+    
+    // Check if this is being included in AdminDashboard
+    $isIncludedInDashboard = defined('ADMIN_DASHBOARD_INCLUDED');
+    $outputFullHtml = !$isIncludedInDashboard;
+    
+    if ($outputFullHtml):
     ?>
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Batch Templates</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+        <link rel="stylesheet" href="/Admin/assets/css/BatchTemplates.css">
+    </head>
+
+    <body>
+    <?php endif; ?>
     <div class="container" style="font-family: Arial, sans-serif;">
         <div class="header-container" style="width: 100%;">
             <h1><i class="fas fa-sliders-h"></i> <span class="chevron"><i class="fas fa-chevron-right"></i></span>Choose
@@ -251,6 +270,8 @@
         </div>
     </div>
     <script src="/Admin/assets/js/BatchTemplates.js"></script>
+<?php if ($outputFullHtml): ?>
 </body>
 
 </html>
+<?php endif; ?>

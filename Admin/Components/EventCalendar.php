@@ -18,7 +18,27 @@
         header('Location: ../');
         exit;
     }
+    
+    // Check if this is being included in AdminDashboard
+    $isIncludedInDashboard = defined('ADMIN_DASHBOARD_INCLUDED');
+    $outputFullHtml = !$isIncludedInDashboard;
+    
+    if ($outputFullHtml):
     ?>
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Event Calendar</title>
+        <link rel="stylesheet" href="/Admin/assets/css/EventCalendar.css">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    </head>
+
+    <body>
+    <?php endif; ?>
     <div class="container" style="font-family: Arial;">
         <div class="header-container" style="width: 100%;">
             <h1><i class="fas fa-bullhorn"></i> <span class="chevron"><i class="fas fa-chevron-right"></i></span>Event
@@ -75,6 +95,8 @@
     <div id="notification-container"></div>
     
     <script src="/Admin/assets/js/EventCalendar.js"></script>
+<?php if ($outputFullHtml): ?>
 </body>
 
 </html>
+<?php endif; ?>

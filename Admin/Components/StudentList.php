@@ -6,6 +6,9 @@ if (!defined('ADMIN_DASHBOARD_INCLUDED')) {
     exit;
 }
 
+// Check if this is being included in AdminDashboard (not AJAX request)
+$isIncludedInDashboard = defined('ADMIN_DASHBOARD_INCLUDED');
+
 require __DIR__ . '/../../vendor/autoload.php';
 
 use MongoDB\Client;
@@ -83,6 +86,9 @@ $allStudents = [];
 $totalStudents = 0;
 
 $isAjax = isset($_GET['ajax']) && $_GET['ajax'] == '1';
+
+// If included in dashboard, don't output full HTML structure
+$outputFullHtml = !$isIncludedInDashboard && !$isAjax;
 
 try {
     $collection = $db->$selectedDepartment;
@@ -169,7 +175,7 @@ try {
 
 ?>
 
-<?php if (!$isAjax): ?>
+<?php if ($outputFullHtml): ?>
     <!DOCTYPE html>
     <html lang="en">
 
@@ -182,7 +188,7 @@ try {
     </head>
 
     <body>
-    <?php endif; ?>
+<?php endif; ?>
     <div class="container">
         <div class="header-container">
             <h1><i class="fas fa-home"></i> <span class="chevron"><i class="fas fa-chevron-right"></i></span> Student
@@ -562,7 +568,7 @@ try {
 
 
             <script src="/Admin/assets/js/StudentList.js?v=<?php echo time(); ?>"></script>
-            <?php if (!$isAjax): ?>
+<?php if ($outputFullHtml): ?>
     </body>
 
     </html>

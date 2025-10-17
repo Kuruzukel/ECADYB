@@ -18,8 +18,27 @@
         header('Location: ../');
         exit;
     }
+    
+    // Check if this is being included in AdminDashboard
+    $isIncludedInDashboard = defined('ADMIN_DASHBOARD_INCLUDED');
+    $outputFullHtml = !$isIncludedInDashboard;
+    
+    if ($outputFullHtml):
     ?>
+    <!DOCTYPE html>
+    <html lang="en">
 
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Change Password</title>
+        <script src="https://kit.fontawesome.com/a2e0f5f0b2.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+        <link rel="stylesheet" href="/Admin/assets/css/ChangePassword.css">
+    </head>
+
+    <body>
+    <?php endif; ?>
     <div class="changepass-container" style=" margin: 0 auto;">
         <div style="font-family: Arial, sans-serif;">
             <div class="changepass-header">
@@ -150,6 +169,8 @@
         </div>
 
         <script src="/Admin/assets/js/ChangePassword.js"></script>
+<?php if ($outputFullHtml): ?>
 </body>
 
 </html>
+<?php endif; ?>
