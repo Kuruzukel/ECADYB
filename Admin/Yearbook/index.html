@@ -88,13 +88,23 @@
     />
     <script
       type="text/javascript"
-      src="/Admin/Flipbook/turn.js/dist/jquery.js"
+      src="../../Turn.js/extras/jquery.min.js"
     ></script>
-    <script type="text/javascript" src="/Admin/Flipbook/turn.js/dist/turn.min.js"></script>
+    <script type="text/javascript" src="../../Turn.js/lib/hash.js"></script>
+    <script type="text/javascript" src="../../Turn.js/lib/turn.min.js"></script>
+    <script type="text/javascript" src="../../Turn.js/lib/zoom.min.js"></script>
     <script type="text/javascript" src="js/magazine.js?v=1736979600"></script>
     <link rel="stylesheet" href="css/magazine.css?v=1736979600" />
 
     <script type="text/javascript">
+      // Define $.isTouch for touch device detection
+      $.isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      $.mouseEvents = $.isTouch ? { over: 'touchstart', out: 'touchend', move: 'touchmove', down: 'touchstart', up: 'touchend' } : { over: 'mouseover', out: 'mouseout', move: 'mousemove', down: 'mousedown', up: 'mouseup' };
+      
+      // Debug: Log touch detection
+      console.log("$.isTouch:", $.isTouch, typeof $.isTouch);
+      console.log("$.mouseEvents:", $.mouseEvents);
+      
       var coverData = null;
       var studentData = null;
 
@@ -112,8 +122,11 @@
           slot
         );
 
+        // Determine base path for API calls
+        var basePath = window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '';
+
         $.ajax({
-          url: "FetchCoverData.php",
+          url: basePath + "/Admin/Yearbook/FetchCoverData.php",
           method: "GET",
           data: { template: template, slot: slot },
           dataType: "json",
@@ -170,8 +183,11 @@
           template
         );
 
+        // Determine base path for API calls
+        var basePath = window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '';
+        
         $.ajax({
-          url: "/Connection/Photos/FetchStudentData.php",
+          url: basePath + "/Connection/Photos/FetchStudentData.php",
           method: "GET",
           data: {
             department: departmentCode,
@@ -794,8 +810,11 @@
         selectedTemplate = parseInt(selectedTemplate);
         console.log("Using template from localStorage:", selectedTemplate);
 
+        // Determine base path for API calls
+        var basePath = window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '';
+        
         $.ajax({
-          url: "FetchCoverData.php",
+          url: basePath + "/Admin/Yearbook/FetchCoverData.php",
           method: "GET",
           data: {
             template: selectedTemplate,

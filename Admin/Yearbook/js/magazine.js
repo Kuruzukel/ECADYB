@@ -1,3 +1,6 @@
+// Determine base path for API calls
+window.basePath = window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '';
+
 window.studentDataCache = window.studentDataCache || {};
 window.studentDataPendingRequests = window.studentDataPendingRequests || {};
 
@@ -33,7 +36,7 @@ function fetchTopManagementCached(template, callback) {
   console.log("Fetching top management data for template", template);
 
   $.ajax({
-    url: "../../Connection/Photos/FetchTopManagement.php",
+    url: window.basePath + "/Connection/Photos/FetchTopManagement.php",
     method: "GET",
     data: {
       template: template,
@@ -97,7 +100,7 @@ function fetchStudentPhotos(studentId, callback) {
   console.log("Timestamp:", new Date().toISOString());
 
   $.ajax({
-    url: "../../Connection/Photos/FetchStudentPhotos.php",
+    url: window.basePath + "/Connection/Photos/FetchStudentPhotos.php",
     method: "GET",
     data: {
       student_id: studentId,
@@ -383,7 +386,7 @@ function fetchStudentDataCached(department, template, apiPage, callback) {
   var studentsPerAPIPage = 50;
 
   $.ajax({
-    url: "../../Connection/Photos/FetchStudentData.php",
+    url: window.basePath + "/Connection/Photos/FetchStudentData.php",
     method: "GET",
     data: {
       department: department,

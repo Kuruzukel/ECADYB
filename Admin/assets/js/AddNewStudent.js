@@ -296,12 +296,23 @@ confirmBtn.addEventListener("click", () => {
   // Use absolute path that works on both localhost and Railway
   // Force HTTPS on Railway to avoid mixed content issues
   let baseUrl = window.location.origin;
-  if (window.location.hostname.includes('railway') || window.location.hostname.includes('up.railway.app')) {
+  
+  // Check if we're on Railway and force HTTPS
+  if (window.location.hostname.includes('railway') || 
+      window.location.hostname.includes('up.railway.app') ||
+      window.location.protocol === 'https:') {
+    // Force HTTPS
     baseUrl = 'https://' + window.location.hostname;
   }
+  
   const basePath = window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '';
   const endpoint = baseUrl + basePath + '/Admin/Components/AddNewStudent.php';
   
+  console.log("Current origin:", window.location.origin);
+  console.log("Current protocol:", window.location.protocol);
+  console.log("Current hostname:", window.location.hostname);
+  console.log("Base URL:", baseUrl);
+  console.log("Base path:", basePath);
   console.log("Fetching from:", endpoint);
 
   fetch(endpoint, {
