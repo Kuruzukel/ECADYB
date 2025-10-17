@@ -641,7 +641,7 @@ function initializeYearbookItems() {
     if (!document.querySelector(".yearbooks-section")) {
       return; // Not on yearbook page, exit silently
     }
-    console.warn("Required yearbook elements not found, retrying...");
+    // Silently retry without logging warning
     setTimeout(initializeYearbookItems, 200);
     return;
   }
