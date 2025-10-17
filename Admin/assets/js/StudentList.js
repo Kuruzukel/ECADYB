@@ -711,7 +711,6 @@ async function confirmDeleteStudent(event) {
         );
 
         if (remainingRows && remainingRows.length === 0) {
-          // Get current template number from URL
           const urlParams = new URLSearchParams(window.location.search);
           const template = urlParams.get("template") || "1";
 
