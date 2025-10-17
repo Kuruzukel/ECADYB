@@ -47,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['redirect_to'] = '../../Admin/Components/AdminDashboard.php';
             
             // Redirect to admin dashboard
-            header('Location: /ECADYB/Admin/Components/AdminDashboard.php');
+            header('Location: /ECADYB/Admin');
             exit();
         } else {
             $loginFound = false;

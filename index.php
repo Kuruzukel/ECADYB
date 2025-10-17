@@ -104,6 +104,18 @@ $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 // Add debug information to help troubleshoot routing issues
 // error_log("Request URI: " . $requestUri);
 
+// Handle direct file access by redirecting to proper routes
+$directFileRedirects = [
+    '/ECADYB/Admin/Components/AdminDashboard.php' => '/ECADYB/Admin',
+    '/ECADYB/Student/Components/StudentDashboard.php' => '/ECADYB/Student',
+];
+
+// Check for direct file access redirects first
+if (isset($directFileRedirects[$requestUri])) {
+    header('Location: ' . $directFileRedirects[$requestUri], true, 301);
+    exit();
+}
+
 // Redirect .html requests to .php files
 $htmlToPhpRedirects = [
     '/Student/Components/StudentDashboard.html' => '/Student/Components/StudentDashboard.php',
@@ -119,18 +131,6 @@ $htmlToPhpRedirects = [
     '/ECADYB/Student/Components/ChangePassword.html' => '/ECADYB/Student/Components/ChangePassword.php',
 ];
 
-// Add additional route redirects to handle direct file access
-$additionalRedirects = [
-    '/ECADYB/Admin/Components/AdminDashboard.php' => '/ECADYB/Admin',
-    '/ECADYB/Student/Components/StudentDashboard.php' => '/ECADYB/Student',
-];
-
-// Check for additional redirects first
-if (isset($additionalRedirects[$requestUri])) {
-    header('Location: ' . $additionalRedirects[$requestUri], true, 301);
-    exit();
-}
-
 if (isset($htmlToPhpRedirects[$requestUri])) {
     header('Location: ' . $htmlToPhpRedirects[$requestUri], true, 301);
     exit();
@@ -143,7 +143,6 @@ $routes = [
     '/Public/Components/Login.php' => BASE_PATH . '/Public/Components/Login.php',
     '/Public/Components/ForgotPassword.html' => BASE_PATH . '/Public/Components/ForgotPassword.html',
     '/Admin'              => BASE_PATH . '/Admin/Components/AdminDashboard.php',
-    '/Admin/Components/AdminDashboard.php' => BASE_PATH . '/Admin/Components/AdminDashboard.php',
     '/Admin/Components/AddNewStudent.php' => BASE_PATH . '/Admin/Components/AddNewStudent.php',
     '/Admin/Components/BatchTemplates.php' => BASE_PATH . '/Admin/Components/BatchTemplates.php',
     '/Admin/Components/BatchUpload.php' => BASE_PATH . '/Admin/Components/BatchUpload.php',
@@ -161,7 +160,6 @@ $routes = [
     '/Admin/Departments/Nursing.php' => BASE_PATH . '/Admin/Departments/Nursing.php',
     '/Admin/Departments/Tourism.php' => BASE_PATH . '/Admin/Departments/Tourism.php',
     '/Student'            => BASE_PATH . '/Student/Components/StudentDashboard.php',
-    '/Student/Components/StudentDashboard.php' => BASE_PATH . '/Student/Components/StudentDashboard.php',
     '/Student/Components/About.php' => BASE_PATH . '/Student/Components/About.php',
     '/Student/Components/Yearbook.php' => BASE_PATH . '/Student/Components/Yearbook.php',
     '/Student/Components/Memories.php' => BASE_PATH . '/Student/Components/Memories.php',
@@ -200,7 +198,6 @@ $routes = [
     '/ECADYB/Public/Components/Login.php' => BASE_PATH . '/Public/Components/Login.php',
     '/ECADYB/Public/Components/ForgotPassword.html' => BASE_PATH . '/Public/Components/ForgotPassword.html',
     '/ECADYB/Admin'              => BASE_PATH . '/Admin/Components/AdminDashboard.php',
-    '/ECADYB/Admin/Components/AdminDashboard.php' => BASE_PATH . '/Admin/Components/AdminDashboard.php',
     '/ECADYB/Admin/Components/AddNewStudent.php' => BASE_PATH . '/Admin/Components/AddNewStudent.php',
     '/ECADYB/Admin/Components/BatchTemplates.php' => BASE_PATH . '/Admin/Components/BatchTemplates.php',
     '/ECADYB/Admin/Components/BatchUpload.php' => BASE_PATH . '/Admin/Components/BatchUpload.php',
@@ -218,7 +215,6 @@ $routes = [
     '/ECADYB/Admin/Departments/Nursing.php' => BASE_PATH . '/Admin/Departments/Nursing.php',
     '/ECADYB/Admin/Departments/Tourism.php' => BASE_PATH . '/Admin/Departments/Tourism.php',
     '/ECADYB/Student'            => BASE_PATH . '/Student/Components/StudentDashboard.php',
-    '/ECADYB/Student/Components/StudentDashboard.php' => BASE_PATH . '/Student/Components/StudentDashboard.php',
     '/ECADYB/Student/Components/About.php' => BASE_PATH . '/Student/Components/About.php',
     '/ECADYB/Student/Components/Yearbook.php' => BASE_PATH . '/Student/Components/Yearbook.php',
     '/ECADYB/Student/Components/Memories.php' => BASE_PATH . '/Student/Components/Memories.php',
