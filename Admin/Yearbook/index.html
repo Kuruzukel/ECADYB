@@ -578,7 +578,6 @@
         $(".thumbnails").html(modalContainer);
         console.log("Modal container created and appended");
 
-        // Update current page display with page description
         var currentPage = $(".magazine").turn("page") || 1;
         var currentPageDescription = getPageDescription(currentPage);
         $("#current-page-display").text(
