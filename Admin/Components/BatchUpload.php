@@ -115,7 +115,6 @@ function importCSVToTemplateDepartments($tmpName, $templateDB, $programMap)
                     $record['status'] = 'Pending';
                 }
 
-                // Log password generation for debugging
                 $studentName = ($record['first name'] ?? '') . ' ' . ($record['last name'] ?? '');
                 error_log("Generated password for student: " . trim($studentName) . " - Password: " . $record['password']);
 
