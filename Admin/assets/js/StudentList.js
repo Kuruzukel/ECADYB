@@ -714,7 +714,6 @@ async function confirmDeleteStudent(event) {
           const urlParams = new URLSearchParams(window.location.search);
           const template = urlParams.get("template") || "1";
 
-          // Show "No students found" message
           const noStudentsRow = document.createElement("tr");
           noStudentsRow.innerHTML = `
             <td colspan="7" class="no-students-message">
