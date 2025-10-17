@@ -180,6 +180,8 @@ $programMap = [
 ];
 
 if ($outputFullHtml):
+    // Detect base path for localhost vs Railway
+    $basePath = strpos($_SERVER['REQUEST_URI'], '/ECADYB/') !== false ? '/ECADYB' : '';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -189,7 +191,7 @@ if ($outputFullHtml):
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Add New Student</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="/Admin/assets/css/AddNewStudent.css">
+    <link rel="stylesheet" href="<?= $basePath ?>/Admin/assets/css/AddNewStudent.css">
 </head>
 
 <body>
@@ -284,7 +286,7 @@ if ($outputFullHtml):
     </div>
 
 <?php if ($outputFullHtml): ?>
-    <script src="/Admin/assets/js/AddNewStudent.js"></script>
+    <script src="<?= $basePath ?>/Admin/assets/js/AddNewStudent.js"></script>
 </body>
 
 </html>

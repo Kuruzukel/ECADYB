@@ -2,6 +2,9 @@
 // Define constant to indicate this file is being included
 define('ADMIN_DASHBOARD_INCLUDED', true);
 
+// Detect base path for localhost vs Railway
+$basePath = strpos($_SERVER['REQUEST_URI'], '/ECADYB/') !== false ? '/ECADYB' : '';
+
 // Check if session is already started to avoid warnings
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
@@ -224,11 +227,11 @@ require $mongoPath;
 
                 <div id="dashboard-submenu" class="submenu">
 
-                    <a href="/ECADYB/Admin?page=student-list" class="tab sub-tab">
+                    <a href="<?= $basePath ?>/Admin?page=student-list" class="tab sub-tab">
                         </i> Student List
                     </a>
 
-                    <a href="/ECADYB/Admin?page=add-new-student" class="tab sub-tab">
+                    <a href="<?= $basePath ?>/Admin?page=add-new-student" class="tab sub-tab">
                         </i> Add New Student
                     </a>
 
@@ -241,11 +244,11 @@ require $mongoPath;
 
                 <div id="announcement-submenu" class="submenu">
 
-                    <a href="/ECADYB/Admin?page=create-announcement" class="tab sub-tab">
+                    <a href="<?= $basePath ?>/Admin?page=create-announcement" class="tab sub-tab">
                         </i> Create Announcement
                     </a>
 
-                    <a href="/ECADYB/Admin?page=event-calendar" class="tab sub-tab">
+                    <a href="<?= $basePath ?>/Admin?page=event-calendar" class="tab sub-tab">
                         </i> Event Calendar
                     </a>
 
@@ -257,36 +260,36 @@ require $mongoPath;
                 </a>
 
                 <div id="yearbook-submenu" class="submenu">
-                    <a href="/ECADYB/Admin?page=maritime" class="tab sub-tab">
+                    <a href="<?= $basePath ?>/Admin?page=maritime" class="tab sub-tab">
                         </i>Maritime Education
                     </a>
 
-                    <a href="/ECADYB/Admin?page=criminology" class="tab sub-tab">
+                    <a href="<?= $basePath ?>/Admin?page=criminology" class="tab sub-tab">
                         </i>College of Criminology
                     </a>
 
-                    <a href="/ECADYB/Admin?page=tourism" class="tab sub-tab">
+                    <a href="<?= $basePath ?>/Admin?page=tourism" class="tab sub-tab">
                         </i>Tourism Management
                     </a>
 
-                    <a href="/ECADYB/Admin?page=education" class="tab sub-tab">
+                    <a href="<?= $basePath ?>/Admin?page=education" class="tab sub-tab">
                         </i>College of Education
                     </a>
 
-                    <a href="/ECADYB/Admin?page=nursing" class="tab sub-tab">
+                    <a href="<?= $basePath ?>/Admin?page=nursing" class="tab sub-tab">
                         </i>College of Nursing
                     </a>
 
-                    <a href="/ECADYB/Admin?page=informationsys" class="tab sub-tab">
+                    <a href="<?= $basePath ?>/Admin?page=informationsys" class="tab sub-tab">
                         </i>Information System
                     </a>
 
-                    <a href="/ECADYB/Admin?page=businessad" class="tab sub-tab">
+                    <a href="<?= $basePath ?>/Admin?page=businessad" class="tab sub-tab">
                         </i>Business Administration
                     </a>
                 </div>
 
-                <a href="/ECADYB/Admin?page=batchupload" class="tab" id="batchupload-tab"
+                <a href="<?= $basePath ?>/Admin?page=batchupload" class="tab" id="batchupload-tab"
                     onclick="setTabActive('batchupload-tab');">
                     <i class="fas fa-cloud-upload-alt"></i> Batch Upload
                 </a>
@@ -298,17 +301,17 @@ require $mongoPath;
                 </a>
 
                 <div id="customize-submenu" class="submenu">
-                    <a href="/ECADYB/Admin?page=themes" class="tab sub-tab">
+                    <a href="<?= $basePath ?>/Admin?page=themes" class="tab sub-tab">
                         </i>Themes
                     </a>
 
-                    <a href="/ECADYB/Admin?page=template" class="tab sub-tab">
+                    <a href="<?= $basePath ?>/Admin?page=template" class="tab sub-tab">
                         </i>Batch Templates
                     </a>
 
                 </div>
 
-                <a href="/ECADYB/Admin?page=changepassword" class="tab" id="changepassword-tab"
+                <a href="<?= $basePath ?>/Admin?page=changepassword" class="tab" id="changepassword-tab"
                     onclick="setTabActive('changepassword-tab');">
                     <i class="fas fa-key"></i> Change password
                 </a>
