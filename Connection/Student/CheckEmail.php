@@ -25,7 +25,14 @@ try {
         exit;
     }
 
-    require_once '../../Connection/Configuration/MongoConnect.php';
+    require_once __DIR__ . '/../Configuration/MongoConnect.php';
+
+    // Get database from global variable
+    $database = $GLOBALS['database'] ?? null;
+    if (!$database) {
+        echo json_encode(['success' => false, 'message' => 'Database connection not available']);
+        exit;
+    }
 
     $collection = $database->selectCollection('students');
     $student = $collection->findOne(['email' => $email]);

@@ -3,11 +3,18 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 use MongoDB\Client;
 
-$mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
+// Use MONGO_URL or MONGODB_URI (Railway standard) with fallback
+$mongoUrl = getenv('MONGO_URL') ?: getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 $client   = new Client($mongoUrl);
+
+// Export client for use in other files
+$GLOBALS['mongoClient'] = $client;
 
 $departmentsDB     = $client->Departments;
 $adminCollection   = $departmentsDB->Admin;
+
+// Export database for use in other files
+$GLOBALS['database'] = $departmentsDB;
 
 $collections = [
     "bsme"   => "BS Marine Engineering",

@@ -33,7 +33,8 @@ try {
     }
 
     $mongoDbName = "BatchTemplate" . $template;
-    $mongoUrl = getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
+    // Use MONGO_URL or MONGODB_URI (Railway standard) with fallback
+    $mongoUrl = getenv('MONGO_URL') ?: getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 
     $mongoClient = new MongoDB\Client($mongoUrl);
 
