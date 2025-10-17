@@ -167,7 +167,8 @@ try {
         $studentId = pathinfo($fileName, PATHINFO_FILENAME);
 
         $baseStudentId = $studentId;
-        if (preg_match('/^(\d{4}-\d{6})(?:-(?:FILIPINIANA|TOGA|UNIFORM))?$/', $studentId, $matches)) {
+        // Case-insensitive regex to match student ID with optional photo type suffix
+        if (preg_match('/^(\d{4}-\d{6})(?:-(?:FILIPINIANA|TOGA|UNIFORM))?$/i', $studentId, $matches)) {
             $studentId = $matches[1];
             $baseStudentId = $studentId;
         } else if (!preg_match('/^\d{4}-\d{6}$/', $studentId) && !is_numeric($studentId)) {
@@ -372,15 +373,16 @@ try {
                 $updateData = ['$set' => ['upload_time' => new \MongoDB\BSON\UTCDateTime()]];
 
                 $originalNameWithoutExt = pathinfo($fileName, PATHINFO_FILENAME);
-                if (strpos($originalNameWithoutExt, '-FILIPINIANA') !== false) {
+                // Case-insensitive matching for photo types
+                if (stripos($originalNameWithoutExt, '-FILIPINIANA') !== false) {
                     $updateData['$set']['filipiniana_url'] = $publicUrl;
                     $updateData['$set']['filipiniana_filename'] = $filename;
                     $updateData['$set']['filipiniana_original_name'] = $fileName;
-                } elseif (strpos($originalNameWithoutExt, '-TOGA') !== false) {
+                } elseif (stripos($originalNameWithoutExt, '-TOGA') !== false) {
                     $updateData['$set']['toga_url'] = $publicUrl;
                     $updateData['$set']['toga_filename'] = $filename;
                     $updateData['$set']['toga_original_name'] = $fileName;
-                } elseif (strpos($originalNameWithoutExt, '-UNIFORM') !== false) {
+                } elseif (stripos($originalNameWithoutExt, '-UNIFORM') !== false) {
                     $updateData['$set']['uniform_url'] = $publicUrl;
                     $updateData['$set']['uniform_filename'] = $filename;
                     $updateData['$set']['uniform_original_name'] = $fileName;
@@ -404,15 +406,16 @@ try {
                 ];
 
                 $originalNameWithoutExt = pathinfo($fileName, PATHINFO_FILENAME);
-                if (strpos($originalNameWithoutExt, '-FILIPINIANA') !== false) {
+                // Case-insensitive matching for photo types
+                if (stripos($originalNameWithoutExt, '-FILIPINIANA') !== false) {
                     $newDocument['filipiniana_url'] = $publicUrl;
                     $newDocument['filipiniana_filename'] = $filename;
                     $newDocument['filipiniana_original_name'] = $fileName;
-                } elseif (strpos($originalNameWithoutExt, '-TOGA') !== false) {
+                } elseif (stripos($originalNameWithoutExt, '-TOGA') !== false) {
                     $newDocument['toga_url'] = $publicUrl;
                     $newDocument['toga_filename'] = $filename;
                     $newDocument['toga_original_name'] = $fileName;
-                } elseif (strpos($originalNameWithoutExt, '-UNIFORM') !== false) {
+                } elseif (stripos($originalNameWithoutExt, '-UNIFORM') !== false) {
                     $newDocument['uniform_url'] = $publicUrl;
                     $newDocument['uniform_filename'] = $filename;
                     $newDocument['uniform_original_name'] = $fileName;
