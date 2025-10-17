@@ -32,6 +32,11 @@ require $mongoPath;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Graduation Gallery</title>
 
+    <!-- Prevent caching -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
     <meta property="fb:app_id" content="1767810860531321" />
     <meta property="og:locale" content="en_US" />
     <meta property="og:title" content="Graduation Gallery - Exact Colleges of Asia" />
@@ -415,16 +420,18 @@ require $mongoPath;
             </div>
 
     </main>
-    <script src="/Admin/assets/js/AdminDashboard.js"></script>
+    <script src="/Admin/assets/js/AdminDashboard.js?v=<?php echo microtime(true); ?>"></script>
     
     <?php
     // Load page-specific JS based on current page
+    // Use microtime for more aggressive cache-busting
+    $cacheBuster = microtime(true);
     $pageJS = [
-        'student-list' => '/Admin/assets/js/StudentList.js?v=' . time(),
-        'add-new-student' => '/Admin/assets/js/AddNewStudent.js?v=' . time(),
+        'student-list' => '/Admin/assets/js/StudentList.js?v=' . $cacheBuster,
+        'add-new-student' => '/Admin/assets/js/AddNewStudent.js?v=' . $cacheBuster,
         'create-announcement' => '/Admin/assets/js/CreateAnnouncement.js',
         'event-calendar' => '/Admin/assets/js/EventCalendar.js',
-        'batchupload' => '/Admin/assets/js/BatchUpload.js?v=' . time(),
+        'batchupload' => '/Admin/assets/js/BatchUpload.js?v=' . $cacheBuster,
         'themes' => '/Admin/assets/js/Themes.js',
         'template' => '/Admin/assets/js/BatchTemplates.js',
         'changepassword' => '/Admin/assets/js/ChangePassword.js',
