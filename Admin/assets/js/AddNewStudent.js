@@ -227,6 +227,7 @@ const form = document.getElementById("addStudentForm");
 let notificationTimeout = null;
 
 addStudentBtn.addEventListener("click", () => {
+  // Show modal without validation - validation happens on confirm
   modalOverlay.style.display = "flex";
 });
 
@@ -273,6 +274,7 @@ function showNotification(message, type = "success") {
 }
 
 confirmBtn.addEventListener("click", () => {
+  // Validate form when confirming
   if (!validateForm()) {
     modalOverlay.style.display = "none";
     showNotification("Please fill in all required fields.", "error");
@@ -280,11 +282,12 @@ confirmBtn.addEventListener("click", () => {
   }
 
   const formData = new FormData(form);
-
-  const selectedTemplate =
-    localStorage.getItem("selectedBatchTemplateNumber") || "1";
+  
+  // Get selected batch template from localStorage
+  const selectedTemplate = localStorage.getItem("selectedBatchTemplateNumber") || "1";
   formData.append("batch_template", selectedTemplate);
 
+  // Debug: Log form data
   console.log("=== FORM DATA ===");
   for (let [key, value] of formData.entries()) {
     console.log(key + ": " + value);
@@ -293,12 +296,8 @@ confirmBtn.addEventListener("click", () => {
 
   modalOverlay.style.display = "none";
 
-  // Use relative path for the endpoint to avoid routing issues
-  const endpoint = '/ECADYB/Admin/Components/AddNewStudent.php';
-  
-  console.log("Fetching from:", endpoint);
-
-  fetch(endpoint, {
+  // Fetch AddNewStudent.php directly, not through AdminDashboard.php
+  fetch("AddNewStudent.php", {
     method: "POST",
     body: formData,
   })
@@ -310,31 +309,27 @@ confirmBtn.addEventListener("click", () => {
     })
     .then((text) => {
       console.log("Response text:", text);
-
+      
+      // Try to parse JSON
       let data;
       try {
         data = JSON.parse(text);
       } catch (e) {
         console.error("JSON parse error:", e);
         console.error("Response was:", text);
-
-        if (
-          text.includes("Fatal error") ||
-          text.includes("Warning") ||
-          text.includes("Notice")
-        ) {
+        
+        // Check if it's a PHP error
+        if (text.includes("Fatal error") || text.includes("Warning") || text.includes("Notice")) {
           showNotification("Server error: Check PHP configuration.", "error");
         } else if (text.includes("<!DOCTYPE") || text.includes("<html")) {
-          showNotification(
-            "Server returned HTML instead of JSON. Check server logs.",
-            "error"
-          );
+          showNotification("Server returned HTML instead of JSON. Check server logs.", "error");
         } else {
           showNotification("Invalid server response. Check console.", "error");
         }
         return;
       }
-
+      
+      // Handle the response
       if (data.success) {
         showNotification("Student added successfully!", "success");
         form.reset();
