@@ -11,7 +11,6 @@ try {
 
     $mongoClient = new MongoDB\Client($mongoUrl);
 
-    // Get all names from messages collection
     $messageCollection = $mongoClient->$mongoDbName->top_management_message;
     $messages = $messageCollection->find([], ['projection' => ['name' => 1]]);
 
