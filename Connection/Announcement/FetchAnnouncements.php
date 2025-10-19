@@ -6,7 +6,7 @@ try {
     $announcements = $calendarCollection->find(
         ['status' => 'active'],
         [
-            'sort' => ['created_at' => -1], // Sort by newest first
+            'sort' => ['created_at' => -1],
             'limit' => 10 // Limit to 10 most recent announcements
         ]
     );
