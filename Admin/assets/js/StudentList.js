@@ -167,7 +167,6 @@ function applyTheme(theme) {
   console.log("Theme applied and saved:", theme);
 }
 
-// Dynamic base path detection
 const getBasePath = () => {
   return window.location.pathname.includes("/ECADYB/") ? "/ECADYB" : "";
 };
