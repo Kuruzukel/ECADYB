@@ -62,7 +62,6 @@ require $mongoPath;
     <link href="<?= $basePath ?>/Admin/assets/css/AdminDashboard.css" rel="stylesheet">
 
     <?php
-    // Load page-specific CSS based on current page
     $currentPage = isset($_GET['page']) ? $_GET['page'] : 'student-list';
     $pageCSS = [
         'student-list' => $basePath . '/Admin/assets/css/StudentList.css',
