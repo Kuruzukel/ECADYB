@@ -423,7 +423,6 @@ require $mongoPath;
     <script src="<?= $basePath ?>/Admin/assets/js/AdminDashboard.js?v=<?php echo microtime(true); ?>"></script>
 
     <?php
-    // Load page-specific JS based on current page
     // Use microtime for more aggressive cache-busting
     $cacheBuster = microtime(true);
     $pageJS = [
