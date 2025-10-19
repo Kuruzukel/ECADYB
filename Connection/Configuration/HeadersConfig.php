@@ -4,7 +4,6 @@ if (!headers_sent()) {
     header('X-Frame-Options: SAMEORIGIN');
     header('Content-Security-Policy: frame-ancestors \'self\' *;');
 
-    // CORS Headers
     header('Access-Control-Allow-Origin: *');
     header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
     header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
