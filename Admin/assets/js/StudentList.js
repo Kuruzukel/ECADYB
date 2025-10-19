@@ -923,7 +923,6 @@ async function updateStudentDetails(studentId, fields) {
     console.log("Response status:", res.status);
     console.log("Response ok:", res.ok);
 
-    // Check if response is ok
     if (!res.ok) {
       const errorText = await res.text();
       console.error("Response error:", errorText);
