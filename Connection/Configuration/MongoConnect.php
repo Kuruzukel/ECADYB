@@ -6,7 +6,6 @@ use MongoDB\Client;
 $mongoUrl = getenv('MONGO_URL') ?: getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 $client   = new Client($mongoUrl);
 
-// Export client for use in other files
 $GLOBALS['mongoClient'] = $client;
 
 $departmentsDB     = $client->Departments;
