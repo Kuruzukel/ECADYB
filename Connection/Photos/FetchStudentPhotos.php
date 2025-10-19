@@ -60,21 +60,16 @@ set_exception_handler(function ($exception) {
 });
 
 try {
-    $template = isset($_GET['template']) ? (int)$_GET['template'] : 1;
     $studentId = isset($_GET['student_id']) ? $_GET['student_id'] : null;
 
-    if ($template < 1 || $template > 3) {
-        respond(false, 'Invalid template parameter. Must be 1, 2, or 3.');
-    }
-
-    $mongoDbName = "BatchTemplate" . $template;
+    $mongoDbName = "ECADYB";
     $mongoUrl = getenv('MONGO_URL') ?: getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 
     $mongoClient = new MongoDB\Client($mongoUrl);
 
-    $photosCollection = $mongoClient->$mongoDbName->StudentPhotos;
+    $photosCollection = $mongoClient->$mongoDbName->Student_Photos;
 
-    $filter = ['template' => $template];
+    $filter = [];
     if ($studentId) {
         $filter['student_id'] = $studentId;
     }

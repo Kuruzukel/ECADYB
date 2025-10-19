@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
         $client = new Client($mongoUrl);
-        $collection = $client->Announcement->Calendar;
+        $collection = $client->ECADYB->Announcement;
 
         $title = trim($_POST['title'] ?? '');
         $message = trim($_POST['message'] ?? '');

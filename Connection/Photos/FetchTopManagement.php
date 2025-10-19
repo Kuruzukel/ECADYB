@@ -35,19 +35,19 @@ function respond($success, $message = '', $data = [])
 }
 
 try {
-    $mongoDbName = "Top_Management";
+    $mongoDbName = "ECADYB";
     $mongoUrl = getenv('MONGO_URL') ?: getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 
     $mongoClient = new MongoDB\Client($mongoUrl);
 
-    $messageCollection = $mongoClient->$mongoDbName->Messages;
+    $messageCollection = $mongoClient->$mongoDbName->Top_Management_Messages;
 
     $messageCount = $messageCollection->countDocuments([]);
     if ($messageCount === 0) {
         respond(true, 'Please upload CSV of the Top Management to the Batch Upload Section first.', ['data' => []]);
     }
 
-    $photosCollection = $mongoClient->$mongoDbName->Photos;
+    $photosCollection = $mongoClient->$mongoDbName->Top_Management_Photos;
     $photos = $photosCollection->find([], ['sort' => ['position' => 1]]);
 
     $result = [];

@@ -253,7 +253,7 @@ try {
             respond(false, 'Upload cancelled');
         }
 
-        $mongoDbName = "Top_Management";
+        $mongoDbName = "ECADYB";
         $mongoUrl = getenv('MONGO_URL') ?: getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
         error_log("UploadTopManagementPhotos.php using MongoDB URL: $mongoUrl");
         error_log("UploadTopManagementPhotos.php using database: $mongoDbName, collection: Photos");
@@ -265,7 +265,7 @@ try {
                 'socketTimeoutMS' => 10000,
                 'retryReads' => true
             ]);
-            $collection = $mongoClient->$mongoDbName->Photos;
+            $collection = $mongoClient->$mongoDbName->Top_Management_Photos;
         } catch (Exception $e) {
             error_log("UploadTopManagementPhotos.php MongoDB connection error: " . $e->getMessage());
             $results[] = [
@@ -290,7 +290,7 @@ try {
         }
 
         try {
-            $messageCollection = $mongoClient->$mongoDbName->Messages;
+            $messageCollection = $mongoClient->$mongoDbName->Top_Management_Messages;
 
             $allNames = $messageCollection->distinct('name');
             error_log("Available names in Messages collection: " . implode(", ", $allNames));

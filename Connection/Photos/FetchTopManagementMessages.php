@@ -35,12 +35,12 @@ function respond($success, $message = '', $data = [])
 }
 
 try {
-    $mongoDbName = "Top_Management";
+    $mongoDbName = "ECADYB";
     $mongoUrl = getenv('MONGO_URL') ?: getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 
     $mongoClient = new MongoDB\Client($mongoUrl);
 
-    $messageCollection = $mongoClient->$mongoDbName->Messages;
+    $messageCollection = $mongoClient->$mongoDbName->Top_Management_Messages;
 
     $messageCount = $messageCollection->countDocuments([]);
     if ($messageCount === 0) {

@@ -45,9 +45,9 @@ try {
         'retryReads' => true
     ]);
 
-    $dbName = "Yearbook";
+    $dbName = "ECADYB";
     $db = $client->$dbName;
-    $collection = $db->Covers;
+    $collection = $db->Yearbook_Covers;
 
     error_log("FetchCovers.php using database: $dbName, collection: Covers");
 

@@ -61,9 +61,9 @@ try {
         'socketTimeoutMS'          => 5000
     ]);
 
-    $dbName = "Yearbook";
+    $dbName = "ECADYB";
     $db = $client->$dbName;
-    $collection = $db->Covers;
+    $collection = $db->Yearbook_Covers;
 
     error_log("DeleteCover.php using database: $dbName, collection: Covers");
 

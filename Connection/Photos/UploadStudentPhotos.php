@@ -134,7 +134,7 @@ try {
     $failedCount = 0;
     $results = [];
 
-    $mongoDbName = "Student";
+        $mongoDbName = "ECADYB";
     $mongoUrl = getenv('MONGO_URL') ?: getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
     error_log("UploadStudentPhotos.php using MongoDB URL: $mongoUrl");
     error_log("UploadStudentPhotos.php using database: $mongoDbName, collection: Photos");
@@ -146,7 +146,7 @@ try {
             'socketTimeoutMS' => 10000,
             'retryReads' => true
         ]);
-        $collection = $mongoClient->$mongoDbName->Photos;
+        $collection = $mongoClient->$mongoDbName->Student_Photos;
     } catch (Exception $e) {
         error_log("UploadStudentPhotos.php MongoDB connection error: " . $e->getMessage());
         respond(false, 'Database connection failed: ' . $e->getMessage());

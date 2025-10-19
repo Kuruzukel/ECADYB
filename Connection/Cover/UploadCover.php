@@ -275,7 +275,7 @@ try {
         respond(false, 'Upload cancelled');
     }
 
-    $mongoDbName = "Yearbook";
+    $mongoDbName = "ECADYB";
     // Use MONGO_URL or MONGODB_URI (Railway standard) with fallback
     $mongoUrl = getenv('MONGO_URL') ?: getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
     error_log("UploadCover.php using MongoDB URL: $mongoUrl");
@@ -288,7 +288,7 @@ try {
             'socketTimeoutMS' => 10000,
             'retryReads' => true
         ]);
-        $collection = $mongoClient->$mongoDbName->Covers;
+        $collection = $mongoClient->$mongoDbName->Yearbook_Covers;
     } catch (Exception $e) {
         error_log("UploadCover.php MongoDB connection error: " . $e->getMessage());
         respond(false, 'Database connection failed: ' . $e->getMessage());

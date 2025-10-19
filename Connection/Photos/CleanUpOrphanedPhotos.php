@@ -19,12 +19,12 @@ require __DIR__ . '/../../vendor/autoload.php';
 use MongoDB\Client;
 
 try {
-    $mongoDbName = "Top_Management";
+    $mongoDbName = "ECADYB";
     $mongoUrl = getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 
     $mongoClient = new MongoDB\Client($mongoUrl);
 
-    $messageCollection = $mongoClient->$mongoDbName->Messages;
+    $messageCollection = $mongoClient->$mongoDbName->Top_Management_Messages;
     $messages = $messageCollection->find([], ['projection' => ['name' => 1]]);
 
     $validNames = [];
@@ -34,7 +34,7 @@ try {
         }
     }
 
-    $photosCollection = $mongoClient->$mongoDbName->Photos;
+    $photosCollection = $mongoClient->$mongoDbName->Top_Management_Photos;
     $orphanedPhotos = $photosCollection->find([
         'name' => ['$nin' => $validNames]
     ]);

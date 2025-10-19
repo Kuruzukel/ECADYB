@@ -87,7 +87,7 @@ function generateRandomPassword($length = 8)
     return $password;
 }
 
-function importCSVToDepartments($tmpName, $departmentsDB, $programMap)
+function importCSVToDepartments($tmpName, $departmentsDB, $programMap, $dropCollection = true)
 {
     if (!isValidCSV($tmpName)) return false;
 
@@ -187,7 +187,10 @@ function importCSVToDepartments($tmpName, $departmentsDB, $programMap)
             try {
                 $collection = $departmentsDB->$deptCode;
 
-                $collection->drop();
+                // Only drop collection if explicitly requested (for single file uploads)
+                if ($dropCollection) {
+                    $collection->drop();
+                }
                 $collection->insertMany($records);
             } catch (Exception $e) {
                 error_log("Error importing data to department $deptCode: " . $e->getMessage());
@@ -254,7 +257,7 @@ function importCSVByMessage($tmpName, $collection)
 
 function getTopManagementDatabase($client)
 {
-    return $client->Top_Management;
+    return $client->ECADYB;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -307,14 +310,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
 
                 if (!empty($csvNames)) {
-                    $photosCollection = $topManagementDB->Photos;
+                    $photosCollection = $topManagementDB->Top_Management_Photos;
                     $deleteResult = $photosCollection->deleteMany([
                         'name' => ['$nin' => $csvNames]
                     ]);
                     error_log("Cleaned up " . $deleteResult->getDeletedCount() . " orphaned top management photos");
                 }
 
-                $uploadStatus['top_management_message'] = importCSVByMessage($tmpName, $topManagementDB->Messages);
+                $uploadStatus['top_management_message'] = importCSVByMessage($tmpName, $topManagementDB->Top_Management_Messages);
             } catch (Exception $e) {
                 error_log("Error importing top management message: " . $e->getMessage());
                 $uploadStatus['top_management_message'] = false;
@@ -327,15 +330,63 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!empty($_FILES['student_info']['tmp_name'])) {
         try {
-            $departmentsDB = $client->Departments;
+            $departmentsDB = $client->ECADYB;
             $dbName = $departmentsDB->getDatabaseName();
             error_log("BatchUpload.php: Importing student info to database: $dbName");
 
-            $uploadStatus['student_info'] = importCSVToDepartments(
-                $_FILES['student_info']['tmp_name'],
-                $departmentsDB,
-                $programMap
-            );
+            // Handle multiple CSV files
+            $studentInfoFiles = $_FILES['student_info'];
+            $successCount = 0;
+            $failCount = 0;
+            $totalFiles = is_array($studentInfoFiles['tmp_name']) ? count($studentInfoFiles['tmp_name']) : 1;
+
+            if (is_array($studentInfoFiles['tmp_name'])) {
+                // Multiple files - drop collection only for first file, append for rest
+                error_log("Processing " . count($studentInfoFiles['tmp_name']) . " CSV files");
+                for ($i = 0; $i < count($studentInfoFiles['tmp_name']); $i++) {
+                    error_log("Processing file $i: " . ($studentInfoFiles['name'][$i] ?? 'unknown'));
+                    if ($studentInfoFiles['error'][$i] === UPLOAD_ERR_OK) {
+                        // Drop collection only for the first file
+                        $dropCollection = ($i === 0);
+                        error_log("File $i: dropCollection = " . ($dropCollection ? 'true' : 'false'));
+                        $result = importCSVToDepartments(
+                            $studentInfoFiles['tmp_name'][$i],
+                            $departmentsDB,
+                            $programMap,
+                            $dropCollection
+                        );
+                        if ($result) {
+                            $successCount++;
+                            error_log("File $i uploaded successfully");
+                        } else {
+                            $failCount++;
+                            error_log("File $i failed to upload");
+                        }
+                    } else {
+                        $failCount++;
+                        error_log("File $i has upload error: " . $studentInfoFiles['error'][$i]);
+                    }
+                }
+                error_log("Total success: $successCount, Total failed: $failCount");
+            } else {
+                // Single file (fallback for compatibility) - drop collection
+                $uploadStatus['student_info'] = importCSVToDepartments(
+                    $studentInfoFiles['tmp_name'],
+                    $departmentsDB,
+                    $programMap,
+                    true
+                );
+                $successCount = $uploadStatus['student_info'] ? 1 : 0;
+                $failCount = $uploadStatus['student_info'] ? 0 : 1;
+            }
+
+            // Store results
+            $uploadStatus['student_info'] = $successCount > 0;
+            $uploadStatus['student_info_count'] = [
+                'success' => $successCount,
+                'failed' => $failCount,
+                'total' => $totalFiles
+            ];
         } catch (Exception $e) {
             error_log("Error processing student info: " . $e->getMessage());
             $uploadStatus['student_info'] = false;
@@ -349,10 +400,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($uploadStatus['top_management_message'] || $uploadStatus['student_info']) {
             $messages = [];
             if ($uploadStatus['top_management_message']) {
-                $messages[] = 'Top Management CSV uploaded successfully! Previous messages and orphaned photos have been replaced.';
+                $messages[] = 'Top Management CSV uploaded successfully!';
             }
             if ($uploadStatus['student_info']) {
-                $messages[] = 'Student Information CSV uploaded successfully! Random passwords have been generated for all students and previous data has been replaced.';
+                if (isset($uploadStatus['student_info_count'])) {
+                    $count = $uploadStatus['student_info_count'];
+                    $csvText = $count['success'] === 1 ? 'CSV' : 'CSVs';
+                    $messages[] = "Successfully uploaded {$count['success']} {$csvText}.";
+                    if ($count['failed'] > 0) {
+                        $csvText2 = $count['failed'] === 1 ? 'CSV' : 'CSVs';
+                        $messages[] = "Failed to upload {$count['failed']} {$csvText2}.";
+                    }
+                } else {
+                    $messages[] = 'Student Information CSV uploaded successfully!';
+                }
             }
             $message = implode(' ', $messages);
             $type = 'success';
@@ -427,9 +488,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="section-header">Student Information</div>
                             <div class="file-card" id="card-student-info">
                                 <label class="custom-upload" for="student-info">Upload Student Information CSV
-                                    File</label>
-                                <input type="file" name="student_info" id="student-info" class="upload-input"
-                                    accept=".csv">
+                                    Files</label>
+                                <input type="file" name="student_info[]" id="student-info" class="upload-input"
+                                    accept=".csv" multiple>
                                 <div class="file-info" id="info-student-info">
                                     <p><i class="fas fa-file-csv"></i> <span class="file-name"></span></p>
                                 </div>

@@ -49,7 +49,7 @@ try {
 
     $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
     $client = new Client($mongoUrl);
-    $collection = $client->Announcement->Calendar;
+    $collection = $client->ECADYB->Announcement;
 
     $deleteFilter = ['_id' => $objectId];
     if ($eventDate !== null) {

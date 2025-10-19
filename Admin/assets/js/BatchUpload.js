@@ -230,7 +230,15 @@ function updateFileUI(input) {
     if (input.files.length === 1) {
       fileNameSpan.textContent = input.files[0].name;
     } else {
-      fileNameSpan.textContent = `${input.files.length} images selected`;
+      // Determine file type based on input ID
+      const fileType = (inputId === "student-info" || inputId === "top_management_message") ? "CSV files" : "images";
+      fileNameSpan.textContent = `${input.files.length} ${fileType} selected`;
+    }
+    
+    // Debug logging
+    console.log(`Files selected for ${inputId}:`, input.files.length);
+    for (let i = 0; i < input.files.length; i++) {
+      console.log(`  File ${i}: ${input.files[i].name}`);
     }
 
     info.classList.add("show");
@@ -441,15 +449,17 @@ window.addEventListener("DOMContentLoaded", () => {
               );
 
               if (result.uploaded > 0) {
+                const imageText = result.uploaded === 1 ? 'image' : 'images';
                 showNotification(
-                  `Successfully uploaded ${result.uploaded} of ${result.total} images.`,
+                  `Successfully uploaded ${result.uploaded} ${imageText}.`,
                   "success"
                 );
               }
 
               if (result.failed > 0) {
+                const imageText = result.failed === 1 ? 'image' : 'images';
                 showNotification(
-                  `Failed to upload ${result.failed} images. Check file names and try again.`,
+                  `Failed to upload ${result.failed} ${imageText}. Check file names and try again.`,
                   "error"
                 );
               }
@@ -478,7 +488,20 @@ window.addEventListener("DOMContentLoaded", () => {
           }
         } else {
           showUploadOverlay("CSV file");
-          formData.append(input.name, input.files[0]);
+          
+          // Append all selected files
+          if (input.files.length > 1) {
+            // Multiple files - append each one
+            console.log(`Sending ${input.files.length} CSV files to server`);
+            for (let i = 0; i < input.files.length; i++) {
+              console.log(`  Appending file ${i}: ${input.files[i].name}`);
+              formData.append(input.name, input.files[i]);
+            }
+          } else {
+            // Single file
+            console.log(`Sending 1 CSV file to server: ${input.files[0].name}`);
+            formData.append(input.name, input.files[0]);
+          }
 
           try {
             currentUploadController = new AbortController();
