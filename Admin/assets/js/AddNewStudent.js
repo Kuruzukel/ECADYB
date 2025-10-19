@@ -325,7 +325,6 @@ confirmBtn.addEventListener("click", () => {
         console.error("JSON parse error:", e);
         console.error("Response was:", text);
 
-        // Check if it's a PHP error
         if (
           text.includes("Fatal error") ||
           text.includes("Warning") ||
