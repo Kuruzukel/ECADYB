@@ -403,10 +403,7 @@ async function updateAllStudentsStatus(
 
     _showNotification(`Updating all students to ${status}...`, "info");
 
-    const baseUrl =
-      window.location.origin +
-      (window.location.pathname.includes("/ECADYB/") ? "/ECADYB" : "");
-    const endpoint = baseUrl + BULK_STATUS_ENDPOINT;
+    const endpoint = window.location.origin + BULK_STATUS_ENDPOINT;
 
     const res = await fetch(endpoint, {
       method: "POST",
@@ -678,10 +675,7 @@ async function confirmDeleteStudent(event) {
     const urlParams = new URLSearchParams(window.location.search);
     const template = urlParams.get("template") || "1";
 
-    const baseUrl =
-      window.location.origin +
-      (window.location.pathname.includes("/ECADYB/") ? "/ECADYB" : "");
-    const endpoint = baseUrl + DELETE_STUDENT_ENDPOINT;
+      const endpoint = window.location.origin + DELETE_STUDENT_ENDPOINT;
 
     const res = await fetch(endpoint, {
       method: "POST",
@@ -818,10 +812,7 @@ function initializeStatusUpdates() {
         const urlParams = new URLSearchParams(window.location.search);
         const template = urlParams.get("template") || "1";
 
-        const baseUrl =
-          window.location.origin +
-          (window.location.pathname.includes("/ECADYB/") ? "/ECADYB" : "");
-        const endpoint = baseUrl + STATUS_ENDPOINT;
+        const endpoint = window.location.origin + STATUS_ENDPOINT;
 
         const res = await fetch(endpoint, {
           method: "POST",
@@ -916,10 +907,7 @@ async function updateStudentDetails(studentId, fields) {
   fields["template"] = template;
 
   try {
-    const baseUrl =
-      window.location.origin +
-      (window.location.pathname.includes("/ECADYB/") ? "/ECADYB" : "");
-    const endpoint = baseUrl + STUDENT_UPDATE_ENDPOINT;
+    const endpoint = window.location.origin + STUDENT_UPDATE_ENDPOINT;
 
     console.log("Sending update request to:", endpoint);
     console.log("Update data:", { original_student_id: studentId, ...fields });
