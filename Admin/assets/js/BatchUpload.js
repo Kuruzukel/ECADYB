@@ -446,8 +446,8 @@ window.addEventListener("DOMContentLoaded", () => {
           const basePath = window.location.pathname.includes("/ECADYB/") ? "/ECADYB" : "";
           const uploadEndpoint =
             input.id === "student-photos"
-              ? basePath + "/Connection/Photos/UploadStudentPhotos.php"
-              : basePath + "/Connection/Photos/UPloadTopManagementPhotos.php";
+              ? window.location.origin + basePath + "/Connection/Photos/UploadStudentPhotos.php"
+              : window.location.origin + basePath + "/Connection/Photos/UPloadTopManagementPhotos.php";
 
           try {
             currentUploadController = new AbortController();

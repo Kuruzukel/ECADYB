@@ -295,10 +295,9 @@ function submitForm() {
       }
 
       currentOperation = "posting_announcement";
-      showNotification("Posting announcement...", "info");
 
       const basePath = window.location.pathname.includes("/ECADYB/") ? "/ECADYB" : "";
-      fetch(basePath + "/Connection/Announcement/SubmitAnnouncement.php", {
+      fetch(window.location.origin + basePath + "/Connection/Announcement/SubmitAnnouncement.php", {
         method: "POST",
         body: formData,
       })
@@ -367,7 +366,7 @@ async function checkDateStatus() {
   try {
     const basePath = window.location.pathname.includes("/ECADYB/") ? "/ECADYB" : "";
     const response = await fetch(
-      basePath + "/Connection/Announcement/FetchAnnouncement.php"
+      window.location.origin + basePath + "/Connection/Announcement/FetchAnnouncement.php"
     );
     const data = await response.json();
 
