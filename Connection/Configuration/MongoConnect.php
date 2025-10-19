@@ -11,7 +11,6 @@ $GLOBALS['mongoClient'] = $client;
 $departmentsDB     = $client->Departments;
 $adminCollection   = $departmentsDB->Admin;
 
-// Export database for use in other files
 $GLOBALS['database'] = $departmentsDB;
 
 $collections = [
