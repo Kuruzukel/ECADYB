@@ -227,7 +227,6 @@ const form = document.getElementById("addStudentForm");
 let notificationTimeout = null;
 
 addStudentBtn.addEventListener("click", () => {
-  // Show modal without validation - validation happens on confirm
   modalOverlay.style.display = "flex";
 });
 
