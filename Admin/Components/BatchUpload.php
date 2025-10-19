@@ -2,7 +2,6 @@
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
-// Prevent direct access to this file
 if (!defined('ADMIN_DASHBOARD_INCLUDED')) {
     // If accessed directly, redirect to the proper route
     header('Location: ../');
