@@ -1,7 +1,6 @@
 <?php
 define('ADMIN_DASHBOARD_INCLUDED', true);
 
-// Detect base path for localhost vs Railway
 $basePath = strpos($_SERVER['REQUEST_URI'], '/ECADYB/') !== false ? '/ECADYB' : '';
 
 // Check if session is already started to avoid warnings
