@@ -198,6 +198,73 @@ function hideUploadOverlay() {
   }
 }
 
+function updateFileUI(input) {
+  const inputId = input.id;
+  let cardId, infoId;
+
+  if (inputId === "top_management_message") {
+    cardId = "card-top-management";
+    infoId = "info-top-management";
+  } else if (inputId === "student-info") {
+    cardId = "card-student-info";
+    infoId = "info-student-info";
+  } else if (inputId === "student-photos") {
+    cardId = "card-student-photos";
+    infoId = "info-student-photos";
+  } else if (inputId === "management-photos") {
+    cardId = "card-management-photos";
+    infoId = "info-management-photos";
+  }
+
+  const card = document.getElementById(cardId);
+  const info = document.getElementById(infoId);
+
+  if (!card || !info) return;
+
+  const hasFiles = input.files && input.files.length > 0;
+
+  if (hasFiles) {
+    card.classList.add("has-file");
+
+    const fileNameSpan = info.querySelector(".file-name");
+    if (input.files.length === 1) {
+      fileNameSpan.textContent = input.files[0].name;
+    } else {
+      fileNameSpan.textContent = `${input.files.length} images selected`;
+    }
+
+    info.classList.add("show");
+  } else {
+    card.classList.remove("has-file");
+    info.classList.remove("show");
+
+    const fileNameSpan = info.querySelector(".file-name");
+    if (fileNameSpan) {
+      fileNameSpan.textContent = "";
+    }
+
+    setTimeout(() => {
+      if (fileNameSpan) {
+        fileNameSpan.textContent = "";
+      }
+    }, 100);
+  }
+}
+
+function forceResetFileUI(inputId) {
+  const input = document.getElementById(inputId);
+  if (!input) return;
+
+  input.value = "";
+  input.files = new DataTransfer().files;
+
+  updateFileUI(input);
+
+  setTimeout(() => {
+    updateFileUI(input);
+  }, 200);
+}
+
 function cancelUpload() {
   console.log("Cancel upload triggered");
 
@@ -306,73 +373,6 @@ window.addEventListener("DOMContentLoaded", () => {
     );
   });
 
-  function updateFileUI(input) {
-    const inputId = input.id;
-    let cardId, infoId;
-
-    if (inputId === "top_management_message") {
-      cardId = "card-top-management";
-      infoId = "info-top-management";
-    } else if (inputId === "student-info") {
-      cardId = "card-student-info";
-      infoId = "info-student-info";
-    } else if (inputId === "student-photos") {
-      cardId = "card-student-photos";
-      infoId = "info-student-photos";
-    } else if (inputId === "management-photos") {
-      cardId = "card-management-photos";
-      infoId = "info-management-photos";
-    }
-
-    const card = document.getElementById(cardId);
-    const info = document.getElementById(infoId);
-
-    if (!card || !info) return;
-
-    const hasFiles = input.files && input.files.length > 0;
-
-    if (hasFiles) {
-      card.classList.add("has-file");
-
-      const fileNameSpan = info.querySelector(".file-name");
-      if (input.files.length === 1) {
-        fileNameSpan.textContent = input.files[0].name;
-      } else {
-        fileNameSpan.textContent = `${input.files.length} images selected`;
-      }
-
-      info.classList.add("show");
-    } else {
-      card.classList.remove("has-file");
-      info.classList.remove("show");
-
-      const fileNameSpan = info.querySelector(".file-name");
-      if (fileNameSpan) {
-        fileNameSpan.textContent = "";
-      }
-
-      setTimeout(() => {
-        if (fileNameSpan) {
-          fileNameSpan.textContent = "";
-        }
-      }, 100);
-    }
-  }
-
-  function forceResetFileUI(inputId) {
-    const input = document.getElementById(inputId);
-    if (!input) return;
-
-    input.value = "";
-    input.files = new DataTransfer().files;
-
-    updateFileUI(input);
-
-    setTimeout(() => {
-      updateFileUI(input);
-    }, 200);
-  }
-
   document.querySelectorAll(".upload-input").forEach((input) => {
     input.addEventListener("change", async (e) => {
       e.preventDefault();
@@ -479,9 +479,6 @@ window.addEventListener("DOMContentLoaded", () => {
         } else {
           showUploadOverlay("CSV file");
           formData.append(input.name, input.files[0]);
-          if (selectedTemplate) {
-            formData.append("selected_template", selectedTemplate.value);
-          }
 
           try {
             currentUploadController = new AbortController();

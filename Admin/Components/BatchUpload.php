@@ -87,7 +87,7 @@ function generateRandomPassword($length = 8)
     return $password;
 }
 
-function importCSVToTemplateDepartments($tmpName, $templateDB, $programMap)
+function importCSVToDepartments($tmpName, $departmentsDB, $programMap)
 {
     if (!isValidCSV($tmpName)) return false;
 
@@ -185,7 +185,7 @@ function importCSVToTemplateDepartments($tmpName, $templateDB, $programMap)
     if (!empty($dataByDepartment)) {
         foreach ($dataByDepartment as $deptCode => $records) {
             try {
-                $collection = $templateDB->$deptCode;
+                $collection = $departmentsDB->$deptCode;
 
                 $collection->drop();
                 $collection->insertMany($records);
@@ -327,13 +327,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!empty($_FILES['student_info']['tmp_name'])) {
         try {
-            $topManagementDB = getTopManagementDatabase($client);
-            $dbName = $topManagementDB->getDatabaseName();
+            $departmentsDB = $client->Departments;
+            $dbName = $departmentsDB->getDatabaseName();
             error_log("BatchUpload.php: Importing student info to database: $dbName");
 
-            $uploadStatus['student_info'] = importCSVToTemplateDepartments(
+            $uploadStatus['student_info'] = importCSVToDepartments(
                 $_FILES['student_info']['tmp_name'],
-                $topManagementDB,
+                $departmentsDB,
                 $programMap
             );
         } catch (Exception $e) {
