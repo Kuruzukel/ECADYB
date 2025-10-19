@@ -1,5 +1,4 @@
 <?php
-// Define constant to indicate this file is being included
 define('ADMIN_DASHBOARD_INCLUDED', true);
 
 // Detect base path for localhost vs Railway
@@ -62,7 +61,7 @@ require $mongoPath;
     <link rel="icon" href="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png" type="image/png" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="<?= $basePath ?>/Admin/assets/css/AdminDashboard.css" rel="stylesheet">
-    
+
     <?php
     // Load page-specific CSS based on current page
     $currentPage = isset($_GET['page']) ? $_GET['page'] : 'student-list';
@@ -76,7 +75,7 @@ require $mongoPath;
         'template' => $basePath . '/Admin/assets/css/BatchTemplates.css',
         'changepassword' => $basePath . '/Admin/assets/css/ChangePassword.css',
     ];
-    
+
     if (isset($pageCSS[$currentPage])) {
         echo '<link rel="stylesheet" href="' . $pageCSS[$currentPage] . '">';
     }
@@ -424,7 +423,7 @@ require $mongoPath;
 
     </main>
     <script src="<?= $basePath ?>/Admin/assets/js/AdminDashboard.js?v=<?php echo microtime(true); ?>"></script>
-    
+
     <?php
     // Load page-specific JS based on current page
     // Use microtime for more aggressive cache-busting
@@ -439,7 +438,7 @@ require $mongoPath;
         'template' => $basePath . '/Admin/assets/js/BatchTemplates.js',
         'changepassword' => $basePath . '/Admin/assets/js/ChangePassword.js',
     ];
-    
+
     if (isset($pageJS[$currentPage])) {
         echo '<script src="' . $pageJS[$currentPage] . '"></script>';
     }
