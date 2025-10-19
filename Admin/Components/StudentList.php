@@ -6,7 +6,6 @@ if (!defined('ADMIN_DASHBOARD_INCLUDED')) {
 
 $isIncludedInDashboard = defined('ADMIN_DASHBOARD_INCLUDED');
 
-// Enable error display for localhost debugging
 if (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false || strpos($_SERVER['HTTP_HOST'], '127.0.0.1') !== false) {
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
