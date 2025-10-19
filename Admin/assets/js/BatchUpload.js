@@ -413,12 +413,14 @@ window.addEventListener("DOMContentLoaded", () => {
           currentOperation = "uploading_photos";
           showUploadOverlay("photos");
 
-          // Debug: Log files being uploaded
           console.log("=== UPLOAD DEBUG ===");
           console.log("Input ID:", input.id);
           console.log("Number of files selected:", input.files.length);
-          console.log("File names:", Array.from(input.files).map(f => f.name));
-          
+          console.log(
+            "File names:",
+            Array.from(input.files).map((f) => f.name)
+          );
+
           // Append files with array notation so PHP receives them as an array
           for (let i = 0; i < input.files.length; i++) {
             console.log(`Appending file ${i + 1}:`, input.files[i].name);
@@ -443,11 +445,17 @@ window.addEventListener("DOMContentLoaded", () => {
           formData.append("template", templateNumber);
           console.log("Uploading with template number:", templateNumber);
 
-          const basePath = window.location.pathname.includes("/ECADYB/") ? "/ECADYB" : "";
+          const basePath = window.location.pathname.includes("/ECADYB/")
+            ? "/ECADYB"
+            : "";
           const uploadEndpoint =
             input.id === "student-photos"
-              ? window.location.origin + basePath + "/Connection/Photos/UploadStudentPhotos.php"
-              : window.location.origin + basePath + "/Connection/Photos/UPloadTopManagementPhotos.php";
+              ? window.location.origin +
+                basePath +
+                "/Connection/Photos/UploadStudentPhotos.php"
+              : window.location.origin +
+                basePath +
+                "/Connection/Photos/UPloadTopManagementPhotos.php";
 
           try {
             currentUploadController = new AbortController();
