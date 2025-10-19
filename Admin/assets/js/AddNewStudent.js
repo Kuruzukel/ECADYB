@@ -342,7 +342,6 @@ confirmBtn.addEventListener("click", () => {
         return;
       }
 
-      // Handle the response
       if (data.success) {
         showNotification("Student added successfully!", "success");
         form.reset();
