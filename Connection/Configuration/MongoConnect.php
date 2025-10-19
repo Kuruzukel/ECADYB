@@ -3,7 +3,6 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 use MongoDB\Client;
 
-// Use MONGO_URL or MONGODB_URI (Railway standard) with fallback
 $mongoUrl = getenv('MONGO_URL') ?: getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 $client   = new Client($mongoUrl);
 
