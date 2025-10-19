@@ -1,6 +1,5 @@
 <?php
 
-// Bunny CDN Configuration - Uses environment variables with fallbacks
 if (!defined('BUNNY_STORAGE_ZONE')) {
     define('BUNNY_STORAGE_ZONE', getenv('BUNNY_STORAGE_ZONE') ?: 'ecadyb');
 }
