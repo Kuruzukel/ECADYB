@@ -421,7 +421,6 @@ window.addEventListener("DOMContentLoaded", () => {
             Array.from(input.files).map((f) => f.name)
           );
 
-          // Append files with array notation so PHP receives them as an array
           for (let i = 0; i < input.files.length; i++) {
             console.log(`Appending file ${i + 1}:`, input.files[i].name);
             formData.append(`files[${i}]`, input.files[i]);
