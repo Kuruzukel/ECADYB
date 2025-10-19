@@ -1,5 +1,4 @@
 <?php
-// Set headers first to allow CORS
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, OPTIONS');
