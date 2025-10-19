@@ -1,27 +1,22 @@
 <?php
-// Set headers first to allow CORS
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
-// Handle preflight OPTIONS request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit();
 }
 
-// Turn off error display for production but log errors
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
-// Start session only if not already started
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-// Error handler to catch any PHP errors
-set_error_handler(function($errno, $errstr, $errfile, $errline) {
+set_error_handler(function ($errno, $errstr, $errfile, $errline) {
     error_log("PHP Error in DeleteStudent: [$errno] $errstr in $errfile:$errline");
     http_response_code(500);
     echo json_encode([
@@ -36,7 +31,6 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 use MongoDB\Client;
 
-// Use MONGO_URL or MONGODB_URI (Railway standard) with fallback
 $mongoUrl = getenv('MONGO_URL') ?: getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 
 try {
@@ -50,7 +44,6 @@ try {
     exit;
 }
 
-// Get and parse JSON input
 $rawInput = file_get_contents('php://input');
 error_log("DeleteStudent raw input: " . $rawInput);
 
@@ -86,7 +79,7 @@ $db = $client->$dbName;
 
 try {
     error_log("DeleteStudent attempting to delete student_id=$studentId from collection=$collectionName in database=$dbName");
-    
+
     $collections = iterator_to_array($db->listCollectionNames());
     if (!in_array($collectionName, $collections)) {
         error_log("DeleteStudent collection not found: $collectionName");

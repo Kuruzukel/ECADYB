@@ -1,9 +1,7 @@
 <?php
-// Turn off error display for production
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
-// Start output buffering to catch any errors
 ob_start();
 
 header('Content-Type: application/json');
@@ -43,8 +41,7 @@ function respond($success, $message = '', $data = [])
     exit;
 }
 
-// Global error handler to ensure JSON response even on errors
-set_error_handler(function($errno, $errstr, $errfile, $errline) {
+set_error_handler(function ($errno, $errstr, $errfile, $errline) {
     error_log("PHP Error: $errstr in $errfile on line $errline");
     http_response_code(500);
     while (ob_get_level()) {
@@ -58,8 +55,7 @@ set_error_handler(function($errno, $errstr, $errfile, $errline) {
     exit;
 });
 
-// Global exception handler
-set_exception_handler(function($exception) {
+set_exception_handler(function ($exception) {
     error_log("PHP Exception: " . $exception->getMessage());
     http_response_code(500);
     while (ob_get_level()) {
@@ -119,8 +115,7 @@ try {
     }
 
     $uploadedFiles = $_FILES['files'];
-    
-    // Normalize single file upload to array format
+
     if (!is_array($uploadedFiles['name'])) {
         $uploadedFiles = [
             'name' => [$uploadedFiles['name']],
@@ -130,7 +125,7 @@ try {
             'size' => [$uploadedFiles['size']]
         ];
     }
-    
+
     $uploadedCount = 0;
     $failedCount = 0;
     $results = [];
@@ -268,7 +263,6 @@ try {
         }
 
         $mongoDbName = "BatchTemplate" . $template;
-        // Use MONGO_URL or MONGODB_URI (Railway standard) with fallback
         $mongoUrl = getenv('MONGO_URL') ?: getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
         error_log("UploadTopManagementPhotos.php using MongoDB URL: $mongoUrl");
         error_log("UploadTopManagementPhotos.php using database: $mongoDbName, collection: top_management_photos");

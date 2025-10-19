@@ -1,9 +1,7 @@
 <?php
-// Turn off error display for production
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
-// Start output buffering to catch any errors
 ob_start();
 
 header('Content-Type: application/json');
@@ -24,11 +22,10 @@ require_once __DIR__ . '/../Configuration/MongoConnect.php';
 
 function respond($success, $message = '', $data = [])
 {
-    // Clean output buffer
     while (ob_get_level()) {
         ob_end_clean();
     }
-    
+
     header('Content-Type: application/json');
     echo json_encode(array_merge([
         'success' => $success,
@@ -45,7 +42,6 @@ try {
     }
 
     $mongoDbName = "BatchTemplate" . $template;
-    // Use MONGO_URL or MONGODB_URI (Railway standard) with fallback
     $mongoUrl = getenv('MONGO_URL') ?: getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 
     $mongoClient = new MongoDB\Client($mongoUrl);

@@ -27,7 +27,6 @@ try {
 
     require_once __DIR__ . '/../Configuration/MongoConnect.php';
 
-    // Get database from global variable
     $database = $GLOBALS['database'] ?? null;
     if (!$database) {
         echo json_encode(['success' => false, 'message' => 'Database connection not available']);

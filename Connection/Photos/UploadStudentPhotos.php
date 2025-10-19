@@ -1,9 +1,7 @@
 <?php
-// Turn off error display for production
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
-// Start output buffering to catch any errors
 ob_start();
 
 header('Content-Type: application/json');
@@ -43,8 +41,7 @@ function respond($success, $message = '', $data = [])
     exit;
 }
 
-// Global error handler to ensure JSON response even on errors
-set_error_handler(function($errno, $errstr, $errfile, $errline) {
+set_error_handler(function ($errno, $errstr, $errfile, $errline) {
     error_log("PHP Error: $errstr in $errfile on line $errline");
     http_response_code(500);
     while (ob_get_level()) {
@@ -58,8 +55,7 @@ set_error_handler(function($errno, $errstr, $errfile, $errline) {
     exit;
 });
 
-// Global exception handler
-set_exception_handler(function($exception) {
+set_exception_handler(function ($exception) {
     error_log("PHP Exception: " . $exception->getMessage());
     http_response_code(500);
     while (ob_get_level()) {
@@ -119,8 +115,7 @@ try {
     }
 
     $uploadedFiles = $_FILES['files'];
-    
-    // Debug: Log what we received
+
     error_log("UploadStudentPhotos.php - Files received:");
     error_log("  - Total files in _FILES: " . count($_FILES));
     error_log("  - Files array structure: " . print_r($_FILES, true));
@@ -131,8 +126,7 @@ try {
     } else {
         error_log("  - Single file name: " . $uploadedFiles['name']);
     }
-    
-    // Normalize single file upload to array format
+
     if (!is_array($uploadedFiles['name'])) {
         error_log("Normalizing single file to array format");
         $uploadedFiles = [
@@ -143,12 +137,11 @@ try {
             'size' => [$uploadedFiles['size']]
         ];
     }
-    
+
     $uploadedCount = 0;
     $failedCount = 0;
     $results = [];
 
-    // Connect to MongoDB once for all files
     $mongoDbName = "BatchTemplate{$template}";
     $mongoUrl = getenv('MONGO_URL') ?: getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
     error_log("UploadStudentPhotos.php using MongoDB URL: $mongoUrl");
@@ -369,9 +362,7 @@ try {
 
                 $originalNameWithoutExt = pathinfo($fileName, PATHINFO_FILENAME);
                 error_log("Updating existing document for $fileName, checking photo type in: $originalNameWithoutExt");
-                
-                // Check which photo type this is and update ONLY that specific field
-                // This preserves other photo types (FILIPINIANA, TOGA, UNIFORM)
+
                 if (strpos($originalNameWithoutExt, '-FILIPINIANA') !== false) {
                     error_log("Detected FILIPINIANA photo for $fileName");
                     $updateData['$set']['filipiniana_url'] = $publicUrl;
@@ -389,8 +380,6 @@ try {
                     $updateData['$set']['uniform_original_name'] = $fileName;
                 } else {
                     error_log("No photo type detected for $fileName, using default fields");
-                    // For regular photos (no suffix), update the default fields
-                    // But don't overwrite FILIPINIANA, TOGA, or UNIFORM if they exist
                     $updateData['$set']['url'] = $publicUrl;
                     $updateData['$set']['filename'] = $filename;
                     $updateData['$set']['original_name'] = $fileName;
@@ -474,7 +463,7 @@ try {
         }
 
         error_log("Successfully processed file: $fileName for student ID: $studentId");
-        
+
         $results[] = [
             'filename' => $fileName,
             'success' => true,

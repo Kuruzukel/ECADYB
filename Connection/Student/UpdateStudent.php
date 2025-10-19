@@ -1,21 +1,17 @@
 <?php
-// Set headers first to allow CORS
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
-// Handle preflight OPTIONS request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit();
 }
 
-// Turn off error display for production
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
-// Start session only if not already started
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
@@ -25,14 +21,12 @@ use MongoDB\Client;
 
 function respond($success, $message = '', $data = [])
 {
-    // Ensure we're sending JSON
     header('Content-Type: application/json');
     http_response_code($success ? 200 : 400);
     echo json_encode(array_merge(['success' => $success, 'message' => $message], $data));
     exit;
 }
 
-// Use MONGO_URL or MONGODB_URI (Railway standard) with fallback
 $mongoUrl = getenv('MONGO_URL') ?: getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 try {
     $client = new Client($mongoUrl);

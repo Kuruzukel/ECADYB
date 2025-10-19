@@ -1,9 +1,7 @@
 <?php
-// Turn off error display for production
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
-// Start output buffering to catch any errors
 ob_start();
 
 header('Content-Type: application/json');
@@ -21,11 +19,10 @@ require_once __DIR__ . '/../Configuration/MongoConnect.php';
 
 function respond($success, $message = '', $data = [])
 {
-    // Clean output buffer
     while (ob_get_level()) {
         ob_end_clean();
     }
-    
+
     header('Content-Type: application/json');
     echo json_encode(array_merge([
         'success' => $success,
@@ -34,8 +31,7 @@ function respond($success, $message = '', $data = [])
     exit;
 }
 
-// Global error handler to ensure JSON response even on errors
-set_error_handler(function($errno, $errstr, $errfile, $errline) {
+set_error_handler(function ($errno, $errstr, $errfile, $errline) {
     error_log("PHP Error: $errstr in $errfile on line $errline");
     http_response_code(500);
     while (ob_get_level()) {
@@ -49,8 +45,7 @@ set_error_handler(function($errno, $errstr, $errfile, $errline) {
     exit;
 });
 
-// Global exception handler
-set_exception_handler(function($exception) {
+set_exception_handler(function ($exception) {
     error_log("PHP Exception: " . $exception->getMessage());
     http_response_code(500);
     while (ob_get_level()) {
@@ -73,7 +68,6 @@ try {
     }
 
     $mongoDbName = "BatchTemplate" . $template;
-    // Use MONGO_URL or MONGODB_URI (Railway standard) with fallback
     $mongoUrl = getenv('MONGO_URL') ?: getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 
     $mongoClient = new MongoDB\Client($mongoUrl);
