@@ -1,5 +1,4 @@
 <?php
-// Turn off error display for production
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
@@ -64,7 +63,7 @@ try {
     while (ob_get_level()) {
         ob_end_clean();
     }
-    
+
     header('Content-Type: application/json');
     echo json_encode([
         'success' => true,
@@ -82,7 +81,7 @@ try {
     while (ob_get_level()) {
         ob_end_clean();
     }
-    
+
     header('Content-Type: application/json');
     echo json_encode([
         'success' => false,
