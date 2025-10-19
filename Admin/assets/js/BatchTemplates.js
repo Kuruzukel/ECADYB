@@ -281,7 +281,8 @@ window.addEventListener("DOMContentLoaded", () => {
   const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
   applyTheme(savedTheme);
 
-  let currentXhr = null;
+  let currentXhrs = [];
+  let isUploadCancelled = false;
 
   const sections = document.querySelectorAll(".form-group .section");
   const sectionHeaders = document.querySelectorAll(
@@ -467,17 +468,74 @@ window.addEventListener("DOMContentLoaded", () => {
       });
 
       frontInput.addEventListener("change", async (event) => {
-        const file = event.target.files && event.target.files[0];
-        if (!file) return;
-        await uploadToBunny(file, slot, "front");
+        const files = event.target.files;
+        if (!files || files.length === 0) return;
+        
+        // Reset cancellation flag
+        isUploadCancelled = false;
+        
+        const uploadOverlay = document.getElementById("upload-overlay");
+        const uploadText = document.getElementById("uploadText");
+        
+        if (isBackgroundSlot) {
+          // Slot 8: only upload first image
+          if (files.length > 1) {
+            showNotification("Background slot can only accept 1 image. Please select only 1 image.", "error");
+            event.target.value = "";
+            return;
+          }
+          await uploadToBunny(files[0], slot, "front", true, false);
+        } else {
+          // Slots 1-7: can upload up to 2 images
+          if (files.length > 2) {
+            showNotification("You can only upload 2 images at the same time. Please select only 2 images.", "error");
+            event.target.value = "";
+            return;
+          }
+          
+          // Show overlay with appropriate message for 2 images
+          if (files.length === 2 && uploadOverlay && uploadText) {
+            uploadOverlay.style.display = "flex";
+            uploadText.textContent = `Uploading Slot ${slot} front and back cover...`;
+          }
+          
+          // Upload the images (suppress individual notifications when uploading 2 images)
+          const suppressNotifications = files.length === 2;
+          const isBatchUpload = files.length === 2;
+          let uploadCancelled = false;
+          
+          if (files.length === 2) {
+            // Upload both images in parallel
+            console.log("Starting parallel upload of 2 images");
+            const uploadPromises = [
+              uploadToBunny(files[0], slot, "front", !suppressNotifications, isBatchUpload),
+              uploadToBunny(files[1], slot, "back", !suppressNotifications, isBatchUpload)
+            ];
+            
+            const results = await Promise.all(uploadPromises);
+            
+            // Check if any upload was cancelled
+            uploadCancelled = results.some(result => result && result.cancelled) || isUploadCancelled;
+            
+            // Show success notification only if not cancelled
+            if (!uploadCancelled && !isUploadCancelled) {
+              showNotification(`Uploaded successfully to Slot ${slot} front and back cover`, "success");
+            }
+          } else if (files.length === 1) {
+            // Upload single image
+            const result = await uploadToBunny(files[0], slot, "front", !suppressNotifications, false);
+            uploadCancelled = (result && result.cancelled) || isUploadCancelled;
+          }
+          
+          // Hide overlay if not cancelled
+          if (!uploadCancelled && !isUploadCancelled && uploadOverlay) {
+            uploadOverlay.style.display = "none";
+          }
+        }
+        
+        // Reset input
+        event.target.value = "";
       });
-
-      if (!isBackgroundSlot)
-        backInput.addEventListener("change", async (event) => {
-          const file = event.target.files && event.target.files[0];
-          if (!file) return;
-          await uploadToBunny(file, slot, "back");
-        });
 
       deleteBtn.addEventListener("click", (event) => {
         event.stopPropagation();
@@ -505,10 +563,12 @@ window.addEventListener("DOMContentLoaded", () => {
         openDeleteModal();
       });
 
-      function xhrUpload(url, formData) {
-        return new Promise((resolve) => {
+      async function xhrUpload(url, formData) {
+        return new Promise(async (resolve) => {
           const xhr = new XMLHttpRequest();
-          currentXhr = xhr;
+          currentXhrs.push(xhr);
+          
+          console.log(`XHR created, total active uploads: ${currentXhrs.length}`);
 
           xhr.upload.addEventListener("progress", function (e) {
             if (e.lengthComputable) {
@@ -526,20 +586,23 @@ window.addEventListener("DOMContentLoaded", () => {
           xhr.timeout = 60000;
 
           xhr.onabort = () => {
+            console.log("XHR aborted");
             resolve({ aborted: true });
           };
 
           xhr.ontimeout = () => {
             resolve({ success: false, message: "Upload timed out" });
-            currentXhr = null;
+            currentXhrs = currentXhrs.filter(x => x !== xhr);
           };
 
           xhr.onreadystatechange = () => {
             if (xhr.readyState === 4) {
               try {
                 if (xhr.status >= 200 && xhr.status < 300) {
+                  console.log("XHR completed successfully");
                   resolve(JSON.parse(xhr.responseText));
                 } else if (xhr.status === 0) {
+                  console.log("XHR status 0 - cancelled");
                   resolve({ success: false, message: "Upload cancelled" });
                 } else {
                   resolve({
@@ -550,20 +613,78 @@ window.addEventListener("DOMContentLoaded", () => {
               } catch (e) {
                 resolve({ success: false, message: "Network error" });
               }
-              currentXhr = null;
+              currentXhrs = currentXhrs.filter(x => x !== xhr);
             }
           };
 
           xhr.onerror = () => {
+            console.log("XHR error");
             resolve({ success: false, message: "Connection failed" });
-            currentXhr = null;
+            currentXhrs = currentXhrs.filter(x => x !== xhr);
           };
 
+          // Check if upload was cancelled before sending
+          if (isUploadCancelled) {
+            console.log("Upload cancelled before sending data");
+            currentXhrs = currentXhrs.filter(x => x !== xhr);
+            resolve({ cancelled: true });
+            return;
+          }
+
+          // Show countdown in upload text - user can cancel during this window
+          const uploadText = document.getElementById("uploadText");
+          if (uploadText) {
+            uploadText.textContent = "Preparing upload... Click Cancel NOW to stop (3s)";
+          }
+          console.log("Countdown started - user can cancel now to prevent upload");
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          
+          if (isUploadCancelled) {
+            console.log("Upload cancelled after 1s - NO DATA SENT TO SERVER");
+            currentXhrs = currentXhrs.filter(x => x !== xhr);
+            resolve({ cancelled: true });
+            return;
+          }
+          
+          if (uploadText) {
+            uploadText.textContent = "Preparing upload... Click Cancel NOW to stop (2s)";
+          }
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          
+          if (isUploadCancelled) {
+            console.log("Upload cancelled after 2s - NO DATA SENT TO SERVER");
+            currentXhrs = currentXhrs.filter(x => x !== xhr);
+            resolve({ cancelled: true });
+            return;
+          }
+          
+          if (uploadText) {
+            uploadText.textContent = "Preparing upload... Click Cancel NOW to stop (1s)";
+          }
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          
+          if (isUploadCancelled) {
+            console.log("Upload cancelled after 3s - NO DATA SENT TO SERVER");
+            currentXhrs = currentXhrs.filter(x => x !== xhr);
+            resolve({ cancelled: true });
+            return;
+          }
+
+          console.log("Countdown ended - sending data to server NOW");
+          if (uploadText) {
+            uploadText.textContent = "Uploading to server...";
+          }
           xhr.send(formData);
         });
       }
 
-      async function uploadToBunny(file, slot, side) {
+      async function uploadToBunny(file, slot, side, shouldShowNotification = true, isBatchUpload = false) {
+        // Check if upload was cancelled before starting
+        if (isUploadCancelled) {
+          console.log("Upload cancelled, not starting upload");
+          return { cancelled: true };
+        }
+        
         const form = new FormData();
         form.append("file", file);
         form.append("slot", String(slot));
@@ -576,9 +697,9 @@ window.addEventListener("DOMContentLoaded", () => {
         const uploadOverlay = document.getElementById("upload-overlay");
         const uploadText = document.getElementById("uploadText");
 
-        if (uploadOverlay && uploadText) {
+        if (!isBatchUpload && uploadOverlay && uploadText) {
           uploadOverlay.style.display = "flex";
-          uploadText.textContent = "Image upload in progress…";
+          uploadText.textContent = `Uploading Slot ${slot} ${side} cover...`;
         }
 
         try {
@@ -644,21 +765,20 @@ window.addEventListener("DOMContentLoaded", () => {
           await new Promise((resolve) => setTimeout(resolve, 10));
 
           const data = await xhrUpload(UPLOAD_ENDPOINT, form);
-          if (data && data.aborted) {
-            if (uploadOverlay) uploadOverlay.style.display = "none";
-            showNotification("Cancelled upload", "error");
-            return;
-          }
-
-          if (data && data.message === "Cancelled upload") {
-            if (uploadOverlay) uploadOverlay.style.display = "none";
-            showNotification("Cancelled upload", "error");
-            return;
+          
+          // Check if upload was cancelled
+          if (data && (data.cancelled || data.aborted || data.message === "Cancelled upload")) {
+            console.log("Upload was cancelled - not showing success notification");
+            if (!isBatchUpload && uploadOverlay) uploadOverlay.style.display = "none";
+            return { cancelled: true };
           }
 
           if (!data?.success) {
-            showNotification(data?.message || "Upload failed", "error");
-            return;
+            if (!isBatchUpload) {
+              showNotification(data?.message || "Upload failed", "error");
+            }
+            if (!isBatchUpload && uploadOverlay) uploadOverlay.style.display = "none";
+            return { cancelled: false, success: false };
           }
 
           const img = document.createElement("img");
@@ -682,46 +802,72 @@ window.addEventListener("DOMContentLoaded", () => {
             if (backImg && !isBackgroundSlot) backImg.style.opacity = 0;
           }
 
-          if (detectedSlot === 8) {
-            showNotification(
-              "Yearbook Backgrounds have been uploaded successfully!",
-              "success"
-            );
-          } else {
-            showNotification(
-              `Uploaded to Slot ${detectedSlot} ${detectedSide} successfully!`,
-              "success"
-            );
+          if (shouldShowNotification) {
+            if (detectedSlot === 8) {
+              showNotification(
+                "Yearbook Backgrounds have been uploaded successfully!",
+                "success"
+              );
+            } else {
+              showNotification(
+                `Uploaded to Slot ${detectedSlot} ${detectedSide} successfully!`,
+                "success"
+              );
+            }
           }
+          
+          return { cancelled: false, success: true };
         } catch (err) {
           console.error("Upload error:", err);
-          showNotification(err.message || "Upload failed", "error");
+          if (!isBatchUpload) {
+            showNotification(err.message || "Upload failed", "error");
+          }
+          return { cancelled: false, success: false };
         } finally {
-          if (!currentXhr && uploadOverlay)
+          if (!isBatchUpload && currentXhrs.length === 0 && uploadOverlay)
             uploadOverlay.style.display = "none";
         }
       }
 
       window.cancelUpload = function () {
+        console.log("Cancel upload clicked. Active uploads:", currentXhrs.length);
+        
+        // Set cancellation flag FIRST
+        isUploadCancelled = true;
+        console.log("Cancellation flag set to true");
+        
         const uploadOverlay = document.getElementById("upload-overlay");
         const progressBar = document.getElementById("progressBar");
         const uploadText = document.getElementById("uploadText");
         const progressPercent = document.getElementById("progressPercent");
 
-        if (currentXhr) {
+        // Abort all active uploads
+        currentXhrs.forEach((xhr, index) => {
           try {
-            currentXhr.abort();
-          } catch (_) {}
-          currentXhr = null;
-        }
+            console.log(`Aborting upload ${index + 1}, readyState: ${xhr.readyState}`);
+            // Force abort regardless of readyState
+            xhr.abort();
+            console.log(`Upload ${index + 1} aborted successfully`);
+          } catch (err) {
+            console.error(`Error aborting upload ${index + 1}:`, err);
+          }
+        });
+        currentXhrs = [];
+        console.log("All XHRs cleared from array");
 
-        showNotification("Cancelled upload", "error");
+        showNotification("Upload Cancelled", "error");
 
         if (progressBar) progressBar.style.width = "0%";
         if (uploadOverlay) uploadOverlay.style.display = "none";
         if (uploadText)
           uploadText.textContent = "Please wait while we upload your file";
         if (progressPercent) progressPercent.textContent = "0%";
+        
+        // Reset cancellation flag after a short delay
+        setTimeout(() => {
+          isUploadCancelled = false;
+          console.log("Cancellation flag reset to false");
+        }, 1000);
       };
 
       async function deleteCover(slot, side) {

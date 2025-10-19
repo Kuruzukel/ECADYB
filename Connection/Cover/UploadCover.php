@@ -94,8 +94,10 @@ try {
         respond(false, $errorMap[$code] ?? 'Upload failed.');
     }
 
+    // Check immediately after receiving file
     if (connection_aborted()) {
         $uploadCancelled = true;
+        error_log("UploadCover.php connection aborted immediately after receiving file");
         respond(false, 'Upload cancelled');
     }
 
@@ -185,7 +187,6 @@ try {
         respond(false, 'Upload cancelled');
     }
 
-
     $ch = curl_init($storageUrl);
     curl_setopt_array($ch, [
         CURLOPT_CUSTOMREQUEST  => 'PUT',
@@ -198,12 +199,36 @@ try {
         CURLOPT_SSL_VERIFYPEER => true,
         CURLOPT_TCP_NODELAY    => true,
         CURLOPT_FRESH_CONNECT  => false,
-        CURLOPT_FORBID_REUSE   => false
+        CURLOPT_FORBID_REUSE   => false,
+        CURLOPT_NOPROGRESS     => false,
+        CURLOPT_PROGRESSFUNCTION => function($resource, $download_size, $downloaded, $upload_size, $uploaded) {
+            // Check for cancellation during upload
+            if (connection_aborted()) {
+                return -1; // Abort the transfer
+            }
+            return 0;
+        }
     ]);
+    
+    // Final check before uploading to BunnyCDN
+    if (connection_aborted()) {
+        curl_close($ch);
+        $uploadCancelled = true;
+        respond(false, 'Upload cancelled');
+    }
+    
     $response = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $curlErr  = curl_error($ch);
+    $curlErrno = curl_errno($ch);
     curl_close($ch);
+
+    // Check if curl was aborted (errno 42 = CURLE_ABORTED_BY_CALLBACK)
+    if ($curlErrno === 42) {
+        error_log("UploadCover.php curl aborted by progress callback");
+        $uploadCancelled = true;
+        respond(false, 'Upload cancelled');
+    }
 
     if (connection_aborted()) {
         $uploadCancelled = true;
@@ -214,6 +239,7 @@ try {
                 CURLOPT_CUSTOMREQUEST  => 'DELETE',
                 CURLOPT_HTTPHEADER     => ['AccessKey: ' . $bunnyAccessKey],
                 CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_HEADER         => false,
                 CURLOPT_TIMEOUT        => 10,
                 CURLOPT_CONNECTTIMEOUT => 3
             ]);
