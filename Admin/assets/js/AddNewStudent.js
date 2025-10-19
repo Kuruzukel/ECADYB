@@ -281,7 +281,6 @@ confirmBtn.addEventListener("click", () => {
 
   const formData = new FormData(form);
 
-  // Get selected batch template from localStorage
   const selectedTemplate =
     localStorage.getItem("selectedBatchTemplateNumber") || "1";
   formData.append("batch_template", selectedTemplate);
