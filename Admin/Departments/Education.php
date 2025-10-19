@@ -12,7 +12,6 @@
 
 <body>
   <?php
-  // Prevent direct access to this file
   if (!defined('ADMIN_DASHBOARD_INCLUDED')) {
     // If accessed directly, redirect to the proper route
     header('Location: ../');
