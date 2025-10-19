@@ -1,5 +1,4 @@
 <?php
-// Only include this file if it's being accessed through AdminDashboard.php
 if (!defined('ADMIN_DASHBOARD_INCLUDED')) {
     // If accessed directly, redirect to the proper route
     header('Location: ../');
