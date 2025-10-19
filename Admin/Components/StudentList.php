@@ -42,7 +42,6 @@ function generateRandomPassword($length = 8)
 
 use MongoDB\BSON\ObjectId;
 
-// Only start output buffering if not included in dashboard
 if (!$isIncludedInDashboard) {
     ob_start();
 }
@@ -178,7 +177,7 @@ try {
     error_log("Database error: " . $e->getMessage());
     $allStudents = [];
     $totalPages = 1;
-    
+
     // Display error on localhost for debugging
     if ($isIncludedInDashboard && (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false || strpos($_SERVER['HTTP_HOST'], '127.0.0.1') !== false)) {
         echo '<div style="padding: 20px; background: #fee; border: 2px solid #f00; margin: 20px; border-radius: 5px;">';
@@ -194,7 +193,7 @@ try {
 
 ?>
 
-<?php 
+<?php
 // Debug output for localhost
 if ($isIncludedInDashboard && (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false || strpos($_SERVER['HTTP_HOST'], '127.0.0.1') !== false)) {
     echo '<!-- DEBUG: StudentList.php loaded successfully -->';
@@ -218,7 +217,7 @@ if ($isIncludedInDashboard && (strpos($_SERVER['HTTP_HOST'], 'localhost') !== fa
     </head>
 
     <body>
-<?php endif; ?>
+    <?php endif; ?>
     <div class="container">
         <div class="header-container">
             <h1><i class="fas fa-home"></i> <span class="chevron"><i class="fas fa-chevron-right"></i></span> Student
@@ -597,8 +596,8 @@ if ($isIncludedInDashboard && (strpos($_SERVER['HTTP_HOST'], 'localhost') !== fa
 
 
 
-<?php if ($outputFullHtml): ?>
-            <script src="<?= $basePath ?>/Admin/assets/js/StudentList.js?v=<?php echo time(); ?>"></script>
+            <?php if ($outputFullHtml): ?>
+                <script src="<?= $basePath ?>/Admin/assets/js/StudentList.js?v=<?php echo time(); ?>"></script>
     </body>
 
     </html>
