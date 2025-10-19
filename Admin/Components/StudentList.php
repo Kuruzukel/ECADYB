@@ -192,7 +192,6 @@ try {
 ?>
 
 <?php
-// Debug output for localhost
 if ($isIncludedInDashboard && (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false || strpos($_SERVER['HTTP_HOST'], '127.0.0.1') !== false)) {
     echo '<!-- DEBUG: StudentList.php loaded successfully -->';
     echo '<!-- DEBUG: Total students: ' . $totalStudents . ' -->';
