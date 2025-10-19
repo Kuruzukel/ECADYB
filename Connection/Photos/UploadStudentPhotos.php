@@ -97,14 +97,6 @@ try {
         respond(false, 'Bunny configuration missing. Please check environment variables.');
     }
 
-    $template = isset($_POST['template']) ? (int)$_POST['template'] : 1;
-
-    error_log("UploadStudentPhotos.php received parameters: template=$template");
-
-    if ($template < 1 || $template > 3) {
-        respond(false, 'Invalid template parameter. Must be 1, 2, or 3.');
-    }
-
     if (connection_aborted()) {
         $uploadCancelled = true;
         respond(false, 'Upload cancelled');
@@ -142,10 +134,10 @@ try {
     $failedCount = 0;
     $results = [];
 
-    $mongoDbName = "BatchTemplate{$template}";
+    $mongoDbName = "Student";
     $mongoUrl = getenv('MONGO_URL') ?: getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
     error_log("UploadStudentPhotos.php using MongoDB URL: $mongoUrl");
-    error_log("UploadStudentPhotos.php using database: $mongoDbName, collection: StudentPhotos");
+    error_log("UploadStudentPhotos.php using database: $mongoDbName, collection: Photos");
 
     try {
         $mongoClient = new Client($mongoUrl, [
@@ -154,7 +146,7 @@ try {
             'socketTimeoutMS' => 10000,
             'retryReads' => true
         ]);
-        $collection = $mongoClient->$mongoDbName->StudentPhotos;
+        $collection = $mongoClient->$mongoDbName->Photos;
     } catch (Exception $e) {
         error_log("UploadStudentPhotos.php MongoDB connection error: " . $e->getMessage());
         respond(false, 'Database connection failed: ' . $e->getMessage());
@@ -251,9 +243,8 @@ try {
         $safeExt = preg_replace('/[^A-Za-z0-9]/', '', $ext) ?: 'jpg';
 
         $safeFolder = 'Student Photos';
-        $templateFolder = sprintf('Batch Template %d', $template);
         $filename = sprintf('%s.%s', $safeFileName, $safeExt);
-        $path = $safeFolder . '/' . $templateFolder . '/' . $filename;
+        $path = $safeFolder . '/' . $filename;
         $storageUrl = "https://storage.bunnycdn.com/{$bunnyStorageZone}/" . str_replace(' ', '%20', $path);
 
         if (connection_aborted()) {
@@ -330,7 +321,6 @@ try {
             'student_id' => $studentId,
             'filename' => $filename,
             'original_name' => $fileName,
-            'template' => $template,
             'url' => $publicUrl,
             'upload_time' => new \MongoDB\BSON\UTCDateTime()
         ];
@@ -353,8 +343,7 @@ try {
 
         try {
             $existingDocument = $collection->findOne([
-                'student_id' => $studentId,
-                'template' => $template
+                'student_id' => $studentId
             ]);
 
             if ($existingDocument) {
@@ -386,7 +375,7 @@ try {
                 }
 
                 $result = $collection->updateOne(
-                    ['student_id' => $studentId, 'template' => $template],
+                    ['student_id' => $studentId],
                     $updateData
                 );
                 $document = $existingDocument;
@@ -394,7 +383,6 @@ try {
             } else {
                 $newDocument = [
                     'student_id' => $studentId,
-                    'template' => $template,
                     'upload_time' => new \MongoDB\BSON\UTCDateTime()
                 ];
 
