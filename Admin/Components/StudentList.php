@@ -4,7 +4,6 @@ if (!defined('ADMIN_DASHBOARD_INCLUDED')) {
     exit;
 }
 
-// Check if this is being included in AdminDashboard (not AJAX request)
 $isIncludedInDashboard = defined('ADMIN_DASHBOARD_INCLUDED');
 
 // Enable error display for localhost debugging
