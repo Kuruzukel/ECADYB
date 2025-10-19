@@ -426,7 +426,6 @@ window.addEventListener("DOMContentLoaded", () => {
             formData.append(`files[${i}]`, input.files[i]);
           }
 
-          // Debug: Verify FormData
           console.log("FormData entries:");
           for (let [key, value] of formData.entries()) {
             if (value instanceof File) {
