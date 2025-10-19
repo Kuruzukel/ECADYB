@@ -68,13 +68,8 @@ try {
 
     $slot     = isset($_POST['slot']) ? (int)$_POST['slot'] : null;
     $side     = isset($_POST['side']) ? strtolower(trim($_POST['side'])) : '';
-    $template = isset($_POST['template']) ? (int)$_POST['template'] : 1;
 
-    error_log("UploadCover.php received parameters: slot=$slot, side=$side, template=$template");
-
-    if ($template < 1 || $template > 3) {
-        respond(false, 'Invalid template parameter. Must be 1, 2, or 3.');
-    }
+    error_log("UploadCover.php received parameters: slot=$slot, side=$side");
 
     if ($slot === null || ($slot !== 8 && ($side !== 'front' && $side !== 'back'))) {
         respond(false, 'Invalid parameters: slot and side (front|back) are required, unless slot=8 (BackgroundPage).');
@@ -152,8 +147,7 @@ try {
     $safeExt      = preg_replace('/[^A-Za-z0-9]/', '', $ext) ?: 'jpg';
     $versionToken = (string) round(microtime(true) * 1000);
 
-    $safeFolder     = 'Yearbook Covers';
-    $templateFolder = sprintf('Batch Template %d', $template);
+    $safeFolder = 'Yearbook Covers';
 
     $sideLabel = ($slot === 8)
         ? 'BackgroundPage'
@@ -163,7 +157,7 @@ try {
         ? sprintf('BackgroundPage-%s-%s.%s', $safeBase, $versionToken, $safeExt)
         : sprintf('Slot-%d-%s-%s-%s.%s', $slot, $sideLabel, $safeBase, $versionToken, $safeExt);
 
-    $path = $safeFolder . '/' . $templateFolder . '/' . $filename;
+    $path = $safeFolder . '/' . $filename;
 
     error_log("UploadCover.php constructed path: $path");
 
@@ -255,11 +249,11 @@ try {
         respond(false, 'Upload cancelled');
     }
 
-    $mongoDbName = "BatchTemplate{$template}";
+    $mongoDbName = "Yearbook";
     // Use MONGO_URL or MONGODB_URI (Railway standard) with fallback
     $mongoUrl = getenv('MONGO_URL') ?: getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
     error_log("UploadCover.php using MongoDB URL: $mongoUrl");
-    error_log("UploadCover.php using database: $mongoDbName, collection: YearbookCovers");
+    error_log("UploadCover.php using database: $mongoDbName, collection: Covers");
 
     try {
         $mongoClient = new Client($mongoUrl, [
@@ -268,7 +262,7 @@ try {
             'socketTimeoutMS' => 10000,
             'retryReads' => true
         ]);
-        $collection = $mongoClient->$mongoDbName->YearbookCovers;
+        $collection = $mongoClient->$mongoDbName->Covers;
     } catch (Exception $e) {
         error_log("UploadCover.php MongoDB connection error: " . $e->getMessage());
         respond(false, 'Database connection failed: ' . $e->getMessage());
@@ -297,7 +291,6 @@ try {
         'original_name' => $originalName,
         'slot' => $slot,
         'side' => $side,
-        'template' => $template,
         'upload_time' => new \MongoDB\BSON\UTCDateTime()
     ];
 
@@ -332,7 +325,6 @@ try {
         error_log("UploadCover.php upserting document: " . json_encode($document));
 
         $filter = [
-            'template' => $template,
             'slot' => $slot
         ];
 
@@ -375,8 +367,7 @@ try {
     $responseData = [
         'filename' => $filename,
         'slot' => $slot,
-        'side' => $side,
-        'template' => $template
+        'side' => $side
     ];
 
     if ($slot === 8) {

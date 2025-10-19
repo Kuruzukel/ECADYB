@@ -40,13 +40,8 @@ use MongoDB\Client;
 try {
     $slot     = isset($_POST['slot']) ? (int)$_POST['slot'] : null;
     $side     = isset($_POST['side']) ? strtolower(trim($_POST['side'])) : '';
-    $template = isset($_POST['template']) ? (int)$_POST['template'] : 1;
 
-    error_log("DeleteCover.php received parameters: slot=$slot, side=$side, template=$template");
-
-    if ($template < 1 || $template > 3) {
-        respond(false, 'Invalid template parameter. Must be 1, 2, or 3.');
-    }
+    error_log("DeleteCover.php received parameters: slot=$slot, side=$side");
 
     if ($slot === null) {
         respond(false, 'Missing slot parameter.');
@@ -66,11 +61,11 @@ try {
         'socketTimeoutMS'          => 5000
     ]);
 
-    $dbName = "BatchTemplate" . $template;
+    $dbName = "Yearbook";
     $db = $client->$dbName;
-    $collection = $db->YearbookCovers;
+    $collection = $db->Covers;
 
-    error_log("DeleteCover.php using database: $dbName, collection: YearbookCovers");
+    error_log("DeleteCover.php using database: $dbName, collection: Covers");
 
     try {
         $databases = $client->listDatabases();
@@ -95,7 +90,7 @@ try {
         error_log("DeleteCover.php error checking databases: " . $e->getMessage());
     }
 
-    $doc = $collection->findOne(['template' => $template, 'slot' => $slot]);
+    $doc = $collection->findOne(['slot' => $slot]);
     if (!$doc) {
         respond(false, 'Cover not found');
     }

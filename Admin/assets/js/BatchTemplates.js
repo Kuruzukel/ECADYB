@@ -404,14 +404,8 @@ window.addEventListener("DOMContentLoaded", () => {
     const sectionHeader = section
       .querySelector(".section-header")
       .textContent.trim();
-    let template = 1;
-    const templateMatch = sectionHeader.match(/Batch Template (\d+)/);
-    if (templateMatch && templateMatch[1]) {
-      template = parseInt(templateMatch[1]);
-    }
 
     console.log("Section header:", sectionHeader);
-    console.log("Extracted template:", template);
 
     sectionUploadBoxes.forEach((box, index) => {
       const frontInput = box.querySelector(".frontInput");
@@ -429,14 +423,13 @@ window.addEventListener("DOMContentLoaded", () => {
       const CONNECTION_PATH = `${BASE_PATH}/Connection`;
 
       const UPLOAD_ENDPOINT = `${CONNECTION_PATH}/Cover/UploadCover.php`;
-      const FETCH_ENDPOINT = `${CONNECTION_PATH}/Cover/FetchCovers.php?template=${template}`;
+      const FETCH_ENDPOINT = `${CONNECTION_PATH}/Cover/FetchCovers.php`;
       const DELETE_ENDPOINT = `${CONNECTION_PATH}/Cover/DeleteCover.php`;
 
       console.log("BatchTemplates endpoints configured:", {
         UPLOAD_ENDPOINT,
         FETCH_ENDPOINT,
         DELETE_ENDPOINT,
-        template,
         slot,
       });
 
@@ -575,9 +568,8 @@ window.addEventListener("DOMContentLoaded", () => {
         form.append("file", file);
         form.append("slot", String(slot));
         form.append("side", side);
-        form.append("template", String(template));
 
-        console.log("Sending upload request with template:", template);
+        console.log("Sending upload request for slot:", slot, "side:", side);
 
         currentOperation = "uploading_image";
 
@@ -737,9 +729,8 @@ window.addEventListener("DOMContentLoaded", () => {
           const form = new FormData();
           form.append("slot", String(slot));
           form.append("side", side);
-          form.append("template", String(template));
 
-          console.log("Sending delete request with template:", template);
+          console.log("Sending delete request for slot:", slot, "side:", side);
           for (let [key, value] of form.entries()) {
             console.log(key, value);
           }
@@ -770,7 +761,7 @@ window.addEventListener("DOMContentLoaded", () => {
           await new Promise((resolve) => setTimeout(resolve, 50));
 
           const res = await fetch(
-            `${CONNECTION_PATH}/Cover/FetchCovers.php?template=${template}`,
+            `${CONNECTION_PATH}/Cover/FetchCovers.php`,
             {
               signal: AbortSignal.timeout(10000),
             }

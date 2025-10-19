@@ -35,14 +35,6 @@ require __DIR__ . '/../../vendor/autoload.php';
 use MongoDB\Client;
 
 try {
-    $template = isset($_GET['template']) ? (int)$_GET['template'] : 1;
-
-    error_log("FetchCovers.php received template parameter: $template");
-
-    if ($template < 1 || $template > 3) {
-        respond(false, 'Invalid template parameter. Must be 1, 2, or 3.');
-    }
-
     $mongoUrl = getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
     error_log("FetchCovers.php using MongoDB URL: $mongoUrl");
 
@@ -53,11 +45,11 @@ try {
         'retryReads' => true
     ]);
 
-    $dbName = "BatchTemplate" . $template;
+    $dbName = "Yearbook";
     $db = $client->$dbName;
-    $collection = $db->YearbookCovers;
+    $collection = $db->Covers;
 
-    error_log("FetchCovers.php using database: $dbName, collection: YearbookCovers");
+    error_log("FetchCovers.php using database: $dbName, collection: Covers");
 
     $cursor = $collection->find(
         [],
@@ -67,7 +59,6 @@ try {
                 'front_url' => 1,
                 'back_url' => 1,
                 'background_url' => 1,
-                'template' => 1,
                 'upload_time' => 1
             ],
             'limit' => 8
@@ -109,7 +100,7 @@ try {
         }
     }
 
-    error_log("FetchCovers.php found " . count($items) . " items for template $template");
+    error_log("FetchCovers.php found " . count($items) . " items");
 
     respond(true, 'Covers fetched', ['items' => array_values($items)]);
 } catch (Exception $e) {
