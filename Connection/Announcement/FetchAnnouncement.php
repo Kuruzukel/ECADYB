@@ -9,7 +9,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-// Turn off error display for production
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
