@@ -2,7 +2,6 @@
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
-// Start output buffering to catch any errors
 ob_start();
 
 header('Content-Type: application/json');
@@ -77,7 +76,6 @@ try {
     ]);
     exit;
 } catch (Exception $e) {
-    // Clean output buffer and return JSON error
     while (ob_get_level()) {
         ob_end_clean();
     }
