@@ -177,7 +177,6 @@ try {
     $allStudents = [];
     $totalPages = 1;
 
-    // Display error on localhost for debugging
     if ($isIncludedInDashboard && (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false || strpos($_SERVER['HTTP_HOST'], '127.0.0.1') !== false)) {
         echo '<div style="padding: 20px; background: #fee; border: 2px solid #f00; margin: 20px; border-radius: 5px;">';
         echo '<h3 style="color: #f00; margin-top: 0;">Database Connection Error</h3>';
