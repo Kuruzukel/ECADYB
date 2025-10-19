@@ -933,7 +933,6 @@ async function updateStudentDetails(studentId, fields) {
       return;
     }
 
-    // Parse JSON response
     let data;
     try {
       data = await res.json();
