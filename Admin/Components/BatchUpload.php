@@ -408,127 +408,130 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <body>
     <?php
-    // Check if this is being included in AdminDashboard
     $isIncludedInDashboard = defined('ADMIN_DASHBOARD_INCLUDED');
     $outputFullHtml = !$isIncludedInDashboard;
-    
+
     if ($outputFullHtml):
     ?>
-    <!DOCTYPE html>
-    <html lang="en">
+        <!DOCTYPE html>
+        <html lang="en">
 
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Batch Upload</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-        <link rel="stylesheet" href="<?= $basePath ?>/Admin/assets/css/BatchUpload.css">
-    </head>
+        <head>
+            <meta charset="UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <title>Batch Upload</title>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+            <link rel="stylesheet" href="<?= $basePath ?>/Admin/assets/css/BatchUpload.css">
+        </head>
 
-    <body>
-    <?php endif; ?>
-    <div class="container">
-        <div class="header-container">
-            <h1><i class="fas fa-cloud-upload-alt"></i> <span class="chevron"><i
-                        class="fas fa-chevron-right"></i></span>Batch Upload</h1>
-        </div>
-        <form method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="selected_template" id="selected_template" value="">
-            <div class="form-content">
-                <div class="form-group">
-                    <div class="section">
-                        <div class="section-header">Top Management Message</div>
-                        <div class="file-card" id="card-top-management">
-                            <label class="custom-upload" for="top_management_message">Upload Top Management Message CSV
-                                File</label>
-                            <input type="file" name="top_management_message" id="top_management_message"
-                                class="upload-input" accept=".csv">
-                            <div class="file-info" id="info-top-management">
-                                <p><i class="fas fa-file-csv"></i> <span class="file-name"></span></p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section">
-                        <div class="section-header">Student Information</div>
-                        <div class="file-card" id="card-student-info">
-                            <label class="custom-upload" for="student-info">Upload Student Information CSV File</label>
-                            <input type="file" name="student_info" id="student-info" class="upload-input" accept=".csv">
-                            <div class="file-info" id="info-student-info">
-                                <p><i class="fas fa-file-csv"></i> <span class="file-name"></span></p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section">
-                        <div class="section-header">Student Photos</div>
-                        <div class="file-card" id="card-student-photos">
-                            <label class="custom-upload" for="student-photos">Upload Student Photos</label>
-                            <input type="file" name="student_photos[]" id="student-photos" class="upload-input"
-                                accept="image/*" multiple>
-                            <div class="file-info" id="info-student-photos">
-                                <p><i class="fas fa-images"></i> <span class="file-name"></span></p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section">
-                        <div class="section-header">Top Management Photos</div>
-                        <div class="file-card" id="card-management-photos">
-                            <label class="custom-upload" for="management-photos">Upload Top Management Photos</label>
-                            <input type="file" name="management_photos[]" id="management-photos" class="upload-input"
-                                accept="image/*" multiple>
-                            <div class="file-info" id="info-management-photos">
-                                <p><i class="fas fa-images"></i> <span class="file-name"></span></p>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
+        <body>
+        <?php endif; ?>
+        <div class="container">
+            <div class="header-container">
+                <h1><i class="fas fa-cloud-upload-alt"></i> <span class="chevron"><i
+                            class="fas fa-chevron-right"></i></span>Batch Upload</h1>
             </div>
-
-            <div id="notification-container"></div>
-    </div>
-    </form>
-    </div>
-
-    <div class="upload-overlay" id="upload-overlay">
-        <div class="upload-modal" id="uploadModal">
-            <h2>Uploading...</h2>
-            <p id="uploadText">Please wait while we upload your files</p>
-
-            <div class="loader">
-                <div class="loading-bar-background">
-                    <div class="loading-bar">
-                        <div class="white-bars-container">
-                            <div class="white-bar"></div>
-                            <div class="white-bar"></div>
-                            <div class="white-bar"></div>
-                            <div class="white-bar"></div>
-                            <div class="white-bar"></div>
-                            <div class="white-bar"></div>
-                            <div class="white-bar"></div>
-                            <div class="white-bar"></div>
-                            <div class="white-bar"></div>
-                            <div class="white-bar"></div>
+            <form method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="selected_template" id="selected_template" value="">
+                <div class="form-content">
+                    <div class="form-group">
+                        <div class="section">
+                            <div class="section-header">Top Management Message</div>
+                            <div class="file-card" id="card-top-management">
+                                <label class="custom-upload" for="top_management_message">Upload Top Management Message
+                                    CSV
+                                    File</label>
+                                <input type="file" name="top_management_message" id="top_management_message"
+                                    class="upload-input" accept=".csv">
+                                <div class="file-info" id="info-top-management">
+                                    <p><i class="fas fa-file-csv"></i> <span class="file-name"></span></p>
+                                </div>
+                            </div>
                         </div>
+
+                        <div class="section">
+                            <div class="section-header">Student Information</div>
+                            <div class="file-card" id="card-student-info">
+                                <label class="custom-upload" for="student-info">Upload Student Information CSV
+                                    File</label>
+                                <input type="file" name="student_info" id="student-info" class="upload-input"
+                                    accept=".csv">
+                                <div class="file-info" id="info-student-info">
+                                    <p><i class="fas fa-file-csv"></i> <span class="file-name"></span></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="section">
+                            <div class="section-header">Student Photos</div>
+                            <div class="file-card" id="card-student-photos">
+                                <label class="custom-upload" for="student-photos">Upload Student Photos</label>
+                                <input type="file" name="student_photos[]" id="student-photos" class="upload-input"
+                                    accept="image/*" multiple>
+                                <div class="file-info" id="info-student-photos">
+                                    <p><i class="fas fa-images"></i> <span class="file-name"></span></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="section">
+                            <div class="section-header">Top Management Photos</div>
+                            <div class="file-card" id="card-management-photos">
+                                <label class="custom-upload" for="management-photos">Upload Top Management
+                                    Photos</label>
+                                <input type="file" name="management_photos[]" id="management-photos"
+                                    class="upload-input" accept="image/*" multiple>
+                                <div class="file-info" id="info-management-photos">
+                                    <p><i class="fas fa-images"></i> <span class="file-name"></span></p>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
-            </div>
 
-            <div class="modal-buttons">
-                <button class="modal-btn cancel" id="cancel-upload-btn">Cancel</button>
+                <div id="notification-container"></div>
+        </div>
+        </form>
+        </div>
+
+        <div class="upload-overlay" id="upload-overlay">
+            <div class="upload-modal" id="uploadModal">
+                <h2>Uploading...</h2>
+                <p id="uploadText">Please wait while we upload your files</p>
+
+                <div class="loader">
+                    <div class="loading-bar-background">
+                        <div class="loading-bar">
+                            <div class="white-bars-container">
+                                <div class="white-bar"></div>
+                                <div class="white-bar"></div>
+                                <div class="white-bar"></div>
+                                <div class="white-bar"></div>
+                                <div class="white-bar"></div>
+                                <div class="white-bar"></div>
+                                <div class="white-bar"></div>
+                                <div class="white-bar"></div>
+                                <div class="white-bar"></div>
+                                <div class="white-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-buttons">
+                    <button class="modal-btn cancel" id="cancel-upload-btn">Cancel</button>
+                </div>
             </div>
         </div>
-    </div>
 
-    <?php if ($flashMessage): ?>
-        <div id="flash-data" data-message="<?= htmlspecialchars($flashMessage['message'], ENT_QUOTES) ?>"
-            data-type="<?= htmlspecialchars($flashMessage['type'], ENT_QUOTES) ?>" style="display:none"></div>
+        <?php if ($flashMessage): ?>
+            <div id="flash-data" data-message="<?= htmlspecialchars($flashMessage['message'], ENT_QUOTES) ?>"
+                data-type="<?= htmlspecialchars($flashMessage['type'], ENT_QUOTES) ?>" style="display:none"></div>
+        <?php endif; ?>
+        <?php if ($outputFullHtml): ?>
+            <script src="<?= $basePath ?>/Admin/assets/js/BatchUpload.js?v=<?php echo time(); ?>"></script>
+        </body>
+
+        </html>
     <?php endif; ?>
-<?php if ($outputFullHtml): ?>
-    <script src="<?= $basePath ?>/Admin/assets/js/BatchUpload.js?v=<?php echo time(); ?>"></script>
-</body>
-
-</html>
-<?php endif; ?>
