@@ -3,7 +3,6 @@ header('Content-Type: application/json');
 require __DIR__ . '/../Configuration/MongoConnect.php';
 
 try {
-    // Get announcements from Calendar collection
     $announcements = $calendarCollection->find(
         ['status' => 'active'], // Only get active announcements
         [
@@ -13,7 +12,7 @@ try {
     );
 
     $announcementData = [];
-    
+
     foreach ($announcements as $announcement) {
         $announcementData[] = [
             'id' => (string)$announcement['_id'],
@@ -31,7 +30,6 @@ try {
         'data' => $announcementData,
         'count' => count($announcementData)
     ]);
-
 } catch (Exception $e) {
     echo json_encode([
         'success' => false,
@@ -39,4 +37,3 @@ try {
         'data' => []
     ]);
 }
-?>
