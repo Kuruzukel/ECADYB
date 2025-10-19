@@ -35,18 +35,12 @@ function respond($success, $message = '', $data = [])
 }
 
 try {
-    $template = isset($_GET['template']) ? (int)$_GET['template'] : 1;
-
-    if ($template < 1 || $template > 3) {
-        respond(false, 'Invalid template parameter. Must be 1, 2, or 3.');
-    }
-
-    $mongoDbName = "BatchTemplate" . $template;
+    $mongoDbName = "Top_Management";
     $mongoUrl = getenv('MONGO_URL') ?: getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 
     $mongoClient = new MongoDB\Client($mongoUrl);
 
-    $messageCollection = $mongoClient->$mongoDbName->top_management_message;
+    $messageCollection = $mongoClient->$mongoDbName->Messages;
 
     $messageCount = $messageCollection->countDocuments([]);
     if ($messageCount === 0) {

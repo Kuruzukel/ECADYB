@@ -97,14 +97,6 @@ try {
         respond(false, 'Bunny configuration missing. Please check environment variables.');
     }
 
-    $template = isset($_POST['template']) ? (int)$_POST['template'] : 1;
-
-    error_log("UploadTopManagementPhotos.php received parameters: template=$template");
-
-    if ($template < 1 || $template > 3) {
-        respond(false, 'Invalid template parameter. Must be 1, 2, or 3.');
-    }
-
     if (connection_aborted()) {
         $uploadCancelled = true;
         respond(false, 'Upload cancelled');
@@ -187,9 +179,8 @@ try {
         $safeExt = preg_replace('/[^A-Za-z0-9]/', '', $ext) ?: 'jpg';
 
         $safeFolder = 'Top Management Photos';
-        $templateFolder = sprintf('Batch Template %d', $template);
         $filename = sprintf('%s.%s', $safeFileName, $safeExt);
-        $path = $safeFolder . '/' . $templateFolder . '/' . $filename;
+        $path = $safeFolder . '/' . $filename;
         $storageUrl = "https://storage.bunnycdn.com/{$bunnyStorageZone}/" . str_replace(' ', '%20', $path);
 
         if (connection_aborted()) {
@@ -262,10 +253,10 @@ try {
             respond(false, 'Upload cancelled');
         }
 
-        $mongoDbName = "BatchTemplate" . $template;
+        $mongoDbName = "Top_Management";
         $mongoUrl = getenv('MONGO_URL') ?: getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
         error_log("UploadTopManagementPhotos.php using MongoDB URL: $mongoUrl");
-        error_log("UploadTopManagementPhotos.php using database: $mongoDbName, collection: top_management_photos");
+        error_log("UploadTopManagementPhotos.php using database: $mongoDbName, collection: Photos");
 
         try {
             $mongoClient = new Client($mongoUrl, [
@@ -274,7 +265,7 @@ try {
                 'socketTimeoutMS' => 10000,
                 'retryReads' => true
             ]);
-            $collection = $mongoClient->$mongoDbName->top_management_photos;
+            $collection = $mongoClient->$mongoDbName->Photos;
         } catch (Exception $e) {
             error_log("UploadTopManagementPhotos.php MongoDB connection error: " . $e->getMessage());
             $results[] = [
@@ -299,10 +290,10 @@ try {
         }
 
         try {
-            $messageCollection = $mongoClient->$mongoDbName->top_management_message;
+            $messageCollection = $mongoClient->$mongoDbName->Messages;
 
             $allNames = $messageCollection->distinct('name');
-            error_log("Available names in top_management_message: " . implode(", ", $allNames));
+            error_log("Available names in Messages collection: " . implode(", ", $allNames));
 
             $messageDoc = $messageCollection->findOne(['name' => $nameWithoutExt]);
 
@@ -348,12 +339,11 @@ try {
                 'position' => $position,
                 'filename' => $filename,
                 'original_name' => $fileName,
-                'template' => $template,
                 'url' => $publicUrl,
                 'upload_time' => new \MongoDB\BSON\UTCDateTime()
             ];
         } catch (Exception $e) {
-            error_log("Error checking name in top_management_message: " . $e->getMessage());
+            error_log("Error checking name in Messages collection: " . $e->getMessage());
 
             $results[] = [
                 'filename' => $fileName,

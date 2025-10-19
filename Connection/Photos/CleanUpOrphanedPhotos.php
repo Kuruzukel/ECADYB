@@ -19,13 +19,12 @@ require __DIR__ . '/../../vendor/autoload.php';
 use MongoDB\Client;
 
 try {
-    $template = isset($_GET['template']) ? (int)$_GET['template'] : 2;
-    $mongoDbName = "BatchTemplate" . $template;
+    $mongoDbName = "Top_Management";
     $mongoUrl = getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 
     $mongoClient = new MongoDB\Client($mongoUrl);
 
-    $messageCollection = $mongoClient->$mongoDbName->top_management_message;
+    $messageCollection = $mongoClient->$mongoDbName->Messages;
     $messages = $messageCollection->find([], ['projection' => ['name' => 1]]);
 
     $validNames = [];
@@ -35,7 +34,7 @@ try {
         }
     }
 
-    $photosCollection = $mongoClient->$mongoDbName->top_management_photos;
+    $photosCollection = $mongoClient->$mongoDbName->Photos;
     $orphanedPhotos = $photosCollection->find([
         'name' => ['$nin' => $validNames]
     ]);

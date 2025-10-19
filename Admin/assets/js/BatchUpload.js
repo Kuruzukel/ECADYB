@@ -234,31 +234,6 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  const selectedTemplateNumber = localStorage.getItem(
-    "selectedBatchTemplateNumber"
-  );
-  const selectedTemplate = localStorage.getItem("selectedBatchTemplate");
-
-  const hidden = document.getElementById("selected_template");
-  if (hidden) {
-    if (selectedTemplateNumber) {
-      hidden.value = selectedTemplateNumber;
-      console.log(
-        "BatchUpload: Using template number from localStorage:",
-        selectedTemplateNumber
-      );
-    } else if (selectedTemplate) {
-      hidden.value = selectedTemplate;
-      console.log(
-        "BatchUpload: Using template from localStorage:",
-        selectedTemplate
-      );
-    } else {
-      hidden.value = "1";
-      console.log("BatchUpload: No template selected, defaulting to 1");
-    }
-  }
-
   const flash = document.getElementById("flash-data");
   if (flash && typeof showNotification === "function") {
     const msg = flash.getAttribute("data-message");
@@ -407,7 +382,6 @@ window.addEventListener("DOMContentLoaded", () => {
       if (input.files.length > 0) {
         const form = input.form;
         const formData = new FormData();
-        const selectedTemplate = document.getElementById("selected_template");
 
         if (input.id === "student-photos" || input.id === "management-photos") {
           currentOperation = "uploading_photos";
@@ -435,14 +409,6 @@ window.addEventListener("DOMContentLoaded", () => {
             }
           }
 
-          let templateNumber = "1";
-          if (selectedTemplate && selectedTemplate.value) {
-            const extracted = selectedTemplate.value.replace(/[^0-9]/g, "");
-            templateNumber = extracted || "1";
-          }
-          formData.append("template", templateNumber);
-          console.log("Uploading with template number:", templateNumber);
-
           const basePath = window.location.pathname.includes("/ECADYB/")
             ? "/ECADYB"
             : "";
@@ -469,9 +435,8 @@ window.addEventListener("DOMContentLoaded", () => {
             if (result.success) {
               const uploadType =
                 input.id === "student-photos" ? "Student" : "Top Management";
-              const templateName = `Batch Template ${templateNumber}`;
               showNotification(
-                `${uploadType} photos uploaded successfully to ${templateName}!`,
+                `${uploadType} photos uploaded successfully!`,
                 "success"
               );
 

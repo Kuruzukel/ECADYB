@@ -35,25 +35,19 @@ function respond($success, $message = '', $data = [])
 }
 
 try {
-    $template = isset($_GET['template']) ? (int)$_GET['template'] : 1;
-
-    if ($template < 1 || $template > 3) {
-        respond(false, 'Invalid template parameter. Must be 1, 2, or 3.');
-    }
-
-    $mongoDbName = "BatchTemplate" . $template;
+    $mongoDbName = "Top_Management";
     $mongoUrl = getenv('MONGO_URL') ?: getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 
     $mongoClient = new MongoDB\Client($mongoUrl);
 
-    $messageCollection = $mongoClient->$mongoDbName->top_management_message;
+    $messageCollection = $mongoClient->$mongoDbName->Messages;
 
     $messageCount = $messageCollection->countDocuments([]);
     if ($messageCount === 0) {
         respond(true, 'Please upload CSV of the Top Management to the Batch Upload Section first.', ['data' => []]);
     }
 
-    $photosCollection = $mongoClient->$mongoDbName->top_management_photos;
+    $photosCollection = $mongoClient->$mongoDbName->Photos;
     $photos = $photosCollection->find([], ['sort' => ['position' => 1]]);
 
     $result = [];
@@ -67,7 +61,6 @@ try {
             'position' => $photo['position'] ?? '',
             'photo_url' => $photo['url'] ?? '',
             'filename' => $photo['filename'] ?? '',
-            'template' => $photo['template'] ?? $template,
             'message' => '',
             'academicyear' => ''
         ];
@@ -87,8 +80,7 @@ try {
                 'position' => $message['position'] ?? '',
                 'photo_url' => '',
                 'message' => $message['message'] ?? '',
-                'academicyear' => $message['academicyear'] ?? '',
-                'template' => $template
+                'academicyear' => $message['academicyear'] ?? ''
             ];
         }
     }

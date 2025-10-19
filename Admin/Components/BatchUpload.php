@@ -237,7 +237,7 @@ function importCSVByMessage($tmpName, $collection)
     if (!empty($dataByMessage)) {
         try {
             $collection->drop();
-            error_log("Dropped old top_management_message collection");
+            error_log("Dropped old Messages collection");
 
             $result = $collection->insertMany($dataByMessage);
             $insertedCount = count($dataByMessage);
@@ -252,36 +252,14 @@ function importCSVByMessage($tmpName, $collection)
     return false;
 }
 
-function getSelectedTemplateDatabase($client)
+function getTopManagementDatabase($client)
 {
-    $selectedTemplate = !empty($_POST['selected_template']) ? $_POST['selected_template'] : '1';
-
-    $selectedTemplate = trim($selectedTemplate);
-
-    if (is_numeric($selectedTemplate)) {
-        $templateNumber = intval($selectedTemplate);
-        if ($templateNumber >= 1 && $templateNumber <= 3) {
-            $dbName = 'BatchTemplate' . $templateNumber;
-        } else {
-            $dbName = 'BatchTemplate1';
-        }
-    } else {
-        $dbName = str_replace(' ', '', $selectedTemplate);
-
-        if (strpos($dbName, 'BatchTemplate') !== 0) {
-            $dbName = 'BatchTemplate1';
-        }
-    }
-
-    return $client->$dbName;
+    return $client->Top_Management;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $mongoUrl = getenv('MONGODB_URI') ?: getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
     $client = new Client($mongoUrl);
-
-    $selectedTemplateValue = isset($_POST['selected_template']) ? $_POST['selected_template'] : 'NOT SET';
-    error_log("BatchUpload.php processing upload - selected_template: $selectedTemplateValue");
 
     if (!empty($_FILES['top_management_message']['tmp_name'])) {
         $tmpName = $_FILES['top_management_message']['tmp_name'];
@@ -307,8 +285,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($actualHeaders === $validTopManagementHeaders) {
             try {
-                $templateDB = getSelectedTemplateDatabase($client);
-                $dbName = $templateDB->getDatabaseName();
+                $topManagementDB = getTopManagementDatabase($client);
+                $dbName = $topManagementDB->getDatabaseName();
                 error_log("BatchUpload.php: Importing top management message to database: $dbName");
 
                 $csvNames = [];
@@ -329,14 +307,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
 
                 if (!empty($csvNames)) {
-                    $photosCollection = $templateDB->top_management_photos;
+                    $photosCollection = $topManagementDB->Photos;
                     $deleteResult = $photosCollection->deleteMany([
                         'name' => ['$nin' => $csvNames]
                     ]);
                     error_log("Cleaned up " . $deleteResult->getDeletedCount() . " orphaned top management photos");
                 }
 
-                $uploadStatus['top_management_message'] = importCSVByMessage($tmpName, $templateDB->top_management_message);
+                $uploadStatus['top_management_message'] = importCSVByMessage($tmpName, $topManagementDB->Messages);
             } catch (Exception $e) {
                 error_log("Error importing top management message: " . $e->getMessage());
                 $uploadStatus['top_management_message'] = false;
@@ -349,13 +327,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!empty($_FILES['student_info']['tmp_name'])) {
         try {
-            $templateDB = getSelectedTemplateDatabase($client);
-            $dbName = $templateDB->getDatabaseName();
+            $topManagementDB = getTopManagementDatabase($client);
+            $dbName = $topManagementDB->getDatabaseName();
             error_log("BatchUpload.php: Importing student info to database: $dbName");
 
             $uploadStatus['student_info'] = importCSVToTemplateDepartments(
                 $_FILES['student_info']['tmp_name'],
-                $templateDB,
+                $topManagementDB,
                 $programMap
             );
         } catch (Exception $e) {
@@ -429,7 +407,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             class="fas fa-chevron-right"></i></span>Batch Upload</h1>
             </div>
             <form method="POST" enctype="multipart/form-data">
-                <input type="hidden" name="selected_template" id="selected_template" value="">
                 <div class="form-content">
                     <div class="form-group">
                         <div class="section">
