@@ -1,8 +1,5 @@
 <?php
-/**
- * Headers Configuration for Railway Deployment
- * This file sets necessary headers to allow iframe embedding and CORS
- */
+
 
 // Only set headers if not already sent
 if (!headers_sent()) {
@@ -26,4 +23,3 @@ if (!headers_sent()) {
         exit();
     }
 }
-
