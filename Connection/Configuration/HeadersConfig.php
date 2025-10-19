@@ -12,7 +12,6 @@ if (!headers_sent()) {
     header('X-Content-Type-Options: nosniff');
     header('Referrer-Policy: strict-origin-when-cross-origin');
 
-    // Handle preflight OPTIONS request
     if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
         http_response_code(200);
         exit();
