@@ -93,7 +93,6 @@ $totalStudents = 0;
 
 $isAjax = isset($_GET['ajax']) && $_GET['ajax'] == '1';
 
-// If included in dashboard, don't output full HTML structure
 $outputFullHtml = !$isIncludedInDashboard && !$isAjax;
 
 try {
