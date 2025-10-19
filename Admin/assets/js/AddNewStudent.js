@@ -293,7 +293,6 @@ confirmBtn.addEventListener("click", () => {
 
   modalOverlay.style.display = "none";
 
-  // Use absolute path that works on both localhost and Railway
   const endpoint = window.location.pathname.includes("/ECADYB/")
     ? "/ECADYB/Admin/Components/AddNewStudent.php"
     : "/Admin/Components/AddNewStudent.php";
