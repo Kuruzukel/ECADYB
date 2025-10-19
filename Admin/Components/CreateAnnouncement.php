@@ -13,7 +13,6 @@
 <body>
     <?php
     if (!defined('ADMIN_DASHBOARD_INCLUDED')) {
-        // If accessed directly, redirect to the proper route
         header('Location: ../');
         exit;
     }
@@ -57,9 +56,8 @@
                         required></textarea>
 
                     <label for="date">Date (optional)</label>
-                    <input type="date" id="date" name="date"
-                        value="<?php date_default_timezone_set('Asia/Manila');
-                                echo date('Y-m-d'); ?>" />
+                    <input type="date" id="date" name="date" value="<?php date_default_timezone_set('Asia/Manila');
+                                                                    echo date('Y-m-d'); ?>" />
                     <div id="date-status" class="date-status"
                         style="margin-top: 0.5rem; font-size: 0.875rem; color: #6b7280;"></div>
 
