@@ -173,9 +173,12 @@ const getBasePath = () => {
 };
 
 const STATUS_ENDPOINT = getBasePath() + "/Connection/Student/UpdateStatus.php";
-const STUDENT_UPDATE_ENDPOINT = getBasePath() + "/Connection/Student/UpdateStudent.php";
-const DELETE_STUDENT_ENDPOINT = getBasePath() + "/Connection/Student/DeleteStudent.php";
-const BULK_STATUS_ENDPOINT = getBasePath() + "/Connection/Student/BulkUpdateStatus.php";
+const STUDENT_UPDATE_ENDPOINT =
+  getBasePath() + "/Connection/Student/UpdateStudent.php";
+const DELETE_STUDENT_ENDPOINT =
+  getBasePath() + "/Connection/Student/DeleteStudent.php";
+const BULK_STATUS_ENDPOINT =
+  getBasePath() + "/Connection/Student/BulkUpdateStatus.php";
 
 window.addEventListener("DOMContentLoaded", () => {
   console.log("StudentList.js loaded successfully - v" + new Date().getTime());
@@ -675,7 +678,7 @@ async function confirmDeleteStudent(event) {
     const urlParams = new URLSearchParams(window.location.search);
     const template = urlParams.get("template") || "1";
 
-      const endpoint = window.location.origin + DELETE_STUDENT_ENDPOINT;
+    const endpoint = window.location.origin + DELETE_STUDENT_ENDPOINT;
 
     const res = await fetch(endpoint, {
       method: "POST",
@@ -925,7 +928,10 @@ async function updateStudentDetails(studentId, fields) {
     if (!res.ok) {
       const errorText = await res.text();
       console.error("Response error:", errorText);
-      _showNotification("Failed to save student details. Server error: " + res.status, "error");
+      _showNotification(
+        "Failed to save student details. Server error: " + res.status,
+        "error"
+      );
       return;
     }
 
@@ -940,7 +946,6 @@ async function updateStudentDetails(studentId, fields) {
       return;
     }
 
-    // Check if data exists and has success property
     if (data && data.success) {
       _showNotification(
         data.message || "Student Details Saved Successfully",
@@ -957,7 +962,10 @@ async function updateStudentDetails(studentId, fields) {
     }
   } catch (error) {
     console.error("Fetch error:", error);
-    _showNotification("Error saving student details: " + error.message, "error");
+    _showNotification(
+      "Error saving student details: " + error.message,
+      "error"
+    );
   }
 }
 
