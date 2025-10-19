@@ -17,7 +17,6 @@
         exit;
     }
 
-    // Check if this is being included in AdminDashboard
     $isIncludedInDashboard = defined('ADMIN_DASHBOARD_INCLUDED');
     $outputFullHtml = !$isIncludedInDashboard;
 
