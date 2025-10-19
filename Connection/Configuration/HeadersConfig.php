@@ -1,7 +1,6 @@
 <?php
 
 if (!headers_sent()) {
-    // Allow iframe embedding
     header('X-Frame-Options: SAMEORIGIN');
     header('Content-Security-Policy: frame-ancestors \'self\' *;');
 
