@@ -1,7 +1,5 @@
 <?php
 
-
-// Only set headers if not already sent
 if (!headers_sent()) {
     // Allow iframe embedding
     header('X-Frame-Options: SAMEORIGIN');
