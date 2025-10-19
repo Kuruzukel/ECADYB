@@ -155,8 +155,9 @@ class EventCalendar {
   async loadEvents() {
     try {
       console.log("Loading events from fetch_announcements.php...");
+      const basePath = window.location.pathname.includes("/ECADYB/") ? "/ECADYB" : "";
       const response = await fetch(
-        "../../Connection/Announcement/FetchAnnouncement.php"
+        basePath + "/Connection/Announcement/FetchAnnouncement.php"
       );
       console.log("Response status:", response.status);
 
@@ -420,8 +421,9 @@ class EventCalendar {
         eventDate
       );
 
+      const basePath = window.location.pathname.includes("/ECADYB/") ? "/ECADYB" : "";
       const response = await fetch(
-        "../../Connection/Announcement/DeleteAnnouncement.php",
+        basePath + "/Connection/Announcement/DeleteAnnouncement.php",
         {
           method: "POST",
           headers: {

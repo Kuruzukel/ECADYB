@@ -353,7 +353,8 @@ document.addEventListener("DOMContentLoaded", () => {
     logoutTab.addEventListener("click", function (e) {
       e.preventDefault();
       e.stopPropagation();
-      window.location.href = "/ECADYB/Admin/Components/AdminLogout.php";
+      const basePath = window.location.pathname.includes("/ECADYB/") ? "/ECADYB" : "";
+      window.location.href = basePath + "/Admin/Components/AdminLogout.php";
     });
   }
 });

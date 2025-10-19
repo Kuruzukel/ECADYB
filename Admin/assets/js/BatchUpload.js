@@ -443,10 +443,11 @@ window.addEventListener("DOMContentLoaded", () => {
           formData.append("template", templateNumber);
           console.log("Uploading with template number:", templateNumber);
 
+          const basePath = window.location.pathname.includes("/ECADYB/") ? "/ECADYB" : "";
           const uploadEndpoint =
             input.id === "student-photos"
-              ? "../../Connection/Photos/UploadStudentPhotos.php"
-              : "../../Connection/Photos/UPloadTopManagementPhotos.php";
+              ? basePath + "/Connection/Photos/UploadStudentPhotos.php"
+              : basePath + "/Connection/Photos/UPloadTopManagementPhotos.php";
 
           try {
             currentUploadController = new AbortController();

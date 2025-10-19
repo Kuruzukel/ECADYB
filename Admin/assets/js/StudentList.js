@@ -167,10 +167,15 @@ function applyTheme(theme) {
   console.log("Theme applied and saved:", theme);
 }
 
-const STATUS_ENDPOINT = "/Connection/Student/UpdateStatus.php";
-const STUDENT_UPDATE_ENDPOINT = "/Connection/Student/UpdateStudent.php";
-const DELETE_STUDENT_ENDPOINT = "/Connection/Student/DeleteStudent.php";
-const BULK_STATUS_ENDPOINT = "/Connection/Student/BulkUpdateStatus.php";
+// Dynamic base path detection
+const getBasePath = () => {
+  return window.location.pathname.includes("/ECADYB/") ? "/ECADYB" : "";
+};
+
+const STATUS_ENDPOINT = getBasePath() + "/Connection/Student/UpdateStatus.php";
+const STUDENT_UPDATE_ENDPOINT = getBasePath() + "/Connection/Student/UpdateStudent.php";
+const DELETE_STUDENT_ENDPOINT = getBasePath() + "/Connection/Student/DeleteStudent.php";
+const BULK_STATUS_ENDPOINT = getBasePath() + "/Connection/Student/BulkUpdateStatus.php";
 
 window.addEventListener("DOMContentLoaded", () => {
   console.log("StudentList.js loaded successfully - v" + new Date().getTime());
