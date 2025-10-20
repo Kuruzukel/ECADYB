@@ -53,11 +53,12 @@ if (isset($data['student id'])) {
 }
 
 $collectionName = $data['collection'] ?? 'students';
-$template = $data['template'] ?? '1';
+$academicYear = $data['academic_year'] ?? '';
 unset($data['collection']);
-unset($data['template']);
+unset($data['academic_year']);
 
-$dbName = "BatchTemplate" . $template;
+// Use ECADYB database instead of BatchTemplate databases
+$dbName = "ECADYB";
 $db = $client->$dbName;
 
 try {
