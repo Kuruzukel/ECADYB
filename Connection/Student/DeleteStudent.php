@@ -108,20 +108,35 @@ try {
     }
 
     $student = $collection->findOne($filter);
+    
+    // If not found with academic year filter, try without it
+    if (!$student && !empty($academicYear)) {
+        $filterWithoutYear = [
+            '$or' => [
+                ['student id' => $studentId],
+                ['student_id' => $studentId]
+            ]
+        ];
+        $student = $collection->findOne($filterWithoutYear);
+        if ($student) {
+            $filter = $filterWithoutYear;
+        }
+    }
 
     if (!$student) {
         $allStudents = $collection->find([], [
-            'projection' => ['student id' => 1, 'student_id' => 1],
+            'projection' => ['student id' => 1, 'student_id' => 1, 'academic year' => 1],
             'limit' => 10
         ]);
 
         $ids = [];
         foreach ($allStudents as $s) {
+            $year = $s['academic year'] ?? 'N/A';
             if (isset($s['student id'])) {
-                $ids[] = "[space] " . $s['student id'];
+                $ids[] = "[space] " . $s['student id'] . " (year: $year)";
             }
             if (isset($s['student_id'])) {
-                $ids[] = "[underscore] " . $s['student_id'];
+                $ids[] = "[underscore] " . $s['student_id'] . " (year: $year)";
             }
         }
 
