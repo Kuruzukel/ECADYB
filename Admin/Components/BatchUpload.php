@@ -187,11 +187,20 @@ function importCSVToDepartments($tmpName, $departmentsDB, $programMap, $dropColl
             try {
                 $collection = $departmentsDB->$deptCode;
 
-                // Only drop collection if explicitly requested (for single file uploads)
-                if ($dropCollection) {
-                    $collection->drop();
+                // Instead of dropping the entire collection, only delete records from the same academic year
+                if ($dropCollection && !empty($records)) {
+                    // Get the academic year from the first record
+                    $academicYear = $records[0]['academic year'] ?? null;
+                    
+                    if ($academicYear) {
+                        // Delete only records with the same academic year
+                        $deleteResult = $collection->deleteMany(['academic year' => $academicYear]);
+                        error_log("Deleted " . $deleteResult->getDeletedCount() . " records for academic year: $academicYear in department: $deptCode");
+                    }
                 }
+                
                 $collection->insertMany($records);
+                error_log("Inserted " . count($records) . " records for department: $deptCode");
             } catch (Exception $e) {
                 error_log("Error importing data to department $deptCode: " . $e->getMessage());
                 return false;
