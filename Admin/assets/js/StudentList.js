@@ -650,6 +650,21 @@ async function confirmDeleteStudent(event) {
   }
 
   confirmDeleteBtn.disabled = true;
+  
+  // Optimistic UI update - close modal immediately
+  closeDeleteModal();
+  
+  // Find and remove row immediately for instant feedback
+  const row = document
+    .querySelector(
+      `.student-checkbox[data-student-id="${selectedStudentId}"]`
+    )
+    ?.closest("tr");
+  
+  if (row) {
+    row.style.opacity = "0.5";
+    row.style.transition = "opacity 0.2s";
+  }
 
   try {
     const urlParams = new URLSearchParams(window.location.search);
@@ -672,50 +687,54 @@ async function confirmDeleteStudent(event) {
     const data = await res.json().catch(() => null);
 
     if (data?.success) {
+      // Remove row immediately
+      if (row) {
+        row.remove();
+      }
+
+      // Clear cache after successful deletion
+      pageCache.clear();
+      
+      const tbody = document.querySelector("tbody");
+      const remainingRows = tbody?.querySelectorAll(
+        "tr:not(.no-students-message)"
+      );
+
+      if (remainingRows && remainingRows.length === 0) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const academicYear = urlParams.get("academic_year") || "";
+
+        const noStudentsRow = document.createElement("tr");
+        noStudentsRow.innerHTML = `
+          <td colspan="7" class="no-students-message">
+            <div class="no-students-content">
+              <p>No students found in this department for Academic Year <strong>${academicYear}</strong>.</p>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(noStudentsRow);
+      }
+      
       _showNotification(
         data.message || "Student deleted successfully",
         "success"
       );
-      const row = document
-        .querySelector(
-          `.student-checkbox[data-student-id="${selectedStudentId}"]`
-        )
-        ?.closest("tr");
-      if (row) {
-        row.remove();
-
-        // Clear cache after successful deletion
-        pageCache.clear();
-        
-        const tbody = document.querySelector("tbody");
-        const remainingRows = tbody?.querySelectorAll(
-          "tr:not(.no-students-message)"
-        );
-
-        if (remainingRows && remainingRows.length === 0) {
-          const urlParams = new URLSearchParams(window.location.search);
-          const academicYear = urlParams.get("academic_year") || "";
-
-          const noStudentsRow = document.createElement("tr");
-          noStudentsRow.innerHTML = `
-            <td colspan="7" class="no-students-message">
-              <div class="no-students-content">
-                <p>No students found in this department for Academic Year <strong>${academicYear}</strong>.</p>
-              </div>
-            </td>
-          `;
-          tbody.appendChild(noStudentsRow);
-        }
-      }
     } else {
+      // Restore row if deletion failed
+      if (row) {
+        row.style.opacity = "1";
+      }
       _showNotification(data?.message || "Failed to delete student", "error");
     }
   } catch (err) {
     console.error("Error deleting student:", err);
+    // Restore row if deletion failed
+    if (row) {
+      row.style.opacity = "1";
+    }
     _showNotification("Error deleting student. Check console.", "error");
   } finally {
     confirmDeleteBtn.disabled = false;
-    closeDeleteModal();
   }
 }
 
