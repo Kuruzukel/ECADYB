@@ -19,13 +19,13 @@ body {
   font-family: Arial, sans-serif;
   width: 100%;
   background-color: var(--body-bg);
+  color: var(--text-color);
 }
 
 .container {
   height: 100%;
   background-color: var(--content-bg);
   border-radius: 10px 10px 0 0;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   font-family: Arial, sans-serif;
 }
 
@@ -46,7 +46,7 @@ body {
 
 h1 {
   margin: 0;
-  color: #ffffff;
+  color: white;
   font-size: 24px;
   text-align: left;
   width: 100%;
@@ -69,6 +69,7 @@ h1 .chevron i {
   font-size: 16px;
   opacity: 0.8;
   margin-top: 3px;
+  color: white;
 }
 
 .form-content,
@@ -88,7 +89,6 @@ h1 .chevron i {
   background-color: var(--section-bg);
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   box-sizing: border-box;
   min-height: 520px;
   display: flex;
@@ -99,7 +99,7 @@ h1 .chevron i {
   width: calc(100% + 40px);
   height: 50px;
   background-color: var(--section-header);
-  color: white;
+  color: var(--text-color);
   padding: 12px;
   margin: -20px -20px 20px -20px;
   border-radius: 8px 8px 0 0;
@@ -138,7 +138,7 @@ label {
   border-radius: 8px;
   border: 2px solid #34495e;
   background: transparent;
-  color: #fff;
+  color: var(--text-color);
   height: 35px;
   min-width: 120px;
   max-width: 100%;
@@ -149,14 +149,14 @@ label {
 }
 
 .filter-select option {
-  background: #112d4e;
-  color: #fff;
+  background: var(--section-bg);
+  color: var(--text-color);
 }
 
 .card-datatable {
   padding: 8px;
   min-height: 200px;
-  color: #b0b0b0;
+  color: var(--text-color);
   width: 100%;
   box-sizing: border-box;
 }
@@ -179,7 +179,6 @@ table {
   border-collapse: collapse;
   margin-top: 2px;
   background: transparent;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   overflow: hidden;
   margin-bottom: 20px;
@@ -187,8 +186,8 @@ table {
 
 td {
   font-size: 14px;
+  color: var(--text-color);
   line-height: 1.4;
-  color: #fff;
   padding: 8px 12px;
   vertical-align: middle;
 }
@@ -225,7 +224,7 @@ td.student-actions {
 th {
   font-size: 15px;
   font-weight: bold;
-  color: #fff;
+  color: var(--text-color);
   padding: 15px 12px;
   vertical-align: middle;
   height: auto !important;
@@ -262,7 +261,7 @@ th {
   border-radius: 8px;
   border: 2px solid #34495e;
   background: transparent;
-  color: #fff;
+  color: var(--text-color);
   height: 35px;
   min-width: 120px;
   max-width: 100%;
@@ -275,7 +274,7 @@ th {
 
 .pagination-controls button:hover {
   background-color: #217ff7;
-  color: #fff;
+  color: var(--text-color);
   border-color: #0c27be;
 }
 
@@ -298,7 +297,6 @@ th {
   padding: 30px;
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .no-students-content i {
@@ -309,7 +307,7 @@ th {
 }
 
 .no-students-content h3 {
-  color: #fff;
+  color: var(--text-color);
   font-size: 24px;
   margin-bottom: 10px;
   font-weight: 600;
@@ -334,7 +332,7 @@ th {
   border-radius: 8px;
   border: 2px solid #34495e;
   background: transparent;
-  color: #fff;
+  color: var(--text-color);
   height: 35px;
   min-width: 120px;
   max-width: 100%;
@@ -372,9 +370,6 @@ th {
   padding: 1rem;
   width: 95%;
   height: 95%;
-  box-shadow: 
-    0 25px 50px -12px rgba(0, 0, 0, 0.25),
-    0 0 0 1px rgba(255, 255, 255, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   position: relative;
@@ -409,7 +404,7 @@ th {
 .editStudentModal h3 {
   font-size: 1.6rem;
   font-weight: 600;
-  color: #ffffff;
+  color: var(--text-color);
   margin: 0;
 }
 
@@ -431,7 +426,6 @@ th {
   background-color: var(--section-bg, #2d2f3a);
   padding: 20px;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
   box-sizing: border-box;
   min-height: 570px;
   display: flex;
@@ -441,7 +435,6 @@ th {
 }
 
 .editStudentModal .section:hover {
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
   transform: translateY(-2px);
   border-color: rgba(59, 130, 246, 0.3);
 }
@@ -450,7 +443,7 @@ th {
   width: calc(100% + 40px);
   height: 60px;
   background: linear-gradient(135deg, var(--section-header) 0%, #3b82f6 100%);
-  color: white;
+  color: var(--text-color);
   padding: 16px;
   margin: -20px -20px 25px -20px;
   border-radius: 8px 8px 0 0;
@@ -461,7 +454,6 @@ th {
   align-items: center;
   justify-content: center;
   letter-spacing: 0.5px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.15);
   position: relative;
   overflow: hidden;
 }
@@ -518,7 +510,6 @@ th {
   outline: none;
   border-color: #3b82f6;
   background-color: #0f172a;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
   transform: translateY(-1px);
 }
 
@@ -544,8 +535,8 @@ th {
 }
 
 .editStudentModal .section select option {
-  background-color: #1e293b;
-  color: #e2e8f0;
+  background-color: var(--section-bg);
+  color: var(--text-color);
   padding: 10px;
 }
 
@@ -572,7 +563,7 @@ th {
 
 .editStudentModal .modal-btn.confirm {
   background: #10b981;
-  color: #ffffff;
+  color: var(--text-color);
 }
 
 .editStudentModal .modal-btn.confirm:hover {
@@ -582,7 +573,7 @@ th {
 
 .editStudentModal .modal-btn.cancel {
   background: #ef4444;
-  color: #ffffff;
+  color: var(--text-color);
 }
 
 .editStudentModal .modal-btn.cancel:hover {
@@ -595,7 +586,7 @@ th {
   top: 12px;
   right: 15px;
   font-size: 22px;
-  color: #ffffff;
+  color: var(--text-color);
   cursor: pointer;
   transition: transform 0.2s ease, color 0.2s ease;
 }
@@ -625,8 +616,6 @@ th {
   padding: 2rem;
   width: 90%;
   max-width: 400px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
-    0 10px 10px -5px rgba(0, 0, 0, 0.04);
   border: 1px solid #475569;
   text-align: center;
   position: relative;
@@ -675,7 +664,7 @@ th {
 
 #delete-modal-overlay .modal-buttons .modal-btn.confirm {
   background: #10b981;
-  color: #ffffff;
+  color: var(--text-color);
 }
 
 #delete-modal-overlay .modal-buttons .modal-btn.confirm:hover {
@@ -685,7 +674,7 @@ th {
 
 #delete-modal-overlay .modal-buttons .modal-btn.cancel {
   background: #ef4444;
-  color: #ffffff;
+  color: var(--text-color);
 }
 
 #delete-modal-overlay .modal-buttons .modal-btn.cancel:hover {
@@ -698,7 +687,7 @@ th {
   top: 12px;
   right: 15px;
   font-size: 22px;
-  color: #ffffff;
+  color: var(--text-color);
   cursor: pointer;
   transition: transform 0.2s ease, color 0.2s ease;
 }
@@ -727,9 +716,8 @@ th {
   max-width: 350px;
   padding: 1rem 1.5rem;
   border-radius: 12px;
-  color: #fff;
+  color: var(--text-color);
   font-weight: 600;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
   opacity: 0;
   transform: translateY(-40px);
   pointer-events: none;
@@ -921,7 +909,7 @@ table th:nth-child(7) #select-all-header {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: white;
+  color: var(--text-color);
   font-size: 12px;
   font-weight: bold;
   line-height: 1;
@@ -937,7 +925,7 @@ table th:nth-child(7) #select-all-header {
 }
 
 .actions-container .student-checkbox[data-status="pending"]:checked::before {
-  color: white;
+  color: var(--text-color);
 }
 
 .actions-container .student-checkbox[data-status="pending"]:checked::after {
@@ -1008,6 +996,8 @@ table th:nth-child(7) #select-all-header {
 .actions-container .eyeIcon svg {
   height: 18px;
   width: 18px;
+  color: var(--text-color);
+  fill: var(--text-color);
 }
 
 .actions-container .action-btn {
