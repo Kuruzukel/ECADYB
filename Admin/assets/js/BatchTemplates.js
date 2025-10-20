@@ -228,6 +228,10 @@ let deleteBatchModal = null;
 let confirmDeleteBatchBtn = null;
 let cancelDeleteBatchBtn = null;
 
+let selectTemplateModal = null;
+let confirmSelectTemplateBtn = null;
+let cancelSelectTemplateBtn = null;
+
 let selectedStudentId = null;
 let selectedCollection = null;
 let selectedConfirmAction = null;
@@ -287,6 +291,45 @@ function openDeleteBatchModal(batchName) {
 
 function closeDeleteBatchModal() {
   if (deleteBatchModal) deleteBatchModal.style.display = "none";
+}
+
+function openSelectTemplateModal(batchName) {
+  console.log("openSelectTemplateModal called with:", batchName);
+  
+  // Find the section by batch name
+  const sections = document.querySelectorAll(".section");
+  let targetSection = null;
+  
+  sections.forEach((section) => {
+    const sectionHeader = section.querySelector(".section-header");
+    if (sectionHeader && sectionHeader.textContent.trim() === batchName) {
+      targetSection = section;
+    }
+  });
+  
+  if (!targetSection) {
+    console.error("Section not found for:", batchName);
+    return;
+  }
+  
+  // Store the section for confirmation
+  window.pendingSelectSection = targetSection;
+  window.pendingSelectBatchName = batchName;
+  
+  const messageEl = document.getElementById("select-template-message");
+  if (messageEl) {
+    messageEl.textContent = `Do you want to select ${batchName}?`;
+  }
+  if (selectTemplateModal) {
+    console.log("Showing select template modal");
+    selectTemplateModal.style.display = "flex";
+  } else {
+    console.error("selectTemplateModal element not found!");
+  }
+}
+
+function closeSelectTemplateModal() {
+  if (selectTemplateModal) selectTemplateModal.style.display = "none";
 }
 
 async function confirmDeleteStudent() {
@@ -432,6 +475,10 @@ function generateNewBatchSection() {
           </div>
           <div class="upload-box action-box">
             <div class="action-buttons">
+              <button class="action-btn select-batch-btn" title="Select Batch">
+                <i class="fas fa-check-circle"></i>
+                <span>Select Batch</span>
+              </button>
               <button class="action-btn download-pdf-btn" title="Download PDF">
                 <i class="fas fa-file-pdf"></i>
                 <span>Download PDF</span>
@@ -536,10 +583,19 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
 
     // Handle action box separately
     if (isActionBox) {
+      const selectBatchBtn = box.querySelector(".select-batch-btn");
       const downloadBtn = box.querySelector(".download-pdf-btn");
       const deleteBatchBtn = box.querySelector(".delete-batch-btn");
       
-      console.log("Action box found, downloadBtn:", downloadBtn, "deleteBatchBtn:", deleteBatchBtn);
+      console.log("Action box found, selectBatchBtn:", selectBatchBtn, "downloadBtn:", downloadBtn, "deleteBatchBtn:", deleteBatchBtn);
+      
+      if (selectBatchBtn) {
+        selectBatchBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          console.log("Select batch button clicked for:", sectionHeader);
+          openSelectTemplateModal(sectionHeader);
+        });
+      }
       
       if (downloadBtn) {
         downloadBtn.addEventListener("click", (e) => {
@@ -807,6 +863,41 @@ function confirmDeleteBatch() {
   closeDeleteBatchModal();
 }
 
+function confirmSelectTemplate() {
+  if (window.pendingSelectSection) {
+    // Remove selected class from all sections
+    document.querySelectorAll(".section").forEach((s) => {
+      s.classList.remove("selected");
+    });
+    
+    // Add selected class to the pending section
+    window.pendingSelectSection.classList.add("selected");
+    
+    // Update upload box states
+    const sections = document.querySelectorAll(".section");
+    sections.forEach((section) => {
+      const uploadBoxes = section.querySelectorAll(".upload-box");
+      const isSelected = section === window.pendingSelectSection;
+      
+      uploadBoxes.forEach((box) => {
+        if (isSelected) {
+          box.classList.remove("disabled");
+          box.style.pointerEvents = "auto";
+        } else {
+          box.classList.add("disabled");
+          box.style.pointerEvents = "none";
+        }
+      });
+    });
+    
+    showNotification(`${window.pendingSelectBatchName} selected successfully!`, "success");
+    
+    window.pendingSelectSection = null;
+    window.pendingSelectBatchName = null;
+  }
+  closeSelectTemplateModal();
+}
+
 window.addEventListener("DOMContentLoaded", () => {
   const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
   applyTheme(savedTheme);
@@ -828,11 +919,17 @@ window.addEventListener("DOMContentLoaded", () => {
   confirmDeleteBatchBtn = document.getElementById("confirm-delete-batch-btn");
   cancelDeleteBatchBtn = document.getElementById("cancel-delete-batch-btn");
 
+  selectTemplateModal = document.getElementById("select-template-modal-overlay");
+  confirmSelectTemplateBtn = document.getElementById("confirm-select-template-btn");
+  cancelSelectTemplateBtn = document.getElementById("cancel-select-template-btn");
+
   // Debug: Check if modal elements exist
   console.log("downloadPdfModal:", downloadPdfModal);
   console.log("deleteBatchModal:", deleteBatchModal);
+  console.log("selectTemplateModal:", selectTemplateModal);
   console.log("confirmDownloadPdfBtn:", confirmDownloadPdfBtn);
   console.log("confirmDeleteBatchBtn:", confirmDeleteBatchBtn);
+  console.log("confirmSelectTemplateBtn:", confirmSelectTemplateBtn);
 
   // Make these variables globally accessible for dynamic section generation
   window.currentXhrs = [];
@@ -920,15 +1017,7 @@ window.addEventListener("DOMContentLoaded", () => {
     openDeleteModal();
   }
 
-  sectionHeaders.forEach((header, idx) => {
-    header.addEventListener("click", (e) => {
-      const section = header.closest(".section");
-      const alreadySelected = section.classList.contains("selected");
-      if (alreadySelected) return;
-      const label = header.textContent?.trim() || `Batch Template ${idx + 1}`;
-      openSelectTemplateModal(section, label);
-    });
-  });
+  // Section header click event removed - now using Select Batch button
 
   if (sections.length > 0) {
     const savedTemplate = localStorage.getItem("selectedBatchTemplate");
@@ -1033,6 +1122,29 @@ window.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       e.stopPropagation();
       confirmDeleteBatch();
+    });
+  }
+
+  // Initialize Select Template Modal
+  if (cancelSelectTemplateBtn) {
+    cancelSelectTemplateBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      closeSelectTemplateModal();
+    });
+  }
+
+  if (selectTemplateModal) {
+    selectTemplateModal.addEventListener("click", (e) => {
+      if (e.target === selectTemplateModal) closeSelectTemplateModal();
+    });
+  }
+
+  if (confirmSelectTemplateBtn) {
+    confirmSelectTemplateBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      confirmSelectTemplate();
     });
   }
 });

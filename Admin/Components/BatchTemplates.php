@@ -97,6 +97,10 @@
                                 </div>
                                 <div class="upload-box action-box">
                                     <div class="action-buttons">
+                                        <button class="action-btn select-batch-btn" title="Select Batch">
+                                            <i class="fas fa-check-circle"></i>
+                                            <span>Select Batch</span>
+                                        </button>
                                         <button class="action-btn download-pdf-btn" title="Download PDF">
                                             <i class="fas fa-file-pdf"></i>
                                             <span>Download PDF</span>
@@ -165,6 +169,10 @@
                                 </div>
                                 <div class="upload-box action-box">
                                     <div class="action-buttons">
+                                        <button class="action-btn select-template-btn" title="Select Template">
+                                            <i class="fas fa-check-circle"></i>
+                                            <span>Select Template</span>
+                                        </button>
                                         <button class="action-btn download-pdf-btn" title="Download PDF">
                                             <i class="fas fa-file-pdf"></i>
                                             <span>Download PDF</span>
@@ -233,6 +241,10 @@
                                 </div>
                                 <div class="upload-box action-box">
                                     <div class="action-buttons">
+                                        <button class="action-btn select-template-btn" title="Select Template">
+                                            <i class="fas fa-check-circle"></i>
+                                            <span>Select Template</span>
+                                        </button>
                                         <button class="action-btn download-pdf-btn" title="Download PDF">
                                             <i class="fas fa-file-pdf"></i>
                                             <span>Download PDF</span>
@@ -331,6 +343,26 @@
                         <i class="fas fa-trash"></i> Yes, Delete
                     </button>
                     <button class="modal-btn cancel" id="cancel-delete-batch-btn">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-overlay" id="select-template-modal-overlay">
+            <div class="modal" style="background: #34495e;">
+                <div class="modal-header">
+                    <i class="fas fa-check-circle modal-icon"></i>
+                    <h3>Select Batch Template</h3>
+                </div>
+                <div class="modal-content">
+                    <p id="select-template-message">Do you want to select this batch template?</p>
+                </div>
+                <div class="modal-buttons">
+                    <button class="modal-btn confirm" id="confirm-select-template-btn">
+                        <i class="fas fa-check"></i> Yes, Select
+                    </button>
+                    <button class="modal-btn cancel" id="cancel-select-template-btn">
                         <i class="fas fa-times"></i> Cancel
                     </button>
                 </div>
