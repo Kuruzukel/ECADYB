@@ -11,6 +11,9 @@ const themes = {
     "--menu-bg-active": "#cbd5e1",
     "--menu-border-active": "#64748b",
     "--menu-hover-bg": "#e2e8f0",
+    "--text-color": "#000000",
+    "--text-color-secondary": "#212529",
+    "--text-color-muted": "#495057",
   },
   "Dark Mode": {
     "--primary-bg": "#0f172a",
@@ -24,6 +27,9 @@ const themes = {
     "--menu-bg-active": "#475569",
     "--menu-border-active": "#334155",
     "--menu-hover-bg": "#64748b",
+    "--text-color": "#ffffff",
+    "--text-color-secondary": "#e9ecef",
+    "--text-color-muted": "#ced4da",
   },
   "Theme 1": {
     "--primary-bg": "#470a0a",
