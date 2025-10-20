@@ -180,6 +180,19 @@ window.addEventListener("DOMContentLoaded", () => {
     applyTheme(savedTheme);
   }
 
+  const urlParams = new URLSearchParams(window.location.search);
+  const currentAcademicYear = urlParams.get("academic_year");
+
+  // If no academic year is in the URL, redirect to include the default (2024-2025)
+  if (!currentAcademicYear) {
+    const department = urlParams.get("department") || "bsme";
+    const tab = urlParams.get("tab") || "all";
+    const pageNum = urlParams.get("pageNum") || "1";
+    
+    const newUrl = `?page=student-list&academic_year=2024-2025&department=${department}&tab=${tab}&pageNum=${pageNum}`;
+    window.history.replaceState({}, "", newUrl);
+  }
+
   isInitializing = true;
 
   initializeSelectAll();
