@@ -373,8 +373,6 @@ async function updateAllStudentsStatus(
   try {
     isBulkUpdateInProgress = true;
 
-    _showNotification(`Updating all students to ${status}...`, "info");
-
     const endpoint = window.location.origin + BULK_STATUS_ENDPOINT;
 
     const res = await fetch(endpoint, {
