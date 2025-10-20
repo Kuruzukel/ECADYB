@@ -71,12 +71,19 @@ try {
 
     error_log("Update fields: " . print_r($updateFields, true));
 
-    $existingDoc = $collection->findOne([
+    // Build filter with academic year if provided
+    $filter = [
         '$or' => [
             ['student id' => $originalId],
             ['student_id' => $originalId]
         ]
-    ]);
+    ];
+    
+    if (!empty($academicYear)) {
+        $filter['academic year'] = $academicYear;
+    }
+
+    $existingDoc = $collection->findOne($filter);
 
     if (!$existingDoc) {
         $allDocs = $collection->find([], ['limit' => 5]);
@@ -124,8 +131,14 @@ try {
 
     error_log("Final update fields: " . print_r($updateFields, true));
 
+    // Use the same filter for update
+    $updateFilter = [$queryField => $originalId];
+    if (!empty($academicYear)) {
+        $updateFilter['academic year'] = $academicYear;
+    }
+
     $result = $collection->updateOne(
-        [$queryField => $originalId],
+        $updateFilter,
         ['$set' => $updateFields],
         ['upsert' => false]
     );
