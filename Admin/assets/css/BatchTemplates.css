@@ -439,7 +439,6 @@ label {
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  animation: fadeInUp 0.4s ease-out;
 }
 
 #delete-modal-overlay .modal,

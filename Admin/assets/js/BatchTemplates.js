@@ -212,21 +212,21 @@ function getBasePath() {
   return window.location.origin;
 }
 
-const deleteModal = document.getElementById("delete-modal-overlay");
-const confirmDeleteBtn = document.getElementById("confirm-delete-btn");
-const cancelDeleteBtn = document.getElementById("cancel-delete-btn");
+let deleteModal = null;
+let confirmDeleteBtn = null;
+let cancelDeleteBtn = null;
 
-const generateModal = document.getElementById("generate-modal-overlay");
-const confirmGenerateBtn = document.getElementById("confirm-generate-btn");
-const cancelGenerateBtn = document.getElementById("cancel-generate-btn");
+let generateModal = null;
+let confirmGenerateBtn = null;
+let cancelGenerateBtn = null;
 
-const downloadPdfModal = document.getElementById("download-pdf-modal-overlay");
-const confirmDownloadPdfBtn = document.getElementById("confirm-download-pdf-btn");
-const cancelDownloadPdfBtn = document.getElementById("cancel-download-pdf-btn");
+let downloadPdfModal = null;
+let confirmDownloadPdfBtn = null;
+let cancelDownloadPdfBtn = null;
 
-const deleteBatchModal = document.getElementById("delete-batch-modal-overlay");
-const confirmDeleteBatchBtn = document.getElementById("confirm-delete-batch-btn");
-const cancelDeleteBatchBtn = document.getElementById("cancel-delete-batch-btn");
+let deleteBatchModal = null;
+let confirmDeleteBatchBtn = null;
+let cancelDeleteBatchBtn = null;
 
 let selectedStudentId = null;
 let selectedCollection = null;
@@ -254,11 +254,17 @@ function closeGenerateModal() {
 }
 
 function openDownloadPdfModal(batchName) {
+  console.log("openDownloadPdfModal called with:", batchName);
   const messageEl = document.getElementById("download-pdf-message");
   if (messageEl) {
     messageEl.textContent = `Are you sure you want to download the PDF for ${batchName}?`;
   }
-  if (downloadPdfModal) downloadPdfModal.style.display = "flex";
+  if (downloadPdfModal) {
+    console.log("Showing download PDF modal");
+    downloadPdfModal.style.display = "flex";
+  } else {
+    console.error("downloadPdfModal element not found!");
+  }
 }
 
 function closeDownloadPdfModal() {
@@ -266,11 +272,17 @@ function closeDownloadPdfModal() {
 }
 
 function openDeleteBatchModal(batchName) {
+  console.log("openDeleteBatchModal called with:", batchName);
   const messageEl = document.getElementById("delete-batch-message");
   if (messageEl) {
     messageEl.textContent = `Are you sure you want to delete ${batchName}? This action cannot be undone.`;
   }
-  if (deleteBatchModal) deleteBatchModal.style.display = "flex";
+  if (deleteBatchModal) {
+    console.log("Showing delete batch modal");
+    deleteBatchModal.style.display = "flex";
+  } else {
+    console.error("deleteBatchModal element not found!");
+  }
 }
 
 function closeDeleteBatchModal() {
@@ -518,6 +530,35 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
   const sectionHeader = section.querySelector(".section-header").textContent.trim();
 
   sectionUploadBoxes.forEach((box, index) => {
+    const slot = index + 1;
+    const isBackgroundSlot = slot === 8;
+    const isActionBox = slot === 9;
+
+    // Handle action box separately
+    if (isActionBox) {
+      const downloadBtn = box.querySelector(".download-pdf-btn");
+      const deleteBatchBtn = box.querySelector(".delete-batch-btn");
+      
+      console.log("Action box found, downloadBtn:", downloadBtn, "deleteBatchBtn:", deleteBatchBtn);
+      
+      if (downloadBtn) {
+        downloadBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          console.log("Download button clicked for:", sectionHeader);
+          downloadPDF(sectionHeader);
+        });
+      }
+      
+      if (deleteBatchBtn) {
+        deleteBatchBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          console.log("Delete batch button clicked for:", sectionHeader);
+          deleteBatchTemplate(section, sectionHeader);
+        });
+      }
+      return; // Skip the rest of the initialization for action box
+    }
+
     const frontInput = box.querySelector(".frontInput");
     const backInput = box.querySelector(".backInput");
     const deleteBtn = box.querySelector(".delete-btn");
@@ -526,9 +567,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
     let frontImg = null;
     let backImg = null;
     let showingFront = true;
-    const slot = index + 1;
-    const isBackgroundSlot = slot === 8;
-    const isActionBox = slot === 9;
 
     const BASE_PATH = getBasePath();
     const CONNECTION_PATH = `${BASE_PATH}/Connection`;
@@ -560,7 +598,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
 
     box.addEventListener("click", (event) => {
       if (event.target === deleteBtn) return;
-      if (isActionBox) return; // Don't handle clicks for action box
       if (!frontImg) {
         frontInput.click();
       } else if (!backImg && !isBackgroundSlot) {
@@ -681,27 +718,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
       }
     }
 
-    // Add event listeners for action buttons
-    if (isActionBox) {
-      const downloadBtn = box.querySelector(".download-pdf-btn");
-      const deleteBatchBtn = box.querySelector(".delete-batch-btn");
-      
-      if (downloadBtn) {
-        downloadBtn.addEventListener("click", (e) => {
-          e.stopPropagation();
-          downloadPDF(sectionHeader);
-        });
-      }
-      
-      if (deleteBatchBtn) {
-        deleteBatchBtn.addEventListener("click", (e) => {
-          e.stopPropagation();
-          deleteBatchTemplate(section, sectionHeader);
-        });
-      }
-      return; // Skip the rest of the initialization for action box
-    }
-
     // Load existing images
     (async function loadExisting() {
       try {
@@ -794,6 +810,29 @@ function confirmDeleteBatch() {
 window.addEventListener("DOMContentLoaded", () => {
   const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
   applyTheme(savedTheme);
+
+  // Initialize modal elements
+  deleteModal = document.getElementById("delete-modal-overlay");
+  confirmDeleteBtn = document.getElementById("confirm-delete-btn");
+  cancelDeleteBtn = document.getElementById("cancel-delete-btn");
+
+  generateModal = document.getElementById("generate-modal-overlay");
+  confirmGenerateBtn = document.getElementById("confirm-generate-btn");
+  cancelGenerateBtn = document.getElementById("cancel-generate-btn");
+
+  downloadPdfModal = document.getElementById("download-pdf-modal-overlay");
+  confirmDownloadPdfBtn = document.getElementById("confirm-download-pdf-btn");
+  cancelDownloadPdfBtn = document.getElementById("cancel-download-pdf-btn");
+
+  deleteBatchModal = document.getElementById("delete-batch-modal-overlay");
+  confirmDeleteBatchBtn = document.getElementById("confirm-delete-batch-btn");
+  cancelDeleteBatchBtn = document.getElementById("cancel-delete-batch-btn");
+
+  // Debug: Check if modal elements exist
+  console.log("downloadPdfModal:", downloadPdfModal);
+  console.log("deleteBatchModal:", deleteBatchModal);
+  console.log("confirmDownloadPdfBtn:", confirmDownloadPdfBtn);
+  console.log("confirmDeleteBatchBtn:", confirmDeleteBatchBtn);
 
   // Make these variables globally accessible for dynamic section generation
   window.currentXhrs = [];
