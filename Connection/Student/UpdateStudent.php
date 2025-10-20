@@ -84,13 +84,29 @@ try {
     }
 
     $existingDoc = $collection->findOne($filter);
+    
+    // If not found with academic year filter, try without it
+    if (!$existingDoc && !empty($academicYear)) {
+        $filterWithoutYear = [
+            '$or' => [
+                ['student id' => $originalId],
+                ['student_id' => $originalId]
+            ]
+        ];
+        $existingDoc = $collection->findOne($filterWithoutYear);
+        if ($existingDoc) {
+            $filter = $filterWithoutYear;
+        }
+    }
 
     if (!$existingDoc) {
-        $allDocs = $collection->find([], ['limit' => 5]);
+        $allDocs = $collection->find([], ['limit' => 5, 'projection' => ['student id' => 1, 'student_id' => 1, 'academic year' => 1]]);
         $docList = [];
         foreach ($allDocs as $doc) {
+            $year = $doc['academic year'] ?? 'N/A';
             $docList[] = [
                 'student_id' => $doc['student id'] ?? $doc['student_id'] ?? 'N/A',
+                'academic_year' => $year,
                 '_id' => (string)($doc['_id'] ?? 'N/A')
             ];
         }
@@ -131,14 +147,9 @@ try {
 
     error_log("Final update fields: " . print_r($updateFields, true));
 
-    // Use the same filter for update
-    $updateFilter = [$queryField => $originalId];
-    if (!empty($academicYear)) {
-        $updateFilter['academic year'] = $academicYear;
-    }
-
+    // Use the same filter that found the student for update
     $result = $collection->updateOne(
-        $updateFilter,
+        $filter,
         ['$set' => $updateFields],
         ['upsert' => false]
     );
