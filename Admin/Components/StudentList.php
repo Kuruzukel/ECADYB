@@ -346,8 +346,8 @@ if ($isIncludedInDashboard && (strpos($_SERVER['HTTP_HOST'], 'localhost') !== fa
                                     <td colspan="7" class="no-students-message">
                                         <div class="no-students-content">
 
-                                            <p>No students found in this department for Batch Template
-                                                <strong><?php echo htmlspecialchars($selectedTemplate); ?></strong>.
+                                            <p>No students found in this department for Academic Year
+                                                <strong><?php echo htmlspecialchars($selectedAcademicYear); ?></strong>.
                                             </p>
                                         </div>
                                     </td>
