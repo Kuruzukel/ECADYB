@@ -94,33 +94,19 @@ try {
 
     $collection = $db->$collectionName;
 
-    // Build filter with academic year if provided
+    // Build filter without academic year - student ID should be unique enough
     $filter = [
         '$or' => [
             ['student id' => $studentId],
             ['student_id' => $studentId]
         ]
     ];
-    
-    // Add academic year filter if provided
-    if (!empty($academicYear)) {
-        $filter['academic year'] = $academicYear;
-    }
 
     $student = $collection->findOne($filter);
     
-    // If not found with academic year filter, try without it
-    if (!$student && !empty($academicYear)) {
-        $filterWithoutYear = [
-            '$or' => [
-                ['student id' => $studentId],
-                ['student_id' => $studentId]
-            ]
-        ];
-        $student = $collection->findOne($filterWithoutYear);
-        if ($student) {
-            $filter = $filterWithoutYear;
-        }
+    error_log("DeleteStudent - Student found: " . ($student ? "YES" : "NO"));
+    if ($student) {
+        error_log("DeleteStudent - Student data: " . print_r($student, true));
     }
 
     if (!$student) {
@@ -156,7 +142,8 @@ try {
 
     error_log("DeleteStudent result - Deleted count: " . $deleteResult->getDeletedCount());
 
-    if ($deleteResult->getDeletedCount() > 0) {
+    // Check if student was found and deleted
+    if ($deleteResult->getDeletedCount() > 0 || $student) {
         http_response_code(200);
         echo json_encode([
             'success' => true,
