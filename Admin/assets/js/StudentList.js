@@ -219,6 +219,9 @@ let isBulkUpdateInProgress = false;
 let notificationTimeout = null;
 let currentOperation = null;
 
+// Cache for storing loaded pages
+const pageCache = new Map();
+
 function updateSelectAllState() {
   const selectAllCheckbox = document.getElementById("select-all-header");
   if (!selectAllCheckbox) return;
@@ -406,6 +409,9 @@ async function updateAllStudentsStatus(
         currentOperation = null;
       }, 100);
 
+      // Clear cache after bulk status update
+      pageCache.clear();
+      
       const urlParams = new URLSearchParams(window.location.search);
       const academicYear = urlParams.get("academic_year") || "";
       const department = urlParams.get("department") || "";
@@ -489,6 +495,9 @@ function initializeFilters() {
 
   if (academicYearFilter) {
     academicYearFilter.addEventListener("change", function () {
+      // Clear cache when filter changes
+      pageCache.clear();
+      
       const urlParams = new URLSearchParams(window.location.search);
       const academicYear = this.value;
       const department = urlParams.get("department") || "bsme";
@@ -503,6 +512,9 @@ function initializeFilters() {
 
   if (departmentFilter) {
     departmentFilter.addEventListener("change", function () {
+      // Clear cache when filter changes
+      pageCache.clear();
+      
       const urlParams = new URLSearchParams(window.location.search);
       const academicYear = urlParams.get("academic_year") || "";
       const department = this.value;
@@ -672,6 +684,9 @@ async function confirmDeleteStudent(event) {
       if (row) {
         row.remove();
 
+        // Clear cache after successful deletion
+        pageCache.clear();
+        
         const tbody = document.querySelector("tbody");
         const remainingRows = tbody?.querySelectorAll(
           "tr:not(.no-students-message)"
@@ -889,6 +904,9 @@ async function updateStudentDetails(studentId, fields) {
     }
 
     if (data && data.success) {
+      // Clear cache after successful update
+      pageCache.clear();
+      
       _showNotification(
         data.message || "Student Details Saved Successfully",
         "success"
@@ -1007,6 +1025,35 @@ function changePage(pageNum) {
 
 function loadStudentList(pageNum, academicYear, department, tab) {
   const tableBody = document.querySelector("tbody");
+  
+  // Create cache key
+  const cacheKey = `${academicYear}-${department}-${pageNum}`;
+  
+  // Check if page is cached
+  if (pageCache.has(cacheKey)) {
+    const cachedData = pageCache.get(cacheKey);
+    
+    if (tableBody) {
+      tableBody.innerHTML = cachedData.html;
+    }
+    
+    const currentPageInfo = document.querySelector(".pagination-controls span");
+    if (currentPageInfo) {
+      currentPageInfo.textContent = cachedData.pageInfo;
+    }
+    
+    updatePaginationButtons(pageNum, academicYear, department, tab, cachedData.totalPages);
+    
+    // Fast re-initialization - no delay
+    isInitializing = true;
+    initializeSelectAll();
+    initializeStatusUpdates();
+    isInitializing = false;
+    
+    return; // Exit early - loaded from cache
+  }
+  
+  // Not in cache, show loading and fetch
   if (tableBody) {
     tableBody.innerHTML =
       '<tr><td colspan="7" style="text-align: center; vertical-align: middle; padding: 0; height: 400px;"><div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 20px;"><i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: #60a5fa;"></i><span style="font-size: 1.2rem; font-weight: 500; color: #fff;">Loading students...</span></div></td></tr>';
@@ -1038,6 +1085,13 @@ function loadStudentList(pageNum, academicYear, department, tab) {
       const totalPages = totalPagesInput
         ? parseInt(totalPagesInput.value)
         : null;
+
+      // Cache the loaded page
+      pageCache.set(cacheKey, {
+        html: newTableBody ? newTableBody.innerHTML : '',
+        pageInfo: newPageInfo ? newPageInfo.textContent : '',
+        totalPages: totalPages
+      });
 
       updatePaginationButtons(pageNum, academicYear, department, tab, totalPages);
 
