@@ -942,9 +942,12 @@ async function updateStudentDetails(studentId, fields) {
         data.message || "Student Details Saved Successfully",
         "success"
       );
-      setTimeout(() => {
-        window.location.reload();
-      }, 1500);
+      
+      // Close the modal without reloading the page
+      const modal = document.getElementById(`editModal_${studentId}`);
+      if (modal) {
+        modal.classList.remove("active");
+      }
     } else {
       _showNotification(
         data?.message || "Failed to save student details",
