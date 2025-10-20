@@ -17,13 +17,13 @@ body {
   padding: 0;
   font-family: Arial, sans-serif;
   background-color: var(--body-bg);
+  color: var(--text-color);
 }
 
 .container {
   height: 100%;
   background-color: var(--content-bg);
   border-radius: 10px 10px 0 0;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .header-container {
@@ -84,7 +84,7 @@ h1 .chevron i {
   background-color: var(--section-bg);
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+ 0 2px 5px rgba(0, 0, 0, 0.2);
   box-sizing: border-box;
   min-height: 585px;
   display: flex;
@@ -125,7 +125,7 @@ h1 .chevron i {
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   text-align: center;
   overflow: hidden;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+ 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 .file-card::before {
@@ -152,7 +152,7 @@ h1 .chevron i {
     rgba(33, 150, 243, 0.15),
     rgba(44, 62, 80, 0.7)
   );
-  box-shadow: 0 12px 40px rgba(33, 150, 243, 0.2),
+ 0 12px 40px rgba(33, 150, 243, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
   transform: translateY(-5px);
 }
@@ -168,7 +168,7 @@ h1 .chevron i {
     rgba(76, 175, 80, 0.1),
     rgba(44, 62, 80, 0.6)
   );
-  box-shadow: 0 8px 32px rgba(76, 175, 80, 0.2);
+ 0 8px 32px rgba(76, 175, 80, 0.2);
 }
 
 .file-card.drag-over {
@@ -178,7 +178,7 @@ h1 .chevron i {
     rgba(252, 218, 21, 0.15),
     rgba(44, 62, 80, 0.7)
   );
-  box-shadow: 0 12px 40px rgba(252, 218, 21, 0.3),
+ 0 12px 40px rgba(252, 218, 21, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.15);
   transform: scale(1.02);
 }
@@ -198,7 +198,7 @@ h1 .chevron i {
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.5px;
-  box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+ 0 4px 15px rgba(33, 150, 243, 0.3);
   z-index: 1;
   overflow: hidden;
 }
@@ -218,7 +218,7 @@ h1 .chevron i {
 
 .custom-upload:hover {
   transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 6px 25px rgba(33, 150, 243, 0.5);
+ 0 6px 25px rgba(33, 150, 243, 0.5);
   background: linear-gradient(135deg, #42a5f5 0%, #2196f3 100%);
 }
 
@@ -314,7 +314,7 @@ h1 .chevron i {
   border-radius: 12px;
   color: #fff;
   font-weight: 600;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+ 0 8px 20px rgba(0, 0, 0, 0.25);
   opacity: 0;
   transform: translateY(-40px);
   pointer-events: none;
@@ -379,12 +379,12 @@ h1 .chevron i {
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+ 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .submit-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+ 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .upload-overlay {
@@ -422,7 +422,7 @@ h1 .chevron i {
   padding: 24px 28px;
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+ 0 20px 40px rgba(0, 0, 0, 0.45);
   text-align: center;
   width: 380px;
   max-width: 90vw;
