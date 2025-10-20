@@ -623,8 +623,8 @@ function _showNotification(message, type = "success") {
 }
 
 const deleteModal = document.getElementById("delete-modal-overlay");
-const confirmDeleteBtn = document.getElementById("confirm-delete-btn");
-const cancelDeleteBtn = document.getElementById("cancel-delete-btn");
+let confirmDeleteBtn = document.getElementById("confirm-delete-btn");
+let cancelDeleteBtn = document.getElementById("cancel-delete-btn");
 
 let selectedStudentId = null;
 let selectedCollection = null;
@@ -721,13 +721,25 @@ async function confirmDeleteStudent(event) {
 
 function initializeDeleteModal() {
   if (!confirmDeleteBtn || !cancelDeleteBtn || !deleteModal) return;
+  
+  // Remove old event listeners to prevent duplicates
+  const newConfirmBtn = confirmDeleteBtn.cloneNode(true);
+  const newCancelBtn = cancelDeleteBtn.cloneNode(true);
+  
+  confirmDeleteBtn.parentNode.replaceChild(newConfirmBtn, confirmDeleteBtn);
+  cancelDeleteBtn.parentNode.replaceChild(newCancelBtn, cancelDeleteBtn);
+  
+  // Update references to new buttons
+  confirmDeleteBtn = newConfirmBtn;
+  cancelDeleteBtn = newCancelBtn;
+  
+  // Add fresh event listeners
+  confirmDeleteBtn.addEventListener("click", (event) => confirmDeleteStudent(event));
   cancelDeleteBtn.addEventListener("click", closeDeleteModal);
+  
   deleteModal.addEventListener("click", (e) => {
     if (e.target === deleteModal) closeDeleteModal();
   });
-  confirmDeleteBtn.addEventListener("click", (event) =>
-    confirmDeleteStudent(event)
-  );
 }
 
 function togglePass(icon) {
