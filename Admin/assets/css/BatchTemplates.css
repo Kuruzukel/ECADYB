@@ -166,6 +166,7 @@ h1 .chevron i {
   display: flex;
   justify-content: space-between;
   gap: 25px;
+  margin-bottom: 25px;
 }
 
 .section {

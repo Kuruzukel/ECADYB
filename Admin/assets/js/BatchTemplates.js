@@ -311,16 +311,16 @@ function initializeDeleteModal() {
 }
 
 function generateNewBatchSection() {
-  const formGroup = document.querySelector(".form-group");
-  if (!formGroup) return;
+  const formContent = document.querySelector(".form-content");
+  if (!formContent) return;
 
-  // Get all existing sections
-  const existingSections = formGroup.querySelectorAll(".section");
+  // Get all existing sections across all form-groups
+  const allSections = document.querySelectorAll(".form-group .section");
   
   // Get the last section's header text
   let nextYear = "2024-2025"; // Default year
-  if (existingSections.length > 0) {
-    const lastSection = existingSections[existingSections.length - 1];
+  if (allSections.length > 0) {
+    const lastSection = allSections[allSections.length - 1];
     const lastHeader = lastSection.querySelector(".section-header").textContent.trim();
     
     // Extract year from "Batch Year 2026-2027" format
@@ -396,8 +396,19 @@ function generateNewBatchSection() {
   tempDiv.innerHTML = newSectionHTML;
   const newSection = tempDiv.firstElementChild;
 
-  // Append to form group (at the bottom of all sections)
-  formGroup.appendChild(newSection);
+  // Create a new form-group for the new section
+  const newFormGroup = document.createElement('div');
+  newFormGroup.className = 'form-group';
+  newFormGroup.appendChild(newSection);
+
+  // Find the generate button container and insert the new form-group before it
+  const generateButtonContainer = document.querySelector(".generate-button-container");
+  if (generateButtonContainer && generateButtonContainer.parentNode) {
+    generateButtonContainer.parentNode.insertBefore(newFormGroup, generateButtonContainer);
+  } else {
+    // Fallback: append to form-content
+    formContent.appendChild(newFormGroup);
+  }
 
   // Initialize the new section with upload functionality
   initializeSection(newSection);
