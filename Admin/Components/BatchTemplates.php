@@ -42,13 +42,6 @@
             </div>
             <div class="form-content" style="width: 100%;">
 
-                <div class="generate-button-container">
-                    <button class="generate-batch-btn" id="generateBatchBtn">
-                        <i class="fas fa-magic"></i>
-                        <span>Generate Batch Template</span>
-                    </button>
-                </div>
-
                 <div class="form-group">
                     <div class="section">
                         <div class="section-header">Batch Year 2024-2025</div>
@@ -218,6 +211,12 @@
                         </div>
                     </div>
 
+                </div>
+
+                <div class="generate-button-container">
+                    <button class="generate-batch-btn" id="generateBatchBtn">
+                        <span>Generate Batch Template</span>
+                    </button>
                 </div>
             </div>
         </div>
