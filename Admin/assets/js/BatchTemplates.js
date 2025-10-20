@@ -553,6 +553,11 @@ function generateNewBatchSection() {
 
   // Save generated sections to localStorage
   saveGeneratedSectionsToLocalStorage();
+  
+  // Refresh sections NodeList to include the new section
+  if (window.refreshSections) {
+    window.refreshSections();
+  }
 
   showNotification(`Batch Year ${nextYear} created successfully!`, "success");
   
@@ -723,21 +728,39 @@ function restoreSingleSection(sectionHeader) {
     }
   }
 
-  // Initialize the new section
-  initializeSection(newSection);
-  
-  // Get the currentXhrs and isUploadCancelled from the parent scope
-  const currentXhrs = window.currentXhrs || [];
-  const isUploadCancelled = window.isUploadCancelled || false;
-  
-  // Initialize upload boxes for the new section
-  initializeSectionUploadBoxes(newSection, currentXhrs, isUploadCancelled);
+  // Initialize the new section only if not deferring
+  if (!window.deferSectionInitialization) {
+    initializeSection(newSection);
+    
+    // Get the currentXhrs and isUploadCancelled from the parent scope
+    const currentXhrs = window.currentXhrs || [];
+    const isUploadCancelled = window.isUploadCancelled || false;
+    
+    // Initialize upload boxes for the new section
+    initializeSectionUploadBoxes(newSection, currentXhrs, isUploadCancelled);
+  }
   
   console.log(`Restored section: ${sectionHeader}`);
 }
 
 function initializeSection(section) {
+  // Validate section
+  if (!section || !section.parentNode) {
+    console.error("initializeSection: Invalid section");
+    return;
+  }
+  
   const sectionHeader = section.querySelector(".section-header");
+  if (!sectionHeader) {
+    console.error("initializeSection: Section header not found");
+    return;
+  }
+  
+  // Check if already initialized by checking for data attribute
+  if (section.dataset.initialized === "true") {
+    console.log("initializeSection: Section already initialized, skipping");
+    return;
+  }
   
   // Add click event to section header
   sectionHeader.addEventListener("click", (e) => {
@@ -746,8 +769,13 @@ function initializeSection(section) {
     const label = sectionHeader.textContent?.trim() || "Batch Template";
     if (window.openSelectTemplateModal) {
       window.openSelectTemplateModal(section, label);
+    } else {
+      console.error("openSelectTemplateModal not available");
     }
   });
+  
+  // Mark as initialized
+  section.dataset.initialized = "true";
 }
 
 function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
@@ -770,8 +798,9 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
       if (selectBatchBtn) {
         selectBatchBtn.addEventListener("click", (e) => {
           e.stopPropagation();
-          console.log("Select batch button clicked for:", sectionHeader);
-          openSelectTemplateModal(sectionHeader);
+          if (window.openSelectTemplateModal) {
+            window.openSelectTemplateModal(section, sectionHeader);
+          }
         });
       }
       
@@ -1041,6 +1070,11 @@ function confirmDeleteBatch() {
     // Update localStorage after deletion
     saveGeneratedSectionsToLocalStorage();
     
+    // Refresh sections NodeList after deletion
+    if (window.refreshSections) {
+      window.refreshSections();
+    }
+    
     showNotification(`${window.pendingDeleteBatchName} deleted successfully!`, "success");
     
     window.pendingDeleteSection = null;
@@ -1134,19 +1168,37 @@ window.addEventListener("DOMContentLoaded", () => {
   window.currentXhrs = [];
   window.isUploadCancelled = false;
 
-  // Restore any previously generated sections from localStorage
-  restoreGeneratedSectionsFromLocalStorage();
-
-  const sections = document.querySelectorAll(".form-group .section");
-  const sectionHeaders = document.querySelectorAll(
+  // Query sections before restoration
+  let sections = document.querySelectorAll(".form-group .section");
+  let sectionHeaders = document.querySelectorAll(
     ".form-group .section .section-header"
   );
 
+  // Function to refresh sections NodeList
+  function refreshSections() {
+    sections = document.querySelectorAll(".form-group .section");
+    sectionHeaders = document.querySelectorAll(".form-group .section .section-header");
+  }
+  
+  // Make refreshSections globally accessible
+  window.refreshSections = refreshSections;
+
+  // Store a flag to defer initialization of restored sections
+  window.deferSectionInitialization = true;
+
+  // Restore any previously generated sections from localStorage
+  restoreGeneratedSectionsFromLocalStorage();
+  
+  // Refresh sections after restoration
+  refreshSections();
+
   function selectSection(section) {
     sections.forEach((s) => s.classList.remove("selected"));
-    if (section) section.classList.add("selected");
+    
+    // Check if section exists and is still in the DOM
+    if (section && section.parentNode) {
+      section.classList.add("selected");
 
-    if (section) {
       const templateName = section
         .querySelector(".section-header")
         .textContent.trim();
@@ -1158,6 +1210,8 @@ window.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem("selectedBatchTemplateNumber", templateNumber);
         console.log("Stored template number:", templateNumber);
       }
+    } else {
+      console.error("selectSection: section is undefined or not in DOM");
     }
 
     updateUploadBoxStates();
@@ -1196,7 +1250,15 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   function openSelectTemplateModal(targetSection, templateLabel) {
-    if (!deleteModal) return;
+    if (!deleteModal) {
+      console.error("openSelectTemplateModal: deleteModal is not available");
+      return;
+    }
+    
+    if (!targetSection) {
+      console.error("openSelectTemplateModal: targetSection is undefined");
+      return;
+    }
 
     const titleEl = deleteModal.querySelector("h3");
     const iconEl = deleteModal.querySelector(".modal-header .modal-icon");
@@ -1218,10 +1280,42 @@ window.addEventListener("DOMContentLoaded", () => {
     if (cancelBtnEl) cancelBtnEl.textContent = "Cancel";
 
     selectedConfirmAction = () => {
-      selectSection(targetSection);
-      if (typeof showNotification === "function") {
-        showNotification(`${templateLabel} selected`, "success");
+      // Validate templateLabel is defined
+      if (!templateLabel) {
+        console.error("selectedConfirmAction: templateLabel is undefined");
+        if (typeof showNotification === "function") {
+          showNotification("Error: Could not select batch template - invalid label", "error");
+        }
+        closeDeleteModal();
+        return;
       }
+      
+      // Re-query the DOM to find the section by its header text instead of using captured reference
+      // This prevents issues if the section was removed and recreated
+      const allSections = document.querySelectorAll(".form-group .section");
+      let actualSection = null;
+      
+      allSections.forEach((section) => {
+        const header = section.querySelector(".section-header");
+        if (header && header.textContent.trim() === templateLabel) {
+          actualSection = section;
+        }
+      });
+      
+      if (actualSection && actualSection.parentNode) {
+        // Section found and is in the DOM, proceed with selection
+        selectSection(actualSection);
+        if (typeof showNotification === "function") {
+          showNotification(`${templateLabel} selected`, "success");
+        }
+      } else {
+        console.error("selectedConfirmAction: Could not find section with label:", templateLabel);
+        if (typeof showNotification === "function") {
+          showNotification("Error: Could not select batch template - section not found", "error");
+        }
+      }
+      
+      // Always restore modal defaults
       if (titleEl) titleEl.textContent = defaultTitle;
       if (messageEl) messageEl.textContent = defaultMsg;
       if (iconEl) iconEl.className = defaultIcon;
@@ -1234,6 +1328,20 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // Make openSelectTemplateModal globally accessible for initializeSection
   window.openSelectTemplateModal = openSelectTemplateModal;
+
+  // Initialize all restored sections now that openSelectTemplateModal is available
+  if (window.deferSectionInitialization) {
+    const allSections = document.querySelectorAll(".form-group .section");
+    const currentXhrs = window.currentXhrs || [];
+    const isUploadCancelled = window.isUploadCancelled || false;
+    
+    allSections.forEach((section) => {
+      initializeSection(section);
+      initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled);
+    });
+    
+    window.deferSectionInitialization = false;
+  }
 
   // Section header click event removed - now using Select Batch button
 
