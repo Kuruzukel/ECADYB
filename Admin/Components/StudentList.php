@@ -83,17 +83,30 @@ try {
             }
         }
     }
-    // Sort academic years in descending order (newest first)
-    rsort($academicYears);
+    // Sort academic years in ascending order (oldest first)
+    sort($academicYears);
 } catch (Exception $e) {
     error_log("Error fetching academic years: " . $e->getMessage());
     $academicYears = [];
 }
 
-// Get selected academic year from URL or use the first available
-$selectedAcademicYear = $_GET['academic_year'] ?? ($academicYears[0] ?? '');
+// Get selected academic year from URL or use default (2024-2025)
+$selectedAcademicYear = $_GET['academic_year'] ?? '';
+if (empty($selectedAcademicYear)) {
+    // Default to 2024-2025 if it exists, otherwise use the first available
+    if (in_array('2024-2025', $academicYears)) {
+        $selectedAcademicYear = '2024-2025';
+    } else {
+        $selectedAcademicYear = $academicYears[0] ?? '';
+    }
+}
 if (!in_array($selectedAcademicYear, $academicYears)) {
-    $selectedAcademicYear = $academicYears[0] ?? '';
+    // If the selected year is not valid, default to 2024-2025 or first available
+    if (in_array('2024-2025', $academicYears)) {
+        $selectedAcademicYear = '2024-2025';
+    } else {
+        $selectedAcademicYear = $academicYears[0] ?? '';
+    }
 }
 
 $selectedDepartment = $_GET['department'] ?? "bsme";
