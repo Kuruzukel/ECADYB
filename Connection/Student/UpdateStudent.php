@@ -155,13 +155,15 @@ try {
     );
 
     error_log("Update result - Matched: " . $result->getMatchedCount() . ", Modified: " . $result->getModifiedCount());
+    error_log("Update filter used: " . print_r($filter, true));
 
     if ($result->getModifiedCount() > 0) {
         respond(true, 'Student details saved successfully.');
     } elseif ($result->getMatchedCount() > 0) {
         respond(true, 'No changes detected, student record remains the same.');
     } else {
-        respond(false, 'Update failed - no documents matched or modified.');
+        error_log("Update failed - Matched: " . $result->getMatchedCount() . ", Modified: " . $result->getModifiedCount());
+        respond(false, 'Update failed - no documents matched or modified. Matched: ' . $result->getMatchedCount() . ', Modified: ' . $result->getModifiedCount());
     }
 } catch (Exception $e) {
     error_log("[UpdateStudent.php] Error: " . $e->getMessage());
