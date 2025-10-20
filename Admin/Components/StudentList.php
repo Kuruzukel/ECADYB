@@ -284,7 +284,7 @@ if ($isIncludedInDashboard && (strpos($_SERVER['HTTP_HOST'], 'localhost') !== fa
                             </select>
                         </label>
 
-                        <input type="hidden" id="current-tab"
+                        <input type="hidden" id="current-tab" name="current-tab"
                             value="<?php echo htmlspecialchars($_GET['tab'] ?? 'all'); ?>">
                         <div class="pagination-controls"
                             style="margin-top:1em; display:flex; justify-content:center; gap:1em;">
@@ -303,7 +303,7 @@ if ($isIncludedInDashboard && (strpos($_SERVER['HTTP_HOST'], 'localhost') !== fa
 
                             <span>Page <?php echo $page; ?> of <?php echo $totalPages; ?></span>
                         </div>
-                        <input type="hidden" id="total-pages" value="<?php echo $totalPages; ?>">
+                        <input type="hidden" id="total-pages" name="total-pages" value="<?php echo $totalPages; ?>">
                     </div>
                 </div>
 
@@ -318,7 +318,7 @@ if ($isIncludedInDashboard && (strpos($_SERVER['HTTP_HOST'], 'localhost') !== fa
                                     <th>ACADEMIC YEAR</th>
                                     <th>STATUS</th>
                                     <th>PASSWORD</th>
-                                    <th>ACTIONS <input type="checkbox" id="select-all-header" title="Select All"></th>
+                                    <th>ACTIONS <input type="checkbox" id="select-all-header" name="select-all-header" title="Select All"></th>
                                 </tr>
                             </thead>
                         <?php endif; ?>
@@ -356,7 +356,10 @@ if ($isIncludedInDashboard && (strpos($_SERVER['HTTP_HOST'], 'localhost') !== fa
                                         </td>
                                         <td>
                                             <div class="actions-container">
-                                                <input type="checkbox" class="student-checkbox"
+                                                <input type="checkbox" 
+                                                    id="student-<?php echo htmlspecialchars($student['student_id'] ?? $student['student id'] ?? ''); ?>"
+                                                    name="student-<?php echo htmlspecialchars($student['student_id'] ?? $student['student id'] ?? ''); ?>"
+                                                    class="student-checkbox"
                                                     data-student-id="<?php echo htmlspecialchars($student['student_id'] ?? $student['student id'] ?? ''); ?>"
                                                     data-collection="<?php echo htmlspecialchars($student['collection'] ?? ''); ?>"
                                                     data-status="<?php echo strtolower($student['status'] ?? 'pending'); ?>"
