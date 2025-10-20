@@ -608,6 +608,11 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
       if (deleteBatchBtn) {
         deleteBatchBtn.addEventListener("click", (e) => {
           e.stopPropagation();
+          // Prevent action if button is disabled
+          if (deleteBatchBtn.disabled) {
+            console.log("Delete batch button is disabled for:", sectionHeader);
+            return;
+          }
           console.log("Delete batch button clicked for:", sectionHeader);
           deleteBatchTemplate(section, sectionHeader);
         });
@@ -880,10 +885,13 @@ function confirmSelectTemplate() {
       const isSelected = section === window.pendingSelectSection;
       
       uploadBoxes.forEach((box) => {
+        // Don't disable action-box, it should always be clickable
+        const isActionBox = box.classList.contains("action-box");
+        
         if (isSelected) {
           box.classList.remove("disabled");
           box.style.pointerEvents = "auto";
-        } else {
+        } else if (!isActionBox) {
           box.classList.add("disabled");
           box.style.pointerEvents = "none";
         }
@@ -969,10 +977,13 @@ window.addEventListener("DOMContentLoaded", () => {
       const isSelected = section === selectedTemplate;
 
       uploadBoxes.forEach((box) => {
+        // Don't disable action-box, it should always be clickable
+        const isActionBox = box.classList.contains("action-box");
+        
         if (isSelected) {
           box.classList.remove("disabled");
           box.style.pointerEvents = "auto";
-        } else {
+        } else if (!isActionBox) {
           box.classList.add("disabled");
           box.style.pointerEvents = "none";
         }

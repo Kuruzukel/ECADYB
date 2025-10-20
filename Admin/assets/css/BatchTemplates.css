@@ -348,6 +348,18 @@ label {
   background: #cc0000;
 }
 
+.delete-btn:disabled {
+  background: #666;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.delete-btn:disabled:hover {
+  background: #666;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .upload-box.has-image {
   border: none;
 }
@@ -429,6 +441,26 @@ label {
 .action-btn.delete-batch-btn:hover {
   background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
   transform: translateY(-2px);
+}
+
+.action-btn.delete-batch-btn:disabled {
+  background: linear-gradient(135deg, #666 0%, #555 100%);
+  opacity: 0.6;
+  cursor: not-allowed;
+  position: relative;
+}
+
+.action-btn.delete-batch-btn:disabled:hover {
+  background: linear-gradient(135deg, #666 0%, #555 100%);
+  transform: none;
+  cursor: not-allowed;
+}
+
+.action-btn.delete-batch-btn:disabled::after {
+  content: "🔒";
+  position: absolute;
+  right: 8px;
+  font-size: 12px;
 }
 
 .action-btn:active {

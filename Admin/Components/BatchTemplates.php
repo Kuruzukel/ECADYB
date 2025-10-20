@@ -105,7 +105,7 @@
                                             <i class="fas fa-file-pdf"></i>
                                             <span>Download PDF</span>
                                         </button>
-                                        <button class="action-btn delete-batch-btn" title="Delete Batch Template">
+                                        <button class="action-btn delete-batch-btn" title="Delete Batch Template" disabled>
                                             <i class="fas fa-trash-alt"></i>
                                             <span>Delete Batch</span>
                                         </button>
@@ -177,7 +177,7 @@
                                             <i class="fas fa-file-pdf"></i>
                                             <span>Download PDF</span>
                                         </button>
-                                        <button class="action-btn delete-batch-btn" title="Delete Batch Template">
+                                        <button class="action-btn delete-batch-btn" title="Delete Batch Template" disabled>
                                             <i class="fas fa-trash-alt"></i>
                                             <span>Delete Batch</span>
                                         </button>
@@ -249,7 +249,7 @@
                                             <i class="fas fa-file-pdf"></i>
                                             <span>Download PDF</span>
                                         </button>
-                                        <button class="action-btn delete-batch-btn" title="Delete Batch Template">
+                                        <button class="action-btn delete-batch-btn" title="Delete Batch Template" disabled>
                                             <i class="fas fa-trash-alt"></i>
                                             <span>Delete Batch</span>
                                         </button>
