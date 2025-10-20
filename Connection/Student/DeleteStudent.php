@@ -63,7 +63,7 @@ error_log("DeleteStudent parsed data: " . print_r($data, true));
 
 $studentId = isset($data['student_id']) ? trim($data['student_id']) : null;
 $collectionName = isset($data['collection']) ? trim($data['collection']) : null;
-$template = isset($data['template']) ? trim($data['template']) : '1';
+$academicYear = isset($data['academic_year']) ? trim($data['academic_year']) : '';
 
 if (!$studentId || !$collectionName) {
     http_response_code(400);
@@ -74,7 +74,8 @@ if (!$studentId || !$collectionName) {
     exit;
 }
 
-$dbName = "BatchTemplate" . $template;
+// Use ECADYB database instead of BatchTemplate databases
+$dbName = "ECADYB";
 $db = $client->$dbName;
 
 try {
@@ -93,12 +94,19 @@ try {
 
     $collection = $db->$collectionName;
 
-    $student = $collection->findOne([
+    $filter = [
         '$or' => [
             ['student id' => $studentId],
             ['student_id' => $studentId]
         ]
-    ]);
+    ];
+
+    // Add academic year filter if provided
+    if (!empty($academicYear)) {
+        $filter['academic year'] = $academicYear;
+    }
+
+    $student = $collection->findOne($filter);
 
     if (!$student) {
         $allStudents = $collection->find([], [
@@ -127,12 +135,19 @@ try {
         exit;
     }
 
-    $deleteResult = $collection->deleteOne([
+    $deleteFilter = [
         '$or' => [
             ['student id' => $studentId],
             ['student_id' => $studentId]
         ]
-    ]);
+    ];
+
+    // Add academic year filter if provided
+    if (!empty($academicYear)) {
+        $deleteFilter['academic year'] = $academicYear;
+    }
+
+    $deleteResult = $collection->deleteOne($deleteFilter);
 
     error_log("DeleteStudent result - Deleted count: " . $deleteResult->getDeletedCount());
 
