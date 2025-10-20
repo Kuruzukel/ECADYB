@@ -423,6 +423,20 @@ label {
   transform: translateY(-2px);
 }
 
+.action-btn.select-batch-btn:disabled {
+  background: #fcda15;
+  color: #000000;
+  opacity: 1;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.action-btn.select-batch-btn:disabled:hover {
+  background: #fcda15;
+  color: #000000;
+  transform: none;
+}
+
 .action-btn.download-pdf-btn {
   background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   color: #ffffff;
@@ -457,7 +471,6 @@ label {
 }
 
 .action-btn.delete-batch-btn:disabled::after {
-  content: "🔒";
   position: absolute;
   right: 8px;
   font-size: 12px;

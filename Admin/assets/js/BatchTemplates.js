@@ -896,6 +896,16 @@ function confirmSelectTemplate() {
           box.style.pointerEvents = "none";
         }
       });
+      
+      // Disable Select Batch button for the selected section only
+      const selectBatchBtn = section.querySelector(".select-batch-btn");
+      if (selectBatchBtn) {
+        if (isSelected) {
+          selectBatchBtn.disabled = true;
+        } else {
+          selectBatchBtn.disabled = false;
+        }
+      }
     });
     
     showNotification(`${window.pendingSelectBatchName} selected successfully!`, "success");
@@ -988,6 +998,16 @@ window.addEventListener("DOMContentLoaded", () => {
           box.style.pointerEvents = "none";
         }
       });
+      
+      // Disable Select Batch button for the selected section only
+      const selectBatchBtn = section.querySelector(".select-batch-btn");
+      if (selectBatchBtn) {
+        if (isSelected) {
+          selectBatchBtn.disabled = true;
+        } else {
+          selectBatchBtn.disabled = false;
+        }
+      }
     });
   }
 
