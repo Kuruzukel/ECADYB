@@ -65,7 +65,10 @@ $studentId = isset($data['student_id']) ? trim($data['student_id']) : null;
 $collectionName = isset($data['collection']) ? trim($data['collection']) : null;
 $academicYear = isset($data['academic_year']) ? trim($data['academic_year']) : '';
 
+error_log("DeleteStudent - student_id: $studentId, collection: $collectionName, academic_year: $academicYear");
+
 if (!$studentId || !$collectionName) {
+    error_log("DeleteStudent - Missing required parameters: student_id=" . ($studentId ? 'OK' : 'MISSING') . ", collection=" . ($collectionName ? 'OK' : 'MISSING'));
     http_response_code(400);
     echo json_encode([
         'success' => false,
@@ -94,19 +97,41 @@ try {
 
     $collection = $db->$collectionName;
 
-    // Build filter without academic year - student ID should be unique enough
+    // Build filter with academic year if provided
     $filter = [
         '$or' => [
             ['student id' => $studentId],
             ['student_id' => $studentId]
         ]
     ];
+    
+    // Add academic year filter if provided
+    if (!empty($academicYear)) {
+        $filter['academic year'] = $academicYear;
+    }
 
     $student = $collection->findOne($filter);
+    
+    // If not found with academic year filter, try without it
+    if (!$student && !empty($academicYear)) {
+        error_log("DeleteStudent - Student not found with academic year, trying without it");
+        $filterWithoutYear = [
+            '$or' => [
+                ['student id' => $studentId],
+                ['student_id' => $studentId]
+            ]
+        ];
+        $student = $collection->findOne($filterWithoutYear);
+        if ($student) {
+            $filter = $filterWithoutYear;
+            error_log("DeleteStudent - Student found without academic year filter");
+        }
+    }
     
     error_log("DeleteStudent - Student found: " . ($student ? "YES" : "NO"));
     if ($student) {
         error_log("DeleteStudent - Student data: " . print_r($student, true));
+        error_log("DeleteStudent - Using filter: " . print_r($filter, true));
     }
 
     if (!$student) {
