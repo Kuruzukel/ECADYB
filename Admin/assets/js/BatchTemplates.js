@@ -396,18 +396,48 @@ function generateNewBatchSection() {
   tempDiv.innerHTML = newSectionHTML;
   const newSection = tempDiv.firstElementChild;
 
-  // Create a new form-group for the new section
-  const newFormGroup = document.createElement('div');
-  newFormGroup.className = 'form-group';
-  newFormGroup.appendChild(newSection);
+  // Check if there's an existing form-group with less than 3 sections
+  const existingFormGroups = document.querySelectorAll(".form-group");
+  let targetFormGroup = null;
+  let insertPosition = 0;
+  
+  // Find the last form-group that has less than 3 sections
+  for (let i = existingFormGroups.length - 1; i >= 0; i--) {
+    const sectionsInGroup = existingFormGroups[i].querySelectorAll(".section");
+    if (sectionsInGroup.length < 3) {
+      targetFormGroup = existingFormGroups[i];
+      insertPosition = sectionsInGroup.length; // Position to insert (0=left, 1=middle, 2=right)
+      break;
+    }
+  }
 
-  // Find the generate button container and insert the new form-group before it
-  const generateButtonContainer = document.querySelector(".generate-button-container");
-  if (generateButtonContainer && generateButtonContainer.parentNode) {
-    generateButtonContainer.parentNode.insertBefore(newFormGroup, generateButtonContainer);
+  if (targetFormGroup) {
+    // Add to existing form-group at the correct position (left to right)
+    const sectionsInGroup = targetFormGroup.querySelectorAll(".section");
+    if (insertPosition === 0) {
+      // Insert at the beginning (left position)
+      targetFormGroup.insertBefore(newSection, sectionsInGroup[0] || null);
+    } else if (insertPosition === 1) {
+      // Insert in the middle
+      targetFormGroup.insertBefore(newSection, sectionsInGroup[1] || null);
+    } else {
+      // Insert at the end (right position)
+      targetFormGroup.appendChild(newSection);
+    }
   } else {
-    // Fallback: append to form-content
-    formContent.appendChild(newFormGroup);
+    // Create a new form-group for the new section
+    const newFormGroup = document.createElement('div');
+    newFormGroup.className = 'form-group';
+    newFormGroup.appendChild(newSection);
+
+    // Find the generate button container and insert the new form-group before it
+    const generateButtonContainer = document.querySelector(".generate-button-container");
+    if (generateButtonContainer && generateButtonContainer.parentNode) {
+      generateButtonContainer.parentNode.insertBefore(newFormGroup, generateButtonContainer);
+    } else {
+      // Fallback: append to form-content
+      formContent.appendChild(newFormGroup);
+    }
   }
 
   // Initialize the new section with upload functionality
@@ -803,7 +833,11 @@ window.addEventListener("DOMContentLoaded", () => {
   }
   
   if (cancelGenerateBtn) {
-    cancelGenerateBtn.addEventListener("click", closeGenerateModal);
+    cancelGenerateBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      closeGenerateModal();
+    });
   }
   
   if (generateModal) {
@@ -813,9 +847,11 @@ window.addEventListener("DOMContentLoaded", () => {
   }
   
   if (confirmGenerateBtn) {
-    confirmGenerateBtn.addEventListener("click", () => {
-      generateNewBatchSection();
+    confirmGenerateBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
       closeGenerateModal();
+      generateNewBatchSection();
     });
   }
 });
