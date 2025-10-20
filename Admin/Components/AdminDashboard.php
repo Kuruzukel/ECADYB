@@ -353,7 +353,7 @@ require $mongoPath;
                             </div>
                         </div>
                         <div class="search-container">
-                            <input type="text" class="search-input" placeholder="Search..." />
+                            <input type="text" id="search-input" name="search-input" class="search-input" placeholder="Search..." />
                             <button class="search-button">
                                 <i class="fas fa-search"></i>
                             </button>
