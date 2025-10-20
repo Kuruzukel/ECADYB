@@ -84,7 +84,7 @@ h1 .chevron i {
   background-color: var(--section-bg);
   padding: 20px;
   border-radius: 8px;
- 0 2px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   box-sizing: border-box;
   min-height: 585px;
   display: flex;
@@ -168,7 +168,7 @@ h1 .chevron i {
     rgba(76, 175, 80, 0.1),
     rgba(44, 62, 80, 0.6)
   );
- 0 8px 32px rgba(76, 175, 80, 0.2);
+  box-shadow: 0 8px 32px rgba(76, 175, 80, 0.2);
 }
 
 .file-card.drag-over {
