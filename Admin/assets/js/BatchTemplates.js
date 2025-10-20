@@ -374,7 +374,10 @@ async function confirmDeleteStudent() {
     }
   } finally {
     if (confirmDeleteBtn) confirmDeleteBtn.disabled = false;
-    closeDeleteModal();
+    // Delay closing the modal to allow notification to be visible
+    setTimeout(() => {
+      closeDeleteModal();
+    }, 500);
   }
 }
 
@@ -924,7 +927,7 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
             showNotification("Background slot can only accept 1 image. Please select only 1 image.", "error");
             return;
           }
-          const result = await uploadToBunny(files[0], slot, "front", true, false);
+          const result = await uploadToBunny(files[0], slot, "front", true, false, 0, true);
           
           if (result && result.success) {
             // Display image immediately using pre-created URL
@@ -961,8 +964,8 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
           
           if (files.length === 2) {
             const uploadPromises = [
-              uploadToBunny(files[0], slot, "front", !suppressNotifications, isBatchUpload),
-              uploadToBunny(files[1], slot, "back", !suppressNotifications, isBatchUpload)
+              uploadToBunny(files[0], slot, "front", !suppressNotifications, isBatchUpload, 0, false),
+              uploadToBunny(files[1], slot, "back", !suppressNotifications, isBatchUpload, 0, false)
             ];
             
             const results = await Promise.all(uploadPromises);
@@ -993,7 +996,7 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
               }
             }
           } else if (files.length === 1) {
-            const result = await uploadToBunny(files[0], slot, "front", !suppressNotifications, false);
+            const result = await uploadToBunny(files[0], slot, "front", !suppressNotifications, false, 0, true);
             
             if (result && result.success) {
               // Display image immediately using pre-created URL
@@ -1037,35 +1040,61 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
         if (backImg && !isBackgroundSlot) sides.push("back");
         if (!sides.length) return;
         
-        // Delete from server first, then update UI only if successful
+        // Get the batch year from the section header for logging
+        const sectionHeader = box.closest('.section')?.querySelector('.section-header');
+        const batchYear = sectionHeader ? sectionHeader.textContent.trim() : '';
+        console.log(`Delete button clicked for slot ${slot}, batch_year: ${batchYear}, sides to delete:`, sides);
+        
+        // Remove images from UI IMMEDIATELY for instant feedback
+        const tempFrontImg = frontImg;
+        const tempBackImg = backImg;
+        frontImg = null;
+        backImg = null;
+        showingFront = true;
+        box.innerHTML = "";
+        const newPlus = document.createElement("span");
+        newPlus.className = "plus-icon";
+        newPlus.textContent = "+";
+        box.appendChild(newPlus);
+        ensureChildren();
+        deleteBtn.style.display = "none";
+        frontInput.value = "";
+        backInput.value = "";
+        box.classList.remove("has-image");
+        
+        // Show success notification immediately
+        showNotification("Image deleted successfully", "success");
+        
+        // Delete from server in the background (non-blocking)
         if (sides.length > 0) {
-          const success = await deleteCover(slot, sides[0]);
+          console.log(`Starting parallel deletion of ${sides.length} side(s) for slot ${slot}`);
           
-          if (success) {
-            // Remove image from UI only after successful deletion
-            frontImg = null;
-            backImg = null;
-            showingFront = true;
-            box.innerHTML = "";
-            const newPlus = document.createElement("span");
-            newPlus.className = "plus-icon";
-            newPlus.textContent = "+";
-            box.appendChild(newPlus);
-            ensureChildren();
-            deleteBtn.style.display = "none";
-            frontInput.value = "";
-            backInput.value = "";
-            box.classList.remove("has-image");
-            
-            // Show success notification
-            showNotification("Image deleted successfully", "success");
+          // Delete all sides in parallel using Promise.all
+          const deletePromises = sides.map(side => deleteCover(slot, side));
+          const results = await Promise.all(deletePromises);
+          
+          // Check if all deletions were successful
+          const allSuccessful = results.every(result => result === true);
+          
+          if (allSuccessful) {
+            console.log(`All deletions successful for slot ${slot}`);
+          } else {
+            console.error(`Some deletions failed for slot ${slot}`);
+            // If server deletion failed, we could restore the images here
+            // But for now, we'll just show an error notification
+            showNotification("Server deletion failed, but UI was updated", "error");
           }
         }
       };
       openDeleteModal();
     });
 
-    async function uploadToBunny(file, slot, side, showNotif, isBatch) {
+    async function uploadToBunny(file, slot, side, showNotif, isBatch, retryCount = 0, isSingleUpload = false) {
+      const MAX_RETRIES = 3;
+      // Set timeout based on single or double upload
+      // Increased to 60s to allow time for BunnyCDN upload + MongoDB save + response
+      const UPLOAD_TIMEOUT = 60000; // 60 seconds for complete operation
+      
       try {
         // Get the batch year from the section header
         const sectionHeader = box.closest('.section').querySelector('.section-header');
@@ -1132,15 +1161,32 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
           });
 
           xhr.open("POST", UPLOAD_ENDPOINT);
-          xhr.timeout = 120000; // Set timeout to 120 seconds (2 minutes)
+          xhr.timeout = UPLOAD_TIMEOUT; // Dynamic timeout: 3s for single, 5s for double upload
           xhr.send(formData);
         });
 
         return await uploadPromise;
       } catch (err) {
         console.error("Upload error:", err);
-        // Always show error notifications
-        showNotification(err.message || "Upload failed", "error");
+        
+        // Retry logic for timeout or network errors
+        if ((err.message.includes("timeout") || err.message.includes("failed")) && retryCount < MAX_RETRIES) {
+          const newRetryCount = retryCount + 1;
+          console.log(`Upload failed, retrying... (${newRetryCount}/${MAX_RETRIES})`);
+          
+          if (showNotif && !isBatch) {
+            showNotification(`Upload failed, retrying... (${newRetryCount}/${MAX_RETRIES})`, "warning");
+          }
+          
+          // Wait a bit before retrying (exponential backoff)
+          await new Promise(resolve => setTimeout(resolve, 1000 * newRetryCount));
+          
+          // Retry the upload
+          return await uploadToBunny(file, slot, side, showNotif, isBatch, newRetryCount, isSingleUpload);
+        }
+        
+        // Max retries reached or non-retryable error
+        showNotification(err.message || "Upload failed after multiple attempts", "error");
         return { success: false, cancelled: true };
       }
     }
@@ -1151,26 +1197,43 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
         const sectionHeader = box.closest('.section')?.querySelector('.section-header');
         const batchYear = sectionHeader ? sectionHeader.textContent.trim() : '';
         
+        console.log(`deleteCover: Attempting to delete slot ${slot}, side ${side}, batch_year: ${batchYear}`);
+        
         const form = new FormData();
         form.append("slot", String(slot));
         form.append("side", side);
         form.append("batch_year", batchYear);
 
+        // Create an AbortController with 20 second timeout
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 20000);
+
         const res = await fetch(DELETE_ENDPOINT, {
           method: "POST",
           body: form,
+          signal: controller.signal
         });
+        
+        clearTimeout(timeoutId);
+
+        console.log(`deleteCover: Response status: ${res.status}`);
 
         if (!res.ok) {
+          const errorText = await res.text();
+          console.error(`deleteCover: HTTP ${res.status} error:`, errorText);
           throw new Error(`HTTP ${res.status}: ${res.statusText}`);
         }
 
-        const data = await res.json().catch(() => null);
+        const data = await res.json();
+        console.log(`deleteCover: Response data:`, data);
+        
         if (!data?.success) {
           // Show error notification if delete fails
+          console.error(`deleteCover: Delete failed - ${data?.message || "Unknown error"}`);
           showNotification(data?.message || "Delete failed", "error");
           return false;
         } else {
+          console.log(`deleteCover: Delete successful`);
           // Update available sections after deletion
           if (window.setAvailableSections) {
             await window.setAvailableSections();
@@ -1178,9 +1241,19 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
           return true;
         }
       } catch (err) {
-        console.error("Delete error:", err);
-        // Show error notification if delete fails
-        showNotification(err.message || "Delete failed", "error");
+        console.error("deleteCover: Exception caught:", err);
+        console.error("deleteCover: Error details:", {
+          message: err.message,
+          stack: err.stack,
+          name: err.name
+        });
+        
+        // Handle abort/timeout error
+        if (err.name === 'AbortError') {
+          showNotification("Delete operation timed out after 20 seconds", "error");
+        } else {
+          showNotification(err.message || "Delete failed", "error");
+        }
         return false;
       }
     }

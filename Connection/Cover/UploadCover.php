@@ -1,4 +1,8 @@
 <?php
+// Set execution time limit for file uploads
+set_time_limit(60); // 60 seconds max
+ini_set('max_execution_time', 60); // 60 seconds max
+
 ob_start();
 
 header('Content-Type: application/json');
@@ -198,8 +202,8 @@ try {
         CURLOPT_POSTFIELDS     => $fileContents,
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_HEADER         => false,
-        CURLOPT_TIMEOUT        => 15,
-        CURLOPT_CONNECTTIMEOUT => 5,
+        CURLOPT_TIMEOUT        => 45, // 45 seconds for uploads (allows time for BunnyCDN upload + MongoDB save)
+        CURLOPT_CONNECTTIMEOUT => 10, // 10 seconds connection timeout
         CURLOPT_SSL_VERIFYPEER => true,
         CURLOPT_TCP_NODELAY    => true,
         CURLOPT_FRESH_CONNECT  => false,
