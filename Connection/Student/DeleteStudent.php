@@ -142,8 +142,8 @@ try {
 
     error_log("DeleteStudent result - Deleted count: " . $deleteResult->getDeletedCount());
 
-    // Check if student was found and deleted
-    if ($deleteResult->getDeletedCount() > 0 || $student) {
+    // Check if student was actually deleted
+    if ($deleteResult->getDeletedCount() > 0) {
         http_response_code(200);
         echo json_encode([
             'success' => true,
@@ -154,7 +154,7 @@ try {
         http_response_code(400);
         echo json_encode([
             'success' => false,
-            'message' => 'Student could not be deleted.'
+            'message' => 'Student could not be deleted. Deleted count: ' . $deleteResult->getDeletedCount()
         ]);
     }
 } catch (Exception $e) {
