@@ -351,7 +351,8 @@ label {
   border: none;
 }
 
-#delete-modal-overlay {
+#delete-modal-overlay,
+#generate-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -378,10 +379,30 @@ label {
   position: relative;
 }
 
+#generate-modal-overlay .modal {
+  background: transparent;
+  border-radius: 16px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 480px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border: 1px solid #475569;
+  text-align: center;
+  position: relative;
+}
+
 #delete-modal-overlay .modal-header {
   display: flex;
   align-items: center;
   gap: 1rem;
+  margin-bottom: 1.5rem;
+  justify-content: center;
+}
+
+#generate-modal-overlay .modal-header {
+  display: flex;
+  align-items: center;
   margin-bottom: 1.5rem;
   justify-content: center;
 }
@@ -391,7 +412,8 @@ label {
   color: #217ff7;
 }
 
-#delete-modal-overlay .modal-content p {
+#delete-modal-overlay .modal-content p,
+#generate-modal-overlay .modal-content p {
   color: #e0e0e0;
   font-size: 1rem;
   line-height: 1.6;
@@ -399,7 +421,8 @@ label {
   font-family: Arial, sans-serif;
 }
 
-#delete-modal-overlay h3 {
+#delete-modal-overlay h3,
+#generate-modal-overlay h3 {
   font-size: 1.6rem;
   font-weight: 600;
   color: #ffffff;
@@ -407,19 +430,22 @@ label {
   font-family: Arial, sans-serif;
 }
 
-#delete-modal-overlay .modal-content {
+#delete-modal-overlay .modal-content,
+#generate-modal-overlay .modal-content {
   background: transparent;
   border-radius: 16px;
 }
 
-#delete-modal-overlay .modal-buttons {
+#delete-modal-overlay .modal-buttons,
+#generate-modal-overlay .modal-buttons {
   display: flex;
   gap: 1rem;
   justify-content: flex-end;
   margin-top: auto;
 }
 
-#delete-modal-overlay .modal-buttons .modal-btn {
+#delete-modal-overlay .modal-buttons .modal-btn,
+#generate-modal-overlay .modal-buttons .modal-btn {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -433,31 +459,36 @@ label {
   font-family: inherit;
 }
 
-#delete-modal-overlay .modal-buttons .modal-btn.confirm {
+#delete-modal-overlay .modal-buttons .modal-btn.confirm,
+#generate-modal-overlay .modal-buttons .modal-btn.confirm {
   background: #10b981;
   color: #ffffff;
   font-family: Arial, sans-serif;
 }
 
-#delete-modal-overlay .modal-buttons .modal-btn.confirm:hover {
+#delete-modal-overlay .modal-buttons .modal-btn.confirm:hover,
+#generate-modal-overlay .modal-buttons .modal-btn.confirm:hover {
   background: #059669;
   transform: translateY(-1px);
   font-family: Arial, sans-serif;
 }
 
-#delete-modal-overlay .modal-buttons .modal-btn.cancel {
+#delete-modal-overlay .modal-buttons .modal-btn.cancel,
+#generate-modal-overlay .modal-buttons .modal-btn.cancel {
   background: #ef4444;
   color: #ffffff;
   font-family: Arial, sans-serif;
 }
 
-#delete-modal-overlay .modal-buttons .modal-btn.cancel:hover {
+#delete-modal-overlay .modal-buttons .modal-btn.cancel:hover,
+#generate-modal-overlay .modal-buttons .modal-btn.cancel:hover {
   background: #dc2626;
   transform: translateY(-1px);
   font-family: Arial, sans-serif;
 }
 
-#delete-modal-overlay .close-btn {
+#delete-modal-overlay .close-btn,
+#generate-modal-overlay .close-btn {
   position: absolute;
   top: 12px;
   right: 15px;
@@ -468,7 +499,8 @@ label {
   font-family: Arial, sans-serif;
 }
 
-#delete-modal-overlay .close-btn:hover {
+#delete-modal-overlay .close-btn:hover,
+#generate-modal-overlay .close-btn:hover {
   transform: scale(1.15);
   color: #f87171;
   font-family: Arial, sans-serif;
@@ -491,7 +523,13 @@ label {
     padding: 1.5rem;
   }
 
-  #delete-modal-overlay .modal-buttons {
+  #generate-modal-overlay .modal {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+
+  #delete-modal-overlay .modal-buttons,
+  #generate-modal-overlay .modal-buttons {
     flex-direction: column;
   }
 }

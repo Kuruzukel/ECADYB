@@ -242,6 +242,25 @@
             </div>
         </div>
 
+        <div class="modal-overlay" id="generate-modal-overlay">
+            <div class="modal" style="background: #34495e;">
+                <div class="modal-header">
+                    <h3>Generate Batch Template</h3>
+                </div>
+                <div class="modal-content">
+                    <p>Are you sure you want to generate the batch template?</p>
+                </div>
+                <div class="modal-buttons">
+                    <button class="modal-btn confirm" id="confirm-generate-btn">
+                        <i class="fas fa-check"></i> Yes, Generate
+                    </button>
+                    <button class="modal-btn cancel" id="cancel-generate-btn">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <div id="notification-container"></div>
 
         <div class="upload-overlay" id="upload-overlay">

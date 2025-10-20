@@ -216,6 +216,10 @@ const deleteModal = document.getElementById("delete-modal-overlay");
 const confirmDeleteBtn = document.getElementById("confirm-delete-btn");
 const cancelDeleteBtn = document.getElementById("cancel-delete-btn");
 
+const generateModal = document.getElementById("generate-modal-overlay");
+const confirmGenerateBtn = document.getElementById("confirm-generate-btn");
+const cancelGenerateBtn = document.getElementById("cancel-generate-btn");
+
 let selectedStudentId = null;
 let selectedCollection = null;
 let selectedConfirmAction = null;
@@ -231,6 +235,14 @@ function closeDeleteModal() {
   selectedCollection = null;
   selectedConfirmAction = null;
   if (deleteModal) deleteModal.style.display = "none";
+}
+
+function openGenerateModal() {
+  if (generateModal) generateModal.style.display = "flex";
+}
+
+function closeGenerateModal() {
+  if (generateModal) generateModal.style.display = "none";
 }
 
 async function confirmDeleteStudent() {
@@ -986,4 +998,30 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 
   initializeDeleteModal();
+
+  // Initialize Generate Modal
+  const generateBatchBtn = document.getElementById("generateBatchBtn");
+  
+  if (generateBatchBtn) {
+    generateBatchBtn.addEventListener("click", openGenerateModal);
+  }
+  
+  if (cancelGenerateBtn) {
+    cancelGenerateBtn.addEventListener("click", closeGenerateModal);
+  }
+  
+  if (generateModal) {
+    generateModal.addEventListener("click", (e) => {
+      if (e.target === generateModal) closeGenerateModal();
+    });
+  }
+  
+  if (confirmGenerateBtn) {
+    confirmGenerateBtn.addEventListener("click", () => {
+      // Add your generate batch template logic here
+      console.log("Generate batch template confirmed!");
+      showNotification("Batch template generation initiated!", "success");
+      closeGenerateModal();
+    });
+  }
 });
