@@ -63,11 +63,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 
-    $selectedTemplate = isset($_POST['batch_template']) ? (int)$_POST['batch_template'] : 1;
-    if ($selectedTemplate < 1 || $selectedTemplate > 3) {
-        $selectedTemplate = 1;
-    }
-    $dbName = "BatchTemplate" . $selectedTemplate;
+    // Use ECADYB database
+    $dbName = "ECADYB";
 
     try {
         $client = new MongoDB\Client($mongoUrl);
@@ -179,6 +176,35 @@ $programMap = [
     "bse" => "BS Entrepreneurship"
 ];
 
+// Fetch available academic years from database
+$mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
+$academicYears = [];
+
+try {
+    $client = new Client($mongoUrl);
+    $db = $client->ECADYB;
+    
+    // Get all collections
+    $collections = $db->listCollectionNames();
+    
+    // Fetch all unique academic years from all collections
+    foreach ($collections as $collectionName) {
+        $collection = $db->$collectionName;
+        $years = $collection->distinct('academic year');
+        foreach ($years as $year) {
+            if (!empty($year) && !in_array($year, $academicYears)) {
+                $academicYears[] = $year;
+            }
+        }
+    }
+    
+    // Sort academic years in ascending order
+    sort($academicYears);
+} catch (Exception $e) {
+    // If database connection fails, use default academic year
+    error_log("Failed to fetch academic years: " . $e->getMessage());
+}
+
 if ($outputFullHtml):
     // Detect base path for localhost vs Railway
     $basePath = strpos($_SERVER['REQUEST_URI'], '/ECADYB/') !== false ? '/ECADYB' : '';
@@ -223,8 +249,12 @@ if ($outputFullHtml):
                     <div class="section">
                         <div class="section-header">Academic Information</div>
                         <label for="academic-year">Academic Year:</label>
-                        <input type="text" id="academic-year" name="academic_year" placeholder="0000-0000" maxlength="9"
-                            oninput="formatAcademicYear(this)">
+                        <select id="academic-year" name="academic_year">
+                            <option value="" disabled selected>Select Academic Year</option>
+                            <?php foreach ($academicYears as $year) : ?>
+                                <option value="<?= htmlspecialchars($year) ?>"><?= htmlspecialchars($year) ?></option>
+                            <?php endforeach; ?>
+                        </select>
 
                         <label for="program">Program:</label>
                         <select id="program" name="program">
