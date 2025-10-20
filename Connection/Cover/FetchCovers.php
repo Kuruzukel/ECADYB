@@ -59,6 +59,8 @@ try {
                 'front_url' => 1,
                 'back_url' => 1,
                 'background_url' => 1,
+                'batch_year' => 1,
+                'completion_date' => 1,
                 'upload_time' => 1
             ],
             'limit' => 8
@@ -81,13 +83,25 @@ try {
             }
         }
 
+        $batchYear = isset($doc['batch_year']) ? (string)$doc['batch_year'] : '';
+        $completionDate = null;
+        if (isset($doc['completion_date'])) {
+            try {
+                $completionDate = $doc['completion_date']->toDateTime()->format('Y-m-d H:i:s');
+            } catch (Exception $e) {
+                $completionDate = null;
+            }
+        }
+        
         if ($slot >= 1 && $slot <= 7) {
             $front = isset($doc['front_url']) ? (string)$doc['front_url'] : '';
             $back  = isset($doc['back_url']) ? (string)$doc['back_url'] : '';
             $items[] = [
                 'slot' => $slot,
                 'front_url' => $front ? ($front . $version) : '',
-                'back_url' => $back ? ($back . $version) : ''
+                'back_url' => $back ? ($back . $version) : '',
+                'batch_year' => $batchYear,
+                'completion_date' => $completionDate
             ];
         } elseif ($slot === 8) {
             $backgroundUrl = isset($doc['background_url']) ? (string)$doc['background_url'] : '';
@@ -95,7 +109,9 @@ try {
             $items[] = [
                 'slot' => 8,
                 'front_url' => $backgroundWithV,
-                'background_url' => $backgroundWithV
+                'background_url' => $backgroundWithV,
+                'batch_year' => $batchYear,
+                'completion_date' => $completionDate
             ];
         }
     }

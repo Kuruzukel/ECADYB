@@ -421,7 +421,7 @@ function generateNewBatchSection() {
 
   // Create new section HTML - identical structure to hard-coded sections
   const newSectionHTML = `
-    <div class="section available">
+    <div class="section">
       <div class="section-header">Batch Year ${nextYear}</div>
       <div class="section-content">
         <div class="upload-grid">
@@ -558,6 +558,11 @@ function generateNewBatchSection() {
   if (window.refreshSections) {
     window.refreshSections();
   }
+  
+  // Update available sections to include the new section if it's within the 3-year window
+  if (window.setAvailableSections) {
+    window.setAvailableSections();
+  }
 
   showNotification(`Batch Year ${nextYear} created successfully!`, "success");
   
@@ -612,7 +617,7 @@ function restoreSingleSection(sectionHeader) {
 
   // Create new section HTML
   const newSectionHTML = `
-    <div class="section available">
+    <div class="section">
       <div class="section-header">${sectionHeader}</div>
       <div class="section-content">
         <div class="upload-grid">
@@ -881,7 +886,11 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
           event.target.value = "";
           return;
         }
-        await uploadToBunny(files[0], slot, "front", true, false);
+        const result = await uploadToBunny(files[0], slot, "front", true, false);
+        // Update available sections after upload
+        if (result && result.success && window.setAvailableSections) {
+          await window.setAvailableSections();
+        }
       } else {
         if (files.length > 2) {
           showNotification("You can only upload 2 images at the same time. Please select only 2 images.", "error");
@@ -909,9 +918,17 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
           
           if (!uploadCancelled && !isUploadCancelled) {
             showNotification(`Uploaded successfully to Slot ${slot} front and back cover`, "success");
+            // Update available sections after upload
+            if (window.setAvailableSections) {
+              await window.setAvailableSections();
+            }
           }
         } else if (files.length === 1) {
           const result = await uploadToBunny(files[0], slot, "front", !suppressNotifications, false);
+          // Update available sections after upload
+          if (result && result.success && window.setAvailableSections) {
+            await window.setAvailableSections();
+          }
           uploadCancelled = (result && result.cancelled) || isUploadCancelled;
         }
         
@@ -949,6 +966,84 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
       openDeleteModal();
     });
 
+    async function uploadToBunny(file, slot, side, showNotif, isBatch) {
+      try {
+        // Get the batch year from the section header
+        const sectionHeader = box.closest('.section').querySelector('.section-header');
+        const batchYear = sectionHeader ? sectionHeader.textContent.trim() : '';
+        
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("slot", String(slot));
+        formData.append("side", side);
+        formData.append("batch_year", batchYear);
+
+        const xhr = new XMLHttpRequest();
+        const uploadPromise = new Promise((resolve, reject) => {
+          xhr.upload.addEventListener("progress", (e) => {
+            if (e.lengthComputable) {
+              const percentComplete = (e.loaded / e.total) * 100;
+              console.log(`Upload progress for slot ${slot} ${side}: ${percentComplete.toFixed(2)}%`);
+            }
+          });
+
+          xhr.addEventListener("load", () => {
+            if (xhr.status === 200) {
+              try {
+                const data = JSON.parse(xhr.responseText);
+                if (data.success) {
+                  if (showNotif && !isBatch) {
+                    showNotification(`Uploaded successfully to Slot ${slot} ${side}`, "success");
+                  }
+                  resolve(data);
+                } else {
+                  if (showNotif) {
+                    showNotification(data.message || "Upload failed", "error");
+                  }
+                  reject(new Error(data.message || "Upload failed"));
+                }
+              } catch (e) {
+                if (showNotif) {
+                  showNotification("Failed to parse response", "error");
+                }
+                reject(e);
+              }
+            } else {
+              if (showNotif) {
+                showNotification(`Upload failed: HTTP ${xhr.status}`, "error");
+              }
+              reject(new Error(`HTTP ${xhr.status}`));
+            }
+          });
+
+          xhr.addEventListener("error", () => {
+            if (showNotif) {
+              showNotification("Upload failed", "error");
+            }
+            reject(new Error("Upload failed"));
+          });
+
+          xhr.addEventListener("abort", () => {
+            if (showNotif) {
+              showNotification("Upload cancelled", "error");
+            }
+            reject(new Error("Upload cancelled"));
+          });
+
+          xhr.open("POST", UPLOAD_ENDPOINT);
+          xhr.send(formData);
+        });
+
+        return await uploadPromise;
+      } catch (err) {
+        console.error("Upload error:", err);
+        if (showNotif) {
+          showNotification(err.message || "Upload failed", "error");
+        }
+        return { success: false, cancelled: true };
+      }
+    }
+
     async function deleteCover(slot, side) {
       try {
         const form = new FormData();
@@ -969,6 +1064,10 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
           showNotification(data?.message || "Delete failed", "error");
         } else {
           showNotification("Image deleted", "success");
+          // Update available sections after deletion
+          if (window.setAvailableSections) {
+            await window.setAvailableSections();
+          }
         }
       } catch (err) {
         console.error("Delete error:", err);
@@ -1332,6 +1431,84 @@ window.addEventListener("DOMContentLoaded", () => {
     
     window.deferSectionInitialization = false;
   }
+
+  // Function to set available status based on completion date
+  // Only batch years that are complete AND within 3 years of completion are available (green) to students
+  async function setAvailableSections() {
+    const allSections = document.querySelectorAll(".form-group .section");
+    const currentDate = new Date();
+    
+    // Fetch covers to get completion dates
+    try {
+      const BASE_PATH = getBasePath();
+      const CONNECTION_PATH = `${BASE_PATH}/Connection`;
+      const FETCH_ENDPOINT = `${CONNECTION_PATH}/Cover/FetchCovers.php`;
+      
+      const res = await fetch(FETCH_ENDPOINT, {
+        signal: AbortSignal.timeout(30000),
+      });
+
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+      }
+
+      const data = await res.json();
+      
+      if (data?.success && data?.items) {
+        // Group items by batch_year
+        const batchYearDataMap = {};
+        data.items.forEach((item) => {
+          if (item.batch_year && !batchYearDataMap[item.batch_year]) {
+            batchYearDataMap[item.batch_year] = {
+              completion_date: item.completion_date,
+              slots: []
+            };
+          }
+          if (item.batch_year) {
+            batchYearDataMap[item.batch_year].slots.push(item.slot);
+          }
+        });
+        
+        // Update sections based on completion date
+        allSections.forEach((section) => {
+          const header = section.querySelector(".section-header");
+          if (!header) return;
+          
+          const headerText = header.textContent.trim();
+          const sectionData = batchYearDataMap[headerText];
+          
+          if (sectionData && sectionData.completion_date) {
+            // Calculate years since completion
+            const completionDate = new Date(sectionData.completion_date);
+            const yearsSinceCompletion = (currentDate - completionDate) / (1000 * 60 * 60 * 24 * 365);
+            
+            if (yearsSinceCompletion <= 3) {
+              // Within 3 years of completion - mark as available (green)
+              section.classList.add("available");
+            } else {
+              // Older than 3 years - remove available class (will be blue/default)
+              section.classList.remove("available");
+            }
+          } else {
+            // No completion date or incomplete - not available
+            section.classList.remove("available");
+          }
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching completion dates:", error);
+      // On error, remove available class from all sections
+      allSections.forEach((section) => {
+        section.classList.remove("available");
+      });
+    }
+  }
+  
+  // Make setAvailableSections globally accessible
+  window.setAvailableSections = setAvailableSections;
+
+  // Set available sections on page load (after all sections are restored)
+  setAvailableSections();
 
   // Section header click event removed - now using Select Batch button
 

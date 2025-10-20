@@ -68,8 +68,9 @@ try {
 
     $slot     = isset($_POST['slot']) ? (int)$_POST['slot'] : null;
     $side     = isset($_POST['side']) ? strtolower(trim($_POST['side'])) : '';
+    $batchYear = isset($_POST['batch_year']) ? trim($_POST['batch_year']) : '';
 
-    error_log("UploadCover.php received parameters: slot=$slot, side=$side");
+    error_log("UploadCover.php received parameters: slot=$slot, side=$side, batch_year=$batchYear");
 
     if ($slot === null || ($slot !== 8 && ($side !== 'front' && $side !== 'back'))) {
         respond(false, 'Invalid parameters: slot and side (front|back) are required, unless slot=8 (BackgroundPage).');
@@ -155,9 +156,12 @@ try {
         ? 'BackgroundPage'
         : ($side === 'back' ? 'Back' : 'Front');
 
+    // Include batch year in filename if provided
+    $batchYearSuffix = $batchYear ? "-" . preg_replace('/[^A-Za-z0-9-]/', '', $batchYear) : '';
+    
     $filename = ($slot === 8)
-        ? sprintf('BackgroundPage-%s-%s.%s', $safeBase, $versionToken, $safeExt)
-        : sprintf('Slot-%d-%s-%s-%s.%s', $slot, $sideLabel, $safeBase, $versionToken, $safeExt);
+        ? sprintf('BackgroundPage-%s%s-%s.%s', $safeBase, $batchYearSuffix, $versionToken, $safeExt)
+        : sprintf('Slot-%d-%s-%s%s-%s.%s', $slot, $sideLabel, $safeBase, $batchYearSuffix, $versionToken, $safeExt);
 
     $path = $safeFolder . '/' . $filename;
 
@@ -317,8 +321,13 @@ try {
         'original_name' => $originalName,
         'slot' => $slot,
         'side' => $side,
+        'batch_year' => $batchYear,
         'upload_time' => new \MongoDB\BSON\UTCDateTime()
     ];
+    
+    // Check if this batch year is now complete (all 8 slots filled)
+    // This will be checked after the insert
+    $checkCompletion = true;
 
     if ($slot === 8) {
         $document['background_url'] = $publicUrl;
@@ -365,6 +374,47 @@ try {
 
         if ($result->getUpsertedCount() > 0) {
             $document['_id'] = (string) $result->getUpsertedId();
+        }
+        
+        // Check if the batch year is now complete
+        if ($checkCompletion) {
+            $batchYearDocs = $collection->find(['batch_year' => $batchYear])->toArray();
+            
+            // Check if all 8 slots have images
+            $slotsWithImages = [];
+            foreach ($batchYearDocs as $doc) {
+                $docSlot = (int)($doc['slot'] ?? 0);
+                $hasFront = isset($doc['front_url']) && !empty($doc['front_url']);
+                $hasBack = isset($doc['back_url']) && !empty($doc['back_url']);
+                $hasBackground = isset($doc['background_url']) && !empty($doc['background_url']);
+                
+                if ($docSlot === 8 && $hasBackground) {
+                    $slotsWithImages[] = 8;
+                } elseif ($docSlot >= 1 && $docSlot <= 7 && ($hasFront || $hasBack)) {
+                    $slotsWithImages[] = $docSlot;
+                }
+            }
+            
+            $slotsWithImages = array_unique($slotsWithImages);
+            $isComplete = count($slotsWithImages) === 8;
+            
+            if ($isComplete) {
+                // Mark batch year as complete with current timestamp
+                $collection->updateMany(
+                    ['batch_year' => $batchYear],
+                    ['$set' => ['completion_date' => new \MongoDB\BSON\UTCDateTime()]],
+                    ['upsert' => false]
+                );
+                error_log("UploadCover.php: Batch year $batchYear is now complete!");
+            } else {
+                // Remove completion_date if batch is incomplete
+                $collection->updateMany(
+                    ['batch_year' => $batchYear],
+                    ['$unset' => ['completion_date' => '']],
+                    ['upsert' => false]
+                );
+                error_log("UploadCover.php: Batch year $batchYear is incomplete. Slots filled: " . count($slotsWithImages) . "/8");
+            }
         }
     } catch (Exception $e) {
         error_log("UploadCover.php MongoDB upsert error: " . $e->getMessage());

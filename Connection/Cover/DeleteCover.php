@@ -159,6 +159,42 @@ try {
     );
 
     error_log("DeleteCover.php update result: matched=" . $result->getMatchedCount() . ", modified=" . $result->getModifiedCount());
+    
+    // Get the batch year from the document before deletion
+    $batchYear = isset($doc['batch_year']) ? (string)$doc['batch_year'] : '';
+    
+    // Check if the batch year is still complete after deletion
+    if ($batchYear) {
+        $batchYearDocs = $collection->find(['batch_year' => $batchYear])->toArray();
+        
+        // Check if all 8 slots still have images
+        $slotsWithImages = [];
+        foreach ($batchYearDocs as $doc) {
+            $docSlot = (int)($doc['slot'] ?? 0);
+            $hasFront = isset($doc['front_url']) && !empty($doc['front_url']);
+            $hasBack = isset($doc['back_url']) && !empty($doc['back_url']);
+            $hasBackground = isset($doc['background_url']) && !empty($doc['background_url']);
+            
+            if ($docSlot === 8 && $hasBackground) {
+                $slotsWithImages[] = 8;
+            } elseif ($docSlot >= 1 && $docSlot <= 7 && ($hasFront || $hasBack)) {
+                $slotsWithImages[] = $docSlot;
+            }
+        }
+        
+        $slotsWithImages = array_unique($slotsWithImages);
+        $isComplete = count($slotsWithImages) === 8;
+        
+        if (!$isComplete) {
+            // Remove completion_date if batch is now incomplete
+            $collection->updateMany(
+                ['batch_year' => $batchYear],
+                ['$unset' => ['completion_date' => '']],
+                ['upsert' => false]
+            );
+            error_log("DeleteCover.php: Batch year $batchYear is now incomplete after deletion. Slots filled: " . count($slotsWithImages) . "/8");
+        }
+    }
 
     respond(true, 'Cover deleted successfully');
 } catch (Exception $e) {
