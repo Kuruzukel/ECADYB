@@ -81,6 +81,8 @@ try {
     $mongoUrl        = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
     $bunnyStorageZone = getenv('BUNNY_STORAGE_ZONE') ?: (defined('BUNNY_STORAGE_ZONE') ? BUNNY_STORAGE_ZONE : ($GLOBALS['BUNNY_STORAGE_ZONE'] ?? 'ecadyb'));
     $bunnyAccessKey   = getenv('BUNNY_ACCESS_KEY') ?: (defined('BUNNY_ACCESS_KEY') ? BUNNY_ACCESS_KEY : ($GLOBALS['BUNNY_ACCESS_KEY'] ?? null));
+    
+    error_log("DeleteCover.php BunnyCDN credentials - Zone: $bunnyStorageZone, AccessKey: " . ($bunnyAccessKey ? 'SET' : 'NOT SET'));
 
     try {
         $client = new Client($mongoUrl, [
@@ -176,8 +178,9 @@ try {
         // Storage URL format: https://storage.bunnycdn.com/ecadyb/Yearbook%20Covers/...
         $relativePath = ltrim($parsed['path'], '/');
         
-        // Decode URL encoding to get the actual path
-        $relativePath = urldecode($relativePath);
+        // Keep the original encoded path - don't decode it
+        // The BunnyCDN Storage API expects the path to be URL-encoded
+        // $relativePath = urldecode($relativePath); // REMOVED - keep original encoding
         
         // Build the storage API URL
         $storageUrl = 'https://storage.bunnycdn.com/' . $zone . '/' . $relativePath;
@@ -188,13 +191,17 @@ try {
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['AccessKey: ' . $key]);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 15); // 15 seconds for delete operations (allows time for BunnyCDN delete + MongoDB delete)
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30); // Increased to 30 seconds for delete operations
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
 
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $curlError = curl_error($ch);
         curl_close($ch);
+
+        error_log("DeleteCover.php BunnyCDN delete response: HTTP $httpCode, Response: " . ($response ?: 'empty'));
 
         if ($httpCode === 200 || $httpCode === 404) {
             error_log("DeleteCover.php successfully deleted from BunnyCDN. HTTP $httpCode");
