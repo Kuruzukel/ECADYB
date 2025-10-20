@@ -101,7 +101,7 @@ h1 .chevron i {
   background-color: var(--section-bg);
   padding: 20px;
   border-radius: 8px;
- 0 2px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   box-sizing: border-box;
   min-height: 600px;
   display: flex;
@@ -235,6 +235,7 @@ h1 .chevron i {
   color: #202124;
   display: flex;
   flex-direction: column;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .calendar-day .day-header-container {
