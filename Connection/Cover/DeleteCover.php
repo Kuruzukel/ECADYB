@@ -56,9 +56,9 @@ try {
     $bunnyAccessKey   = getenv('BUNNY_ACCESS_KEY') ?: (defined('BUNNY_ACCESS_KEY') ? BUNNY_ACCESS_KEY : ($GLOBALS['BUNNY_ACCESS_KEY'] ?? null));
 
     $client     = new Client($mongoUrl, [
-        'serverSelectionTimeoutMS' => 5000,
-        'connectTimeoutMS'         => 5000,
-        'socketTimeoutMS'          => 5000
+        'serverSelectionTimeoutMS' => 10000,
+        'connectTimeoutMS'         => 10000,
+        'socketTimeoutMS'          => 20000
     ]);
 
     $dbName = "ECADYB";

@@ -785,7 +785,7 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
         await new Promise((resolve) => setTimeout(resolve, 50));
 
         const res = await fetch(FETCH_ENDPOINT, {
-          signal: AbortSignal.timeout(10000),
+          signal: AbortSignal.timeout(30000),
         });
 
         if (!res.ok) {

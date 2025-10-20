@@ -283,9 +283,9 @@ try {
 
     try {
         $mongoClient = new Client($mongoUrl, [
-            'serverSelectionTimeoutMS' => 5000,
-            'connectTimeoutMS' => 5000,
-            'socketTimeoutMS' => 10000,
+            'serverSelectionTimeoutMS' => 10000,
+            'connectTimeoutMS' => 10000,
+            'socketTimeoutMS' => 20000,
             'retryReads' => true
         ]);
         $collection = $mongoClient->$mongoDbName->Yearbook_Covers;
