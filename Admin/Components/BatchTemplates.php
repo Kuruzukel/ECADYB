@@ -297,6 +297,46 @@
             </div>
         </div>
 
+        <div class="modal-overlay" id="download-pdf-modal-overlay">
+            <div class="modal" style="background: #34495e;">
+                <div class="modal-header">
+                    <i class="fas fa-file-pdf modal-icon"></i>
+                    <h3>Download PDF</h3>
+                </div>
+                <div class="modal-content">
+                    <p id="download-pdf-message">Are you sure you want to download the PDF for this batch?</p>
+                </div>
+                <div class="modal-buttons">
+                    <button class="modal-btn confirm" id="confirm-download-pdf-btn">
+                        <i class="fas fa-download"></i> Yes, Download
+                    </button>
+                    <button class="modal-btn cancel" id="cancel-download-pdf-btn">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-overlay" id="delete-batch-modal-overlay">
+            <div class="modal" style="background: #34495e;">
+                <div class="modal-header">
+                    <i class="fas fa-trash-alt modal-icon"></i>
+                    <h3>Delete Batch Template</h3>
+                </div>
+                <div class="modal-content">
+                    <p id="delete-batch-message">Are you sure you want to delete this batch template? This action cannot be undone.</p>
+                </div>
+                <div class="modal-buttons">
+                    <button class="modal-btn confirm" id="confirm-delete-batch-btn">
+                        <i class="fas fa-trash"></i> Yes, Delete
+                    </button>
+                    <button class="modal-btn cancel" id="cancel-delete-batch-btn">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <div id="notification-container"></div>
 
         <div class="upload-overlay" id="upload-overlay">
