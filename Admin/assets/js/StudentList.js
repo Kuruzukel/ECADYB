@@ -1031,15 +1031,13 @@ function loadStudentList(pageNum, template, department, tab) {
 
       updatePaginationButtons(pageNum, template, department, tab, totalPages);
 
+      // Re-initialize without setTimeout to prevent glitching
+      isInitializing = true;
+      initializeSelectAll();
+      initializeStatusUpdates();
       setTimeout(() => {
-        isInitializing = true;
-        initializeSelectAll();
-        initializeFilters();
-        initializeStatusUpdates();
-        setTimeout(() => {
-          isInitializing = false;
-        }, 500);
-      }, 100);
+        isInitializing = false;
+      }, 300);
     })
     .catch((error) => {
       console.error("Error loading page:", error);
