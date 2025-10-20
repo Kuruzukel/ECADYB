@@ -67,7 +67,7 @@ h1 .chevron i {
 }
 
 .form-content {
-  padding: 25px;
+  padding: 23px;
   box-sizing: border-box;
   max-height: calc(100vh - 100px);
   overflow-y: auto;

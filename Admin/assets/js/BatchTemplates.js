@@ -551,10 +551,189 @@ function generateNewBatchSection() {
   // Initialize upload boxes for the new section
   initializeSectionUploadBoxes(newSection, currentXhrs, isUploadCancelled);
 
+  // Save generated sections to localStorage
+  saveGeneratedSectionsToLocalStorage();
+
   showNotification(`Batch Year ${nextYear} created successfully!`, "success");
   
   // Scroll to the new section
   newSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// Save all dynamically generated sections to localStorage
+function saveGeneratedSectionsToLocalStorage() {
+  const allSections = document.querySelectorAll(".form-group .section");
+  const generatedSections = [];
+  
+  // We know the first 3 sections are hardcoded (2024-2025, 2025-2026, 2026-2027)
+  // So we only save sections after the first 3
+  allSections.forEach((section, index) => {
+    if (index >= 3) { // Skip the first 3 hardcoded sections
+      const sectionHeader = section.querySelector(".section-header").textContent.trim();
+      generatedSections.push(sectionHeader);
+    }
+  });
+  
+  localStorage.setItem('generatedBatchSections', JSON.stringify(generatedSections));
+  console.log('Saved generated sections to localStorage:', generatedSections);
+}
+
+// Restore generated sections from localStorage on page load
+function restoreGeneratedSectionsFromLocalStorage() {
+  const savedSections = localStorage.getItem('generatedBatchSections');
+  
+  if (!savedSections) {
+    console.log('No saved sections found in localStorage');
+    return;
+  }
+  
+  try {
+    const sectionsArray = JSON.parse(savedSections);
+    console.log('Restoring sections from localStorage:', sectionsArray);
+    
+    // Restore each section
+    sectionsArray.forEach((sectionHeader) => {
+      restoreSingleSection(sectionHeader);
+    });
+  } catch (e) {
+    console.error('Error parsing saved sections:', e);
+  }
+}
+
+// Restore a single section based on its header text
+function restoreSingleSection(sectionHeader) {
+  const formContent = document.querySelector(".form-content");
+  if (!formContent) return;
+
+  // Create new section HTML
+  const newSectionHTML = `
+    <div class="section">
+      <div class="section-header">${sectionHeader}</div>
+      <div class="section-content">
+        <div class="upload-grid">
+          <div class="upload-box">
+            <span class="plus-icon">+</span>
+            <input type="file" class="frontInput" accept="image/*" multiple hidden>
+            <input type="file" class="backInput" accept="image/*" hidden>
+            <button class="delete-btn">&times;</button>
+          </div>
+          <div class="upload-box">
+            <span class="plus-icon">+</span>
+            <input type="file" class="frontInput" accept="image/*" multiple hidden>
+            <input type="file" class="backInput" accept="image/*" hidden>
+            <button class="delete-btn">&times;</button>
+          </div>
+          <div class="upload-box">
+            <span class="plus-icon">+</span>
+            <input type="file" class="frontInput" accept="image/*" multiple hidden>
+            <input type="file" class="backInput" accept="image/*" hidden>
+            <button class="delete-btn">&times;</button>
+          </div>
+          <div class="upload-box">
+            <span class="plus-icon">+</span>
+            <input type="file" class="frontInput" accept="image/*" multiple hidden>
+            <input type="file" class="backInput" accept="image/*" hidden>
+            <button class="delete-btn">&times;</button>
+          </div>
+          <div class="upload-box">
+            <span class="plus-icon">+</span>
+            <input type="file" class="frontInput" accept="image/*" multiple hidden>
+            <input type="file" class="backInput" accept="image/*" hidden>
+            <button class="delete-btn">&times;</button>
+          </div>
+          <div class="upload-box">
+            <span class="plus-icon">+</span>
+            <input type="file" class="frontInput" accept="image/*" multiple hidden>
+            <input type="file" class="backInput" accept="image/*" hidden>
+            <button class="delete-btn">&times;</button>
+          </div>
+          <div class="upload-box">
+            <span class="plus-icon">+</span>
+            <input type="file" class="frontInput" accept="image/*" multiple hidden>
+            <input type="file" class="backInput" accept="image/*" hidden>
+            <button class="delete-btn">&times;</button>
+          </div>
+          <div class="upload-box">
+            <span class="plus-icon">+</span>
+            <input type="file" class="frontInput" accept="image/*" hidden>
+            <input type="file" class="backInput" accept="image/*" hidden>
+            <button class="delete-btn">&times;</button>
+          </div>
+          <div class="upload-box action-box">
+            <div class="action-buttons">
+              <button class="action-btn select-batch-btn" title="Select Batch">
+                <i class="fas fa-check-circle"></i>
+                <span>Select Batch</span>
+              </button>
+              <button class="action-btn download-pdf-btn" title="Download PDF">
+                <i class="fas fa-file-pdf"></i>
+                <span>Download PDF</span>
+              </button>
+              <button class="action-btn delete-batch-btn" title="Delete Batch Template">
+                <i class="fas fa-trash-alt"></i>
+                <span>Delete Batch</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Create a temporary container and parse the HTML
+  const tempDiv = document.createElement('div');
+  tempDiv.innerHTML = newSectionHTML;
+  const newSection = tempDiv.firstElementChild;
+
+  // Check if there's an existing form-group with less than 3 sections
+  const existingFormGroups = document.querySelectorAll(".form-group");
+  let targetFormGroup = null;
+  let insertPosition = 0;
+  
+  // Find the last form-group that has less than 3 sections
+  for (let i = existingFormGroups.length - 1; i >= 0; i--) {
+    const sectionsInGroup = existingFormGroups[i].querySelectorAll(".section");
+    if (sectionsInGroup.length < 3) {
+      targetFormGroup = existingFormGroups[i];
+      insertPosition = sectionsInGroup.length;
+      break;
+    }
+  }
+
+  if (targetFormGroup) {
+    // Add to existing form-group at the correct position
+    const sectionsInGroup = targetFormGroup.querySelectorAll(".section");
+    if (insertPosition === 0) {
+      targetFormGroup.insertBefore(newSection, sectionsInGroup[0] || null);
+    } else {
+      targetFormGroup.appendChild(newSection);
+    }
+  } else {
+    // Create a new form-group for the new section
+    const newFormGroup = document.createElement('div');
+    newFormGroup.className = 'form-group';
+    newFormGroup.appendChild(newSection);
+
+    // Find the generate button container and insert the new form-group before it
+    const generateButtonContainer = document.querySelector(".generate-button-container");
+    if (generateButtonContainer && generateButtonContainer.parentNode) {
+      generateButtonContainer.parentNode.insertBefore(newFormGroup, generateButtonContainer);
+    } else {
+      formContent.appendChild(newFormGroup);
+    }
+  }
+
+  // Initialize the new section
+  initializeSection(newSection);
+  
+  // Get the currentXhrs and isUploadCancelled from the parent scope
+  const currentXhrs = window.currentXhrs || [];
+  const isUploadCancelled = window.isUploadCancelled || false;
+  
+  // Initialize upload boxes for the new section
+  initializeSectionUploadBoxes(newSection, currentXhrs, isUploadCancelled);
+  
+  console.log(`Restored section: ${sectionHeader}`);
 }
 
 function initializeSection(section) {
@@ -856,11 +1035,14 @@ function deleteBatchTemplate(section, batchName) {
 
 function confirmDeleteBatch() {
   if (window.pendingDeleteSection) {
-    const formGroup = window.pendingDeleteSection.closest(".form-group");
-    if (formGroup) {
-      formGroup.remove();
-      showNotification(`${window.pendingDeleteBatchName} deleted successfully!`, "success");
-    }
+    // Remove only the specific section, not the entire form-group
+    window.pendingDeleteSection.remove();
+    
+    // Update localStorage after deletion
+    saveGeneratedSectionsToLocalStorage();
+    
+    showNotification(`${window.pendingDeleteBatchName} deleted successfully!`, "success");
+    
     window.pendingDeleteSection = null;
     window.pendingDeleteBatchName = null;
   }
@@ -951,6 +1133,9 @@ window.addEventListener("DOMContentLoaded", () => {
   // Make these variables globally accessible for dynamic section generation
   window.currentXhrs = [];
   window.isUploadCancelled = false;
+
+  // Restore any previously generated sections from localStorage
+  restoreGeneratedSectionsFromLocalStorage();
 
   const sections = document.querySelectorAll(".form-group .section");
   const sectionHeaders = document.querySelectorAll(
