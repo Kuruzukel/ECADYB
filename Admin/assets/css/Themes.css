@@ -86,7 +86,7 @@ h1 .chevron i {
   background-color: var(--section-bg);
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+ 0 2px 5px rgba(0, 0, 0, 0.2);
   box-sizing: border-box;
   min-height: 555px;
   display: flex;
@@ -123,7 +123,7 @@ h1 .chevron i {
   height: 250px;
   object-fit: cover;
   border-radius: 50%;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+ 0 4px 8px rgba(0, 0, 0, 0.3);
   transition: transform 0.2s ease;
   position: relative;
   display: block;
@@ -168,7 +168,7 @@ h1 .chevron i {
   padding: 24px 28px;
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+ 0 20px 40px rgba(0, 0, 0, 0.45);
   text-align: center;
   width: 380px;
   max-width: 90vw;
@@ -327,13 +327,13 @@ h1 .chevron i {
   cursor: pointer;
   transition: all 0.3s ease;
   z-index: 3;
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+ 0 6px 14px rgba(0, 0, 0, 0.25);
 }
 
 .upload-box.circle .delete-btn:hover {
   background: #dc2626;
   transform: scale(1.15) translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+ 0 8px 20px rgba(0, 0, 0, 0.35);
 }
 
 .upload-box.circle.has-image .delete-btn {
@@ -348,7 +348,7 @@ h1 .chevron i {
   border-color: #e2e8f0;
   background: rgba(255, 255, 255, 0.05);
   transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+ 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
 .upload-box.circle:hover .plus-icon {
@@ -362,7 +362,7 @@ h1 .chevron i {
 
 .upload-box.circle.has-image:hover {
   transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+ 0 8px 25px rgba(0, 0, 0, 0.2);
 }
 
 .section-header {
@@ -397,7 +397,7 @@ h1 .chevron i {
   transition: transform 0.2s ease;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+ 0 0 4px rgba(0, 0, 0, 0.3);
   display: flex;
 }
 
@@ -412,7 +412,7 @@ h1 .chevron i {
 
 .color-box.selected {
   border: 3px solid #fcda15;
-  box-shadow: 0 0 5px rgba(255, 255, 255, 0.6);
+ 0 0 5px rgba(255, 255, 255, 0.6);
 }
 
 .color-box::after {
@@ -608,7 +608,7 @@ h1 .chevron i {
   padding: 2rem;
   width: 90%;
   max-width: 450px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+ 0 20px 25px -5px rgba(0, 0, 0, 0.1),
     0 10px 10px -5px rgba(0, 0, 0, 0.04);
   border: 1px solid #475569;
 }
@@ -744,7 +744,7 @@ h1 .chevron i {
   display: flex;
   align-items: center;
   gap: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+ 0 4px 12px rgba(0, 0, 0, 0.15);
   transform: translateY(-100px);
   transition: all 0.3s ease-in-out;
   max-width: 350px;
