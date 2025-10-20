@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $studentId  = trim($input['student_id'] ?? '');
     $collection = trim($input['collection'] ?? '');
     $status     = trim($input['status'] ?? '');
-    $template   = trim($input['template'] ?? '1');
+    $academicYear = trim($input['academic_year'] ?? '');
 
     if (!$studentId || !$collection || !$status) {
         http_response_code(400);
@@ -58,7 +58,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    $dbName = "BatchTemplate" . $template;
+    // Use ECADYB database instead of BatchTemplate databases
+    $dbName = "ECADYB";
     $db = $client->$dbName;
 
     try {
@@ -70,6 +71,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ['student id' => $studentId]
             ]
         ];
+
+        // Add academic year filter if provided
+        if (!empty($academicYear)) {
+            $filter['academic year'] = $academicYear;
+        }
 
         $update = ['$set' => ['status' => $status]];
 
