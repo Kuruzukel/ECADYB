@@ -781,6 +781,15 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
     const slot = index + 1;
     const isBackgroundSlot = slot === 8;
     const isActionBox = slot === 9;
+    
+    // Check if this upload box has already been initialized
+    if (box.dataset.initialized === "true") {
+      console.log(`Upload box ${slot} for ${sectionHeader} already initialized, skipping`);
+      return;
+    }
+    
+    // Mark as initialized
+    box.dataset.initialized = "true";
 
     // Handle action box separately
     if (isActionBox) {
@@ -1640,9 +1649,8 @@ window.addEventListener("DOMContentLoaded", () => {
   // Then, set available sections (green headers)
   setAvailableSections();
 
-  sections.forEach((section) => {
-    initializeSectionUploadBoxes(section, window.currentXhrs, window.isUploadCancelled);
-  });
+  // Note: sections are already initialized in the restoration block above (lines 1539-1542)
+  // No need to initialize them again here to avoid duplicate event listeners
 
   initializeDeleteModal();
 

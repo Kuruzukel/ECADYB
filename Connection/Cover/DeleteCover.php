@@ -91,52 +91,81 @@ try {
         error_log("DeleteCover.php error checking databases: " . $e->getMessage());
     }
 
-    // Build query filter with batch_year if provided
+    // Build query filter - only use slot (same as upload)
+    // Note: Each slot can only have ONE document, regardless of batch_year
     $filter = ['slot' => $slot];
-    if (!empty($batchYear)) {
-        $filter['batch_year'] = $batchYear;
-    }
+    
+    error_log("DeleteCover.php query filter: " . json_encode($filter));
     
     $doc = $collection->findOne($filter);
     if (!$doc) {
+        error_log("DeleteCover.php: No document found for slot $slot");
         respond(false, 'Cover not found');
     }
+    
+    error_log("DeleteCover.php found document: " . json_encode($doc->toArray()));
 
     function deleteFromBunny($cdnUrl, $zone, $key)
     {
-        if (!$cdnUrl || !$zone || !$key) return;
+        if (!$cdnUrl || !$zone || !$key) {
+            error_log("DeleteCover.php: Missing required parameters for BunnyCDN deletion. URL: " . ($cdnUrl ?: 'empty') . ", Zone: " . ($zone ?: 'empty'));
+            return false;
+        }
+        
+        error_log("DeleteCover.php original CDN URL: $cdnUrl");
+        
         $parsed = parse_url($cdnUrl);
-        if (!empty($parsed['path'])) {
-            $relativePath = ltrim($parsed['path'], '/');
-            $storageUrl   = 'https://storage.bunnycdn.com/' . $zone . '/' . $relativePath;
+        if (empty($parsed['path'])) {
+            error_log("DeleteCover.php: Invalid URL path for BunnyCDN deletion. URL: $cdnUrl");
+            return false;
+        }
+        
+        // Extract the path from the CDN URL
+        // CDN URL format: https://ECADYB.b-cdn.net/Yearbook%20Covers/...
+        // Storage URL format: https://storage.bunnycdn.com/ecadyb/Yearbook%20Covers/...
+        $relativePath = ltrim($parsed['path'], '/');
+        
+        // Decode URL encoding to get the actual path
+        $relativePath = urldecode($relativePath);
+        
+        // Build the storage API URL
+        $storageUrl = 'https://storage.bunnycdn.com/' . $zone . '/' . $relativePath;
 
-            error_log("DeleteCover.php attempting to delete from BunnyCDN: $storageUrl");
+        error_log("DeleteCover.php attempting to delete from BunnyCDN storage: $storageUrl");
 
-            $ch = curl_init($storageUrl);
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
-            curl_setopt($ch, CURLOPT_HTTPHEADER, ['AccessKey: ' . $key]);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        $ch = curl_init($storageUrl);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['AccessKey: ' . $key]);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
 
-            $response = curl_exec($ch);
-            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curlError = curl_error($ch);
+        curl_close($ch);
 
-            if ($httpCode !== 200 && $httpCode !== 404) {
-                error_log("Warning: Failed to delete $cdnUrl from BunnyCDN. HTTP $httpCode");
-            } else {
-                error_log("DeleteCover.php successfully deleted from BunnyCDN. HTTP $httpCode");
-            }
+        if ($httpCode === 200 || $httpCode === 404) {
+            error_log("DeleteCover.php successfully deleted from BunnyCDN. HTTP $httpCode");
+            return true;
+        } else {
+            error_log("DeleteCover.php FAILED to delete from BunnyCDN. HTTP $httpCode, Error: $curlError, Response: $response");
+            return false;
         }
     }
 
     $unsetFields = [];
+    $bunnyDeleteSuccess = false;
 
     if ($slot === 8) {
         $existingUrl = isset($doc['background_url']) ? (string)$doc['background_url'] : '';
 
-        deleteFromBunny($existingUrl, $bunnyStorageZone, $bunnyAccessKey);
+        if (!empty($existingUrl)) {
+            $bunnyDeleteSuccess = deleteFromBunny($existingUrl, $bunnyStorageZone, $bunnyAccessKey);
+        } else {
+            error_log("DeleteCover.php: No background_url found in document");
+            $bunnyDeleteSuccess = true; // No URL to delete, consider it successful
+        }
 
         $unsetFields = [
             'background_url' => ""
@@ -148,20 +177,25 @@ try {
 
         error_log("DeleteCover.php deleting URL - main: $existingUrl");
 
-        deleteFromBunny($existingUrl, $bunnyStorageZone, $bunnyAccessKey);
+        if (!empty($existingUrl)) {
+            $bunnyDeleteSuccess = deleteFromBunny($existingUrl, $bunnyStorageZone, $bunnyAccessKey);
+        } else {
+            error_log("DeleteCover.php: No $urlField found in document");
+            $bunnyDeleteSuccess = true; // No URL to delete, consider it successful
+        }
 
         $unsetFields = [
             $urlField => ""
         ];
     }
 
+    error_log("DeleteCover.php BunnyCDN deletion result: " . ($bunnyDeleteSuccess ? "SUCCESS" : "FAILED"));
     error_log("DeleteCover.php unsetting fields: " . json_encode($unsetFields));
 
-    // Build update filter with batch_year if provided
+    // Build update filter - only use slot (same as upload)
     $updateFilter = ['slot' => $slot];
-    if (!empty($batchYear)) {
-        $updateFilter['batch_year'] = $batchYear;
-    }
+    
+    error_log("DeleteCover.php update filter: " . json_encode($updateFilter));
 
     $result = $collection->updateOne(
         $updateFilter,
@@ -173,8 +207,27 @@ try {
 
     error_log("DeleteCover.php update result: matched=" . $result->getMatchedCount() . ", modified=" . $result->getModifiedCount());
     
+    if ($result->getMatchedCount() === 0) {
+        respond(false, 'Cover not found in database');
+    }
+    
+    if ($result->getModifiedCount() === 0) {
+        error_log("DeleteCover.php WARNING: MongoDB update matched document but did not modify it");
+    }
+    
+    // Verify the field was actually removed
+    $verifyDoc = $collection->findOne($updateFilter);
+    if ($verifyDoc) {
+        $fieldToCheck = ($slot === 8) ? 'background_url' : ($side . '_url');
+        if (isset($verifyDoc[$fieldToCheck]) && !empty($verifyDoc[$fieldToCheck])) {
+            error_log("DeleteCover.php ERROR: Field $fieldToCheck still exists after unset operation!");
+            respond(false, 'Failed to remove cover from database');
+        }
+    }
+    
     // Check if the batch year is still complete after deletion
     if (!empty($batchYear)) {
+        // Get all documents for this batch year
         $batchYearDocs = $collection->find(['batch_year' => $batchYear])->toArray();
         
         // Check if all 8 slots still have images
@@ -187,7 +240,8 @@ try {
             
             if ($docSlot === 8 && $hasBackground) {
                 $slotsWithImages[] = 8;
-            } elseif ($docSlot >= 1 && $docSlot <= 7 && ($hasFront || $hasBack)) {
+            } elseif ($docSlot >= 1 && $docSlot <= 7 && ($hasFront && $hasBack)) {
+                // Both front and back must be present for slots 1-7
                 $slotsWithImages[] = $docSlot;
             }
         }
@@ -195,14 +249,16 @@ try {
         $slotsWithImages = array_unique($slotsWithImages);
         $isComplete = count($slotsWithImages) === 8;
         
+        error_log("DeleteCover.php: After deletion, slots with images: " . count($slotsWithImages) . "/8, isComplete: " . ($isComplete ? "true" : "false"));
+        
         if (!$isComplete) {
             // Remove completion_date if batch is now incomplete
-            $collection->updateMany(
+            $updateResult = $collection->updateMany(
                 ['batch_year' => $batchYear],
                 ['$unset' => ['completion_date' => '']],
                 ['upsert' => false]
             );
-            error_log("DeleteCover.php: Batch year $batchYear is now incomplete after deletion. Slots filled: " . count($slotsWithImages) . "/8");
+            error_log("DeleteCover.php: Batch year $batchYear is now incomplete after deletion. Slots filled: " . count($slotsWithImages) . "/8. Updated " . $updateResult->getModifiedCount() . " documents.");
         }
     }
 
