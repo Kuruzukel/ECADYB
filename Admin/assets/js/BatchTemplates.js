@@ -565,11 +565,10 @@ function initializeSection(section) {
     const alreadySelected = section.classList.contains("selected");
     if (alreadySelected) return;
     const label = sectionHeader.textContent?.trim() || "Batch Template";
-    openSelectTemplateModal(section, label);
+    if (window.openSelectTemplateModal) {
+      window.openSelectTemplateModal(section, label);
+    }
   });
-
-  // Update upload box states
-  updateUploadBoxStates();
 }
 
 function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
@@ -1047,6 +1046,9 @@ window.addEventListener("DOMContentLoaded", () => {
 
     openDeleteModal();
   }
+
+  // Make openSelectTemplateModal globally accessible for initializeSection
+  window.openSelectTemplateModal = openSelectTemplateModal;
 
   // Section header click event removed - now using Select Batch button
 
