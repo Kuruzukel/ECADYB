@@ -33,7 +33,6 @@ body {
   height: 100%;
   background-color: var(--content-bg);
   border-radius: 10px 10px 0 0;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .header-container {
@@ -84,7 +83,7 @@ h1 .chevron i {
   background-color: var(--section-bg);
   margin: 25px;
   border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+ 0 2px 5px rgba(0, 0, 0, 0.2);
   min-height: 520px;
 }
 
@@ -126,21 +125,21 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 input:focus,
 textarea:focus {
   border-color: var(--input-focus);
-  box-shadow: 0 0 0 3px rgba(12, 39, 190, 0.1);
+ 0 0 0 3px rgba(12, 39, 190, 0.1);
   background: var(--input-bg);
 }
 
 #title:focus,
 #message:focus {
   border-color: var(--input-focus);
-  box-shadow: 0 0 0 3px rgba(12, 39, 190, 0.1);
+ 0 0 0 3px rgba(12, 39, 190, 0.1);
   background: var(--input-bg);
 }
 
 input:invalid,
 textarea:invalid {
   border-color: var(--input-error);
-  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+ 0 0 0 3px rgba(220, 38, 38, 0.1);
 }
 
 input::placeholder,
@@ -187,14 +186,14 @@ textarea {
 .btn-primary {
   background: #4caf50;
   color: white;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+ 0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .btn-primary:hover {
   background: #45a049;
   transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+ 0 10px 15px -3px rgba(0, 0, 0, 0.1),
     0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
@@ -238,7 +237,7 @@ textarea {
   padding: 2rem;
   width: 90%;
   max-width: 450px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+ 0 20px 25px -5px rgba(0, 0, 0, 0.1),
     0 10px 10px -5px rgba(0, 0, 0, 0.04);
   border: 1px solid #475569;
 }
@@ -340,7 +339,7 @@ textarea {
   right: 20px;
   padding: 1rem 1.5rem;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+ 0 4px 12px rgba(0, 0, 0, 0.15);
   z-index: 1001;
   display: flex;
   align-items: center;
@@ -425,7 +424,7 @@ textarea {
   display: flex;
   align-items: center;
   gap: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+ 0 4px 12px rgba(0, 0, 0, 0.15);
   transform: translateY(-100px);
   transition: all 0.3s ease-in-out;
   max-width: 350px;
