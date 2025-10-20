@@ -46,11 +46,6 @@ date_default_timezone_set('Asia/Manila');
 
 $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 
-$selectedTemplate = isset($_GET['template']) ? (int)$_GET['template'] : 1;
-if ($selectedTemplate < 1 || $selectedTemplate > 3) {
-    $selectedTemplate = 1;
-}
-
 // Use ECADYB database instead of BatchTemplate databases
 $dbName = "ECADYB";
 
@@ -76,6 +71,31 @@ $collections = [
     "bse"    => "BS Entrepreneurship"
 ];
 
+// Fetch all unique academic years from all collections
+$academicYears = [];
+try {
+    foreach ($collections as $collectionKey => $collectionName) {
+        $collection = $db->$collectionKey;
+        $distinctYears = $collection->distinct('academic year');
+        foreach ($distinctYears as $year) {
+            if (!empty($year) && !in_array($year, $academicYears)) {
+                $academicYears[] = $year;
+            }
+        }
+    }
+    // Sort academic years in descending order (newest first)
+    rsort($academicYears);
+} catch (Exception $e) {
+    error_log("Error fetching academic years: " . $e->getMessage());
+    $academicYears = [];
+}
+
+// Get selected academic year from URL or use the first available
+$selectedAcademicYear = $_GET['academic_year'] ?? ($academicYears[0] ?? '');
+if (!in_array($selectedAcademicYear, $academicYears)) {
+    $selectedAcademicYear = $academicYears[0] ?? '';
+}
+
 $selectedDepartment = $_GET['department'] ?? "bsme";
 if (!array_key_exists($selectedDepartment, $collections)) {
     $selectedDepartment = "bsme";
@@ -95,9 +115,15 @@ $outputFullHtml = !$isIncludedInDashboard && !$isAjax;
 try {
     $collection = $db->$selectedDepartment;
 
+    // Build filter query for academic year
+    $filterQuery = [];
+    if (!empty($selectedAcademicYear)) {
+        $filterQuery['academic year'] = $selectedAcademicYear;
+    }
+
     // Fetch all students first to deduplicate
     $allCursor = $collection->find(
-        [],
+        $filterQuery,
         [
             'projection' => [
                 '_id' => 1,
@@ -245,23 +271,15 @@ if ($isIncludedInDashboard && (strpos($_SERVER['HTTP_HOST'], 'localhost') !== fa
             <div class="card">
                 <div class="card-header">
                     <div class="filter-bar">
-                        <label for="template-filter" class="filter-label" style="position: relative;">
-                            <select id="template-filter" class="filter-select"
-                                title="Template is locked. Change template selection in Batch Templates page.">
-                                <option value="" disabled>Select Batch Template (Locked)</option>
-                                <option value="1" <?php if ($selectedTemplate == 1) echo "selected"; ?>>
-                                    Batch Template 1
-                                </option>
-                                <option value="2" <?php if ($selectedTemplate == 2) echo "selected"; ?>>
-                                    Batch Template 2
-                                </option>
-                                <option value="3" <?php if ($selectedTemplate == 3) echo "selected"; ?>>
-                                    Batch Template 3
-                                </option>
+                        <label for="academic-year-filter" class="filter-label">
+                            <select id="academic-year-filter" class="filter-select" name="academic-year-filter">
+                                <option value="" disabled>Select Batch Year</option>
+                                <?php foreach ($academicYears as $year): ?>
+                                    <option value="<?php echo htmlspecialchars($year); ?>" <?php if ($selectedAcademicYear == $year) echo "selected"; ?>>
+                                        Batch Year <?php echo htmlspecialchars($year); ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
-                            <i class="fas fa-lock"
-                                style="position: absolute; right: 30px; top: 50%; transform: translateY(-50%); color: #f39c12; pointer-events: none; font-size: 14px;"
-                                title="Locked"></i>
                         </label>
 
                         <label for="department-filter" class="filter-label">
