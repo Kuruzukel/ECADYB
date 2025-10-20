@@ -762,17 +762,7 @@ function initializeSection(section) {
     return;
   }
   
-  // Add click event to section header
-  sectionHeader.addEventListener("click", (e) => {
-    const alreadySelected = section.classList.contains("selected");
-    if (alreadySelected) return;
-    const label = sectionHeader.textContent?.trim() || "Batch Template";
-    if (window.openSelectTemplateModal) {
-      window.openSelectTemplateModal(section, label);
-    } else {
-      console.error("openSelectTemplateModal not available");
-    }
-  });
+  // Section header click functionality removed - now using Select Batch button only
   
   // Mark as initialized
   section.dataset.initialized = "true";
