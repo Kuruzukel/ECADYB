@@ -285,7 +285,7 @@ h1 .chevron i {
   background: #f8f9fa;
   border-color: #dadce0;
   transform: translateY(-1px);
- 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .calendar-day.other-month {
@@ -521,13 +521,13 @@ h1 .chevron i {
   background: #f8f9fa;
   border-color: #dadce0;
   transform: translateY(-1px);
- 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .calendar-day.other-month {
   opacity: 0.5;
   border-radius: 8px;
- 0 2px 4px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .calendar-day.today {
@@ -593,7 +593,7 @@ h1 .chevron i {
   border-radius: 8px;
   padding: 1.5rem;
   border-left: 4px solid #0c27be;
- 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease;
   position: relative;
 }
@@ -621,7 +621,7 @@ h1 .chevron i {
 .event-preview-card .delete-btn:hover {
   background: #c82333;
   transform: scale(1.1);
- 0 2px 4px rgba(220, 53, 69, 0.3);
+  box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3);
 }
 
 .event-preview-card .delete-btn:active {
@@ -668,7 +668,7 @@ h1 .chevron i {
   max-width: 400px;
   width: 90%;
   text-align: center;
- 0 8px 32px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   animation: slideInUp 0.3s ease-out;
 }
 
@@ -725,7 +725,7 @@ h1 .chevron i {
   right: 20px;
   padding: 1rem 1.5rem;
   border-radius: 8px;
- 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   z-index: 1001;
   display: flex;
   align-items: center;
@@ -771,7 +771,7 @@ h1 .chevron i {
   display: flex;
   align-items: center;
   gap: 10px;
- 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   transform: translateY(-100px);
   transition: all 0.3s ease-in-out;
   max-width: 350px;
@@ -823,7 +823,7 @@ h1 .chevron i {
   max-width: 400px;
   width: 90%;
   text-align: center;
- 0 8px 32px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   animation: slideInUp 0.3s ease-out;
 }
 
@@ -886,7 +886,7 @@ h1 .chevron i {
   border-radius: 8px;
   padding: 1.5rem;
   border-left: 4px solid #0c27be;
- 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease;
   position: relative;
 }
@@ -914,7 +914,7 @@ h1 .chevron i {
 .event-preview-card .delete-btn:hover {
   background: #c82333;
   transform: scale(1.1);
- 0 2px 4px rgba(220, 53, 69, 0.3);
+  box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3);
 }
 
 .event-preview-card .delete-btn:active {
@@ -942,7 +942,7 @@ h1 .chevron i {
 
 .event-preview-card:hover {
   transform: translateY(-2px);
- 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .event-preview-title {

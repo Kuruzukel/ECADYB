@@ -226,16 +226,14 @@ select:hover {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   transition: all 0.3s ease;
-
-    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   font-family: inherit;
 }
 
 .submit-btn:hover {
   background: #45a049;
   transform: translateY(-2px);
-
-    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 @media (max-width: 768px) {
@@ -283,8 +281,7 @@ select:hover {
   padding: 2rem;
   width: 90%;
   max-width: 450px;
-
-    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   border: 1px solid #475569;
 }
 
@@ -1070,8 +1067,7 @@ header h3 {
   padding: 2rem;
   width: 90%;
   max-width: 400px;
-
-    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   border: 1px solid #475569;
   text-align: center;
   position: relative;
@@ -1480,8 +1476,7 @@ label {
   padding: 2rem;
   width: 90%;
   max-width: 400px;
-
-    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   border: 1px solid #475569;
   text-align: center;
   position: relative;
@@ -1971,8 +1966,7 @@ h1 .chevron i {
     rgba(33, 150, 243, 0.15),
     rgba(44, 62, 80, 0.7)
   );
-
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
   transform: translateY(-5px);
 }
 
@@ -1997,8 +1991,7 @@ h1 .chevron i {
     rgba(252, 218, 21, 0.15),
     rgba(44, 62, 80, 0.7)
   );
-
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
   transform: scale(1.02);
 }
 
@@ -2555,8 +2548,7 @@ input[type="number"] {
   padding: 2rem;
   width: 90%;
   max-width: 400px;
-
-    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   border: 1px solid #475569;
   text-align: center;
   position: relative;
@@ -2875,15 +2867,13 @@ textarea {
 .btn-primary {
   background: #4caf50;
   color: white;
-
-    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .btn-primary:hover {
   background: #45a049;
   transform: translateY(-2px);
-
-    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 .btn-secondary {
@@ -2926,8 +2916,7 @@ textarea {
   padding: 2rem;
   width: 90%;
   max-width: 450px;
-
-    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   border: 1px solid #475569;
 }
 
@@ -3565,8 +3554,7 @@ h1 .chevron i {
   max-width: 1200px;
   max-height: 80vh;
   overflow-y: auto;
-
-    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   border: 1px solid #475569;
 }
 
@@ -4601,7 +4589,7 @@ th {
   padding: 1rem;
   width: 95%;
   height: 95%;
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   position: relative;
   display: flex;
@@ -5927,8 +5915,7 @@ h1 .chevron i {
   padding: 2rem;
   width: 90%;
   max-width: 450px;
-
-    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   border: 1px solid #475569;
 }
 

@@ -339,14 +339,13 @@ textarea {
   right: 20px;
   padding: 1rem 1.5rem;
   border-radius: 8px;
- 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   z-index: 1001;
   display: flex;
   align-items: center;
   gap: 0.5rem;
   font-size: 0.875rem;
   font-weight: 500;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   animation: slideInRight 0.3s ease-out;
   cursor: pointer;
   min-width: 300px;
@@ -425,7 +424,7 @@ textarea {
   display: flex;
   align-items: center;
   gap: 10px;
- 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   transform: translateY(-100px);
   transition: all 0.3s ease-in-out;
   max-width: 350px;
