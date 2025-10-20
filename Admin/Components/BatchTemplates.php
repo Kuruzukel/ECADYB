@@ -43,7 +43,7 @@
             <div class="form-content" style="width: 100%;">
 
                 <div class="form-group">
-                    <div class="section">
+                    <div class="section available">
                         <div class="section-header">Batch Year 2024-2025</div>
                         <div class="section-content">
                             <div class="upload-grid">
@@ -115,7 +115,7 @@
                         </div>
                     </div>
 
-                    <div class="section">
+                    <div class="section available">
                         <div class="section-header">Batch Year 2025-2026</div>
                         <div class="section-content">
                             <div class="upload-grid">
@@ -187,7 +187,7 @@
                         </div>
                     </div>
 
-                    <div class="section">
+                    <div class="section available">
                         <div class="section-header">Batch Year 2026-2027</div>
                         <div class="section-content">
                             <div class="upload-grid">

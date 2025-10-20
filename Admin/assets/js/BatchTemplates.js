@@ -421,7 +421,7 @@ function generateNewBatchSection() {
 
   // Create new section HTML - identical structure to hard-coded sections
   const newSectionHTML = `
-    <div class="section">
+    <div class="section available">
       <div class="section-header">Batch Year ${nextYear}</div>
       <div class="section-content">
         <div class="upload-grid">
@@ -612,7 +612,7 @@ function restoreSingleSection(sectionHeader) {
 
   // Create new section HTML
   const newSectionHTML = `
-    <div class="section">
+    <div class="section available">
       <div class="section-header">${sectionHeader}</div>
       <div class="section-content">
         <div class="upload-grid">

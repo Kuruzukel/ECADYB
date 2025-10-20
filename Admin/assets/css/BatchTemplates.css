@@ -255,6 +255,14 @@ h1 .chevron i {
   outline-offset: 0;
 }
 
+/* Green background for available sections (viewable on student accounts) */
+.section.available .section-header {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* Yellow background for selected section (overrides available) */
 .section.selected .section-header {
   background: #fcda15;
   color: #000000;
