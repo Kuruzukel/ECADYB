@@ -75,6 +75,9 @@ window.themes = {
     "--menu-bg-active": "#349e5e",
     "--menu-border-active": "#ffffff",
     "--menu-hover-bg": "#1f693c",
+    "--text-color": "#ffffff",
+    "--text-color-secondary": "#e9ecef",
+    "--text-color-muted": "#ced4da",
   },
   "Theme 4": {
     "--primary-bg": "#281E18",
@@ -84,6 +87,9 @@ window.themes = {
     "--section-header": "#9D9C75",
     "--body-bg": "#281E18",
     "--sidebar-bg": "#572D0C",
+    "--text-color": "#ffffff",
+    "--text-color-secondary": "#e9ecef",
+    "--text-color-muted": "#ced4da",
     "--content-bg": "#E3B76A",
     "--menu-bg-active": "#9D9C75",
     "--menu-border-active": "#ffffff",
@@ -101,6 +107,9 @@ window.themes = {
     "--menu-bg-active": "#000042",
     "--menu-border-active": "#fcda15",
     "--menu-hover-bg": "#1c1c84",
+    "--text-color": "#ffffff",
+    "--text-color-secondary": "#e9ecef",
+    "--text-color-muted": "#ced4da",
   },
 };
 
