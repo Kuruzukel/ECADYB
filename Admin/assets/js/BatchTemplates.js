@@ -386,6 +386,18 @@ function generateNewBatchSection() {
             <input type="file" class="backInput" accept="image/*" hidden>
             <button class="delete-btn">&times;</button>
           </div>
+          <div class="upload-box action-box">
+            <div class="action-buttons">
+              <button class="action-btn download-pdf-btn" title="Download PDF">
+                <i class="fas fa-file-pdf"></i>
+                <span>Download PDF</span>
+              </button>
+              <button class="action-btn delete-batch-btn" title="Delete Batch Template">
+                <i class="fas fa-trash-alt"></i>
+                <span>Delete Batch</span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -484,6 +496,7 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
     let showingFront = true;
     const slot = index + 1;
     const isBackgroundSlot = slot === 8;
+    const isActionBox = slot === 9;
 
     const BASE_PATH = getBasePath();
     const CONNECTION_PATH = `${BASE_PATH}/Connection`;
@@ -515,6 +528,7 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
 
     box.addEventListener("click", (event) => {
       if (event.target === deleteBtn) return;
+      if (isActionBox) return; // Don't handle clicks for action box
       if (!frontImg) {
         frontInput.click();
       } else if (!backImg && !isBackgroundSlot) {
@@ -635,6 +649,27 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
       }
     }
 
+    // Add event listeners for action buttons
+    if (isActionBox) {
+      const downloadBtn = box.querySelector(".download-pdf-btn");
+      const deleteBatchBtn = box.querySelector(".delete-batch-btn");
+      
+      if (downloadBtn) {
+        downloadBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          downloadPDF(sectionHeader);
+        });
+      }
+      
+      if (deleteBatchBtn) {
+        deleteBatchBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          deleteBatchTemplate(section, sectionHeader);
+        });
+      }
+      return; // Skip the rest of the initialization for action box
+    }
+
     // Load existing images
     (async function loadExisting() {
       try {
@@ -690,6 +725,24 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
       }
     })();
   });
+}
+
+function downloadPDF(batchName) {
+  showNotification("PDF download functionality will be implemented soon!", "info");
+  console.log("Downloading PDF for:", batchName);
+  // TODO: Implement PDF download logic
+}
+
+function deleteBatchTemplate(section, batchName) {
+  selectedConfirmAction = () => {
+    // Remove the entire form-group containing this section
+    const formGroup = section.closest(".form-group");
+    if (formGroup) {
+      formGroup.remove();
+      showNotification(`${batchName} deleted successfully!`, "success");
+    }
+  };
+  openDeleteModal();
 }
 
 window.addEventListener("DOMContentLoaded", () => {

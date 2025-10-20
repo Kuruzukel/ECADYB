@@ -95,6 +95,18 @@
                                     <input type="file" class="backInput" accept="image/*" hidden>
                                     <button class="delete-btn">&times;</button>
                                 </div>
+                                <div class="upload-box action-box">
+                                    <div class="action-buttons">
+                                        <button class="action-btn download-pdf-btn" title="Download PDF">
+                                            <i class="fas fa-file-pdf"></i>
+                                            <span>Download PDF</span>
+                                        </button>
+                                        <button class="action-btn delete-batch-btn" title="Delete Batch Template">
+                                            <i class="fas fa-trash-alt"></i>
+                                            <span>Delete Batch</span>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -151,6 +163,18 @@
                                     <input type="file" class="backInput" accept="image/*" hidden>
                                     <button class="delete-btn">&times;</button>
                                 </div>
+                                <div class="upload-box action-box">
+                                    <div class="action-buttons">
+                                        <button class="action-btn download-pdf-btn" title="Download PDF">
+                                            <i class="fas fa-file-pdf"></i>
+                                            <span>Download PDF</span>
+                                        </button>
+                                        <button class="action-btn delete-batch-btn" title="Delete Batch Template">
+                                            <i class="fas fa-trash-alt"></i>
+                                            <span>Delete Batch</span>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -206,6 +230,18 @@
                                     <input type="file" class="frontInput" accept="image/*" hidden>
                                     <input type="file" class="backInput" accept="image/*" hidden>
                                     <button class="delete-btn">&times;</button>
+                                </div>
+                                <div class="upload-box action-box">
+                                    <div class="action-buttons">
+                                        <button class="action-btn download-pdf-btn" title="Download PDF">
+                                            <i class="fas fa-file-pdf"></i>
+                                            <span>Download PDF</span>
+                                        </button>
+                                        <button class="action-btn delete-batch-btn" title="Delete Batch Template">
+                                            <i class="fas fa-trash-alt"></i>
+                                            <span>Delete Batch</span>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
