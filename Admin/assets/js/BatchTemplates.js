@@ -830,6 +830,8 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
     let frontImg = null;
     let backImg = null;
     let showingFront = true;
+    let isUploading = false;
+    let isFileInputOpen = false;
 
     const BASE_PATH = getBasePath();
     const CONNECTION_PATH = `${BASE_PATH}/Connection`;
@@ -861,9 +863,14 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
 
     box.addEventListener("click", (event) => {
       if (event.target === deleteBtn) return;
+      if (isUploading) return; // Prevent clicking while uploading
+      if (isFileInputOpen) return; // Prevent clicking if file input is already open
+      
       if (!frontImg) {
+        isFileInputOpen = true;
         frontInput.click();
       } else if (!backImg && !isBackgroundSlot) {
+        isFileInputOpen = true;
         backInput.click();
       } else {
         toggleImages();
@@ -872,72 +879,145 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
 
     frontInput.addEventListener("change", async (event) => {
       const files = event.target.files;
-      if (!files || files.length === 0) return;
+      if (!files || files.length === 0) {
+        isFileInputOpen = false; // Reset flag if no files selected
+        isUploading = false; // Reset upload flag
+        return;
+      }
+      
+      // Stop event propagation to prevent box click from triggering again
+      event.stopPropagation();
+      
+      // Reset file input open flag
+      isFileInputOpen = false;
+      
+      // Prevent multiple uploads - check at the very beginning
+      if (isUploading) {
+        console.log("Upload already in progress, ignoring duplicate change event");
+        event.target.value = ""; // Clear the input
+        return;
+      }
+      isUploading = true;
       
       // Reset cancellation flag
       isUploadCancelled = false;
       
-      const uploadOverlay = document.getElementById("upload-overlay");
-      const uploadText = document.getElementById("uploadText");
+      // Create object URLs BEFORE upload starts (files will be cleared after)
+      const frontImageUrl = files.length > 0 ? URL.createObjectURL(files[0]) : null;
+      const backImageUrl = files.length > 1 ? URL.createObjectURL(files[1]) : null;
       
-      if (isBackgroundSlot) {
-        if (files.length > 1) {
-          showNotification("Background slot can only accept 1 image. Please select only 1 image.", "error");
-          event.target.value = "";
-          return;
-        }
-        const result = await uploadToBunny(files[0], slot, "front", true, false);
-        // Update available sections after upload
-        if (result && result.success && window.setAvailableSections) {
-          await window.setAvailableSections();
-        }
-      } else {
-        if (files.length > 2) {
-          showNotification("You can only upload 2 images at the same time. Please select only 2 images.", "error");
-          event.target.value = "";
-          return;
-        }
+      try {
+        const uploadOverlay = document.getElementById("upload-overlay");
+        const uploadText = document.getElementById("uploadText");
         
-        if (files.length === 2 && uploadOverlay && uploadText) {
-          uploadOverlay.style.display = "flex";
-          uploadText.textContent = `Uploading Slot ${slot} front and back cover...`;
-        }
-        
-        const suppressNotifications = files.length === 2;
-        const isBatchUpload = files.length === 2;
-        let uploadCancelled = false;
-        
-        if (files.length === 2) {
-          const uploadPromises = [
-            uploadToBunny(files[0], slot, "front", !suppressNotifications, isBatchUpload),
-            uploadToBunny(files[1], slot, "back", !suppressNotifications, isBatchUpload)
-          ];
+        if (isBackgroundSlot) {
+          if (files.length > 1) {
+            showNotification("Background slot can only accept 1 image. Please select only 1 image.", "error");
+            return;
+          }
+          const result = await uploadToBunny(files[0], slot, "front", true, false);
           
-          const results = await Promise.all(uploadPromises);
-          uploadCancelled = results.some(result => result && result.cancelled) || isUploadCancelled;
-          
-          if (!uploadCancelled && !isUploadCancelled) {
-            showNotification(`Uploaded successfully to Slot ${slot} front and back cover`, "success");
+          if (result && result.success) {
+            // Display image immediately using pre-created URL
+            frontImg = document.createElement("img");
+            frontImg.src = frontImageUrl;
+            frontImg.classList.add("front-img");
+            
+            box.innerHTML = "";
+            ensureChildren();
+            deleteBtn.style.display = "flex";
+            box.classList.add("has-image");
+            showingFront = true;
+            frontImg.style.opacity = 1;
+            
             // Update available sections after upload
             if (window.setAvailableSections) {
               await window.setAvailableSections();
             }
           }
-        } else if (files.length === 1) {
-          const result = await uploadToBunny(files[0], slot, "front", !suppressNotifications, false);
-          // Update available sections after upload
-          if (result && result.success && window.setAvailableSections) {
-            await window.setAvailableSections();
+        } else {
+          if (files.length > 2) {
+            showNotification("You can only upload 2 images at the same time. Please select only 2 images.", "error");
+            return;
           }
-          uploadCancelled = (result && result.cancelled) || isUploadCancelled;
+          
+          if (files.length === 2 && uploadOverlay && uploadText) {
+            uploadOverlay.style.display = "flex";
+            uploadText.textContent = `Uploading Slot ${slot} front and back cover...`;
+          }
+          
+          const suppressNotifications = files.length === 2;
+          const isBatchUpload = files.length === 2;
+          let uploadCancelled = false;
+          
+          if (files.length === 2) {
+            const uploadPromises = [
+              uploadToBunny(files[0], slot, "front", !suppressNotifications, isBatchUpload),
+              uploadToBunny(files[1], slot, "back", !suppressNotifications, isBatchUpload)
+            ];
+            
+            const results = await Promise.all(uploadPromises);
+            uploadCancelled = results.some(result => result && result.cancelled) || isUploadCancelled;
+            
+            if (!uploadCancelled && !isUploadCancelled) {
+              // Display images immediately using pre-created URLs
+              frontImg = document.createElement("img");
+              frontImg.src = frontImageUrl;
+              frontImg.classList.add("front-img");
+              
+              backImg = document.createElement("img");
+              backImg.src = backImageUrl;
+              backImg.classList.add("back-img");
+              
+              box.innerHTML = "";
+              ensureChildren();
+              deleteBtn.style.display = "flex";
+              box.classList.add("has-image");
+              showingFront = true;
+              frontImg.style.opacity = 1;
+              backImg.style.opacity = 0;
+              
+              showNotification(`Uploaded successfully to Slot ${slot} front and back cover`, "success");
+              // Update available sections after upload
+              if (window.setAvailableSections) {
+                await window.setAvailableSections();
+              }
+            }
+          } else if (files.length === 1) {
+            const result = await uploadToBunny(files[0], slot, "front", !suppressNotifications, false);
+            
+            if (result && result.success) {
+              // Display image immediately using pre-created URL
+              frontImg = document.createElement("img");
+              frontImg.src = frontImageUrl;
+              frontImg.classList.add("front-img");
+              
+              box.innerHTML = "";
+              ensureChildren();
+              deleteBtn.style.display = "flex";
+              box.classList.add("has-image");
+              showingFront = true;
+              frontImg.style.opacity = 1;
+              
+              // Update available sections after upload
+              if (window.setAvailableSections) {
+                await window.setAvailableSections();
+              }
+            }
+            uploadCancelled = (result && result.cancelled) || isUploadCancelled;
+          }
         }
         
-        if (!uploadCancelled && !isUploadCancelled && uploadOverlay) {
+        // Hide upload overlay after all uploads complete
+        if (uploadOverlay) {
           uploadOverlay.style.display = "none";
         }
+      } finally {
+        // Always reset flags and clear input, even if there's an error
+        event.target.value = "";
+        isUploading = false; // Reset upload flag
+        isFileInputOpen = false; // Reset file input open flag
       }
-      
-      event.target.value = "";
     });
 
     deleteBtn.addEventListener("click", (event) => {
@@ -947,21 +1027,29 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
         if (frontImg) sides.push("front");
         if (backImg && !isBackgroundSlot) sides.push("back");
         if (!sides.length) return;
-        Promise.all(sides.map((side) => deleteCover(slot, side))).then(() => {
-          frontImg = null;
-          backImg = null;
-          showingFront = true;
-          box.innerHTML = "";
-          const newPlus = document.createElement("span");
-          newPlus.className = "plus-icon";
-          newPlus.textContent = "+";
-          box.appendChild(newPlus);
-          ensureChildren();
-          deleteBtn.style.display = "none";
-          frontInput.value = "";
-          backInput.value = "";
-          box.classList.remove("has-image");
-        });
+        
+        // Remove image immediately from UI
+        frontImg = null;
+        backImg = null;
+        showingFront = true;
+        box.innerHTML = "";
+        const newPlus = document.createElement("span");
+        newPlus.className = "plus-icon";
+        newPlus.textContent = "+";
+        box.appendChild(newPlus);
+        ensureChildren();
+        deleteBtn.style.display = "none";
+        frontInput.value = "";
+        backInput.value = "";
+        box.classList.remove("has-image");
+        
+        // Show notification immediately
+        showNotification("Image deleted", "success");
+        
+        // Delete from server in background
+        if (sides.length > 0) {
+          deleteCover(slot, sides[0]);
+        }
       };
       openDeleteModal();
     });
@@ -992,63 +1080,70 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
               try {
                 const data = JSON.parse(xhr.responseText);
                 if (data.success) {
+                  // Only show individual notification if showNotif is true AND not a batch upload
                   if (showNotif && !isBatch) {
                     showNotification(`Uploaded successfully to Slot ${slot} ${side}`, "success");
                   }
                   resolve(data);
                 } else {
-                  if (showNotif) {
-                    showNotification(data.message || "Upload failed", "error");
-                  }
+                  // Always show error notifications
+                  showNotification(data.message || "Upload failed", "error");
                   reject(new Error(data.message || "Upload failed"));
                 }
               } catch (e) {
-                if (showNotif) {
-                  showNotification("Failed to parse response", "error");
-                }
+                // Always show error notifications
+                showNotification("Failed to parse response", "error");
                 reject(e);
               }
             } else {
-              if (showNotif) {
-                showNotification(`Upload failed: HTTP ${xhr.status}`, "error");
-              }
+              // Always show error notifications
+              showNotification(`Upload failed: HTTP ${xhr.status}`, "error");
               reject(new Error(`HTTP ${xhr.status}`));
             }
           });
 
           xhr.addEventListener("error", () => {
-            if (showNotif) {
-              showNotification("Upload failed", "error");
-            }
+            // Always show error notifications
+            showNotification("Upload failed", "error");
             reject(new Error("Upload failed"));
           });
 
           xhr.addEventListener("abort", () => {
-            if (showNotif) {
-              showNotification("Upload cancelled", "error");
-            }
+            // Always show error notifications
+            showNotification("Upload cancelled", "error");
             reject(new Error("Upload cancelled"));
           });
 
+          xhr.addEventListener("timeout", () => {
+            // Always show error notifications
+            showNotification("Upload timeout - please try again", "error");
+            reject(new Error("Upload timeout"));
+          });
+
           xhr.open("POST", UPLOAD_ENDPOINT);
+          xhr.timeout = 120000; // Set timeout to 120 seconds (2 minutes)
           xhr.send(formData);
         });
 
         return await uploadPromise;
       } catch (err) {
         console.error("Upload error:", err);
-        if (showNotif) {
-          showNotification(err.message || "Upload failed", "error");
-        }
+        // Always show error notifications
+        showNotification(err.message || "Upload failed", "error");
         return { success: false, cancelled: true };
       }
     }
 
     async function deleteCover(slot, side) {
       try {
+        // Get the batch year from the section header
+        const sectionHeader = box.closest('.section')?.querySelector('.section-header');
+        const batchYear = sectionHeader ? sectionHeader.textContent.trim() : '';
+        
         const form = new FormData();
         form.append("slot", String(slot));
         form.append("side", side);
+        form.append("batch_year", batchYear);
 
         const res = await fetch(DELETE_ENDPOINT, {
           method: "POST",
@@ -1061,9 +1156,9 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
 
         const data = await res.json().catch(() => null);
         if (!data?.success) {
+          // Only show error notification if delete fails
           showNotification(data?.message || "Delete failed", "error");
         } else {
-          showNotification("Image deleted", "success");
           // Update available sections after deletion
           if (window.setAvailableSections) {
             await window.setAvailableSections();
@@ -1071,6 +1166,7 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
         }
       } catch (err) {
         console.error("Delete error:", err);
+        // Only show error notification if delete fails
         showNotification(err.message || "Delete failed", "error");
       }
     }
@@ -1094,7 +1190,14 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
           return;
         }
 
-        const found = (data.items || []).find((i) => i.slot === slot);
+        // Get the batch year from the section header
+        const sectionHeader = box.closest('.section')?.querySelector('.section-header');
+        const batchYear = sectionHeader ? sectionHeader.textContent.trim() : null;
+
+        // Filter by both slot AND batch year
+        const found = (data.items || []).find((i) => 
+          i.slot === slot && i.batch_year === batchYear
+        );
         if (!found) return;
         if (found.front_url) {
           frontImg = document.createElement("img");
@@ -1507,11 +1610,9 @@ window.addEventListener("DOMContentLoaded", () => {
   // Make setAvailableSections globally accessible
   window.setAvailableSections = setAvailableSections;
 
-  // Set available sections on page load (after all sections are restored)
-  setAvailableSections();
-
   // Section header click event removed - now using Select Batch button
 
+  // First, select the default section (this enables upload boxes)
   if (sections.length > 0) {
     const savedTemplate = localStorage.getItem("selectedBatchTemplate");
     let selectedSection = null;
@@ -1535,6 +1636,9 @@ window.addEventListener("DOMContentLoaded", () => {
   } else {
     updateUploadBoxStates();
   }
+
+  // Then, set available sections (green headers)
+  setAvailableSections();
 
   sections.forEach((section) => {
     initializeSectionUploadBoxes(section, window.currentXhrs, window.isUploadCancelled);

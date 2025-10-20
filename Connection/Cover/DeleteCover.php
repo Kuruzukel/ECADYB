@@ -40,8 +40,9 @@ use MongoDB\Client;
 try {
     $slot     = isset($_POST['slot']) ? (int)$_POST['slot'] : null;
     $side     = isset($_POST['side']) ? strtolower(trim($_POST['side'])) : '';
+    $batchYear = isset($_POST['batch_year']) ? trim($_POST['batch_year']) : '';
 
-    error_log("DeleteCover.php received parameters: slot=$slot, side=$side");
+    error_log("DeleteCover.php received parameters: slot=$slot, side=$side, batch_year=$batchYear");
 
     if ($slot === null) {
         respond(false, 'Missing slot parameter.');
@@ -90,7 +91,13 @@ try {
         error_log("DeleteCover.php error checking databases: " . $e->getMessage());
     }
 
-    $doc = $collection->findOne(['slot' => $slot]);
+    // Build query filter with batch_year if provided
+    $filter = ['slot' => $slot];
+    if (!empty($batchYear)) {
+        $filter['batch_year'] = $batchYear;
+    }
+    
+    $doc = $collection->findOne($filter);
     if (!$doc) {
         respond(false, 'Cover not found');
     }
@@ -150,8 +157,14 @@ try {
 
     error_log("DeleteCover.php unsetting fields: " . json_encode($unsetFields));
 
+    // Build update filter with batch_year if provided
+    $updateFilter = ['slot' => $slot];
+    if (!empty($batchYear)) {
+        $updateFilter['batch_year'] = $batchYear;
+    }
+
     $result = $collection->updateOne(
-        ['template' => $template, 'slot' => $slot],
+        $updateFilter,
         [
             '$unset' => $unsetFields,
             '$set'   => ['updated_at' => new MongoDB\BSON\UTCDateTime()]
@@ -160,11 +173,8 @@ try {
 
     error_log("DeleteCover.php update result: matched=" . $result->getMatchedCount() . ", modified=" . $result->getModifiedCount());
     
-    // Get the batch year from the document before deletion
-    $batchYear = isset($doc['batch_year']) ? (string)$doc['batch_year'] : '';
-    
     // Check if the batch year is still complete after deletion
-    if ($batchYear) {
+    if (!empty($batchYear)) {
         $batchYearDocs = $collection->find(['batch_year' => $batchYear])->toArray();
         
         // Check if all 8 slots still have images
