@@ -426,7 +426,9 @@ label {
 }
 
 #delete-modal-overlay,
-#generate-modal-overlay {
+#generate-modal-overlay,
+#download-pdf-modal-overlay,
+#delete-batch-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -440,20 +442,10 @@ label {
   animation: fadeInUp 0.4s ease-out;
 }
 
-#delete-modal-overlay .modal {
-  background: transparent;
-  border-radius: 16px;
-  padding: 2rem;
-  width: 90%;
-  max-width: 400px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
-    0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  border: 1px solid #475569;
-  text-align: center;
-  position: relative;
-}
-
-#generate-modal-overlay .modal {
+#delete-modal-overlay .modal,
+#generate-modal-overlay .modal,
+#download-pdf-modal-overlay .modal,
+#delete-batch-modal-overlay .modal {
   background: transparent;
   border-radius: 16px;
   padding: 2rem;
@@ -466,7 +458,10 @@ label {
   position: relative;
 }
 
-#delete-modal-overlay .modal-header {
+#delete-modal-overlay .modal-header,
+#generate-modal-overlay .modal-header,
+#download-pdf-modal-overlay .modal-header,
+#delete-batch-modal-overlay .modal-header {
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -474,20 +469,17 @@ label {
   justify-content: center;
 }
 
-#generate-modal-overlay .modal-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 1.5rem;
-  justify-content: center;
-}
-
-#delete-modal-overlay .modal-header .modal-icon {
+#delete-modal-overlay .modal-header .modal-icon,
+#download-pdf-modal-overlay .modal-header .modal-icon,
+#delete-batch-modal-overlay .modal-header .modal-icon {
   font-size: 1.5rem;
   color: #217ff7;
 }
 
 #delete-modal-overlay .modal-content p,
-#generate-modal-overlay .modal-content p {
+#generate-modal-overlay .modal-content p,
+#download-pdf-modal-overlay .modal-content p,
+#delete-batch-modal-overlay .modal-content p {
   color: #e0e0e0;
   font-size: 1rem;
   line-height: 1.6;
@@ -496,7 +488,9 @@ label {
 }
 
 #delete-modal-overlay h3,
-#generate-modal-overlay h3 {
+#generate-modal-overlay h3,
+#download-pdf-modal-overlay h3,
+#delete-batch-modal-overlay h3 {
   font-size: 1.6rem;
   font-weight: 600;
   color: #ffffff;
@@ -505,13 +499,17 @@ label {
 }
 
 #delete-modal-overlay .modal-content,
-#generate-modal-overlay .modal-content {
+#generate-modal-overlay .modal-content,
+#download-pdf-modal-overlay .modal-content,
+#delete-batch-modal-overlay .modal-content {
   background: transparent;
   border-radius: 16px;
 }
 
 #delete-modal-overlay .modal-buttons,
-#generate-modal-overlay .modal-buttons {
+#generate-modal-overlay .modal-buttons,
+#download-pdf-modal-overlay .modal-buttons,
+#delete-batch-modal-overlay .modal-buttons {
   display: flex;
   gap: 1rem;
   justify-content: flex-end;
@@ -519,7 +517,9 @@ label {
 }
 
 #delete-modal-overlay .modal-buttons .modal-btn,
-#generate-modal-overlay .modal-buttons .modal-btn {
+#generate-modal-overlay .modal-buttons .modal-btn,
+#download-pdf-modal-overlay .modal-buttons .modal-btn,
+#delete-batch-modal-overlay .modal-buttons .modal-btn {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -534,28 +534,36 @@ label {
 }
 
 #delete-modal-overlay .modal-buttons .modal-btn.confirm,
-#generate-modal-overlay .modal-buttons .modal-btn.confirm {
+#generate-modal-overlay .modal-buttons .modal-btn.confirm,
+#download-pdf-modal-overlay .modal-buttons .modal-btn.confirm,
+#delete-batch-modal-overlay .modal-buttons .modal-btn.confirm {
   background: #10b981;
   color: #ffffff;
   font-family: Arial, sans-serif;
 }
 
 #delete-modal-overlay .modal-buttons .modal-btn.confirm:hover,
-#generate-modal-overlay .modal-buttons .modal-btn.confirm:hover {
+#generate-modal-overlay .modal-buttons .modal-btn.confirm:hover,
+#download-pdf-modal-overlay .modal-buttons .modal-btn.confirm:hover,
+#delete-batch-modal-overlay .modal-buttons .modal-btn.confirm:hover {
   background: #059669;
   transform: translateY(-1px);
   font-family: Arial, sans-serif;
 }
 
 #delete-modal-overlay .modal-buttons .modal-btn.cancel,
-#generate-modal-overlay .modal-buttons .modal-btn.cancel {
+#generate-modal-overlay .modal-buttons .modal-btn.cancel,
+#download-pdf-modal-overlay .modal-buttons .modal-btn.cancel,
+#delete-batch-modal-overlay .modal-buttons .modal-btn.cancel {
   background: #ef4444;
   color: #ffffff;
   font-family: Arial, sans-serif;
 }
 
 #delete-modal-overlay .modal-buttons .modal-btn.cancel:hover,
-#generate-modal-overlay .modal-buttons .modal-btn.cancel:hover {
+#generate-modal-overlay .modal-buttons .modal-btn.cancel:hover,
+#download-pdf-modal-overlay .modal-buttons .modal-btn.cancel:hover,
+#delete-batch-modal-overlay .modal-buttons .modal-btn.cancel:hover {
   background: #dc2626;
   transform: translateY(-1px);
   font-family: Arial, sans-serif;

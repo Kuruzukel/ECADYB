@@ -220,6 +220,14 @@ const generateModal = document.getElementById("generate-modal-overlay");
 const confirmGenerateBtn = document.getElementById("confirm-generate-btn");
 const cancelGenerateBtn = document.getElementById("cancel-generate-btn");
 
+const downloadPdfModal = document.getElementById("download-pdf-modal-overlay");
+const confirmDownloadPdfBtn = document.getElementById("confirm-download-pdf-btn");
+const cancelDownloadPdfBtn = document.getElementById("cancel-download-pdf-btn");
+
+const deleteBatchModal = document.getElementById("delete-batch-modal-overlay");
+const confirmDeleteBatchBtn = document.getElementById("confirm-delete-batch-btn");
+const cancelDeleteBatchBtn = document.getElementById("cancel-delete-batch-btn");
+
 let selectedStudentId = null;
 let selectedCollection = null;
 let selectedConfirmAction = null;
@@ -243,6 +251,30 @@ function openGenerateModal() {
 
 function closeGenerateModal() {
   if (generateModal) generateModal.style.display = "none";
+}
+
+function openDownloadPdfModal(batchName) {
+  const messageEl = document.getElementById("download-pdf-message");
+  if (messageEl) {
+    messageEl.textContent = `Are you sure you want to download the PDF for ${batchName}?`;
+  }
+  if (downloadPdfModal) downloadPdfModal.style.display = "flex";
+}
+
+function closeDownloadPdfModal() {
+  if (downloadPdfModal) downloadPdfModal.style.display = "none";
+}
+
+function openDeleteBatchModal(batchName) {
+  const messageEl = document.getElementById("delete-batch-message");
+  if (messageEl) {
+    messageEl.textContent = `Are you sure you want to delete ${batchName}? This action cannot be undone.`;
+  }
+  if (deleteBatchModal) deleteBatchModal.style.display = "flex";
+}
+
+function closeDeleteBatchModal() {
+  if (deleteBatchModal) deleteBatchModal.style.display = "none";
 }
 
 async function confirmDeleteStudent() {
@@ -728,21 +760,35 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
 }
 
 function downloadPDF(batchName) {
+  openDownloadPdfModal(batchName);
+}
+
+function confirmDownloadPDF() {
   showNotification("PDF download functionality will be implemented soon!", "info");
-  console.log("Downloading PDF for:", batchName);
+  console.log("Downloading PDF...");
+  closeDownloadPdfModal();
   // TODO: Implement PDF download logic
 }
 
 function deleteBatchTemplate(section, batchName) {
-  selectedConfirmAction = () => {
-    // Remove the entire form-group containing this section
-    const formGroup = section.closest(".form-group");
+  openDeleteBatchModal(batchName);
+  
+  // Store the section and batch name for deletion
+  window.pendingDeleteSection = section;
+  window.pendingDeleteBatchName = batchName;
+}
+
+function confirmDeleteBatch() {
+  if (window.pendingDeleteSection) {
+    const formGroup = window.pendingDeleteSection.closest(".form-group");
     if (formGroup) {
       formGroup.remove();
-      showNotification(`${batchName} deleted successfully!`, "success");
+      showNotification(`${window.pendingDeleteBatchName} deleted successfully!`, "success");
     }
-  };
-  openDeleteModal();
+    window.pendingDeleteSection = null;
+    window.pendingDeleteBatchName = null;
+  }
+  closeDeleteBatchModal();
 }
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -902,6 +948,52 @@ window.addEventListener("DOMContentLoaded", () => {
       e.stopPropagation();
       closeGenerateModal();
       generateNewBatchSection();
+    });
+  }
+
+  // Initialize Download PDF Modal
+  if (cancelDownloadPdfBtn) {
+    cancelDownloadPdfBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      closeDownloadPdfModal();
+    });
+  }
+
+  if (downloadPdfModal) {
+    downloadPdfModal.addEventListener("click", (e) => {
+      if (e.target === downloadPdfModal) closeDownloadPdfModal();
+    });
+  }
+
+  if (confirmDownloadPdfBtn) {
+    confirmDownloadPdfBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      confirmDownloadPDF();
+    });
+  }
+
+  // Initialize Delete Batch Modal
+  if (cancelDeleteBatchBtn) {
+    cancelDeleteBatchBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      closeDeleteBatchModal();
+    });
+  }
+
+  if (deleteBatchModal) {
+    deleteBatchModal.addEventListener("click", (e) => {
+      if (e.target === deleteBatchModal) closeDeleteBatchModal();
+    });
+  }
+
+  if (confirmDeleteBatchBtn) {
+    confirmDeleteBatchBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      confirmDeleteBatch();
     });
   }
 });
