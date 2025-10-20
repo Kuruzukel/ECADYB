@@ -95,11 +95,8 @@ $outputFullHtml = !$isIncludedInDashboard && !$isAjax;
 try {
     $collection = $db->$selectedDepartment;
 
-
-    $totalStudents = $collection->countDocuments();
-    $totalPages = ceil($totalStudents / $perPage);
-
-    $cursor = $collection->find(
+    // Fetch all students first to deduplicate
+    $allCursor = $collection->find(
         [],
         [
             'projection' => [
@@ -120,13 +117,39 @@ try {
                 'status' => 1,
                 'password' => 1
             ],
-            'skip' => $skip,
-            'limit' => $perPage,
             'sort' => ['department section' => 1, 'last name' => 1]
         ]
     );
 
-    foreach ($cursor as $student) {
+    // Deduplicate by student ID (keep only the first occurrence of each student ID)
+    $seenStudentIds = [];
+    $uniqueStudents = [];
+    
+    foreach ($allCursor as $student) {
+        $studentId = $student['student id'] ?? '';
+        
+        // Skip if we've already seen this student ID
+        if (!empty($studentId) && isset($seenStudentIds[$studentId])) {
+            error_log("⚠ Skipping duplicate student ID: " . $studentId);
+            continue;
+        }
+        
+        // Mark this student ID as seen
+        if (!empty($studentId)) {
+            $seenStudentIds[$studentId] = true;
+        }
+        
+        $uniqueStudents[] = $student;
+    }
+
+    // Calculate pagination for unique students
+    $totalStudents = count($uniqueStudents);
+    $totalPages = ceil($totalStudents / $perPage);
+
+    // Apply pagination to unique students
+    $paginatedStudents = array_slice($uniqueStudents, $skip, $perPage);
+
+    foreach ($paginatedStudents as $student) {
         $studentPassword = $student['password'] ?? '';
         $studentObjectId = $student['_id'] ?? null;
 

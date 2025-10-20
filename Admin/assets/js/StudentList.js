@@ -138,11 +138,8 @@ function selectColor(el) {
 }
 
 function applyTheme(theme) {
-  console.log("Applying theme:", theme);
   const root = document.documentElement;
   const selectedTheme = themes[theme] || themes["Default"];
-
-  console.log("Selected theme data:", selectedTheme);
 
   for (const [varName, color] of Object.entries(selectedTheme)) {
     root.style.setProperty(varName, color);
@@ -163,8 +160,6 @@ function applyTheme(theme) {
   }
 
   localStorage.setItem("dashboard-theme", theme);
-
-  console.log("Theme applied and saved:", theme);
 }
 
 const getBasePath = () => {
@@ -180,8 +175,6 @@ const BULK_STATUS_ENDPOINT =
   getBasePath() + "/Connection/Student/BulkUpdateStatus.php";
 
 window.addEventListener("DOMContentLoaded", () => {
-  console.log("StudentList.js loaded successfully - v" + new Date().getTime());
-
   const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
   if (savedTheme) {
     applyTheme(savedTheme);
@@ -208,12 +201,10 @@ window.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("submit", function (event) {
     event.preventDefault();
     event.stopPropagation();
-    console.log("Form submission prevented");
   });
 
   setTimeout(() => {
     isInitializing = false;
-    console.log("Initialization complete - ready for user interactions");
   }, 1000);
 });
 
@@ -261,12 +252,10 @@ function updateSelectAllState() {
 function initializeSelectAll() {
   const selectAllCheckbox = document.getElementById("select-all-header");
   if (!selectAllCheckbox) {
-    console.log("Select all checkbox not found!");
     return;
   }
 
   const savedSelectAllState = localStorage.getItem("selectAllState");
-  console.log("Select all state from localStorage:", savedSelectAllState);
 
   const visibleCheckboxes = getVisibleStudentCheckboxes();
   const checkedCount = visibleCheckboxes.filter((cb) => cb.checked).length;
@@ -274,37 +263,22 @@ function initializeSelectAll() {
     checkedCount === visibleCheckboxes.length && visibleCheckboxes.length > 0;
   const allPending = checkedCount === 0 && visibleCheckboxes.length > 0;
 
-  console.log("Select All Debug:", {
-    totalCheckboxes: visibleCheckboxes.length,
-    checkedCount: checkedCount,
-    allChecked: allChecked,
-    allPending: allPending,
-    savedState: savedSelectAllState,
-  });
-
   if (allChecked) {
     selectAllCheckbox.checked = true;
     selectAllCheckbox.indeterminate = false;
     isSelectAllActive = true;
     localStorage.setItem("selectAllState", "true");
   } else if (allPending) {
-    console.log(
-      "Setting select all to INDETERMINATE (minus sign) - all students pending"
-    );
     selectAllCheckbox.checked = false;
     selectAllCheckbox.indeterminate = true;
     isSelectAllActive = false;
     localStorage.removeItem("selectAllState");
   } else if (checkedCount > 0) {
-    console.log(
-      "Setting select all to INDETERMINATE (minus sign) - mixed states"
-    );
     selectAllCheckbox.checked = false;
     selectAllCheckbox.indeterminate = true;
     isSelectAllActive = false;
     localStorage.removeItem("selectAllState");
   } else {
-    console.log("Setting select all to UNCHECKED - no students or edge case");
     selectAllCheckbox.checked = false;
     selectAllCheckbox.indeterminate = false;
     isSelectAllActive = false;
@@ -319,12 +293,9 @@ function initializeSelectAll() {
 
   newSelectAllCheckbox.addEventListener("change", function () {
     if (isBulkUpdateInProgress) {
-      console.log("Bulk update already in progress, ignoring click");
       this.checked = !this.checked;
       return;
     }
-
-    console.log("Select all clicked:", this.checked);
 
     this.indeterminate = false;
 
@@ -337,7 +308,6 @@ function initializeSelectAll() {
     }
 
     const visibleStudentCheckboxes = getVisibleStudentCheckboxes();
-    console.log("Found", visibleStudentCheckboxes.length, "visible checkboxes");
 
     if (visibleStudentCheckboxes.length > 0) {
       if (this.checked) {
@@ -498,11 +468,9 @@ function getVisibleStudentCheckboxes() {
 
 function clearSelectAllState() {
   if (isSelectAllActive) {
-    console.log("Select all is active, not clearing state");
     return;
   }
 
-  console.log("Clearing select all state due to individual change");
   localStorage.removeItem("selectAllState");
   const selectAllCheckbox = document.getElementById("select-all-header");
   if (selectAllCheckbox) {
@@ -547,16 +515,12 @@ function initializeFilters() {
 }
 
 function applyFilters() {
-  const deptVal = (
-    document.getElementById("department-filter")?.value || ""
-  ).trim();
+  // Only filter by status - department filtering is handled by page reload
   const statusVal = (
     document.getElementById("status-filter")?.value || ""
   ).trim();
 
-  console.log("Applying filters - Department:", deptVal, "Status:", statusVal);
-
-  if (deptVal || statusVal) {
+  if (statusVal) {
     clearSelectAllState();
   }
 
@@ -564,30 +528,23 @@ function applyFilters() {
   if (!tableBody) return;
 
   const studentRows = tableBody.querySelectorAll("tr");
-  console.log("Found", studentRows.length, "student rows");
 
   studentRows.forEach((row, index) => {
     const checkbox = row.querySelector(".student-checkbox");
     if (!checkbox) {
-      console.log("Row", index, "has no checkbox, skipping");
       return;
     }
 
     let showRow = true;
 
-    if (deptVal) {
-      const deptValue = checkbox.dataset.collection;
-      console.log("Row", index, "dept check:", deptValue, "vs", deptVal);
-      if (deptValue !== deptVal) showRow = false;
-    }
-
+    // Only filter by status, not department
     if (statusVal) {
       const statusAttr = checkbox.dataset.status || "";
-      console.log("Row", index, "status check:", statusAttr, "vs", statusVal);
-      if (statusAttr.toLowerCase() !== statusVal.toLowerCase()) showRow = false;
+      if (statusAttr.toLowerCase() !== statusVal.toLowerCase()) {
+        showRow = false;
+      }
     }
 
-    console.log("Row", index, "will be", showRow ? "shown" : "hidden");
     row.style.display = showRow ? "" : "none";
   });
 
@@ -775,16 +732,11 @@ function togglePass(icon) {
 
 function initializeStatusUpdates() {
   const studentCheckboxes = document.querySelectorAll(".student-checkbox");
-  console.log("Found", studentCheckboxes.length, "student checkboxes");
   if (!studentCheckboxes.length) return;
 
   studentCheckboxes.forEach((checkbox) => {
     checkbox.addEventListener("change", async function () {
-      console.log("Checkbox changed", this.checked);
-      console.log("Dataset:", this.dataset);
-
       if (isInitializing) {
-        console.log("Skipping status update - initializing");
         return;
       }
 
@@ -798,10 +750,6 @@ function initializeStatusUpdates() {
       const studentId = this.dataset.studentId?.trim();
       const collection = this.dataset.collection?.trim();
       const status = this.checked ? "Active" : "Pending";
-
-      console.log("Student ID:", studentId);
-      console.log("Collection:", collection);
-      console.log("Status:", status);
 
       if (!studentId || !collection) {
         _showNotification("Student ID or collection missing", "error");
@@ -845,20 +793,16 @@ function initializeStatusUpdates() {
         }
 
         if (data && data.success) {
-          console.log("Status update successful");
           this.dataset.status = status.toLowerCase();
           const row = this.closest("tr");
           const statusCell = row?.querySelector(".student-status");
-          console.log("Found status cell:", statusCell);
           if (statusCell) {
-            console.log("Updating status cell text to:", status);
             statusCell.textContent = status;
             statusCell.className = `student-status ${
               status.toLowerCase() === "active"
                 ? "status-active"
                 : "status-pending"
             }`;
-            console.log("New status cell className:", statusCell.className);
           }
           applyFilters();
 
@@ -888,7 +832,6 @@ function initializeStatusUpdates() {
         if (isSelectAllActive) {
           setTimeout(() => {
             isSelectAllActive = false;
-            console.log("Select all operation completed, flag reset");
           }, 100);
         }
       }
@@ -911,17 +854,11 @@ async function updateStudentDetails(studentId, fields) {
   try {
     const endpoint = window.location.origin + STUDENT_UPDATE_ENDPOINT;
 
-    console.log("Sending update request to:", endpoint);
-    console.log("Update data:", { original_student_id: studentId, ...fields });
-
     const res = await fetch(endpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ original_student_id: studentId, ...fields }),
     });
-
-    console.log("Response status:", res.status);
-    console.log("Response ok:", res.ok);
 
     if (!res.ok) {
       const errorText = await res.text();
@@ -936,7 +873,6 @@ async function updateStudentDetails(studentId, fields) {
     let data;
     try {
       data = await res.json();
-      console.log("Response data:", data);
     } catch (jsonError) {
       console.error("JSON parse error:", jsonError);
       _showNotification("Failed to parse server response", "error");
@@ -967,8 +903,6 @@ async function updateStudentDetails(studentId, fields) {
 }
 
 function submitStudentForm(studentId, event) {
-  console.log("submitStudentForm called with studentId:", studentId);
-
   if (!studentId) {
     console.error("No studentId provided");
     return;
