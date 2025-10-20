@@ -125,7 +125,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 input:focus,
 textarea:focus {
   border-color: var(--input-focus);
- 0 0 0 3px rgba(12, 39, 190, 0.1);
+  box-shadow: 0 0 0 3px rgba(12, 39, 190, 0.1);
   background: var(--input-bg);
 }
 
