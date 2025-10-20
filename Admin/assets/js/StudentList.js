@@ -943,11 +943,20 @@ async function updateStudentDetails(studentId, fields) {
         "success"
       );
       
-      // Close the modal without reloading the page
+      // Close the modal
       const modal = document.getElementById(`editModal_${studentId}`);
       if (modal) {
         modal.classList.remove("active");
       }
+      
+      // Reload the current page to show updated data
+      const urlParams = new URLSearchParams(window.location.search);
+      const academicYear = urlParams.get("academic_year") || "";
+      const department = urlParams.get("department") || "bsme";
+      const tab = urlParams.get("tab") || "all";
+      const pageNum = urlParams.get("pageNum") || "1";
+      
+      loadStudentList(parseInt(pageNum), academicYear, department, tab);
     } else {
       _showNotification(
         data?.message || "Failed to save student details",
