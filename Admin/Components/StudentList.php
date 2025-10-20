@@ -327,19 +327,17 @@ if ($isIncludedInDashboard && (strpos($_SERVER['HTTP_HOST'], 'localhost') !== fa
 
                 <div class="card-datatable">
                     <table style="width:100%;">
-                        <?php if (!empty($allStudents)): ?>
-                            <thead>
-                                <tr>
-                                    <th>STUDENT</th>
-                                    <th>ID NUMBER</th>
-                                    <th>DEPARTMENT</th>
-                                    <th>ACADEMIC YEAR</th>
-                                    <th>STATUS</th>
-                                    <th>PASSWORD</th>
-                                    <th>ACTIONS <input type="checkbox" id="select-all-header" name="select-all-header" title="Select All"></th>
-                                </tr>
-                            </thead>
-                        <?php endif; ?>
+                        <thead>
+                            <tr>
+                                <th>STUDENT</th>
+                                <th>ID NUMBER</th>
+                                <th>DEPARTMENT</th>
+                                <th>ACADEMIC YEAR</th>
+                                <th>STATUS</th>
+                                <th>PASSWORD</th>
+                                <th>ACTIONS <input type="checkbox" id="select-all-header" name="select-all-header" title="Select All"></th>
+                            </tr>
+                        </thead>
                         <tbody>
                             <?php if (empty($allStudents)): ?>
                                 <tr>
