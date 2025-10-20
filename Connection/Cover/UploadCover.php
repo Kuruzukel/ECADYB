@@ -317,10 +317,7 @@ try {
     }
 
     $document = [
-        'filename' => $filename,
-        'original_name' => $originalName,
         'slot' => $slot,
-        'side' => $side,
         'batch_year' => $batchYear,
         'upload_time' => new \MongoDB\BSON\UTCDateTime()
     ];
@@ -331,11 +328,20 @@ try {
 
     if ($slot === 8) {
         $document['background_url'] = $publicUrl;
+        $document['background_filename'] = $filename;
+        $document['background_original_name'] = $originalName;
+        $document['background_side'] = 'background';
     } else {
         if ($side === 'front') {
             $document['front_url'] = $publicUrl;
+            $document['front_filename'] = $filename;
+            $document['front_original_name'] = $originalName;
+            $document['front_side'] = $side;
         } else {
             $document['back_url'] = $publicUrl;
+            $document['back_filename'] = $filename;
+            $document['back_original_name'] = $originalName;
+            $document['back_side'] = $side;
         }
     }
 
@@ -360,7 +366,8 @@ try {
         error_log("UploadCover.php upserting document: " . json_encode($document));
 
         $filter = [
-            'slot' => $slot
+            'slot' => $slot,
+            'batch_year' => $batchYear
         ];
 
         error_log("UploadCover.php using filter: " . json_encode($filter));
@@ -390,7 +397,8 @@ try {
                 
                 if ($docSlot === 8 && $hasBackground) {
                     $slotsWithImages[] = 8;
-                } elseif ($docSlot >= 1 && $docSlot <= 7 && ($hasFront || $hasBack)) {
+                } elseif ($docSlot >= 1 && $docSlot <= 7 && ($hasFront && $hasBack)) {
+                    // Both front and back must be present for slots 1-7
                     $slotsWithImages[] = $docSlot;
                 }
             }

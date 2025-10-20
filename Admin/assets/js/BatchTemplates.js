@@ -1029,35 +1029,37 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
       }
     });
 
-    deleteBtn.addEventListener("click", (event) => {
+    deleteBtn.addEventListener("click", async (event) => {
       event.stopPropagation();
-      selectedConfirmAction = () => {
+      selectedConfirmAction = async () => {
         const sides = [];
         if (frontImg) sides.push("front");
         if (backImg && !isBackgroundSlot) sides.push("back");
         if (!sides.length) return;
         
-        // Remove image immediately from UI
-        frontImg = null;
-        backImg = null;
-        showingFront = true;
-        box.innerHTML = "";
-        const newPlus = document.createElement("span");
-        newPlus.className = "plus-icon";
-        newPlus.textContent = "+";
-        box.appendChild(newPlus);
-        ensureChildren();
-        deleteBtn.style.display = "none";
-        frontInput.value = "";
-        backInput.value = "";
-        box.classList.remove("has-image");
-        
-        // Show notification immediately
-        showNotification("Image deleted", "success");
-        
-        // Delete from server in background
+        // Delete from server first, then update UI only if successful
         if (sides.length > 0) {
-          deleteCover(slot, sides[0]);
+          const success = await deleteCover(slot, sides[0]);
+          
+          if (success) {
+            // Remove image from UI only after successful deletion
+            frontImg = null;
+            backImg = null;
+            showingFront = true;
+            box.innerHTML = "";
+            const newPlus = document.createElement("span");
+            newPlus.className = "plus-icon";
+            newPlus.textContent = "+";
+            box.appendChild(newPlus);
+            ensureChildren();
+            deleteBtn.style.display = "none";
+            frontInput.value = "";
+            backInput.value = "";
+            box.classList.remove("has-image");
+            
+            // Show success notification
+            showNotification("Image deleted successfully", "success");
+          }
         }
       };
       openDeleteModal();
@@ -1165,18 +1167,21 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
 
         const data = await res.json().catch(() => null);
         if (!data?.success) {
-          // Only show error notification if delete fails
+          // Show error notification if delete fails
           showNotification(data?.message || "Delete failed", "error");
+          return false;
         } else {
           // Update available sections after deletion
           if (window.setAvailableSections) {
             await window.setAvailableSections();
           }
+          return true;
         }
       } catch (err) {
         console.error("Delete error:", err);
-        // Only show error notification if delete fails
+        // Show error notification if delete fails
         showNotification(err.message || "Delete failed", "error");
+        return false;
       }
     }
 

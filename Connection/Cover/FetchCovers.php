@@ -57,13 +57,22 @@ try {
             'projection' => [
                 'slot' => 1,
                 'front_url' => 1,
+                'front_filename' => 1,
+                'front_original_name' => 1,
+                'front_side' => 1,
                 'back_url' => 1,
+                'back_filename' => 1,
+                'back_original_name' => 1,
+                'back_side' => 1,
                 'background_url' => 1,
+                'background_filename' => 1,
+                'background_original_name' => 1,
+                'background_side' => 1,
                 'batch_year' => 1,
                 'completion_date' => 1,
                 'upload_time' => 1
-            ],
-            'limit' => 8
+            ]
+            // Removed limit since we now have multiple documents per slot (one per batch year)
         ]
     );
 
@@ -96,20 +105,43 @@ try {
         if ($slot >= 1 && $slot <= 7) {
             $front = isset($doc['front_url']) ? (string)$doc['front_url'] : '';
             $back  = isset($doc['back_url']) ? (string)$doc['back_url'] : '';
+            
+            $frontFilename = isset($doc['front_filename']) ? (string)$doc['front_filename'] : '';
+            $frontOriginalName = isset($doc['front_original_name']) ? (string)$doc['front_original_name'] : '';
+            $frontSide = isset($doc['front_side']) ? (string)$doc['front_side'] : '';
+            
+            $backFilename = isset($doc['back_filename']) ? (string)$doc['back_filename'] : '';
+            $backOriginalName = isset($doc['back_original_name']) ? (string)$doc['back_original_name'] : '';
+            $backSide = isset($doc['back_side']) ? (string)$doc['back_side'] : '';
+            
             $items[] = [
                 'slot' => $slot,
                 'front_url' => $front ? ($front . $version) : '',
+                'front_filename' => $frontFilename,
+                'front_original_name' => $frontOriginalName,
+                'front_side' => $frontSide,
                 'back_url' => $back ? ($back . $version) : '',
+                'back_filename' => $backFilename,
+                'back_original_name' => $backOriginalName,
+                'back_side' => $backSide,
                 'batch_year' => $batchYear,
                 'completion_date' => $completionDate
             ];
         } elseif ($slot === 8) {
             $backgroundUrl = isset($doc['background_url']) ? (string)$doc['background_url'] : '';
             $backgroundWithV = $backgroundUrl ? ($backgroundUrl . $version) : '';
+            
+            $backgroundFilename = isset($doc['background_filename']) ? (string)$doc['background_filename'] : '';
+            $backgroundOriginalName = isset($doc['background_original_name']) ? (string)$doc['background_original_name'] : '';
+            $backgroundSide = isset($doc['background_side']) ? (string)$doc['background_side'] : '';
+            
             $items[] = [
                 'slot' => 8,
                 'front_url' => $backgroundWithV,
                 'background_url' => $backgroundWithV,
+                'background_filename' => $backgroundFilename,
+                'background_original_name' => $backgroundOriginalName,
+                'background_side' => $backgroundSide,
                 'batch_year' => $batchYear,
                 'completion_date' => $completionDate
             ];

@@ -91,15 +91,18 @@ try {
         error_log("DeleteCover.php error checking databases: " . $e->getMessage());
     }
 
-    // Build query filter - only use slot (same as upload)
-    // Note: Each slot can only have ONE document, regardless of batch_year
+    // Build query filter - use both slot AND batch_year (same as upload)
+    // This ensures each batch year has its own separate documents
     $filter = ['slot' => $slot];
+    if (!empty($batchYear)) {
+        $filter['batch_year'] = $batchYear;
+    }
     
     error_log("DeleteCover.php query filter: " . json_encode($filter));
     
     $doc = $collection->findOne($filter);
     if (!$doc) {
-        error_log("DeleteCover.php: No document found for slot $slot");
+        error_log("DeleteCover.php: No document found for slot $slot, batch_year $batchYear");
         respond(false, 'Cover not found');
     }
     
@@ -168,10 +171,16 @@ try {
         }
 
         $unsetFields = [
-            'background_url' => ""
+            'background_url' => "",
+            'background_filename' => "",
+            'background_original_name' => "",
+            'background_side' => ""
         ];
     } else {
         $urlField = $side . '_url';
+        $filenameField = $side . '_filename';
+        $originalNameField = $side . '_original_name';
+        $sideField = $side . '_side';
 
         $existingUrl = isset($doc[$urlField]) ? (string)$doc[$urlField] : '';
 
@@ -185,15 +194,21 @@ try {
         }
 
         $unsetFields = [
-            $urlField => ""
+            $urlField => "",
+            $filenameField => "",
+            $originalNameField => "",
+            $sideField => ""
         ];
     }
 
     error_log("DeleteCover.php BunnyCDN deletion result: " . ($bunnyDeleteSuccess ? "SUCCESS" : "FAILED"));
     error_log("DeleteCover.php unsetting fields: " . json_encode($unsetFields));
 
-    // Build update filter - only use slot (same as upload)
+    // Build update filter - use both slot AND batch_year (same as upload)
     $updateFilter = ['slot' => $slot];
+    if (!empty($batchYear)) {
+        $updateFilter['batch_year'] = $batchYear;
+    }
     
     error_log("DeleteCover.php update filter: " . json_encode($updateFilter));
 
