@@ -511,7 +511,8 @@ function initializeFilters() {
     if (filter) filter.addEventListener("change", applyFilters);
   });
 
-  applyFilters();
+  // Don't call applyFilters on initialization - let the page load naturally
+  // applyFilters() will only be called when status filter changes
 }
 
 function applyFilters() {

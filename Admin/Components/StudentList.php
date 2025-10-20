@@ -408,6 +408,8 @@ if ($isIncludedInDashboard && (strpos($_SERVER['HTTP_HOST'], 'localhost') !== fa
                                                             onsubmit="return false;">
                                                             <input type="hidden"
                                                                 id="collection-hidden-<?php echo $student['student_id']; ?>"
+                                                                name="collection"
+                                                                autocomplete="off"
                                                                 value="<?php echo htmlspecialchars($student['collection'] ?? 'students'); ?>">
 
                                                             <div class="form-group">
@@ -421,6 +423,7 @@ if ($isIncludedInDashboard && (strpos($_SERVER['HTTP_HOST'], 'localhost') !== fa
                                                                     <input type="text"
                                                                         id="first_name<?php echo $student['student_id']; ?>"
                                                                         name="first_name"
+                                                                        autocomplete="given-name"
                                                                         value="<?php echo htmlspecialchars($student['first_name'] ?? ''); ?>"
                                                                         required oninput="allowOnlyLetters(this)"
                                                                         onkeypress="return /[a-zA-Z\s]/.test(event.key)"
@@ -432,6 +435,7 @@ if ($isIncludedInDashboard && (strpos($_SERVER['HTTP_HOST'], 'localhost') !== fa
                                                                     <input type="text"
                                                                         id="middle_name<?php echo $student['student_id']; ?>"
                                                                         name="middle_name"
+                                                                        autocomplete="additional-name"
                                                                         value="<?php echo htmlspecialchars($student['middle_name'] ?? ''); ?>"
                                                                         oninput="allowOnlyLetters(this);removeSpaces(this)"
                                                                         onkeypress="return /[a-zA-Z\s]/.test(event.key)"
@@ -443,6 +447,7 @@ if ($isIncludedInDashboard && (strpos($_SERVER['HTTP_HOST'], 'localhost') !== fa
                                                                     <input type="text"
                                                                         id="last_name<?php echo $student['student_id']; ?>"
                                                                         name="last_name"
+                                                                        autocomplete="family-name"
                                                                         value="<?php echo htmlspecialchars($student['last_name'] ?? ''); ?>"
                                                                         required
                                                                         oninput="allowOnlyLetters(this);removeSpaces(this)"
@@ -451,9 +456,10 @@ if ($isIncludedInDashboard && (strpos($_SERVER['HTTP_HOST'], 'localhost') !== fa
 
                                                                     <label
                                                                         for="email<?php echo $student['student_id']; ?>">Email:</label>
-                                                                    <input type="text"
+                                                                    <input type="email"
                                                                         id="email<?php echo $student['student_id']; ?>"
                                                                         name="email"
+                                                                        autocomplete="email"
                                                                         value="<?php echo htmlspecialchars($student['email'] ?? ''); ?>"
                                                                         oninput="removeSpaces(this)" placeholder="Email">
 
@@ -462,6 +468,7 @@ if ($isIncludedInDashboard && (strpos($_SERVER['HTTP_HOST'], 'localhost') !== fa
                                                                     <input type="text"
                                                                         id="password<?php echo $student['student_id']; ?>"
                                                                         name="password"
+                                                                        autocomplete="new-password"
                                                                         value="<?php echo htmlspecialchars($student['password'] ?? ''); ?>"
                                                                         placeholder="Password">
                                                                 </div>
@@ -475,6 +482,7 @@ if ($isIncludedInDashboard && (strpos($_SERVER['HTTP_HOST'], 'localhost') !== fa
                                                                     <input type="text"
                                                                         id="academic_year<?php echo $student['student_id']; ?>"
                                                                         name="academic_year"
+                                                                        autocomplete="off"
                                                                         value="<?php echo htmlspecialchars($student['academic_year'] ?? ''); ?>"
                                                                         placeholder="0000-0000" maxlength="9"
                                                                         oninput="formatAcademicYear(this)">
@@ -482,7 +490,8 @@ if ($isIncludedInDashboard && (strpos($_SERVER['HTTP_HOST'], 'localhost') !== fa
                                                                     <label
                                                                         for="program<?php echo $student['student_id']; ?>">Program:</label>
                                                                     <select id="program<?php echo $student['student_id']; ?>"
-                                                                        name="program">
+                                                                        name="program"
+                                                                        autocomplete="off">
                                                                         <option value="" disabled>Select a program</option>
                                                                         <option value="bsme"
                                                                             <?php if (($student['program'] ?? '') == "bsme") echo "selected"; ?>>
@@ -521,6 +530,7 @@ if ($isIncludedInDashboard && (strpos($_SERVER['HTTP_HOST'], 'localhost') !== fa
                                                                     <input type="text"
                                                                         id="section<?php echo $student['student_id']; ?>"
                                                                         name="section"
+                                                                        autocomplete="off"
                                                                         value="<?php echo htmlspecialchars($student['section'] ?? ''); ?>"
                                                                         placeholder="Section">
 
@@ -532,6 +542,7 @@ if ($isIncludedInDashboard && (strpos($_SERVER['HTTP_HOST'], 'localhost') !== fa
                                                                     <input type="text"
                                                                         id="student_id<?php echo $student['student_id']; ?>"
                                                                         name="student_id"
+                                                                        autocomplete="off"
                                                                         value="<?php echo htmlspecialchars($student['student_id'] ?? ''); ?>"
                                                                         placeholder="0000-000000" maxlength="11"
                                                                         oninput="formatStudentID(this)">
@@ -547,6 +558,7 @@ if ($isIncludedInDashboard && (strpos($_SERVER['HTTP_HOST'], 'localhost') !== fa
                                                                     <input type="text"
                                                                         id="motto<?php echo $student['student_id']; ?>"
                                                                         name="motto"
+                                                                        autocomplete="off"
                                                                         value="<?php echo htmlspecialchars($student['motto'] ?? ''); ?>"
                                                                         placeholder="Personal Philosophy">
 
@@ -556,6 +568,7 @@ if ($isIncludedInDashboard && (strpos($_SERVER['HTTP_HOST'], 'localhost') !== fa
                                                                     <input type="text"
                                                                         id="honors<?php echo $student['student_id']; ?>"
                                                                         name="honors"
+                                                                        autocomplete="off"
                                                                         value="<?php echo htmlspecialchars($student['honors'] ?? ''); ?>"
                                                                         placeholder="Latin Awards">
 
@@ -565,6 +578,7 @@ if ($isIncludedInDashboard && (strpos($_SERVER['HTTP_HOST'], 'localhost') !== fa
                                                                     <input type="text"
                                                                         id="milestone<?php echo $student['student_id']; ?>"
                                                                         name="milestone"
+                                                                        autocomplete="off"
                                                                         value="<?php echo htmlspecialchars($student['milestone'] ?? ''); ?>"
                                                                         placeholder="Career Highlights">
 
