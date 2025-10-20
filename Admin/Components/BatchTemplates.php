@@ -42,9 +42,16 @@
             </div>
             <div class="form-content" style="width: 100%;">
 
+                <div class="generate-button-container">
+                    <button class="generate-batch-btn" id="generateBatchBtn">
+                        <i class="fas fa-magic"></i>
+                        <span>Generate Batch Template</span>
+                    </button>
+                </div>
+
                 <div class="form-group">
                     <div class="section">
-                        <div class="section-header">Batch Template 1</div>
+                        <div class="section-header">Batch Year 2024-2025</div>
                         <div class="section-content">
                             <div class="upload-grid">
                                 <div class="upload-box">
@@ -100,7 +107,7 @@
                     </div>
 
                     <div class="section">
-                        <div class="section-header">Batch Template 2</div>
+                        <div class="section-header">Batch Year 2025-2026</div>
                         <div class="section-content">
                             <div class="upload-grid">
                                 <div class="upload-box">
@@ -156,7 +163,7 @@
                     </div>
 
                     <div class="section">
-                        <div class="section-header">Batch Template 3</div>
+                        <div class="section-header">Batch Year 2026-2027</div>
                         <div class="section-content">
                             <div class="upload-grid">
                                 <div class="upload-box">

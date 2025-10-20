@@ -69,6 +69,9 @@ h1 .chevron i {
 .form-content {
   padding: 25px;
   box-sizing: border-box;
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .form-group {
@@ -81,16 +84,20 @@ h1 .chevron i {
   width: 32%;
   min-width: 250px;
   background-color: var(--section-bg);
-  padding: 20px;
+  padding: 15px;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
   box-sizing: border-box;
-  min-height: 555px;
+  height: 570px;
+  max-height: 570px;
   display: flex;
   flex-direction: column;
   transition: all 0.3s ease;
   border: 1px solid rgba(59, 130, 246, 0.1);
+  overflow: hidden;
 }
+
+
 
 .section:hover {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
@@ -103,7 +110,6 @@ h1 .chevron i {
   height: 50px;
   background: linear-gradient(135deg, var(--section-header) 0%, #3b82f6 100%);
   color: white;
-  padding: 12px;
   margin: -20px -20px 20px -20px;
   border-radius: 8px 8px 0 0;
   text-align: center;
