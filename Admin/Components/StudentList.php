@@ -51,7 +51,8 @@ if ($selectedTemplate < 1 || $selectedTemplate > 3) {
     $selectedTemplate = 1;
 }
 
-$dbName = "BatchTemplate" . $selectedTemplate;
+// Use ECADYB database instead of BatchTemplate databases
+$dbName = "ECADYB";
 
 $client = new Client($mongoUrl, [
     'connectTimeoutMS' => 5000,
