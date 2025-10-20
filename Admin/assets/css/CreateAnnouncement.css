@@ -237,7 +237,7 @@ textarea {
   padding: 2rem;
   width: 90%;
   max-width: 450px;
- 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
     0 10px 10px -5px rgba(0, 0, 0, 0.04);
   border: 1px solid #475569;
 }
@@ -346,6 +346,7 @@ textarea {
   gap: 0.5rem;
   font-size: 0.875rem;
   font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   animation: slideInRight 0.3s ease-out;
   cursor: pointer;
   min-width: 300px;
