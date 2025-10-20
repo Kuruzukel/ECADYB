@@ -94,17 +94,13 @@ try {
 
     $collection = $db->$collectionName;
 
+    // Build filter without academic year first (more flexible)
     $filter = [
         '$or' => [
             ['student id' => $studentId],
             ['student_id' => $studentId]
         ]
     ];
-
-    // Add academic year filter if provided
-    if (!empty($academicYear)) {
-        $filter['academic year'] = $academicYear;
-    }
 
     $student = $collection->findOne($filter);
 
@@ -135,19 +131,8 @@ try {
         exit;
     }
 
-    $deleteFilter = [
-        '$or' => [
-            ['student id' => $studentId],
-            ['student_id' => $studentId]
-        ]
-    ];
-
-    // Add academic year filter if provided
-    if (!empty($academicYear)) {
-        $deleteFilter['academic year'] = $academicYear;
-    }
-
-    $deleteResult = $collection->deleteOne($deleteFilter);
+    // Delete using the same filter that found the student
+    $deleteResult = $collection->deleteOne($filter);
 
     error_log("DeleteStudent result - Deleted count: " . $deleteResult->getDeletedCount());
 
