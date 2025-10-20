@@ -87,7 +87,7 @@ h1 .chevron i {
   background-color: var(--section-bg);
   padding: 20px;
   border-radius: 12px;
- 0 4px 12px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
   box-sizing: border-box;
   min-height: 570px;
   display: flex;
@@ -97,7 +97,7 @@ h1 .chevron i {
 }
 
 .section:hover {
- 0 8px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
   transform: translateY(-2px);
   border-color: rgba(59, 130, 246, 0.3);
 }
@@ -117,7 +117,7 @@ h1 .chevron i {
   align-items: center;
   justify-content: center;
   letter-spacing: 0.5px;
- 0 4px 6px -1px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.15);
   position: relative;
   overflow: hidden;
 }
@@ -177,7 +177,7 @@ select:focus {
   outline: none;
   border-color: #3b82f6;
   background-color: #0f172a;
- 0 0 0 3px rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
   transform: translateY(-1px);
 }
 
@@ -226,7 +226,7 @@ select:hover {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   transition: all 0.3s ease;
- 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
   font-family: inherit;
 }
@@ -234,7 +234,7 @@ select:hover {
 .submit-btn:hover {
   background: #45a049;
   transform: translateY(-2px);
- 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
     0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
@@ -283,7 +283,7 @@ select:hover {
   padding: 2rem;
   width: 90%;
   max-width: 450px;
- 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
     0 10px 10px -5px rgba(0, 0, 0, 0.04);
   border: 1px solid #475569;
 }
@@ -412,7 +412,7 @@ select:hover {
   display: flex;
   align-items: center;
   gap: 10px;
- 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   transform: translateY(-100px);
   transition: all 0.3s ease-in-out;
   max-width: 350px;
