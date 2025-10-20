@@ -649,6 +649,10 @@ async function confirmDeleteStudent(event) {
     event.stopPropagation();
   }
 
+  // Save values before closing modal (which sets them to null)
+  const studentIdToDelete = selectedStudentId;
+  const collectionToDelete = selectedCollection;
+
   confirmDeleteBtn.disabled = true;
   
   // Optimistic UI update - close modal immediately
@@ -657,7 +661,7 @@ async function confirmDeleteStudent(event) {
   // Find and remove row immediately for instant feedback
   const row = document
     .querySelector(
-      `.student-checkbox[data-student-id="${selectedStudentId}"]`
+      `.student-checkbox[data-student-id="${studentIdToDelete}"]`
     )
     ?.closest("tr");
   
@@ -676,15 +680,18 @@ async function confirmDeleteStudent(event) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        student_id: selectedStudentId,
-        collection: selectedCollection,
+        student_id: studentIdToDelete,
+        collection: collectionToDelete,
         academic_year: academicYear,
       }),
     });
 
-    if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
-
     const data = await res.json().catch(() => null);
+    
+    if (!res.ok) {
+      const errorMsg = data?.message || `HTTP ${res.status} ${res.statusText}`;
+      throw new Error(errorMsg);
+    }
 
     if (data?.success) {
       // Remove row immediately
