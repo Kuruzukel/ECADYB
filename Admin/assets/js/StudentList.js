@@ -181,13 +181,10 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   const urlParams = new URLSearchParams(window.location.search);
-  const currentTemplate = urlParams.get("template");
-  const savedTemplate = localStorage.getItem("selectedBatchTemplateNumber");
+  const currentAcademicYear = urlParams.get("academic_year");
 
-  if (!currentTemplate && savedTemplate) {
-    urlParams.set("template", savedTemplate);
-    const newUrl = window.location.pathname + "?" + urlParams.toString();
-    window.location.href = newUrl;
+  if (!currentAcademicYear) {
+    // If no academic year is selected, let the page load with the default
     return;
   }
 
@@ -313,15 +310,15 @@ function initializeSelectAll() {
       if (this.checked) {
         const departmentFilter = document.getElementById("department-filter");
         const statusFilter = document.getElementById("status-filter");
-        const templateFilter = document.getElementById("template-filter");
+        const academicYearFilter = document.getElementById("academic-year-filter");
 
         const department = departmentFilter ? departmentFilter.value : "";
         const status = statusFilter ? statusFilter.value : "";
-        const template = templateFilter ? templateFilter.value : "1";
+        const academicYear = academicYearFilter ? academicYearFilter.value : "";
 
         if (department) {
           currentOperation = "activating_all";
-          updateAllStudentsStatus(department, "Active", template, status);
+          updateAllStudentsStatus(department, "Active", academicYear, status);
         } else {
           isSelectAllOperation = true;
           selectAllProcessedCount = 0;
@@ -338,15 +335,15 @@ function initializeSelectAll() {
       } else {
         const departmentFilter = document.getElementById("department-filter");
         const statusFilter = document.getElementById("status-filter");
-        const templateFilter = document.getElementById("template-filter");
+        const academicYearFilter = document.getElementById("academic-year-filter");
 
         const department = departmentFilter ? departmentFilter.value : "";
         const status = statusFilter ? statusFilter.value : "";
-        const template = templateFilter ? templateFilter.value : "1";
+        const academicYear = academicYearFilter ? academicYearFilter.value : "";
 
         if (department) {
           currentOperation = "pending_all";
-          updateAllStudentsStatus(department, "Pending", template, status);
+          updateAllStudentsStatus(department, "Pending", academicYear, status);
         } else {
           visibleStudentCheckboxes.forEach((checkbox) => {
             if (checkbox.checked) {
@@ -367,7 +364,7 @@ function initializeSelectAll() {
 async function updateAllStudentsStatus(
   collection,
   status,
-  template,
+  academicYear,
   statusFilter
 ) {
   try {
@@ -381,7 +378,7 @@ async function updateAllStudentsStatus(
       body: JSON.stringify({
         collection: collection,
         status: status,
-        template: template,
+        academic_year: academicYear,
         status_filter: statusFilter,
       }),
     });
@@ -405,12 +402,12 @@ async function updateAllStudentsStatus(
       }, 100);
 
       const urlParams = new URLSearchParams(window.location.search);
-      const template = urlParams.get("template") || "1";
+      const academicYear = urlParams.get("academic_year") || "";
       const department = urlParams.get("department") || "";
       const tab = urlParams.get("tab") || "all";
       const pageNum = urlParams.get("pageNum") || "1";
 
-      loadStudentList(parseInt(pageNum), template, department, tab);
+      loadStudentList(parseInt(pageNum), academicYear, department, tab);
     } else {
       if (notificationTimeout) {
         clearTimeout(notificationTimeout);
@@ -483,25 +480,33 @@ function initializeFilters() {
   const entriesCount = document.getElementById("entries-count");
   const departmentFilter = document.getElementById("department-filter");
   const statusFilter = document.getElementById("status-filter");
-  const templateFilter = document.getElementById("template-filter");
+  const academicYearFilter = document.getElementById("academic-year-filter");
 
-  if (templateFilter) {
-    templateFilter.disabled = true;
-    templateFilter.style.cursor = "not-allowed";
-    templateFilter.style.opacity = "0.6";
+  if (academicYearFilter) {
+    academicYearFilter.addEventListener("change", function () {
+      const urlParams = new URLSearchParams(window.location.search);
+      const academicYear = this.value;
+      const department = urlParams.get("department") || "bsme";
+      const tab = urlParams.get("tab") || "all";
+
+      const newUrl = `?page=student-list&academic_year=${academicYear}&department=${department}&tab=${tab}&pageNum=1`;
+      window.history.pushState({}, "", newUrl);
+
+      loadStudentList(1, academicYear, department, tab);
+    });
   }
 
   if (departmentFilter) {
     departmentFilter.addEventListener("change", function () {
       const urlParams = new URLSearchParams(window.location.search);
-      const template = urlParams.get("template") || "1";
+      const academicYear = urlParams.get("academic_year") || "";
       const department = this.value;
       const tab = urlParams.get("tab") || "all";
 
-      const newUrl = `?page=student-list&template=${template}&department=${department}&tab=${tab}&pageNum=1`;
+      const newUrl = `?page=student-list&academic_year=${academicYear}&department=${department}&tab=${tab}&pageNum=1`;
       window.history.pushState({}, "", newUrl);
 
-      loadStudentList(1, template, department, tab);
+      loadStudentList(1, academicYear, department, tab);
     });
   }
 
@@ -631,7 +636,7 @@ async function confirmDeleteStudent(event) {
 
   try {
     const urlParams = new URLSearchParams(window.location.search);
-    const template = urlParams.get("template") || "1";
+    const academicYear = urlParams.get("academic_year") || "";
 
     const endpoint = window.location.origin + DELETE_STUDENT_ENDPOINT;
 
@@ -641,7 +646,7 @@ async function confirmDeleteStudent(event) {
       body: JSON.stringify({
         student_id: selectedStudentId,
         collection: selectedCollection,
-        template: template,
+        academic_year: academicYear,
       }),
     });
 
@@ -669,13 +674,13 @@ async function confirmDeleteStudent(event) {
 
         if (remainingRows && remainingRows.length === 0) {
           const urlParams = new URLSearchParams(window.location.search);
-          const template = urlParams.get("template") || "1";
+          const academicYear = urlParams.get("academic_year") || "";
 
           const noStudentsRow = document.createElement("tr");
           noStudentsRow.innerHTML = `
             <td colspan="7" class="no-students-message">
               <div class="no-students-content">
-                <p>No students found in this department for Batch Template <strong>${template}</strong>.</p>
+                <p>No students found in this department for Academic Year <strong>${academicYear}</strong>.</p>
               </div>
             </td>
           `;
@@ -759,7 +764,7 @@ function initializeStatusUpdates() {
 
       try {
         const urlParams = new URLSearchParams(window.location.search);
-        const template = urlParams.get("template") || "1";
+        const academicYear = urlParams.get("academic_year") || "";
 
         const endpoint = window.location.origin + STATUS_ENDPOINT;
 
@@ -770,7 +775,7 @@ function initializeStatusUpdates() {
             student_id: studentId,
             collection,
             status,
-            template,
+            academic_year: academicYear,
           }),
         });
 
@@ -847,8 +852,8 @@ async function updateStudentDetails(studentId, fields) {
   if (collectionEl) fields["collection"] = collectionEl.value;
 
   const urlParams = new URLSearchParams(window.location.search);
-  const template = urlParams.get("template") || "1";
-  fields["template"] = template;
+  const academicYear = urlParams.get("academic_year") || "";
+  fields["academic_year"] = academicYear;
 
   try {
     const endpoint = window.location.origin + STUDENT_UPDATE_ENDPOINT;
@@ -985,17 +990,17 @@ function changePage(pageNum) {
   const urlParams = new URLSearchParams(window.location.search);
   urlParams.set("pageNum", pageNum);
 
-  const template = urlParams.get("template") || "1";
+  const academicYear = urlParams.get("academic_year") || "";
   const department = urlParams.get("department") || "bsme";
   const tab = urlParams.get("tab") || "all";
 
-  const newUrl = `?page=student-list&template=${template}&department=${department}&tab=${tab}&pageNum=${pageNum}`;
+  const newUrl = `?page=student-list&academic_year=${academicYear}&department=${department}&tab=${tab}&pageNum=${pageNum}`;
   window.history.pushState({}, "", newUrl);
 
-  loadStudentList(pageNum, template, department, tab);
+  loadStudentList(pageNum, academicYear, department, tab);
 }
 
-function loadStudentList(pageNum, template, department, tab) {
+function loadStudentList(pageNum, academicYear, department, tab) {
   const tableBody = document.querySelector("tbody");
   if (tableBody) {
     tableBody.innerHTML =
@@ -1003,7 +1008,7 @@ function loadStudentList(pageNum, template, department, tab) {
   }
 
   fetch(
-    `?page=student-list&template=${template}&department=${department}&tab=${tab}&pageNum=${pageNum}&ajax=1`
+    `?page=student-list&academic_year=${academicYear}&department=${department}&tab=${tab}&pageNum=${pageNum}&ajax=1`
   )
     .then((response) => response.text())
     .then((data) => {
@@ -1029,7 +1034,7 @@ function loadStudentList(pageNum, template, department, tab) {
         ? parseInt(totalPagesInput.value)
         : null;
 
-      updatePaginationButtons(pageNum, template, department, tab, totalPages);
+      updatePaginationButtons(pageNum, academicYear, department, tab, totalPages);
 
       // Re-initialize without setTimeout to prevent glitching
       isInitializing = true;
@@ -1051,7 +1056,7 @@ function loadStudentList(pageNum, template, department, tab) {
 
 function updatePaginationButtons(
   pageNum,
-  template,
+  academicYear,
   department,
   tab,
   totalPages = null
