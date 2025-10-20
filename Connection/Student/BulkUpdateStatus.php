@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $collection = trim($input['collection'] ?? '');
     $status     = trim($input['status'] ?? '');
-    $template   = trim($input['template'] ?? '1');
+    $academicYear = trim($input['academic_year'] ?? '');
     $statusFilter = $input['status_filter'] ?? null;
 
     if (!$collection || !$status) {
@@ -58,13 +58,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    $dbName = "BatchTemplate" . $template;
+    // Use ECADYB database instead of BatchTemplate databases
+    $dbName = "ECADYB";
     $db = $client->$dbName;
 
     try {
         $coll = $db->$collection;
 
         $filter = [];
+
+        // Add academic year filter if provided
+        if (!empty($academicYear)) {
+            $filter['academic year'] = $academicYear;
+        }
 
         if ($statusFilter && $statusFilter !== '') {
             if ($statusFilter === 'active') {
