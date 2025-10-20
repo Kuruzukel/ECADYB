@@ -180,14 +180,6 @@ window.addEventListener("DOMContentLoaded", () => {
     applyTheme(savedTheme);
   }
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const currentAcademicYear = urlParams.get("academic_year");
-
-  if (!currentAcademicYear) {
-    // If no academic year is selected, let the page load with the default
-    return;
-  }
-
   isInitializing = true;
 
   initializeSelectAll();
