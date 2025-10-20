@@ -417,11 +417,8 @@ function generateNewBatchSection() {
     if (insertPosition === 0) {
       // Insert at the beginning (left position)
       targetFormGroup.insertBefore(newSection, sectionsInGroup[0] || null);
-    } else if (insertPosition === 1) {
-      // Insert in the middle
-      targetFormGroup.insertBefore(newSection, sectionsInGroup[1] || null);
     } else {
-      // Insert at the end (right position)
+      // Insert at the end (right position) - for both middle and right positions
       targetFormGroup.appendChild(newSection);
     }
   } else {

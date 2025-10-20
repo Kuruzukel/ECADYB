@@ -164,7 +164,7 @@ h1 .chevron i {
 
 .form-group {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 25px;
   margin-bottom: 25px;
 }
