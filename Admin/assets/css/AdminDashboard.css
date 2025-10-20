@@ -21,6 +21,7 @@ body {
 
 body {
   background-color: var(--body-bg);
+  color: var(--text-color);
   display: flex;
   flex-direction: column;
 }
@@ -101,7 +102,7 @@ header {
   );
   color: #ffffff;
   font-weight: 400;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+ 0 4px 20px rgba(0, 0, 0, 0.15);
   border-left: 4px solid var(--menu-border-active);
 }
 
@@ -230,7 +231,7 @@ header {
   padding: 8px 16px;
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+ 0 4px 15px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
@@ -238,7 +239,7 @@ header {
 
 .search-container:hover {
   background: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+ 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
 .search-container .search-input {
@@ -417,7 +418,7 @@ main {
   width: 40px;
   height: 0;
   border-radius: 40px;
-  box-shadow: 4px 4px 0 -2px #585e69;
+ 4px 4px 0 -2px #585e69;
 }
 
 .tab.active::after {
@@ -428,7 +429,7 @@ main {
   width: 40px;
   height: 0;
   border-radius: 40px;
-  box-shadow: 4px -4px 0 -2px #585e69;
+ 4px -4px 0 -2px #585e69;
 }
 
 .submenu {
@@ -597,7 +598,7 @@ header h3 {
   padding: 2rem;
   width: 90%;
   max-width: 400px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+ 0 20px 25px -5px rgba(0, 0, 0, 0.1),
     0 10px 10px -5px rgba(0, 0, 0, 0.04);
   border: 1px solid #475569;
   text-align: center;
@@ -698,7 +699,7 @@ header h3 {
   border-radius: 12px;
   color: #fff;
   font-weight: 600;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+ 0 8px 20px rgba(0, 0, 0, 0.25);
   opacity: 0;
   transform: translateY(-40px);
   pointer-events: none;
