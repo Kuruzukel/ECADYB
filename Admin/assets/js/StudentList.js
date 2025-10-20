@@ -1041,13 +1041,11 @@ function loadStudentList(pageNum, academicYear, department, tab) {
 
       updatePaginationButtons(pageNum, academicYear, department, tab, totalPages);
 
-      // Re-initialize without setTimeout to prevent glitching
+      // Fast re-initialization - no delay
       isInitializing = true;
       initializeSelectAll();
       initializeStatusUpdates();
-      setTimeout(() => {
-        isInitializing = false;
-      }, 300);
+      isInitializing = false;
     })
     .catch((error) => {
       console.error("Error loading page:", error);
