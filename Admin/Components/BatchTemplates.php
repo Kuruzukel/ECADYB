@@ -169,9 +169,9 @@
                                 </div>
                                 <div class="upload-box action-box">
                                     <div class="action-buttons">
-                                        <button class="action-btn select-template-btn" title="Select Template">
+                                        <button class="action-btn select-batch-btn" title="Select Batch">
                                             <i class="fas fa-check-circle"></i>
-                                            <span>Select Template</span>
+                                            <span>Select Batch</span>
                                         </button>
                                         <button class="action-btn download-pdf-btn" title="Download PDF">
                                             <i class="fas fa-file-pdf"></i>
@@ -241,9 +241,9 @@
                                 </div>
                                 <div class="upload-box action-box">
                                     <div class="action-buttons">
-                                        <button class="action-btn select-template-btn" title="Select Template">
+                                        <button class="action-btn select-batch-btn" title="Select Batch">
                                             <i class="fas fa-check-circle"></i>
-                                            <span>Select Template</span>
+                                            <span>Select Batch</span>
                                         </button>
                                         <button class="action-btn download-pdf-btn" title="Download PDF">
                                             <i class="fas fa-file-pdf"></i>
