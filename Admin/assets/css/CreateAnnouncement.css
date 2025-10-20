@@ -83,7 +83,7 @@ h1 .chevron i {
   background-color: var(--section-bg);
   margin: 25px;
   border-radius: 8px;
- 0 2px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   min-height: 520px;
 }
 
@@ -132,7 +132,7 @@ textarea:focus {
 #title:focus,
 #message:focus {
   border-color: var(--input-focus);
- 0 0 0 3px rgba(12, 39, 190, 0.1);
+  box-shadow: 0 0 0 3px rgba(12, 39, 190, 0.1);
   background: var(--input-bg);
 }
 
