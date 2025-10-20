@@ -350,9 +350,8 @@ th {
   left: 0;
   height: 100vh;
   width: 100vw;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
   display: none;
   justify-content: center;
   align-items: center;
@@ -367,9 +366,8 @@ th {
 }
 
 .editStudentModal .modal-content {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
   border-radius: 16px;
   padding: 1rem;
   width: 95%;
@@ -613,8 +611,7 @@ th {
   left: 0;
   height: 100vh;
   width: 100vw;
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(2px);
   display: none;
   justify-content: center;
   align-items: center;
