@@ -94,13 +94,18 @@ try {
 
     $collection = $db->$collectionName;
 
-    // Build filter without academic year first (more flexible)
+    // Build filter with academic year if provided
     $filter = [
         '$or' => [
             ['student id' => $studentId],
             ['student_id' => $studentId]
         ]
     ];
+    
+    // Add academic year filter if provided
+    if (!empty($academicYear)) {
+        $filter['academic year'] = $academicYear;
+    }
 
     $student = $collection->findOne($filter);
 
