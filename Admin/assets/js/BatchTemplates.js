@@ -889,8 +889,8 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
 
     box.addEventListener("click", (event) => {
       if (event.target === deleteBtn) return;
-      if (isUploading) return; // Prevent clicking while uploading
-      if (isFileInputOpen) return; // Prevent clicking if file input is already open
+      if (isUploading) return;
+      if (isFileInputOpen) return;
 
       if (!frontImg) {
         isFileInputOpen = true;
