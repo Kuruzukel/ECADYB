@@ -913,7 +913,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
 
       event.stopPropagation();
 
-      // Reset file input open flag
       isFileInputOpen = false;
 
       // Prevent multiple uploads - check at the very beginning
