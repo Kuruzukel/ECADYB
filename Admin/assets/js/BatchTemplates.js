@@ -926,7 +926,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
 
       isUploadCancelled = false;
 
-      // Create object URLs BEFORE upload starts (files will be cleared after)
       const frontImageUrl =
         files.length > 0 ? URL.createObjectURL(files[0]) : null;
       const backImageUrl =
