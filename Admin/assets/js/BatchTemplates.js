@@ -1075,8 +1075,8 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
         }
       } finally {
         event.target.value = "";
-        isUploading = false; // Reset upload flag
-        isFileInputOpen = false; // Reset file input open flag
+        isUploading = false;
+        isFileInputOpen = false;
       }
     });
 
