@@ -1426,7 +1426,6 @@ function deleteBatchTemplate(section, batchName) {
 
 function confirmDeleteBatch() {
   if (window.pendingDeleteSection) {
-    // Remove only the specific section, not the entire form-group
     window.pendingDeleteSection.remove();
 
     // Update localStorage after deletion
