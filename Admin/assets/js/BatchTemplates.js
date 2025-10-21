@@ -1521,7 +1521,6 @@ window.addEventListener("DOMContentLoaded", () => {
     "cancel-select-template-btn"
   );
 
-  // Debug: Check if modal elements exist
   console.log("downloadPdfModal:", downloadPdfModal);
   console.log("deleteBatchModal:", deleteBatchModal);
   console.log("selectTemplateModal:", selectTemplateModal);
