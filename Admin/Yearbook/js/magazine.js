@@ -1088,10 +1088,6 @@ function loadPage(page, pageElement) {
                 text: student.name || 'Unknown Student',
               });
 
-              var honorsText = $("<p/>", {
-                text: student.program || student.section || "Honors and Achievements",
-              });
-
               // Store student data in data attributes for event delegation
               card.attr("data-student-id", student.student_id || "");
               card.attr("data-student-name", student.name || "Unknown Student");
@@ -1102,7 +1098,7 @@ function loadPage(page, pageElement) {
               card.attr("data-student-program", student.program || "");
               card.attr("data-student-section", student.section || "");
 
-              card.append(studentImg).append(studentName).append(honorsText);
+              card.append(studentImg).append(studentName);
 
               cardsContainer.append(card);
             }
