@@ -295,27 +295,27 @@ function closeDeleteBatchModal() {
 
 function openSelectTemplateModal(batchName) {
   console.log("openSelectTemplateModal called with:", batchName);
-  
+
   // Find the section by batch name
   const sections = document.querySelectorAll(".section");
   let targetSection = null;
-  
+
   sections.forEach((section) => {
     const sectionHeader = section.querySelector(".section-header");
     if (sectionHeader && sectionHeader.textContent.trim() === batchName) {
       targetSection = section;
     }
   });
-  
+
   if (!targetSection) {
     console.error("Section not found for:", batchName);
     return;
   }
-  
+
   // Store the section for confirmation
   window.pendingSelectSection = targetSection;
   window.pendingSelectBatchName = batchName;
-  
+
   const messageEl = document.getElementById("select-template-message");
   if (messageEl) {
     messageEl.textContent = `Do you want to select ${batchName}?`;
@@ -406,13 +406,15 @@ function generateNewBatchSection() {
 
   // Get all existing sections across all form-groups
   const allSections = document.querySelectorAll(".form-group .section");
-  
+
   // Get the last section's header text
   let nextYear = "2024-2025"; // Default year
   if (allSections.length > 0) {
     const lastSection = allSections[allSections.length - 1];
-    const lastHeader = lastSection.querySelector(".section-header").textContent.trim();
-    
+    const lastHeader = lastSection
+      .querySelector(".section-header")
+      .textContent.trim();
+
     // Extract year from "Batch Year 2026-2027" format
     const yearMatch = lastHeader.match(/(\d{4})-(\d{4})/);
     if (yearMatch) {
@@ -498,7 +500,7 @@ function generateNewBatchSection() {
   `;
 
   // Create a temporary container and parse the HTML
-  const tempDiv = document.createElement('div');
+  const tempDiv = document.createElement("div");
   tempDiv.innerHTML = newSectionHTML;
   const newSection = tempDiv.firstElementChild;
 
@@ -506,7 +508,7 @@ function generateNewBatchSection() {
   const existingFormGroups = document.querySelectorAll(".form-group");
   let targetFormGroup = null;
   let insertPosition = 0;
-  
+
   // Find the last form-group that has less than 3 sections
   for (let i = existingFormGroups.length - 1; i >= 0; i--) {
     const sectionsInGroup = existingFormGroups[i].querySelectorAll(".section");
@@ -529,14 +531,19 @@ function generateNewBatchSection() {
     }
   } else {
     // Create a new form-group for the new section
-    const newFormGroup = document.createElement('div');
-    newFormGroup.className = 'form-group';
+    const newFormGroup = document.createElement("div");
+    newFormGroup.className = "form-group";
     newFormGroup.appendChild(newSection);
 
     // Find the generate button container and insert the new form-group before it
-    const generateButtonContainer = document.querySelector(".generate-button-container");
+    const generateButtonContainer = document.querySelector(
+      ".generate-button-container"
+    );
     if (generateButtonContainer && generateButtonContainer.parentNode) {
-      generateButtonContainer.parentNode.insertBefore(newFormGroup, generateButtonContainer);
+      generateButtonContainer.parentNode.insertBefore(
+        newFormGroup,
+        generateButtonContainer
+      );
     } else {
       // Fallback: append to form-content
       formContent.appendChild(newFormGroup);
@@ -545,71 +552,77 @@ function generateNewBatchSection() {
 
   // Initialize the new section with upload functionality
   initializeSection(newSection);
-  
+
   // Get the currentXhrs and isUploadCancelled from the parent scope
   // These are defined in the DOMContentLoaded event listener
   const currentXhrs = window.currentXhrs || [];
   const isUploadCancelled = window.isUploadCancelled || false;
-  
+
   // Initialize upload boxes for the new section
   initializeSectionUploadBoxes(newSection, currentXhrs, isUploadCancelled);
 
   // Save generated sections to localStorage
   saveGeneratedSectionsToLocalStorage();
-  
+
   // Refresh sections NodeList to include the new section
   if (window.refreshSections) {
     window.refreshSections();
   }
-  
+
   // Update available sections to include the new section if it's within the 3-year window
   if (window.setAvailableSections) {
     window.setAvailableSections();
   }
 
   showNotification(`Batch Year ${nextYear} created successfully!`, "success");
-  
+
   // Scroll to the new section
-  newSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  newSection.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
 
 // Save all dynamically generated sections to localStorage
 function saveGeneratedSectionsToLocalStorage() {
   const allSections = document.querySelectorAll(".form-group .section");
   const generatedSections = [];
-  
+
   // We know the first 3 sections are hardcoded (2024-2025, 2025-2026, 2026-2027)
   // So we only save sections after the first 3
   allSections.forEach((section, index) => {
-    if (index >= 3) { // Skip the first 3 hardcoded sections
-      const sectionHeader = section.querySelector(".section-header").textContent.trim();
+    if (index >= 3) {
+      // Skip the first 3 hardcoded sections
+      const sectionHeader = section
+        .querySelector(".section-header")
+        .textContent.trim();
       generatedSections.push(sectionHeader);
     }
   });
-  
-  localStorage.setItem('generatedBatchSections', JSON.stringify(generatedSections));
-  console.log('Saved generated sections to localStorage:', generatedSections);
+
+  localStorage.setItem(
+    "generatedBatchSections",
+    JSON.stringify(generatedSections)
+  );
+  console.log("Saved generated sections to localStorage:", generatedSections);
 }
 
 // Restore generated sections from localStorage on page load
 function restoreGeneratedSectionsFromLocalStorage() {
-  const savedSections = localStorage.getItem('generatedBatchSections');
-  
+  const savedSections = localStorage.getItem("generatedBatchSections");
+
   if (!savedSections) {
-    console.log('No saved sections found in localStorage');
+    console.log("No saved sections found in localStorage");
     return;
   }
-  
+
   try {
     const sectionsArray = JSON.parse(savedSections);
-    console.log('Restoring sections from localStorage:', sectionsArray);
-    
+    console.log("Restoring sections from localStorage:", sectionsArray);
+
     // Restore each section
     sectionsArray.forEach((sectionHeader) => {
       restoreSingleSection(sectionHeader);
     });
   } catch (e) {
-    console.error('Error parsing saved sections:', e);
+    console.error("Error parsing saved sections:", e);
   }
 }
 
@@ -694,7 +707,7 @@ function restoreSingleSection(sectionHeader) {
   `;
 
   // Create a temporary container and parse the HTML
-  const tempDiv = document.createElement('div');
+  const tempDiv = document.createElement("div");
   tempDiv.innerHTML = newSectionHTML;
   const newSection = tempDiv.firstElementChild;
 
@@ -702,7 +715,7 @@ function restoreSingleSection(sectionHeader) {
   const existingFormGroups = document.querySelectorAll(".form-group");
   let targetFormGroup = null;
   let insertPosition = 0;
-  
+
   // Find the last form-group that has less than 3 sections
   for (let i = existingFormGroups.length - 1; i >= 0; i--) {
     const sectionsInGroup = existingFormGroups[i].querySelectorAll(".section");
@@ -723,31 +736,35 @@ function restoreSingleSection(sectionHeader) {
     }
   } else {
     // Create a new form-group for the new section
-    const newFormGroup = document.createElement('div');
-    newFormGroup.className = 'form-group';
+    const newFormGroup = document.createElement("div");
+    newFormGroup.className = "form-group";
     newFormGroup.appendChild(newSection);
 
     // Find the generate button container and insert the new form-group before it
-    const generateButtonContainer = document.querySelector(".generate-button-container");
+    const generateButtonContainer = document.querySelector(
+      ".generate-button-container"
+    );
     if (generateButtonContainer && generateButtonContainer.parentNode) {
-      generateButtonContainer.parentNode.insertBefore(newFormGroup, generateButtonContainer);
+      generateButtonContainer.parentNode.insertBefore(
+        newFormGroup,
+        generateButtonContainer
+      );
     } else {
       formContent.appendChild(newFormGroup);
     }
   }
 
-  // Initialize the new section only if not deferring
   if (!window.deferSectionInitialization) {
     initializeSection(newSection);
-    
+
     // Get the currentXhrs and isUploadCancelled from the parent scope
     const currentXhrs = window.currentXhrs || [];
     const isUploadCancelled = window.isUploadCancelled || false;
-    
+
     // Initialize upload boxes for the new section
     initializeSectionUploadBoxes(newSection, currentXhrs, isUploadCancelled);
   }
-  
+
   console.log(`Restored section: ${sectionHeader}`);
 }
 
@@ -757,40 +774,44 @@ function initializeSection(section) {
     console.error("initializeSection: Invalid section");
     return;
   }
-  
+
   const sectionHeader = section.querySelector(".section-header");
   if (!sectionHeader) {
     console.error("initializeSection: Section header not found");
     return;
   }
-  
+
   // Check if already initialized by checking for data attribute
   if (section.dataset.initialized === "true") {
     console.log("initializeSection: Section already initialized, skipping");
     return;
   }
-  
+
   // Section header click functionality removed - now using Select Batch button only
-  
+
   // Mark as initialized
   section.dataset.initialized = "true";
 }
 
 function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
   const sectionUploadBoxes = section.querySelectorAll(".upload-box");
-  const sectionHeader = section.querySelector(".section-header").textContent.trim();
+  const sectionHeader = section
+    .querySelector(".section-header")
+    .textContent.trim();
 
   sectionUploadBoxes.forEach((box, index) => {
     const slot = index + 1;
     const isBackgroundSlot = slot === 8;
     const isActionBox = slot === 9;
-    
+
     // Check if this upload box has already been initialized
     if (box.dataset.initialized === "true") {
-      console.log(`Upload box ${slot} for ${sectionHeader} already initialized, skipping`);
+      console.log(
+        `Upload box ${slot} for ${sectionHeader} already initialized, skipping`
+      );
       return;
     }
-    
+
     // Mark as initialized
     box.dataset.initialized = "true";
 
@@ -799,9 +820,16 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
       const selectBatchBtn = box.querySelector(".select-batch-btn");
       const downloadBtn = box.querySelector(".download-pdf-btn");
       const deleteBatchBtn = box.querySelector(".delete-batch-btn");
-      
-      console.log("Action box found, selectBatchBtn:", selectBatchBtn, "downloadBtn:", downloadBtn, "deleteBatchBtn:", deleteBatchBtn);
-      
+
+      console.log(
+        "Action box found, selectBatchBtn:",
+        selectBatchBtn,
+        "downloadBtn:",
+        downloadBtn,
+        "deleteBatchBtn:",
+        deleteBatchBtn
+      );
+
       if (selectBatchBtn) {
         selectBatchBtn.addEventListener("click", (e) => {
           e.stopPropagation();
@@ -810,7 +838,7 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
           }
         });
       }
-      
+
       if (downloadBtn) {
         downloadBtn.addEventListener("click", (e) => {
           e.stopPropagation();
@@ -818,7 +846,7 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
           downloadPDF(sectionHeader);
         });
       }
-      
+
       if (deleteBatchBtn) {
         deleteBatchBtn.addEventListener("click", (e) => {
           e.stopPropagation();
@@ -877,7 +905,7 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
       if (event.target === deleteBtn) return;
       if (isUploading) return; // Prevent clicking while uploading
       if (isFileInputOpen) return; // Prevent clicking if file input is already open
-      
+
       if (!frontImg) {
         isFileInputOpen = true;
         frontInput.click();
@@ -896,52 +924,67 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
         isUploading = false; // Reset upload flag
         return;
       }
-      
+
       // Stop event propagation to prevent box click from triggering again
       event.stopPropagation();
-      
+
       // Reset file input open flag
       isFileInputOpen = false;
-      
+
       // Prevent multiple uploads - check at the very beginning
       if (isUploading) {
-        console.log("Upload already in progress, ignoring duplicate change event");
+        console.log(
+          "Upload already in progress, ignoring duplicate change event"
+        );
         event.target.value = ""; // Clear the input
         return;
       }
       isUploading = true;
-      
+
       // Reset cancellation flag
       isUploadCancelled = false;
-      
+
       // Create object URLs BEFORE upload starts (files will be cleared after)
-      const frontImageUrl = files.length > 0 ? URL.createObjectURL(files[0]) : null;
-      const backImageUrl = files.length > 1 ? URL.createObjectURL(files[1]) : null;
-      
+      const frontImageUrl =
+        files.length > 0 ? URL.createObjectURL(files[0]) : null;
+      const backImageUrl =
+        files.length > 1 ? URL.createObjectURL(files[1]) : null;
+
       try {
         const uploadOverlay = document.getElementById("upload-overlay");
         const uploadText = document.getElementById("uploadText");
-        
+
         if (isBackgroundSlot) {
           if (files.length > 1) {
-            showNotification("Background slot can only accept 1 image. Please select only 1 image.", "error");
+            showNotification(
+              "Background slot can only accept 1 image. Please select only 1 image.",
+              "error"
+            );
             return;
           }
-          const result = await uploadToBunny(files[0], slot, "front", true, false, 0, true);
-          
+          const result = await uploadToBunny(
+            files[0],
+            slot,
+            "front",
+            true,
+            false,
+            0,
+            true
+          );
+
           if (result && result.success) {
             // Display image immediately using pre-created URL
             frontImg = document.createElement("img");
             frontImg.src = frontImageUrl;
             frontImg.classList.add("front-img");
-            
+
             box.innerHTML = "";
             ensureChildren();
             deleteBtn.style.display = "flex";
             box.classList.add("has-image");
             showingFront = true;
             frontImg.style.opacity = 1;
-            
+
             // Update available sections after upload
             if (window.setAvailableSections) {
               await window.setAvailableSections();
@@ -949,38 +992,59 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
           }
         } else {
           if (files.length > 2) {
-            showNotification("You can only upload 2 images at the same time. Please select only 2 images.", "error");
+            showNotification(
+              "You can only upload 2 images at the same time. Please select only 2 images.",
+              "error"
+            );
             return;
           }
-          
+
           if (files.length === 2 && uploadOverlay && uploadText) {
             uploadOverlay.style.display = "flex";
             uploadText.textContent = `Uploading Slot ${slot} front and back cover...`;
           }
-          
+
           const suppressNotifications = files.length === 2;
           const isBatchUpload = files.length === 2;
           let uploadCancelled = false;
-          
+
           if (files.length === 2) {
             const uploadPromises = [
-              uploadToBunny(files[0], slot, "front", !suppressNotifications, isBatchUpload, 0, false),
-              uploadToBunny(files[1], slot, "back", !suppressNotifications, isBatchUpload, 0, false)
+              uploadToBunny(
+                files[0],
+                slot,
+                "front",
+                !suppressNotifications,
+                isBatchUpload,
+                0,
+                false
+              ),
+              uploadToBunny(
+                files[1],
+                slot,
+                "back",
+                !suppressNotifications,
+                isBatchUpload,
+                0,
+                false
+              ),
             ];
-            
+
             const results = await Promise.all(uploadPromises);
-            uploadCancelled = results.some(result => result && result.cancelled) || isUploadCancelled;
-            
+            uploadCancelled =
+              results.some((result) => result && result.cancelled) ||
+              isUploadCancelled;
+
             if (!uploadCancelled && !isUploadCancelled) {
               // Display images immediately using pre-created URLs
               frontImg = document.createElement("img");
               frontImg.src = frontImageUrl;
               frontImg.classList.add("front-img");
-              
+
               backImg = document.createElement("img");
               backImg.src = backImageUrl;
               backImg.classList.add("back-img");
-              
+
               box.innerHTML = "";
               ensureChildren();
               deleteBtn.style.display = "flex";
@@ -988,29 +1052,40 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
               showingFront = true;
               frontImg.style.opacity = 1;
               backImg.style.opacity = 0;
-              
-              showNotification(`Uploaded successfully to Slot ${slot} front and back cover`, "success");
+
+              showNotification(
+                `Uploaded successfully to Slot ${slot} front and back cover`,
+                "success"
+              );
               // Update available sections after upload
               if (window.setAvailableSections) {
                 await window.setAvailableSections();
               }
             }
           } else if (files.length === 1) {
-            const result = await uploadToBunny(files[0], slot, "front", !suppressNotifications, false, 0, true);
-            
+            const result = await uploadToBunny(
+              files[0],
+              slot,
+              "front",
+              !suppressNotifications,
+              false,
+              0,
+              true
+            );
+
             if (result && result.success) {
               // Display image immediately using pre-created URL
               frontImg = document.createElement("img");
               frontImg.src = frontImageUrl;
               frontImg.classList.add("front-img");
-              
+
               box.innerHTML = "";
               ensureChildren();
               deleteBtn.style.display = "flex";
               box.classList.add("has-image");
               showingFront = true;
               frontImg.style.opacity = 1;
-              
+
               // Update available sections after upload
               if (window.setAvailableSections) {
                 await window.setAvailableSections();
@@ -1019,7 +1094,7 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
             uploadCancelled = (result && result.cancelled) || isUploadCancelled;
           }
         }
-        
+
         // Hide upload overlay after all uploads complete
         if (uploadOverlay) {
           uploadOverlay.style.display = "none";
@@ -1039,12 +1114,17 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
         if (frontImg) sides.push("front");
         if (backImg && !isBackgroundSlot) sides.push("back");
         if (!sides.length) return;
-        
+
         // Get the batch year from the section header for logging
-        const sectionHeader = box.closest('.section')?.querySelector('.section-header');
-        const batchYear = sectionHeader ? sectionHeader.textContent.trim() : '';
-        console.log(`Delete button clicked for slot ${slot}, batch_year: ${batchYear}, sides to delete:`, sides);
-        
+        const sectionHeader = box
+          .closest(".section")
+          ?.querySelector(".section-header");
+        const batchYear = sectionHeader ? sectionHeader.textContent.trim() : "";
+        console.log(
+          `Delete button clicked for slot ${slot}, batch_year: ${batchYear}, sides to delete:`,
+          sides
+        );
+
         // Remove images from UI IMMEDIATELY for instant feedback
         const tempFrontImg = frontImg;
         const tempBackImg = backImg;
@@ -1061,45 +1141,60 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
         frontInput.value = "";
         backInput.value = "";
         box.classList.remove("has-image");
-        
+
         // Show success notification immediately
         showNotification("Image deleted successfully", "success");
-        
+
         // Delete from server in the background (non-blocking)
         if (sides.length > 0) {
-          console.log(`Starting parallel deletion of ${sides.length} side(s) for slot ${slot}`);
-          
+          console.log(
+            `Starting parallel deletion of ${sides.length} side(s) for slot ${slot}`
+          );
+
           // Delete all sides in parallel using Promise.all
-          const deletePromises = sides.map(side => deleteCover(slot, side));
+          const deletePromises = sides.map((side) => deleteCover(slot, side));
           const results = await Promise.all(deletePromises);
-          
+
           // Check if all deletions were successful
-          const allSuccessful = results.every(result => result === true);
-          
+          const allSuccessful = results.every((result) => result === true);
+
           if (allSuccessful) {
             console.log(`All deletions successful for slot ${slot}`);
           } else {
             console.error(`Some deletions failed for slot ${slot}`);
             // If server deletion failed, we could restore the images here
             // But for now, we'll just show an error notification
-            showNotification("Server deletion failed, but UI was updated", "error");
+            showNotification(
+              "Server deletion failed, but UI was updated",
+              "error"
+            );
           }
         }
       };
       openDeleteModal();
     });
 
-    async function uploadToBunny(file, slot, side, showNotif, isBatch, retryCount = 0, isSingleUpload = false) {
+    async function uploadToBunny(
+      file,
+      slot,
+      side,
+      showNotif,
+      isBatch,
+      retryCount = 0,
+      isSingleUpload = false
+    ) {
       const MAX_RETRIES = 3;
       // Set timeout based on single or double upload
       // Increased to 60s to allow time for BunnyCDN upload + MongoDB save + response
       const UPLOAD_TIMEOUT = 60000; // 60 seconds for complete operation
-      
+
       try {
         // Get the batch year from the section header
-        const sectionHeader = box.closest('.section').querySelector('.section-header');
-        const batchYear = sectionHeader ? sectionHeader.textContent.trim() : '';
-        
+        const sectionHeader = box
+          .closest(".section")
+          .querySelector(".section-header");
+        const batchYear = sectionHeader ? sectionHeader.textContent.trim() : "";
+
         const formData = new FormData();
         formData.append("file", file);
         formData.append("slot", String(slot));
@@ -1111,7 +1206,11 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
           xhr.upload.addEventListener("progress", (e) => {
             if (e.lengthComputable) {
               const percentComplete = (e.loaded / e.total) * 100;
-              console.log(`Upload progress for slot ${slot} ${side}: ${percentComplete.toFixed(2)}%`);
+              console.log(
+                `Upload progress for slot ${slot} ${side}: ${percentComplete.toFixed(
+                  2
+                )}%`
+              );
             }
           });
 
@@ -1122,7 +1221,10 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
                 if (data.success) {
                   // Only show individual notification if showNotif is true AND not a batch upload
                   if (showNotif && !isBatch) {
-                    showNotification(`Uploaded successfully to Slot ${slot} ${side}`, "success");
+                    showNotification(
+                      `Uploaded successfully to Slot ${slot} ${side}`,
+                      "success"
+                    );
                   }
                   resolve(data);
                 } else {
@@ -1168,25 +1270,46 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
         return await uploadPromise;
       } catch (err) {
         console.error("Upload error:", err);
-        
+
         // Retry logic for timeout or network errors
-        if ((err.message.includes("timeout") || err.message.includes("failed")) && retryCount < MAX_RETRIES) {
+        if (
+          (err.message.includes("timeout") || err.message.includes("failed")) &&
+          retryCount < MAX_RETRIES
+        ) {
           const newRetryCount = retryCount + 1;
-          console.log(`Upload failed, retrying... (${newRetryCount}/${MAX_RETRIES})`);
-          
+          console.log(
+            `Upload failed, retrying... (${newRetryCount}/${MAX_RETRIES})`
+          );
+
           if (showNotif && !isBatch) {
-            showNotification(`Upload failed, retrying... (${newRetryCount}/${MAX_RETRIES})`, "warning");
+            showNotification(
+              `Upload failed, retrying... (${newRetryCount}/${MAX_RETRIES})`,
+              "warning"
+            );
           }
-          
+
           // Wait a bit before retrying (exponential backoff)
-          await new Promise(resolve => setTimeout(resolve, 1000 * newRetryCount));
-          
+          await new Promise((resolve) =>
+            setTimeout(resolve, 1000 * newRetryCount)
+          );
+
           // Retry the upload
-          return await uploadToBunny(file, slot, side, showNotif, isBatch, newRetryCount, isSingleUpload);
+          return await uploadToBunny(
+            file,
+            slot,
+            side,
+            showNotif,
+            isBatch,
+            newRetryCount,
+            isSingleUpload
+          );
         }
-        
+
         // Max retries reached or non-retryable error
-        showNotification(err.message || "Upload failed after multiple attempts", "error");
+        showNotification(
+          err.message || "Upload failed after multiple attempts",
+          "error"
+        );
         return { success: false, cancelled: true };
       }
     }
@@ -1194,11 +1317,15 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
     async function deleteCover(slot, side) {
       try {
         // Get the batch year from the section header
-        const sectionHeader = box.closest('.section')?.querySelector('.section-header');
-        const batchYear = sectionHeader ? sectionHeader.textContent.trim() : '';
-        
-        console.log(`deleteCover: Attempting to delete slot ${slot}, side ${side}, batch_year: ${batchYear}`);
-        
+        const sectionHeader = box
+          .closest(".section")
+          ?.querySelector(".section-header");
+        const batchYear = sectionHeader ? sectionHeader.textContent.trim() : "";
+
+        console.log(
+          `deleteCover: Attempting to delete slot ${slot}, side ${side}, batch_year: ${batchYear}`
+        );
+
         const form = new FormData();
         form.append("slot", String(slot));
         form.append("side", side);
@@ -1211,9 +1338,9 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
         const res = await fetch(DELETE_ENDPOINT, {
           method: "POST",
           body: form,
-          signal: controller.signal
+          signal: controller.signal,
         });
-        
+
         clearTimeout(timeoutId);
 
         console.log(`deleteCover: Response status: ${res.status}`);
@@ -1226,10 +1353,12 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
 
         const data = await res.json();
         console.log(`deleteCover: Response data:`, data);
-        
+
         if (!data?.success) {
           // Show error notification if delete fails
-          console.error(`deleteCover: Delete failed - ${data?.message || "Unknown error"}`);
+          console.error(
+            `deleteCover: Delete failed - ${data?.message || "Unknown error"}`
+          );
           showNotification(data?.message || "Delete failed", "error");
           return false;
         } else {
@@ -1245,12 +1374,15 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
         console.error("deleteCover: Error details:", {
           message: err.message,
           stack: err.stack,
-          name: err.name
+          name: err.name,
         });
-        
+
         // Handle abort/timeout error
-        if (err.name === 'AbortError') {
-          showNotification("Delete operation timed out after 20 seconds", "error");
+        if (err.name === "AbortError") {
+          showNotification(
+            "Delete operation timed out after 20 seconds",
+            "error"
+          );
         } else {
           showNotification(err.message || "Delete failed", "error");
         }
@@ -1278,12 +1410,16 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
         }
 
         // Get the batch year from the section header
-        const sectionHeader = box.closest('.section')?.querySelector('.section-header');
-        const batchYear = sectionHeader ? sectionHeader.textContent.trim() : null;
+        const sectionHeader = box
+          .closest(".section")
+          ?.querySelector(".section-header");
+        const batchYear = sectionHeader
+          ? sectionHeader.textContent.trim()
+          : null;
 
         // Filter by both slot AND batch year
-        const found = (data.items || []).find((i) => 
-          i.slot === slot && i.batch_year === batchYear
+        const found = (data.items || []).find(
+          (i) => i.slot === slot && i.batch_year === batchYear
         );
         if (!found) return;
         if (found.front_url) {
@@ -1312,7 +1448,10 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
       } catch (e) {
         if (e.name === "TimeoutError" || e.name === "AbortError") {
           console.warn("Fetch covers request timed out");
-          showNotification("Loading covers timed out. Please try again.", "error");
+          showNotification(
+            "Loading covers timed out. Please try again.",
+            "error"
+          );
         } else {
           console.error("Failed to load existing covers:", e);
           showNotification("Failed to load existing covers", "error");
@@ -1327,7 +1466,10 @@ function downloadPDF(batchName) {
 }
 
 function confirmDownloadPDF() {
-  showNotification("PDF download functionality will be implemented soon!", "info");
+  showNotification(
+    "PDF download functionality will be implemented soon!",
+    "info"
+  );
   console.log("Downloading PDF...");
   closeDownloadPdfModal();
   // TODO: Implement PDF download logic
@@ -1335,7 +1477,7 @@ function confirmDownloadPDF() {
 
 function deleteBatchTemplate(section, batchName) {
   openDeleteBatchModal(batchName);
-  
+
   // Store the section and batch name for deletion
   window.pendingDeleteSection = section;
   window.pendingDeleteBatchName = batchName;
@@ -1345,17 +1487,20 @@ function confirmDeleteBatch() {
   if (window.pendingDeleteSection) {
     // Remove only the specific section, not the entire form-group
     window.pendingDeleteSection.remove();
-    
+
     // Update localStorage after deletion
     saveGeneratedSectionsToLocalStorage();
-    
+
     // Refresh sections NodeList after deletion
     if (window.refreshSections) {
       window.refreshSections();
     }
-    
-    showNotification(`${window.pendingDeleteBatchName} deleted successfully!`, "success");
-    
+
+    showNotification(
+      `${window.pendingDeleteBatchName} deleted successfully!`,
+      "success"
+    );
+
     window.pendingDeleteSection = null;
     window.pendingDeleteBatchName = null;
   }
@@ -1368,20 +1513,20 @@ function confirmSelectTemplate() {
     document.querySelectorAll(".section").forEach((s) => {
       s.classList.remove("selected");
     });
-    
+
     // Add selected class to the pending section
     window.pendingSelectSection.classList.add("selected");
-    
+
     // Update upload box states
     const sections = document.querySelectorAll(".section");
     sections.forEach((section) => {
       const uploadBoxes = section.querySelectorAll(".upload-box");
       const isSelected = section === window.pendingSelectSection;
-      
+
       uploadBoxes.forEach((box) => {
         // Don't disable action-box, it should always be clickable
         const isActionBox = box.classList.contains("action-box");
-        
+
         if (isSelected) {
           box.classList.remove("disabled");
           box.style.pointerEvents = "auto";
@@ -1390,7 +1535,7 @@ function confirmSelectTemplate() {
           box.style.pointerEvents = "none";
         }
       });
-      
+
       // Disable Select Batch button for the selected section only
       const selectBatchBtn = section.querySelector(".select-batch-btn");
       if (selectBatchBtn) {
@@ -1401,9 +1546,12 @@ function confirmSelectTemplate() {
         }
       }
     });
-    
-    showNotification(`${window.pendingSelectBatchName} selected successfully!`, "success");
-    
+
+    showNotification(
+      `${window.pendingSelectBatchName} selected successfully!`,
+      "success"
+    );
+
     window.pendingSelectSection = null;
     window.pendingSelectBatchName = null;
   }
@@ -1431,9 +1579,15 @@ window.addEventListener("DOMContentLoaded", () => {
   confirmDeleteBatchBtn = document.getElementById("confirm-delete-batch-btn");
   cancelDeleteBatchBtn = document.getElementById("cancel-delete-batch-btn");
 
-  selectTemplateModal = document.getElementById("select-template-modal-overlay");
-  confirmSelectTemplateBtn = document.getElementById("confirm-select-template-btn");
-  cancelSelectTemplateBtn = document.getElementById("cancel-select-template-btn");
+  selectTemplateModal = document.getElementById(
+    "select-template-modal-overlay"
+  );
+  confirmSelectTemplateBtn = document.getElementById(
+    "confirm-select-template-btn"
+  );
+  cancelSelectTemplateBtn = document.getElementById(
+    "cancel-select-template-btn"
+  );
 
   // Debug: Check if modal elements exist
   console.log("downloadPdfModal:", downloadPdfModal);
@@ -1456,9 +1610,11 @@ window.addEventListener("DOMContentLoaded", () => {
   // Function to refresh sections NodeList
   function refreshSections() {
     sections = document.querySelectorAll(".form-group .section");
-    sectionHeaders = document.querySelectorAll(".form-group .section .section-header");
+    sectionHeaders = document.querySelectorAll(
+      ".form-group .section .section-header"
+    );
   }
-  
+
   // Make refreshSections globally accessible
   window.refreshSections = refreshSections;
 
@@ -1467,13 +1623,13 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // Restore any previously generated sections from localStorage
   restoreGeneratedSectionsFromLocalStorage();
-  
+
   // Refresh sections after restoration
   refreshSections();
 
   function selectSection(section) {
     sections.forEach((s) => s.classList.remove("selected"));
-    
+
     // Check if section exists and is still in the DOM
     if (section && section.parentNode) {
       section.classList.add("selected");
@@ -1506,7 +1662,7 @@ window.addEventListener("DOMContentLoaded", () => {
       uploadBoxes.forEach((box) => {
         // Don't disable action-box, it should always be clickable
         const isActionBox = box.classList.contains("action-box");
-        
+
         if (isSelected) {
           box.classList.remove("disabled");
           box.style.pointerEvents = "auto";
@@ -1515,7 +1671,7 @@ window.addEventListener("DOMContentLoaded", () => {
           box.style.pointerEvents = "none";
         }
       });
-      
+
       // Disable Select Batch button for the selected section only
       const selectBatchBtn = section.querySelector(".select-batch-btn");
       if (selectBatchBtn) {
@@ -1533,7 +1689,7 @@ window.addEventListener("DOMContentLoaded", () => {
       console.error("openSelectTemplateModal: deleteModal is not available");
       return;
     }
-    
+
     if (!targetSection) {
       console.error("openSelectTemplateModal: targetSection is undefined");
       return;
@@ -1563,24 +1719,27 @@ window.addEventListener("DOMContentLoaded", () => {
       if (!templateLabel) {
         console.error("selectedConfirmAction: templateLabel is undefined");
         if (typeof showNotification === "function") {
-          showNotification("Error: Could not select batch template - invalid label", "error");
+          showNotification(
+            "Error: Could not select batch template - invalid label",
+            "error"
+          );
         }
         closeDeleteModal();
         return;
       }
-      
+
       // Re-query the DOM to find the section by its header text instead of using captured reference
       // This prevents issues if the section was removed and recreated
       const allSections = document.querySelectorAll(".form-group .section");
       let actualSection = null;
-      
+
       allSections.forEach((section) => {
         const header = section.querySelector(".section-header");
         if (header && header.textContent.trim() === templateLabel) {
           actualSection = section;
         }
       });
-      
+
       if (actualSection && actualSection.parentNode) {
         // Section found and is in the DOM, proceed with selection
         selectSection(actualSection);
@@ -1588,12 +1747,18 @@ window.addEventListener("DOMContentLoaded", () => {
           showNotification(`${templateLabel} selected`, "success");
         }
       } else {
-        console.error("selectedConfirmAction: Could not find section with label:", templateLabel);
+        console.error(
+          "selectedConfirmAction: Could not find section with label:",
+          templateLabel
+        );
         if (typeof showNotification === "function") {
-          showNotification("Error: Could not select batch template - section not found", "error");
+          showNotification(
+            "Error: Could not select batch template - section not found",
+            "error"
+          );
         }
       }
-      
+
       // Always restore modal defaults
       if (titleEl) titleEl.textContent = defaultTitle;
       if (messageEl) messageEl.textContent = defaultMsg;
@@ -1613,12 +1778,12 @@ window.addEventListener("DOMContentLoaded", () => {
     const allSections = document.querySelectorAll(".form-group .section");
     const currentXhrs = window.currentXhrs || [];
     const isUploadCancelled = window.isUploadCancelled || false;
-    
+
     allSections.forEach((section) => {
       initializeSection(section);
       initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled);
     });
-    
+
     window.deferSectionInitialization = false;
   }
 
@@ -1627,13 +1792,13 @@ window.addEventListener("DOMContentLoaded", () => {
   async function setAvailableSections() {
     const allSections = document.querySelectorAll(".form-group .section");
     const currentDate = new Date();
-    
+
     // Fetch covers to get completion dates
     try {
       const BASE_PATH = getBasePath();
       const CONNECTION_PATH = `${BASE_PATH}/Connection`;
       const FETCH_ENDPOINT = `${CONNECTION_PATH}/Cover/FetchCovers.php`;
-      
+
       const res = await fetch(FETCH_ENDPOINT, {
         signal: AbortSignal.timeout(30000),
       });
@@ -1643,7 +1808,7 @@ window.addEventListener("DOMContentLoaded", () => {
       }
 
       const data = await res.json();
-      
+
       if (data?.success && data?.items) {
         // Group items by batch_year
         const batchYearDataMap = {};
@@ -1651,27 +1816,28 @@ window.addEventListener("DOMContentLoaded", () => {
           if (item.batch_year && !batchYearDataMap[item.batch_year]) {
             batchYearDataMap[item.batch_year] = {
               completion_date: item.completion_date,
-              slots: []
+              slots: [],
             };
           }
           if (item.batch_year) {
             batchYearDataMap[item.batch_year].slots.push(item.slot);
           }
         });
-        
+
         // Update sections based on completion date
         allSections.forEach((section) => {
           const header = section.querySelector(".section-header");
           if (!header) return;
-          
+
           const headerText = header.textContent.trim();
           const sectionData = batchYearDataMap[headerText];
-          
+
           if (sectionData && sectionData.completion_date) {
             // Calculate years since completion
             const completionDate = new Date(sectionData.completion_date);
-            const yearsSinceCompletion = (currentDate - completionDate) / (1000 * 60 * 60 * 24 * 365);
-            
+            const yearsSinceCompletion =
+              (currentDate - completionDate) / (1000 * 60 * 60 * 24 * 365);
+
             if (yearsSinceCompletion <= 3) {
               // Within 3 years of completion - mark as available (green)
               section.classList.add("available");
@@ -1693,7 +1859,7 @@ window.addEventListener("DOMContentLoaded", () => {
       });
     }
   }
-  
+
   // Make setAvailableSections globally accessible
   window.setAvailableSections = setAvailableSections;
 
@@ -1734,11 +1900,11 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // Initialize Generate Modal
   const generateBatchBtn = document.getElementById("generateBatchBtn");
-  
+
   if (generateBatchBtn) {
     generateBatchBtn.addEventListener("click", openGenerateModal);
   }
-  
+
   if (cancelGenerateBtn) {
     cancelGenerateBtn.addEventListener("click", (e) => {
       e.preventDefault();
@@ -1746,13 +1912,13 @@ window.addEventListener("DOMContentLoaded", () => {
       closeGenerateModal();
     });
   }
-  
+
   if (generateModal) {
     generateModal.addEventListener("click", (e) => {
       if (e.target === generateModal) closeGenerateModal();
     });
   }
-  
+
   if (confirmGenerateBtn) {
     confirmGenerateBtn.addEventListener("click", (e) => {
       e.preventDefault();
