@@ -1074,7 +1074,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
           uploadOverlay.style.display = "none";
         }
       } finally {
-        // Always reset flags and clear input, even if there's an error
         event.target.value = "";
         isUploading = false; // Reset upload flag
         isFileInputOpen = false; // Reset file input open flag
