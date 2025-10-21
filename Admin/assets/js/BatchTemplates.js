@@ -1097,7 +1097,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
           sides
         );
 
-        // Remove images from UI IMMEDIATELY for instant feedback
         const tempFrontImg = frontImg;
         const tempBackImg = backImg;
         frontImg = null;
