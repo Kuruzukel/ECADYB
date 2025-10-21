@@ -1181,7 +1181,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
               try {
                 const data = JSON.parse(xhr.responseText);
                 if (data.success) {
-                  // Only show individual notification if showNotif is true AND not a batch upload
                   if (showNotif && !isBatch) {
                     showNotification(
                       `Uploaded successfully to Slot ${slot} ${side}`,
