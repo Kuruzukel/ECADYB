@@ -1113,7 +1113,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
         backInput.value = "";
         box.classList.remove("has-image");
 
-        // Show success notification immediately
         showNotification("Image deleted successfully", "success");
 
         // Delete from server in the background (non-blocking)
