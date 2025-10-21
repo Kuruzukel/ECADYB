@@ -325,8 +325,8 @@ try {
         'upload_time' => new \MongoDB\BSON\UTCDateTime()
     ];
 
-    // Only check completion for non-background slots to improve performance
-    $checkCompletion = ($slot !== 8);
+    // Check completion for all slots including background
+    $checkCompletion = true;
 
     if ($slot === 8) {
         $document['background_url'] = $publicUrl;
@@ -408,7 +408,7 @@ try {
             if ($isComplete) {
                 $collection->updateMany(
                     ['batch_year' => $batchYear],
-                    ['$set' => ['completion_date' => new \MongoDB\BSON\UTCDateTime()]],
+                    ['$set' => ['completion_date' => new \MongoDB\BSON\UTCDateTime((new DateTime())->modify('+2 minute')->getTimestamp() * 1000)]],
                     ['upsert' => false]
                 );
                 error_log("UploadCover.php: Batch year $batchYear is now complete!");
