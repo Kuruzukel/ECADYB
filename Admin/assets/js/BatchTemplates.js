@@ -1447,7 +1447,6 @@ function confirmDeleteBatch() {
 
 function confirmSelectTemplate() {
   if (window.pendingSelectSection) {
-    // Remove selected class from all sections
     document.querySelectorAll(".section").forEach((s) => {
       s.classList.remove("selected");
     });
