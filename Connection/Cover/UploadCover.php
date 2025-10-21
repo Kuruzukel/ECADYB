@@ -106,8 +106,9 @@ try {
     $slot     = isset($_POST['slot']) ? (int)$_POST['slot'] : null;
     $side     = isset($_POST['side']) ? strtolower(trim($_POST['side'])) : '';
     $batchYear = isset($_POST['batch_year']) ? trim($_POST['batch_year']) : '';
+    $template = isset($_POST['template']) ? (int)$_POST['template'] : 1;
 
-    error_log("UploadCover.php received parameters: slot=$slot, side=$side, batch_year=$batchYear");
+    error_log("UploadCover.php received parameters: slot=$slot, side=$side, batch_year=$batchYear, template=$template");
 
     if ($slot === null || ($slot !== 8 && ($side !== 'front' && $side !== 'back'))) {
         respond(false, 'Invalid parameters: slot and side (front|back) are required, unless slot=8 (BackgroundPage).');
@@ -364,6 +365,7 @@ try {
     $document = [
         'slot' => $slot,
         'batch_year' => $batchYear,
+        'template' => $template,
         'upload_time' => new \MongoDB\BSON\UTCDateTime()
     ];
 
@@ -411,7 +413,8 @@ try {
 
         $filter = [
             'slot' => $slot,
-            'batch_year' => $batchYear
+            'batch_year' => $batchYear,
+            'template' => $template
         ];
 
         // Add MongoDB info to uploadedFileInfo for shutdown cleanup
@@ -435,7 +438,7 @@ try {
         }
 
         if ($checkCompletion) {
-            $batchYearDocs = $collection->find(['batch_year' => $batchYear])->toArray();
+            $batchYearDocs = $collection->find(['batch_year' => $batchYear, 'template' => $template])->toArray();
 
             $slotsWithImages = [];
             foreach ($batchYearDocs as $doc) {
@@ -456,18 +459,18 @@ try {
 
             if ($isComplete) {
                 $collection->updateMany(
-                    ['batch_year' => $batchYear],
+                    ['batch_year' => $batchYear, 'template' => $template],
                     ['$set' => ['completion_date' => new \MongoDB\BSON\UTCDateTime((new DateTime())->modify('+3 years')->getTimestamp() * 1000)]],
                     ['upsert' => false]
                 );
-                error_log("UploadCover.php: Batch year $batchYear is now complete!");
+                error_log("UploadCover.php: Batch year $batchYear (template $template) is now complete!");
             } else {
                 $collection->updateMany(
-                    ['batch_year' => $batchYear],
+                    ['batch_year' => $batchYear, 'template' => $template],
                     ['$unset' => ['completion_date' => '']],
                     ['upsert' => false]
                 );
-                error_log("UploadCover.php: Batch year $batchYear is incomplete. Slots filled: " . count($slotsWithImages) . "/8");
+                error_log("UploadCover.php: Batch year $batchYear (template $template) is incomplete. Slots filled: " . count($slotsWithImages) . "/8");
             }
         }
     } catch (Exception $e) {

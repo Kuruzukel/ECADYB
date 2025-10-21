@@ -1,5 +1,22 @@
 RewriteEngine On
 
+# PHP Settings for large file uploads (up to 500MB)
+<IfModule mod_php7.c>
+    php_value upload_max_filesize 500M
+    php_value post_max_size 500M
+    php_value memory_limit 1024M
+    php_value max_execution_time 300
+    php_value max_input_time 300
+</IfModule>
+
+<IfModule mod_php8.c>
+    php_value upload_max_filesize 500M
+    php_value post_max_size 500M
+    php_value memory_limit 1024M
+    php_value max_execution_time 300
+    php_value max_input_time 300
+</IfModule>
+
 # Allow iframe embedding (if mod_headers is available)
 <IfModule mod_headers.c>
     Header always set X-Frame-Options "SAMEORIGIN"

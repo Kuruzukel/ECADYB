@@ -2,6 +2,11 @@
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
+// Increase limits for large datasets
+ini_set('memory_limit', '256M');
+ini_set('max_execution_time', '60');
+set_time_limit(60);
+
 ob_start();
 
 header('Content-Type: application/json');
@@ -20,17 +25,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 require __DIR__ . '/../../vendor/autoload.php';
 require_once __DIR__ . '/../Configuration/MongoConnect.php';
 
+// Register shutdown function to catch fatal errors
+register_shutdown_function(function() {
+    $error = error_get_last();
+    if ($error !== null && in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+        
+        error_log("FetchTopManagement Fatal Error: " . $error['message'] . " in " . $error['file'] . " on line " . $error['line']);
+        
+        $response = [
+            'success' => false,
+            'message' => 'Server error occurred while fetching top management data',
+            'error_details' => $error['message']
+        ];
+        
+        $jsonOutput = json_encode($response);
+        header('Content-Type: application/json');
+        header('Content-Length: ' . strlen($jsonOutput));
+        echo $jsonOutput;
+        exit;
+    }
+});
+
 function respond($success, $message = '', $data = [])
 {
     while (ob_get_level()) {
         ob_end_clean();
     }
 
-    header('Content-Type: application/json');
-    echo json_encode(array_merge([
+    $response = array_merge([
         'success' => $success,
         'message' => $message
-    ], $data));
+    ], $data);
+    
+    $jsonOutput = json_encode($response);
+
+    header('Content-Type: application/json');
+    header('Content-Length: ' . strlen($jsonOutput));
+    echo $jsonOutput;
     exit;
 }
 

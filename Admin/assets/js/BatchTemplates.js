@@ -351,6 +351,10 @@ async function deleteRecentlyUploadedFile(fileInfo) {
       formData.append('batch_year', fileInfo.batch_year);
       formData.append('side', fileInfo.side || 'front');
       
+      // Add template number for deletion
+      const templateNumber = localStorage.getItem("selectedBatchTemplateNumber") || 1;
+      formData.append('template', templateNumber);
+      
       if (attempt === 1) {
         console.log(`🗑️ Deleting Slot ${fileInfo.slot} ${fileInfo.side} from Bunny CDN and MongoDB (Batch: ${fileInfo.batch_year})`);
       } else {
@@ -1427,6 +1431,10 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
         formData.append("slot", String(slot));
         formData.append("side", side);
         formData.append("batch_year", batchYear);
+        
+        // Add template number
+        const templateNumber = localStorage.getItem("selectedBatchTemplateNumber") || 1;
+        formData.append("template", templateNumber);
 
         const xhr = new XMLHttpRequest();
         
@@ -1803,7 +1811,25 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
       try {
         await new Promise((resolve) => setTimeout(resolve, 50));
 
-        const res = await fetch(FETCH_ENDPOINT, {
+        const sectionHeader = box
+          .closest(".section")
+          ?.querySelector(".section-header");
+        const batchYear = sectionHeader
+          ? sectionHeader.textContent.trim()
+          : null;
+        
+        // Get template number from localStorage
+        const templateNumber = localStorage.getItem("selectedBatchTemplateNumber") || 1;
+        
+        // Build query parameters
+        const params = new URLSearchParams({
+          template: templateNumber
+        });
+        if (batchYear) {
+          params.append('batch_year', batchYear);
+        }
+
+        const res = await fetch(`${FETCH_ENDPOINT}?${params}`, {
           signal: AbortSignal.timeout(30000),
         });
 
@@ -1817,16 +1843,7 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
           return;
         }
 
-        const sectionHeader = box
-          .closest(".section")
-          ?.querySelector(".section-header");
-        const batchYear = sectionHeader
-          ? sectionHeader.textContent.trim()
-          : null;
-
-        const found = (data.items || []).find(
-          (i) => i.slot === slot && i.batch_year === batchYear
-        );
+        const found = (data.items || []).find((i) => i.slot === slot);
         if (!found) return;
         
         if (found.back_url && !isBackgroundSlot) {

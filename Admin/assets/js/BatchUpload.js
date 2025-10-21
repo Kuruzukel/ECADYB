@@ -464,12 +464,53 @@ window.addEventListener("DOMContentLoaded", () => {
             return;
           }
 
+          // Validate number of files (maximum 20 images)
+          const MAX_FILES = 20;
+          const fileCount = input.files.length;
+          
+          if (fileCount > MAX_FILES) {
+            showNotification(
+              `You can only upload a maximum of ${MAX_FILES} images at a time. You selected ${fileCount} images. Please reduce the number of files.`,
+              "error"
+            );
+            forceResetFileUI(input.id);
+            return;
+          }
+          
+          // Validate total file size (maximum 500MB)
+          let totalSize = 0;
+          for (let i = 0; i < input.files.length; i++) {
+            totalSize += input.files[i].size;
+          }
+          
+          const totalSizeMB = totalSize / (1024 * 1024);
+          const MAX_SIZE_MB = 500; // Maximum 500MB
+          
+          console.log(`Total files: ${fileCount}, Total upload size: ${totalSizeMB.toFixed(2)} MB`);
+          
+          if (totalSizeMB > MAX_SIZE_MB) {
+            showNotification(
+              `Total file size (${totalSizeMB.toFixed(2)} MB) exceeds the maximum limit of ${MAX_SIZE_MB} MB. Please reduce the number of files or compress them.`,
+              "error"
+            );
+            forceResetFileUI(input.id);
+            return;
+          }
+          
+          // Show info to user
+          if (fileCount > 0) {
+            showNotification(
+              `Uploading ${fileCount} image${fileCount > 1 ? 's' : ''} (${totalSizeMB.toFixed(2)} MB)${totalSizeMB > 100 ? '. This may take a few minutes...' : ''}`,
+              "info"
+            );
+          }
+
           currentOperation = "uploading_photos";
           
           // Reset cancelling flag
           isCancelling = false;
           
-          // Show overlay with countdown
+          // Show overlay and start upload immediately
           showUploadOverlay("photos");
           const uploadText = document.getElementById("uploadText");
           
@@ -481,40 +522,22 @@ window.addEventListener("DOMContentLoaded", () => {
             Array.from(input.files).map((f) => f.name)
           );
           
-          // 5-second countdown before upload
-          console.log("⏳ Starting 5-second cancellation window for photo upload");
+          // Start upload immediately (no countdown delay for faster uploads)
+          console.log("🚀 Starting instant photo upload");
           let uploadCancelled = false;
           
-          for (let secondsLeft = 5; secondsLeft > 0; secondsLeft--) {
-            // Check if cancelled during countdown
-            if (isCancelling) {
-              console.log(`✅ Upload cancelled during countdown (${secondsLeft}s remaining - PREVENTED UPLOAD)`);
-              uploadCancelled = true;
-              forceResetFileUI(input.id);
-              return;
-            }
-            
-            // Update overlay text with countdown
-            if (uploadText) {
-              const uploadType = input.id === "student-photos" ? "Student photos" : "Management photos";
-              uploadText.textContent = `Preparing ${uploadType}... (${secondsLeft}s to cancel)`;
-            }
-            
-            // Wait 1 second
-            await new Promise(resolve => setTimeout(resolve, 1000));
-          }
-          
-          // Check one more time before starting actual upload
+          // Quick check if cancelled
           if (isCancelling) {
-            console.log(` Upload cancelled just before upload start - PREVENTED UPLOAD`);
+            console.log(`✅ Upload cancelled before start`);
             uploadCancelled = true;
             forceResetFileUI(input.id);
             return;
           }
           
-          console.log("✓ Cancellation window expired, starting actual upload");
+          // Update overlay text
           if (uploadText) {
-            uploadText.textContent = `Uploading photos...`;
+            const uploadType = input.id === "student-photos" ? "Student photos" : "Management photos";
+            uploadText.textContent = `Uploading ${uploadType}...`;
           }
 
           for (let i = 0; i < input.files.length; i++) {
@@ -550,15 +573,50 @@ window.addEventListener("DOMContentLoaded", () => {
                 "/Connection/Photos/UploadTopManagementPhotos.php";
 
           try {
-            currentUploadController = new AbortController();
+            // Use XMLHttpRequest for better upload progress tracking
+            const xhr = new XMLHttpRequest();
+            currentUploadController = { abort: () => xhr.abort() };
 
-            const response = await fetch(uploadEndpoint, {
-              method: "POST",
-              body: formData,
-              signal: currentUploadController.signal,
+            // Track upload progress
+            xhr.upload.addEventListener("progress", (e) => {
+              if (e.lengthComputable) {
+                const percentComplete = Math.round((e.loaded / e.total) * 100);
+                if (uploadText) {
+                  const uploadType = input.id === "student-photos" ? "Student photos" : "Management photos";
+                  const loadedMB = (e.loaded / (1024 * 1024)).toFixed(2);
+                  const totalMB = (e.total / (1024 * 1024)).toFixed(2);
+                  uploadText.textContent = `Uploading ${uploadType}... ${percentComplete}% (${loadedMB}MB / ${totalMB}MB)`;
+                }
+              }
             });
 
-            const result = await response.json();
+            // Handle upload completion
+            const uploadPromise = new Promise((resolve, reject) => {
+              xhr.onload = () => {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                  try {
+                    const result = JSON.parse(xhr.responseText);
+                    resolve(result);
+                  } catch (e) {
+                    reject(new Error("Invalid JSON response"));
+                  }
+                } else {
+                  reject(new Error(`Upload failed with status ${xhr.status}`));
+                }
+              };
+              
+              xhr.onerror = () => reject(new Error("Network error"));
+              xhr.onabort = () => {
+                const abortError = new Error("Upload cancelled");
+                abortError.name = "AbortError";
+                reject(abortError);
+              };
+              
+              xhr.open("POST", uploadEndpoint);
+              xhr.send(formData);
+            });
+
+            const result = await uploadPromise;
 
             if (result.success) {
               const uploadType =

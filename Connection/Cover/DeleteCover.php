@@ -54,8 +54,9 @@ try {
     $slot     = isset($_POST['slot']) ? (int)$_POST['slot'] : null;
     $side     = isset($_POST['side']) ? strtolower(trim($_POST['side'])) : '';
     $batchYear = isset($_POST['batch_year']) ? trim($_POST['batch_year']) : '';
+    $template = isset($_POST['template']) ? (int)$_POST['template'] : 1;
 
-    error_log("DeleteCover.php received parameters: slot=$slot, side=$side, batch_year='$batchYear'");
+    error_log("DeleteCover.php received parameters: slot=$slot, side=$side, batch_year='$batchYear', template=$template");
 
     if ($slot === null) {
         error_log("DeleteCover.php ERROR: Missing slot parameter");
@@ -117,7 +118,7 @@ try {
         error_log("DeleteCover.php error checking databases: " . $e->getMessage());
     }
 
-    $filter = ['slot' => $slot];
+    $filter = ['slot' => $slot, 'template' => $template];
     if (!empty($batchYear)) {
         $filter['batch_year'] = $batchYear;
     }
@@ -223,7 +224,7 @@ try {
         error_log("DeleteCover.php BunnyCDN deletion: FAILED (but will continue with MongoDB deletion)");
     }
 
-    $updateFilter = ['slot' => $slot];
+    $updateFilter = ['slot' => $slot, 'template' => $template];
     if (!empty($batchYear)) {
         $updateFilter['batch_year'] = $batchYear;
     }
@@ -272,7 +273,7 @@ try {
     }
 
     if (!empty($batchYear)) {
-        $batchYearDocs = $collection->find(['batch_year' => $batchYear])->toArray();
+        $batchYearDocs = $collection->find(['batch_year' => $batchYear, 'template' => $template])->toArray();
 
         $slotsWithImages = [];
         foreach ($batchYearDocs as $doc) {
@@ -295,7 +296,7 @@ try {
 
         if (!$isComplete) {
             $updateResult = $collection->updateMany(
-                ['batch_year' => $batchYear],
+                ['batch_year' => $batchYear, 'template' => $template],
                 ['$unset' => ['completion_date' => '']],
                 ['upsert' => false]
             );

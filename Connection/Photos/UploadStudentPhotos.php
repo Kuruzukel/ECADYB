@@ -2,6 +2,14 @@
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
+// Increase upload limits to support up to 500MB total file uploads
+ini_set('memory_limit', '1024M');              // 1GB memory for processing
+ini_set('upload_max_filesize', '500M');        // Max 500MB per request
+ini_set('post_max_size', '500M');              // Max 500MB POST data
+ini_set('max_execution_time', '300');          // 5 minutes execution time
+ini_set('max_input_time', '300');              // 5 minutes input time
+set_time_limit(300);
+
 ob_start();
 
 header('Content-Type: application/json');
@@ -146,6 +154,17 @@ try {
     } else {
         error_log("  - Single file name: " . $uploadedFiles['name']);
     }
+    
+    // Validate maximum number of files (20 images limit)
+    $MAX_FILES = 20;
+    $fileCount = is_array($uploadedFiles['name']) ? count($uploadedFiles['name']) : 1;
+    
+    if ($fileCount > $MAX_FILES) {
+        error_log("UploadStudentPhotos.php - Too many files: $fileCount (max: $MAX_FILES)");
+        respond(false, "You can only upload a maximum of $MAX_FILES images at a time. You attempted to upload $fileCount images. Please reduce the number of files.");
+    }
+    
+    error_log("UploadStudentPhotos.php - File count validation passed: $fileCount files");
 
     if (!is_array($uploadedFiles['name'])) {
         error_log("Normalizing single file to array format");
@@ -295,12 +314,13 @@ try {
             CURLOPT_POSTFIELDS     => $fileContents,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_HEADER         => false,
-            CURLOPT_TIMEOUT        => 15,
-            CURLOPT_CONNECTTIMEOUT => 5,
+            CURLOPT_TIMEOUT        => 60,              // Increased timeout for large files
+            CURLOPT_CONNECTTIMEOUT => 10,              // Faster initial connection
             CURLOPT_SSL_VERIFYPEER => true,
-            CURLOPT_TCP_NODELAY    => true,
-            CURLOPT_FRESH_CONNECT  => false,
-            CURLOPT_FORBID_REUSE   => false
+            CURLOPT_TCP_NODELAY    => true,            // Disable Nagle's algorithm for faster transfers
+            CURLOPT_FRESH_CONNECT  => false,           // Reuse connections
+            CURLOPT_FORBID_REUSE   => false,           // Allow connection reuse
+            CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_2_0  // Use HTTP/2 for faster transfers
         ]);
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);

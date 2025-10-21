@@ -35,6 +35,11 @@ require __DIR__ . '/../../vendor/autoload.php';
 use MongoDB\Client;
 
 try {
+    $batchYear = isset($_GET['batch_year']) ? trim($_GET['batch_year']) : '';
+    $template = isset($_GET['template']) ? (int)$_GET['template'] : 1;
+    
+    error_log("FetchCovers.php received parameters: batch_year='$batchYear', template=$template");
+    
     $mongoUrl = getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
     error_log("FetchCovers.php using MongoDB URL: $mongoUrl");
 
@@ -51,8 +56,16 @@ try {
 
     error_log("FetchCovers.php using database: $dbName, collection: Covers");
 
+    // Build filter
+    $filter = ['template' => $template];
+    if (!empty($batchYear)) {
+        $filter['batch_year'] = $batchYear;
+    }
+    
+    error_log("FetchCovers.php query filter: " . json_encode($filter));
+
     $cursor = $collection->find(
-        [],
+        $filter,
         [
             'projection' => [
                 'slot' => 1,
@@ -69,6 +82,7 @@ try {
                 'background_original_name' => 1,
                 'background_side' => 1,
                 'batch_year' => 1,
+                'template' => 1,
                 'completion_date' => 1,
                 'upload_time' => 1
             ]
@@ -92,6 +106,7 @@ try {
         }
 
         $batchYear = isset($doc['batch_year']) ? (string)$doc['batch_year'] : '';
+        $template = isset($doc['template']) ? (int)$doc['template'] : 1;
         $completionDate = null;
         if (isset($doc['completion_date'])) {
             try {
@@ -124,6 +139,7 @@ try {
                 'back_original_name' => $backOriginalName,
                 'back_side' => $backSide,
                 'batch_year' => $batchYear,
+                'template' => $template,
                 'completion_date' => $completionDate
             ];
         } elseif ($slot === 8) {
@@ -142,6 +158,7 @@ try {
                 'background_original_name' => $backgroundOriginalName,
                 'background_side' => $backgroundSide,
                 'batch_year' => $batchYear,
+                'template' => $template,
                 'completion_date' => $completionDate
             ];
         }
