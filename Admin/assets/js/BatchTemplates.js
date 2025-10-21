@@ -1197,7 +1197,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
                 reject(e);
               }
             } else {
-              // Always show error notifications
               showNotification(`Upload failed: HTTP ${xhr.status}`, "error");
               reject(new Error(`HTTP ${xhr.status}`));
             }
