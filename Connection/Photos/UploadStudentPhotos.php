@@ -290,14 +290,36 @@ try {
         $safeFileName = preg_replace('/[^A-Za-z0-9 _.-]/', '', $originalNameWithoutExt) ?: ('student_' . time());
         $safeExt = preg_replace('/[^A-Za-z0-9]/', '', $ext) ?: 'jpg';
 
-        // Create academic year folder structure
+        // Create academic year folder structure with photo type subfolders
         if ($academicYear) {
-            $safeFolder = 'Student Photos/' . $academicYear;
-            error_log("UploadStudentPhotos: Using academic year folder: $safeFolder");
+            $baseFolder = 'Student Photos/' . $academicYear;
+            error_log("UploadStudentPhotos: Using academic year folder: $baseFolder");
         } else {
-            $safeFolder = 'Student Photos';
-            error_log("UploadStudentPhotos: No academic year, using default folder: $safeFolder");
+            $baseFolder = 'Student Photos';
+            error_log("UploadStudentPhotos: No academic year, using default folder: $baseFolder");
         }
+        
+        // Determine photo type folder based on filename
+        $photoTypeFolder = '';
+        $originalNameWithoutExt = pathinfo($fileName, PATHINFO_FILENAME);
+        
+        if (strpos($originalNameWithoutExt, '-FILIPINIANA') !== false) {
+            $photoTypeFolder = 'FILIPINIANA';
+            error_log("Detected FILIPINIANA photo for $fileName");
+        } elseif (strpos($originalNameWithoutExt, '-TOGA') !== false) {
+            $photoTypeFolder = 'TOGA';
+            error_log("Detected TOGA photo for $fileName");
+        } elseif (strpos($originalNameWithoutExt, '-UNIFORM') !== false) {
+            $photoTypeFolder = 'UNIFORM';
+            error_log("Detected UNIFORM photo for $fileName");
+        } else {
+            $photoTypeFolder = 'UNIFORM'; // Default to UNIFORM for photos without type suffix
+            error_log("No photo type detected for $fileName, defaulting to UNIFORM");
+        }
+        
+        $safeFolder = $baseFolder . '/' . $photoTypeFolder;
+        error_log("UploadStudentPhotos: Using full folder path: $safeFolder");
+        
         $filename = sprintf('%s.%s', $safeFileName, $safeExt);
         $path = $safeFolder . '/' . $filename;
         $storageUrl = "https://storage.bunnycdn.com/{$bunnyStorageZone}/" . str_replace(' ', '%20', $path);
@@ -385,7 +407,9 @@ try {
             'filename' => $filename,
             'original_name' => $fileName,
             'url' => $publicUrl,
-            'upload_time' => new \MongoDB\BSON\UTCDateTime()
+            'upload_time' => new \MongoDB\BSON\UTCDateTime(),
+            'photo_type' => $photoTypeFolder,
+            'folder_path' => $safeFolder
         ];
 
         // Add academic year if available
@@ -421,7 +445,11 @@ try {
             $existingDocument = $collection->findOne($filter);
 
             if ($existingDocument) {
-                $updateData = ['$set' => ['upload_time' => new \MongoDB\BSON\UTCDateTime()]];
+                $updateData = ['$set' => [
+                    'upload_time' => new \MongoDB\BSON\UTCDateTime(),
+                    'photo_type' => $photoTypeFolder,
+                    'folder_path' => $safeFolder
+                ]];
 
                 // Add academic year if available
                 if ($academicYear) {
@@ -464,7 +492,9 @@ try {
             } else {
                 $newDocument = [
                     'student_id' => $studentId,
-                    'upload_time' => new \MongoDB\BSON\UTCDateTime()
+                    'upload_time' => new \MongoDB\BSON\UTCDateTime(),
+                    'photo_type' => $photoTypeFolder,
+                    'folder_path' => $safeFolder
                 ];
 
                 // Add academic year if available

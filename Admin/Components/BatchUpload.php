@@ -511,6 +511,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <br><br>
                                     <i class="fas fa-file-csv"></i>
                                     Note: CSV files contain an academic year header, so you don't need to filter by academic year when uploading CSV files.
+                                    <br><br>
+                                    <i class="fas fa-images"></i>
+                                    Note: You can only upload a maximum of 20 images at a time for student photos.
                                 </p>
 
                                 <div class="form-group">

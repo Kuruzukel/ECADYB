@@ -226,14 +226,36 @@ try {
         $safeFileName = preg_replace('/[^A-Za-z0-9 _.-]/', '', $nameWithoutExt) ?: ('top_management_' . time());
         $safeExt = preg_replace('/[^A-Za-z0-9]/', '', $ext) ?: 'jpg';
 
-        // Create academic year folder structure
+        // Create academic year folder structure with photo type subfolders
         if ($academicYear) {
-            $safeFolder = 'Top Management Photos/' . $academicYear;
-            error_log("UploadTopManagementPhotos: Using academic year folder: $safeFolder");
+            $baseFolder = 'Top Management Photos/' . $academicYear;
+            error_log("UploadTopManagementPhotos: Using academic year folder: $baseFolder");
         } else {
-            $safeFolder = 'Top Management Photos';
-            error_log("UploadTopManagementPhotos: No academic year, using default folder: $safeFolder");
+            $baseFolder = 'Top Management Photos';
+            error_log("UploadTopManagementPhotos: No academic year, using default folder: $baseFolder");
         }
+        
+        // Determine photo type folder based on filename
+        $photoTypeFolder = '';
+        $nameWithoutExt = pathinfo($fileName, PATHINFO_FILENAME);
+        
+        if (strpos($nameWithoutExt, '-FILIPINIANA') !== false) {
+            $photoTypeFolder = 'FILIPINIANA';
+            error_log("Detected FILIPINIANA photo for $fileName");
+        } elseif (strpos($nameWithoutExt, '-TOGA') !== false) {
+            $photoTypeFolder = 'TOGA';
+            error_log("Detected TOGA photo for $fileName");
+        } elseif (strpos($nameWithoutExt, '-UNIFORM') !== false) {
+            $photoTypeFolder = 'UNIFORM';
+            error_log("Detected UNIFORM photo for $fileName");
+        } else {
+            $photoTypeFolder = 'UNIFORM'; // Default to UNIFORM for photos without type suffix
+            error_log("No photo type detected for $fileName, defaulting to UNIFORM");
+        }
+        
+        $safeFolder = $baseFolder . '/' . $photoTypeFolder;
+        error_log("UploadTopManagementPhotos: Using full folder path: $safeFolder");
+        
         $filename = sprintf('%s.%s', $safeFileName, $safeExt);
         $path = $safeFolder . '/' . $filename;
         $storageUrl = "https://storage.bunnycdn.com/{$bunnyStorageZone}/" . str_replace(' ', '%20', $path);
@@ -403,7 +425,9 @@ try {
                 'filename' => $filename,
                 'original_name' => $fileName,
                 'url' => $publicUrl,
-                'upload_time' => new \MongoDB\BSON\UTCDateTime()
+                'upload_time' => new \MongoDB\BSON\UTCDateTime(),
+                'photo_type' => $photoTypeFolder,
+                'folder_path' => $safeFolder
             ];
 
             // Add academic year if available

@@ -105,7 +105,7 @@ h1 .chevron i {
 
 .section-header {
   width: calc(100% + 40px);
-  height: 60px;
+  height: 50px;
   background: linear-gradient(135deg, var(--section-header) 0%, #3b82f6 100%);
   color: white;
   padding: 16px;
