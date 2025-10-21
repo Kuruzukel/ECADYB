@@ -110,36 +110,42 @@ try {
 
     $upperName = strtoupper($originalName);
 
-    $slotMapping = [
-        'BSME' => 1,
-        'BSCJ' => 2,
-        'BSTM' => 3,
-        'BSE' => 4,
-        'BSN' => 5,
-        'BSIS' => 6,
-        'BSBA' => 7
-    ];
+    // Skip filename validation for slot 8 (background) to improve performance
+    if ($slot !== 8) {
+        $slotMapping = [
+            'BSME' => 1,
+            'BSCJ' => 2,
+            'BSTM' => 3,
+            'BSE' => 4,
+            'BSN' => 5,
+            'BSIS' => 6,
+            'BSBA' => 7
+        ];
 
-    $detectedSlot = null;
-    foreach ($slotMapping as $prefix => $slotNum) {
-        if (strpos($upperName, $prefix) === 0) {
-            $detectedSlot = $slotNum;
-            break;
+        $detectedSlot = null;
+        foreach ($slotMapping as $prefix => $slotNum) {
+            if (strpos($upperName, $prefix) === 0) {
+                $detectedSlot = $slotNum;
+                break;
+            }
+        }
+
+        if ($detectedSlot !== null && $detectedSlot != $slot) {
+            respond(false, "Upload cancelled: Filename prefix doesn't match the selected slot. Expected slot $detectedSlot for this filename.");
+        }
+
+        if ($slot >= 1 && $slot <= 7 && $detectedSlot === null) {
+            respond(false, "Upload cancelled: Filename must start with a valid prefix (BSME, BSCJ, BSTM, BSE, BSN, BSIS, BSBA).");
         }
     }
 
-    if ($detectedSlot !== null && $detectedSlot != $slot) {
-        respond(false, "Upload cancelled: Filename prefix doesn't match the selected slot. Expected slot $detectedSlot for this filename.");
-    }
-
-    if ($slot >= 1 && $slot <= 7 && $detectedSlot === null) {
-        respond(false, "Upload cancelled: Filename must start with a valid prefix (BSME, BSCJ, BSTM, BSE, BSN, BSIS, BSBA).");
-    }
-
-    if (strpos($upperName, 'BACK') !== false) {
-        $side = 'back';
-    } else if (strpos($upperName, 'FRONT') !== false) {
-        $side = 'front';
+    // Skip side detection for slot 8 (background) as it's always 'front'
+    if ($slot !== 8) {
+        if (strpos($upperName, 'BACK') !== false) {
+            $side = 'back';
+        } else if (strpos($upperName, 'FRONT') !== false) {
+            $side = 'front';
+        }
     }
 
     if (connection_aborted()) {
@@ -319,7 +325,8 @@ try {
         'upload_time' => new \MongoDB\BSON\UTCDateTime()
     ];
 
-    $checkCompletion = true;
+    // Only check completion for non-background slots to improve performance
+    $checkCompletion = ($slot !== 8);
 
     if ($slot === 8) {
         $document['background_url'] = $publicUrl;

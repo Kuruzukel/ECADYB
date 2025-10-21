@@ -953,6 +953,13 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
             isFileInputOpen = false;
             return;
           }
+
+          // Show upload progress for background slot
+          if (uploadOverlay && uploadText) {
+            uploadOverlay.style.display = "flex";
+            uploadText.textContent = `Uploading background image...`;
+          }
+
           const result = await uploadToBunny(
             files[0],
             slot,
@@ -976,6 +983,8 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
             deleteBtn.style.display = "flex";
             box.classList.add("has-image");
             showingFront = true;
+
+            showNotification("Background image uploaded successfully!", "success");
 
             if (window.setAvailableSections) {
               await window.setAvailableSections();
@@ -1203,7 +1212,8 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
       isSingleUpload = false
     ) {
       const MAX_RETRIES = 3;
-      const UPLOAD_TIMEOUT = 60000;
+      // Reduce timeout for slot 8 (background) as it's typically a single large file
+      const UPLOAD_TIMEOUT = slot === 8 ? 120000 : 60000;
 
       try {
         const sectionHeader = box
@@ -1227,6 +1237,14 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
                   2
                 )}%`
               );
+              
+              // Update upload overlay text for slot 8
+              if (slot === 8) {
+                const uploadText = document.getElementById("uploadText");
+                if (uploadText) {
+                  uploadText.textContent = `Uploading background cover...`;
+                }
+              }
             }
           });
 
