@@ -1451,10 +1451,8 @@ function confirmSelectTemplate() {
       s.classList.remove("selected");
     });
 
-    // Add selected class to the pending section
     window.pendingSelectSection.classList.add("selected");
 
-    // Update upload box states
     const sections = document.querySelectorAll(".section");
     sections.forEach((section) => {
       const uploadBoxes = section.querySelectorAll(".upload-box");
