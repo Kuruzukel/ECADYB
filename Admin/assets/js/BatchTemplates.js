@@ -840,7 +840,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
       if (deleteBatchBtn) {
         deleteBatchBtn.addEventListener("click", (e) => {
           e.stopPropagation();
-          // Prevent action if button is disabled
           if (deleteBatchBtn.disabled) {
             console.log("Delete batch button is disabled for:", sectionHeader);
             return;
