@@ -919,7 +919,7 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
         console.log(
           "Upload already in progress, ignoring duplicate change event"
         );
-        event.target.value = ""; // Clear the input
+        event.target.value = "";
         return;
       }
       isUploading = true;
