@@ -496,14 +496,6 @@ window.addEventListener("DOMContentLoaded", () => {
             forceResetFileUI(input.id);
             return;
           }
-          
-          // Show info to user
-          if (fileCount > 0) {
-            showNotification(
-              `Uploading ${fileCount} image${fileCount > 1 ? 's' : ''} (${totalSizeMB.toFixed(2)} MB)${totalSizeMB > 100 ? '. This may take a few minutes...' : ''}`,
-              "info"
-            );
-          }
 
           currentOperation = "uploading_photos";
           
@@ -577,16 +569,12 @@ window.addEventListener("DOMContentLoaded", () => {
             const xhr = new XMLHttpRequest();
             currentUploadController = { abort: () => xhr.abort() };
 
-            // Track upload progress
+            // Track upload progress (silently, without displaying details)
             xhr.upload.addEventListener("progress", (e) => {
               if (e.lengthComputable) {
                 const percentComplete = Math.round((e.loaded / e.total) * 100);
-                if (uploadText) {
-                  const uploadType = input.id === "student-photos" ? "Student photos" : "Management photos";
-                  const loadedMB = (e.loaded / (1024 * 1024)).toFixed(2);
-                  const totalMB = (e.total / (1024 * 1024)).toFixed(2);
-                  uploadText.textContent = `Uploading ${uploadType}... ${percentComplete}% (${loadedMB}MB / ${totalMB}MB)`;
-                }
+                console.log(`Upload progress: ${percentComplete}%`);
+                // Progress tracked in console only, UI shows simple message
               }
             });
 
