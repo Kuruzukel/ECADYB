@@ -1415,7 +1415,6 @@ function confirmDownloadPDF() {
   );
   console.log("Downloading PDF...");
   closeDownloadPdfModal();
-  // TODO: Implement PDF download logic
 }
 
 function deleteBatchTemplate(section, batchName) {
