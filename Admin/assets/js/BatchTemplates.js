@@ -1129,7 +1129,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
             console.log(`All deletions successful for slot ${slot}`);
           } else {
             console.error(`Some deletions failed for slot ${slot}`);
-            // If server deletion failed, we could restore the images here
             // But for now, we'll just show an error notification
             showNotification(
               "Server deletion failed, but UI was updated",
