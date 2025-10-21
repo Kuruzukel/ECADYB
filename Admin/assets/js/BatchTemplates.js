@@ -1459,7 +1459,6 @@ function confirmSelectTemplate() {
       const isSelected = section === window.pendingSelectSection;
 
       uploadBoxes.forEach((box) => {
-        // Don't disable action-box, it should always be clickable
         const isActionBox = box.classList.contains("action-box");
 
         if (isSelected) {
