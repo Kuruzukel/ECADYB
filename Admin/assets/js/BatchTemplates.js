@@ -757,7 +757,6 @@ function restoreSingleSection(sectionHeader) {
   if (!window.deferSectionInitialization) {
     initializeSection(newSection);
 
-    // Get the currentXhrs and isUploadCancelled from the parent scope
     const currentXhrs = window.currentXhrs || [];
     const isUploadCancelled = window.isUploadCancelled || false;
 
