@@ -262,7 +262,6 @@ h1 .chevron i {
   font-weight: 600;
 }
 
-/* Yellow background for selected section (overrides available) */
 .section.selected .section-header {
   background: #fcda15;
   color: #000000;
