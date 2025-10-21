@@ -848,7 +848,7 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
           deleteBatchTemplate(section, sectionHeader);
         });
       }
-      return; // Skip the rest of the initialization for action box
+      return;
     }
 
     const frontInput = box.querySelector(".frontInput");
