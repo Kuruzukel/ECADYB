@@ -271,7 +271,14 @@ try {
         $safeFileName = preg_replace('/[^A-Za-z0-9 _.-]/', '', $originalNameWithoutExt) ?: ('student_' . time());
         $safeExt = preg_replace('/[^A-Za-z0-9]/', '', $ext) ?: 'jpg';
 
-        $safeFolder = 'Student Photos';
+        // Create academic year folder structure
+        if ($academicYear) {
+            $safeFolder = 'Student Photos/' . $academicYear;
+            error_log("UploadStudentPhotos: Using academic year folder: $safeFolder");
+        } else {
+            $safeFolder = 'Student Photos';
+            error_log("UploadStudentPhotos: No academic year, using default folder: $safeFolder");
+        }
         $filename = sprintf('%s.%s', $safeFileName, $safeExt);
         $path = $safeFolder . '/' . $filename;
         $storageUrl = "https://storage.bunnycdn.com/{$bunnyStorageZone}/" . str_replace(' ', '%20', $path);

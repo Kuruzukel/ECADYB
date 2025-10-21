@@ -162,6 +162,7 @@ function applyTheme(theme) {
 let notificationTimeout = null;
 let currentOperation = null;
 let currentUploadController = null;
+let isCancelling = false;
 
 function showNotification(message, type = "success") {
   const container = document.getElementById("notification-container");
@@ -297,6 +298,8 @@ function forceResetFileUI(inputId) {
 
 function cancelUpload() {
   console.log("Cancel upload triggered");
+  
+  isCancelling = true;
 
   if (currentUploadController) {
     console.log("Aborting current upload...");
@@ -317,7 +320,12 @@ function cancelUpload() {
 
   currentOperation = null;
 
-  showNotification("Upload cancelled successfully", "warning");
+  showNotification("Upload cancelled", "error");
+  
+  // Reset cancelling flag after a short delay
+  setTimeout(() => {
+    isCancelling = false;
+  }, 500);
 }
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -457,8 +465,14 @@ window.addEventListener("DOMContentLoaded", () => {
           }
 
           currentOperation = "uploading_photos";
+          
+          // Reset cancelling flag
+          isCancelling = false;
+          
+          // Show overlay with countdown
           showUploadOverlay("photos");
-
+          const uploadText = document.getElementById("uploadText");
+          
           console.log("=== UPLOAD DEBUG ===");
           console.log("Input ID:", input.id);
           console.log("Number of files selected:", input.files.length);
@@ -466,6 +480,42 @@ window.addEventListener("DOMContentLoaded", () => {
             "File names:",
             Array.from(input.files).map((f) => f.name)
           );
+          
+          // 5-second countdown before upload
+          console.log("⏳ Starting 5-second cancellation window for photo upload");
+          let uploadCancelled = false;
+          
+          for (let secondsLeft = 5; secondsLeft > 0; secondsLeft--) {
+            // Check if cancelled during countdown
+            if (isCancelling) {
+              console.log(`✅ Upload cancelled during countdown (${secondsLeft}s remaining - PREVENTED UPLOAD)`);
+              uploadCancelled = true;
+              forceResetFileUI(input.id);
+              return;
+            }
+            
+            // Update overlay text with countdown
+            if (uploadText) {
+              const uploadType = input.id === "student-photos" ? "Student photos" : "Management photos";
+              uploadText.textContent = `Preparing ${uploadType}... (${secondsLeft}s to cancel)`;
+            }
+            
+            // Wait 1 second
+            await new Promise(resolve => setTimeout(resolve, 1000));
+          }
+          
+          // Check one more time before starting actual upload
+          if (isCancelling) {
+            console.log(` Upload cancelled just before upload start - PREVENTED UPLOAD`);
+            uploadCancelled = true;
+            forceResetFileUI(input.id);
+            return;
+          }
+          
+          console.log("✓ Cancellation window expired, starting actual upload");
+          if (uploadText) {
+            uploadText.textContent = `Uploading photos...`;
+          }
 
           for (let i = 0; i < input.files.length; i++) {
             console.log(`Appending file ${i + 1}:`, input.files[i].name);
