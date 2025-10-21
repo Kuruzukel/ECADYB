@@ -93,7 +93,6 @@ h1 .chevron i {
   background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
 }
 
-/* Firefox scrollbar styling */
 .form-content {
   scrollbar-width: thin;
   scrollbar-color: #fbbf24 rgba(17, 45, 78, 0.5);
