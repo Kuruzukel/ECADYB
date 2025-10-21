@@ -810,6 +810,12 @@
             <div class="student-info">
               <h2 class="student-name">Student Name</h2>
               <p class="academic-year">Academic Year: <span>2024-2025</span></p>
+              <div class="latin-awards">
+                <h3>Latin Award</h3>
+                <ul>
+                  <li>Summa Cum Laude</li>
+                </ul>
+              </div>
               <div class="motto">
                 <h3>Motto</h3>
                 <p>
@@ -818,17 +824,11 @@
                 </p>
               </div>
               <div class="milestones">
-                <h3>Milestones</h3>
+                <h3>Milestone</h3>
                 <ul>
                   <li>Dean's Lister (2020-2024)</li>
                   <li>Student Council President</li>
                   <li>Academic Excellence Award</li>
-                </ul>
-              </div>
-              <div class="latin-awards">
-                <h3>Latin Awards</h3>
-                <ul>
-                  <li>Summa Cum Laude</li>
                 </ul>
               </div>
             </div>
@@ -1262,7 +1262,7 @@
 
           if (hasMilestones) {
             milestonesContainer.show();
-            milestonesTitle.text("Milestones");
+            milestonesTitle.text("Milestone");
 
             clickedStudent.milestones.forEach(function (milestone) {
               // Filter out sample data

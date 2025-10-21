@@ -1041,6 +1041,7 @@
   background: transparent;
   transform-style: preserve-3d;
   transform: translateZ(10px);
+  padding: 25px;
 }
 
 .student-name {
@@ -1121,7 +1122,6 @@
 }
 
 .motto p::before {
-  content: "🏆";
   font-size: 18px;
   margin-right: 12px;
   filter: drop-shadow(0 2px 4px rgba(212, 175, 55, 0.5));
@@ -1176,7 +1176,6 @@
 }
 
 .latin-awards li::before {
-  content: "🏆";
   font-size: 18px;
   margin-right: 12px;
   filter: drop-shadow(0 2px 4px rgba(212, 175, 55, 0.5));
@@ -1184,7 +1183,7 @@
 }
 
 .milestones li::before {
-  content: "🏆";
+  
   font-size: 18px;
   margin-right: 12px;
   filter: drop-shadow(0 2px 4px rgba(212, 175, 55, 0.5));
