@@ -1276,6 +1276,7 @@
 
           // Populate Latin Awards section
           var latinAwardsList = modal.find(".latin-awards ul");
+          var latinAwardsContainer = modal.find(".latin-awards");
           latinAwardsList.empty();
           
           // Check if student has Latin awards/honors
@@ -1289,21 +1290,27 @@
                 return honor.length > 0;
               });
               
-              honorsArray.forEach(function (honor) {
-                latinAwardsList.append("<li>" + honor + "</li>");
-              });
+              if (honorsArray.length > 0) {
+                latinAwardsContainer.show();
+                honorsArray.forEach(function (honor) {
+                  latinAwardsList.append("<li>" + honor + "</li>");
+                });
+              } else {
+                latinAwardsContainer.hide();
+              }
             } else if (Array.isArray(clickedStudent.honors) && clickedStudent.honors.length > 0) {
               // If honors is already an array
+              latinAwardsContainer.show();
               clickedStudent.honors.forEach(function (honor) {
                 latinAwardsList.append("<li>" + honor + "</li>");
               });
             } else {
-              // Default Latin awards if none provided
-              latinAwardsList.append("<li>SAMPLE Latin Awards</li>");
+              // No valid honors data
+              latinAwardsContainer.hide();
             }
           } else {
-            // Default Latin awards if no honors field
-            latinAwardsList.append("<li>SAMPLE Latin Awards</li>");
+            // No honors field at all
+            latinAwardsContainer.hide();
           }
 
           // Fetch and display student photos
