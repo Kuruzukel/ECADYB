@@ -1213,7 +1213,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
           });
 
           xhr.addEventListener("timeout", () => {
-            // Always show error notifications
             showNotification("Upload timeout - please try again", "error");
             reject(new Error("Upload timeout"));
           });
