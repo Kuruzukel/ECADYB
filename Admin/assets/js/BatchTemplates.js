@@ -738,7 +738,6 @@ function restoreSingleSection(sectionHeader) {
     newFormGroup.className = "form-group";
     newFormGroup.appendChild(newSection);
 
-    // Find the generate button container and insert the new form-group before it
     const generateButtonContainer = document.querySelector(
       ".generate-button-container"
     );
