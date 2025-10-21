@@ -1336,7 +1336,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
       }
     }
 
-    // Load existing images
     (async function loadExisting() {
       try {
         await new Promise((resolve) => setTimeout(resolve, 50));
