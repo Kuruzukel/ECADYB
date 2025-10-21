@@ -911,7 +911,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
         return;
       }
 
-      // Stop event propagation to prevent box click from triggering again
       event.stopPropagation();
 
       // Reset file input open flag
