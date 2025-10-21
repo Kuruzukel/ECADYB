@@ -12,11 +12,20 @@ window.studentPhotosCache = window.studentPhotosCache || {};
 window.topManagementCache = window.topManagementCache || {};
 window.topManagementPendingRequests = window.topManagementPendingRequests || {};
 
+// Function to clear top management cache when batch year changes
+function clearTopManagementCache() {
+  console.log("Clearing top management cache due to batch year change");
+  window.topManagementCache = {};
+  window.topManagementPendingRequests = {};
+}
+
 function fetchTopManagementCached(template, callback) {
-  var cacheKey = "template_" + template;
+  // Get batch year from localStorage to include in cache key
+  var batchYear = localStorage.getItem("selectedBatchYear");
+  var cacheKey = "template_" + template + "_" + (batchYear || 'default');
 
   if (window.topManagementCache[cacheKey]) {
-    console.log("Using cached top management data for template", template);
+    console.log("Using cached top management data for template", template, "batch year", batchYear);
     callback(window.topManagementCache[cacheKey]);
     return;
   }
@@ -25,6 +34,8 @@ function fetchTopManagementCached(template, callback) {
     console.log(
       "Request already pending for template",
       template,
+      "batch year",
+      batchYear,
       "- waiting for it to complete"
     );
     window.topManagementPendingRequests[cacheKey].push(callback);
@@ -33,10 +44,7 @@ function fetchTopManagementCached(template, callback) {
 
   window.topManagementPendingRequests[cacheKey] = [callback];
 
-  console.log("Fetching top management data for template", template);
-
-  // Get batch year from localStorage
-  var batchYear = localStorage.getItem("selectedBatchYear");
+  console.log("Fetching top management data for template", template, "batch year", batchYear);
 
   // Build request data
   var requestData = {
@@ -46,12 +54,24 @@ function fetchTopManagementCached(template, callback) {
     requestData.batch_year = batchYear;
   }
 
+  console.log("=== FETCHING TOP MANAGEMENT ===");
+  console.log("Template:", template);
+  console.log("Batch Year:", batchYear);
+  console.log("Request Data:", requestData);
+  console.log("Request URL:", window.basePath + "/Connection/Photos/FetchTopManagement.php");
+
   $.ajax({
     url: window.basePath + "/Connection/Photos/FetchTopManagement.php",
     method: "GET",
     data: requestData,
     dataType: "json",
     success: function (response) {
+      console.log("=== TOP MANAGEMENT RESPONSE ===");
+      console.log("Response:", response);
+      console.log("Success:", response.success);
+      console.log("Data length:", response.data ? response.data.length : 'no data');
+      console.log("Data:", response.data);
+      
       window.topManagementCache[cacheKey] = response;
 
       var callbacks = window.topManagementPendingRequests[cacheKey];
@@ -678,13 +698,22 @@ function loadPage(page, pageElement) {
       var managementIndex = page - 2;
 
       fetchTopManagementCached(template, function (response) {
-        console.log("Top management data response:", response);
+        console.log("=== TOP MANAGEMENT PAGE LOADING ===");
+        console.log("Page:", page);
+        console.log("Management Index:", managementIndex);
+        console.log("Template:", template);
+        console.log("Response:", response);
+        console.log("Response Success:", response.success);
+        console.log("Response Data:", response.data);
+        console.log("Data Length:", response.data ? response.data.length : 'no data');
 
         loadingIndicator.remove();
 
         if (response.success && response.data && response.data.length > 0) {
+          console.log("Top management data available, checking index:", managementIndex);
           if (managementIndex < response.data.length) {
             var currentManager = response.data[managementIndex];
+            console.log("Current Manager:", currentManager);
 
             var photoContainer = $("<div/>", {
               class: "management-photo",
@@ -837,6 +866,13 @@ function loadPage(page, pageElement) {
             }, 500);
           }
         } else {
+          console.log("No top management data available");
+          console.log("Response success:", response.success);
+          console.log("Response message:", response.message);
+          console.log("Response data:", response.data);
+          
+          var currentBatchYear = localStorage.getItem("selectedBatchYear") || 'none';
+          
           var errorMessage = $("<div/>", {
             class: "management-message modern-empty-state",
             html: `
@@ -852,6 +888,7 @@ function loadPage(page, pageElement) {
                   response.message ||
                   "Please upload CSV of the Top Management to the Batch Upload Section first."
                 }</p>
+                <p class="empty-state-description">Debug: Template=${template}, BatchYear=${currentBatchYear}</p>
               </div>
             `,
           });

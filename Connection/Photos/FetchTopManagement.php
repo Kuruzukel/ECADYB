@@ -91,6 +91,16 @@ try {
         error_log("Filtering top management by academic year: $academicYear");
     }
 
+    // First, let's check what's in the collection without any filter
+    $totalCount = $messageCollection->countDocuments([]);
+    error_log("Total documents in Top_Management_Messages collection: $totalCount");
+    
+    // Log a sample document to see the structure
+    $sampleDoc = $messageCollection->findOne([]);
+    if ($sampleDoc) {
+        error_log("Sample document structure: " . json_encode($sampleDoc));
+    }
+    
     $messageCount = $messageCollection->countDocuments($academicYearFilter);
     error_log("Found $messageCount top management messages with filter: " . json_encode($academicYearFilter));
     
@@ -103,61 +113,99 @@ try {
     }
 
     $photosCollection = $mongoClient->$mongoDbName->Top_Management_Photos;
-    error_log("Querying Top_Management_Photos collection with filter: " . json_encode($academicYearFilter));
-    $photos = $photosCollection->find($academicYearFilter, ['sort' => ['position' => 1]]);
     
-    $photoCount = count(iterator_to_array($photos));
+    // Build photo filter - photos might use different field names for academic year
+    $photoFilter = [];
+    if ($batchYear) {
+        $academicYear = str_replace('Batch Year ', '', $batchYear);
+        // Try both field name variations
+        $photoFilter = [
+            '$or' => [
+                ['academicyear' => $academicYear],
+                ['academic year' => $academicYear]
+            ]
+        ];
+    }
+    
+    error_log("Querying Top_Management_Photos collection with filter: " . json_encode($photoFilter));
+    $photosCursor = $photosCollection->find($photoFilter, ['sort' => ['position' => 1]]);
+    
+    // Convert cursor to array to avoid rewind issues
+    $photos = iterator_to_array($photosCursor);
+    $photoCount = count($photos);
     error_log("Found $photoCount top management photos");
 
     $result = [];
     $photoMap = [];
 
+    // First, collect all photos by name
     $photoIndex = 0;
     foreach ($photos as $photo) {
         $photoIndex++;
         error_log("Processing photo record #$photoIndex: " . json_encode($photo));
         
         $name = $photo['name'] ?? '';
+        $academicYear = $photo['academic year'] ?? $photo['academicyear'] ?? '';
+        
+        error_log("Photo - Name: '$name', Academic Year: '$academicYear'");
+        
         $photoMap[$name] = [
-            'id' => (string)$photo['_id'],
-            'name' => $name,
-            'position' => $photo['position'] ?? '',
             'photo_url' => $photo['url'] ?? '',
             'filename' => $photo['filename'] ?? '',
-            'message' => '',
-            'academicyear' => ''
+            'original_name' => $photo['original_name'] ?? '',
+            'upload_time' => $photo['upload_time'] ?? '',
+            'academic_year' => $academicYear
         ];
     }
+    
+    error_log("Photo map created: " . json_encode($photoMap));
 
     error_log("Querying Top_Management_Messages collection with filter: " . json_encode($academicYearFilter));
-    $messages = $messageCollection->find($academicYearFilter, ['sort' => ['position' => 1]]);
+    $messagesCursor = $messageCollection->find($academicYearFilter, ['sort' => ['position' => 1]]);
     
-    $messageCount = count(iterator_to_array($messages));
+    // Convert cursor to array to avoid rewind issues
+    $messages = iterator_to_array($messagesCursor);
+    $messageCount = count($messages);
     error_log("Found $messageCount top management messages");
     
+    // Build result array based on messages (primary data source)
     $messageIndex = 0;
     foreach ($messages as $message) {
         $messageIndex++;
         error_log("Processing message record #$messageIndex: " . json_encode($message));
         
         $name = $message['name'] ?? '';
-
+        $messageAcademicYear = $message['academicyear'] ?? '';
+        
+        error_log("Message - Name: '$name', Academic Year: '$messageAcademicYear'");
+        
+        // Create entry for each message, add photo if available
+        $entry = [
+            'id' => (string)$message['_id'],
+            'name' => $name,
+            'position' => $message['position'] ?? '',
+            'message' => $message['message'] ?? '',
+            'academicyear' => $messageAcademicYear,
+            'photo_url' => '',
+            'filename' => '',
+            'original_name' => '',
+            'upload_time' => ''
+        ];
+        
+        // Add photo data if available for this person
         if (isset($photoMap[$name])) {
-            $photoMap[$name]['message'] = $message['message'] ?? '';
-            $photoMap[$name]['academicyear'] = $message['academicyear'] ?? '';
+            error_log("Found photo for '$name': " . json_encode($photoMap[$name]));
+            $entry['photo_url'] = $photoMap[$name]['photo_url'];
+            $entry['filename'] = $photoMap[$name]['filename'];
+            $entry['original_name'] = $photoMap[$name]['original_name'];
+            $entry['upload_time'] = $photoMap[$name]['upload_time'];
+            error_log("Added photo for $name: " . $entry['photo_url']);
         } else {
-            $photoMap[$name] = [
-                'id' => (string)$message['_id'],
-                'name' => $name,
-                'position' => $message['position'] ?? '',
-                'photo_url' => '',
-                'message' => $message['message'] ?? '',
-                'academicyear' => $message['academicyear'] ?? ''
-            ];
+            error_log("No photo found for $name");
         }
+        
+        $result[] = $entry;
     }
-
-    $result = array_values($photoMap);
     error_log("Combined result has " . count($result) . " items");
 
     usort($result, function ($a, $b) {

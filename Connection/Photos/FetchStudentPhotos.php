@@ -78,16 +78,19 @@ try {
     
     error_log("Querying Student_Photos collection with filter: " . json_encode($filter));
 
-    $photos = $photosCollection->find($filter, ['sort' => ['upload_time' => -1]]);
+    $photosCursor = $photosCollection->find($filter, ['sort' => ['upload_time' => -1]]);
+    
+    // Convert cursor to array to avoid rewind issues
+    $photos = iterator_to_array($photosCursor);
+    $photoCount = count($photos);
+    
+    error_log("Found " . $photoCount . " photo records for student_id: " . ($studentId ?: 'null'));
 
     $result = [];
-    
-    error_log("Found " . count(iterator_to_array($photos)) . " photo records for student_id: " . ($studentId ?: 'null'));
-
-    $photoCount = 0;
+    $processedCount = 0;
     foreach ($photos as $photo) {
-        $photoCount++;
-        error_log("Processing photo record #" . $photoCount . " for student_id: " . ($studentId ?: 'null'));
+        $processedCount++;
+        error_log("Processing photo record #" . $processedCount . " for student_id: " . ($studentId ?: 'null'));
         
         $studentData = [
             'id' => (string)$photo['_id'],
