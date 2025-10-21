@@ -232,42 +232,85 @@ let selectTemplateModal = null;
 let confirmSelectTemplateBtn = null;
 let cancelSelectTemplateBtn = null;
 
-let currentUploadController = null;
+let currentUploadControllers = []; // Array to track multiple XHR requests
 let globalIsUploading = false;
-let lastUploadedFile = null; // Track last uploaded file for cleanup
+let lastUploadedFiles = []; // Track all uploaded files in current batch for cleanup
+let pendingUploads = []; // Track uploads in progress (before completion)
+let isCancelling = false; // Guard flag to prevent multiple simultaneous cancellations
 
-function cancelUpload() {
+async function cancelUpload() {
+  // Prevent multiple simultaneous cancel operations
+  if (isCancelling) {
+    console.log("Cancel already in progress, ignoring duplicate cancel request");
+    return;
+  }
+  
+  isCancelling = true;
   console.log("Cancel upload triggered in BatchTemplates");
   
-  if (currentUploadController) {
-    console.log("Aborting current upload...");
-    currentUploadController.abort();
-    currentUploadController = null;
-  }
-  
-  // If there's a recently uploaded file, delete it
-  if (lastUploadedFile) {
-    console.log("Deleting recently uploaded file:", lastUploadedFile);
-    deleteRecentlyUploadedFile(lastUploadedFile);
-    lastUploadedFile = null;
-  }
-  
-  globalIsUploading = false;
-  
-  // Hide upload overlay
+  // Hide upload overlay IMMEDIATELY - don't wait for cleanup
   const uploadOverlay = document.getElementById("upload-overlay");
   if (uploadOverlay) {
     uploadOverlay.style.display = "none";
   }
   
-  // Reset all file inputs
+  // Reset file inputs immediately
   document.querySelectorAll('input[type="file"]').forEach((input) => {
     if (input.files && input.files.length > 0) {
       input.value = "";
     }
   });
   
-  showNotification("Upload cancelled successfully", "warning");
+  // Show immediate feedback to user
+  showNotification("Cancelling upload...", "info");
+  
+  // Abort ALL active XHR requests
+  if (currentUploadControllers.length > 0) {
+    console.log(`Aborting ${currentUploadControllers.length} active upload(s)...`);
+    currentUploadControllers.forEach((xhr, index) => {
+      if (xhr) {
+        console.log(`Aborting upload ${index + 1}/${currentUploadControllers.length}`);
+        xhr.abort();
+      }
+    });
+    currentUploadControllers = [];
+  }
+  
+  // Combine both completed and pending uploads for cleanup
+  // IMPORTANT: Copy arrays and clear originals immediately to prevent re-entry
+  const allFilesToCleanup = [...lastUploadedFiles, ...pendingUploads];
+  lastUploadedFiles = [];
+  pendingUploads = [];
+  
+  globalIsUploading = false;
+  
+  // Perform cleanup in the background (don't block UI)
+  if (allFilesToCleanup.length > 0) {
+    console.log(`Background cleanup: ${allFilesToCleanup.length} file(s) from Bunny CDN and MongoDB...`);
+    
+    // Run cleanup without blocking
+    Promise.all(
+      allFilesToCleanup.map(fileInfo => deleteRecentlyUploadedFile(fileInfo))
+    ).then(results => {
+      const successCount = results.filter(r => r === true).length;
+      const failCount = results.filter(r => r === false).length;
+      
+      console.log(`Background cleanup complete: ${successCount} deleted successfully, ${failCount} failed`);
+      
+      // Only show notification if there were actual cleanups
+      if (successCount > 0) {
+        showNotification(`Cleanup complete - ${successCount} file(s) removed`, "success");
+      }
+    }).catch(error => {
+      console.error("Error during background cleanup:", error);
+    }).finally(() => {
+      isCancelling = false;
+      console.log("Background cleanup finished, flag reset");
+    });
+  } else {
+    console.log("No files to clean up (upload was cancelled before any uploads started)");
+    isCancelling = false;
+  }
 }
 
 async function deleteRecentlyUploadedFile(fileInfo) {
@@ -280,7 +323,7 @@ async function deleteRecentlyUploadedFile(fileInfo) {
     formData.append('batch_year', fileInfo.batch_year);
     formData.append('side', fileInfo.side || 'front');
     
-    console.log("Sending delete request for:", fileInfo);
+    console.log(`Deleting recently uploaded file - Slot ${fileInfo.slot} ${fileInfo.side}, Batch: ${fileInfo.batch_year}`);
     
     const response = await fetch(DELETE_ENDPOINT, {
       method: 'POST',
@@ -288,15 +331,17 @@ async function deleteRecentlyUploadedFile(fileInfo) {
     });
     
     const data = await response.json();
-    console.log("Delete response:", data);
     
     if (data.success) {
-      console.log("Successfully deleted cancelled upload");
+      console.log(`✓ Successfully deleted Slot ${fileInfo.slot} ${fileInfo.side} from Bunny CDN and MongoDB`);
+      return true;
     } else {
-      console.error("Failed to delete cancelled upload:", data.message);
+      console.error(`✗ Failed to delete Slot ${fileInfo.slot} ${fileInfo.side}: ${data.message}`);
+      return false;
     }
   } catch (error) {
-    console.error("Error deleting cancelled upload:", error);
+    console.error(`✗ Error deleting Slot ${fileInfo.slot} ${fileInfo.side}:`, error);
+    return false;
   }
 }
 
@@ -619,17 +664,9 @@ function generateNewBatchSection() {
     window.setAvailableSections();
   }
 
-  // Disable upload boxes for the new section if it's not selected
-  const selectedSection = document.querySelector(".section.selected");
-  if (selectedSection && selectedSection !== newSection) {
-    const uploadBoxes = newSection.querySelectorAll(".upload-box");
-    uploadBoxes.forEach((box) => {
-      const isActionBox = box.classList.contains("action-box");
-      if (!isActionBox) {
-        box.classList.add("disabled");
-        box.style.pointerEvents = "none";
-      }
-    });
+  // Update upload box states for all sections (including the new one)
+  if (window.updateUploadBoxStates) {
+    window.updateUploadBoxStates();
   }
 
   showNotification(`Batch Year ${nextYear} created successfully!`, "success");
@@ -805,17 +842,9 @@ function restoreSingleSection(sectionHeader) {
 
     initializeSectionUploadBoxes(newSection, currentXhrs, isUploadCancelled);
 
-    // Disable upload boxes for the restored section if it's not selected
-    const selectedSection = document.querySelector(".section.selected");
-    if (selectedSection && selectedSection !== newSection) {
-      const uploadBoxes = newSection.querySelectorAll(".upload-box");
-      uploadBoxes.forEach((box) => {
-        const isActionBox = box.classList.contains("action-box");
-        if (!isActionBox) {
-          box.classList.add("disabled");
-          box.style.pointerEvents = "none";
-        }
-      });
+    // Update upload box states after restoration
+    if (window.updateUploadBoxStates) {
+      window.updateUploadBoxStates();
     }
   }
 
@@ -956,16 +985,27 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
 
     box.addEventListener("click", (event) => {
       if (event.target === deleteBtn) return;
-      if (isUploading) return;
-      if (isFileInputOpen) return;
+      
+      if (isUploading) {
+        console.log(`⚠️ Upload box Slot ${slot} - Click blocked: upload in progress (isUploading=${isUploading})`);
+        return;
+      }
+      
+      if (isFileInputOpen) {
+        console.log(`⚠️ Upload box Slot ${slot} - Click blocked: file dialog open`);
+        return;
+      }
 
       if (!frontImg) {
+        console.log(`✓ Upload box Slot ${slot} - Opening file dialog for front image`);
         isFileInputOpen = true;
         frontInput.click();
       } else if (!backImg && !isBackgroundSlot) {
+        console.log(`✓ Upload box Slot ${slot} - Opening file dialog for back image`);
         isFileInputOpen = true;
         backInput.click();
       } else {
+        console.log(`✓ Upload box Slot ${slot} - Toggling between front/back images`);
         toggleImages();
       }
     });
@@ -992,6 +1032,11 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
       isUploading = true;
 
       isUploadCancelled = false;
+      
+      // Clear any previous upload tracking before starting new upload
+      lastUploadedFiles = [];
+      pendingUploads = [];
+      currentUploadControllers = [];
 
       console.log("Files selected:", files.length, "files");
       console.log("File 0 name:", files[0]?.name);
@@ -1054,8 +1099,8 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
 
             showNotification("Background cover uploaded successfully!", "success");
 
-            // Clear lastUploadedFile since upload is complete and displayed
-            lastUploadedFile = null;
+            // Don't clear lastUploadedFiles yet - keep it for potential cancellation cleanup
+            // It will be cleared when the next upload starts
 
             if (window.setAvailableSections) {
               await window.setAvailableSections();
@@ -1107,9 +1152,10 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
             const results = await Promise.all(uploadPromises);
             uploadCancelled =
               results.some((result) => result && result.cancelled) ||
-              isUploadCancelled;
+              isUploadCancelled ||
+              isCancelling; // Also check global cancellation flag
 
-            if (!uploadCancelled && !isUploadCancelled) {
+            if (!uploadCancelled && !isUploadCancelled && !isCancelling) {
               // Get the URLs from the server response
               const frontUrl = results[1]?.url || frontImageUrl;
               const backUrl = results[0]?.url || backImageUrl;
@@ -1159,8 +1205,8 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
                 "success"
               );
               
-              // Clear lastUploadedFile since upload is complete and displayed
-              lastUploadedFile = null;
+              // Don't clear lastUploadedFiles yet - keep it for potential cancellation cleanup
+              // It will be cleared when the next upload starts
               
               if (window.setAvailableSections) {
                 await window.setAvailableSections();
@@ -1191,14 +1237,14 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
               box.classList.add("has-image");
               showingFront = true;
 
-              // Clear lastUploadedFile since upload is complete and displayed
-              lastUploadedFile = null;
+              // Don't clear lastUploadedFiles yet - keep it for potential cancellation cleanup
+              // It will be cleared when the next upload starts
 
               if (window.setAvailableSections) {
                 await window.setAvailableSections();
               }
             }
-            uploadCancelled = (result && result.cancelled) || isUploadCancelled;
+            uploadCancelled = (result && result.cancelled) || isUploadCancelled || isCancelling;
           }
         }
 
@@ -1218,6 +1264,7 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
         event.target.value = "";
         isUploading = false;
         isFileInputOpen = false;
+        console.log(`✓ Upload box Slot ${slot} - isUploading reset to false, ready for next upload`);
       }
     });
 
@@ -1307,11 +1354,24 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
 
         const xhr = new XMLHttpRequest();
         
-        // Store the XHR in global controller for cancellation
-        currentUploadController = xhr;
+        // Track this upload as pending BEFORE it starts
+        const fileInfo = {
+          slot: slot,
+          batch_year: batchYear,
+          side: side,
+          timestamp: Date.now()
+        };
+        pendingUploads.push(fileInfo);
+        console.log(`Added to pending uploads: Slot ${slot} ${side} (${pendingUploads.length} pending)`);
+        
+        // Store the XHR in global array for cancellation
+        currentUploadControllers.push(xhr);
         globalIsUploading = true;
+        console.log(`Active XHR requests: ${currentUploadControllers.length}`);
         
         const uploadPromise = new Promise((resolve, reject) => {
+          let uploadStartTime = Date.now();
+          let uploadCompleted = false;
           xhr.upload.addEventListener("progress", (e) => {
             if (e.lengthComputable) {
               const percentComplete = (e.loaded / e.total) * 100;
@@ -1332,17 +1392,41 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
           });
 
           xhr.addEventListener("load", () => {
+            uploadCompleted = true;
+            
+            // Remove XHR from active controllers
+            const xhrIndex = currentUploadControllers.indexOf(xhr);
+            if (xhrIndex > -1) {
+              currentUploadControllers.splice(xhrIndex, 1);
+              console.log(`Removed XHR from active controllers. Remaining: ${currentUploadControllers.length}`);
+            }
+            
+            // Check if cancellation is in progress - if so, treat this as cancelled
+            if (isCancelling) {
+              console.log(`⚠️ Upload completed but cancellation is active - treating as cancelled for Slot ${slot} ${side}`);
+              // Keep in pending array - cancelUpload() will handle cleanup
+              reject(new Error("Upload cancelled"));
+              return;
+            }
+            
             if (xhr.status === 200) {
               try {
                 const data = JSON.parse(xhr.responseText);
                 if (data.success) {
-                  // Track this upload for potential cancellation cleanup
-                  lastUploadedFile = {
-                    slot: slot,
-                    batch_year: batchYear,
-                    side: side,
-                    timestamp: Date.now()
-                  };
+                  // Move from pending to completed uploads
+                  const pendingIndex = pendingUploads.findIndex(
+                    f => f.slot === slot && f.side === side && f.batch_year === batchYear
+                  );
+                  if (pendingIndex > -1) {
+                    const completedFile = pendingUploads.splice(pendingIndex, 1)[0];
+                    lastUploadedFiles.push(completedFile);
+                    console.log(`✓ Upload completed for Slot ${slot} ${side} (Batch: ${batchYear})`);
+                    console.log(`  Moved from pending (${pendingUploads.length} remaining) to completed (${lastUploadedFiles.length} total)`);
+                  } else {
+                    // Fallback if not found in pending
+                    lastUploadedFiles.push(fileInfo);
+                    console.log(`✓ Upload completed for Slot ${slot} ${side} - Added to completed (${lastUploadedFiles.length} total)`);
+                  }
                   
                   if (showNotif && !isBatch) {
                     showNotification(
@@ -1352,30 +1436,81 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
                   }
                   resolve(data);
                 } else {
+                  // Remove from pending on failure
+                  const pendingIndex = pendingUploads.findIndex(
+                    f => f.slot === slot && f.side === side && f.batch_year === batchYear
+                  );
+                  if (pendingIndex > -1) {
+                    pendingUploads.splice(pendingIndex, 1);
+                  }
                   showNotification(data.message || "Upload failed", "error");
                   reject(new Error(data.message || "Upload failed"));
                 }
               } catch (e) {
+                // Remove from pending on parse error
+                const pendingIndex = pendingUploads.findIndex(
+                  f => f.slot === slot && f.side === side && f.batch_year === batchYear
+                );
+                if (pendingIndex > -1) {
+                  pendingUploads.splice(pendingIndex, 1);
+                }
                 showNotification("Failed to parse response", "error");
                 reject(e);
               }
             } else {
+              // Remove from pending on HTTP error
+              const pendingIndex = pendingUploads.findIndex(
+                f => f.slot === slot && f.side === side && f.batch_year === batchYear
+              );
+              if (pendingIndex > -1) {
+                pendingUploads.splice(pendingIndex, 1);
+              }
               showNotification(`Upload failed: HTTP ${xhr.status}`, "error");
               reject(new Error(`HTTP ${xhr.status}`));
             }
           });
 
           xhr.addEventListener("error", () => {
+            // Remove XHR from active controllers
+            const xhrIndex = currentUploadControllers.indexOf(xhr);
+            if (xhrIndex > -1) {
+              currentUploadControllers.splice(xhrIndex, 1);
+            }
+            // Remove from pending
+            const pendingIndex = pendingUploads.findIndex(
+              f => f.slot === slot && f.side === side && f.batch_year === batchYear
+            );
+            if (pendingIndex > -1) {
+              pendingUploads.splice(pendingIndex, 1);
+            }
             showNotification("Upload failed", "error");
             reject(new Error("Upload failed"));
           });
 
           xhr.addEventListener("abort", () => {
+            // Remove XHR from active controllers
+            const xhrIndex = currentUploadControllers.indexOf(xhr);
+            if (xhrIndex > -1) {
+              currentUploadControllers.splice(xhrIndex, 1);
+            }
+            // Keep in pending - will be cleaned up by cancelUpload()
             console.log("Upload aborted for slot", slot, side);
             reject(new Error("Upload cancelled"));
           });
 
           xhr.addEventListener("timeout", () => {
+            // Remove XHR from active controllers
+            const xhrIndex = currentUploadControllers.indexOf(xhr);
+            if (xhrIndex > -1) {
+              currentUploadControllers.splice(xhrIndex, 1);
+            }
+            // Remove from pending
+            const pendingIndex = pendingUploads.findIndex(
+              f => f.slot === slot && f.side === side && f.batch_year === batchYear
+            );
+            if (pendingIndex > -1) {
+              pendingUploads.splice(pendingIndex, 1);
+            }
             showNotification("Upload timeout - please try again", "error");
             reject(new Error("Upload timeout"));
           });
@@ -1387,15 +1522,19 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
 
         const result = await uploadPromise;
         
-        // Clean up global upload state
-        currentUploadController = null;
-        globalIsUploading = false;
+        // uploadPromise already cleaned up XHR from array in event handlers
+        // Just update global upload state if no more active uploads
+        if (currentUploadControllers.length === 0) {
+          globalIsUploading = false;
+        }
         
         return result;
       } catch (err) {
-        // Clean up global upload state on error
-        currentUploadController = null;
-        globalIsUploading = false;
+        // XHR already cleaned up in event handlers
+        // Just update global upload state if no more active uploads
+        if (currentUploadControllers.length === 0) {
+          globalIsUploading = false;
+        }
 
         // Check if this is a cancellation error
         if (err.message === "Upload cancelled") {
@@ -1741,6 +1880,9 @@ window.addEventListener("DOMContentLoaded", () => {
   refreshSections();
 
   function selectSection(section) {
+    console.log("=== selectSection called ===");
+    console.log("Section to select:", section);
+    
     sections.forEach((s) => s.classList.remove("selected"));
 
     if (section && section.parentNode) {
@@ -1749,6 +1891,7 @@ window.addEventListener("DOMContentLoaded", () => {
       const templateName = section
         .querySelector(".section-header")
         .textContent.trim();
+      console.log("✓ Selected section:", templateName);
       localStorage.setItem("selectedBatchTemplate", templateName);
 
       const templateMatch = templateName.match(/Batch Template (\d+)/);
@@ -1758,7 +1901,7 @@ window.addEventListener("DOMContentLoaded", () => {
         console.log("Stored template number:", templateNumber);
       }
     } else {
-      console.error("selectSection: section is undefined or not in DOM");
+      console.error("❌ selectSection: section is undefined or not in DOM");
     }
 
     updateUploadBoxStates();
@@ -1767,10 +1910,21 @@ window.addEventListener("DOMContentLoaded", () => {
    function updateUploadBoxStates() {
      const selectedTemplate = document.querySelector(".section.selected");
      const allSections = document.querySelectorAll(".section");
+     
+     console.log("=== updateUploadBoxStates called ===");
+     console.log("Selected template:", selectedTemplate);
+     console.log("Total sections:", allSections.length);
 
-     allSections.forEach((section) => {
+     if (!selectedTemplate) {
+       console.warn("⚠️ No section is selected! Upload boxes will be disabled.");
+     }
+
+     allSections.forEach((section, sectionIndex) => {
        const uploadBoxes = section.querySelectorAll(".upload-box");
        const isSelected = section === selectedTemplate;
+       const sectionName = section.querySelector(".section-header")?.textContent.trim();
+
+       console.log(`Section ${sectionIndex} (${sectionName}): ${isSelected ? "SELECTED ✓" : "not selected"}`);
 
        uploadBoxes.forEach((box) => {
          const isActionBox = box.classList.contains("action-box");
@@ -1799,6 +1953,8 @@ window.addEventListener("DOMContentLoaded", () => {
          }
        }
      });
+     
+     console.log("=== updateUploadBoxStates complete ===");
    }
 
    // Make updateUploadBoxStates globally accessible
@@ -1967,26 +2123,47 @@ window.addEventListener("DOMContentLoaded", () => {
 
   if (sections.length > 0) {
     const savedTemplate = localStorage.getItem("selectedBatchTemplate");
+    const savedBatchYear = localStorage.getItem("selectedBatchYear");
     let selectedSection = null;
 
-    if (savedTemplate) {
+    // Try to restore saved batch year first (from confirmSelectTemplate)
+    if (savedBatchYear) {
+      sections.forEach((section) => {
+        const headerText = section
+          .querySelector(".section-header")
+          .textContent.trim();
+        if (headerText === savedBatchYear) {
+          selectedSection = section;
+          console.log("Restored selected section from savedBatchYear:", savedBatchYear);
+        }
+      });
+    }
+    
+    // Fallback to saved template name
+    if (!selectedSection && savedTemplate) {
       sections.forEach((section) => {
         const headerText = section
           .querySelector(".section-header")
           .textContent.trim();
         if (headerText === savedTemplate) {
           selectedSection = section;
+          console.log("Restored selected section from savedTemplate:", savedTemplate);
         }
       });
     }
 
+    // Default to first section if nothing saved
     if (!selectedSection) {
       selectedSection = sections[0];
+      console.log("No saved selection, defaulting to first section");
     }
 
     selectSection(selectedSection);
+    console.log("Section selected on page load, upload boxes should be enabled");
   } else {
-    updateUploadBoxStates();
+    console.warn("No sections found on page load - this shouldn't happen");
+    // Don't call updateUploadBoxStates() when there are no sections
+    // It will disable all boxes when sections are added later
   }
 
   setAvailableSections();

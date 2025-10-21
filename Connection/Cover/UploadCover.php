@@ -192,17 +192,17 @@ try {
     $safeExt      = preg_replace('/[^A-Za-z0-9]/', '', $ext) ?: 'jpg';
     $versionToken = (string) round(microtime(true) * 1000);
 
-    $safeFolder = 'Yearbook Covers';
+    // Create batch year folder structure
+    $safeBatchYear = $batchYear ? preg_replace('/[^A-Za-z0-9-]/', '', $batchYear) : 'Default';
+    $safeFolder = 'Yearbook Covers/' . $safeBatchYear;
 
     $sideLabel = ($slot === 8)
         ? 'BackgroundPage'
         : ($side === 'back' ? 'Back' : 'Front');
 
-    $batchYearSuffix = $batchYear ? "-" . preg_replace('/[^A-Za-z0-9-]/', '', $batchYear) : '';
-
     $filename = ($slot === 8)
-        ? sprintf('BackgroundPage-%s%s-%s.%s', $safeBase, $batchYearSuffix, $versionToken, $safeExt)
-        : sprintf('Slot-%d-%s-%s%s-%s.%s', $slot, $sideLabel, $safeBase, $batchYearSuffix, $versionToken, $safeExt);
+        ? sprintf('BackgroundPage-%s-%s.%s', $safeBase, $versionToken, $safeExt)
+        : sprintf('Slot-%d-%s-%s-%s.%s', $slot, $sideLabel, $safeBase, $versionToken, $safeExt);
 
     $path = $safeFolder . '/' . $filename;
 
