@@ -932,6 +932,9 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
               "Background slot can only accept 1 image. Please select only 1 image.",
               "error"
             );
+            event.target.value = "";
+            isUploading = false;
+            isFileInputOpen = false;
             return;
           }
           const result = await uploadToBunny(
@@ -966,6 +969,9 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
               "You can only upload 2 images at the same time. Please select only 2 images.",
               "error"
             );
+            event.target.value = "";
+            isUploading = false;
+            isFileInputOpen = false;
             return;
           }
 
@@ -1061,6 +1067,15 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
           }
         }
 
+        if (uploadOverlay) {
+          uploadOverlay.style.display = "none";
+        }
+      } catch (error) {
+        console.error("Unexpected error during upload:", error);
+        showNotification("An unexpected error occurred during upload", "error");
+        event.target.value = "";
+        isUploading = false;
+        isFileInputOpen = false;
         if (uploadOverlay) {
           uploadOverlay.style.display = "none";
         }
