@@ -1267,7 +1267,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
 
     async function deleteCover(slot, side) {
       try {
-        // Get the batch year from the section header
         const sectionHeader = box
           .closest(".section")
           ?.querySelector(".section-header");
