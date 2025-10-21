@@ -760,7 +760,6 @@ function restoreSingleSection(sectionHeader) {
     const currentXhrs = window.currentXhrs || [];
     const isUploadCancelled = window.isUploadCancelled || false;
 
-    // Initialize upload boxes for the new section
     initializeSectionUploadBoxes(newSection, currentXhrs, isUploadCancelled);
   }
 
