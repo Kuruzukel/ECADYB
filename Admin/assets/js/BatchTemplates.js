@@ -1354,7 +1354,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
           return;
         }
 
-        // Get the batch year from the section header
         const sectionHeader = box
           .closest(".section")
           ?.querySelector(".section-header");
