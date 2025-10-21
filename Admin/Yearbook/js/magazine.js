@@ -35,12 +35,21 @@ function fetchTopManagementCached(template, callback) {
 
   console.log("Fetching top management data for template", template);
 
+  // Get batch year from localStorage
+  var batchYear = localStorage.getItem("selectedBatchYear");
+
+  // Build request data
+  var requestData = {
+    template: template,
+  };
+  if (batchYear) {
+    requestData.batch_year = batchYear;
+  }
+
   $.ajax({
     url: window.basePath + "/Connection/Photos/FetchTopManagement.php",
     method: "GET",
-    data: {
-      template: template,
-    },
+    data: requestData,
     dataType: "json",
     success: function (response) {
       window.topManagementCache[cacheKey] = response;
@@ -94,18 +103,28 @@ function fetchStudentPhotos(studentId, callback) {
     }
   }
 
+  // Get batch year from localStorage
+  var batchYear = localStorage.getItem("selectedBatchYear");
+
   console.log("=== FETCHING PHOTOS ===");
   console.log("Student ID:", studentId);
   console.log("Template:", template);
+  console.log("Batch Year:", batchYear);
   console.log("Timestamp:", new Date().toISOString());
+
+  // Build request data
+  var requestData = {
+    student_id: studentId,
+    template: template,
+  };
+  if (batchYear) {
+    requestData.batch_year = batchYear;
+  }
 
   $.ajax({
     url: window.basePath + "/Connection/Photos/FetchStudentPhotos.php",
     method: "GET",
-    data: {
-      student_id: studentId,
-      template: template,
-    },
+    data: requestData,
     dataType: "json",
     success: function (response) {
       console.log("=== PHOTOS RESPONSE ===");
@@ -385,15 +404,24 @@ function fetchStudentDataCached(department, template, apiPage, callback) {
 
   var studentsPerAPIPage = 50;
 
+  // Get batch year from localStorage
+  var batchYear = localStorage.getItem("selectedBatchYear");
+
+  // Build request data
+  var requestData = {
+    department: department,
+    template: template,
+    page: apiPage,
+    limit: studentsPerAPIPage,
+  };
+  if (batchYear) {
+    requestData.batch_year = batchYear;
+  }
+
   $.ajax({
     url: window.basePath + "/Connection/Photos/FetchStudentData.php",
     method: "GET",
-    data: {
-      department: department,
-      template: template,
-      page: apiPage,
-      limit: studentsPerAPIPage,
-    },
+    data: requestData,
     dataType: "json",
     success: function (response) {
       window.studentDataCache[cacheKey] = response;

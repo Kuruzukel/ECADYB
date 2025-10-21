@@ -43,8 +43,9 @@ try {
     $department = isset($_GET['department']) ? strtoupper($_GET['department']) : null;
     $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
     $limit = isset($_GET['limit']) ? max(1, min(100, (int)$_GET['limit'])) : 50;
+    $batchYear = isset($_GET['batch_year']) ? trim($_GET['batch_year']) : null;
 
-    error_log("Parsed parameters - Template: $template, Department: $department, Page: $page, Limit: $limit");
+    error_log("Parsed parameters - Template: $template, Department: $department, Page: $page, Limit: $limit, BatchYear: $batchYear");
 
     if ($template < 1 || $template > 3) {
         respond(false, 'Invalid template parameter. Must be 1, 2, or 3.');
@@ -75,7 +76,8 @@ try {
     }
 
     $template = max(1, min(3, $template));
-    $mongoDbName = "BatchTemplate" . $template;
+    // Use ECADYB database instead of BatchTemplate databases
+    $mongoDbName = "ECADYB";
 
     error_log("Connecting to MongoDB database: " . $mongoDbName . " for department: " . $department);
     $mongoUrl = getenv('MONGO_URL') ?: getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
@@ -101,6 +103,15 @@ try {
     $collections = $departmentCollections[$department];
     error_log("Processing collections for department $department: " . implode(', ', $collections));
 
+    // Build filter for academic year if batch year is provided
+    $academicYearFilter = [];
+    if ($batchYear) {
+        // Convert "Batch Year 2024-2025" to "2024-2025"
+        $academicYear = str_replace('Batch Year ', '', $batchYear);
+        $academicYearFilter = ['academic year' => $academicYear];
+        error_log("Filtering students by academic year: $academicYear");
+    }
+
     $totalStudentsCount = 0;
     foreach ($collections as $collectionName) {
         try {
@@ -109,9 +120,9 @@ try {
 
             if ($collectionExists) {
                 $collection = $db->$collectionName;
-                $studentCount = $collection->countDocuments();
+                $studentCount = $collection->countDocuments($academicYearFilter);
                 $totalStudentsCount += $studentCount;
-                error_log("Found $studentCount students in collection $collectionName");
+                error_log("Found $studentCount students in collection $collectionName" . ($academicYearFilter ? " with filter: " . json_encode($academicYearFilter) : ""));
             }
         } catch (Exception $e) {
             error_log("Error counting collection $collectionName: " . $e->getMessage());
@@ -152,7 +163,7 @@ try {
                 if ($collectionLimit > 0) {
                     error_log("Collection $collectionName: Skip $collectionSkip, Limit $collectionLimit");
 
-                    $students = $collection->find([], [
+                    $students = $collection->find($academicYearFilter, [
                         'sort' => ['department section' => 1, 'last name' => 1],
                         'skip' => $collectionSkip,
                         'limit' => $collectionLimit

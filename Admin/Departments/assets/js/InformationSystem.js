@@ -138,6 +138,26 @@ function applyTheme(theme) {
   document.body.style.display = "";
 }
 
+// Listen for batch template selection changes
+window.addEventListener('batchTemplateSelected', function(e) {
+  console.log('Batch template selected:', e.detail.batchName);
+  const iframe = document.querySelector('iframe');
+  if (iframe) {
+    iframe.contentWindow.location.reload();
+  }
+});
+
+// Also reload on storage change (for when batch is selected in another tab)
+window.addEventListener('storage', function(e) {
+  if (e.key === 'selectedBatchTemplateNumber' || e.key === 'selectedBatchYear') {
+    console.log('Batch changed via storage - key:', e.key, 'value:', e.newValue);
+    const iframe = document.querySelector('iframe');
+    if (iframe) {
+      iframe.contentWindow.location.reload();
+    }
+  }
+});
+
 document.querySelector('iframe').addEventListener('load', function() {
   const iframeDoc = this.contentDocument || this.contentWindow.document;
   const iframeRoot = iframeDoc.documentElement;

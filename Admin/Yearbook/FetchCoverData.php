@@ -15,6 +15,8 @@ use MongoDB\Client;
 
 try {
     $template = isset($_GET['template']) ? (int)$_GET['template'] : 1;
+    $batchYear = isset($_GET['batch_year']) ? trim($_GET['batch_year']) : null;
+    
     $departmentSlots = [
         'BSME' => 1,
         'BSCJ' => 2,
@@ -47,12 +49,26 @@ try {
         'socketTimeoutMS' => 5000
     ]);
 
-    $dbName = "BatchTemplate" . $template;
-    $db = $client->$dbName;
-    $collection = $db->YearbookCovers;
+    // Use ECADYB database instead of BatchTemplate databases
+    $db = $client->ECADYB;
+    $collection = $db->Yearbook_Covers;
 
-    $cover = $collection->findOne(['template' => $template, 'slot' => $slot]);
-    $background = $collection->findOne(['template' => $template, 'slot' => 8]);
+    // Build query - prioritize batch_year if provided, otherwise use template
+    $query = ['slot' => $slot];
+    $backgroundQuery = ['slot' => 8];
+    
+    if ($batchYear) {
+        $query['batch_year'] = $batchYear;
+        $backgroundQuery['batch_year'] = $batchYear;
+        error_log("FetchCoverData: Querying by batch_year: $batchYear, slot: $slot");
+    } else {
+        $query['template'] = $template;
+        $backgroundQuery['template'] = $template;
+        error_log("FetchCoverData: Querying by template: $template, slot: $slot");
+    }
+
+    $cover = $collection->findOne($query);
+    $background = $collection->findOne($backgroundQuery);
 
     error_log("Searching for template: " . $template . ", slot: " . $slot);
     error_log("Background data found: " . ($background ? json_encode($background) : "none"));
@@ -62,8 +78,32 @@ try {
         error_log("No cover found for template: " . $template . ", slot: " . $slot);
     }
 
+    // Return empty/default data if no cover found instead of throwing error
     if (!$cover) {
-        throw new Exception('Cover not found for template ' . $template . ' and slot ' . $slot);
+        $response = [
+            '_id' => '',
+            'slot' => $slot,
+            'template' => $template,
+            'front_url' => '',
+            'back_url' => '',
+            'front_thumb_url' => '',
+            'back_thumb_url' => '',
+            'background_url' => $background && isset($background['background_url']) ? (string)$background['background_url'] : '',
+            'background_thumb_url' => $background && isset($background['background_thumb_url']) ? (string)$background['background_thumb_url'] : '',
+            'created_at' => null,
+            'updated_at' => null,
+            'department' => null,
+            'department_page' => null
+        ];
+
+        error_log("FetchCoverData response (no cover): " . json_encode($response));
+
+        echo json_encode([
+            'success' => true,
+            'data' => $response,
+            'message' => 'No cover data found for this template and slot'
+        ]);
+        exit;
     }
 
     $response = [

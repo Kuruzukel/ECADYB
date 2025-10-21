@@ -35,6 +35,12 @@ function respond($success, $message = '', $data = [])
 }
 
 try {
+    $template = isset($_GET['template']) ? (int)$_GET['template'] : 1;
+    $batchYear = isset($_GET['batch_year']) ? trim($_GET['batch_year']) : null;
+    
+    error_log("FetchTopManagement Request: " . json_encode($_GET));
+    error_log("Parsed parameters - Template: $template, BatchYear: $batchYear");
+
     $mongoDbName = "ECADYB";
     $mongoUrl = getenv('MONGO_URL') ?: getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 
@@ -42,13 +48,25 @@ try {
 
     $messageCollection = $mongoClient->$mongoDbName->Top_Management_Messages;
 
-    $messageCount = $messageCollection->countDocuments([]);
+    // Build filter for academic year if batch year is provided
+    $academicYearFilter = [];
+    if ($batchYear) {
+        // Convert "Batch Year 2024-2025" to "2024-2025"
+        $academicYear = str_replace('Batch Year ', '', $batchYear);
+        $academicYearFilter = ['academicyear' => $academicYear];
+        error_log("Filtering top management by academic year: $academicYear");
+    }
+
+    $messageCount = $messageCollection->countDocuments($academicYearFilter);
     if ($messageCount === 0) {
-        respond(true, 'Please upload CSV of the Top Management to the Batch Upload Section first.', ['data' => []]);
+        $message = $batchYear ? 
+            "No top management data found for academic year " . str_replace('Batch Year ', '', $batchYear) . ". Please upload CSV of the Top Management to the Batch Upload Section first." :
+            'Please upload CSV of the Top Management to the Batch Upload Section first.';
+        respond(true, $message, ['data' => []]);
     }
 
     $photosCollection = $mongoClient->$mongoDbName->Top_Management_Photos;
-    $photos = $photosCollection->find([], ['sort' => ['position' => 1]]);
+    $photos = $photosCollection->find($academicYearFilter, ['sort' => ['position' => 1]]);
 
     $result = [];
     $photoMap = [];
@@ -66,7 +84,7 @@ try {
         ];
     }
 
-    $messages = $messageCollection->find([], ['sort' => ['position' => 1]]);
+    $messages = $messageCollection->find($academicYearFilter, ['sort' => ['position' => 1]]);
     foreach ($messages as $message) {
         $name = $message['name'] ?? '';
 

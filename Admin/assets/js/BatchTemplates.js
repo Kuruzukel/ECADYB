@@ -1531,10 +1531,28 @@ function confirmDeleteBatch() {
      // Update the sections variable to include the newly selected section
      const sections = document.querySelectorAll(".section");
      
+     // Extract and store the batch year from the section header
+     const sectionHeader = window.pendingSelectSection.querySelector(".section-header");
+     const batchYear = sectionHeader ? sectionHeader.textContent.trim() : "";
+     
+     // Store the batch year in localStorage
+     if (batchYear) {
+       localStorage.setItem("selectedBatchYear", batchYear);
+       console.log("Stored batch year:", batchYear);
+     }
+     
      // Call the centralized updateUploadBoxStates function
      if (typeof window.updateUploadBoxStates === "function") {
        window.updateUploadBoxStates();
      }
+
+     // Trigger a custom event to notify other parts of the app (like department iframes)
+     window.dispatchEvent(new CustomEvent('batchTemplateSelected', {
+       detail: {
+         batchName: window.pendingSelectBatchName,
+         batchYear: batchYear
+       }
+     }));
 
      showNotification(
        `${window.pendingSelectBatchName} selected successfully!`,

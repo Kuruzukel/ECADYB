@@ -115,20 +115,31 @@
         }
         slot = slot || 1;
 
+        // Get batch year from localStorage if available
+        var batchYear = localStorage.getItem("selectedBatchYear");
+
         console.log(
           "Fetching cover data for template:",
           template,
           "slot:",
-          slot
+          slot,
+          "batch_year:",
+          batchYear
         );
 
         // Determine base path for API calls
         var basePath = window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '';
 
+        // Build request data
+        var requestData = { template: template, slot: slot };
+        if (batchYear) {
+          requestData.batch_year = batchYear;
+        }
+
         $.ajax({
           url: basePath + "/Admin/Yearbook/FetchCoverData.php",
           method: "GET",
-          data: { template: template, slot: slot },
+          data: requestData,
           dataType: "json",
           success: function (response) {
             console.log("Cover data response:", response);
@@ -180,19 +191,27 @@
           "Fetching student data for department:",
           departmentCode,
           "template:",
-          template
+          template,
+          "batch_year:",
+          batchYear
         );
 
         // Determine base path for API calls
         var basePath = window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '';
         
+        // Build request data
+        var requestData = {
+          department: departmentCode,
+          template: template,
+        };
+        if (batchYear) {
+          requestData.batch_year = batchYear;
+        }
+        
         $.ajax({
           url: basePath + "/Connection/Photos/FetchStudentData.php",
           method: "GET",
-          data: {
-            department: departmentCode,
-            template: template,
-          },
+          data: requestData,
           dataType: "json",
           success: function (response) {
             console.log("Student data response:", response);
@@ -808,18 +827,29 @@
         var selectedTemplate =
           localStorage.getItem("selectedBatchTemplateNumber") || 1;
         selectedTemplate = parseInt(selectedTemplate);
+        
+        // Get batch year from localStorage
+        var batchYear = localStorage.getItem("selectedBatchYear");
+        
         console.log("Using template from localStorage:", selectedTemplate);
+        console.log("Using batch year from localStorage:", batchYear);
 
         // Determine base path for API calls
         var basePath = window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '';
         
+        // Build request data
+        var requestData = {
+          template: selectedTemplate,
+          department: departmentCode,
+        };
+        if (batchYear) {
+          requestData.batch_year = batchYear;
+        }
+        
         $.ajax({
           url: basePath + "/Admin/Yearbook/FetchCoverData.php",
           method: "GET",
-          data: {
-            template: selectedTemplate,
-            department: departmentCode,
-          },
+          data: requestData,
           dataType: "json",
           success: function (response) {
             console.log("Cover data response:", response);
@@ -1238,14 +1268,23 @@
           // Determine base path for API calls
           var basePath = window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '';
           
+          // Get batch year from localStorage
+          var batchYear = localStorage.getItem("selectedBatchYear");
+          
+          // Build request data
+          var requestData = {
+            student_id: clickedStudent.student_id,
+            template: localStorage.getItem('selectedBatchTemplateNumber') || 1
+          };
+          if (batchYear) {
+            requestData.batch_year = batchYear;
+          }
+          
           // Fetch student photos
           $.ajax({
             url: basePath + '/Connection/Photos/FetchStudentPhotos.php',
             method: 'GET',
-            data: {
-              student_id: clickedStudent.student_id,
-              template: localStorage.getItem('selectedBatchTemplateNumber') || 1
-            },
+            data: requestData,
             dataType: 'json',
             success: function(response) {
               console.log('Student photos response:', response);
