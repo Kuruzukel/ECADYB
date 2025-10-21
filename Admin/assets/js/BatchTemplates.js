@@ -797,7 +797,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
     const isBackgroundSlot = slot === 8;
     const isActionBox = slot === 9;
 
-    // Check if this upload box has already been initialized
     if (box.dataset.initialized === "true") {
       console.log(
         `Upload box ${slot} for ${sectionHeader} already initialized, skipping`
