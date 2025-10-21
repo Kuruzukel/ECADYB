@@ -58,20 +58,31 @@ try {
     }
 
     $messageCount = $messageCollection->countDocuments($academicYearFilter);
+    error_log("Found $messageCount top management messages with filter: " . json_encode($academicYearFilter));
+    
     if ($messageCount === 0) {
         $message = $batchYear ? 
             "No top management data found for academic year " . str_replace('Batch Year ', '', $batchYear) . ". Please upload CSV of the Top Management to the Batch Upload Section first." :
             'Please upload CSV of the Top Management to the Batch Upload Section first.';
+        error_log("No top management messages found - responding with message: $message");
         respond(true, $message, ['data' => []]);
     }
 
     $photosCollection = $mongoClient->$mongoDbName->Top_Management_Photos;
+    error_log("Querying Top_Management_Photos collection with filter: " . json_encode($academicYearFilter));
     $photos = $photosCollection->find($academicYearFilter, ['sort' => ['position' => 1]]);
+    
+    $photoCount = count(iterator_to_array($photos));
+    error_log("Found $photoCount top management photos");
 
     $result = [];
     $photoMap = [];
 
+    $photoIndex = 0;
     foreach ($photos as $photo) {
+        $photoIndex++;
+        error_log("Processing photo record #$photoIndex: " . json_encode($photo));
+        
         $name = $photo['name'] ?? '';
         $photoMap[$name] = [
             'id' => (string)$photo['_id'],
@@ -84,8 +95,17 @@ try {
         ];
     }
 
+    error_log("Querying Top_Management_Messages collection with filter: " . json_encode($academicYearFilter));
     $messages = $messageCollection->find($academicYearFilter, ['sort' => ['position' => 1]]);
+    
+    $messageCount = count(iterator_to_array($messages));
+    error_log("Found $messageCount top management messages");
+    
+    $messageIndex = 0;
     foreach ($messages as $message) {
+        $messageIndex++;
+        error_log("Processing message record #$messageIndex: " . json_encode($message));
+        
         $name = $message['name'] ?? '';
 
         if (isset($photoMap[$name])) {
@@ -104,6 +124,7 @@ try {
     }
 
     $result = array_values($photoMap);
+    error_log("Combined result has " . count($result) . " items");
 
     usort($result, function ($a, $b) {
         $posA = isset($a['position']) ? $a['position'] : '';
@@ -122,7 +143,9 @@ try {
 
         return strcmp($posA, $posB);
     });
-
+    
+    error_log("Final sorted result has " . count($result) . " items");
+    
     if (empty($result)) {
         respond(true, 'Please upload CSV of the Top Management to the Batch Upload Section first.', ['data' => $result]);
     } else {
@@ -130,5 +153,6 @@ try {
     }
 } catch (Exception $e) {
     error_log("FetchTopManagement.php exception: " . $e->getMessage());
+    error_log("Exception trace: " . $e->getTraceAsString());
     respond(false, 'Server error: ' . $e->getMessage());
 }

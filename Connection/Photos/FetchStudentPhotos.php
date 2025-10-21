@@ -61,6 +61,8 @@ set_exception_handler(function ($exception) {
 
 try {
     $studentId = isset($_GET['student_id']) ? $_GET['student_id'] : null;
+    
+    error_log("FetchStudentPhotos.php called with student_id: " . ($studentId ?: 'null'));
 
     $mongoDbName = "ECADYB";
     $mongoUrl = getenv('MONGO_URL') ?: getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
@@ -73,16 +75,24 @@ try {
     if ($studentId) {
         $filter['student_id'] = $studentId;
     }
+    
+    error_log("Querying Student_Photos collection with filter: " . json_encode($filter));
 
     $photos = $photosCollection->find($filter, ['sort' => ['upload_time' => -1]]);
 
     $result = [];
+    
+    error_log("Found " . count(iterator_to_array($photos)) . " photo records for student_id: " . ($studentId ?: 'null'));
 
+    $photoCount = 0;
     foreach ($photos as $photo) {
+        $photoCount++;
+        error_log("Processing photo record #" . $photoCount . " for student_id: " . ($studentId ?: 'null'));
+        
         $studentData = [
             'id' => (string)$photo['_id'],
             'student_id' => $photo['student_id'] ?? '',
-            'template' => $photo['template'] ?? $template,
+            'template' => $photo['template'] ?? 1,
             'upload_time' => $photo['upload_time'] ?? '',
             'photos' => [
                 'student_photo_1' => [
@@ -108,9 +118,12 @@ try {
 
         $result[] = $studentData;
     }
+    
+    error_log("Returning " . count($result) . " photo records for student_id: " . ($studentId ?: 'null'));
 
     respond(true, 'Student photos retrieved successfully', ['data' => $result]);
 } catch (Exception $e) {
     error_log("FetchStudentPhotos.php exception: " . $e->getMessage());
+    error_log("Exception trace: " . $e->getTraceAsString());
     respond(false, 'Server error: ' . $e->getMessage());
 }

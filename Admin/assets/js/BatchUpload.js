@@ -430,6 +430,15 @@ window.addEventListener("DOMContentLoaded", () => {
             formData.append(`files[${i}]`, input.files[i]);
           }
 
+          // Add batch year from localStorage if available
+          const selectedBatchYear = localStorage.getItem("selectedBatchYear");
+          if (selectedBatchYear) {
+            formData.append("batch_year", selectedBatchYear);
+            console.log("Added batch year to FormData:", selectedBatchYear);
+          } else {
+            console.warn("No batch year found in localStorage - photos will not be associated with academic year");
+          }
+
           console.log("FormData entries:");
           for (let [key, value] of formData.entries()) {
             if (value instanceof File) {
@@ -449,7 +458,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 "/Connection/Photos/UploadStudentPhotos.php"
               : window.location.origin +
                 basePath +
-                "/Connection/Photos/UPloadTopManagementPhotos.php";
+                "/Connection/Photos/UploadTopManagementPhotos.php";
 
           try {
             currentUploadController = new AbortController();

@@ -86,6 +86,18 @@ if (file_exists(__DIR__ . '/../Configuration/BunnyConfig.php')) {
 use MongoDB\Client;
 
 try {
+    // Get batch year from form data
+    $batchYear = isset($_POST['batch_year']) ? trim($_POST['batch_year']) : null;
+    $academicYear = null;
+    
+    if ($batchYear) {
+        // Convert "Batch Year 2024-2025" to "2024-2025"
+        $academicYear = str_replace('Batch Year ', '', $batchYear);
+        error_log("UploadTopManagementPhotos: Batch year received: $batchYear, converted to academic year: $academicYear");
+    } else {
+        error_log("UploadTopManagementPhotos: No batch year provided - photos will not be associated with academic year");
+    }
+
     $bunnyStorageZone = getenv('BUNNY_STORAGE_ZONE')
         ?: (defined('BUNNY_STORAGE_ZONE') ? BUNNY_STORAGE_ZONE : ($GLOBALS['BUNNY_STORAGE_ZONE'] ?? 'ecadyb'));
     $bunnyAccessKey = getenv('BUNNY_ACCESS_KEY')
@@ -342,6 +354,12 @@ try {
                 'url' => $publicUrl,
                 'upload_time' => new \MongoDB\BSON\UTCDateTime()
             ];
+
+            // Add academic year if available
+            if ($academicYear) {
+                $document['academic year'] = $academicYear;
+                error_log("Added academic year '$academicYear' to Top Management Photo document for '$correctName'");
+            }
         } catch (Exception $e) {
             error_log("Error checking name in Messages collection: " . $e->getMessage());
 

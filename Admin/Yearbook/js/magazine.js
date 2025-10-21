@@ -126,17 +126,34 @@ function fetchStudentPhotos(studentId, callback) {
     method: "GET",
     data: requestData,
     dataType: "json",
+    timeout: 10000, // 10 second timeout
     success: function (response) {
       console.log("=== PHOTOS RESPONSE ===");
       console.log("Requested ID:", studentId);
       console.log("Response:", response);
-      if (response.success && response.data && response.data.length > 0) {
+      
+      // Validate response structure
+      if (!response) {
+        console.error("Empty response received from FetchStudentPhotos.php");
+        callback([]);
+        return;
+      } else if (typeof response !== 'object') {
+        console.error("Invalid response format received from FetchStudentPhotos.php:", typeof response);
+        callback([]);
+        return;
+      } else if (!response.hasOwnProperty('success')) {
+        console.error("Response missing 'success' property");
+        callback([]);
+        return;
+      }
+      
+      if (response.success && response.data && Array.isArray(response.data) && response.data.length > 0) {
         console.log("Found photos for student ID", studentId);
         console.log("Photo data:", response.data[0]);
         window.studentPhotosCache[studentId] = response.data;
         callback(response.data);
       } else {
-        console.log("No photos found for student ID:", studentId);
+        console.log("No photos found for student ID:", studentId, "Response message:", response.message || "No message");
         callback([]);
       }
     },
@@ -144,7 +161,9 @@ function fetchStudentPhotos(studentId, callback) {
       console.log("=== PHOTOS ERROR ===");
       console.log("Student ID:", studentId);
       console.log("Error:", error);
+      console.log("Status:", status);
       console.log("XHR:", xhr);
+      console.log("XHR Response Text:", xhr.responseText);
       callback([]);
     },
   });
@@ -334,9 +353,12 @@ function loadStudentsForPage(
   );
 
   fetchStudentDataCached(department, template, apiPage, function (response) {
-    if (response.success && response.data && response.data.students) {
+    // Enhanced error handling and logging
+    if (response && response.success && response.data && Array.isArray(response.data.students)) {
       var students = response.data.students;
-      var totalStudents = response.data.total_students;
+      var totalStudents = response.data.total_students || 0;
+
+      console.log("Successfully loaded", students.length, "students for API page", apiPage);
 
       var studentsFromThisPage = students.slice(
         localStartIndex,
@@ -348,20 +370,33 @@ function loadStudentsForPage(
         var nextApiPage = apiPage + 1;
         var remainingCount = studentsNeeded;
 
+        console.log("Need additional", studentsNeeded, "students from next API page", nextApiPage);
+
         fetchStudentDataCached(
           department,
           template,
           nextApiPage,
           function (nextResponse) {
+            // Enhanced error handling for next page
             if (
+              nextResponse &&
               nextResponse.success &&
               nextResponse.data &&
-              nextResponse.data.students
+              Array.isArray(nextResponse.data.students)
             ) {
               var nextStudents = nextResponse.data.students;
               var studentsFromNextPage = nextStudents.slice(0, remainingCount);
               studentsFromThisPage =
                 studentsFromThisPage.concat(studentsFromNextPage);
+              
+              console.log("Successfully loaded additional", studentsFromNextPage.length, "students from API page", nextApiPage);
+            } else {
+              console.warn(
+                "Failed to load additional students for API page",
+                nextApiPage,
+                "Response:",
+                nextResponse
+              );
             }
 
             callback(studentsFromThisPage);
@@ -374,8 +409,23 @@ function loadStudentsForPage(
       console.warn(
         "Failed to load students for API page",
         apiPage,
-        "- returning empty array"
+        "- returning empty array. Response received:",
+        response
       );
+      
+      // Try to provide more context about the failure
+      if (response) {
+        if (!response.success) {
+          console.warn("API returned success=false with message:", response.message);
+        } else if (!response.data) {
+          console.warn("API returned no data object");
+        } else if (!Array.isArray(response.data.students)) {
+          console.warn("API returned data.students but it's not an array:", typeof response.data.students);
+        }
+      } else {
+        console.warn("No response received from API");
+      }
+      
       callback([]);
     }
   });
@@ -418,12 +468,46 @@ function fetchStudentDataCached(department, template, apiPage, callback) {
     requestData.batch_year = batchYear;
   }
 
+  console.log("Making request to FetchStudentData.php with parameters:", requestData);
+
   $.ajax({
     url: window.basePath + "/Connection/Photos/FetchStudentData.php",
     method: "GET",
     data: requestData,
     dataType: "json",
+    timeout: 10000, // 10 second timeout
     success: function (response) {
+      console.log("=== STUDENT DATA RESPONSE ===");
+      console.log("API Page:", apiPage);
+      console.log("Department:", department);
+      console.log("Template:", template);
+      console.log("Batch Year:", batchYear);
+      console.log("Response:", response);
+      
+      // Validate response structure
+      if (!response) {
+        console.error("Empty response received from FetchStudentData.php");
+        response = {
+          success: false,
+          message: "Empty response received from server",
+          data: { students: [] }
+        };
+      } else if (typeof response !== 'object') {
+        console.error("Invalid response format received from FetchStudentData.php:", typeof response);
+        response = {
+          success: false,
+          message: "Invalid response format received from server",
+          data: { students: [] }
+        };
+      } else if (!response.hasOwnProperty('success')) {
+        console.error("Response missing 'success' property");
+        response = {
+          success: false,
+          message: "Response missing required properties",
+          data: { students: [] }
+        };
+      }
+      
       window.studentDataCache[cacheKey] = response;
 
       var callbacks = window.studentDataPendingRequests[cacheKey];
@@ -440,13 +524,18 @@ function fetchStudentDataCached(department, template, apiPage, callback) {
         ":",
         error
       );
+      console.log("XHR Response:", xhr.responseText);
+      console.log("XHR Status:", xhr.status);
+      console.log("Request URL:", window.basePath + "/Connection/Photos/FetchStudentData.php");
+      console.log("Request Data:", requestData);
+      console.log("XHR Object:", xhr);
 
       var callbacks = window.studentDataPendingRequests[cacheKey];
       delete window.studentDataPendingRequests[cacheKey];
 
       var errorResponse = {
         success: false,
-        message: "Failed to fetch student data",
+        message: "Failed to fetch student data - " + status + (error ? ": " + error : ""),
         data: { students: [] },
       };
 
@@ -823,10 +912,36 @@ function loadPage(page, pageElement) {
               "Students for page",
               page,
               ":",
-              studentsForThisPage.length,
+              studentsForThisPage ? studentsForThisPage.length : 'undefined',
               "students starting from index",
               studentStartIndex
             );
+
+            // Enhanced error handling for student data
+            if (!studentsForThisPage || !Array.isArray(studentsForThisPage)) {
+              console.error("Invalid student data received for page", page, ":", studentsForThisPage);
+              var errorMessage = $("<div/>", {
+                class: "modern-empty-state",
+                html: `
+                  <div class="empty-state-container">
+                    <div class="empty-state-icon">
+                      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                        <path d="M8 12h8M12 8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                      </svg>
+                    </div>
+                    <h3 class="empty-state-title">Data Loading Error</h3>
+                    <p class="empty-state-description">Failed to load student data for this page.</p>
+                  </div>
+                `,
+              });
+              pageElement.append(errorMessage);
+
+              setTimeout(function () {
+                waitForImagesAndGenerateThumbnail(page, pageElement);
+              }, 500);
+              return;
+            }
 
             if (studentsForThisPage.length === 0) {
               var emptyMessage = $("<div/>", {
@@ -854,14 +969,21 @@ function loadPage(page, pageElement) {
 
             for (var i = 0; i < studentsForThisPage.length; i++) {
               var student = studentsForThisPage[i];
+              
+              // Validate student object
+              if (!student || typeof student !== 'object') {
+                console.warn("Invalid student object at index", i, "for page", page, ":", student);
+                continue;
+              }
+              
               var globalIndex = studentStartIndex + i;
 
               console.log("=== PROCESSING STUDENT ===");
               console.log("Global Index:", globalIndex);
-              console.log("Student Name:", student.name);
-              console.log("Student ID:", student.student_id);
-              console.log("MongoDB ID:", student.id);
-              console.log("Program:", student.program);
+              console.log("Student Name:", student.name || 'Unknown');
+              console.log("Student ID:", student.student_id || 'Unknown');
+              console.log("MongoDB ID:", student.id || 'Unknown');
+              console.log("Program:", student.program || 'Unknown');
               console.log("Full Student Object:", student);
 
               var card = $("<div/>", {
@@ -877,7 +999,7 @@ function loadPage(page, pageElement) {
 
               var studentPhoto = $("<img/>", {
                 src: defaultPhotoUrl,
-                alt: student.name,
+                alt: student.name || 'Unknown Student',
                 crossOrigin: "anonymous",
                 onerror:
                   'this.src=\'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="135" height="155" viewBox="0 0 135 155"%3E%3Crect width="135" height="155" fill="%23f0f0f0"/%3E%3Ctext x="67.5" y="77.5" font-family="Arial" font-size="12" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Photo%3C/text%3E%3C/svg%3E\';',
@@ -886,7 +1008,7 @@ function loadPage(page, pageElement) {
               studentImg.append(studentPhoto);
 
               var studentIdForPhotos = student.student_id;
-              var studentNameForPhotos = student.name;
+              var studentNameForPhotos = student.name || 'Unknown Student';
               console.log(
                 "Fetching TOGA photo for student:",
                 studentNameForPhotos,
@@ -902,7 +1024,7 @@ function loadPage(page, pageElement) {
                   currentStudentName
                 ) {
                   fetchStudentPhotos(currentStudentId, function (photos) {
-                    if (photos && photos.length > 0) {
+                    if (photos && photos.length > 0 && photos[0] && photos[0].photos && photos[0].photos.student_photo_1) {
                       var togaUrl = photos[0].photos.student_photo_1.url;
                       if (togaUrl) {
                         console.log(
@@ -913,6 +1035,8 @@ function loadPage(page, pageElement) {
                         );
                         currentPhotoElement.attr("src", togaUrl);
                       }
+                    } else {
+                      console.log("No valid photo data found for student", currentStudentName);
                     }
                   });
                 })(
@@ -924,16 +1048,16 @@ function loadPage(page, pageElement) {
               }
 
               var studentName = $("<h3/>", {
-                text: student.name,
+                text: student.name || 'Unknown Student',
               });
 
               var honorsText = $("<p/>", {
-                text: student.program || "Honors and Achievements",
+                text: student.program || student.section || "Honors and Achievements",
               });
 
               // Store student data in data attributes for event delegation
-              card.attr("data-student-id", student.student_id);
-              card.attr("data-student-name", student.name);
+              card.attr("data-student-id", student.student_id || "");
+              card.attr("data-student-name", student.name || "Unknown Student");
               card.attr("data-student-year", student.year || "N/A");
               card.attr("data-student-motto", student.motto || "No motto provided");
               card.attr("data-student-milestones", JSON.stringify(student.milestones || []));

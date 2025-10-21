@@ -187,6 +187,9 @@
           }
         }
 
+        // Get batch year from localStorage
+        var batchYear = localStorage.getItem("selectedBatchYear");
+
         console.log(
           "Fetching student data for department:",
           departmentCode,
@@ -386,22 +389,33 @@
           );
 
           if (typeof loadStudentsForPage === "function") {
+            console.log("Attempting to load students for page", pageNumber, "with startIndex", studentStartIndex);
             loadStudentsForPage(
               yearbook.code,
               template,
               studentStartIndex,
               1,
               function (students) {
+                console.log("Received students data for page", pageNumber, ":", students);
                 if (students && students.length > 0) {
                   var firstStudent = students[0];
-                  var section =
-                    firstStudent.section ||
-                    firstStudent.program ||
-                    firstStudent.course ||
-                    firstStudent.department;
-                  if (section) {
-                    return section.toUpperCase();
+                  if (firstStudent) {
+                    var section =
+                      firstStudent.section ||
+                      firstStudent.program ||
+                      firstStudent.course ||
+                      firstStudent.department;
+                    if (section) {
+                      console.log("Found section", section, "for page", pageNumber);
+                      return section.toUpperCase();
+                    } else {
+                      console.log("No section information found for student", firstStudent);
+                    }
+                  } else {
+                    console.log("No valid first student found in array");
                   }
+                } else {
+                  console.log("No students returned for page", pageNumber);
                 }
               }
             );

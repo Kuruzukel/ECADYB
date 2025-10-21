@@ -86,6 +86,18 @@ if (file_exists(__DIR__ . '/../Configuration/BunnyConfig.php')) {
 use MongoDB\Client;
 
 try {
+    // Get batch year from form data
+    $batchYear = isset($_POST['batch_year']) ? trim($_POST['batch_year']) : null;
+    $academicYear = null;
+    
+    if ($batchYear) {
+        // Convert "Batch Year 2024-2025" to "2024-2025"
+        $academicYear = str_replace('Batch Year ', '', $batchYear);
+        error_log("UploadStudentPhotos: Batch year received: $batchYear, converted to academic year: $academicYear");
+    } else {
+        error_log("UploadStudentPhotos: No batch year provided - photos will not be associated with academic year");
+    }
+
     $bunnyStorageZone = getenv('BUNNY_STORAGE_ZONE')
         ?: (defined('BUNNY_STORAGE_ZONE') ? BUNNY_STORAGE_ZONE : ($GLOBALS['BUNNY_STORAGE_ZONE'] ?? 'ecadyb'));
     $bunnyAccessKey = getenv('BUNNY_ACCESS_KEY')
@@ -325,6 +337,12 @@ try {
             'upload_time' => new \MongoDB\BSON\UTCDateTime()
         ];
 
+        // Add academic year if available
+        if ($academicYear) {
+            $document['academic year'] = $academicYear;
+            error_log("Added academic year '$academicYear' to Student Photo document for student ID '$studentId'");
+        }
+
         if (connection_aborted()) {
             $uploadCancelled = true;
             error_log("UploadStudentPhotos.php deleting file from BunnyCDN due to cancellation before MongoDB insert: $storageUrl");
@@ -348,6 +366,12 @@ try {
 
             if ($existingDocument) {
                 $updateData = ['$set' => ['upload_time' => new \MongoDB\BSON\UTCDateTime()]];
+
+                // Add academic year if available
+                if ($academicYear) {
+                    $updateData['$set']['academic year'] = $academicYear;
+                    error_log("Added academic year '$academicYear' to existing Student Photo document for student ID '$studentId'");
+                }
 
                 $originalNameWithoutExt = pathinfo($fileName, PATHINFO_FILENAME);
                 error_log("Updating existing document for $fileName, checking photo type in: $originalNameWithoutExt");
@@ -385,6 +409,12 @@ try {
                     'student_id' => $studentId,
                     'upload_time' => new \MongoDB\BSON\UTCDateTime()
                 ];
+
+                // Add academic year if available
+                if ($academicYear) {
+                    $newDocument['academic year'] = $academicYear;
+                    error_log("Added academic year '$academicYear' to new Student Photo document for student ID '$studentId'");
+                }
 
                 $originalNameWithoutExt = pathinfo($fileName, PATHINFO_FILENAME);
                 if (strpos($originalNameWithoutExt, '-FILIPINIANA') !== false) {
