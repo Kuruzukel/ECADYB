@@ -1088,7 +1088,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
         if (backImg && !isBackgroundSlot) sides.push("back");
         if (!sides.length) return;
 
-        // Get the batch year from the section header for logging
         const sectionHeader = box
           .closest(".section")
           ?.querySelector(".section-header");
