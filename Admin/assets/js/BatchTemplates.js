@@ -804,7 +804,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
       return;
     }
 
-    // Mark as initialized
     box.dataset.initialized = "true";
 
     // Handle action box separately
