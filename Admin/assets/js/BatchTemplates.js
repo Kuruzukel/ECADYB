@@ -232,6 +232,74 @@ let selectTemplateModal = null;
 let confirmSelectTemplateBtn = null;
 let cancelSelectTemplateBtn = null;
 
+let currentUploadController = null;
+let globalIsUploading = false;
+let lastUploadedFile = null; // Track last uploaded file for cleanup
+
+function cancelUpload() {
+  console.log("Cancel upload triggered in BatchTemplates");
+  
+  if (currentUploadController) {
+    console.log("Aborting current upload...");
+    currentUploadController.abort();
+    currentUploadController = null;
+  }
+  
+  // If there's a recently uploaded file, delete it
+  if (lastUploadedFile) {
+    console.log("Deleting recently uploaded file:", lastUploadedFile);
+    deleteRecentlyUploadedFile(lastUploadedFile);
+    lastUploadedFile = null;
+  }
+  
+  globalIsUploading = false;
+  
+  // Hide upload overlay
+  const uploadOverlay = document.getElementById("upload-overlay");
+  if (uploadOverlay) {
+    uploadOverlay.style.display = "none";
+  }
+  
+  // Reset all file inputs
+  document.querySelectorAll('input[type="file"]').forEach((input) => {
+    if (input.files && input.files.length > 0) {
+      input.value = "";
+    }
+  });
+  
+  showNotification("Upload cancelled successfully", "warning");
+}
+
+async function deleteRecentlyUploadedFile(fileInfo) {
+  try {
+    const BASE_PATH = getBasePath();
+    const DELETE_ENDPOINT = `${BASE_PATH}/Connection/Cover/DeleteCover.php`;
+    
+    const formData = new FormData();
+    formData.append('slot', fileInfo.slot);
+    formData.append('batch_year', fileInfo.batch_year);
+    formData.append('side', fileInfo.side || 'front');
+    
+    console.log("Sending delete request for:", fileInfo);
+    
+    const response = await fetch(DELETE_ENDPOINT, {
+      method: 'POST',
+      body: formData
+    });
+    
+    const data = await response.json();
+    console.log("Delete response:", data);
+    
+    if (data.success) {
+      console.log("Successfully deleted cancelled upload");
+    } else {
+      console.error("Failed to delete cancelled upload:", data.message);
+    }
+  } catch (error) {
+    console.error("Error deleting cancelled upload:", error);
+  }
+}
+
 let selectedStudentId = null;
 let selectedCollection = null;
 let selectedConfirmAction = null;
@@ -986,6 +1054,9 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
 
             showNotification("Background cover uploaded successfully!", "success");
 
+            // Clear lastUploadedFile since upload is complete and displayed
+            lastUploadedFile = null;
+
             if (window.setAvailableSections) {
               await window.setAvailableSections();
             }
@@ -1087,6 +1158,10 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
                 `Uploaded successfully to Slot ${slot} front and back cover`,
                 "success"
               );
+              
+              // Clear lastUploadedFile since upload is complete and displayed
+              lastUploadedFile = null;
+              
               if (window.setAvailableSections) {
                 await window.setAvailableSections();
               }
@@ -1115,6 +1190,9 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
               deleteBtn.style.display = "flex";
               box.classList.add("has-image");
               showingFront = true;
+
+              // Clear lastUploadedFile since upload is complete and displayed
+              lastUploadedFile = null;
 
               if (window.setAvailableSections) {
                 await window.setAvailableSections();
@@ -1228,6 +1306,11 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
         formData.append("batch_year", batchYear);
 
         const xhr = new XMLHttpRequest();
+        
+        // Store the XHR in global controller for cancellation
+        currentUploadController = xhr;
+        globalIsUploading = true;
+        
         const uploadPromise = new Promise((resolve, reject) => {
           xhr.upload.addEventListener("progress", (e) => {
             if (e.lengthComputable) {
@@ -1253,6 +1336,14 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
               try {
                 const data = JSON.parse(xhr.responseText);
                 if (data.success) {
+                  // Track this upload for potential cancellation cleanup
+                  lastUploadedFile = {
+                    slot: slot,
+                    batch_year: batchYear,
+                    side: side,
+                    timestamp: Date.now()
+                  };
+                  
                   if (showNotif && !isBatch) {
                     showNotification(
                       `Uploaded successfully to Slot ${slot} ${side}`,
@@ -1280,7 +1371,7 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
           });
 
           xhr.addEventListener("abort", () => {
-            showNotification("Upload cancelled", "error");
+            console.log("Upload aborted for slot", slot, side);
             reject(new Error("Upload cancelled"));
           });
 
@@ -1294,8 +1385,24 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
           xhr.send(formData);
         });
 
-        return await uploadPromise;
+        const result = await uploadPromise;
+        
+        // Clean up global upload state
+        currentUploadController = null;
+        globalIsUploading = false;
+        
+        return result;
       } catch (err) {
+        // Clean up global upload state on error
+        currentUploadController = null;
+        globalIsUploading = false;
+
+        // Check if this is a cancellation error
+        if (err.message === "Upload cancelled") {
+          console.log("Upload cancelled by user for slot", slot, side);
+          return { success: false, cancelled: true };
+        }
+
         console.error("Upload error:", err);
 
         if (

@@ -86,6 +86,12 @@ if (file_exists(__DIR__ . '/../Configuration/BunnyConfig.php')) {
 use MongoDB\Client;
 
 try {
+    // Check for connection abortion at the start
+    if (connection_aborted()) {
+        $uploadCancelled = true;
+        respond(false, 'Upload cancelled');
+    }
+
     // Debug: Log all POST data
     error_log("UploadTopManagementPhotos: POST data received: " . json_encode($_POST));
     
@@ -100,6 +106,12 @@ try {
     } else {
         error_log("UploadTopManagementPhotos: No batch year provided - photos will not be associated with academic year");
         error_log("UploadTopManagementPhotos: Available POST keys: " . implode(', ', array_keys($_POST)));
+    }
+
+    // Check for connection abortion after processing POST data
+    if (connection_aborted()) {
+        $uploadCancelled = true;
+        respond(false, 'Upload cancelled');
     }
 
     $bunnyStorageZone = getenv('BUNNY_STORAGE_ZONE')
@@ -137,6 +149,7 @@ try {
     $uploadedCount = 0;
     $failedCount = 0;
     $results = [];
+    $uploadedFilesToCleanup = []; // Track files uploaded to BunnyCDN for cleanup
 
     for ($i = 0; $i < count($uploadedFiles['name']); $i++) {
         if (connection_aborted()) {
@@ -250,6 +263,13 @@ try {
             $failedCount++;
             continue;
         }
+
+        // Track successfully uploaded file for potential cleanup
+        $uploadedFilesToCleanup[] = [
+            'storageUrl' => $storageUrl,
+            'bunnyAccessKey' => $bunnyAccessKey,
+            'filename' => $fileName
+        ];
 
         $publicUrl = rtrim($bunnyCdnHost, '/') . '/' . str_replace(' ', '%20', $path);
 
@@ -470,5 +490,24 @@ try {
     respond(true, "Processed {$uploadedCount} of " . count($uploadedFiles['name']) . " files successfully", $responseData);
 } catch (Exception $e) {
     error_log("UploadTopManagementPhotos.php exception: " . $e->getMessage());
+    
+    // Clean up any files that were uploaded to BunnyCDN before the error
+    if (!empty($uploadedFilesToCleanup)) {
+        error_log("Cleaning up " . count($uploadedFilesToCleanup) . " files from BunnyCDN due to exception");
+        foreach ($uploadedFilesToCleanup as $fileInfo) {
+            $deleteCh = curl_init($fileInfo['storageUrl']);
+            curl_setopt_array($deleteCh, [
+                CURLOPT_CUSTOMREQUEST  => 'DELETE',
+                CURLOPT_HTTPHEADER     => ['AccessKey: ' . $fileInfo['bunnyAccessKey']],
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_TIMEOUT        => 10,
+                CURLOPT_CONNECTTIMEOUT => 3
+            ]);
+            curl_exec($deleteCh);
+            curl_close($deleteCh);
+            error_log("Cleaned up file: " . $fileInfo['filename']);
+        }
+    }
+    
     respond(false, 'Server error: ' . $e->getMessage());
 }

@@ -299,12 +299,14 @@ function cancelUpload() {
   console.log("Cancel upload triggered");
 
   if (currentUploadController) {
+    console.log("Aborting current upload...");
     currentUploadController.abort();
     currentUploadController = null;
   }
 
   hideUploadOverlay();
 
+  // Reset all file inputs
   document.querySelectorAll(".upload-input").forEach((input) => {
     if (input.files && input.files.length > 0) {
       input.value = "";
@@ -315,7 +317,7 @@ function cancelUpload() {
 
   currentOperation = null;
 
-  showNotification("Upload cancelled", "error");
+  showNotification("Upload cancelled successfully", "warning");
 }
 
 window.addEventListener("DOMContentLoaded", () => {
