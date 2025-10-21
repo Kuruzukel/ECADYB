@@ -1029,18 +1029,22 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
               isUploadCancelled;
 
             if (!uploadCancelled && !isUploadCancelled) {
-              console.log("Creating frontImg with URL:", frontImageUrl);
+              // Get the URLs from the server response
+              const frontUrl = results[1]?.url || frontImageUrl;
+              const backUrl = results[0]?.url || backImageUrl;
+              
+              console.log("Creating frontImg with URL:", frontUrl);
               frontImg = document.createElement("img");
-              frontImg.src = frontImageUrl;
+              frontImg.src = frontUrl;
               frontImg.classList.add("front-img");
               frontImg.style.zIndex = "10";
               frontImg.style.opacity = 1;
               frontImg.style.position = "absolute";
               frontImg.style.inset = "0";
 
-              console.log("Creating backImg with URL:", backImageUrl);
+              console.log("Creating backImg with URL:", backUrl);
               backImg = document.createElement("img");
-              backImg.src = backImageUrl;
+              backImg.src = backUrl;
               backImg.classList.add("back-img");
               backImg.style.zIndex = "5";
               backImg.style.opacity = 0;
@@ -1090,7 +1094,8 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
 
             if (result && result.success) {
               frontImg = document.createElement("img");
-              frontImg.src = frontImageUrl;
+              // Use the URL from the server response instead of the blob URL
+              frontImg.src = result.url || frontImageUrl;
               frontImg.classList.add("front-img");
               frontImg.style.zIndex = "10";
               frontImg.style.opacity = 1;
@@ -1496,51 +1501,32 @@ function confirmDeleteBatch() {
   closeDeleteBatchModal();
 }
 
-function confirmSelectTemplate() {
-  if (window.pendingSelectSection) {
-    document.querySelectorAll(".section").forEach((s) => {
-      s.classList.remove("selected");
-    });
+ function confirmSelectTemplate() {
+   if (window.pendingSelectSection) {
+     document.querySelectorAll(".section").forEach((s) => {
+       s.classList.remove("selected");
+     });
 
-    window.pendingSelectSection.classList.add("selected");
+     window.pendingSelectSection.classList.add("selected");
 
-    const sections = document.querySelectorAll(".section");
-    sections.forEach((section) => {
-      const uploadBoxes = section.querySelectorAll(".upload-box");
-      const isSelected = section === window.pendingSelectSection;
+     // Update the sections variable to include the newly selected section
+     const sections = document.querySelectorAll(".section");
+     
+     // Call the centralized updateUploadBoxStates function
+     if (typeof window.updateUploadBoxStates === "function") {
+       window.updateUploadBoxStates();
+     }
 
-      uploadBoxes.forEach((box) => {
-        const isActionBox = box.classList.contains("action-box");
+     showNotification(
+       `${window.pendingSelectBatchName} selected successfully!`,
+       "success"
+     );
 
-        if (isSelected) {
-          box.classList.remove("disabled");
-          box.style.pointerEvents = "auto";
-        } else if (!isActionBox) {
-          box.classList.add("disabled");
-          box.style.pointerEvents = "none";
-        }
-      });
-
-      const selectBatchBtn = section.querySelector(".select-batch-btn");
-      if (selectBatchBtn) {
-        if (isSelected) {
-          selectBatchBtn.disabled = true;
-        } else {
-          selectBatchBtn.disabled = false;
-        }
-      }
-    });
-
-    showNotification(
-      `${window.pendingSelectBatchName} selected successfully!`,
-      "success"
-    );
-
-    window.pendingSelectSection = null;
-    window.pendingSelectBatchName = null;
-  }
-  closeSelectTemplateModal();
-}
+     window.pendingSelectSection = null;
+     window.pendingSelectBatchName = null;
+   }
+   closeSelectTemplateModal();
+ }
 
 window.addEventListener("DOMContentLoaded", () => {
   const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
@@ -1626,35 +1612,45 @@ window.addEventListener("DOMContentLoaded", () => {
     updateUploadBoxStates();
   }
 
-  function updateUploadBoxStates() {
-    const selectedTemplate = document.querySelector(".section.selected");
+   function updateUploadBoxStates() {
+     const selectedTemplate = document.querySelector(".section.selected");
+     const allSections = document.querySelectorAll(".section");
 
-    sections.forEach((section) => {
-      const uploadBoxes = section.querySelectorAll(".upload-box");
-      const isSelected = section === selectedTemplate;
+     allSections.forEach((section) => {
+       const uploadBoxes = section.querySelectorAll(".upload-box");
+       const isSelected = section === selectedTemplate;
 
-      uploadBoxes.forEach((box) => {
-        const isActionBox = box.classList.contains("action-box");
+       uploadBoxes.forEach((box) => {
+         const isActionBox = box.classList.contains("action-box");
 
-        if (isSelected) {
-          box.classList.remove("disabled");
-          box.style.pointerEvents = "auto";
-        } else if (!isActionBox) {
-          box.classList.add("disabled");
-          box.style.pointerEvents = "none";
-        }
-      });
+         if (isSelected) {
+           // Enable all upload boxes for the selected batch
+           box.classList.remove("disabled");
+           box.style.pointerEvents = "auto";
+           box.style.opacity = "1";
+         } else if (!isActionBox) {
+           // Disable upload boxes for non-selected batches
+           box.classList.add("disabled");
+           box.style.pointerEvents = "none";
+           box.style.opacity = "0.5";
+         }
+       });
 
-      const selectBatchBtn = section.querySelector(".select-batch-btn");
-      if (selectBatchBtn) {
-        if (isSelected) {
-          selectBatchBtn.disabled = true;
-        } else {
-          selectBatchBtn.disabled = false;
-        }
-      }
-    });
-  }
+       const selectBatchBtn = section.querySelector(".select-batch-btn");
+       if (selectBatchBtn) {
+         if (isSelected) {
+           selectBatchBtn.disabled = true;
+           selectBatchBtn.classList.add("selected");
+         } else {
+           selectBatchBtn.disabled = false;
+           selectBatchBtn.classList.remove("selected");
+         }
+       }
+     });
+   }
+
+   // Make updateUploadBoxStates globally accessible
+   window.updateUploadBoxStates = updateUploadBoxStates;
 
   function openSelectTemplateModal(targetSection, templateLabel) {
     if (!deleteModal) {
