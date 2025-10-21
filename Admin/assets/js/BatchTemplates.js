@@ -238,6 +238,31 @@ let lastUploadedFiles = []; // Track all uploaded files in current batch for cle
 let pendingUploads = []; // Track uploads in progress (before completion)
 let isCancelling = false; // Guard flag to prevent multiple simultaneous cancellations
 
+// Emergency reset function - accessible from console
+window.resetUploadStates = function() {
+  console.log("🔧 EMERGENCY RESET: Resetting all upload states...");
+  currentUploadControllers = [];
+  globalIsUploading = false;
+  lastUploadedFiles = [];
+  pendingUploads = [];
+  isCancelling = false;
+  
+  // Reset all file inputs
+  document.querySelectorAll('input[type="file"]').forEach((input) => {
+    input.value = "";
+  });
+  
+  // Hide overlay
+  const uploadOverlay = document.getElementById("upload-overlay");
+  if (uploadOverlay) {
+    uploadOverlay.style.display = "none";
+  }
+  
+  console.log("✅ All upload states reset. Upload boxes should be clickable now.");
+  console.log("Note: Individual upload box flags (isUploading, isFileInputOpen) are scoped to each box.");
+  console.log("If still stuck, try clicking the upload box - it should auto-reset after 500ms.");
+};
+
 async function cancelUpload() {
   // Prevent multiple simultaneous cancel operations
   if (isCancelling) {
@@ -999,10 +1024,36 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
       if (!frontImg) {
         console.log(`✓ Upload box Slot ${slot} - Opening file dialog for front image`);
         isFileInputOpen = true;
+        
+        // Reset flag when file dialog closes (handles cancel case)
+        const resetFlag = () => {
+          setTimeout(() => {
+            if (isFileInputOpen) {
+              console.log(`✓ Upload box Slot ${slot} - File dialog closed, resetting flag`);
+              isFileInputOpen = false;
+            }
+          }, 500); // Small delay to ensure change event fires first if files selected
+          window.removeEventListener('focus', resetFlag);
+        };
+        window.addEventListener('focus', resetFlag, { once: true });
+        
         frontInput.click();
       } else if (!backImg && !isBackgroundSlot) {
         console.log(`✓ Upload box Slot ${slot} - Opening file dialog for back image`);
         isFileInputOpen = true;
+        
+        // Reset flag when file dialog closes (handles cancel case)
+        const resetFlag = () => {
+          setTimeout(() => {
+            if (isFileInputOpen) {
+              console.log(`✓ Upload box Slot ${slot} - File dialog closed, resetting flag`);
+              isFileInputOpen = false;
+            }
+          }, 500); // Small delay to ensure change event fires first if files selected
+          window.removeEventListener('focus', resetFlag);
+        };
+        window.addEventListener('focus', resetFlag, { once: true });
+        
         backInput.click();
       } else {
         console.log(`✓ Upload box Slot ${slot} - Toggling between front/back images`);
