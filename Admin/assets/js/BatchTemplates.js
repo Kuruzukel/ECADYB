@@ -965,7 +965,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
             showingFront = true;
             frontImg.style.opacity = 1;
 
-            // Update available sections after upload
             if (window.setAvailableSections) {
               await window.setAvailableSections();
             }
