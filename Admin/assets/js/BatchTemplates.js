@@ -1115,7 +1115,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
 
         showNotification("Image deleted successfully", "success");
 
-        // Delete from server in the background (non-blocking)
         if (sides.length > 0) {
           console.log(
             `Starting parallel deletion of ${sides.length} side(s) for slot ${slot}`
