@@ -322,6 +322,34 @@ window.addEventListener("DOMContentLoaded", () => {
   const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
   applyTheme(savedTheme);
 
+  // Initialize batch year selector
+  const batchYearSelect = document.getElementById("batch-year-select");
+  if (batchYearSelect) {
+    // Load saved batch year from localStorage
+    const savedBatchYear = localStorage.getItem("selectedBatchYear");
+    if (savedBatchYear) {
+      // Try to select the saved batch year (without "Batch Year " prefix)
+      const cleanBatchYear = savedBatchYear.replace('Batch Year ', '');
+      batchYearSelect.value = cleanBatchYear;
+      console.log("Loaded saved batch year:", cleanBatchYear);
+    }
+
+    // Handle batch year selection
+    batchYearSelect.addEventListener("change", (e) => {
+      const selectedYear = e.target.value;
+      if (selectedYear) {
+        // Store with "Batch Year " prefix for consistency with BatchTemplates.js
+        const formattedYear = "Batch Year " + selectedYear;
+        localStorage.setItem("selectedBatchYear", formattedYear);
+        console.log("Batch year selected and saved:", formattedYear);
+        showNotification(`Academic Year ${selectedYear} selected`, "success");
+      } else {
+        localStorage.removeItem("selectedBatchYear");
+        console.log("Batch year selection cleared");
+      }
+    });
+  }
+
   const cancelBtn = document.getElementById("cancel-upload-btn");
   if (cancelBtn) {
     cancelBtn.addEventListener("click", (e) => {
@@ -414,6 +442,18 @@ window.addEventListener("DOMContentLoaded", () => {
         const formData = new FormData();
 
         if (input.id === "student-photos" || input.id === "management-photos") {
+          // Check if batch year is selected
+          const selectedBatchYear = localStorage.getItem("selectedBatchYear");
+          
+          if (!selectedBatchYear) {
+            showNotification(
+              "Please select an Academic Year before uploading photos.",
+              "warning"
+            );
+            forceResetFileUI(input.id);
+            return;
+          }
+
           currentOperation = "uploading_photos";
           showUploadOverlay("photos");
 
@@ -430,14 +470,11 @@ window.addEventListener("DOMContentLoaded", () => {
             formData.append(`files[${i}]`, input.files[i]);
           }
 
-          // Add batch year from localStorage if available
-          const selectedBatchYear = localStorage.getItem("selectedBatchYear");
-          if (selectedBatchYear) {
-            formData.append("batch_year", selectedBatchYear);
-            console.log("Added batch year to FormData:", selectedBatchYear);
-          } else {
-            console.warn("No batch year found in localStorage - photos will not be associated with academic year");
-          }
+          // Add batch year to FormData
+          console.log("=== BATCH YEAR DEBUG ===");
+          console.log("selectedBatchYear from localStorage:", selectedBatchYear);
+          formData.append("batch_year", selectedBatchYear);
+          console.log("Added batch year to FormData:", selectedBatchYear);
 
           console.log("FormData entries:");
           for (let [key, value] of formData.entries()) {

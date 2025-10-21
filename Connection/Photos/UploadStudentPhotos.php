@@ -86,6 +86,9 @@ if (file_exists(__DIR__ . '/../Configuration/BunnyConfig.php')) {
 use MongoDB\Client;
 
 try {
+    // Debug: Log all POST data
+    error_log("UploadStudentPhotos: POST data received: " . json_encode($_POST));
+    
     // Get batch year from form data
     $batchYear = isset($_POST['batch_year']) ? trim($_POST['batch_year']) : null;
     $academicYear = null;
@@ -96,6 +99,7 @@ try {
         error_log("UploadStudentPhotos: Batch year received: $batchYear, converted to academic year: $academicYear");
     } else {
         error_log("UploadStudentPhotos: No batch year provided - photos will not be associated with academic year");
+        error_log("UploadStudentPhotos: Available POST keys: " . implode(', ', array_keys($_POST)));
     }
 
     $bunnyStorageZone = getenv('BUNNY_STORAGE_ZONE')

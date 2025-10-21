@@ -1535,10 +1535,18 @@ function confirmDeleteBatch() {
      const sectionHeader = window.pendingSelectSection.querySelector(".section-header");
      const batchYear = sectionHeader ? sectionHeader.textContent.trim() : "";
      
+     console.log("=== BATCH TEMPLATE SELECTION DEBUG ===");
+     console.log("Section header element:", sectionHeader);
+     console.log("Section header text:", batchYear);
+     console.log("Full section HTML:", window.pendingSelectSection.outerHTML);
+     
      // Store the batch year in localStorage
      if (batchYear) {
        localStorage.setItem("selectedBatchYear", batchYear);
        console.log("Stored batch year:", batchYear);
+       console.log("Verification - localStorage now contains:", localStorage.getItem("selectedBatchYear"));
+     } else {
+       console.warn("No batch year found in section header!");
      }
      
      // Call the centralized updateUploadBoxStates function

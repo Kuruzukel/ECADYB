@@ -78,6 +78,14 @@ h1 .chevron i {
   gap: 15px;
 }
 
+.form-content > .form-group {
+  flex-direction: column;
+}
+
+.form-group .form-group {
+  flex-direction: row;
+}
+
 .section {
   width: 32%;
   min-width: 250px;
@@ -86,24 +94,55 @@ h1 .chevron i {
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   box-sizing: border-box;
-  min-height: 585px;
   display: flex;
   flex-direction: column;
 }
 
+.section:has(.batch-year-selector) {
+  min-height: 585px;
+  width: 100%;
+}
+
 .section-header {
   width: calc(100% + 40px);
-  height: 50px;
-  background-color: var(--section-header);
+  height: 60px;
+  background: linear-gradient(135deg, var(--section-header) 0%, #3b82f6 100%);
   color: white;
-  padding: 12px;
-  margin: -20px -20px 20px -20px;
+  padding: 16px;
+  margin: -20px -20px 15px -20px;
   border-radius: 8px 8px 0 0;
   text-align: center;
-  font-size: 1.1em;
+  font-size: 1.15em;
+  font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.section-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.section:hover .section-header::before {
+  left: 100%;
+}
+
+.section-header:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px -1px rgba(0, 0, 0, 0.25);
+  background: linear-gradient(135deg, #3b82f6 0%, var(--section-header) 100%);
 }
 
 .file-card {
@@ -534,4 +573,76 @@ h1 .chevron i {
 .upload-modal .modal-btn.cancel:hover {
   background: #dc2626;
   transform: translateY(-1px);
+}
+
+/* Batch Year Selector Styles */
+.batch-year-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+  justify-content: center;
+}
+
+.batch-year-dropdown {
+  width: 100%;
+  max-width: 300px;
+  padding: 15px 15px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #ffffff;
+  background: linear-gradient(145deg, rgba(33, 150, 243, 0.2), rgba(44, 62, 80, 0.6));
+  border: 2px solid rgba(33, 150, 243, 0.5);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  outline: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.batch-year-dropdown:hover {
+  border-color: rgba(33, 150, 243, 0.8);
+  background: linear-gradient(145deg, rgba(33, 150, 243, 0.3), rgba(44, 62, 80, 0.7));
+  box-shadow: 0 6px 16px rgba(33, 150, 243, 0.2);
+}
+
+.batch-year-dropdown:focus {
+  border-color: #2196f3;
+  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
+}
+
+.batch-year-dropdown option {
+  background-color: #1e293b;
+  color: #ffffff;
+  padding: 10px;
+}
+
+.batch-year-dropdown option:hover {
+  background-color: #334155;
+}
+
+.batch-year-note {
+  color: #e0e0e0;
+  font-size: 15px;
+  text-align: center;
+  line-height: 1.4;
+  margin: 0;
+  padding: 15px 15px;
+  background: rgba(33, 150, 243, 0.1);
+  border-radius: 6px;
+  border-left: 3px solid #2196f3;
+}
+
+.batch-year-note i {
+  color: #2196f3;
+  margin-right: 6px;
+}
+
+/* Warning notification styles */
+.notification.warning {
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+}
+
+.notification.info {
+  background: linear-gradient(135deg, #60a5fa, #3b82f6);
 }
