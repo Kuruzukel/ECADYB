@@ -287,7 +287,7 @@ async function cancelUpload() {
   });
   
   // Show immediate feedback to user
-  showNotification("Cancelling upload...", "info");
+  showNotification("Upload cancelled", "error");
   
   // Abort ALL active XHR requests
   if (currentUploadControllers.length > 0) {
@@ -321,11 +321,7 @@ async function cancelUpload() {
       const failCount = results.filter(r => r === false).length;
       
       console.log(`Background cleanup complete: ${successCount} deleted successfully, ${failCount} failed`);
-      
-      // Only show notification if there were actual cleanups
-      if (successCount > 0) {
-        showNotification(`Cleanup complete - ${successCount} file(s) removed`, "success");
-      }
+      // No notification - user already saw "Upload cancelled" message
     }).catch(error => {
       console.error("Error during background cleanup:", error);
     }).finally(() => {
@@ -335,39 +331,68 @@ async function cancelUpload() {
   } else {
     console.log("No files to clean up (upload was cancelled before any uploads started)");
     isCancelling = false;
+    // No notification - user already saw "Upload cancelled" message
   }
 }
 
 async function deleteRecentlyUploadedFile(fileInfo) {
-  try {
-    const BASE_PATH = getBasePath();
-    const DELETE_ENDPOINT = `${BASE_PATH}/Connection/Cover/DeleteCover.php`;
+  const MAX_DELETE_RETRIES = 3;
+  let attempt = 0;
+  
+  while (attempt < MAX_DELETE_RETRIES) {
+    attempt++;
     
-    const formData = new FormData();
-    formData.append('slot', fileInfo.slot);
-    formData.append('batch_year', fileInfo.batch_year);
-    formData.append('side', fileInfo.side || 'front');
-    
-    console.log(`Deleting recently uploaded file - Slot ${fileInfo.slot} ${fileInfo.side}, Batch: ${fileInfo.batch_year}`);
-    
-    const response = await fetch(DELETE_ENDPOINT, {
-      method: 'POST',
-      body: formData
-    });
-    
-    const data = await response.json();
-    
-    if (data.success) {
-      console.log(`✓ Successfully deleted Slot ${fileInfo.slot} ${fileInfo.side} from Bunny CDN and MongoDB`);
-      return true;
-    } else {
-      console.error(`✗ Failed to delete Slot ${fileInfo.slot} ${fileInfo.side}: ${data.message}`);
-      return false;
+    try {
+      const BASE_PATH = getBasePath();
+      const DELETE_ENDPOINT = `${BASE_PATH}/Connection/Cover/DeleteCover.php`;
+      
+      const formData = new FormData();
+      formData.append('slot', fileInfo.slot);
+      formData.append('batch_year', fileInfo.batch_year);
+      formData.append('side', fileInfo.side || 'front');
+      
+      if (attempt === 1) {
+        console.log(`🗑️ Deleting Slot ${fileInfo.slot} ${fileInfo.side} from Bunny CDN and MongoDB (Batch: ${fileInfo.batch_year})`);
+      } else {
+        console.log(`🔄 Retry ${attempt}/${MAX_DELETE_RETRIES} - Deleting Slot ${fileInfo.slot} ${fileInfo.side}`);
+      }
+      
+      const response = await fetch(DELETE_ENDPOINT, {
+        method: 'POST',
+        body: formData
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        console.log(`✅ Confirmed deleted from Bunny CDN: Slot ${fileInfo.slot} ${fileInfo.side}`);
+        return true;
+      } else {
+        // If file not found, it's already deleted (success)
+        if (data.message && data.message.includes('not found')) {
+          console.log(`ℹ️ Slot ${fileInfo.slot} ${fileInfo.side} already deleted or never saved`);
+          return true;
+        }
+        
+        console.warn(`⚠️ Delete attempt ${attempt} failed: ${data.message}`);
+        
+        // Retry after a short delay
+        if (attempt < MAX_DELETE_RETRIES) {
+          await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+        }
+      }
+    } catch (error) {
+      console.error(`❌ Error on delete attempt ${attempt}:`, error);
+      
+      // Retry after a short delay
+      if (attempt < MAX_DELETE_RETRIES) {
+        await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+      }
     }
-  } catch (error) {
-    console.error(`✗ Error deleting Slot ${fileInfo.slot} ${fileInfo.side}:`, error);
-    return false;
   }
+  
+  console.error(`❌ Failed to delete Slot ${fileInfo.slot} ${fileInfo.side} after ${MAX_DELETE_RETRIES} attempts`);
+  return false;
 }
 
 let selectedStudentId = null;
@@ -1121,7 +1146,7 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
           // Show upload progress for background slot
           if (uploadOverlay && uploadText) {
             uploadOverlay.style.display = "flex";
-            uploadText.textContent = `Uploading background cover...`;
+            uploadText.textContent = `Preparing upload... (5s to cancel)`;
           }
 
           const result = await uploadToBunny(
@@ -1171,7 +1196,7 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
 
           if (files.length === 2 && uploadOverlay && uploadText) {
             uploadOverlay.style.display = "flex";
-            uploadText.textContent = `Uploading Slot ${slot} front and back cover...`;
+            uploadText.textContent = `Preparing upload... (5s to cancel)`;
           }
 
           const suppressNotifications = files.length === 2;
@@ -1420,7 +1445,79 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
         globalIsUploading = true;
         console.log(`Active XHR requests: ${currentUploadControllers.length}`);
         
-        const uploadPromise = new Promise((resolve, reject) => {
+        const uploadPromise = new Promise(async (resolve, reject) => {
+          // 5-second cancellation window before actual upload
+          const CANCEL_WINDOW_MS = 5000;
+          const uploadText = document.getElementById("uploadText");
+          
+          console.log(`⏳ Starting 5-second cancellation window for Slot ${slot} ${side}`);
+          
+          // Countdown from 5 to 1
+          for (let secondsLeft = 5; secondsLeft > 0; secondsLeft--) {
+            // Check if cancelled during countdown
+            if (isCancelling) {
+              console.log(`✅ Upload cancelled during countdown for Slot ${slot} ${side} (${secondsLeft}s remaining - PREVENTED UPLOAD)`);
+              
+              // Remove XHR from controllers since we never sent it
+              const xhrIndex = currentUploadControllers.indexOf(xhr);
+              if (xhrIndex > -1) {
+                currentUploadControllers.splice(xhrIndex, 1);
+              }
+              
+              // Remove from pending uploads since upload never started
+              const pendingIndex = pendingUploads.findIndex(
+                f => f.slot === slot && f.side === side && f.batch_year === batchYear
+              );
+              if (pendingIndex > -1) {
+                pendingUploads.splice(pendingIndex, 1);
+                console.log(`Removed from pending uploads (never sent to server)`);
+              }
+              
+              reject(new Error("Upload cancelled"));
+              return;
+            }
+            
+            // Update overlay text with countdown
+            if (uploadText) {
+              if (isBatch) {
+                uploadText.textContent = `Preparing upload... (${secondsLeft}s to cancel)`;
+              } else {
+                uploadText.textContent = `Preparing Slot ${slot} ${side}... (${secondsLeft}s to cancel)`;
+              }
+            }
+            
+            // Wait 1 second
+            await new Promise(resolve => setTimeout(resolve, 1000));
+          }
+          
+          // Check one more time before starting actual upload
+          if (isCancelling) {
+            console.log(`✅ Upload cancelled just before upload start for Slot ${slot} ${side} - PREVENTED UPLOAD`);
+            
+            // Remove XHR from controllers since we never sent it
+            const xhrIndex = currentUploadControllers.indexOf(xhr);
+            if (xhrIndex > -1) {
+              currentUploadControllers.splice(xhrIndex, 1);
+            }
+            
+            // Remove from pending uploads since upload never started
+            const pendingIndex = pendingUploads.findIndex(
+              f => f.slot === slot && f.side === side && f.batch_year === batchYear
+            );
+            if (pendingIndex > -1) {
+              pendingUploads.splice(pendingIndex, 1);
+              console.log(`Removed from pending uploads (never sent to server)`);
+            }
+            
+            reject(new Error("Upload cancelled"));
+            return;
+          }
+          
+          console.log(`✓ Cancellation window expired, starting actual upload for Slot ${slot} ${side}`);
+          if (uploadText) {
+            uploadText.textContent = `Uploading Slot ${slot} ${side}...`;
+          }
+          
           let uploadStartTime = Date.now();
           let uploadCompleted = false;
           xhr.upload.addEventListener("progress", (e) => {
@@ -1432,12 +1529,9 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
                 )}%`
               );
               
-              // Update upload overlay text for slot 8
-              if (slot === 8) {
-                const uploadText = document.getElementById("uploadText");
-                if (uploadText) {
-                  uploadText.textContent = `Uploading background cover...`;
-                }
+              // Update upload overlay text
+              if (uploadText) {
+                uploadText.textContent = `Uploading Slot ${slot} ${side}... ${percentComplete.toFixed(0)}%`;
               }
             }
           });
