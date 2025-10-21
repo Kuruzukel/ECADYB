@@ -408,7 +408,7 @@ try {
             if ($isComplete) {
                 $collection->updateMany(
                     ['batch_year' => $batchYear],
-                    ['$set' => ['completion_date' => new \MongoDB\BSON\UTCDateTime((new DateTime())->modify('+2 minute')->getTimestamp() * 1000)]],
+                    ['$set' => ['completion_date' => new \MongoDB\BSON\UTCDateTime((new DateTime())->modify('+3 years')->getTimestamp() * 1000)]],
                     ['upsert' => false]
                 );
                 error_log("UploadCover.php: Batch year $batchYear is now complete!");
