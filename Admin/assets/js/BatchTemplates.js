@@ -806,7 +806,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
 
     box.dataset.initialized = "true";
 
-    // Handle action box separately
     if (isActionBox) {
       const selectBatchBtn = box.querySelector(".select-batch-btn");
       const downloadBtn = box.querySelector(".download-pdf-btn");
