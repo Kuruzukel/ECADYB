@@ -1430,7 +1430,6 @@ function confirmDeleteBatch() {
 
     saveGeneratedSectionsToLocalStorage();
 
-    // Refresh sections NodeList after deletion
     if (window.refreshSections) {
       window.refreshSections();
     }
