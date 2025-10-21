@@ -204,12 +204,11 @@ window.addEventListener("DOMContentLoaded", () => {
   const urlParams = new URLSearchParams(window.location.search);
   const currentAcademicYear = urlParams.get("academic_year");
 
-  // If no academic year is in the URL, redirect to include the default (2024-2025)
   if (!currentAcademicYear) {
     const department = urlParams.get("department") || "bsme";
     const tab = urlParams.get("tab") || "all";
     const pageNum = urlParams.get("pageNum") || "1";
-    
+
     const newUrl = `?page=student-list&academic_year=2024-2025&department=${department}&tab=${tab}&pageNum=${pageNum}`;
     window.history.replaceState({}, "", newUrl);
   }
@@ -240,7 +239,6 @@ let isBulkUpdateInProgress = false;
 let notificationTimeout = null;
 let currentOperation = null;
 
-// Cache for storing loaded pages
 const pageCache = new Map();
 
 function updateSelectAllState() {
@@ -339,7 +337,9 @@ function initializeSelectAll() {
       if (this.checked) {
         const departmentFilter = document.getElementById("department-filter");
         const statusFilter = document.getElementById("status-filter");
-        const academicYearFilter = document.getElementById("academic-year-filter");
+        const academicYearFilter = document.getElementById(
+          "academic-year-filter"
+        );
 
         const department = departmentFilter ? departmentFilter.value : "";
         const status = statusFilter ? statusFilter.value : "";
@@ -364,7 +364,9 @@ function initializeSelectAll() {
       } else {
         const departmentFilter = document.getElementById("department-filter");
         const statusFilter = document.getElementById("status-filter");
-        const academicYearFilter = document.getElementById("academic-year-filter");
+        const academicYearFilter = document.getElementById(
+          "academic-year-filter"
+        );
 
         const department = departmentFilter ? departmentFilter.value : "";
         const status = statusFilter ? statusFilter.value : "";
@@ -430,9 +432,8 @@ async function updateAllStudentsStatus(
         currentOperation = null;
       }, 100);
 
-      // Clear cache after bulk status update
       pageCache.clear();
-      
+
       const urlParams = new URLSearchParams(window.location.search);
       const academicYear = urlParams.get("academic_year") || "";
       const department = urlParams.get("department") || "";
@@ -516,9 +517,8 @@ function initializeFilters() {
 
   if (academicYearFilter) {
     academicYearFilter.addEventListener("change", function () {
-      // Clear cache when filter changes
       pageCache.clear();
-      
+
       const urlParams = new URLSearchParams(window.location.search);
       const academicYear = this.value;
       const department = urlParams.get("department") || "bsme";
@@ -533,9 +533,8 @@ function initializeFilters() {
 
   if (departmentFilter) {
     departmentFilter.addEventListener("change", function () {
-      // Clear cache when filter changes
       pageCache.clear();
-      
+
       const urlParams = new URLSearchParams(window.location.search);
       const academicYear = urlParams.get("academic_year") || "";
       const department = this.value;
@@ -551,13 +550,9 @@ function initializeFilters() {
   [entriesCount, statusFilter].forEach((filter) => {
     if (filter) filter.addEventListener("change", applyFilters);
   });
-
-  // Don't call applyFilters on initialization - let the page load naturally
-  // applyFilters() will only be called when status filter changes
 }
 
 function applyFilters() {
-  // Only filter by status - department filtering is handled by page reload
   const statusVal = (
     document.getElementById("status-filter")?.value || ""
   ).trim();
@@ -579,7 +574,6 @@ function applyFilters() {
 
     let showRow = true;
 
-    // Only filter by status, not department
     if (statusVal) {
       const statusAttr = checkbox.dataset.status || "";
       if (statusAttr.toLowerCase() !== statusVal.toLowerCase()) {
@@ -670,13 +664,11 @@ async function confirmDeleteStudent(event) {
     event.stopPropagation();
   }
 
-  // Save values before closing modal (which sets them to null)
   const studentIdToDelete = selectedStudentId;
   const collectionToDelete = selectedCollection;
 
   confirmDeleteBtn.disabled = true;
-  
-  // Close modal
+
   closeDeleteModal();
 
   try {
@@ -696,29 +688,26 @@ async function confirmDeleteStudent(event) {
     });
 
     const data = await res.json().catch(() => null);
-    
+
     if (!res.ok) {
       const errorMsg = data?.message || `HTTP ${res.status} ${res.statusText}`;
       throw new Error(errorMsg);
     }
 
     if (data?.success) {
-      // Clear cache after successful deletion
       pageCache.clear();
-      
-      // Reload current page to show updated data
+
       const urlParams = new URLSearchParams(window.location.search);
       const academicYear = urlParams.get("academic_year") || "";
       const department = urlParams.get("department") || "bsme";
       const tab = urlParams.get("tab") || "all";
       const pageNum = urlParams.get("pageNum") || "1";
-      
+
       _showNotification(
         data.message || "Student deleted successfully",
         "success"
       );
-      
-      // Reload the current page to show updated data
+
       loadStudentList(parseInt(pageNum), academicYear, department, tab);
     } else {
       _showNotification(data?.message || "Failed to delete student", "error");
@@ -733,22 +722,21 @@ async function confirmDeleteStudent(event) {
 
 function initializeDeleteModal() {
   if (!confirmDeleteBtn || !cancelDeleteBtn || !deleteModal) return;
-  
-  // Remove old event listeners to prevent duplicates
+
   const newConfirmBtn = confirmDeleteBtn.cloneNode(true);
   const newCancelBtn = cancelDeleteBtn.cloneNode(true);
-  
+
   confirmDeleteBtn.parentNode.replaceChild(newConfirmBtn, confirmDeleteBtn);
   cancelDeleteBtn.parentNode.replaceChild(newCancelBtn, cancelDeleteBtn);
-  
-  // Update references to new buttons
+
   confirmDeleteBtn = newConfirmBtn;
   cancelDeleteBtn = newCancelBtn;
-  
-  // Add fresh event listeners
-  confirmDeleteBtn.addEventListener("click", (event) => confirmDeleteStudent(event));
+
+  confirmDeleteBtn.addEventListener("click", (event) =>
+    confirmDeleteStudent(event)
+  );
   cancelDeleteBtn.addEventListener("click", closeDeleteModal);
-  
+
   deleteModal.addEventListener("click", (e) => {
     if (e.target === deleteModal) closeDeleteModal();
   });
@@ -928,27 +916,24 @@ async function updateStudentDetails(studentId, fields) {
     }
 
     if (data && data.success) {
-      // Clear cache after successful update
       pageCache.clear();
-      
+
       _showNotification(
         data.message || "Student Details Saved Successfully",
         "success"
       );
-      
-      // Close the modal
+
       const modal = document.getElementById(`editModal_${studentId}`);
       if (modal) {
         modal.classList.remove("active");
       }
-      
-      // Reload the current page to show updated data
+
       const urlParams = new URLSearchParams(window.location.search);
       const academicYear = urlParams.get("academic_year") || "";
       const department = urlParams.get("department") || "bsme";
       const tab = urlParams.get("tab") || "all";
       const pageNum = urlParams.get("pageNum") || "1";
-      
+
       loadStudentList(parseInt(pageNum), academicYear, department, tab);
     } else {
       _showNotification(
@@ -1061,35 +1046,37 @@ function changePage(pageNum) {
 
 function loadStudentList(pageNum, academicYear, department, tab) {
   const tableBody = document.querySelector("tbody");
-  
-  // Create cache key
+
   const cacheKey = `${academicYear}-${department}-${pageNum}`;
-  
-  // Check if page is cached
+
   if (pageCache.has(cacheKey)) {
     const cachedData = pageCache.get(cacheKey);
-    
+
     if (tableBody) {
       tableBody.innerHTML = cachedData.html;
     }
-    
+
     const currentPageInfo = document.querySelector(".pagination-controls span");
     if (currentPageInfo) {
       currentPageInfo.textContent = cachedData.pageInfo;
     }
-    
-    updatePaginationButtons(pageNum, academicYear, department, tab, cachedData.totalPages);
-    
-    // Fast re-initialization - no delay
+
+    updatePaginationButtons(
+      pageNum,
+      academicYear,
+      department,
+      tab,
+      cachedData.totalPages
+    );
+
     isInitializing = true;
     initializeSelectAll();
     initializeStatusUpdates();
     isInitializing = false;
-    
-    return; // Exit early - loaded from cache
+
+    return;
   }
-  
-  // Not in cache, show loading and fetch
+
   if (tableBody) {
     tableBody.innerHTML =
       '<tr><td colspan="7" style="text-align: center; vertical-align: middle; padding: 0; height: 400px;"><div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 20px;"><i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: #60a5fa;"></i><span style="font-size: 1.2rem; font-weight: 500; color: #fff;">Loading students...</span></div></td></tr>';
@@ -1122,16 +1109,20 @@ function loadStudentList(pageNum, academicYear, department, tab) {
         ? parseInt(totalPagesInput.value)
         : null;
 
-      // Cache the loaded page
       pageCache.set(cacheKey, {
-        html: newTableBody ? newTableBody.innerHTML : '',
-        pageInfo: newPageInfo ? newPageInfo.textContent : '',
-        totalPages: totalPages
+        html: newTableBody ? newTableBody.innerHTML : "",
+        pageInfo: newPageInfo ? newPageInfo.textContent : "",
+        totalPages: totalPages,
       });
 
-      updatePaginationButtons(pageNum, academicYear, department, tab, totalPages);
+      updatePaginationButtons(
+        pageNum,
+        academicYear,
+        department,
+        tab,
+        totalPages
+      );
 
-      // Fast re-initialization - no delay
       isInitializing = true;
       initializeSelectAll();
       initializeStatusUpdates();

@@ -1,15 +1,10 @@
 <?php
-// Check if this is being included in AdminDashboard
 $isIncludedInDashboard = defined('ADMIN_DASHBOARD_INCLUDED');
 $outputFullHtml = !$isIncludedInDashboard;
 
-// Allow POST requests to be processed directly (for AJAX/fetch calls)
-// Only redirect GET requests when not included in dashboard
 if (!defined('ADMIN_DASHBOARD_INCLUDED') && $_SERVER["REQUEST_METHOD"] !== "POST") {
-    // If accessed directly via GET, redirect to the proper route
-    // Detect if running on localhost (with /ECADYB/) or Railway
-    $redirectPath = strpos($_SERVER['REQUEST_URI'], '/ECADYB/') !== false 
-        ? '/ECADYB/Admin' 
+    $redirectPath = strpos($_SERVER['REQUEST_URI'], '/ECADYB/') !== false
+        ? '/ECADYB/Admin'
         : '/Admin';
     header('Location: ' . $redirectPath);
     exit;
@@ -63,7 +58,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 
-    // Use ECADYB database
     $dbName = "ECADYB";
 
     try {
@@ -176,18 +170,15 @@ $programMap = [
     "bse" => "BS Entrepreneurship"
 ];
 
-// Fetch available academic years from database
 $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 $academicYears = [];
 
 try {
     $client = new Client($mongoUrl);
     $db = $client->ECADYB;
-    
-    // Get all collections
+
     $collections = $db->listCollectionNames();
-    
-    // Fetch all unique academic years from all collections
+
     foreach ($collections as $collectionName) {
         $collection = $db->$collectionName;
         $years = $collection->distinct('academic year');
@@ -197,31 +188,28 @@ try {
             }
         }
     }
-    
-    // Sort academic years in ascending order
+
     sort($academicYears);
 } catch (Exception $e) {
-    // If database connection fails, use default academic year
     error_log("Failed to fetch academic years: " . $e->getMessage());
 }
 
 if ($outputFullHtml):
-    // Detect base path for localhost vs Railway
     $basePath = strpos($_SERVER['REQUEST_URI'], '/ECADYB/') !== false ? '/ECADYB' : '';
 ?>
-<!DOCTYPE html>
-<html lang="en">
+    <!DOCTYPE html>
+    <html lang="en">
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Add New Student</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="<?= $basePath ?>/Admin/assets/css/AddNewStudent.css">
-</head>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Add New Student</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+        <link rel="stylesheet" href="<?= $basePath ?>/Admin/assets/css/AddNewStudent.css">
+    </head>
 
-<body>
-<?php endif; ?>
+    <body>
+    <?php endif; ?>
     <div class="container" style="font-family: Arial, sans-serif;">
         <div class="header-container" style="width: 100%;">
             <h1><i class="fas fa-home"></i> <span class="chevron"><i class="fas fa-chevron-right"></i></span> Add New
@@ -315,9 +303,9 @@ if ($outputFullHtml):
         </div>
     </div>
 
-<?php if ($outputFullHtml): ?>
-    <script src="<?= $basePath ?>/Admin/assets/js/AddNewStudent.js"></script>
-</body>
+    <?php if ($outputFullHtml): ?>
+        <script src="<?= $basePath ?>/Admin/assets/js/AddNewStudent.js"></script>
+    </body>
 
-</html>
+    </html>
 <?php endif; ?>

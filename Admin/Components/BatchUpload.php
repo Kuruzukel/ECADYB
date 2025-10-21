@@ -187,18 +187,15 @@ function importCSVToDepartments($tmpName, $departmentsDB, $programMap, $dropColl
             try {
                 $collection = $departmentsDB->$deptCode;
 
-                // Instead of dropping the entire collection, only delete records from the same academic year
                 if ($dropCollection && !empty($records)) {
-                    // Get the academic year from the first record
                     $academicYear = $records[0]['academic year'] ?? null;
-                    
+
                     if ($academicYear) {
-                        // Delete only records with the same academic year
                         $deleteResult = $collection->deleteMany(['academic year' => $academicYear]);
                         error_log("Deleted " . $deleteResult->getDeletedCount() . " records for academic year: $academicYear in department: $deptCode");
                     }
                 }
-                
+
                 $collection->insertMany($records);
                 error_log("Inserted " . count($records) . " records for department: $deptCode");
             } catch (Exception $e) {
@@ -343,19 +340,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $dbName = $departmentsDB->getDatabaseName();
             error_log("BatchUpload.php: Importing student info to database: $dbName");
 
-            // Handle multiple CSV files
             $studentInfoFiles = $_FILES['student_info'];
             $successCount = 0;
             $failCount = 0;
             $totalFiles = is_array($studentInfoFiles['tmp_name']) ? count($studentInfoFiles['tmp_name']) : 1;
 
             if (is_array($studentInfoFiles['tmp_name'])) {
-                // Multiple files - drop collection only for first file, append for rest
                 error_log("Processing " . count($studentInfoFiles['tmp_name']) . " CSV files");
                 for ($i = 0; $i < count($studentInfoFiles['tmp_name']); $i++) {
                     error_log("Processing file $i: " . ($studentInfoFiles['name'][$i] ?? 'unknown'));
                     if ($studentInfoFiles['error'][$i] === UPLOAD_ERR_OK) {
-                        // Drop collection only for the first file
                         $dropCollection = ($i === 0);
                         error_log("File $i: dropCollection = " . ($dropCollection ? 'true' : 'false'));
                         $result = importCSVToDepartments(
@@ -378,7 +372,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
                 error_log("Total success: $successCount, Total failed: $failCount");
             } else {
-                // Single file (fallback for compatibility) - drop collection
                 $uploadStatus['student_info'] = importCSVToDepartments(
                     $studentInfoFiles['tmp_name'],
                     $departmentsDB,
@@ -389,7 +382,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $failCount = $uploadStatus['student_info'] ? 0 : 1;
             }
 
-            // Store results
             $uploadStatus['student_info'] = $successCount > 0;
             $uploadStatus['student_info_count'] = [
                 'success' => $successCount,
