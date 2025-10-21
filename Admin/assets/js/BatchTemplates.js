@@ -1428,7 +1428,6 @@ function confirmDeleteBatch() {
   if (window.pendingDeleteSection) {
     window.pendingDeleteSection.remove();
 
-    // Update localStorage after deletion
     saveGeneratedSectionsToLocalStorage();
 
     // Refresh sections NodeList after deletion
