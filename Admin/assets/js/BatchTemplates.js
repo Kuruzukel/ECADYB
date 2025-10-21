@@ -767,7 +767,6 @@ function restoreSingleSection(sectionHeader) {
 }
 
 function initializeSection(section) {
-  // Validate section
   if (!section || !section.parentNode) {
     console.error("initializeSection: Invalid section");
     return;
