@@ -1281,7 +1281,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
         form.append("side", side);
         form.append("batch_year", batchYear);
 
-        // Create an AbortController with 20 second timeout
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 20000);
 
