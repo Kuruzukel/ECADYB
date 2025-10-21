@@ -1324,7 +1324,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
           name: err.name,
         });
 
-        // Handle abort/timeout error
         if (err.name === "AbortError") {
           showNotification(
             "Delete operation timed out after 20 seconds",
