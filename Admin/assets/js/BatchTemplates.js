@@ -783,8 +783,6 @@ function initializeSection(section) {
     return;
   }
 
-  // Section header click functionality removed - now using Select Batch button only
-
   // Mark as initialized
   section.dataset.initialized = "true";
 }
