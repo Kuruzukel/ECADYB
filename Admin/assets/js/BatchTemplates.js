@@ -1257,7 +1257,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
           );
         }
 
-        // Max retries reached or non-retryable error
         showNotification(
           err.message || "Upload failed after multiple attempts",
           "error"
