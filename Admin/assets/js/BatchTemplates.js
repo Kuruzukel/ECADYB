@@ -1311,7 +1311,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
           return false;
         } else {
           console.log(`deleteCover: Delete successful`);
-          // Update available sections after deletion
           if (window.setAvailableSections) {
             await window.setAvailableSections();
           }
