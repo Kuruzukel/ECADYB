@@ -1149,7 +1149,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
       isSingleUpload = false
     ) {
       const MAX_RETRIES = 3;
-      // Set timeout based on single or double upload
       // Increased to 60s to allow time for BunnyCDN upload + MongoDB save + response
       const UPLOAD_TIMEOUT = 60000;
 
