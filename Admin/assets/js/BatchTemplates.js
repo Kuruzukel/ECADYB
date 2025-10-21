@@ -727,7 +727,6 @@ function restoreSingleSection(sectionHeader) {
   }
 
   if (targetFormGroup) {
-    // Add to existing form-group at the correct position
     const sectionsInGroup = targetFormGroup.querySelectorAll(".section");
     if (insertPosition === 0) {
       targetFormGroup.insertBefore(newSection, sectionsInGroup[0] || null);
