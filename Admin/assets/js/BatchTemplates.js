@@ -1361,7 +1361,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
           ? sectionHeader.textContent.trim()
           : null;
 
-        // Filter by both slot AND batch year
         const found = (data.items || []).find(
           (i) => i.slot === slot && i.batch_year === batchYear
         );
