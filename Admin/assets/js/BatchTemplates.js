@@ -296,7 +296,6 @@ function closeDeleteBatchModal() {
 function openSelectTemplateModal(batchName) {
   console.log("openSelectTemplateModal called with:", batchName);
 
-  // Find the section by batch name
   const sections = document.querySelectorAll(".section");
   let targetSection = null;
 
@@ -312,7 +311,6 @@ function openSelectTemplateModal(batchName) {
     return;
   }
 
-  // Store the section for confirmation
   window.pendingSelectSection = targetSection;
   window.pendingSelectBatchName = batchName;
 
@@ -374,7 +372,6 @@ async function confirmDeleteStudent() {
     }
   } finally {
     if (confirmDeleteBtn) confirmDeleteBtn.disabled = false;
-    // Delay closing the modal to allow notification to be visible
     setTimeout(() => {
       closeDeleteModal();
     }, 500);
@@ -404,18 +401,15 @@ function generateNewBatchSection() {
   const formContent = document.querySelector(".form-content");
   if (!formContent) return;
 
-  // Get all existing sections across all form-groups
   const allSections = document.querySelectorAll(".form-group .section");
 
-  // Get the last section's header text
-  let nextYear = "2024-2025"; // Default year
+  let nextYear = "2024-2025";
   if (allSections.length > 0) {
     const lastSection = allSections[allSections.length - 1];
     const lastHeader = lastSection
       .querySelector(".section-header")
       .textContent.trim();
 
-    // Extract year from "Batch Year 2026-2027" format
     const yearMatch = lastHeader.match(/(\d{4})-(\d{4})/);
     if (yearMatch) {
       const startYear = parseInt(yearMatch[1]);
@@ -424,7 +418,6 @@ function generateNewBatchSection() {
     }
   }
 
-  // Create new section HTML - identical structure to hard-coded sections
   const newSectionHTML = `
     <div class="section">
       <div class="section-header">Batch Year ${nextYear}</div>
@@ -499,43 +492,35 @@ function generateNewBatchSection() {
     </div>
   `;
 
-  // Create a temporary container and parse the HTML
   const tempDiv = document.createElement("div");
   tempDiv.innerHTML = newSectionHTML;
   const newSection = tempDiv.firstElementChild;
 
-  // Check if there's an existing form-group with less than 3 sections
   const existingFormGroups = document.querySelectorAll(".form-group");
   let targetFormGroup = null;
   let insertPosition = 0;
 
-  // Find the last form-group that has less than 3 sections
   for (let i = existingFormGroups.length - 1; i >= 0; i--) {
     const sectionsInGroup = existingFormGroups[i].querySelectorAll(".section");
     if (sectionsInGroup.length < 3) {
       targetFormGroup = existingFormGroups[i];
-      insertPosition = sectionsInGroup.length; // Position to insert (0=left, 1=middle, 2=right)
+      insertPosition = sectionsInGroup.length;
       break;
     }
   }
 
   if (targetFormGroup) {
-    // Add to existing form-group at the correct position (left to right)
     const sectionsInGroup = targetFormGroup.querySelectorAll(".section");
     if (insertPosition === 0) {
-      // Insert at the beginning (left position)
       targetFormGroup.insertBefore(newSection, sectionsInGroup[0] || null);
     } else {
-      // Insert at the end (right position) - for both middle and right positions
       targetFormGroup.appendChild(newSection);
     }
   } else {
-    // Create a new form-group for the new section
     const newFormGroup = document.createElement("div");
     newFormGroup.className = "form-group";
     newFormGroup.appendChild(newSection);
 
-    // Find the generate button container and insert the new form-group before it
     const generateButtonContainer = document.querySelector(
       ".generate-button-container"
     );
@@ -545,51 +530,38 @@ function generateNewBatchSection() {
         generateButtonContainer
       );
     } else {
-      // Fallback: append to form-content
       formContent.appendChild(newFormGroup);
     }
   }
 
-  // Initialize the new section with upload functionality
   initializeSection(newSection);
 
-  // Get the currentXhrs and isUploadCancelled from the parent scope
-  // These are defined in the DOMContentLoaded event listener
   const currentXhrs = window.currentXhrs || [];
   const isUploadCancelled = window.isUploadCancelled || false;
 
-  // Initialize upload boxes for the new section
   initializeSectionUploadBoxes(newSection, currentXhrs, isUploadCancelled);
 
-  // Save generated sections to localStorage
   saveGeneratedSectionsToLocalStorage();
 
-  // Refresh sections NodeList to include the new section
   if (window.refreshSections) {
     window.refreshSections();
   }
 
-  // Update available sections to include the new section if it's within the 3-year window
   if (window.setAvailableSections) {
     window.setAvailableSections();
   }
 
   showNotification(`Batch Year ${nextYear} created successfully!`, "success");
 
-  // Scroll to the new section
   newSection.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
 
-// Save all dynamically generated sections to localStorage
 function saveGeneratedSectionsToLocalStorage() {
   const allSections = document.querySelectorAll(".form-group .section");
   const generatedSections = [];
 
-  // We know the first 3 sections are hardcoded (2024-2025, 2025-2026, 2026-2027)
-  // So we only save sections after the first 3
   allSections.forEach((section, index) => {
     if (index >= 3) {
-      // Skip the first 3 hardcoded sections
       const sectionHeader = section
         .querySelector(".section-header")
         .textContent.trim();
@@ -604,7 +576,6 @@ function saveGeneratedSectionsToLocalStorage() {
   console.log("Saved generated sections to localStorage:", generatedSections);
 }
 
-// Restore generated sections from localStorage on page load
 function restoreGeneratedSectionsFromLocalStorage() {
   const savedSections = localStorage.getItem("generatedBatchSections");
 
@@ -617,7 +588,6 @@ function restoreGeneratedSectionsFromLocalStorage() {
     const sectionsArray = JSON.parse(savedSections);
     console.log("Restoring sections from localStorage:", sectionsArray);
 
-    // Restore each section
     sectionsArray.forEach((sectionHeader) => {
       restoreSingleSection(sectionHeader);
     });
@@ -626,12 +596,10 @@ function restoreGeneratedSectionsFromLocalStorage() {
   }
 }
 
-// Restore a single section based on its header text
 function restoreSingleSection(sectionHeader) {
   const formContent = document.querySelector(".form-content");
   if (!formContent) return;
 
-  // Create new section HTML
   const newSectionHTML = `
     <div class="section">
       <div class="section-header">${sectionHeader}</div>
@@ -706,17 +674,14 @@ function restoreSingleSection(sectionHeader) {
     </div>
   `;
 
-  // Create a temporary container and parse the HTML
   const tempDiv = document.createElement("div");
   tempDiv.innerHTML = newSectionHTML;
   const newSection = tempDiv.firstElementChild;
 
-  // Check if there's an existing form-group with less than 3 sections
   const existingFormGroups = document.querySelectorAll(".form-group");
   let targetFormGroup = null;
   let insertPosition = 0;
 
-  // Find the last form-group that has less than 3 sections
   for (let i = existingFormGroups.length - 1; i >= 0; i--) {
     const sectionsInGroup = existingFormGroups[i].querySelectorAll(".section");
     if (sectionsInGroup.length < 3) {
@@ -1528,17 +1493,14 @@ window.addEventListener("DOMContentLoaded", () => {
   console.log("confirmDeleteBatchBtn:", confirmDeleteBatchBtn);
   console.log("confirmSelectTemplateBtn:", confirmSelectTemplateBtn);
 
-  // Make these variables globally accessible for dynamic section generation
   window.currentXhrs = [];
   window.isUploadCancelled = false;
 
-  // Query sections before restoration
   let sections = document.querySelectorAll(".form-group .section");
   let sectionHeaders = document.querySelectorAll(
     ".form-group .section .section-header"
   );
 
-  // Function to refresh sections NodeList
   function refreshSections() {
     sections = document.querySelectorAll(".form-group .section");
     sectionHeaders = document.querySelectorAll(
@@ -1546,22 +1508,17 @@ window.addEventListener("DOMContentLoaded", () => {
     );
   }
 
-  // Make refreshSections globally accessible
   window.refreshSections = refreshSections;
 
-  // Store a flag to defer initialization of restored sections
   window.deferSectionInitialization = true;
 
-  // Restore any previously generated sections from localStorage
   restoreGeneratedSectionsFromLocalStorage();
 
-  // Refresh sections after restoration
   refreshSections();
 
   function selectSection(section) {
     sections.forEach((s) => s.classList.remove("selected"));
 
-    // Check if section exists and is still in the DOM
     if (section && section.parentNode) {
       section.classList.add("selected");
 
@@ -1591,7 +1548,6 @@ window.addEventListener("DOMContentLoaded", () => {
       const isSelected = section === selectedTemplate;
 
       uploadBoxes.forEach((box) => {
-        // Don't disable action-box, it should always be clickable
         const isActionBox = box.classList.contains("action-box");
 
         if (isSelected) {
@@ -1603,7 +1559,6 @@ window.addEventListener("DOMContentLoaded", () => {
         }
       });
 
-      // Disable Select Batch button for the selected section only
       const selectBatchBtn = section.querySelector(".select-batch-btn");
       if (selectBatchBtn) {
         if (isSelected) {
@@ -1646,7 +1601,6 @@ window.addEventListener("DOMContentLoaded", () => {
     if (cancelBtnEl) cancelBtnEl.textContent = "Cancel";
 
     selectedConfirmAction = () => {
-      // Validate templateLabel is defined
       if (!templateLabel) {
         console.error("selectedConfirmAction: templateLabel is undefined");
         if (typeof showNotification === "function") {
@@ -1659,8 +1613,6 @@ window.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      // Re-query the DOM to find the section by its header text instead of using captured reference
-      // This prevents issues if the section was removed and recreated
       const allSections = document.querySelectorAll(".form-group .section");
       let actualSection = null;
 
@@ -1672,7 +1624,6 @@ window.addEventListener("DOMContentLoaded", () => {
       });
 
       if (actualSection && actualSection.parentNode) {
-        // Section found and is in the DOM, proceed with selection
         selectSection(actualSection);
         if (typeof showNotification === "function") {
           showNotification(`${templateLabel} selected`, "success");
@@ -1690,7 +1641,6 @@ window.addEventListener("DOMContentLoaded", () => {
         }
       }
 
-      // Always restore modal defaults
       if (titleEl) titleEl.textContent = defaultTitle;
       if (messageEl) messageEl.textContent = defaultMsg;
       if (iconEl) iconEl.className = defaultIcon;
@@ -1701,10 +1651,8 @@ window.addEventListener("DOMContentLoaded", () => {
     openDeleteModal();
   }
 
-  // Make openSelectTemplateModal globally accessible for initializeSection
   window.openSelectTemplateModal = openSelectTemplateModal;
 
-  // Initialize all restored sections now that openSelectTemplateModal is available
   if (window.deferSectionInitialization) {
     const allSections = document.querySelectorAll(".form-group .section");
     const currentXhrs = window.currentXhrs || [];
@@ -1718,13 +1666,10 @@ window.addEventListener("DOMContentLoaded", () => {
     window.deferSectionInitialization = false;
   }
 
-  // Function to set available status based on completion date
-  // Only batch years that are complete AND within 3 years of completion are available (green) to students
   async function setAvailableSections() {
     const allSections = document.querySelectorAll(".form-group .section");
     const currentDate = new Date();
 
-    // Fetch covers to get completion dates
     try {
       const BASE_PATH = getBasePath();
       const CONNECTION_PATH = `${BASE_PATH}/Connection`;
@@ -1741,7 +1686,6 @@ window.addEventListener("DOMContentLoaded", () => {
       const data = await res.json();
 
       if (data?.success && data?.items) {
-        // Group items by batch_year
         const batchYearDataMap = {};
         data.items.forEach((item) => {
           if (item.batch_year && !batchYearDataMap[item.batch_year]) {
@@ -1755,7 +1699,6 @@ window.addEventListener("DOMContentLoaded", () => {
           }
         });
 
-        // Update sections based on completion date
         allSections.forEach((section) => {
           const header = section.querySelector(".section-header");
           if (!header) return;
@@ -1764,39 +1707,30 @@ window.addEventListener("DOMContentLoaded", () => {
           const sectionData = batchYearDataMap[headerText];
 
           if (sectionData && sectionData.completion_date) {
-            // Calculate years since completion
             const completionDate = new Date(sectionData.completion_date);
             const yearsSinceCompletion =
               (currentDate - completionDate) / (1000 * 60 * 60 * 24 * 365);
 
             if (yearsSinceCompletion <= 3) {
-              // Within 3 years of completion - mark as available (green)
               section.classList.add("available");
             } else {
-              // Older than 3 years - remove available class (will be blue/default)
               section.classList.remove("available");
             }
           } else {
-            // No completion date or incomplete - not available
             section.classList.remove("available");
           }
         });
       }
     } catch (error) {
       console.error("Error fetching completion dates:", error);
-      // On error, remove available class from all sections
       allSections.forEach((section) => {
         section.classList.remove("available");
       });
     }
   }
 
-  // Make setAvailableSections globally accessible
   window.setAvailableSections = setAvailableSections;
 
-  // Section header click event removed - now using Select Batch button
-
-  // First, select the default section (this enables upload boxes)
   if (sections.length > 0) {
     const savedTemplate = localStorage.getItem("selectedBatchTemplate");
     let selectedSection = null;
@@ -1821,15 +1755,10 @@ window.addEventListener("DOMContentLoaded", () => {
     updateUploadBoxStates();
   }
 
-  // Then, set available sections (green headers)
   setAvailableSections();
-
-  // Note: sections are already initialized in the restoration block above (lines 1539-1542)
-  // No need to initialize them again here to avoid duplicate event listeners
 
   initializeDeleteModal();
 
-  // Initialize Generate Modal
   const generateBatchBtn = document.getElementById("generateBatchBtn");
 
   if (generateBatchBtn) {
@@ -1859,7 +1788,6 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Initialize Download PDF Modal
   if (cancelDownloadPdfBtn) {
     cancelDownloadPdfBtn.addEventListener("click", (e) => {
       e.preventDefault();
@@ -1882,7 +1810,6 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Initialize Delete Batch Modal
   if (cancelDeleteBatchBtn) {
     cancelDeleteBatchBtn.addEventListener("click", (e) => {
       e.preventDefault();
@@ -1905,7 +1832,6 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Initialize Select Template Modal
   if (cancelSelectTemplateBtn) {
     cancelSelectTemplateBtn.addEventListener("click", (e) => {
       e.preventDefault();
