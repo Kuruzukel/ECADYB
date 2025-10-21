@@ -1304,7 +1304,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
         console.log(`deleteCover: Response data:`, data);
 
         if (!data?.success) {
-          // Show error notification if delete fails
           console.error(
             `deleteCover: Delete failed - ${data?.message || "Unknown error"}`
           );
