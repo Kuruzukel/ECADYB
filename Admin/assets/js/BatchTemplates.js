@@ -1242,7 +1242,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
             );
           }
 
-          // Wait a bit before retrying (exponential backoff)
           await new Promise((resolve) =>
             setTimeout(resolve, 1000 * newRetryCount)
           );
