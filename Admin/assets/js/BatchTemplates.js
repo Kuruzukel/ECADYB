@@ -551,6 +551,19 @@ function generateNewBatchSection() {
     window.setAvailableSections();
   }
 
+  // Disable upload boxes for the new section if it's not selected
+  const selectedSection = document.querySelector(".section.selected");
+  if (selectedSection && selectedSection !== newSection) {
+    const uploadBoxes = newSection.querySelectorAll(".upload-box");
+    uploadBoxes.forEach((box) => {
+      const isActionBox = box.classList.contains("action-box");
+      if (!isActionBox) {
+        box.classList.add("disabled");
+        box.style.pointerEvents = "none";
+      }
+    });
+  }
+
   showNotification(`Batch Year ${nextYear} created successfully!`, "success");
 
   newSection.scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -723,6 +736,19 @@ function restoreSingleSection(sectionHeader) {
     const isUploadCancelled = window.isUploadCancelled || false;
 
     initializeSectionUploadBoxes(newSection, currentXhrs, isUploadCancelled);
+
+    // Disable upload boxes for the restored section if it's not selected
+    const selectedSection = document.querySelector(".section.selected");
+    if (selectedSection && selectedSection !== newSection) {
+      const uploadBoxes = newSection.querySelectorAll(".upload-box");
+      uploadBoxes.forEach((box) => {
+        const isActionBox = box.classList.contains("action-box");
+        if (!isActionBox) {
+          box.classList.add("disabled");
+          box.style.pointerEvents = "none";
+        }
+      });
+    }
   }
 
   console.log(`Restored section: ${sectionHeader}`);
