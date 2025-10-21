@@ -455,7 +455,12 @@ window.addEventListener("DOMContentLoaded", () => {
           // Check if batch year is selected
           const selectedBatchYear = localStorage.getItem("selectedBatchYear");
           
+          console.log("=== BATCH YEAR VALIDATION ===");
+          console.log("selectedBatchYear from localStorage:", selectedBatchYear);
+          console.log("Batch year select element value:", document.getElementById("batch-year-select")?.value);
+          
           if (!selectedBatchYear) {
+            console.log("❌ No batch year selected - showing warning");
             showNotification(
               "Please select an Academic Year before uploading photos.",
               "warning"
@@ -463,6 +468,8 @@ window.addEventListener("DOMContentLoaded", () => {
             forceResetFileUI(input.id);
             return;
           }
+          
+          console.log("✅ Batch year validation passed:", selectedBatchYear);
 
           // Validate number of files (maximum 20 images)
           const MAX_FILES = 20;
@@ -506,13 +513,18 @@ window.addEventListener("DOMContentLoaded", () => {
           showUploadOverlay("photos");
           const uploadText = document.getElementById("uploadText");
           
-          console.log("=== UPLOAD DEBUG ===");
+          console.log("=== FILE UPLOAD DEBUG ===");
           console.log("Input ID:", input.id);
           console.log("Number of files selected:", input.files.length);
-          console.log(
-            "File names:",
-            Array.from(input.files).map((f) => f.name)
-          );
+          console.log("File names:", Array.from(input.files).map(f => f.name));
+          console.log("FormData entries before sending:");
+          for (let [key, value] of formData.entries()) {
+            if (value instanceof File) {
+              console.log(`  ${key}: [File] ${value.name}`);
+            } else {
+              console.log(`  ${key}: ${value}`);
+            }
+          }
           
           // Start upload immediately (no countdown delay for faster uploads)
           console.log("🚀 Starting instant photo upload");
@@ -534,7 +546,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
           for (let i = 0; i < input.files.length; i++) {
             console.log(`Appending file ${i + 1}:`, input.files[i].name);
-            formData.append(`files[${i}]`, input.files[i]);
+            formData.append(`files[]`, input.files[i]);
           }
 
           // Add batch year to FormData
@@ -564,6 +576,11 @@ window.addEventListener("DOMContentLoaded", () => {
                 basePath +
                 "/Connection/Photos/UploadTopManagementPhotos.php";
 
+          console.log("=== UPLOAD ENDPOINT DEBUG ===");
+          console.log("Upload endpoint:", uploadEndpoint);
+          console.log("Base path:", basePath);
+          console.log("Window location origin:", window.location.origin);
+
           try {
             // Use XMLHttpRequest for better upload progress tracking
             const xhr = new XMLHttpRequest();
@@ -581,26 +598,42 @@ window.addEventListener("DOMContentLoaded", () => {
             // Handle upload completion
             const uploadPromise = new Promise((resolve, reject) => {
               xhr.onload = () => {
+                console.log("=== UPLOAD RESPONSE DEBUG ===");
+                console.log("Response status:", xhr.status);
+                console.log("Response headers:", xhr.getAllResponseHeaders());
+                console.log("Response text:", xhr.responseText);
+                
                 if (xhr.status >= 200 && xhr.status < 300) {
                   try {
                     const result = JSON.parse(xhr.responseText);
+                    console.log("Parsed JSON result:", result);
                     resolve(result);
                   } catch (e) {
+                    console.error("JSON parse error:", e);
+                    console.error("Raw response:", xhr.responseText);
                     reject(new Error("Invalid JSON response"));
                   }
                 } else {
+                  console.error("HTTP error status:", xhr.status);
                   reject(new Error(`Upload failed with status ${xhr.status}`));
                 }
               };
               
-              xhr.onerror = () => reject(new Error("Network error"));
+              xhr.onerror = () => {
+                console.error("=== UPLOAD ERROR ===");
+                console.error("Network error occurred");
+                reject(new Error("Network error"));
+              };
               xhr.onabort = () => {
                 const abortError = new Error("Upload cancelled");
                 abortError.name = "AbortError";
                 reject(abortError);
               };
               
+              console.log("=== SENDING REQUEST ===");
+              console.log("Opening POST request to:", uploadEndpoint);
               xhr.open("POST", uploadEndpoint);
+              console.log("Sending FormData with", formData.getAll('files[]').length, "files");
               xhr.send(formData);
             });
 

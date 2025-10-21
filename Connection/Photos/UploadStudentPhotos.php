@@ -78,6 +78,7 @@ set_exception_handler(function ($exception) {
 });
 
 if (connection_aborted()) {
+    error_log("UploadStudentPhotos: Connection aborted at start");
     $uploadCancelled = true;
     respond(false, 'Upload cancelled');
 }
@@ -96,12 +97,18 @@ use MongoDB\Client;
 try {
     // Check for connection abortion at the start
     if (connection_aborted()) {
+        error_log("UploadStudentPhotos: Connection aborted after POST check");
         $uploadCancelled = true;
         respond(false, 'Upload cancelled');
     }
 
     // Debug: Log all POST data
     error_log("UploadStudentPhotos: POST data received: " . json_encode($_POST));
+    error_log("UploadStudentPhotos: FILES data received: " . json_encode($_FILES));
+    error_log("UploadStudentPhotos: REQUEST_METHOD: " . $_SERVER['REQUEST_METHOD']);
+    error_log("UploadStudentPhotos: CONTENT_TYPE: " . ($_SERVER['CONTENT_TYPE'] ?? 'not set'));
+    error_log("UploadStudentPhotos: CONTENT_LENGTH: " . ($_SERVER['CONTENT_LENGTH'] ?? 'not set'));
+    error_log("UploadStudentPhotos: All SERVER vars: " . json_encode($_SERVER));
     
     // Get batch year from form data
     $batchYear = isset($_POST['batch_year']) ? trim($_POST['batch_year']) : null;
@@ -118,6 +125,7 @@ try {
 
     // Check for connection abortion after processing POST data
     if (connection_aborted()) {
+        error_log("UploadStudentPhotos: Connection aborted after POST data processing");
         $uploadCancelled = true;
         respond(false, 'Upload cancelled');
     }
@@ -134,11 +142,14 @@ try {
     }
 
     if (connection_aborted()) {
+        error_log("UploadStudentPhotos: Connection aborted before file check");
         $uploadCancelled = true;
         respond(false, 'Upload cancelled');
     }
 
     if (empty($_FILES) || !isset($_FILES['files'])) {
+        error_log("UploadStudentPhotos: No files received - FILES array is empty or 'files' key not found");
+        error_log("UploadStudentPhotos: FILES array contents: " . print_r($_FILES, true));
         respond(false, 'No files were uploaded.');
     }
 
@@ -147,6 +158,7 @@ try {
     error_log("UploadStudentPhotos.php - Files received:");
     error_log("  - Total files in _FILES: " . count($_FILES));
     error_log("  - Files array structure: " . print_r($_FILES, true));
+    error_log("  - uploadedFiles array structure: " . print_r($uploadedFiles, true));
     error_log("  - uploadedFiles['name'] is array: " . (is_array($uploadedFiles['name']) ? 'YES' : 'NO'));
     if (is_array($uploadedFiles['name'])) {
         error_log("  - Number of files: " . count($uploadedFiles['name']));
