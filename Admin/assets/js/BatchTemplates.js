@@ -1123,7 +1123,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
           const deletePromises = sides.map((side) => deleteCover(slot, side));
           const results = await Promise.all(deletePromises);
 
-          // Check if all deletions were successful
           const allSuccessful = results.every((result) => result === true);
 
           if (allSuccessful) {
