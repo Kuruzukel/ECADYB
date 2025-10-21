@@ -1257,31 +1257,19 @@
           var milestonesTitle = modal.find(".milestones h3");
           milestonesList.empty();
 
-          // Check if student has milestones or honors
+          // Check if student has milestones (honors will be handled separately in Latin Awards)
           var hasMilestones = clickedStudent.milestones && clickedStudent.milestones.length > 0;
-          var hasHonors = clickedStudent.honors && clickedStudent.honors.length > 0;
 
-          if (hasMilestones || hasHonors) {
+          if (hasMilestones) {
             milestonesContainer.show();
-            if (hasMilestones && hasHonors) {
-              milestonesTitle.text("Milestones & Honors");
-            } else if (hasMilestones) {
-              milestonesTitle.text("Milestones");
-            } else {
-              milestonesTitle.text("Honors");
-            }
+            milestonesTitle.text("Milestones");
 
-            if (hasMilestones) {
-              clickedStudent.milestones.forEach(function (milestone) {
+            clickedStudent.milestones.forEach(function (milestone) {
+              // Filter out sample data
+              if (milestone && !milestone.toLowerCase().includes('sample') && milestone.trim() !== '') {
                 milestonesList.append("<li>" + milestone + "</li>");
-              });
-            }
-
-            if (hasHonors) {
-              clickedStudent.honors.forEach(function (honor) {
-                milestonesList.append("<li>" + honor + "</li>");
-              });
-            }
+              }
+            });
           } else {
             milestonesContainer.hide();
           }
@@ -1291,13 +1279,31 @@
           latinAwardsList.empty();
           
           // Check if student has Latin awards/honors
-          if (clickedStudent.honors && clickedStudent.honors.length > 0) {
-            clickedStudent.honors.forEach(function (honor) {
-              latinAwardsList.append("<li>" + honor + "</li>");
-            });
+          if (clickedStudent.honors) {
+            // Handle both string and array formats
+            if (typeof clickedStudent.honors === 'string' && clickedStudent.honors.trim() !== '') {
+              // If honors is a string, split by common separators and add each as a list item
+              var honorsArray = clickedStudent.honors.split(/[,;|\n]/).map(function(honor) {
+                return honor.trim();
+              }).filter(function(honor) {
+                return honor.length > 0;
+              });
+              
+              honorsArray.forEach(function (honor) {
+                latinAwardsList.append("<li>" + honor + "</li>");
+              });
+            } else if (Array.isArray(clickedStudent.honors) && clickedStudent.honors.length > 0) {
+              // If honors is already an array
+              clickedStudent.honors.forEach(function (honor) {
+                latinAwardsList.append("<li>" + honor + "</li>");
+              });
+            } else {
+              // Default Latin awards if none provided
+              latinAwardsList.append("<li>SAMPLE Latin Awards</li>");
+            }
           } else {
-            // Default Latin awards if none provided
-            latinAwardsList.append("<li>Summa Cum Laude</li>");
+            // Default Latin awards if no honors field
+            latinAwardsList.append("<li>SAMPLE Latin Awards</li>");
           }
 
           // Fetch and display student photos

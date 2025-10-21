@@ -306,12 +306,8 @@ try {
                                 }
                             }
 
+                            // Keep honors separate - don't mix with milestones
                             $honors = $student['honors'] ?? '';
-                            if (!empty($honors) && !is_array($milestones)) {
-                                $milestones[] = $honors;
-                            } elseif (!empty($honors) && is_array($milestones)) {
-                                array_unshift($milestones, $honors);
-                            }
 
                             $allStudents[] = [
                                 'id' => (string)$student['_id'],
@@ -322,6 +318,7 @@ try {
                                 'section' => $student['section'] ?? '',
                                 'motto' => $student['motto'] ?? 'No motto provided',
                                 'milestones' => $milestones,
+                                'honors' => $student['honors'] ?? '',
                                 'photo_url' => $student['photo_url'] ?? '',
                                 'collection' => $collectionName
                             ];
