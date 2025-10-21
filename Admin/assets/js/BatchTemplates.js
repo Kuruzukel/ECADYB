@@ -1208,7 +1208,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
           });
 
           xhr.addEventListener("abort", () => {
-            // Always show error notifications
             showNotification("Upload cancelled", "error");
             reject(new Error("Upload cancelled"));
           });
