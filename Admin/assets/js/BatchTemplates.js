@@ -1015,7 +1015,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
               isUploadCancelled;
 
             if (!uploadCancelled && !isUploadCancelled) {
-              // Display images immediately using pre-created URLs
               frontImg = document.createElement("img");
               frontImg.src = frontImageUrl;
               frontImg.classList.add("front-img");
