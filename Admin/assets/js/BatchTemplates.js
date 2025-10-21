@@ -1193,7 +1193,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
                   reject(new Error(data.message || "Upload failed"));
                 }
               } catch (e) {
-                // Always show error notifications
                 showNotification("Failed to parse response", "error");
                 reject(e);
               }
