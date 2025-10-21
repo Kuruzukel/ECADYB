@@ -825,6 +825,12 @@
                   <li>Academic Excellence Award</li>
                 </ul>
               </div>
+              <div class="latin-awards">
+                <h3>Latin Awards</h3>
+                <ul>
+                  <li>Summa Cum Laude</li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
@@ -1278,6 +1284,20 @@
             }
           } else {
             milestonesContainer.hide();
+          }
+
+          // Populate Latin Awards section
+          var latinAwardsList = modal.find(".latin-awards ul");
+          latinAwardsList.empty();
+          
+          // Check if student has Latin awards/honors
+          if (clickedStudent.honors && clickedStudent.honors.length > 0) {
+            clickedStudent.honors.forEach(function (honor) {
+              latinAwardsList.append("<li>" + honor + "</li>");
+            });
+          } else {
+            // Default Latin awards if none provided
+            latinAwardsList.append("<li>Summa Cum Laude</li>");
           }
 
           // Fetch and display student photos

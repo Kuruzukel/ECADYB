@@ -1082,27 +1082,11 @@
   font-family: "Times New Roman", serif;
 }
 
-.motto,
-.milestones {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.9) 0%,
-    rgba(250, 248, 245, 0.9) 100%
-  );
-  padding: 20px;
-  margin-bottom: 20px;
-  border-radius: 12px;
-  position: relative;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15), 0 4px 10px rgba(0, 0, 0, 0.1),
-    inset 0 0 0 2px #d4af37, inset 0 0 0 3px rgba(139, 69, 19, 0.2),
-    inset 0 0 15px rgba(212, 175, 55, 0.1);
-  border-image: linear-gradient(135deg, #d4af37 0%, #f4e4a6 50%, #d4af37 100%) 1;
-  transform-style: preserve-3d;
-  transform: translateZ(8px);
-}
+
 
 .motto h3,
-.milestones h3 {
+.milestones h3,
+.latin-awards h3 {
   font-size: 20px;
   font-weight: 700;
   color: #2c1810;
@@ -1121,23 +1105,26 @@
 }
 
 .motto p {
-  font-style: italic;
+  font-style: normal;
   color: #5a4520;
   line-height: 1.6;
   font-size: 16px;
   font-weight: 500;
-  text-align: center;
-  padding: 12px;
-  background: linear-gradient(
-    135deg,
-    rgba(212, 175, 55, 0.05) 0%,
-    rgba(139, 69, 19, 0.05) 100%
-  );
-  border-radius: 8px;
-  border-left: 4px solid #d4af37;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1),
-    inset 0 1px 2px rgba(255, 255, 255, 0.5);
+  text-align: left;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  display: flex;
+  align-items: center;
+  position: relative;
   font-family: "Times New Roman", serif;
+  margin: 0;
+}
+
+.motto p::before {
+  content: "🏆";
+  font-size: 18px;
+  margin-right: 12px;
+  filter: drop-shadow(0 2px 4px rgba(212, 175, 55, 0.5));
   transform: translateZ(2px);
 }
 
@@ -1156,24 +1143,44 @@
   display: flex;
   align-items: center;
   position: relative;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.3) 0%,
-    rgba(250, 248, 245, 0.3) 100%
-  );
-  margin-bottom: 8px;
-  border-radius: 8px;
-  padding-left: 16px;
-  padding-right: 16px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05),
-    inset 0 1px 2px rgba(255, 255, 255, 0.5);
-  transform: translateZ(1px);
   font-family: "Times New Roman", serif;
 }
 
 .milestones li:last-child {
   border-bottom: none;
   padding-bottom: 0;
+}
+
+/* Latin Awards styling to match milestones */
+.latin-awards ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.latin-awards li {
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  color: #5a4520;
+  font-size: 16px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  position: relative;
+  font-family: "Times New Roman", serif;
+}
+
+.latin-awards li:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.latin-awards li::before {
+  content: "🏆";
+  font-size: 18px;
+  margin-right: 12px;
+  filter: drop-shadow(0 2px 4px rgba(212, 175, 55, 0.5));
+  transform: translateZ(2px);
 }
 
 .milestones li::before {
