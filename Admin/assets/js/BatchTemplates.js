@@ -1189,7 +1189,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
                   }
                   resolve(data);
                 } else {
-                  // Always show error notifications
                   showNotification(data.message || "Upload failed", "error");
                   reject(new Error(data.message || "Upload failed"));
                 }
