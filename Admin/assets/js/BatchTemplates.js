@@ -778,7 +778,6 @@ function initializeSection(section) {
     return;
   }
 
-  // Check if already initialized by checking for data attribute
   if (section.dataset.initialized === "true") {
     console.log("initializeSection: Section already initialized, skipping");
     return;
