@@ -1226,7 +1226,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
       } catch (err) {
         console.error("Upload error:", err);
 
-        // Retry logic for timeout or network errors
         if (
           (err.message.includes("timeout") || err.message.includes("failed")) &&
           retryCount < MAX_RETRIES
