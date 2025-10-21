@@ -734,7 +734,6 @@ function restoreSingleSection(sectionHeader) {
       targetFormGroup.appendChild(newSection);
     }
   } else {
-    // Create a new form-group for the new section
     const newFormGroup = document.createElement("div");
     newFormGroup.className = "form-group";
     newFormGroup.appendChild(newSection);
