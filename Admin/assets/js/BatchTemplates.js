@@ -924,7 +924,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
       }
       isUploading = true;
 
-      // Reset cancellation flag
       isUploadCancelled = false;
 
       // Create object URLs BEFORE upload starts (files will be cleared after)
