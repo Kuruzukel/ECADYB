@@ -1070,7 +1070,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
           }
         }
 
-        // Hide upload overlay after all uploads complete
         if (uploadOverlay) {
           uploadOverlay.style.display = "none";
         }
