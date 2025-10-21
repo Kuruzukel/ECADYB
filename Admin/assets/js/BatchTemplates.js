@@ -1420,7 +1420,6 @@ function confirmDownloadPDF() {
 function deleteBatchTemplate(section, batchName) {
   openDeleteBatchModal(batchName);
 
-  // Store the section and batch name for deletion
   window.pendingDeleteSection = section;
   window.pendingDeleteBatchName = batchName;
 }
