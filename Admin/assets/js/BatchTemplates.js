@@ -915,7 +915,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
 
       isFileInputOpen = false;
 
-      // Prevent multiple uploads - check at the very beginning
       if (isUploading) {
         console.log(
           "Upload already in progress, ignoring duplicate change event"
