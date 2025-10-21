@@ -906,8 +906,8 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
     frontInput.addEventListener("change", async (event) => {
       const files = event.target.files;
       if (!files || files.length === 0) {
-        isFileInputOpen = false; // Reset flag if no files selected
-        isUploading = false; // Reset upload flag
+        isFileInputOpen = false;
+        isUploading = false;
         return;
       }
 
