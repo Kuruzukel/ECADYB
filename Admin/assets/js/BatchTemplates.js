@@ -871,11 +871,19 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
     };
 
     const ensureChildren = () => {
-      if (frontImg) box.appendChild(frontImg);
-      if (backImg) box.appendChild(backImg);
+      console.log("ensureChildren called - appending elements to box");
+      if (frontImg) {
+        console.log("Appending frontImg:", frontImg.src);
+        box.appendChild(frontImg);
+      }
+      if (backImg) {
+        console.log("Appending backImg:", backImg.src);
+        box.appendChild(backImg);
+      }
       box.appendChild(deleteBtn);
       box.appendChild(frontInput);
       box.appendChild(backInput);
+      console.log("Box children after appending:", box.children);
     };
 
     box.addEventListener("click", (event) => {
@@ -917,10 +925,18 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
 
       isUploadCancelled = false;
 
-      const frontImageUrl =
-        files.length > 0 ? URL.createObjectURL(files[0]) : null;
+      console.log("Files selected:", files.length, "files");
+      console.log("File 0 name:", files[0]?.name);
+      console.log("File 1 name:", files[1]?.name);
+
+      // Swap the assignments: first file selected is back, second is front
       const backImageUrl =
+        files.length > 0 ? URL.createObjectURL(files[0]) : null;
+      const frontImageUrl =
         files.length > 1 ? URL.createObjectURL(files[1]) : null;
+      
+      console.log("Front image URL:", frontImageUrl);
+      console.log("Back image URL:", backImageUrl);
 
       try {
         const uploadOverlay = document.getElementById("upload-overlay");
@@ -951,13 +967,14 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
             frontImg = document.createElement("img");
             frontImg.src = frontImageUrl;
             frontImg.classList.add("front-img");
+            frontImg.style.zIndex = "10";
+            frontImg.style.opacity = 1;
 
             box.innerHTML = "";
             ensureChildren();
             deleteBtn.style.display = "flex";
             box.classList.add("has-image");
             showingFront = true;
-            frontImg.style.opacity = 1;
 
             if (window.setAvailableSections) {
               await window.setAvailableSections();
@@ -989,7 +1006,7 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
               uploadToBunny(
                 files[0],
                 slot,
-                "front",
+                "back",
                 !suppressNotifications,
                 isBatchUpload,
                 0,
@@ -998,7 +1015,7 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
               uploadToBunny(
                 files[1],
                 slot,
-                "back",
+                "front",
                 !suppressNotifications,
                 isBatchUpload,
                 0,
@@ -1012,21 +1029,45 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
               isUploadCancelled;
 
             if (!uploadCancelled && !isUploadCancelled) {
+              console.log("Creating frontImg with URL:", frontImageUrl);
               frontImg = document.createElement("img");
               frontImg.src = frontImageUrl;
               frontImg.classList.add("front-img");
+              frontImg.style.zIndex = "10";
+              frontImg.style.opacity = 1;
+              frontImg.style.position = "absolute";
+              frontImg.style.inset = "0";
 
+              console.log("Creating backImg with URL:", backImageUrl);
               backImg = document.createElement("img");
               backImg.src = backImageUrl;
               backImg.classList.add("back-img");
+              backImg.style.zIndex = "5";
+              backImg.style.opacity = 0;
+              backImg.style.position = "absolute";
+              backImg.style.inset = "0";
+
+              console.log("frontImg element:", frontImg);
+              console.log("backImg element:", backImg);
+
+              // Wait for images to load before appending
+              await new Promise((resolve) => {
+                let loadedCount = 0;
+                const checkLoaded = () => {
+                  loadedCount++;
+                  if (loadedCount === 2) resolve();
+                };
+                frontImg.onload = checkLoaded;
+                backImg.onload = checkLoaded;
+                // Timeout after 2 seconds if images don't load
+                setTimeout(resolve, 2000);
+              });
 
               box.innerHTML = "";
               ensureChildren();
               deleteBtn.style.display = "flex";
               box.classList.add("has-image");
               showingFront = true;
-              frontImg.style.opacity = 1;
-              backImg.style.opacity = 0;
 
               showNotification(
                 `Uploaded successfully to Slot ${slot} front and back cover`,
@@ -1051,13 +1092,14 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
               frontImg = document.createElement("img");
               frontImg.src = frontImageUrl;
               frontImg.classList.add("front-img");
+              frontImg.style.zIndex = "10";
+              frontImg.style.opacity = 1;
 
               box.innerHTML = "";
               ensureChildren();
               deleteBtn.style.display = "flex";
               box.classList.add("has-image");
               showingFront = true;
-              frontImg.style.opacity = 1;
 
               if (window.setAvailableSections) {
                 await window.setAvailableSections();
@@ -1371,16 +1413,23 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
           (i) => i.slot === slot && i.batch_year === batchYear
         );
         if (!found) return;
-        if (found.front_url) {
-          frontImg = document.createElement("img");
-          frontImg.src = found.front_url;
-          frontImg.classList.add("front-img");
-        }
+        
         if (found.back_url && !isBackgroundSlot) {
           backImg = document.createElement("img");
           backImg.src = found.back_url;
           backImg.classList.add("back-img");
+          backImg.style.zIndex = "5";
+          backImg.style.opacity = 0;
         }
+        
+        if (found.front_url) {
+          frontImg = document.createElement("img");
+          frontImg.src = found.front_url;
+          frontImg.classList.add("front-img");
+          frontImg.style.zIndex = "10";
+          frontImg.style.opacity = 1;
+        }
+        
         if (frontImg || backImg) {
           box.innerHTML = "";
           const plusIcon = box.querySelector(".plus-icon");
@@ -1389,10 +1438,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
           deleteBtn.style.display = "flex";
           box.classList.add("has-image");
           showingFront = true;
-          if (frontImg) {
-            frontImg.style.opacity = 1;
-            if (backImg && !isBackgroundSlot) backImg.style.opacity = 0;
-          }
         }
       } catch (e) {
         if (e.name === "TimeoutError" || e.name === "AbortError") {
