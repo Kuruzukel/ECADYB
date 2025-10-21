@@ -391,9 +391,14 @@ try {
         }
 
         try {
-            $existingDocument = $collection->findOne([
-                'student_id' => $studentId
-            ]);
+            // Check for existing document based on student_id and academic year
+            $filter = ['student_id' => $studentId];
+            if ($academicYear) {
+                $filter['academic year'] = $academicYear;
+            }
+            
+            error_log("UploadStudentPhotos.php checking for existing document with filter: " . json_encode($filter));
+            $existingDocument = $collection->findOne($filter);
 
             if ($existingDocument) {
                 $updateData = ['$set' => ['upload_time' => new \MongoDB\BSON\UTCDateTime()]];
@@ -430,9 +435,10 @@ try {
                 }
 
                 $result = $collection->updateOne(
-                    ['student_id' => $studentId],
+                    $filter,
                     $updateData
                 );
+                error_log("UploadStudentPhotos.php updated existing document for student ID '$studentId' (academic year: " . ($academicYear ?: 'none') . ")");
                 $document = $existingDocument;
                 $document['_id'] = (string) $document['_id'];
             } else {
@@ -468,6 +474,7 @@ try {
 
                 $result = $collection->insertOne($newDocument);
                 $newDocument['_id'] = (string) $result->getInsertedId();
+                error_log("UploadStudentPhotos.php inserted new document for student ID '$studentId' with ID: " . $newDocument['_id'] . " (academic year: " . ($academicYear ?: 'none') . ")");
                 $document = $newDocument;
             }
         } catch (Exception $e) {

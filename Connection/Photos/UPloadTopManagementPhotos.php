@@ -432,11 +432,30 @@ try {
         }
 
         try {
-            error_log("UploadTopManagementPhotos.php inserting document: " . json_encode($document));
-            $result = $collection->insertOne($document);
-            $document['_id'] = (string) $result->getInsertedId();
+            // Use updateOne with upsert to avoid duplicates
+            // Update based on name and academic year
+            $filter = ['name' => $correctName];
+            if ($academicYear) {
+                $filter['academic year'] = $academicYear;
+            }
+            
+            error_log("UploadTopManagementPhotos.php upserting document with filter: " . json_encode($filter));
+            error_log("UploadTopManagementPhotos.php document data: " . json_encode($document));
+            
+            $result = $collection->updateOne(
+                $filter,
+                ['$set' => $document],
+                ['upsert' => true]
+            );
+            
+            if ($result->getUpsertedId()) {
+                $document['_id'] = (string) $result->getUpsertedId();
+                error_log("UploadTopManagementPhotos.php inserted new document with ID: " . $document['_id']);
+            } else {
+                error_log("UploadTopManagementPhotos.php updated existing document for '{$correctName}' (academic year: {$academicYear})");
+            }
         } catch (Exception $e) {
-            error_log("UploadTopManagementPhotos.php MongoDB insert error: " . $e->getMessage());
+            error_log("UploadTopManagementPhotos.php MongoDB upsert error: " . $e->getMessage());
             $results[] = [
                 'filename' => $fileName,
                 'success' => false,
