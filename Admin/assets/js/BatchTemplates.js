@@ -1495,7 +1495,6 @@ window.addEventListener("DOMContentLoaded", () => {
   const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
   applyTheme(savedTheme);
 
-  // Initialize modal elements
   deleteModal = document.getElementById("delete-modal-overlay");
   confirmDeleteBtn = document.getElementById("confirm-delete-btn");
   cancelDeleteBtn = document.getElementById("cancel-delete-btn");
