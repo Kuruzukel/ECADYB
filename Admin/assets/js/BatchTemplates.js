@@ -1246,7 +1246,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
             setTimeout(resolve, 1000 * newRetryCount)
           );
 
-          // Retry the upload
           return await uploadToBunny(
             file,
             slot,
