@@ -783,7 +783,6 @@ function initializeSection(section) {
     return;
   }
 
-  // Mark as initialized
   section.dataset.initialized = "true";
 }
 
