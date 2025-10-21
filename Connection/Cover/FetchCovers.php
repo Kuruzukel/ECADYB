@@ -72,7 +72,6 @@ try {
                 'completion_date' => 1,
                 'upload_time' => 1
             ]
-            // Removed limit since we now have multiple documents per slot (one per batch year)
         ]
     );
 
@@ -101,19 +100,19 @@ try {
                 $completionDate = null;
             }
         }
-        
+
         if ($slot >= 1 && $slot <= 7) {
             $front = isset($doc['front_url']) ? (string)$doc['front_url'] : '';
             $back  = isset($doc['back_url']) ? (string)$doc['back_url'] : '';
-            
+
             $frontFilename = isset($doc['front_filename']) ? (string)$doc['front_filename'] : '';
             $frontOriginalName = isset($doc['front_original_name']) ? (string)$doc['front_original_name'] : '';
             $frontSide = isset($doc['front_side']) ? (string)$doc['front_side'] : '';
-            
+
             $backFilename = isset($doc['back_filename']) ? (string)$doc['back_filename'] : '';
             $backOriginalName = isset($doc['back_original_name']) ? (string)$doc['back_original_name'] : '';
             $backSide = isset($doc['back_side']) ? (string)$doc['back_side'] : '';
-            
+
             $items[] = [
                 'slot' => $slot,
                 'front_url' => $front ? ($front . $version) : '',
@@ -130,11 +129,11 @@ try {
         } elseif ($slot === 8) {
             $backgroundUrl = isset($doc['background_url']) ? (string)$doc['background_url'] : '';
             $backgroundWithV = $backgroundUrl ? ($backgroundUrl . $version) : '';
-            
+
             $backgroundFilename = isset($doc['background_filename']) ? (string)$doc['background_filename'] : '';
             $backgroundOriginalName = isset($doc['background_original_name']) ? (string)$doc['background_original_name'] : '';
             $backgroundSide = isset($doc['background_side']) ? (string)$doc['background_side'] : '';
-            
+
             $items[] = [
                 'slot' => 8,
                 'front_url' => $backgroundWithV,

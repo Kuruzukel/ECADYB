@@ -8,12 +8,10 @@ $client   = new Client($mongoUrl);
 
 $GLOBALS['mongoClient'] = $client;
 
-// All data now goes to ECADYB database
 $ecadybDB = $client->ECADYB;
 
 $GLOBALS['database'] = $ecadybDB;
 
-// Department collections (program codes as collection names)
 $collections = [
     "bsme"   => "BS Marine Engineering",
     "bsmt"   => "BS Marine Transportation",
@@ -27,20 +25,15 @@ $collections = [
     "bse"    => "BS Entrepreneurship"
 ];
 
-// Announcement collection
 $calendarCollection = $ecadybDB->Announcement;
 
-// Top Management collections
 $messageCollection = $ecadybDB->Top_Management_Messages;
 $topManagementPhotosCollection = $ecadybDB->Top_Management_Photos;
 
-// Student collection
 $studentPhotosCollection = $ecadybDB->Student_Photos;
 
-// Yearbook collection
 $yearbookCoversCollection = $ecadybDB->Yearbook_Covers;
 
-// Admin collection (legacy support)
 $adminCollection = $ecadybDB->Admin;
 
 $adminDB              = $client->admin;

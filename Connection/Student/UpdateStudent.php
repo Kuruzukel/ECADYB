@@ -57,7 +57,6 @@ $academicYear = $data['academic_year'] ?? '';
 unset($data['collection']);
 unset($data['academic_year']);
 
-// Use ECADYB database instead of BatchTemplate databases
 $dbName = "ECADYB";
 $db = $client->$dbName;
 
@@ -71,21 +70,19 @@ try {
 
     error_log("Update fields: " . print_r($updateFields, true));
 
-    // Build filter with academic year if provided
     $filter = [
         '$or' => [
             ['student id' => $originalId],
             ['student_id' => $originalId]
         ]
     ];
-    
+
     if (!empty($academicYear)) {
         $filter['academic year'] = $academicYear;
     }
 
     $existingDoc = $collection->findOne($filter);
-    
-    // If not found with academic year filter, try without it
+
     if (!$existingDoc && !empty($academicYear)) {
         $filterWithoutYear = [
             '$or' => [
@@ -147,7 +144,6 @@ try {
 
     error_log("Final update fields: " . print_r($updateFields, true));
 
-    // Use the same filter that found the student for update
     $result = $collection->updateOne(
         $filter,
         ['$set' => $updateFields],

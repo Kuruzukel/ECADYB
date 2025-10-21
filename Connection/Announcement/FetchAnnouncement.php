@@ -22,7 +22,6 @@ try {
     $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 
     $client = new Client($mongoUrl);
-    // Use ECADYB database and Announcement collection
     $db = $client->ECADYB;
     $collection = $db->Announcement;
 

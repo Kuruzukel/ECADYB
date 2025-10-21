@@ -77,7 +77,6 @@ if (!$studentId || !$collectionName) {
     exit;
 }
 
-// Use ECADYB database instead of BatchTemplate databases
 $dbName = "ECADYB";
 $db = $client->$dbName;
 
@@ -97,22 +96,19 @@ try {
 
     $collection = $db->$collectionName;
 
-    // Build filter with academic year if provided
     $filter = [
         '$or' => [
             ['student id' => $studentId],
             ['student_id' => $studentId]
         ]
     ];
-    
-    // Add academic year filter if provided
+
     if (!empty($academicYear)) {
         $filter['academic year'] = $academicYear;
     }
 
     $student = $collection->findOne($filter);
-    
-    // If not found with academic year filter, try without it
+
     if (!$student && !empty($academicYear)) {
         error_log("DeleteStudent - Student not found with academic year, trying without it");
         $filterWithoutYear = [
@@ -127,7 +123,7 @@ try {
             error_log("DeleteStudent - Student found without academic year filter");
         }
     }
-    
+
     error_log("DeleteStudent - Student found: " . ($student ? "YES" : "NO"));
     if ($student) {
         error_log("DeleteStudent - Student data: " . print_r($student, true));
@@ -162,12 +158,10 @@ try {
         exit;
     }
 
-    // Delete using the same filter that found the student
     $deleteResult = $collection->deleteOne($filter);
 
     error_log("DeleteStudent result - Deleted count: " . $deleteResult->getDeletedCount());
 
-    // Check if student was actually deleted
     if ($deleteResult->getDeletedCount() > 0) {
         http_response_code(200);
         echo json_encode([

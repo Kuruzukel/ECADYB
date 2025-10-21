@@ -1,7 +1,6 @@
 <?php
-// Set execution time limit for file uploads
-set_time_limit(60); // 60 seconds max
-ini_set('max_execution_time', 60); // 60 seconds max
+set_time_limit(60);
+ini_set('max_execution_time', 60);
 
 ob_start();
 
@@ -99,7 +98,6 @@ try {
         respond(false, $errorMap[$code] ?? 'Upload failed.');
     }
 
-    // Check immediately after receiving file
     if (connection_aborted()) {
         $uploadCancelled = true;
         error_log("UploadCover.php connection aborted immediately after receiving file");
@@ -160,9 +158,8 @@ try {
         ? 'BackgroundPage'
         : ($side === 'back' ? 'Back' : 'Front');
 
-    // Include batch year in filename if provided
     $batchYearSuffix = $batchYear ? "-" . preg_replace('/[^A-Za-z0-9-]/', '', $batchYear) : '';
-    
+
     $filename = ($slot === 8)
         ? sprintf('BackgroundPage-%s%s-%s.%s', $safeBase, $batchYearSuffix, $versionToken, $safeExt)
         : sprintf('Slot-%d-%s-%s%s-%s.%s', $slot, $sideLabel, $safeBase, $batchYearSuffix, $versionToken, $safeExt);
@@ -202,36 +199,33 @@ try {
         CURLOPT_POSTFIELDS     => $fileContents,
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_HEADER         => false,
-        CURLOPT_TIMEOUT        => 45, // 45 seconds for uploads (allows time for BunnyCDN upload + MongoDB save)
-        CURLOPT_CONNECTTIMEOUT => 10, // 10 seconds connection timeout
+        CURLOPT_TIMEOUT        => 45,
+        CURLOPT_CONNECTTIMEOUT => 10,
         CURLOPT_SSL_VERIFYPEER => true,
         CURLOPT_TCP_NODELAY    => true,
         CURLOPT_FRESH_CONNECT  => false,
         CURLOPT_FORBID_REUSE   => false,
         CURLOPT_NOPROGRESS     => false,
-        CURLOPT_PROGRESSFUNCTION => function($resource, $download_size, $downloaded, $upload_size, $uploaded) {
-            // Check for cancellation during upload
+        CURLOPT_PROGRESSFUNCTION => function ($resource, $download_size, $downloaded, $upload_size, $uploaded) {
             if (connection_aborted()) {
-                return -1; // Abort the transfer
+                return -1;
             }
             return 0;
         }
     ]);
-    
-    // Final check before uploading to BunnyCDN
+
     if (connection_aborted()) {
         curl_close($ch);
         $uploadCancelled = true;
         respond(false, 'Upload cancelled');
     }
-    
+
     $response = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $curlErr  = curl_error($ch);
     $curlErrno = curl_errno($ch);
     curl_close($ch);
 
-    // Check if curl was aborted (errno 42 = CURLE_ABORTED_BY_CALLBACK)
     if ($curlErrno === 42) {
         error_log("UploadCover.php curl aborted by progress callback");
         $uploadCancelled = true;
@@ -284,7 +278,6 @@ try {
     }
 
     $mongoDbName = "ECADYB";
-    // Use MONGO_URL or MONGODB_URI (Railway standard) with fallback
     $mongoUrl = getenv('MONGO_URL') ?: getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
     error_log("UploadCover.php using MongoDB URL: $mongoUrl");
     error_log("UploadCover.php using database: $mongoDbName, collection: Covers");
@@ -325,9 +318,7 @@ try {
         'batch_year' => $batchYear,
         'upload_time' => new \MongoDB\BSON\UTCDateTime()
     ];
-    
-    // Check if this batch year is now complete (all 8 slots filled)
-    // This will be checked after the insert
+
     $checkCompletion = true;
 
     if ($slot === 8) {
@@ -386,32 +377,28 @@ try {
         if ($result->getUpsertedCount() > 0) {
             $document['_id'] = (string) $result->getUpsertedId();
         }
-        
-        // Check if the batch year is now complete
+
         if ($checkCompletion) {
             $batchYearDocs = $collection->find(['batch_year' => $batchYear])->toArray();
-            
-            // Check if all 8 slots have images
+
             $slotsWithImages = [];
             foreach ($batchYearDocs as $doc) {
                 $docSlot = (int)($doc['slot'] ?? 0);
                 $hasFront = isset($doc['front_url']) && !empty($doc['front_url']);
                 $hasBack = isset($doc['back_url']) && !empty($doc['back_url']);
                 $hasBackground = isset($doc['background_url']) && !empty($doc['background_url']);
-                
+
                 if ($docSlot === 8 && $hasBackground) {
                     $slotsWithImages[] = 8;
                 } elseif ($docSlot >= 1 && $docSlot <= 7 && ($hasFront && $hasBack)) {
-                    // Both front and back must be present for slots 1-7
                     $slotsWithImages[] = $docSlot;
                 }
             }
-            
+
             $slotsWithImages = array_unique($slotsWithImages);
             $isComplete = count($slotsWithImages) === 8;
-            
+
             if ($isComplete) {
-                // Mark batch year as complete with current timestamp
                 $collection->updateMany(
                     ['batch_year' => $batchYear],
                     ['$set' => ['completion_date' => new \MongoDB\BSON\UTCDateTime()]],
@@ -419,7 +406,6 @@ try {
                 );
                 error_log("UploadCover.php: Batch year $batchYear is now complete!");
             } else {
-                // Remove completion_date if batch is incomplete
                 $collection->updateMany(
                     ['batch_year' => $batchYear],
                     ['$unset' => ['completion_date' => '']],
