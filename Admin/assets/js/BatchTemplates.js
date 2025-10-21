@@ -1470,7 +1470,6 @@ function confirmSelectTemplate() {
         }
       });
 
-      // Disable Select Batch button for the selected section only
       const selectBatchBtn = section.querySelector(".select-batch-btn");
       if (selectBatchBtn) {
         if (isSelected) {
