@@ -1120,7 +1120,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
             `Starting parallel deletion of ${sides.length} side(s) for slot ${slot}`
           );
 
-          // Delete all sides in parallel using Promise.all
           const deletePromises = sides.map((side) => deleteCover(slot, side));
           const results = await Promise.all(deletePromises);
 
