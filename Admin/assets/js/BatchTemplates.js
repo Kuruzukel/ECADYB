@@ -1035,7 +1035,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
                 `Uploaded successfully to Slot ${slot} front and back cover`,
                 "success"
               );
-              // Update available sections after upload
               if (window.setAvailableSections) {
                 await window.setAvailableSections();
               }
