@@ -957,7 +957,7 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
           // Show upload progress for background slot
           if (uploadOverlay && uploadText) {
             uploadOverlay.style.display = "flex";
-            uploadText.textContent = `Uploading background image...`;
+            uploadText.textContent = `Uploading background cover...`;
           }
 
           const result = await uploadToBunny(
@@ -984,7 +984,7 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
             box.classList.add("has-image");
             showingFront = true;
 
-            showNotification("Background image uploaded successfully!", "success");
+            showNotification("Background cover uploaded successfully!", "success");
 
             if (window.setAvailableSections) {
               await window.setAvailableSections();
