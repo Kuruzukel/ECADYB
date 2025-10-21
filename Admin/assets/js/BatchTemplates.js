@@ -1218,7 +1218,7 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
           });
 
           xhr.open("POST", UPLOAD_ENDPOINT);
-          xhr.timeout = UPLOAD_TIMEOUT; // Dynamic timeout: 3s for single, 5s for double upload
+          xhr.timeout = UPLOAD_TIMEOUT;
           xhr.send(formData);
         });
 
