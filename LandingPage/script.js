@@ -483,6 +483,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const loginBtn = document.getElementById("loginDropdownBtn");
   const mobileLoginBtn = document.getElementById("mobileLoginDropdownBtn");
 
+  // Auto-detect base URL for Railway vs Localhost
+  const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  const BASE_URL = isLocalhost ? '/ECADYB/' : '/';
+
   function handleLoginClick(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -490,7 +494,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.body.classList.add("page-transition-out");
 
     setTimeout(() => {
-      window.location.href = "/ECADYB/Public/Components/Login.php";
+      window.location.href = BASE_URL + "Public/Components/Login.php";
     }, 1000);
   }
 

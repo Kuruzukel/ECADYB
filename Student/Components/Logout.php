@@ -1,5 +1,6 @@
 <?php
 session_start();
+require __DIR__ . '/../../config.php';
 
 // Unset all session variables
 $_SESSION = array();
@@ -13,6 +14,6 @@ if (isset($_COOKIE[session_name()])) {
 session_destroy();
 
 // Redirect to login page
-header('Location: /ECADYB/Public/Components/Login.php');
+header('Location: ' . BASE_URL . 'Public/Components/Login.php');
 exit();
 ?>

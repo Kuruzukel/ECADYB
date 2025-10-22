@@ -1,6 +1,7 @@
 <?php
 session_start();
 require __DIR__ . '/../../vendor/autoload.php';
+require __DIR__ . '/../../config.php';
 
 use MongoDB\Client;
 
@@ -47,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['redirect_to'] = '../../Admin/Components/AdminDashboard.php';
             
             // Redirect to admin dashboard
-            header('Location: /ECADYB/Admin');
+            header('Location: ' . BASE_URL . 'Admin');
             exit();
         } else {
             $loginFound = false;
@@ -88,7 +89,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $loginFound = true;
                         
                         // Redirect to student dashboard
-                        header('Location: /ECADYB/Student');
+                        header('Location: ' . BASE_URL . 'Student');
                         exit();
                     }
                 }

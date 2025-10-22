@@ -14,7 +14,7 @@ require $mongoPath;
 define('BASE_PATH', __DIR__);
 
 if (getenv('RAILWAY_PUBLIC_URL')) {
-    define('BASE_URL', '/ECADYB/');
+    define('BASE_URL', '/');
 } else {
     define('BASE_URL', '/ECADYB/');
 }
@@ -35,13 +35,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
             $_SESSION['role']     = 'admin';
             $_SESSION['username'] = $studentId;
 
-            // Fixed redirect for Railway environment - use absolute URL when available
-            if (getenv('RAILWAY_PUBLIC_URL')) {
-                $railwayUrl = rtrim(getenv('RAILWAY_PUBLIC_URL'), '/');
-                header("Location: " . $railwayUrl . "/ECADYB/Admin");
-            } else {
-                header("Location: " . BASE_URL . "Admin");
-            }
+            // Redirect to admin dashboard
+            header("Location: " . BASE_URL . "Admin");
             exit;
         }
 
@@ -76,13 +71,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
 
                 $foundStudent = true;
 
-                // Fixed redirect for Railway environment - use absolute URL when available
-                if (getenv('RAILWAY_PUBLIC_URL')) {
-                    $railwayUrl = rtrim(getenv('RAILWAY_PUBLIC_URL'), '/');
-                    header("Location: " . $railwayUrl . "/ECADYB/Student");
-                } else {
-                    header("Location: " . BASE_URL . "Student");
-                }
+                // Redirect to student dashboard
+                header("Location: " . BASE_URL . "Student");
                 exit;
             }
         }

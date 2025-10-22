@@ -51,7 +51,14 @@
       href="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png"
       type="image/png"
     />
-    <link rel="stylesheet" href="../assets/css/Loader.css" />
+    <script>
+      // Auto-detect base URL for Railway vs Localhost
+      const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      const BASE_URL = isLocalhost ? '/ECADYB/' : '/';
+      
+      // Dynamically set the stylesheet href
+      document.write('<link rel="stylesheet" href="' + BASE_URL + 'Public/assets/css/Loader.css" />');
+    </script>
   </head>
   <body>
     <section class="main-hero" id="main-hero">
@@ -95,7 +102,6 @@
       </div>
       <iframe
         id="preload-frame"
-        src="../../LandingPage/index.html"
         style="
           position: absolute;
           width: 1px;
@@ -106,6 +112,10 @@
         "
         loading="eager"
       ></iframe>
+      <script>
+        // Set iframe src with correct base URL
+        document.getElementById('preload-frame').src = BASE_URL + 'LandingPage/index.html';
+      </script>
       <div class="main-hero-lower-curl">
         <svg
           viewBox="0 0 1440 120"
@@ -131,6 +141,11 @@
         </svg>
       </div>
     </section>
-    <script src="../assets/js/Loader.js"></script>
+    <script>
+      // Load script with correct base URL
+      const scriptTag = document.createElement('script');
+      scriptTag.src = BASE_URL + 'Public/assets/js/Loader.js';
+      document.body.appendChild(scriptTag);
+    </script>
   </body>
 </html>

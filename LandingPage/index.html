@@ -52,7 +52,14 @@
       type="image/png"
     />
 
-    <link rel="stylesheet" href="style.css" />
+    <script>
+      // Auto-detect base URL for Railway vs Localhost
+      const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      const BASE_URL = isLocalhost ? '/ECADYB/' : '/';
+      
+      // Dynamically set the stylesheet href
+      document.write('<link rel="stylesheet" href="' + BASE_URL + 'LandingPage/style.css" />');
+    </script>
 
     <link
       rel="stylesheet"
@@ -600,6 +607,11 @@
         </div>
       </div>
     </footer>
-    <script src="script.js"></script>
+    <script>
+      // Load script with correct base URL
+      const scriptTag = document.createElement('script');
+      scriptTag.src = BASE_URL + 'LandingPage/script.js';
+      document.body.appendChild(scriptTag);
+    </script>
   </body>
 </html>

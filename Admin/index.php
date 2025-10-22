@@ -1,10 +1,11 @@
 <?php
 session_start();
+require __DIR__ . '/../config.php';
 
 // Check if user is logged in and is an admin
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     // Redirect to login page if not logged in or not an admin
-    header('Location: /ECADYB/Public/Components/Login.php');
+    header('Location: ' . BASE_URL . 'Public/Components/Login.php');
     exit();
 }
 
