@@ -1497,7 +1497,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
                 `✅ Upload cancelled during countdown for Slot ${slot} ${side} (${secondsLeft}s remaining - PREVENTED UPLOAD)`
               );
 
-              // Remove XHR from controllers since we never sent it
               const xhrIndex = currentUploadControllers.indexOf(xhr);
               if (xhrIndex > -1) {
                 currentUploadControllers.splice(xhrIndex, 1);
