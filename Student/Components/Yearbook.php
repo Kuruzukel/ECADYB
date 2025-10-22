@@ -122,6 +122,32 @@ $departmentCode = $departmentCodes[$studentDepartment] ?? 'BSME';
             style="border: none;"
             title="Digital Yearbook"
           ></iframe>
+          
+          <!-- Bottom Curl for Fullscreen -->
+          <div class="yearbook-lower-curl">
+            <svg
+              viewBox="0 0 1440 120"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              preserveAspectRatio="none"
+              style="display: block; width: 100%; height: 60px"
+            >
+              <path
+                d="M0,60 Q180,100 360,60 T720,60 T1080,60 T1440,60 L1440,120 L0,120 Z"
+                fill="#1a237e"
+                opacity="0.4"
+              />
+              <path
+                d="M0,80 Q180,40 360,80 T720,80 T1080,80 T1440,80 L1440,120 L0,120 Z"
+                fill="#112d4e"
+                opacity="0.7"
+              />
+              <path
+                d="M0,100 Q180,60 360,100 T720,100 T1080,100 T1440,100 L1440,120 L0,120 Z"
+                fill="#021326"
+              />
+            </svg>
+          </div>
         </div>
 
         <!-- Yearbook Items Container -->
