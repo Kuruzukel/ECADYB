@@ -1320,8 +1320,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
                 "success"
               );
 
-              // It will be cleared when the next upload starts
-
               if (window.setAvailableSections) {
                 await window.setAvailableSections();
               }
