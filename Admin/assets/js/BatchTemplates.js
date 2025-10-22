@@ -1678,7 +1678,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
           });
 
           xhr.addEventListener("error", () => {
-            // Remove XHR from active controllers
             const xhrIndex = currentUploadControllers.indexOf(xhr);
             if (xhrIndex > -1) {
               currentUploadControllers.splice(xhrIndex, 1);
