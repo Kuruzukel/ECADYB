@@ -5,7 +5,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Change Password</title>
-    <script src="https://kit.fontawesome.com/a2e0f5f0b2.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="<?= $basePath ?>/Admin/assets/css/ChangePassword.css">
 </head>
@@ -29,7 +28,6 @@
             <meta charset="UTF-8" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             <title>Change Password</title>
-            <script src="https://kit.fontawesome.com/a2e0f5f0b2.js" crossorigin="anonymous"></script>
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
             <link rel="stylesheet" href="<?= $basePath ?>/Admin/assets/css/ChangePassword.css">
         </head>
