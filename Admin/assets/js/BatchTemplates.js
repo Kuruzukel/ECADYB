@@ -2143,7 +2143,6 @@ window.addEventListener("DOMContentLoaded", () => {
         const isActionBox = box.classList.contains("action-box");
 
         if (isSelected) {
-          // Enable all upload boxes for the selected batch
           box.classList.remove("disabled");
           box.style.pointerEvents = "auto";
           box.style.opacity = "1";
