@@ -1535,7 +1535,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
               `✅ Upload cancelled just before upload start for Slot ${slot} ${side} - PREVENTED UPLOAD`
             );
 
-            // Remove XHR from controllers since we never sent it
             const xhrIndex = currentUploadControllers.indexOf(xhr);
             if (xhrIndex > -1) {
               currentUploadControllers.splice(xhrIndex, 1);
