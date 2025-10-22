@@ -156,35 +156,6 @@ function prevImage() {
 
 track.addEventListener("transitionend", handleTransitionEnd);
 
-let startX = 0;
-let isDragging = false;
-
-track.addEventListener("touchstart", (e) => {
-  startX = e.touches[0].clientX;
-  isDragging = true;
-});
-
-track.addEventListener("touchmove", (e) => {
-  if (!isDragging) return;
-  const diff = e.touches[0].clientX - startX;
-  track.style.transition = "none";
-  track.style.transform = `translateX(calc(-${
-    (currentIndex + 1) * 100
-  }% + ${diff}px))`;
-});
-
-track.addEventListener("touchend", (e) => {
-  isDragging = false;
-  const diff = e.changedTouches[0].clientX - startX;
-  if (diff > 50) {
-    prevImage();
-  } else if (diff < -50) {
-    nextImage();
-  } else {
-    moveToIndex(currentIndex);
-  }
-});
-
 renderImages();
 
 let autoSlideInterval = null;
