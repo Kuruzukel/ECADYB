@@ -1604,7 +1604,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
               try {
                 const data = JSON.parse(xhr.responseText);
                 if (data.success) {
-                  // Move from pending to completed uploads
                   const pendingIndex = pendingUploads.findIndex(
                     (f) =>
                       f.slot === slot &&
