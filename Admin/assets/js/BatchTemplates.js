@@ -1274,7 +1274,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
               isCancelling;
 
             if (!uploadCancelled && !isUploadCancelled && !isCancelling) {
-              // Get the URLs from the server response
               const frontUrl = results[1]?.url || frontImageUrl;
               const backUrl = results[0]?.url || backImageUrl;
 
