@@ -2351,7 +2351,6 @@ window.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    // Fallback to saved template name
     if (!selectedSection && savedTemplate) {
       sections.forEach((section) => {
         const headerText = section
