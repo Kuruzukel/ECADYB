@@ -288,10 +288,8 @@ async function cancelUpload() {
     }
   });
 
-  // Show immediate feedback to user
   showNotification("Upload cancelled", "error");
 
-  // Abort ALL active XHR requests
   if (currentUploadControllers.length > 0) {
     console.log(
       `Aborting ${currentUploadControllers.length} active upload(s)...`
@@ -307,21 +305,17 @@ async function cancelUpload() {
     currentUploadControllers = [];
   }
 
-  // Combine both completed and pending uploads for cleanup
-  // IMPORTANT: Copy arrays and clear originals immediately to prevent re-entry
   const allFilesToCleanup = [...lastUploadedFiles, ...pendingUploads];
   lastUploadedFiles = [];
   pendingUploads = [];
 
   globalIsUploading = false;
 
-  // Perform cleanup in the background (don't block UI)
   if (allFilesToCleanup.length > 0) {
     console.log(
       `Background cleanup: ${allFilesToCleanup.length} file(s) from Bunny CDN and MongoDB...`
     );
 
-    // Run cleanup without blocking
     Promise.all(
       allFilesToCleanup.map((fileInfo) => deleteRecentlyUploadedFile(fileInfo))
     )
@@ -332,7 +326,6 @@ async function cancelUpload() {
         console.log(
           `Background cleanup complete: ${successCount} deleted successfully, ${failCount} failed`
         );
-        // No notification - user already saw "Upload cancelled" message
       })
       .catch((error) => {
         console.error("Error during background cleanup:", error);
@@ -346,7 +339,6 @@ async function cancelUpload() {
       "No files to clean up (upload was cancelled before any uploads started)"
     );
     isCancelling = false;
-    // No notification - user already saw "Upload cancelled" message
   }
 }
 
@@ -366,7 +358,6 @@ async function deleteRecentlyUploadedFile(fileInfo) {
       formData.append("batch_year", fileInfo.batch_year);
       formData.append("side", fileInfo.side || "front");
 
-      // Add template number for deletion
       const templateNumber =
         localStorage.getItem("selectedBatchTemplateNumber") || 1;
       formData.append("template", templateNumber);
@@ -394,7 +385,6 @@ async function deleteRecentlyUploadedFile(fileInfo) {
         );
         return true;
       } else {
-        // If file not found, it's already deleted (success)
         if (data.message && data.message.includes("not found")) {
           console.log(
             `ℹ️ Slot ${fileInfo.slot} ${fileInfo.side} already deleted or never saved`
@@ -404,7 +394,6 @@ async function deleteRecentlyUploadedFile(fileInfo) {
 
         console.warn(`⚠️ Delete attempt ${attempt} failed: ${data.message}`);
 
-        // Retry after a short delay
         if (attempt < MAX_DELETE_RETRIES) {
           await new Promise((resolve) => setTimeout(resolve, 1000 * attempt));
         }
@@ -412,7 +401,6 @@ async function deleteRecentlyUploadedFile(fileInfo) {
     } catch (error) {
       console.error(`❌ Error on delete attempt ${attempt}:`, error);
 
-      // Retry after a short delay
       if (attempt < MAX_DELETE_RETRIES) {
         await new Promise((resolve) => setTimeout(resolve, 1000 * attempt));
       }
