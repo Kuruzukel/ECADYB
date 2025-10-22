@@ -267,7 +267,6 @@ window.resetUploadStates = function () {
 };
 
 async function cancelUpload() {
-  // Prevent multiple simultaneous cancel operations
   if (isCancelling) {
     console.log(
       "Cancel already in progress, ignoring duplicate cancel request"
