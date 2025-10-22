@@ -1306,7 +1306,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
                 };
                 frontImg.onload = checkLoaded;
                 backImg.onload = checkLoaded;
-                // Timeout after 2 seconds if images don't load
                 setTimeout(resolve, 2000);
               });
 
