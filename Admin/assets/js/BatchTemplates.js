@@ -1735,7 +1735,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
           globalIsUploading = false;
         }
 
-        // Check if this is a cancellation error
         if (err.message === "Upload cancelled") {
           console.log("Upload cancelled by user for slot", slot, side);
           return { success: false, cancelled: true };
