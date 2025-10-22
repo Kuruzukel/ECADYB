@@ -58,7 +58,7 @@
                             <div class="passwordField" data-isvisible="false">
                                 <input name="password" id="loginPass" type="password" placeholder="Current Password"
                                     maxlength="8" autocomplete="off" required>
-                                <div class="eyeIcon open" onclick="togglePass()">
+                                <div class="eyeIcon open">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                         <g fill="none">
                                             <path
@@ -68,7 +68,7 @@
                                         </g>
                                     </svg>
                                 </div>
-                                <div class="eyeIcon close" onclick="togglePass()">
+                                <div class="eyeIcon close">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                         <g fill="none" fill-rule="evenodd">
                                             <path
@@ -93,7 +93,7 @@
                                 <div class="passwordField" data-isvisible="false">
                                     <input name="password" id="loginPass" type="password" placeholder="New Password"
                                         maxlength="8" autocomplete="off" required>
-                                    <div class="eyeIcon open" onclick="togglePass()">
+                                    <div class="eyeIcon open">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                             <g fill="none">
                                                 <path
@@ -103,7 +103,7 @@
                                             </g>
                                         </svg>
                                     </div>
-                                    <div class="eyeIcon close" onclick="togglePass()">
+                                    <div class="eyeIcon close">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                             <g fill="none" fill-rule="evenodd">
                                                 <path
@@ -128,7 +128,7 @@
                                     <div class="passwordField" data-isvisible="false">
                                         <input name="password" id="loginPass" type="password"
                                             placeholder="Confirm Password" maxlength="8" autocomplete="off" required>
-                                        <div class="eyeIcon open" onclick="togglePass()">
+                                        <div class="eyeIcon open">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                                 <g fill="none">
                                                     <path
@@ -138,7 +138,7 @@
                                                 </g>
                                             </svg>
                                         </div>
-                                        <div class="eyeIcon close" onclick="togglePass()">
+                                        <div class="eyeIcon close">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                                 <g fill="none" fill-rule="evenodd">
                                                     <path
