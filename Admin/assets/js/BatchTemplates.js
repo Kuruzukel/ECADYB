@@ -236,7 +236,7 @@ let currentUploadControllers = [];
 let globalIsUploading = false;
 let lastUploadedFiles = [];
 let pendingUploads = [];
-let isCancelling = false; // Guard flag to prevent multiple simultaneous cancellations
+let isCancelling = false;
 
 // Emergency reset function - accessible from console
 window.resetUploadStates = function () {
