@@ -251,7 +251,7 @@ $departmentCode = $departmentCodes[$studentDepartment] ?? 'BSME';
 
         // Update iframe src and show it
         if (iframe && iframeContainer) {
-          iframe.src = `/ECADYB/Admin/Yearbook/index.html?department=${departmentCode}`;
+          iframe.src = `/ECADYB/Student/Yearbook/index.html?department=${departmentCode}`;
           iframe.title = `Digital Yearbook - ${departmentName}`;
           iframeContainer.style.display = 'block';
           

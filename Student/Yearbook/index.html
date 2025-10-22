@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Yearbook - Graduation Gallery</title>
+    <meta name="viewport" content="width = 1050, user-scalable = no" />
+    <style>
+      body {
+        overflow: hidden;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      #canvas {
+        overflow: hidden;
+      }
+
+      ::-webkit-scrollbar {
+        display: none;
+      }
+
+      .thumbnails {
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+        transform: translateY(20px);
+      }
+
+      .thumbnails.visible {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+        transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out,
+          transform 0.5s ease-in-out;
+      }
+    </style>
+    <meta property="fb:app_id" content="1767810860531321" />
+    <meta property="og:locale" content="en_US" />
+    <meta
+      property="og:title"
+      content="Graduation Gallery - Exact Colleges of Asia"
+    />
+    <meta
+      property="og:description"
+      content="Step into your digital yearbook. Every achievement and memory comes alive."
+    />
+    <meta
+      property="og:image"
+      content="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png"
+    />
+    <meta
+      property="og:image:secure_url"
+      content="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:url" content="https://grad-gallery.up.railway.app" />
+    <meta property="og:type" content="website" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Graduation Gallery - Exact Colleges of Asia"
+    />
+    <meta
+      name="twitter:description"
+      content="Step into your digital yearbook. Every achievement and memory comes alive."
+    />
+    <meta
+      name="twitter:image"
+      content="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png"
+    />
+    <meta
+      name="twitter:image:alt"
+      content="Exact Colleges of Asia Graduation Gallery Preview Logo"
+    />
+
+    <link
+      rel="icon"
+      href="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png"
+      type="image/png"
+    />
+    <script>
+      // Detect base path for asset loading
+      var assetBasePath = window.location.pathname.includes('/ECADYB/') ? '/ECADYB/' : '/ECADYB/';
+    </script>
+    <script
+      type="text/javascript"
+      src="/ECADYB/Turn.js/extras/jquery.min.js"
+    ></script>
+    <script type="text/javascript" src="/ECADYB/Turn.js/lib/hash.js"></script>
+    <script type="text/javascript" src="/ECADYB/Turn.js/lib/turn.min.js"></script>
+    <script type="text/javascript" src="/ECADYB/Turn.js/lib/zoom.min.js"></script>
+    <script type="text/javascript" src="/ECADYB/Student/Yearbook/js/magazine.js?v=1736979600"></script>
+    <link rel="stylesheet" href="/ECADYB/Student/Yearbook/css/magazine.css?v=1736979600" />
+
+    <script type="text/javascript">
+      // Define $.isTouch for touch device detection
+      $.isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      $.mouseEvents = $.isTouch ? { over: 'touchstart', out: 'touchend', move: 'touchmove', down: 'touchstart', up: 'touchend' } : { over: 'mouseover', out: 'mouseout', move: 'mousemove', down: 'mousedown', up: 'mouseup' };
+      
+      // Debug: Log touch detection
+      console.log("$.isTouch:", $.isTouch, typeof $.isTouch);
+      console.log("$.mouseEvents:", $.mouseEvents);
+      
+      var coverData = null;
+      var studentData = null;
+
+      function fetchCoverData(template, slot) {
+        if (!template) {
+          template = localStorage.getItem("selectedBatchTemplateNumber") || 1;
+          template = parseInt(template);
+        }
+        slot = slot || 1;
+
+        // Get batch year from localStorage if available
+        var batchYear = localStorage.getItem("selectedBatchYear");
+
+        console.log(
+          "Fetching cover data for template:",
+          template,
+          "slot:",
+          slot,
+          "batch_year:",
+          batchYear
+        );
+
+        // Build request data
+        var requestData = { template: template, slot: slot };
+        if (batchYear) {
+          requestData.batch_year = batchYear;
+        }
+
+        $.ajax({
+          url: "/ECADYB/Admin/Yearbook/FetchCoverData.php",
+          method: "GET",
+          data: requestData,
+          dataType: "json",
+          success: function (response) {
+            console.log("Cover data response:", response);
+            if (response.success) {
+              coverData = response.data;
+
+              console.log("Cover data loaded:", coverData);
+
+              fetchStudentData();
+
+              if (typeof loadApp === "function") {
+                loadApp();
+              }
+            } else {
+              console.log("Failed to fetch cover data:", response.message);
+              if (typeof loadApp === "function") {
+                loadApp();
+              }
+            }
+          },
+          error: function (xhr, status, error) {
+            console.log("Error fetching cover data:", error);
+            console.log("XHR:", xhr);
+            console.log("Status:", status);
+            if (typeof loadApp === "function") {
+              loadApp();
+            }
+          },
+        });
+      }
+
+      function fetchStudentData() {
+        var urlParams = new URLSearchParams(window.location.search);
+        var departmentCode = urlParams.get("department") || "BSME";
+
+        var template = 1;
+        if (coverData && coverData.template) {
+          template = coverData.template;
+        } else {
+          var savedTemplate = localStorage.getItem(
+            "selectedBatchTemplateNumber"
+          );
+          if (savedTemplate) {
+            template = parseInt(savedTemplate);
+          }
+        }
+
+        // Get batch year from localStorage
+        var batchYear = localStorage.getItem("selectedBatchYear");
+
+        console.log(
+          "Fetching student data for department:",
+          departmentCode,
+          "template:",
+          template,
+          "batch_year:",
+          batchYear
+        );
+
+        // Build request data
+        var requestData = {
+          department: departmentCode,
+          template: template,
+        };
+        if (batchYear) {
+          requestData.batch_year = batchYear;
+        }
+        
+        $.ajax({
+          url: "/ECADYB/Connection/Photos/FetchStudentData.php",
+          method: "GET",
+          data: requestData,
+          dataType: "json",
+          success: function (response) {
+            console.log("Student data response:", response);
+            if (response.success) {
+              studentData = response.data;
+              console.log("Student data loaded:", studentData);
+              console.log("Total students:", studentData.total_students);
+              console.log("Students array:", studentData.students);
+              console.log(
+                "First few students:",
+                studentData.students.slice(0, 3)
+              );
+              populateThumbnails();
+            } else {
+              console.log("Failed to fetch student data:", response.message);
+              populateThumbnails();
+            }
+          },
+          error: function (xhr, status, error) {
+            console.log("Error fetching student data:", error);
+            populateThumbnails();
+          },
+        });
+      }
+
+      function getCurrentYearbook() {
+        var urlParams = new URLSearchParams(window.location.search);
+        var departmentCode = urlParams.get("department") || "BSME";
+
+        var yearbookMap = {
+          BSME: "Maritime Education",
+          BSCJE: "College of Criminology",
+          BSTM: "Tourism Management",
+          BSE: "College of Education",
+          BSN: "College of Nursing",
+          BSIS: "Information System",
+          BSBA: "Business Administration",
+        };
+
+        return {
+          code: departmentCode,
+          name: yearbookMap[departmentCode] || "Unknown Department",
+        };
+      }
+
+      function getTopManagementNameForPage(pageNumber) {
+        try {
+          var template = 1;
+          if (coverData && coverData.template) {
+            template = coverData.template;
+          } else {
+            var savedTemplate = localStorage.getItem(
+              "selectedBatchTemplateNumber"
+            );
+            if (savedTemplate) {
+              template = parseInt(savedTemplate);
+            }
+          }
+
+          var cacheKey = "template_" + template;
+
+          if (
+            window.topManagementCache &&
+            window.topManagementCache[cacheKey]
+          ) {
+            var topManagementData = window.topManagementCache[cacheKey];
+            if (
+              topManagementData &&
+              topManagementData.data &&
+              topManagementData.data.length > 0
+            ) {
+              var topMgmtIndex = pageNumber - 2;
+
+              if (
+                topMgmtIndex >= 0 &&
+                topMgmtIndex < topManagementData.data.length
+              ) {
+                var topMgmt = topManagementData.data[topMgmtIndex];
+                if (topMgmt && topMgmt.name && topMgmt.position) {
+                  return topMgmt.name + " (" + topMgmt.position + ")";
+                } else if (topMgmt && topMgmt.name) {
+                  return topMgmt.name;
+                }
+              }
+            }
+          }
+
+          if (typeof localStorage !== "undefined") {
+            var savedTopMgmt = localStorage.getItem("topManagementData");
+            if (savedTopMgmt) {
+              try {
+                var parsedData = JSON.parse(savedTopMgmt);
+                var topMgmtIndex = pageNumber - 2;
+                if (topMgmtIndex >= 0 && topMgmtIndex < parsedData.length) {
+                  var topMgmt = parsedData[topMgmtIndex];
+                  if (topMgmt && topMgmt.name && topMgmt.position) {
+                    return topMgmt.name + " (" + topMgmt.position + ")";
+                  } else if (topMgmt && topMgmt.name) {
+                    return topMgmt.name;
+                  }
+                }
+              } catch (e) {
+                console.log("Error parsing top management data:", e);
+              }
+            }
+          }
+        } catch (e) {
+          console.log(
+            "Error getting top management name for page",
+            pageNumber,
+            ":",
+            e
+          );
+        }
+
+        return null;
+      }
+
+      function getStudentSectionForPage(pageNumber) {
+        try {
+          var yearbook = getCurrentYearbook();
+          var studentsPerPage = 4;
+          var studentStartIndex = (pageNumber - 6) * studentsPerPage;
+
+          var template = 1;
+          if (coverData && coverData.template) {
+            template = coverData.template;
+          } else {
+            var savedTemplate = localStorage.getItem(
+              "selectedBatchTemplateNumber"
+            );
+            if (savedTemplate) {
+              template = parseInt(savedTemplate);
+            }
+          }
+
+          var studentsPerAPIPage = 50;
+          var apiPage = Math.floor(studentStartIndex / studentsPerAPIPage) + 1;
+          var localStartIndex = studentStartIndex % studentsPerAPIPage;
+
+          var cacheKey = yearbook.code + "_" + template + "_" + apiPage;
+
+          if (window.studentDataCache && window.studentDataCache[cacheKey]) {
+            var studentData = window.studentDataCache[cacheKey];
+            if (
+              studentData &&
+              studentData.success &&
+              studentData.data &&
+              studentData.data.students
+            ) {
+              var students = studentData.data.students;
+              if (students.length > localStartIndex) {
+                var firstStudent = students[localStartIndex];
+                if (firstStudent) {
+                  var section =
+                    firstStudent.section ||
+                    firstStudent.program ||
+                    firstStudent.course ||
+                    firstStudent.department;
+                  if (section) {
+                    return section.toUpperCase();
+                  }
+                }
+              }
+            }
+          }
+
+          console.log(
+            "No cached student data found for page",
+            pageNumber,
+            "- attempting to load"
+          );
+
+          if (typeof loadStudentsForPage === "function") {
+            console.log("Attempting to load students for page", pageNumber, "with startIndex", studentStartIndex);
+            loadStudentsForPage(
+              yearbook.code,
+              template,
+              studentStartIndex,
+              1,
+              function (students) {
+                console.log("Received students data for page", pageNumber, ":", students);
+                if (students && students.length > 0) {
+                  var firstStudent = students[0];
+                  if (firstStudent) {
+                    var section =
+                      firstStudent.section ||
+                      firstStudent.program ||
+                      firstStudent.course ||
+                      firstStudent.department;
+                    if (section) {
+                      console.log("Found section", section, "for page", pageNumber);
+                      return section.toUpperCase();
+                    } else {
+                      console.log("No section information found for student", firstStudent);
+                    }
+                  } else {
+                    console.log("No valid first student found in array");
+                  }
+                } else {
+                  console.log("No students returned for page", pageNumber);
+                }
+              }
+            );
+          }
+
+          if (typeof localStorage !== "undefined") {
+            var savedStudentData = localStorage.getItem(
+              "studentData_" + yearbook.code
+            );
+            if (savedStudentData) {
+              try {
+                var parsedData = JSON.parse(savedStudentData);
+                if (
+                  parsedData &&
+                  parsedData.data &&
+                  parsedData.data.length > studentStartIndex
+                ) {
+                  var firstStudent = parsedData.data[studentStartIndex];
+                  if (firstStudent) {
+                    var section =
+                      firstStudent.section ||
+                      firstStudent.program ||
+                      firstStudent.course ||
+                      firstStudent.department;
+                    if (section) {
+                      return section.toUpperCase();
+                    }
+                  }
+                }
+              } catch (e) {
+                console.log("Error parsing student data:", e);
+              }
+            }
+          }
+        } catch (e) {
+          console.log(
+            "Error getting student section for page",
+            pageNumber,
+            ":",
+            e
+          );
+        }
+
+        return null;
+      }
+
+      function getPageDescription(pageNumber) {
+        var yearbook = getCurrentYearbook();
+        var departmentCode = yearbook.code;
+        var totalPages = calculateTotalPages();
+
+        console.log(
+          "Getting page description for page",
+          pageNumber,
+          "in yearbook:",
+          yearbook.name
+        );
+
+        if (pageNumber === 1) {
+          return "Front Cover";
+        }
+
+        if (pageNumber >= 2 && pageNumber <= 5) {
+          var topMgmtPageNumber = pageNumber - 1;
+
+          var topMgmtName = getTopManagementNameForPage(pageNumber);
+          console.log(
+            "Top management name for page",
+            pageNumber,
+            ":",
+            topMgmtName
+          );
+          if (topMgmtName) {
+            return (
+              "Top Management Message - " +
+              topMgmtName +
+              " - Page " +
+              topMgmtPageNumber
+            );
+          } else {
+            return "Top Management Message - Page " + topMgmtPageNumber;
+          }
+        }
+
+        if (pageNumber === totalPages) {
+          return "Back Cover";
+        }
+
+        if (pageNumber >= 6 && pageNumber < totalPages) {
+          var studentPageNumber = pageNumber - 5;
+
+          var studentSection = getStudentSectionForPage(pageNumber);
+          console.log(
+            "Student section for page",
+            pageNumber,
+            ":",
+            studentSection
+          );
+          if (studentSection) {
+            return (
+              "Student Graduates - " +
+              studentSection +
+              " - Page " +
+              studentPageNumber
+            );
+          } else {
+            return "Student Graduates - Page " + studentPageNumber;
+          }
+        }
+
+        return "PAGE " + pageNumber;
+      }
+
+      function calculateTotalPages() {
+        var studentPages = 0;
+        var studentsPerPage = 4;
+
+        if (studentData && studentData.total_students) {
+          studentPages = Math.ceil(
+            studentData.total_students / studentsPerPage
+          );
+
+          console.log("Using actual student page calculation:", {
+            total_students_in_db: studentData.total_students,
+            students_per_page: studentsPerPage,
+            calculated_student_pages: studentPages,
+          });
+        }
+
+        if (studentPages === 0) {
+          studentPages = 4;
+          console.log(
+            "No students found - Setting minimum 4 student pages for empty state display"
+          );
+        }
+
+        var totalPages = 1 + 4 + studentPages + 1;
+
+        console.log(
+          "Calculated total pages:",
+          totalPages,
+          "(1 front + 4 management + " + studentPages + " students + 1 back)"
+        );
+
+        return totalPages;
+      }
+
+      function populateThumbnails() {
+        console.log("=== POPULATE THUMBNAILS CALLED ===");
+        var yearbook = getCurrentYearbook();
+        console.log("Populating text-based thumbnails for:", yearbook.name);
+
+        var thumbnailList = $("#thumbnail-list");
+        console.log("Thumbnail list element found:", thumbnailList.length);
+        thumbnailList.empty();
+
+        if (thumbnailList.length === 0) {
+          console.log("Creating thumbnail list element");
+          thumbnailList = $('<div id="thumbnail-list"></div>');
+        }
+
+        var totalPages = calculateTotalPages();
+        console.log("Total pages calculated:", totalPages);
+
+        var headerHtml = `
+          <div class="thumbnails-header">
+            <div class="thumbnails-title">
+              Table of Contents
+            </div>
+            <div class="thumbnails-subtitle">
+              ${totalPages} pages • Currently on page <span id="current-page-display">Loading...</span>
+            </div>
+          </div>
+          <button class="close-thumbnails">×</button>
+        `;
+
+        console.log("Total pages for", yearbook.name, ":", totalPages);
+
+        for (var pageNum = 1; pageNum <= totalPages; pageNum++) {
+          var pageName = getPageDescription(pageNum);
+          console.log("Creating page", pageNum, "with name:", pageName);
+
+          var thumbnailDiv = $('<div class="thumbnail-item"></div>');
+          var pageNameDiv = $('<div class="thumbnail-page-name"></div>').text(
+            pageName
+          );
+          var pageNumberDiv = $(
+            '<div class="thumbnail-page-number"></div>'
+          ).text(pageNum);
+
+          thumbnailDiv.append(pageNameDiv);
+          thumbnailDiv.append(pageNumberDiv);
+          thumbnailDiv.attr("data-page", pageNum);
+          thumbnailList.append(thumbnailDiv);
+        }
+
+        console.log(
+          "Final thumbnail items count:",
+          thumbnailList.find(".thumbnail-item").length
+        );
+
+        var modalContainer = $('<div class="thumbnails-modal"></div>');
+        modalContainer.append(headerHtml);
+        modalContainer.append(thumbnailList);
+
+        $(".thumbnails").html(modalContainer);
+        console.log("Modal container created and appended");
+
+        var currentPage = $(".magazine").turn("page") || 1;
+        var currentPageDescription = getPageDescription(currentPage);
+        $("#current-page-display").text(
+          currentPage + " • " + currentPageDescription
+        );
+
+        $(".thumbnails")
+          .off("click")
+          .on("click", function (event) {
+            var thumbnailElement = $(event.target).closest(".thumbnail-item");
+            if (thumbnailElement.length) {
+              var pageNumber = thumbnailElement.attr("data-page");
+              $(".magazine").turn("page", pageNumber);
+              $(".thumbnails").removeClass("visible");
+            }
+          });
+
+        $(".close-thumbnails")
+          .off("click")
+          .on("click", function (e) {
+            e.stopPropagation();
+            $(".thumbnails").removeClass("visible");
+          });
+
+        $(".thumbnails")
+          .off("click.background")
+          .on("click.background", function (e) {
+            if ($(e.target).hasClass("thumbnails")) {
+              $(".thumbnails").removeClass("visible");
+            }
+          });
+      }
+
+      function refreshThumbnails() {
+        if (!window.pageThumbnails) return;
+
+        for (var pageNum in window.pageThumbnails) {
+          var thumbnailSrc = window.pageThumbnails[pageNum];
+          var existingThumbnail = $(".thumbnails .page-" + pageNum);
+          if (existingThumbnail.length) {
+            existingThumbnail.attr("src", thumbnailSrc);
+          }
+        }
+
+        console.log("Refreshed thumbnails with generated content");
+      }
+
+      function createManagementThumbnail(managementIndex, dataToUse) {
+        var backgroundSrc =
+          dataToUse.background_thumb_url || dataToUse.background_url;
+        if (backgroundSrc) {
+          return backgroundSrc;
+        }
+
+        return (
+          'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="76" height="100" viewBox="0 0 76 100"%3E%3Crect width="76" height="100" fill="%23e8f4fd"/%3E%3Ccircle cx="38" cy="30" r="15" fill="%23ffffff" stroke="%23cccccc"/%3E%3Ctext x="38" y="35" font-family="Arial" font-size="8" fill="%23666" text-anchor="middle"%3EMGT%3C/text%3E%3Ctext x="38" y="60" font-family="Arial" font-size="6" fill="%23999" text-anchor="middle"%3EPage ' +
+          (managementIndex + 2) +
+          "%3C/text%3E%3C/svg%3E"
+        );
+      }
+
+      function createStudentThumbnail(studentPageIndex, dataToUse) {
+        var backgroundSrc =
+          dataToUse.background_thumb_url || dataToUse.background_url;
+        if (backgroundSrc) {
+          return backgroundSrc;
+        }
+
+        return (
+          'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="76" height="100" viewBox="0 0 76 100"%3E%3Crect width="76" height="100" fill="%23f0f8ff"/%3E%3Ccircle cx="38" cy="30" r="15" fill="%23ffffff" stroke="%23cccccc"/%3E%3Ctext x="38" y="35" font-family="Arial" font-size="8" fill="%23666" text-anchor="middle"%3ESTU%3C/text%3E%3Ctext x="38" y="60" font-family="Arial" font-size="6" fill="%23999" text-anchor="middle"%3EPage ' +
+          (studentPageIndex + 6) +
+          "%3C/text%3E%3C/svg%3E"
+        );
+      }
+    </script>
+  </head>
+  <body>
+    <div id="canvas">
+      <div class="magazine-viewport">
+        <div class="container">
+          <div class="magazine"></div>
+        </div>
+      </div>
+
+      <div class="nav-controls">
+        <button class="nav-btn prev-btn" id="prevBtn" title="Previous Page">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polyline points="15,18 9,12 15,6"></polyline>
+          </svg>
+        </button>
+        <button class="nav-btn toc-btn" id="tocBtn" title="Table of Contents">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+        </button>
+        <button
+          class="nav-btn fullscreen-btn"
+          id="fullscreenBtn"
+          title="Exit Fullscreen"
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path
+              d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"
+            ></path>
+          </svg>
+        </button>
+        <button class="nav-btn next-btn" id="nextBtn" title="Next Page">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polyline points="9,18 15,12 9,6"></polyline>
+          </svg>
+        </button>
+      </div>
+
+      <div class="student-modal">
+        <div class="modal-content">
+          <span class="close-modal">&times;</span>
+          <div class="student-details">
+            <div class="student-images">
+              <div class="student-image-large">
+                <img src="" alt="Student TOGA Photo" />
+              </div>
+              <div class="student-image-navigation">
+                <button class="nav-prev">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <polyline points="15,18 9,12 15,6"></polyline>
+                  </svg>
+                </button>
+                <button class="nav-next">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <polyline points="9,18 15,12 9,6"></polyline>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="student-info">
+              <h2 class="student-name">Student Name</h2>
+              <p class="academic-year">Academic Year: <span>2024-2025</span></p>
+              <div class="latin-awards">
+                <h3>Latin Award</h3>
+                <p>Summa Cum Laude</p>
+              </div>
+              <div class="motto">
+                <h3>Motto</h3>
+                <p>
+                  "Success is not final, failure is not fatal: it is the courage
+                  to continue that counts."
+                </p>
+              </div>
+              <div class="milestones">
+                <h3>Milestone</h3>
+                <p>Dean's Lister (2020-2024)</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="thumbnails"></div>
+    </div>
+
+    <script type="text/javascript">
+      $(document).ready(function () {
+        var urlParams = new URLSearchParams(window.location.search);
+        var departmentCode = urlParams.get("department");
+
+        var selectedTemplate =
+          localStorage.getItem("selectedBatchTemplateNumber") || 1;
+        selectedTemplate = parseInt(selectedTemplate);
+        
+        // Get batch year from localStorage
+        var batchYear = localStorage.getItem("selectedBatchYear");
+        
+        console.log("Using template from localStorage:", selectedTemplate);
+        console.log("Using batch year from localStorage:", batchYear);
+        
+        // Clear top management cache if batch year has changed
+        if (typeof clearTopManagementCache === "function") {
+          clearTopManagementCache();
+        }
+
+        // Build request data
+        var requestData = {
+          template: selectedTemplate,
+          department: departmentCode,
+        };
+        if (batchYear) {
+          requestData.batch_year = batchYear;
+        }
+        
+        $.ajax({
+          url: "/ECADYB/Admin/Yearbook/FetchCoverData.php",
+          method: "GET",
+          data: requestData,
+          dataType: "json",
+          success: function (response) {
+            console.log("Cover data response:", response);
+
+            if (
+              response.success &&
+              response.data.department &&
+              (!departmentCode || departmentCode !== response.data.department)
+            ) {
+              if (response.data.department_page) {
+                var redirectUrl =
+                  "/Admin/Departments/" + response.data.department_page + ".php";
+                window.location.href =
+                  redirectUrl + "?department=" + response.data.department;
+                return;
+              }
+            }
+
+            if (response.success) {
+              coverData = response.data;
+
+              console.log("Cover data loaded:", coverData);
+
+              fetchStudentData();
+
+              if (typeof loadApp === "function") {
+                loadApp();
+              }
+            } else {
+              console.log("Failed to fetch cover data:", response.message);
+              if (typeof loadApp === "function") {
+                loadApp();
+              }
+            }
+          },
+          error: function (xhr, status, error) {
+            console.log("Error fetching cover data:", error);
+            console.log("XHR:", xhr);
+            console.log("Status:", status);
+            if (typeof loadApp === "function") {
+              loadApp();
+            }
+          },
+        });
+      });
+
+      function loadApp() {
+        if (!coverData) {
+          console.log("Waiting for cover data to load...");
+          setTimeout(loadApp, 100);
+          return;
+        }
+
+        if (!studentData) {
+          console.log("Waiting for student data to load...");
+          setTimeout(loadApp, 100);
+          return;
+        }
+
+        console.log("Cover data and student data available, initializing app");
+        console.log("Cover data:", coverData);
+        console.log("Student data:", studentData);
+
+        $("#canvas").fadeIn(1000);
+
+        var flipbook = $(".magazine");
+
+        if (flipbook.width() == 0 || flipbook.height() == 0) {
+          setTimeout(loadApp, 10);
+          return;
+        }
+
+        var totalPages = calculateTotalPages();
+
+        console.log("Setting total pages to:", totalPages);
+
+        flipbook.turn({
+          width: 922,
+          height: 600,
+          duration: 1000,
+          acceleration: true,
+          gradients: false,
+          autoCenter: true,
+          elevation: 50,
+          pages: totalPages,
+          when: {
+            turning: function (event, page, view) {
+              var book = $(this),
+                currentPage = book.turn("page"),
+                pages = book.turn("pages");
+
+              Hash.go("page/" + page).update();
+
+              disableControls(page);
+
+              $(".thumbnails .thumbnail-item").removeClass("current");
+
+              $(
+                ".thumbnails .thumbnail-item[data-page='" + page + "']"
+              ).addClass("current");
+
+              $("#current-page-display").text(page);
+            },
+
+            turned: function (event, page, view) {
+              disableControls(page);
+              $(this).turn("center");
+            },
+
+            missing: function (event, pages) {
+              for (var i = 0; i < pages.length; i++) {
+                addPage(pages[i], $(this));
+              }
+            },
+          },
+        });
+
+        $(".magazine-viewport").zoom({
+          flipbook: $(".magazine"),
+
+          max: function () {
+            return largeMagazineWidth() / $(".magazine").width();
+          },
+
+          when: {
+            swipeLeft: function () {
+              $(this).zoom("flipbook").turn("next");
+            },
+
+            swipeRight: function () {
+              $(this).zoom("flipbook").turn("previous");
+            },
+
+            resize: function (event, scale, page, pageElement) {
+              if (scale == 1) loadSmallPage(page, pageElement);
+              else loadLargePage(page, pageElement);
+            },
+
+            zoomIn: function () {
+              $(".thumbnails").hide();
+              $(".made").hide();
+              $(".magazine").removeClass("animated").addClass("zoom-in");
+              $(".zoom-icon")
+                .removeClass("zoom-icon-in")
+                .addClass("zoom-icon-out");
+
+              if (!window.escTip && !$.isTouch) {
+                escTip = true;
+
+                $("<div />", { class: "exit-message" })
+                  .html("<div>Press ESC to exit</div>")
+                  .appendTo($("body"))
+                  .delay(2000)
+                  .animate({ opacity: 0 }, 500, function () {
+                    $(this).remove();
+                  });
+              }
+            },
+
+            zoomOut: function () {
+              $(".exit-message").hide();
+              $(".thumbnails").fadeIn();
+              $(".made").fadeIn();
+              $(".zoom-icon")
+                .removeClass("zoom-icon-out")
+                .addClass("zoom-icon-in");
+
+              setTimeout(function () {
+                $(".magazine").addClass("animated").removeClass("zoom-in");
+                resizeViewport();
+              }, 0);
+            },
+          },
+        });
+
+        if ($.isTouch) $(".magazine-viewport").on("zoom.doubleTap", zoomTo);
+        else $(".magazine-viewport").on("zoom.tap", zoomTo);
+
+        $(document).on("keydown", function (e) {
+          var previous = 37,
+            next = 39,
+            esc = 27;
+
+          switch (e.keyCode) {
+            case previous:
+              $(".magazine").turn("previous");
+              e.preventDefault();
+
+              break;
+            case next:
+              $(".magazine").turn("next");
+              e.preventDefault();
+
+              break;
+            case esc:
+              $(".magazine-viewport").zoom("zoomOut");
+              e.preventDefault();
+
+              break;
+          }
+        });
+
+        Hash.on("^page\/([0-9]*)$", {
+          yep: function (path, parts) {
+            var page = parts[1];
+
+            if (page !== undefined) {
+              if ($(".magazine").turn("is")) $(".magazine").turn("page", page);
+            }
+          },
+          nop: function (path) {
+            if ($(".magazine").turn("is")) $(".magazine").turn("page", 1);
+          },
+        });
+
+        $(window)
+          .on("resize", function () {
+            resizeViewport();
+          })
+          .on("orientationchange", function () {
+            resizeViewport();
+          });
+
+        $(".thumbnails").on("click", function (event) {
+          var page;
+
+          if (
+            event.target &&
+            (page = /page-([0-9]+)/.exec($(event.target).attr("class")))
+          ) {
+            $(".magazine").turn("page", page[1]);
+            $(".thumbnails").removeClass("visible");
+          }
+        });
+
+        $(".thumbnails li")
+          .on($.mouseEvents.over, function () {
+            $(this).addClass("thumb-hover");
+          })
+          .on($.mouseEvents.out, function () {
+            $(this).removeClass("thumb-hover");
+          });
+
+        if ($.isTouch) {
+          $(".thumbnails")
+            .addClass("thumbanils-touch")
+            .on($.mouseEvents.move, function (event) {
+              event.preventDefault();
+            });
+        } else {
+          $(".thumbnails ul")
+            .on("mouseover", function () {
+              $(".thumbnails").addClass("thumbnails-hover");
+            })
+            .on("mousedown", function () {
+              return false;
+            })
+            .on("mouseout", function () {
+              $(".thumbnails").removeClass("thumbnails-hover");
+            });
+        }
+
+        $(".next-button")
+          .on($.mouseEvents.over, function () {
+            $(this).addClass("next-button-hover");
+          })
+          .on($.mouseEvents.out, function () {
+            $(this).removeClass("next-button-hover");
+          })
+          .on($.mouseEvents.down, function () {
+            $(this).addClass("next-button-down");
+          })
+          .on($.mouseEvents.up, function () {
+            $(this).removeClass("next-button-down");
+          })
+          .on("click", function () {
+            $(".magazine").turn("next");
+          });
+
+        $(".previous-button")
+          .on($.mouseEvents.over, function () {
+            $(this).addClass("previous-button-hover");
+          })
+          .on($.mouseEvents.out, function () {
+            $(this).removeClass("previous-button-hover");
+          })
+          .on($.mouseEvents.down, function () {
+            $(this).addClass("previous-button-down");
+          })
+          .on($.mouseEvents.up, function () {
+            $(this).removeClass("previous-button-down");
+          })
+          .on("click", function () {
+            $(".magazine").turn("previous");
+          });
+
+        resizeViewport();
+
+        $(".magazine").addClass("animated");
+
+        if (typeof initializeCornerHover === "function") {
+          initializeCornerHover();
+        }
+
+        setTimeout(function () {
+          if (typeof generateAllThumbnails === "function") {
+            generateAllThumbnails();
+            setTimeout(function () {
+              if (typeof refreshThumbnails === "function") {
+                refreshThumbnails();
+              }
+            }, 5000);
+          }
+        }, 5000);
+      }
+
+      $(".zoom-icon")
+        .on("mouseover", function () {
+          if ($(this).hasClass("zoom-icon-in"))
+            $(this).addClass("zoom-icon-in-hover");
+
+          if ($(this).hasClass("zoom-icon-out"))
+            $(this).addClass("zoom-icon-out-hover");
+        })
+        .on("mouseout", function () {
+          if ($(this).hasClass("zoom-icon-in"))
+            $(this).removeClass("zoom-icon-in-hover");
+
+          if ($(this).hasClass("zoom-icon-out"))
+            $(this).removeClass("zoom-icon-out-hover");
+        });
+
+      $("#canvas").hide();
+
+      $(document).ready(function () {
+        // Event delegation for student card clicks - works even after page navigation
+        $(document).on("click", ".student-card", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          var card = $(this);
+          var modal = $(".student-modal");
+
+          // Get student data from data attributes
+          var clickedStudent = {
+            student_id: card.attr("data-student-id"),
+            name: card.attr("data-student-name"),
+            year: card.attr("data-student-year"),
+            motto: card.attr("data-student-motto"),
+            milestones: JSON.parse(card.attr("data-student-milestones") || "[]"),
+            honors: JSON.parse(card.attr("data-student-honors") || "[]"),
+            program: card.attr("data-student-program"),
+            section: card.attr("data-student-section")
+          };
+
+          console.log("Card clicked for student:", clickedStudent);
+          
+          // Ensure modal is properly closed before reopening
+          if (modal.hasClass("active")) {
+            modal.removeClass("active");
+            $("body").removeClass("modal-active");
+          }
+
+          // Populate modal with student data
+          modal.find(".student-name").text(clickedStudent.name);
+          modal.find(".academic-year span").text(clickedStudent.year || "N/A");
+          modal.find(".motto p").text(clickedStudent.motto || "No motto provided");
+
+          var milestonesContainer = modal.find(".milestones");
+          var milestonesTitle = modal.find(".milestones h3");
+          
+          // Remove existing milestone paragraphs (keep only the h3)
+          milestonesContainer.find("p").remove();
+
+          // Check if student has milestones (honors will be handled separately in Latin Awards)
+          var hasMilestones = clickedStudent.milestones && clickedStudent.milestones.length > 0;
+
+          if (hasMilestones) {
+            milestonesContainer.show();
+            milestonesTitle.text("Milestone");
+
+            clickedStudent.milestones.forEach(function (milestone) {
+              // Filter out sample data
+              if (milestone && !milestone.toLowerCase().includes('sample') && milestone.trim() !== '') {
+                milestonesContainer.append("<p>" + milestone + "</p>");
+              }
+            });
+          } else {
+            milestonesContainer.hide();
+          }
+
+          // Populate Latin Awards section
+          var latinAwardsContainer = modal.find(".latin-awards");
+          
+          // Remove existing award paragraphs (keep only the h3)
+          latinAwardsContainer.find("p").remove();
+          
+          // Check if student has Latin awards/honors
+          if (clickedStudent.honors) {
+            // Handle both string and array formats
+            if (typeof clickedStudent.honors === 'string' && clickedStudent.honors.trim() !== '') {
+              // If honors is a string, split by common separators and add each as a paragraph
+              var honorsArray = clickedStudent.honors.split(/[,;|\n]/).map(function(honor) {
+                return honor.trim();
+              }).filter(function(honor) {
+                return honor.length > 0;
+              });
+              
+              if (honorsArray.length > 0) {
+                latinAwardsContainer.show();
+                honorsArray.forEach(function (honor) {
+                  latinAwardsContainer.append("<p>" + honor + "</p>");
+                });
+              } else {
+                latinAwardsContainer.hide();
+              }
+            } else if (Array.isArray(clickedStudent.honors) && clickedStudent.honors.length > 0) {
+              // If honors is already an array
+              latinAwardsContainer.show();
+              clickedStudent.honors.forEach(function (honor) {
+                latinAwardsContainer.append("<p>" + honor + "</p>");
+              });
+            } else {
+              // No valid honors data
+              latinAwardsContainer.hide();
+            }
+          } else {
+            // No honors field at all
+            latinAwardsContainer.hide();
+          }
+
+          // Fetch and display student photos
+          var defaultPhotoUrl = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect width="300" height="300" fill="%23f0f0f0"/%3E%3Ctext x="150" y="150" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Student Photo%3C/text%3E%3C/svg%3E';
+          modal.find(".student-image-large img").attr("src", defaultPhotoUrl);
+
+          // Get batch year from localStorage
+          var batchYear = localStorage.getItem("selectedBatchYear");
+          
+          // Build request data
+          var requestData = {
+            student_id: clickedStudent.student_id,
+            template: localStorage.getItem('selectedBatchTemplateNumber') || 1
+          };
+          if (batchYear) {
+            requestData.batch_year = batchYear;
+          }
+          
+          // Fetch student photos
+          $.ajax({
+            url: '/ECADYB/Connection/Photos/FetchStudentPhotos.php',
+            method: 'GET',
+            data: requestData,
+            dataType: 'json',
+            success: function(response) {
+              console.log('Student photos response:', response);
+              
+              if (response.success && response.data && response.data.length > 0) {
+                var photos = response.data[0].photos;
+                var photoUrls = [];
+                
+                // Collect all available photo URLs
+                if (photos.student_photo_1 && photos.student_photo_1.url) {
+                  photoUrls.push(photos.student_photo_1.url);
+                }
+                if (photos.student_photo_2 && photos.student_photo_2.url) {
+                  photoUrls.push(photos.student_photo_2.url);
+                }
+                if (photos.student_photo_3 && photos.student_photo_3.url) {
+                  photoUrls.push(photos.student_photo_3.url);
+                }
+                
+                console.log('Available photo URLs:', photoUrls);
+                
+                // Set the first available photo
+                if (photoUrls.length > 0) {
+                  modal.find(".student-image-large img").attr("src", photoUrls[0]);
+                  modal.data('student-photos', photoUrls);
+                  modal.data('current-photo-index', 0);
+                  console.log('Set student photo:', photoUrls[0]);
+                } else {
+                  console.log('No photos available for student');
+                }
+              } else {
+                console.log('No photos found for student');
+              }
+            },
+            error: function(xhr, status, error) {
+              console.error('Error fetching student photos:', error);
+              console.error('Response:', xhr.responseText);
+            }
+          });
+
+          // Show modal with a small delay
+          setTimeout(function() {
+            modal.addClass("active");
+            $("body").addClass("modal-active");
+
+            if (typeof window.clearAllPeels === "function") {
+              window.clearAllPeels();
+            }
+
+            if (typeof window.disableMagazineInteractions === "function") {
+              window.disableMagazineInteractions();
+            }
+
+            if (window.peelClearInterval) {
+              clearInterval(window.peelClearInterval);
+            }
+            window.peelClearInterval = setInterval(function () {
+              if ($(".student-modal").hasClass("active")) {
+                if (typeof window.clearAllPeels === "function") {
+                  window.clearAllPeels();
+                }
+              } else {
+                clearInterval(window.peelClearInterval);
+                window.peelClearInterval = null;
+                $("body").removeClass("modal-active");
+              }
+            }, 100);
+          }, 50);
+
+          console.log("Modal opened for student:", clickedStudent.name);
+        });
+
+        $("#prevBtn").on("click", function () {
+          $(".magazine").turn("previous");
+        });
+
+        $("#nextBtn").on("click", function () {
+          $(".magazine").turn("next");
+        });
+
+        $("#tocBtn").on("click", function () {
+          console.log("Table of Contents button clicked");
+          populateThumbnails();
+          $(".thumbnails").addClass("visible");
+
+          setTimeout(function () {
+            if (typeof forceRegenerateThumbnails === "function") {
+              forceRegenerateThumbnails();
+            } else if (typeof refreshThumbnails === "function") {
+              refreshThumbnails();
+            }
+            if (typeof generateAllThumbnails === "function") {
+              generateAllThumbnails();
+            }
+          }, 100);
+        });
+
+        $("#closeThumbnails").on("click", function () {
+          $(".thumbnails").removeClass("visible");
+        });
+
+        function exitFullscreen() {
+          // Check if we're in an iframe
+          if (window.parent !== window) {
+            // We're in an iframe, tell the parent to exit fullscreen
+            try {
+              if (window.parent.document.exitFullscreen) {
+                window.parent.document.exitFullscreen();
+              } else if (window.parent.document.webkitExitFullscreen) {
+                window.parent.document.webkitExitFullscreen();
+              } else if (window.parent.document.msExitFullscreen) {
+                window.parent.document.msExitFullscreen();
+              }
+            } catch (e) {
+              console.log("Could not exit parent fullscreen:", e);
+              // Fallback to exiting our own fullscreen
+              if (document.exitFullscreen) {
+                document.exitFullscreen();
+              } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+              } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+              }
+            }
+          } else {
+            // Not in an iframe, exit our own fullscreen
+            if (document.exitFullscreen) {
+              document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+              document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) {
+              document.msExitFullscreen();
+            }
+          }
+        }
+
+        $("#fullscreenBtn").on("click", function () {
+          exitFullscreen();
+        });
+
+        // Student photo navigation
+        $(".nav-prev").on("click", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          var modal = $(".student-modal");
+          var photos = modal.data('student-photos');
+          var currentIndex = modal.data('current-photo-index') || 0;
+          
+          if (photos && photos.length > 0) {
+            currentIndex = (currentIndex - 1 + photos.length) % photos.length;
+            modal.data('current-photo-index', currentIndex);
+            modal.find(".student-image-large img").attr("src", photos[currentIndex]);
+            console.log('Previous photo:', photos[currentIndex]);
+          }
+        });
+
+        $(".nav-next").on("click", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          var modal = $(".student-modal");
+          var photos = modal.data('student-photos');
+          var currentIndex = modal.data('current-photo-index') || 0;
+          
+          if (photos && photos.length > 0) {
+            currentIndex = (currentIndex + 1) % photos.length;
+            modal.data('current-photo-index', currentIndex);
+            modal.find(".student-image-large img").attr("src", photos[currentIndex]);
+            console.log('Next photo:', photos[currentIndex]);
+          }
+        });
+
+        $(document).on("click", function (e) {
+          if ($(e.target).hasClass("thumbnails")) {
+            $(".thumbnails").removeClass("visible");
+          }
+        });
+
+        $(".close-modal").on("click", function (e) {
+          e.stopPropagation();
+          $(".student-modal").removeClass("active");
+
+          $("body").removeClass("modal-active");
+
+          if (typeof window.enableMagazineInteractions === "function") {
+            window.enableMagazineInteractions();
+          }
+
+          if (window.peelClearInterval) {
+            clearInterval(window.peelClearInterval);
+            window.peelClearInterval = null;
+          }
+
+          console.log("Modal closed via close button");
+        });
+
+        $(".student-modal").on("click", function (e) {
+          if ($(e.target).hasClass("student-modal")) {
+            $(this).removeClass("active");
+
+            $("body").removeClass("modal-active");
+
+            if (typeof window.enableMagazineInteractions === "function") {
+              window.enableMagazineInteractions();
+            }
+
+            if (window.peelClearInterval) {
+              clearInterval(window.peelClearInterval);
+              window.peelClearInterval = null;
+            }
+
+            console.log("Modal closed via background click");
+          }
+        });
+
+        $(".modal-content").on("click", function (e) {
+          e.stopPropagation();
+        });
+
+        $(document).on("keydown", function (e) {
+          if (e.keyCode === 27 && $(".student-modal").hasClass("active")) {
+            $(".student-modal").removeClass("active");
+            $("body").removeClass("modal-active");
+
+            if (typeof window.enableMagazineInteractions === "function") {
+              window.enableMagazineInteractions();
+            }
+
+            if (window.peelClearInterval) {
+              clearInterval(window.peelClearInterval);
+              window.peelClearInterval = null;
+            }
+
+            console.log("Modal closed via ESC key");
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
