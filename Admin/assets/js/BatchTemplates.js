@@ -1530,7 +1530,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
             await new Promise((resolve) => setTimeout(resolve, 1000));
           }
 
-          // Check one more time before starting actual upload
           if (isCancelling) {
             console.log(
               `✅ Upload cancelled just before upload start for Slot ${slot} ${side} - PREVENTED UPLOAD`
