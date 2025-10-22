@@ -477,19 +477,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const loginBtn = document.getElementById("loginDropdownBtn");
   const mobileLoginBtn = document.getElementById("mobileLoginDropdownBtn");
 
-  // Use BASE_URL from HTML if available, otherwise auto-detect
-  let BASE_URL_LOGIN;
-  
-  if (typeof BASE_URL !== 'undefined') {
-    // BASE_URL is defined in the HTML head section
-    BASE_URL_LOGIN = BASE_URL;
-  } else {
-    // Fallback: Auto-detect base URL for Railway vs Localhost
-    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    const isInLandingPage = window.location.pathname.includes('/LandingPage/');
-    BASE_URL_LOGIN = (isLocalhost && !isInLandingPage) ? '/ECADYB/' : '/';
-  }
-
   function handleLoginClick(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -497,7 +484,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.body.classList.add("page-transition-out");
 
     setTimeout(() => {
-      window.location.href = BASE_URL_LOGIN + "Public/Components/Login.php";
+      window.location.href = "/Public/Components/Login.php";
     }, 1000);
   }
 
@@ -520,12 +507,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    // Detect service worker path based on current location
-    const isInLandingPage = window.location.pathname.includes('/LandingPage/');
-    const swPath = isInLandingPage ? './service-worker.js' : './LandingPage/service-worker.js';
-    
     navigator.serviceWorker
-      .register(swPath)
+      .register("/LandingPage/service-worker.js")
       .then((reg) => console.log("✅ Service Worker registered:", reg.scope))
       .catch((err) => console.log("❌ Service Worker failed:", err));
   });
