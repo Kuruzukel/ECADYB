@@ -282,7 +282,6 @@ async function cancelUpload() {
     uploadOverlay.style.display = "none";
   }
 
-  // Reset file inputs immediately
   document.querySelectorAll('input[type="file"]').forEach((input) => {
     if (input.files && input.files.length > 0) {
       input.value = "";
