@@ -75,13 +75,25 @@ function respond($success, $message = '', $data = [])
         'message' => $message
     ], $data);
 
-    error_log("FetchStudentData Response: " . substr(json_encode($response), 0, 200) . "...");
-
-    $jsonOutput = json_encode($response);
+    // Validate that response can be JSON encoded
+    $jsonOutput = json_encode($response, JSON_PARTIAL_OUTPUT_ON_ERROR);
+    if ($jsonOutput === false) {
+        // JSON encoding failed, send error response
+        $errorResponse = [
+            'success' => false,
+            'message' => 'Failed to encode response: ' . json_last_error_msg(),
+            'data' => []
+        ];
+        $jsonOutput = json_encode($errorResponse);
+    }
     
-    header('Content-Type: application/json');
+    error_log("FetchStudentData Response: " . substr($jsonOutput, 0, 200) . "... (total length: " . strlen($jsonOutput) . " bytes)");
+    
+    header('Content-Type: application/json; charset=utf-8');
     header('Content-Length: ' . strlen($jsonOutput));
+    header('Connection: close'); // Ensure connection closes properly
     echo $jsonOutput;
+    flush(); // Force send
     exit;
 }
 
@@ -139,13 +151,17 @@ try {
     // Use ECADYB database instead of BatchTemplate databases
     $mongoDbName = "ECADYB";
 
+    error_log("=== FETCH STUDENT DATA REQUEST ===");
+    error_log("Department: $department, Template: $template, Page: $page, Limit: $limit, Batch Year: $batchYear");
     error_log("Connecting to MongoDB database: " . $mongoDbName . " for department: " . $department);
+    
     $mongoUrl = getenv('MONGO_URL') ?: getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 
     $mongoClient = new MongoDB\Client($mongoUrl, [
-        'serverSelectionTimeoutMS' => 10000, // Increased from 5000
-        'connectTimeoutMS' => 10000, // Increased from 5000
-        'socketTimeoutMS' => 30000 // Increased from 5000 to 30 seconds for long queries
+        'serverSelectionTimeoutMS' => 15000, // Increased to 15 seconds
+        'connectTimeoutMS' => 15000, // Increased to 15 seconds
+        'socketTimeoutMS' => 60000, // Increased to 60 seconds for very long queries
+        'maxIdleTimeMS' => 60000 // Keep connections alive
     ]);
 
     try {
@@ -272,13 +288,21 @@ try {
 
                     if ($collectionLimit > 0) {
                         try {
+                            error_log("Executing MongoDB query for collection $collectionName with skip=$collectionSkip, limit=$collectionLimit");
+                            $queryStartTime = microtime(true);
+                            
                             $students = $collection->find($academicYearFilter, [
                                 'sort' => ['department section' => 1, 'last name' => 1],
                                 'skip' => $collectionSkip,
                                 'limit' => $collectionLimit,
-                                'maxTimeMS' => 25000 // 25 second max query time
+                                'maxTimeMS' => 45000, // Increased to 45 seconds
+                                'noCursorTimeout' => true // Prevent cursor timeout on slow queries
                             ]);
                             $processedCount = 0;
+                            
+                            $queryEndTime = microtime(true);
+                            $queryDuration = round(($queryEndTime - $queryStartTime) * 1000, 2);
+                            error_log("MongoDB query executed in {$queryDuration}ms for collection $collectionName");
 
                             foreach ($students as $student) {
                                 $processedCount++;
@@ -329,17 +353,28 @@ try {
                                 // Keep honors separate - don't mix with milestones
                                 $honors = $student['honors'] ?? '';
 
+                                // Sanitize strings to ensure valid UTF-8 and prevent JSON encoding issues
+                                $sanitize = function($value) {
+                                    if (is_string($value)) {
+                                        // Remove any non-UTF-8 characters and control characters
+                                        $value = mb_convert_encoding($value, 'UTF-8', 'UTF-8');
+                                        $value = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/u', '', $value);
+                                        return trim($value);
+                                    }
+                                    return $value;
+                                };
+                                
                                 $allStudents[] = [
                                     'id' => (string)$student['_id'],
-                                    'student_id' => $student['student id'] ?? $student['student_id'] ?? '',
-                                    'name' => $fullName,
-                                    'program' => $student['program'] ?? $student['department section'] ?? '',
-                                    'year' => $student['academic year'] ?? $student['year'] ?? '',
-                                    'section' => $student['section'] ?? '',
-                                    'motto' => $student['motto'] ?? 'No motto provided',
-                                    'milestones' => $milestones,
-                                    'honors' => $student['honors'] ?? '',
-                                    'photo_url' => $student['photo_url'] ?? '',
+                                    'student_id' => $sanitize($student['student id'] ?? $student['student_id'] ?? ''),
+                                    'name' => $sanitize($fullName),
+                                    'program' => $sanitize($student['program'] ?? $student['department section'] ?? ''),
+                                    'year' => $sanitize($student['academic year'] ?? $student['year'] ?? ''),
+                                    'section' => $sanitize($student['section'] ?? ''),
+                                    'motto' => $sanitize($student['motto'] ?? 'No motto provided'),
+                                    'milestones' => array_map($sanitize, $milestones),
+                                    'honors' => $sanitize($student['honors'] ?? ''),
+                                    'photo_url' => $sanitize($student['photo_url'] ?? ''),
                                     'collection' => $collectionName
                                 ];
                                 
