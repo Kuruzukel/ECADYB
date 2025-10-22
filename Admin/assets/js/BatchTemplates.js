@@ -1863,7 +1863,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
           ? sectionHeader.textContent.trim()
           : null;
 
-        // Get template number from localStorage
         const templateNumber =
           localStorage.getItem("selectedBatchTemplateNumber") || 1;
 
