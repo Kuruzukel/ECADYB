@@ -1348,8 +1348,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
               box.classList.add("has-image");
               showingFront = true;
 
-              // Don't clear lastUploadedFiles yet - keep it for potential cancellation cleanup
-
               if (window.setAvailableSections) {
                 await window.setAvailableSections();
               }
