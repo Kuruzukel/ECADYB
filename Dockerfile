@@ -25,9 +25,12 @@ COPY docker/php.ini /usr/local/etc/php/conf.d/custom.ini
 
 RUN chown -R www-data:www-data /var/www/html
 
-RUN a2enmod rewrite
+RUN a2enmod rewrite headers
 COPY conf/httpd.conf /etc/apache2/sites-available/000-default.conf
 
-EXPOSE 80
+# Set default PORT if not provided by Railway
+ENV PORT=80
+
+EXPOSE ${PORT}
 
 CMD ["apache2-foreground"]
