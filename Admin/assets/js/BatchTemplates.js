@@ -1155,7 +1155,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
 
       isUploadCancelled = false;
 
-      // Clear any previous upload tracking before starting new upload
       lastUploadedFiles = [];
       pendingUploads = [];
       currentUploadControllers = [];
