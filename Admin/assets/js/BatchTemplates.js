@@ -277,7 +277,6 @@ async function cancelUpload() {
   isCancelling = true;
   console.log("Cancel upload triggered in BatchTemplates");
 
-  // Hide upload overlay IMMEDIATELY - don't wait for cleanup
   const uploadOverlay = document.getElementById("upload-overlay");
   if (uploadOverlay) {
     uploadOverlay.style.display = "none";
