@@ -1110,7 +1110,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
         );
         isFileInputOpen = true;
 
-        // Reset flag when file dialog closes (handles cancel case)
         const resetFlag = () => {
           setTimeout(() => {
             if (isFileInputOpen) {
