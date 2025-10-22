@@ -48,7 +48,7 @@ function setupEventListeners() {
   if (backButton) {
     backButton.addEventListener("click", function(e) {
       e.preventDefault();
-      window.location.href = "/Public/Components/ForgotPassword.html";
+      window.location.href = "ForgotPassword.html";
     });
   }
 

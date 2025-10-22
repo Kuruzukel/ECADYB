@@ -77,7 +77,7 @@ function setupEventListeners() {
   if (backButton) {
     backButton.addEventListener("click", function(e) {
       e.preventDefault();
-      window.location.href = "/Public/Components/Login.php";
+      window.location.href = "Login.php";
     });
   }
 
@@ -354,7 +354,7 @@ async function handleFormSubmission() {
       
       // Redirect to login after 3 seconds
       setTimeout(() => {
-        window.location.href = "/Public/Components/Login.php";
+        window.location.href = "Login.php";
       }, 3000);
     } else {
       showErrorModal(result.message || "Password reset failed. Please try again.");
