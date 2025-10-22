@@ -3,6 +3,14 @@
   const body = document.body;
   let redirectInProgress = false;
 
+  // Auto-detect base URL for Railway vs Localhost
+  const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  const BASE_URL = isLocalhost ? '/ECADYB/' : '/';
+  
+  console.log('Loader.js - isLocalhost:', isLocalhost);
+  console.log('Loader.js - BASE_URL:', BASE_URL);
+  console.log('Loader.js - Will redirect to:', BASE_URL + "LandingPage");
+
   function allImagesLoaded(doc) {
     const imgs = Array.from(doc ? doc.images : []);
     if (imgs.length === 0) return true;
@@ -16,7 +24,7 @@
     body.classList.add("page-transition-out");
 
     setTimeout(() => {
-      window.location.href = "/LandingPage";
+      window.location.href = BASE_URL + "LandingPage";
     }, 1000);
   }
 
