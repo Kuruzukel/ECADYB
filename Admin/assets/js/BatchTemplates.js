@@ -1731,7 +1731,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
 
         return result;
       } catch (err) {
-        // XHR already cleaned up in event handlers
         // Just update global upload state if no more active uploads
         if (currentUploadControllers.length === 0) {
           globalIsUploading = false;
