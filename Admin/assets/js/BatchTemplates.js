@@ -2168,7 +2168,6 @@ window.addEventListener("DOMContentLoaded", () => {
     console.log("=== updateUploadBoxStates complete ===");
   }
 
-  // Make updateUploadBoxStates globally accessible
   window.updateUploadBoxStates = updateUploadBoxStates;
 
   function openSelectTemplateModal(targetSection, templateLabel) {
