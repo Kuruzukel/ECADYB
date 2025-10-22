@@ -238,7 +238,6 @@ let lastUploadedFiles = [];
 let pendingUploads = [];
 let isCancelling = false;
 
-// Emergency reset function - accessible from console
 window.resetUploadStates = function () {
   console.log("🔧 EMERGENCY RESET: Resetting all upload states...");
   currentUploadControllers = [];
