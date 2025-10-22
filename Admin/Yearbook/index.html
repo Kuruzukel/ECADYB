@@ -131,9 +131,6 @@
           batchYear
         );
 
-        // Determine base path for API calls
-        var basePath = window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '';
-
         // Build request data
         var requestData = { template: template, slot: slot };
         if (batchYear) {
@@ -141,7 +138,7 @@
         }
 
         $.ajax({
-          url: basePath + "/Admin/Yearbook/FetchCoverData.php",
+          url: window.basePath + "/Admin/Yearbook/FetchCoverData.php",
           method: "GET",
           data: requestData,
           dataType: "json",
@@ -203,9 +200,6 @@
           batchYear
         );
 
-        // Determine base path for API calls
-        var basePath = window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '';
-        
         // Build request data
         var requestData = {
           department: departmentCode,
@@ -216,7 +210,7 @@
         }
         
         $.ajax({
-          url: basePath + "/Connection/Photos/FetchStudentData.php",
+          url: window.basePath + "/Connection/Photos/FetchStudentData.php",
           method: "GET",
           data: requestData,
           dataType: "json",
@@ -863,9 +857,6 @@
           clearTopManagementCache();
         }
 
-        // Determine base path for API calls
-        var basePath = window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '';
-        
         // Build request data
         var requestData = {
           template: selectedTemplate,
@@ -876,7 +867,7 @@
         }
         
         $.ajax({
-          url: basePath + "/Admin/Yearbook/FetchCoverData.php",
+          url: window.basePath + "/Admin/Yearbook/FetchCoverData.php",
           method: "GET",
           data: requestData,
           dataType: "json",
