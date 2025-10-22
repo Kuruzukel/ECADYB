@@ -1492,7 +1492,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
           );
 
           for (let secondsLeft = 5; secondsLeft > 0; secondsLeft--) {
-            // Check if cancelled during countdown
             if (isCancelling) {
               console.log(
                 `✅ Upload cancelled during countdown for Slot ${slot} ${side} (${secondsLeft}s remaining - PREVENTED UPLOAD)`
