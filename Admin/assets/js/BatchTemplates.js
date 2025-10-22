@@ -1698,7 +1698,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
             if (xhrIndex > -1) {
               currentUploadControllers.splice(xhrIndex, 1);
             }
-            // Keep in pending - will be cleaned up by cancelUpload()
             console.log("Upload aborted for slot", slot, side);
             reject(new Error("Upload cancelled"));
           });
