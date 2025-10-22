@@ -1980,7 +1980,6 @@ function confirmSelectTemplate() {
 
     window.pendingSelectSection.classList.add("selected");
 
-    // Update the sections variable to include the newly selected section
     const sections = document.querySelectorAll(".section");
 
     // Extract and store the batch year from the section header
