@@ -772,7 +772,7 @@
   backdrop-filter: blur(20px);
   padding: 30px;
   border-radius: 8px;
-  width: 65%;
+  width: 53%;
   height: 70%;
   margin-bottom: 3.2rem;
   position: relative;
@@ -1112,7 +1112,7 @@
   font-size: 16px;
   font-weight: 500;
   text-align: left;
-  padding: 12px 0;
+  padding: 12px 0 0;
   display: flex;
   align-items: center;
   position: relative;
@@ -1127,62 +1127,45 @@
   transform: translateZ(2px);
 }
 
-.milestones ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.milestones li {
-  padding: 12px 0;
-  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+.milestones p {
+  font-style: normal;
   color: #5a4520;
+  line-height: 1.6;
   font-size: 16px;
   font-weight: 500;
+  text-align: left;
+  padding: 12px 0 0;
   display: flex;
   align-items: center;
   position: relative;
   font-family: "Times New Roman", serif;
-}
-
-.milestones li:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
-}
-
-/* Latin Awards styling to match milestones */
-.latin-awards ul {
-  list-style: none;
-  padding: 0;
   margin: 0;
 }
 
-.latin-awards li {
-  padding: 12px 0;
-  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+/* Latin Awards styling to match motto */
+.latin-awards p {
+  font-style: normal;
   color: #5a4520;
+  line-height: 1.6;
   font-size: 16px;
   font-weight: 500;
+  text-align: left;
+  padding: 12px 0 0;
   display: flex;
   align-items: center;
   position: relative;
   font-family: "Times New Roman", serif;
+  margin: 0;
 }
 
-.latin-awards li:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
-}
-
-.latin-awards li::before {
+.latin-awards p::before {
   font-size: 18px;
   margin-right: 12px;
   filter: drop-shadow(0 2px 4px rgba(212, 175, 55, 0.5));
   transform: translateZ(2px);
 }
 
-.milestones li::before {
-  
+.milestones p::before {
   font-size: 18px;
   margin-right: 12px;
   filter: drop-shadow(0 2px 4px rgba(212, 175, 55, 0.5));

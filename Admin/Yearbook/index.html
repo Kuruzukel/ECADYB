@@ -810,9 +810,7 @@
               <p class="academic-year">Academic Year: <span>2024-2025</span></p>
               <div class="latin-awards">
                 <h3>Latin Award</h3>
-                <ul>
-                  <li>Summa Cum Laude</li>
-                </ul>
+                <p>Summa Cum Laude</p>
               </div>
               <div class="motto">
                 <h3>Motto</h3>
@@ -823,11 +821,7 @@
               </div>
               <div class="milestones">
                 <h3>Milestone</h3>
-                <ul>
-                  <li>Dean's Lister (2020-2024)</li>
-                  <li>Student Council President</li>
-                  <li>Academic Excellence Award</li>
-                </ul>
+                <p>Dean's Lister (2020-2024)</p>
               </div>
             </div>
           </div>
@@ -1247,10 +1241,11 @@
           modal.find(".academic-year span").text(clickedStudent.year || "N/A");
           modal.find(".motto p").text(clickedStudent.motto || "No motto provided");
 
-          var milestonesList = modal.find(".milestones ul");
           var milestonesContainer = modal.find(".milestones");
           var milestonesTitle = modal.find(".milestones h3");
-          milestonesList.empty();
+          
+          // Remove existing milestone paragraphs (keep only the h3)
+          milestonesContainer.find("p").remove();
 
           // Check if student has milestones (honors will be handled separately in Latin Awards)
           var hasMilestones = clickedStudent.milestones && clickedStudent.milestones.length > 0;
@@ -1262,7 +1257,7 @@
             clickedStudent.milestones.forEach(function (milestone) {
               // Filter out sample data
               if (milestone && !milestone.toLowerCase().includes('sample') && milestone.trim() !== '') {
-                milestonesList.append("<li>" + milestone + "</li>");
+                milestonesContainer.append("<p>" + milestone + "</p>");
               }
             });
           } else {
@@ -1270,15 +1265,16 @@
           }
 
           // Populate Latin Awards section
-          var latinAwardsList = modal.find(".latin-awards ul");
           var latinAwardsContainer = modal.find(".latin-awards");
-          latinAwardsList.empty();
+          
+          // Remove existing award paragraphs (keep only the h3)
+          latinAwardsContainer.find("p").remove();
           
           // Check if student has Latin awards/honors
           if (clickedStudent.honors) {
             // Handle both string and array formats
             if (typeof clickedStudent.honors === 'string' && clickedStudent.honors.trim() !== '') {
-              // If honors is a string, split by common separators and add each as a list item
+              // If honors is a string, split by common separators and add each as a paragraph
               var honorsArray = clickedStudent.honors.split(/[,;|\n]/).map(function(honor) {
                 return honor.trim();
               }).filter(function(honor) {
@@ -1288,7 +1284,7 @@
               if (honorsArray.length > 0) {
                 latinAwardsContainer.show();
                 honorsArray.forEach(function (honor) {
-                  latinAwardsList.append("<li>" + honor + "</li>");
+                  latinAwardsContainer.append("<p>" + honor + "</p>");
                 });
               } else {
                 latinAwardsContainer.hide();
@@ -1297,7 +1293,7 @@
               // If honors is already an array
               latinAwardsContainer.show();
               clickedStudent.honors.forEach(function (honor) {
-                latinAwardsList.append("<li>" + honor + "</li>");
+                latinAwardsContainer.append("<p>" + honor + "</p>");
               });
             } else {
               // No valid honors data
