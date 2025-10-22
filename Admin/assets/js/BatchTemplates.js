@@ -234,7 +234,7 @@ let cancelSelectTemplateBtn = null;
 
 let currentUploadControllers = [];
 let globalIsUploading = false;
-let lastUploadedFiles = []; // Track all uploaded files in current batch for cleanup
+let lastUploadedFiles = [];
 let pendingUploads = []; // Track uploads in progress (before completion)
 let isCancelling = false; // Guard flag to prevent multiple simultaneous cancellations
 
