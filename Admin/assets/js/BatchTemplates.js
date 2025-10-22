@@ -232,7 +232,7 @@ let selectTemplateModal = null;
 let confirmSelectTemplateBtn = null;
 let cancelSelectTemplateBtn = null;
 
-let currentUploadControllers = []; // Array to track multiple XHR requests
+let currentUploadControllers = [];
 let globalIsUploading = false;
 let lastUploadedFiles = []; // Track all uploaded files in current batch for cleanup
 let pendingUploads = []; // Track uploads in progress (before completion)
