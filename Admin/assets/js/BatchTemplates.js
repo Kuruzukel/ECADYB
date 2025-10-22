@@ -1519,7 +1519,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
               return;
             }
 
-            // Update overlay text with countdown
             if (uploadText) {
               if (isBatch) {
                 uploadText.textContent = `Preparing upload... (${secondsLeft}s to cancel)`;
