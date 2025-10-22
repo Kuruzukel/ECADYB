@@ -1337,7 +1337,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
 
             if (result && result.success) {
               frontImg = document.createElement("img");
-              // Use the URL from the server response instead of the blob URL
               frontImg.src = result.url || frontImageUrl;
               frontImg.classList.add("front-img");
               frontImg.style.zIndex = "10";
