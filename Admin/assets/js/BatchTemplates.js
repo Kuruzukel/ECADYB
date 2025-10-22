@@ -1484,7 +1484,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
         console.log(`Active XHR requests: ${currentUploadControllers.length}`);
 
         const uploadPromise = new Promise(async (resolve, reject) => {
-          // 5-second cancellation window before actual upload
           const CANCEL_WINDOW_MS = 5000;
           const uploadText = document.getElementById("uploadText");
 
