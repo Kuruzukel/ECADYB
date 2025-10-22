@@ -1462,7 +1462,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
         formData.append("side", side);
         formData.append("batch_year", batchYear);
 
-        // Add template number
         const templateNumber =
           localStorage.getItem("selectedBatchTemplateNumber") || 1;
         formData.append("template", templateNumber);
