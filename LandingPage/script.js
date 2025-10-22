@@ -19,10 +19,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const navLinks = centerNav.querySelectorAll("a");
   navLinks.forEach((link) => {
-    link.addEventListener("click", function () {
+    const handleLinkClick = function () {
       hamburgerMenu.classList.remove("active");
       centerNav.classList.remove("mobile-active");
-    });
+    };
+    
+    link.addEventListener("click", handleLinkClick);
+    link.addEventListener("touchstart", handleLinkClick, { passive: true });
   });
 
   document.addEventListener("click", function (event) {
@@ -43,8 +46,9 @@ document.addEventListener("DOMContentLoaded", function () {
   );
 
   navLinks.forEach((link) => {
-    link.addEventListener("click", function (e) {
+    const handleNavClick = function (e) {
       e.preventDefault();
+      e.stopPropagation();
 
       navLinks.forEach((navLink) => navLink.classList.remove("clicked"));
 
@@ -54,11 +58,24 @@ document.addEventListener("DOMContentLoaded", function () {
       const targetSection = document.querySelector(targetId);
 
       if (targetSection) {
+        // Smooth scroll to section
         targetSection.scrollIntoView({
           behavior: "smooth",
         });
+        
+        // Keep URL clean without hash (consistent across all devices)
+        if (history.pushState) {
+          const currentPath = window.location.pathname + window.location.search;
+          history.pushState(null, null, currentPath);
+        }
       }
-    });
+    };
+
+    link.addEventListener("click", handleNavClick);
+    link.addEventListener("touchstart", function(e) {
+      e.preventDefault();
+      handleNavClick.call(this, e);
+    }, { passive: false });
   });
 
   heroButtons.forEach((button) => {
@@ -77,14 +94,21 @@ document.addEventListener("DOMContentLoaded", function () {
       const targetSection = document.querySelector(targetId);
 
       if (targetSection) {
+        // Smooth scroll to section
         targetSection.scrollIntoView({
           behavior: "smooth",
         });
+        
+        // Keep URL clean without hash (consistent across all devices)
+        if (history.pushState) {
+          const currentPath = window.location.pathname + window.location.search;
+          history.pushState(null, null, currentPath);
+        }
       }
     };
 
     button.addEventListener("click", handleInteraction);
-    button.addEventListener("touchend", function(e) {
+    button.addEventListener("touchstart", function(e) {
       e.preventDefault();
       handleInteraction.call(this, e);
     }, { passive: false });
@@ -553,9 +577,29 @@ if ("serviceWorker" in navigator) {
     const isInLandingPage = window.location.pathname.includes('/LandingPage/');
     const swPath = isInLandingPage ? './service-worker.js' : './LandingPage/service-worker.js';
     
+    // Clear old service workers and caches
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      registrations.forEach((registration) => {
+        registration.update(); // Force update to get the new service worker
+      });
+    });
+    
+    // Register the service worker
     navigator.serviceWorker
       .register(swPath)
-      .then((reg) => console.log("✅ Service Worker registered:", reg.scope))
+      .then((reg) => {
+        console.log("✅ Service Worker registered:", reg.scope);
+        
+        // Force update if there's an update available
+        reg.update();
+        
+        // Listen for controller change (new service worker activated)
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          console.log("✅ New Service Worker activated - reloading page");
+          // Optionally reload the page to use the new service worker
+          // window.location.reload();
+        });
+      })
       .catch((err) => console.log("❌ Service Worker failed:", err));
   });
 }

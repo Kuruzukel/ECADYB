@@ -1868,6 +1868,12 @@ header.fading {
     position: relative;
     width: 200px;
     height: 50px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    pointer-events: auto;
+    z-index: 100;
+    user-select: none;
+    -webkit-user-select: none;
   }
 
   .hero-btn-secondary {
@@ -1877,6 +1883,12 @@ header.fading {
     border: 1.5px solid #0c27be;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    pointer-events: auto;
+    z-index: 100;
+    user-select: none;
+    -webkit-user-select: none;
   }
 
   .about-image {
@@ -2056,6 +2068,12 @@ header.fading {
     position: relative;
     width: 200px;
     height: 50px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    pointer-events: auto;
+    z-index: 100;
+    user-select: none;
+    -webkit-user-select: none;
   }
 
   .hero-btn-secondary {
@@ -2065,6 +2083,12 @@ header.fading {
     border: 1.5px solid #0c27be;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    pointer-events: auto;
+    z-index: 100;
+    user-select: none;
+    -webkit-user-select: none;
   }
 
   .about-image {
@@ -2429,6 +2453,12 @@ header.fading {
     position: relative;
     width: 195px;
     height: 50px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    pointer-events: auto;
+    z-index: 100;
+    user-select: none;
+    -webkit-user-select: none;
   }
 
   .hero-btn-secondary {
@@ -2438,6 +2468,12 @@ header.fading {
     border: 1.5px solid #0c27be;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    pointer-events: auto;
+    z-index: 100;
+    user-select: none;
+    -webkit-user-select: none;
   }
 
   .about-image {
@@ -2701,6 +2737,8 @@ header.fading {
   .center-nav a {
     font-size: 0.8rem;
     margin: auto;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   }
 
   .login-btn {
@@ -2714,7 +2752,7 @@ header.fading {
     position: relative;
     z-index: 1001;
     touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   }
 
   .hamburger-menu.active + .center-nav,
@@ -2919,6 +2957,12 @@ header.fading {
     border: 1.5px solid #0c27be;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    pointer-events: auto;
+    z-index: 100;
+    user-select: none;
+    -webkit-user-select: none;
   }
 
   .about-image {
@@ -3436,6 +3480,12 @@ header.fading {
     position: relative;
     width: 195px;
     height: 45px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    pointer-events: auto;
+    z-index: 100;
+    user-select: none;
+    -webkit-user-select: none;
   }
 
   .hero-btn-secondary {
@@ -3445,6 +3495,12 @@ header.fading {
     border: 1.5px solid #0c27be;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    pointer-events: auto;
+    z-index: 100;
+    user-select: none;
+    -webkit-user-select: none;
   }
 
   .about-image {
