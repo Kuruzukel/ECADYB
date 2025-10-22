@@ -8,8 +8,8 @@ $client = new Client("mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline
 $adminDB = $client->admin;
 $adminCollection = $adminDB->accounts;
 
-// Array of batch template databases
-$batchTemplates = ['BatchTemplate1', 'BatchTemplate2', 'BatchTemplate3'];
+// Only search in ECADYB database
+$batchTemplates = ['ECADYB'];
 
 $collections = [
     "bsme"   => "BS Marine Engineering",
@@ -59,14 +59,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 foreach ($collections as $collectionName => $course) {
                     $collection = $departmentsDB->{$collectionName};
 
+                    // Try to find student with either 'student id' or 'student_id' field name
                     $student = $collection->findOne([
-                        'student id' => $username,
-                        'password'   => $password
+                        '$or' => [
+                            [
+                                'student id' => $username,
+                                'password'   => $password
+                            ],
+                            [
+                                'student_id' => $username,
+                                'password'   => $password
+                            ]
+                        ]
                     ]);
 
                     if ($student) {
+                        // Get student ID from either field name variation
+                        $studentIdValue = $student['student id'] ?? $student['student_id'] ?? $username;
+                        
                         $_SESSION['role']       = 'student';
-                        $_SESSION['student_id'] = $student['student id'];
+                        $_SESSION['student_id'] = $studentIdValue;
                         $_SESSION['name']       = trim(($student['first name'] ?? '') . ' ' . ($student['middle name'] ?? '') . ' ' . ($student['last name'] ?? ''));
                         $_SESSION['department'] = $course;
                         $_SESSION['section']    = $student['department section'] ?? '';

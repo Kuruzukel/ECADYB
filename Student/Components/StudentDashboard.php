@@ -42,13 +42,13 @@ try {
     ];
     
     // Determine which database and collection to use
-    $dbName = $_SESSION['batch_template'] ?? "BatchTemplate1"; // Use batch template from session
+    $dbName = $_SESSION['batch_template'] ?? "ECADYB"; // Use batch template from session, default to ECADYB
     $collectionName = $collections[$studentDepartment] ?? 'bsme';
     
     $db = $client->$dbName;
     $collection = $db->$collectionName;
     
-    // Find the student by student ID
+    // Find the student by student ID (trying both field name variations)
     $student = $collection->findOne([
         '$or' => [
             ['student id' => $studentId],
@@ -56,13 +56,35 @@ try {
         ]
     ]);
     
+    // If not found in the expected collection, search all collections in this batch template
+    if (!$student) {
+        foreach ($collections as $fullName => $collName) {
+            if ($collName === $collectionName) continue; // Skip the one we already tried
+            
+            $altCollection = $db->$collName;
+            $student = $altCollection->findOne([
+                '$or' => [
+                    ['student id' => $studentId],
+                    ['student_id' => $studentId]
+                ]
+            ]);
+            
+            if ($student) {
+                // Update the collection name if found in a different collection
+                $collectionName = $collName;
+                $collection = $altCollection;
+                break;
+            }
+        }
+    }
+    
     if ($student) {
         $studentAcademicYear = $student['academic year'] ?? '';
         $studentProgram = $student['program'] ?? '';
         $studentStatus = $student['status'] ?? 'Pending';
         
-        // Fetch student photo from StudentPhotos collection in the same database
-        $studentPhotosCollection = $db->StudentPhotos;
+        // Fetch student photo from Student_Photos collection in the same database
+        $studentPhotosCollection = $db->Student_Photos;
         
         // Find the student photo by student ID
         $studentPhoto = $studentPhotosCollection->findOne([
@@ -83,6 +105,9 @@ try {
         $_SESSION['program'] = $studentProgram;
         $_SESSION['status'] = $studentStatus;
         $_SESSION['profile_photo'] = $studentProfilePhoto;
+    } else {
+        // Debug: Log that student was not found
+        error_log("Student not found with ID: " . $studentId . " in database: " . $dbName . " collection: " . $collectionName);
     }
 } catch (Exception $e) {
     error_log("Error fetching student data: " . $e->getMessage());
@@ -162,6 +187,9 @@ try {
       };
       
       console.log('Student Data Loaded:', window.studentData);
+      console.log('Database:', '<?php echo $dbName ?? "ECADYB"; ?>');
+      console.log('Collection:', '<?php echo $collectionName ?? "bsn"; ?>');
+      console.log('Student Found:', <?php echo $student ? 'true' : 'false'; ?>);
     </script>
   </head>
 
@@ -181,12 +209,12 @@ try {
         </div>
         <div class="hero-message">
           <div>
-            Welcome, <strong><?php echo htmlspecialchars($studentName); ?></strong>!
+            Welcome, <strong><?php echo htmlspecialchars($studentName ?: 'Student'); ?></strong>!
           </div>
           <div style="font-size: 0.9em; margin-top: 0.5em; opacity: 0.9;">
-            <i class="fas fa-id-card"></i> Student ID: <?php echo htmlspecialchars($studentId); ?> | 
-            <i class="fas fa-graduation-cap"></i> <?php echo htmlspecialchars($studentDepartment); ?> | 
-            <i class="fas fa-calendar"></i> <?php echo htmlspecialchars($studentAcademicYear); ?>
+            <i class="fas fa-id-card"></i> Student ID: <?php echo htmlspecialchars($studentId ?: 'N/A'); ?> | 
+            <i class="fas fa-graduation-cap"></i> <?php echo htmlspecialchars($studentDepartment ?: 'N/A'); ?> | 
+            <i class="fas fa-calendar"></i> <?php echo htmlspecialchars($studentAcademicYear ?: 'N/A'); ?>
           </div>
           <div style="margin-top: 1em;">
             Step into your digital yearbook. Every achievement and memory comes

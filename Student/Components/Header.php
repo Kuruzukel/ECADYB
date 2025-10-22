@@ -5,6 +5,9 @@ $studentName = $_SESSION['name'] ?? '';
 $studentDepartment = $_SESSION['department'] ?? '';
 $studentSection = $_SESSION['section'] ?? '';
 $studentProfilePhoto = $_SESSION['profile_photo'] ?? '';
+
+// Student photo is already fetched in StudentDashboard.php and stored in session
+// No need to fetch it again here to avoid duplicate MongoDB connections
 ?>
 <header>
   <div class="logo">
