@@ -2006,7 +2006,6 @@ function confirmSelectTemplate() {
       window.updateUploadBoxStates();
     }
 
-    // Trigger a custom event to notify other parts of the app (like department iframes)
     window.dispatchEvent(
       new CustomEvent("batchTemplateSelected", {
         detail: {
