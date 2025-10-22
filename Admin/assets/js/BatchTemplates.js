@@ -1650,7 +1650,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
                   reject(new Error(data.message || "Upload failed"));
                 }
               } catch (e) {
-                // Remove from pending on parse error
                 const pendingIndex = pendingUploads.findIndex(
                   (f) =>
                     f.slot === slot &&
