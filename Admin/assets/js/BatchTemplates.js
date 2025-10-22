@@ -1271,7 +1271,7 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
             uploadCancelled =
               results.some((result) => result && result.cancelled) ||
               isUploadCancelled ||
-              isCancelling; // Also check global cancellation flag
+              isCancelling;
 
             if (!uploadCancelled && !isUploadCancelled && !isCancelling) {
               // Get the URLs from the server response
