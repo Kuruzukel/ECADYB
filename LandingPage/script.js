@@ -1,4 +1,13 @@
 document.addEventListener("DOMContentLoaded", function () {
+  // Clean up any existing fragments in the URL on page load
+  if (window.location.hash) {
+    setTimeout(() => {
+      if (window.history && window.history.replaceState) {
+        window.history.replaceState(null, null, window.location.pathname);
+      }
+    }, 100);
+  }
+
   const hamburgerMenu = document.getElementById("hamburgerMenu");
   const centerNav = document.querySelector(".center-nav");
 
@@ -50,6 +59,13 @@ document.addEventListener("DOMContentLoaded", function () {
         targetSection.scrollIntoView({
           behavior: "smooth",
         });
+        
+        // Remove the fragment from URL after scrolling
+        setTimeout(() => {
+          if (window.history && window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.pathname);
+          }
+        }, 1000);
       }
     });
   });
@@ -71,6 +87,13 @@ document.addEventListener("DOMContentLoaded", function () {
         targetSection.scrollIntoView({
           behavior: "smooth",
         });
+        
+        // Remove the fragment from URL after scrolling
+        setTimeout(() => {
+          if (window.history && window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.pathname);
+          }
+        }, 1000);
       }
     });
   });
