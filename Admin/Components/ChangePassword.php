@@ -56,7 +56,7 @@
                                 <p>Current Password:</p>
                             </div>
                             <div class="passwordField" data-isvisible="false">
-                                <input name="password" id="loginPass" type="password" placeholder="Current Password"
+                                <input name="currentPassword" id="currentPassword" type="password" placeholder="Current Password"
                                     maxlength="8" autocomplete="off" required>
                                 <div class="eyeIcon open">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -91,7 +91,7 @@
                                     <p>New Password:</p>
                                 </div>
                                 <div class="passwordField" data-isvisible="false">
-                                    <input name="password" id="loginPass" type="password" placeholder="New Password"
+                                    <input name="newPassword" id="newPassword" type="password" placeholder="New Password"
                                         maxlength="8" autocomplete="off" required>
                                     <div class="eyeIcon open">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -126,7 +126,7 @@
                                         <p>Confirm Password:</p>
                                     </div>
                                     <div class="passwordField" data-isvisible="false">
-                                        <input name="password" id="loginPass" type="password"
+                                        <input name="confirmPassword" id="confirmPassword" type="password"
                                             placeholder="Confirm Password" maxlength="8" autocomplete="off" required>
                                         <div class="eyeIcon open">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
