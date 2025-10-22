@@ -1491,7 +1491,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
             `⏳ Starting 5-second cancellation window for Slot ${slot} ${side}`
           );
 
-          // Countdown from 5 to 1
           for (let secondsLeft = 5; secondsLeft > 0; secondsLeft--) {
             // Check if cancelled during countdown
             if (isCancelling) {
