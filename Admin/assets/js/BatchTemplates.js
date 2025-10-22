@@ -1623,7 +1623,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
                       `  Moved from pending (${pendingUploads.length} remaining) to completed (${lastUploadedFiles.length} total)`
                     );
                   } else {
-                    // Fallback if not found in pending
                     lastUploadedFiles.push(fileInfo);
                     console.log(
                       `✓ Upload completed for Slot ${slot} ${side} - Added to completed (${lastUploadedFiles.length} total)`
