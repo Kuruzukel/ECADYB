@@ -1866,7 +1866,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
         const templateNumber =
           localStorage.getItem("selectedBatchTemplateNumber") || 1;
 
-        // Build query parameters
         const params = new URLSearchParams({
           template: templateNumber,
         });
