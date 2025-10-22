@@ -1573,7 +1573,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
                 )}%`
               );
 
-              // Update upload overlay text
               if (uploadText) {
                 uploadText.textContent = `Uploading Slot ${slot} ${side}... ${percentComplete.toFixed(
                   0
