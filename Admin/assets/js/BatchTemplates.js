@@ -1448,7 +1448,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
       isSingleUpload = false
     ) {
       const MAX_RETRIES = 3;
-      // Reduce timeout for slot 8 (background) as it's typically a single large file
       const UPLOAD_TIMEOUT = slot === 8 ? 120000 : 60000;
 
       try {
