@@ -1187,7 +1187,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
             return;
           }
 
-          // Show upload progress for background slot
           if (uploadOverlay && uploadText) {
             uploadOverlay.style.display = "flex";
             uploadText.textContent = `Preparing upload... (5s to cancel)`;
