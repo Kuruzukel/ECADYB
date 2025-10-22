@@ -86,15 +86,19 @@
       href="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png"
       type="image/png"
     />
+    <script>
+      // Detect base path for asset loading
+      var assetBasePath = window.location.pathname.includes('/ECADYB/') ? '/ECADYB/' : '/ECADYB/';
+    </script>
     <script
       type="text/javascript"
-      src="../../Turn.js/extras/jquery.min.js"
+      src="/ECADYB/Turn.js/extras/jquery.min.js"
     ></script>
-    <script type="text/javascript" src="../../Turn.js/lib/hash.js"></script>
-    <script type="text/javascript" src="../../Turn.js/lib/turn.min.js"></script>
-    <script type="text/javascript" src="../../Turn.js/lib/zoom.min.js"></script>
-    <script type="text/javascript" src="js/magazine.js?v=1736979600"></script>
-    <link rel="stylesheet" href="css/magazine.css?v=1736979600" />
+    <script type="text/javascript" src="/ECADYB/Turn.js/lib/hash.js"></script>
+    <script type="text/javascript" src="/ECADYB/Turn.js/lib/turn.min.js"></script>
+    <script type="text/javascript" src="/ECADYB/Turn.js/lib/zoom.min.js"></script>
+    <script type="text/javascript" src="/ECADYB/Admin/Yearbook/js/magazine.js?v=1736979600"></script>
+    <link rel="stylesheet" href="/ECADYB/Admin/Yearbook/css/magazine.css?v=1736979600" />
 
     <script type="text/javascript">
       // Define $.isTouch for touch device detection
