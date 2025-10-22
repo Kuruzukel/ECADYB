@@ -1527,7 +1527,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
               }
             }
 
-            // Wait 1 second
             await new Promise((resolve) => setTimeout(resolve, 1000));
           }
 
