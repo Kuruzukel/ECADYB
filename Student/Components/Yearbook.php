@@ -103,16 +103,69 @@ $departmentCode = $departmentCodes[$studentDepartment] ?? 'BSME';
       <div class="yearbooks-background"></div>
 
       <main class="yearbook-slider-main">
-        <div class="yearbook-iframe-container">
+        <!-- Intro Content -->
+        <div class="yearbook-intro-content">
+          <h1 class="yearbook-main-title">Digital Yearbook</h1>
+          <h2 class="yearbook-subtitle">Exact Colleges of Asia</h2>
+          <p class="yearbook-description">
+            Click on any yearbook below to explore your department yearbook.
+          </p>
+        </div>
+
+        <!-- Iframe Container (hidden by default) -->
+        <div class="yearbook-iframe-container" style="display: none;">
           <iframe 
-            src="/ECADYB/Admin/Yearbook/index.html?department=<?php echo htmlspecialchars($departmentCode); ?>" 
+            id="yearbookIframe"
+            src="" 
             width="100%" 
             height="100%"
             style="border: none;"
-            title="Digital Yearbook - <?php echo htmlspecialchars($studentDepartment); ?>"
+            title="Digital Yearbook"
           ></iframe>
         </div>
 
+        <!-- Yearbook Items Container -->
+        <div class="yearbook-items-container">
+          <ul class="yearbook-slider">
+            <li class="yearbook-item" 
+                style="background-image: url('https://ECADYB.b-cdn.net/img/YB%20COVER/MaritimeEducation.png');"
+                onclick="showYearbookIframe('BSME', 'Maritime Education')"
+                data-department="BSME">
+            </li>
+            <li class="yearbook-item" 
+                style="background-image: url('https://ECADYB.b-cdn.net/img/YB%20COVER/TourismManagement.png');"
+                onclick="showYearbookIframe('BSTM', 'Tourism Management')"
+                data-department="BSTM">
+            </li>
+            <li class="yearbook-item" 
+                style="background-image: url('https://ECADYB.b-cdn.net/img/YB%20COVER/CriminalJusticeEducation.png');"
+                onclick="showYearbookIframe('BSCJE', 'Criminal Justice Education')"
+                data-department="BSCJE">
+            </li>
+            <li class="yearbook-item" 
+                style="background-image: url('https://ECADYB.b-cdn.net/img/YB%20COVER/InformationSystem.png');"
+                onclick="showYearbookIframe('BSIS', 'Information System')"
+                data-department="BSIS">
+            </li>
+            <li class="yearbook-item" 
+                style="background-image: url('https://ECADYB.b-cdn.net/img/YB%20COVER/Education.png');"
+                onclick="showYearbookIframe('BTVTED', 'Education')"
+                data-department="BTVTED">
+            </li>
+            <li class="yearbook-item" 
+                style="background-image: url('https://ECADYB.b-cdn.net/img/YB%20COVER/BusinessAdministration.png');"
+                onclick="showYearbookIframe('BSBA', 'Business Administration')"
+                data-department="BSBA">
+            </li>
+            <li class="yearbook-item" 
+                style="background-image: url('https://ECADYB.b-cdn.net/img/YB%20COVER/Nursing.png');"
+                onclick="showYearbookIframe('BSN', 'Nursing')"
+                data-department="BSN">
+            </li>
+          </ul>
+        </div>
+
+        <!-- Bottom Curl -->
         <div class="yearbook-lower-curl">
           <svg
             viewBox="0 0 1440 120"
@@ -142,6 +195,136 @@ $departmentCode = $departmentCodes[$studentDepartment] ?? 'BSME';
 
     <?php include __DIR__ . '/Footer.php'; ?>
     <script src="/ECADYB/Student/assets/js/StudentDashboard.js"></script>
+    <script>
+      // Function to show yearbook iframe when clicking on a yearbook item
+      function showYearbookIframe(departmentCode, departmentName) {
+        const introContent = document.querySelector('.yearbook-intro-content');
+        const iframeContainer = document.querySelector('.yearbook-iframe-container');
+        const iframe = document.getElementById('yearbookIframe');
+        const itemsContainer = document.querySelector('.yearbook-items-container');
+        const allItems = document.querySelectorAll('.yearbook-item');
+
+        // Remove active class from all items
+        allItems.forEach(item => item.classList.remove('active'));
+        
+        // Add active class to clicked item
+        const clickedItem = document.querySelector(`[data-department="${departmentCode}"]`);
+        if (clickedItem) {
+          clickedItem.classList.add('active');
+        }
+
+        // Hide intro content
+        if (introContent) {
+          introContent.style.display = 'none';
+        }
+
+        // Hide yearbook slider
+        if (itemsContainer) {
+          itemsContainer.style.display = 'none';
+        }
+
+        // Update iframe src and show it
+        if (iframe && iframeContainer) {
+          iframe.src = `/ECADYB/Admin/Yearbook/index.html?department=${departmentCode}`;
+          iframe.title = `Digital Yearbook - ${departmentName}`;
+          iframeContainer.style.display = 'block';
+          
+          // Request full screen mode
+          if (iframeContainer.requestFullscreen) {
+            iframeContainer.requestFullscreen().catch(err => {
+              console.log('Full screen request failed:', err);
+            });
+          } else if (iframeContainer.webkitRequestFullscreen) {
+            iframeContainer.webkitRequestFullscreen();
+          } else if (iframeContainer.msRequestFullscreen) {
+            iframeContainer.msRequestFullscreen();
+          }
+        }
+      }
+
+      // Function to close yearbook iframe
+      function closeYearbookIframe() {
+        const introContent = document.querySelector('.yearbook-intro-content');
+        const iframeContainer = document.querySelector('.yearbook-iframe-container');
+        const iframe = document.getElementById('yearbookIframe');
+        const itemsContainer = document.querySelector('.yearbook-items-container');
+        const allItems = document.querySelectorAll('.yearbook-item');
+
+        // Exit full screen mode
+        if (document.exitFullscreen) {
+          document.exitFullscreen().catch(err => {
+            console.log('Exit full screen failed:', err);
+          });
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        }
+
+        // Remove active class from all items
+        allItems.forEach(item => item.classList.remove('active'));
+
+        // Show intro content
+        if (introContent) {
+          introContent.style.display = 'block';
+        }
+
+        // Show yearbook slider
+        if (itemsContainer) {
+          itemsContainer.style.display = 'flex';
+        }
+
+        // Hide and reset iframe
+        if (iframeContainer && iframe) {
+          iframeContainer.style.display = 'none';
+          iframe.src = '';
+        }
+      }
+
+      // Close iframe with Escape key
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          const iframeContainer = document.querySelector('.yearbook-iframe-container');
+          if (iframeContainer && iframeContainer.style.display === 'block') {
+            closeYearbookIframe();
+          }
+        }
+      });
+
+      // Listen for full screen change events
+      document.addEventListener('fullscreenchange', function() {
+        if (!document.fullscreenElement) {
+          // User exited full screen, close the iframe
+          const iframeContainer = document.querySelector('.yearbook-iframe-container');
+          if (iframeContainer && iframeContainer.style.display === 'block') {
+            closeYearbookIframe();
+          }
+        }
+      });
+
+      // Listen for webkit full screen change events (Safari)
+      document.addEventListener('webkitfullscreenchange', function() {
+        if (!document.webkitFullscreenElement) {
+          // User exited full screen, close the iframe
+          const iframeContainer = document.querySelector('.yearbook-iframe-container');
+          if (iframeContainer && iframeContainer.style.display === 'block') {
+            closeYearbookIframe();
+          }
+        }
+      });
+
+      // Initialize yearbook items on page load
+      document.addEventListener('DOMContentLoaded', function() {
+        const yearBookItems = document.querySelectorAll('.yearbook-item');
+        yearBookItems.forEach((item) => {
+          if (item) {
+            item.style.transform = '';
+            item.style.willChange = 'transform';
+            item.style.backfaceVisibility = 'hidden';
+          }
+        });
+      });
+    </script>
   </body>
 </html>
 

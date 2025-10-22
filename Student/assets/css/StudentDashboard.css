@@ -3681,3 +3681,151 @@ header.fading {
 
 @media only screen and (min-width: 320px) and (max-width: 479px) and (orientation: landscape) {
 }
+
+/* Yearbook Close Button Styles */
+.yearbook-close-btn {
+  position: absolute;
+  top: 5.5rem;
+  right: 1.5rem;
+  width: 45px;
+  height: 45px;
+  border: none;
+  border-radius: 50%;
+  background-color: #112d4e;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 12px rgba(99, 102, 241, 0.18);
+  border: 1px solid #0c27be;
+  z-index: 1000;
+}
+
+/* Close button in full screen mode */
+.yearbook-iframe-container:fullscreen .yearbook-close-btn,
+.yearbook-iframe-container:-webkit-full-screen .yearbook-close-btn,
+.yearbook-iframe-container:-moz-full-screen .yearbook-close-btn,
+.yearbook-iframe-container:-ms-fullscreen .yearbook-close-btn {
+  top: 1rem;
+  right: 1rem;
+  background-color: #112d4e;
+}
+
+.yearbook-close-btn:hover {
+  background: linear-gradient(135deg, #0d39d9 0%, #112d4e 100%);
+  color: #ffffff !important;
+  border-radius: 50%;
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.25),
+    0 0 0 2px rgba(252, 218, 21, 0.3);
+  border: 2px solid #fcda15;
+  transform: scale(1.1);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.yearbook-close-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2;
+}
+
+/* Yearbook iframe container update */
+.yearbook-iframe-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: calc(100% - 60px);
+  z-index: 5;
+  background: transparent;
+  box-sizing: border-box;
+  margin-top: 4.3rem;
+}
+
+/* Full screen mode styles */
+.yearbook-iframe-container:fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center center/cover no-repeat;
+  z-index: 9999;
+}
+
+.yearbook-iframe-container:-webkit-full-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center center/cover no-repeat;
+  z-index: 9999;
+}
+
+.yearbook-iframe-container:-moz-full-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center center/cover no-repeat;
+  z-index: 9999;
+}
+
+.yearbook-iframe-container:-ms-fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center center/cover no-repeat;
+  z-index: 9999;
+}
+
+/* Yearbook items transition */
+.yearbook-items-container {
+  transition: bottom 0.3s ease;
+}
+
+.yearbook-item.active {
+  transform: scale(0.9);
+  opacity: 0.8;
+}
+
+/* Responsive close button */
+@media (max-width: 768px) {
+  .yearbook-close-btn {
+    top: 4.5rem;
+    right: 1rem;
+    width: 40px;
+    height: 40px;
+  }
+
+  .yearbook-close-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .yearbook-close-btn {
+    top: 4rem;
+    right: 0.75rem;
+    width: 36px;
+    height: 36px;
+  }
+
+  .yearbook-close-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+}
