@@ -1298,7 +1298,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
               console.log("frontImg element:", frontImg);
               console.log("backImg element:", backImg);
 
-              // Wait for images to load before appending
               await new Promise((resolve) => {
                 let loadedCount = 0;
                 const checkLoaded = () => {
