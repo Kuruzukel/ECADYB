@@ -1,6 +1,6 @@
 <?php
 session_start();
-require __DIR__ . '/../../config.php';
+require __DIR__ . '/../../Connection/Configuration/config.php';
 
 // Unset all session variables
 $_SESSION = array();
