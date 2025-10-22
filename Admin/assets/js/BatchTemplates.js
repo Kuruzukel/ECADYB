@@ -1982,7 +1982,6 @@ function confirmSelectTemplate() {
 
     const sections = document.querySelectorAll(".section");
 
-    // Extract and store the batch year from the section header
     const sectionHeader =
       window.pendingSelectSection.querySelector(".section-header");
     const batchYear = sectionHeader ? sectionHeader.textContent.trim() : "";
