@@ -483,9 +483,18 @@ document.addEventListener("DOMContentLoaded", function () {
   const loginBtn = document.getElementById("loginDropdownBtn");
   const mobileLoginBtn = document.getElementById("mobileLoginDropdownBtn");
 
-  // Auto-detect base URL for Railway vs Localhost
-  const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-  const BASE_URL = isLocalhost ? '/ECADYB/' : '/';
+  // Use BASE_URL from HTML if available, otherwise auto-detect
+  let BASE_URL_LOGIN;
+  
+  if (typeof BASE_URL !== 'undefined') {
+    // BASE_URL is defined in the HTML head section
+    BASE_URL_LOGIN = BASE_URL;
+  } else {
+    // Fallback: Auto-detect base URL for Railway vs Localhost
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    const isInLandingPage = window.location.pathname.includes('/LandingPage/');
+    BASE_URL_LOGIN = (isLocalhost && !isInLandingPage) ? '/ECADYB/' : '/';
+  }
 
   function handleLoginClick(e) {
     e.preventDefault();
@@ -494,7 +503,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.body.classList.add("page-transition-out");
 
     setTimeout(() => {
-      window.location.href = BASE_URL + "Public/Components/Login.php";
+      window.location.href = BASE_URL_LOGIN + "Public/Components/Login.php";
     }, 1000);
   }
 
@@ -517,8 +526,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
+    // Detect service worker path based on current location
+    const isInLandingPage = window.location.pathname.includes('/LandingPage/');
+    const swPath = isInLandingPage ? './service-worker.js' : './LandingPage/service-worker.js';
+    
     navigator.serviceWorker
-      .register("./service-worker.js")
+      .register(swPath)
       .then((reg) => console.log("✅ Service Worker registered:", reg.scope))
       .catch((err) => console.log("❌ Service Worker failed:", err));
   });
@@ -710,6 +723,112 @@ function closeYearbookView() {
     console.error("Error in closeYearbookView:", error);
   }
 }
+
+// Mobile yearbook slider navigation
+let currentYearbookIndex = 0;
+
+function navigateYearbook(direction) {
+  try {
+    // Only apply navigation on mobile screens
+    if (window.innerWidth > 480) {
+      return;
+    }
+
+    const items = document.querySelectorAll('.yearbook-item');
+    if (!items || items.length === 0) {
+      return;
+    }
+
+    // Remove all classes from all items
+    items.forEach(item => {
+      item.classList.remove('mobile-active', 'mobile-prev', 'mobile-next');
+    });
+
+    // Calculate new index
+    if (direction === 'next') {
+      currentYearbookIndex = (currentYearbookIndex + 1) % items.length;
+    } else if (direction === 'prev') {
+      currentYearbookIndex = (currentYearbookIndex - 1 + items.length) % items.length;
+    }
+
+    // Add active class to current item
+    items[currentYearbookIndex].classList.add('mobile-active');
+
+    // Add prev class to previous item
+    const prevIndex = (currentYearbookIndex - 1 + items.length) % items.length;
+    items[prevIndex].classList.add('mobile-prev');
+
+    // Add next class to next item
+    const nextIndex = (currentYearbookIndex + 1) % items.length;
+    items[nextIndex].classList.add('mobile-next');
+
+    // Ensure click handlers are working for the new active item
+    items.forEach((item, index) => {
+      // Remove existing click listeners to avoid duplicates
+      item.removeEventListener('click', handleMobileYearbookClick);
+      // Add new click listener
+      item.addEventListener('click', handleMobileYearbookClick);
+    });
+
+    console.log('Navigated to yearbook item:', currentYearbookIndex);
+  } catch (error) {
+    console.error('Error in navigateYearbook:', error);
+  }
+}
+
+// Separate function for mobile yearbook click handling
+function handleMobileYearbookClick(e) {
+  if (this.classList.contains('mobile-active')) {
+    // Only allow clicks on the active item
+    const imageUrl = 'https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png';
+    showYearbookBackground(this, imageUrl);
+  }
+}
+
+// Initialize mobile slider on page load
+function initMobileYearbookSlider() {
+  try {
+    if (window.innerWidth <= 480) {
+      const items = document.querySelectorAll('.yearbook-item');
+      items.forEach((item, index) => {
+        item.classList.remove('mobile-active', 'mobile-prev', 'mobile-next');
+      });
+      
+      if (items.length > 0) {
+        currentYearbookIndex = 0;
+        
+        // Set active item (center)
+        items[0].classList.add('mobile-active');
+        
+        // Set previous item (left side)
+        const prevIndex = (items.length - 1) % items.length;
+        items[prevIndex].classList.add('mobile-prev');
+        
+        // Set next item (right side)
+        if (items.length > 1) {
+          items[1].classList.add('mobile-next');
+        }
+        
+        // Add click handlers for mobile
+        items.forEach((item, index) => {
+          item.addEventListener('click', handleMobileYearbookClick);
+        });
+      }
+    }
+  } catch (error) {
+    console.error('Error initializing mobile yearbook slider:', error);
+  }
+}
+
+// Reinitialize on window resize
+window.addEventListener('resize', function() {
+  initMobileYearbookSlider();
+});
+
+// Initialize on DOM load
+document.addEventListener('DOMContentLoaded', function() {
+  initMobileYearbookSlider();
+});
 
 document.addEventListener("keydown", function (e) {
   try {

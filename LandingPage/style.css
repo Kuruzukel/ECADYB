@@ -850,6 +850,10 @@ header.fading {
   backface-visibility: hidden;
 }
 
+.yearbook-slider-nav {
+  display: none;
+}
+
 .yearbook-item {
   width: 120px;
   height: 180px;
@@ -3241,26 +3245,125 @@ header.fading {
     width: 95%;
     margin: 0 auto;
     color: white;
+    top: 28%;
   }
 
   .yearbook-items-container {
     padding: 1rem 1rem;
     gap: 10px;
-    bottom: 2rem;
+    top: 43%;
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    overflow: visible;
+  }
+
+  .yearbook-slider {
+    overflow: visible;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 300px;
   }
 
   .yearbook-item {
-    width: 33px;
-    height: 48px;
-    position: static;
+    width: 200px;
+    height: 280px;
+    position: absolute;
     background-position: center;
     background-size: cover;
-    transition: transform 0.3s ease-out;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
     list-style-type: none;
     transform-origin: center center;
-    will-change: transform;
+    will-change: transform, opacity;
     backface-visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    border-radius: 8px;
+    left: 50%;
+    transform: translateX(-50%) scale(0.7);
+  }
+
+  .yearbook-item.mobile-active {
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 3;
+    transform: translateX(-50%) scale(1);
+  }
+
+  /* Previous item (left side) */
+  .yearbook-item.mobile-active + .yearbook-item {
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 1;
+    transform: translateX(-180%) scale(0.75);
+  }
+
+  /* Show previous item with a class */
+  .yearbook-item.mobile-prev {
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 1;
+    transform: translateX(-180%) scale(0.75);
+  }
+
+  /* Show next item with a class */
+  .yearbook-item.mobile-next {
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 1;
+    transform: translateX(80%) scale(0.75);
+  }
+
+  /* Disable hover effects on mobile */
+  .yearbook-item:hover,
+  .yearbook-item:not(.active):hover,
+  .yearbook-item.active:hover {
+    transform: none !important;
+  }
+
+  .yearbook-slider-main.show-yearbook-bg .yearbook-item:hover {
+    transform: none !important;
+  }
+
+  /* Hide yearbook items and navigation when popup is shown */
+  .yearbook-slider-main.show-yearbook-bg .yearbook-items-container {
+    display: none;
+  }
+
+  .yearbook-slider-nav {
+    display: flex !important;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.45);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .yearbook-slider-nav.prev {
+    left: 10px;
+  }
+
+  .yearbook-slider-nav.next {
+    right: 10px;
+  }
+
+  .yearbook-slider-nav i {
+    font-size: 1.2rem;
   }
 
   .carousel-subtitle {
@@ -3374,6 +3477,117 @@ header.fading {
     width: 100%;
     max-width: 100%;
     padding: 0 0.3rem;
+  }
+
+  /* Yearbook Detail Popup Mobile Styles */
+  .yearbook-detail-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    width: 100%;
+    max-width: 100%;
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 1rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    height: 80vh;
+    max-height: 76vh;
+    overflow: hidden;
+  }
+
+  .yearbook-detail-display {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 5;
+    width: 100%;
+    display: none;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .yearbook-detail-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: white;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+  }
+
+  .yearbook-detail-close-btn:hover {
+    background: rgba(0, 0, 0, 0.6);
+    transform: scale(1.1);
+  }
+
+  .yearbook-detail-close-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .yearbook-cover-large {
+    width: 100%;
+    max-width: 250px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .yearbook-cover-image {
+    width: 180px;
+    height: 250px;
+    border-radius: 8px;
+  }
+
+  .yearbook-info {
+    text-align: center;
+    color: white;
+    width: 100%;
+  }
+
+  .yearbook-detail-title {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-bottom: 8px !important;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
+    font-family: "arial-black", sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #ffffff;
+    text-align: center;
+  }
+
+  .yearbook-detail-subtitle {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 8px !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+    color: #fcda15;
+    font-family: "Segoe UI", sans-serif;
+    text-align: center;
+  }
+
+  .yearbook-detail-description {
+    font-size: 1rem;
+    line-height: 1.6;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    color: #e0e7ff;
+    font-family: "Segoe UI", sans-serif;
+    text-align: center;
+    margin: 0;
   }
 }
 

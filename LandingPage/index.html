@@ -55,10 +55,25 @@
     <script>
       // Auto-detect base URL for Railway vs Localhost
       const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-      const BASE_URL = isLocalhost ? '/ECADYB/' : '/';
+      
+      // Check if we're in the LandingPage directory or root
+      const isInLandingPage = window.location.pathname.includes('/LandingPage/');
+      
+      let BASE_URL;
+      let cssPath;
+      
+      if (isInLandingPage) {
+        // Serving from LandingPage directory (e.g., live server on LandingPage/index.html)
+        BASE_URL = isLocalhost ? '../' : '/';
+        cssPath = './style.css';
+      } else {
+        // Serving from root (e.g., XAMPP serving from ECADYB root)
+        BASE_URL = isLocalhost ? '/ECADYB/' : '/';
+        cssPath = BASE_URL + 'LandingPage/style.css';
+      }
       
       // Dynamically set the stylesheet href
-      document.write('<link rel="stylesheet" href="' + BASE_URL + 'LandingPage/style.css" />');
+      document.write('<link rel="stylesheet" href="' + cssPath + '" />');
     </script>
 
     <link
@@ -302,9 +317,15 @@
           </svg>
         </div>
         <div class="yearbook-items-container">
+          <button class="yearbook-slider-nav prev" onclick="navigateYearbook('prev')">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <button class="yearbook-slider-nav next" onclick="navigateYearbook('next')">
+            <i class="fas fa-chevron-right"></i>
+          </button>
           <ul class="yearbook-slider">
             <li
-              class="yearbook-item"
+              class="yearbook-item mobile-active"
               style="
                 background-image: url('https://ECADYB.b-cdn.net/img/YB%20COVER/MaritimeEducation.png');
               "
@@ -610,7 +631,7 @@
     <script>
       // Load script with correct base URL
       const scriptTag = document.createElement('script');
-      scriptTag.src = BASE_URL + 'LandingPage/script.js';
+      scriptTag.src = isInLandingPage ? './script.js' : (BASE_URL + 'LandingPage/script.js');
       document.body.appendChild(scriptTag);
     </script>
   </body>
