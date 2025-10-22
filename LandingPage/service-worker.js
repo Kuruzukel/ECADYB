@@ -1,7 +1,7 @@
 // service-worker.js
 
-// Updated cache version to force refresh and clear old cache
-const CACHE_VERSION = "v8";
+/*
+const CACHE_VERSION = "v7";
 const CACHE_PREFIX = "ecadyb";
 const STATIC_CACHE = `${CACHE_PREFIX}-static-${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `${CACHE_PREFIX}-dynamic-${CACHE_VERSION}`;
@@ -357,3 +357,4 @@ self.addEventListener("message", (event) => {
     );
   }
 });
+*/

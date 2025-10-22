@@ -4,28 +4,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if (!hamburgerMenu || !centerNav) return;
 
-  const toggleMenu = function (e) {
+  hamburgerMenu.addEventListener("click", function (e) {
     e.stopPropagation();
-    e.preventDefault();
     this.classList.toggle("active");
     centerNav.classList.toggle("mobile-active");
-  };
-
-  hamburgerMenu.addEventListener("click", toggleMenu);
-  hamburgerMenu.addEventListener("touchend", function(e) {
-    e.preventDefault();
-    toggleMenu.call(this, e);
-  }, { passive: false });
+  });
 
   const navLinks = centerNav.querySelectorAll("a");
   navLinks.forEach((link) => {
-    const handleLinkClick = function () {
+    link.addEventListener("click", function () {
       hamburgerMenu.classList.remove("active");
       centerNav.classList.remove("mobile-active");
-    };
-    
-    link.addEventListener("click", handleLinkClick);
-    link.addEventListener("touchstart", handleLinkClick, { passive: true });
+    });
   });
 
   document.addEventListener("click", function (event) {
@@ -46,9 +36,8 @@ document.addEventListener("DOMContentLoaded", function () {
   );
 
   navLinks.forEach((link) => {
-    const handleNavClick = function (e) {
+    link.addEventListener("click", function (e) {
       e.preventDefault();
-      e.stopPropagation();
 
       navLinks.forEach((navLink) => navLink.classList.remove("clicked"));
 
@@ -58,31 +47,16 @@ document.addEventListener("DOMContentLoaded", function () {
       const targetSection = document.querySelector(targetId);
 
       if (targetSection) {
-        // Smooth scroll to section
         targetSection.scrollIntoView({
           behavior: "smooth",
         });
-        
-        // Keep URL clean without hash (consistent across all devices)
-        if (history.pushState) {
-          const currentPath = window.location.pathname + window.location.search;
-          history.pushState(null, null, currentPath);
-        }
       }
-    };
-
-    link.addEventListener("click", handleNavClick);
-    link.addEventListener("touchstart", function(e) {
-      e.preventDefault();
-      handleNavClick.call(this, e);
-    }, { passive: false });
+    });
   });
 
   heroButtons.forEach((button) => {
-    // Handle both click and touch events
-    const handleInteraction = function (e) {
+    button.addEventListener("click", function (e) {
       e.preventDefault();
-      e.stopPropagation();
 
       this.classList.add("clicked");
 
@@ -94,24 +68,11 @@ document.addEventListener("DOMContentLoaded", function () {
       const targetSection = document.querySelector(targetId);
 
       if (targetSection) {
-        // Smooth scroll to section
         targetSection.scrollIntoView({
           behavior: "smooth",
         });
-        
-        // Keep URL clean without hash (consistent across all devices)
-        if (history.pushState) {
-          const currentPath = window.location.pathname + window.location.search;
-          history.pushState(null, null, currentPath);
-        }
       }
-    };
-
-    button.addEventListener("click", handleInteraction);
-    button.addEventListener("touchstart", function(e) {
-      e.preventDefault();
-      handleInteraction.call(this, e);
-    }, { passive: false });
+    });
   });
 });
 
@@ -178,7 +139,7 @@ let isDragging = false;
 track.addEventListener("touchstart", (e) => {
   startX = e.touches[0].clientX;
   isDragging = true;
-}, { passive: true });
+});
 
 track.addEventListener("touchmove", (e) => {
   if (!isDragging) return;
@@ -187,7 +148,7 @@ track.addEventListener("touchmove", (e) => {
   track.style.transform = `translateX(calc(-${
     (currentIndex + 1) * 100
   }% + ${diff}px))`;
-}, { passive: true });
+});
 
 track.addEventListener("touchend", (e) => {
   isDragging = false;
@@ -550,10 +511,6 @@ document.addEventListener("DOMContentLoaded", function () {
     loginBtn.replaceWith(loginBtn.cloneNode(true));
     const newLoginBtn = document.getElementById("loginDropdownBtn");
     newLoginBtn.addEventListener("click", handleLoginClick);
-    newLoginBtn.addEventListener("touchend", function(e) {
-      e.preventDefault();
-      handleLoginClick.call(this, e);
-    }, { passive: false });
 
     newLoginBtn.onclick = handleLoginClick;
   }
@@ -562,10 +519,6 @@ document.addEventListener("DOMContentLoaded", function () {
     mobileLoginBtn.replaceWith(mobileLoginBtn.cloneNode(true));
     const newMobileBtn = document.getElementById("mobileLoginDropdownBtn");
     newMobileBtn.addEventListener("click", handleLoginClick);
-    newMobileBtn.addEventListener("touchend", function(e) {
-      e.preventDefault();
-      handleLoginClick.call(this, e);
-    }, { passive: false });
 
     newMobileBtn.onclick = handleLoginClick;
   }
@@ -577,29 +530,9 @@ if ("serviceWorker" in navigator) {
     const isInLandingPage = window.location.pathname.includes('/LandingPage/');
     const swPath = isInLandingPage ? './service-worker.js' : './LandingPage/service-worker.js';
     
-    // Clear old service workers and caches
-    navigator.serviceWorker.getRegistrations().then((registrations) => {
-      registrations.forEach((registration) => {
-        registration.update(); // Force update to get the new service worker
-      });
-    });
-    
-    // Register the service worker
     navigator.serviceWorker
       .register(swPath)
-      .then((reg) => {
-        console.log("✅ Service Worker registered:", reg.scope);
-        
-        // Force update if there's an update available
-        reg.update();
-        
-        // Listen for controller change (new service worker activated)
-        navigator.serviceWorker.addEventListener('controllerchange', () => {
-          console.log("✅ New Service Worker activated - reloading page");
-          // Optionally reload the page to use the new service worker
-          // window.location.reload();
-        });
-      })
+      .then((reg) => console.log("✅ Service Worker registered:", reg.scope))
       .catch((err) => console.log("❌ Service Worker failed:", err));
   });
 }

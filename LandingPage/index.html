@@ -54,34 +54,26 @@
 
     <script>
       // Auto-detect base URL for Railway vs Localhost
-      (function() {
-        const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        
-        // Check if we're in the LandingPage directory or root
-        const isInLandingPage = window.location.pathname.includes('/LandingPage/');
-        
-        let BASE_URL;
-        let cssPath;
-        
-        if (isInLandingPage) {
-          // Serving from LandingPage directory (e.g., live server on LandingPage/index.html)
-          BASE_URL = isLocalhost ? '../' : '/';
-          cssPath = './style.css';
-        } else {
-          // Serving from root (e.g., XAMPP serving from ECADYB root)
-          BASE_URL = isLocalhost ? '/ECADYB/' : '/';
-          cssPath = BASE_URL + 'LandingPage/style.css';
-        }
-        
-        // Dynamically set the stylesheet href (avoiding document.write)
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = cssPath;
-        document.head.appendChild(link);
-        
-        // Store BASE_URL for use in other scripts
-        window.BASE_URL = BASE_URL;
-      })();
+      const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      
+      // Check if we're in the LandingPage directory or root
+      const isInLandingPage = window.location.pathname.includes('/LandingPage/');
+      
+      let BASE_URL;
+      let cssPath;
+      
+      if (isInLandingPage) {
+        // Serving from LandingPage directory (e.g., live server on LandingPage/index.html)
+        BASE_URL = isLocalhost ? '../' : '/';
+        cssPath = './style.css';
+      } else {
+        // Serving from root (e.g., XAMPP serving from ECADYB root)
+        BASE_URL = isLocalhost ? '/ECADYB/' : '/';
+        cssPath = BASE_URL + 'LandingPage/style.css';
+      }
+      
+      // Dynamically set the stylesheet href
+      document.write('<link rel="stylesheet" href="' + cssPath + '" />');
     </script>
 
     <link
