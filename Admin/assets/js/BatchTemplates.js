@@ -1592,7 +1592,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
               );
             }
 
-            // Check if cancellation is in progress - if so, treat this as cancelled
             if (isCancelling) {
               console.log(
                 `⚠️ Upload completed but cancellation is active - treating as cancelled for Slot ${slot} ${side}`
