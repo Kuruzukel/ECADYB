@@ -1479,7 +1479,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
           `Added to pending uploads: Slot ${slot} ${side} (${pendingUploads.length} pending)`
         );
 
-        // Store the XHR in global array for cancellation
         currentUploadControllers.push(xhr);
         globalIsUploading = true;
         console.log(`Active XHR requests: ${currentUploadControllers.length}`);
