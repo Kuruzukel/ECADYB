@@ -1,13 +1,19 @@
 <?php
+// Clean any existing output first
+while (ob_get_level()) {
+    ob_end_clean();
+}
+
+// Start fresh output buffering to prevent any output before JSON
+ob_start();
+
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
 // Increase limits for large datasets
-ini_set('memory_limit', '256M');
-ini_set('max_execution_time', '60');
-set_time_limit(60);
-
-ob_start();
+ini_set('memory_limit', '512M'); // Increased from 256M
+ini_set('max_execution_time', '120'); // Increased from 60
+set_time_limit(120);
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
@@ -19,8 +25,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-require __DIR__ . '/../../vendor/autoload.php';
-require_once __DIR__ . '/../Configuration/MongoConnect.php';
+try {
+    require __DIR__ . '/../../vendor/autoload.php';
+    require_once __DIR__ . '/../Configuration/MongoConnect.php';
+} catch (Exception $e) {
+    while (ob_get_level()) {
+        ob_end_clean();
+    }
+    header('Content-Type: application/json');
+    echo json_encode([
+        'success' => false,
+        'message' => 'Failed to load required files: ' . $e->getMessage()
+    ]);
+    exit;
+}
 
 // Register shutdown function to catch fatal errors
 register_shutdown_function(function() {
@@ -125,9 +143,9 @@ try {
     $mongoUrl = getenv('MONGO_URL') ?: getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 
     $mongoClient = new MongoDB\Client($mongoUrl, [
-        'serverSelectionTimeoutMS' => 5000,
-        'connectTimeoutMS' => 5000,
-        'socketTimeoutMS' => 5000
+        'serverSelectionTimeoutMS' => 10000, // Increased from 5000
+        'connectTimeoutMS' => 10000, // Increased from 5000
+        'socketTimeoutMS' => 30000 // Increased from 5000 to 30 seconds for long queries
     ]);
 
     try {
@@ -253,85 +271,95 @@ try {
                     error_log("Collection $collectionName: Skip $collectionSkip, Limit $collectionLimit (students needed: $studentsNeeded, collection count: $collectionCount)");
 
                     if ($collectionLimit > 0) {
-                        $students = $collection->find($academicYearFilter, [
-                            'sort' => ['department section' => 1, 'last name' => 1],
-                            'skip' => $collectionSkip,
-                            'limit' => $collectionLimit
-                        ]);
-                        $processedCount = 0;
+                        try {
+                            $students = $collection->find($academicYearFilter, [
+                                'sort' => ['department section' => 1, 'last name' => 1],
+                                'skip' => $collectionSkip,
+                                'limit' => $collectionLimit,
+                                'maxTimeMS' => 25000 // 25 second max query time
+                            ]);
+                            $processedCount = 0;
 
-                        foreach ($students as $student) {
-                            $processedCount++;
-                            $fullName = '';
-                            if (isset($student['name']) && !empty($student['name'])) {
-                                $fullName = $student['name'];
-                            } else {
-                                $firstName = $student['first name'] ?? '';
-                                $middleName = $student['middle name'] ?? '';
-                                $lastName = $student['last name'] ?? '';
-
-                                if (!empty($firstName) || !empty($lastName)) {
-                                    $parts = [];
-                                    if (!empty($firstName)) {
-                                        $parts[] = $firstName;
-                                    }
-                                    if (!empty($middleName)) {
-                                        if (strlen($middleName) <= 2) {
-                                            $parts[] = rtrim($middleName, '.') . '.';
-                                        } else {
-                                            $parts[] = substr($middleName, 0, 1) . '.';
-                                        }
-                                    }
-                                    if (!empty($lastName)) {
-                                        $parts[] = $lastName;
-                                    }
-                                    $fullName = implode(' ', $parts);
+                            foreach ($students as $student) {
+                                $processedCount++;
+                                $fullName = '';
+                                if (isset($student['name']) && !empty($student['name'])) {
+                                    $fullName = $student['name'];
                                 } else {
-                                    $fullName = 'Unknown Student';
+                                    $firstName = $student['first name'] ?? '';
+                                    $middleName = $student['middle name'] ?? '';
+                                    $lastName = $student['last name'] ?? '';
+
+                                    if (!empty($firstName) || !empty($lastName)) {
+                                        $parts = [];
+                                        if (!empty($firstName)) {
+                                            $parts[] = $firstName;
+                                        }
+                                        if (!empty($middleName)) {
+                                            if (strlen($middleName) <= 2) {
+                                                $parts[] = rtrim($middleName, '.') . '.';
+                                            } else {
+                                                $parts[] = substr($middleName, 0, 1) . '.';
+                                            }
+                                        }
+                                        if (!empty($lastName)) {
+                                            $parts[] = $lastName;
+                                        }
+                                        $fullName = implode(' ', $parts);
+                                    } else {
+                                        $fullName = 'Unknown Student';
+                                    }
+                                }
+
+                                $milestones = [];
+                                if (isset($student['milestone'])) {
+                                    if (is_array($student['milestone'])) {
+                                        $milestones = $student['milestone'];
+                                    } elseif (!empty($student['milestone'])) {
+                                        $milestones = [$student['milestone']];
+                                    }
+                                } elseif (isset($student['milestones'])) {
+                                    if (is_array($student['milestones'])) {
+                                        $milestones = $student['milestones'];
+                                    } elseif (!empty($student['milestones'])) {
+                                        $milestones = [$student['milestones']];
+                                    }
+                                }
+
+                                // Keep honors separate - don't mix with milestones
+                                $honors = $student['honors'] ?? '';
+
+                                $allStudents[] = [
+                                    'id' => (string)$student['_id'],
+                                    'student_id' => $student['student id'] ?? $student['student_id'] ?? '',
+                                    'name' => $fullName,
+                                    'program' => $student['program'] ?? $student['department section'] ?? '',
+                                    'year' => $student['academic year'] ?? $student['year'] ?? '',
+                                    'section' => $student['section'] ?? '',
+                                    'motto' => $student['motto'] ?? 'No motto provided',
+                                    'milestones' => $milestones,
+                                    'honors' => $student['honors'] ?? '',
+                                    'photo_url' => $student['photo_url'] ?? '',
+                                    'collection' => $collectionName
+                                ];
+                                
+                                // Break if we've collected enough students
+                                if (count($allStudents) >= $targetLimit) {
+                                    error_log("Reached target limit of $targetLimit students, breaking collection loop");
+                                    break;
                                 }
                             }
 
-                            $milestones = [];
-                            if (isset($student['milestone'])) {
-                                if (is_array($student['milestone'])) {
-                                    $milestones = $student['milestone'];
-                                } elseif (!empty($student['milestone'])) {
-                                    $milestones = [$student['milestone']];
-                                }
-                            } elseif (isset($student['milestones'])) {
-                                if (is_array($student['milestones'])) {
-                                    $milestones = $student['milestones'];
-                                } elseif (!empty($student['milestones'])) {
-                                    $milestones = [$student['milestones']];
-                                }
-                            }
-
-                            // Keep honors separate - don't mix with milestones
-                            $honors = $student['honors'] ?? '';
-
-                            $allStudents[] = [
-                                'id' => (string)$student['_id'],
-                                'student_id' => $student['student id'] ?? $student['student_id'] ?? '',
-                                'name' => $fullName,
-                                'program' => $student['program'] ?? $student['department section'] ?? '',
-                                'year' => $student['academic year'] ?? $student['year'] ?? '',
-                                'section' => $student['section'] ?? '',
-                                'motto' => $student['motto'] ?? 'No motto provided',
-                                'milestones' => $milestones,
-                                'honors' => $student['honors'] ?? '',
-                                'photo_url' => $student['photo_url'] ?? '',
-                                'collection' => $collectionName
-                            ];
-                            
-                            // Break if we've collected enough students
-                            if (count($allStudents) >= $targetLimit) {
-                                error_log("Reached target limit of $targetLimit students, breaking collection loop");
-                                break;
-                            }
+                            error_log("Processed $processedCount students from collection $collectionName, total students now: " . count($allStudents));
+                            $studentsProcessed += $processedCount;
+                        } catch (MongoDB\Driver\Exception\ExecutionTimeoutException $e) {
+                            error_log("MongoDB query timeout for collection $collectionName: " . $e->getMessage());
+                            // Continue with what we have so far
+                            $studentsProcessed += $collectionCount;
+                        } catch (Exception $e) {
+                            error_log("Error during MongoDB find for collection $collectionName: " . $e->getMessage());
+                            $studentsProcessed += $collectionCount;
                         }
-
-                        error_log("Processed $processedCount students from collection $collectionName, total students now: " . count($allStudents));
-                        $studentsProcessed += $processedCount;
                     } else {
                         error_log("No students to fetch from collection $collectionName (collectionLimit <= 0)");
                         $studentsProcessed += $collectionCount;
@@ -411,9 +439,27 @@ try {
     ];
 
     error_log("Sending paginated response: Page $page of $totalPages, " . count($allStudents) . " students returned");
+    
+    // Final safety check - ensure we're about to send valid JSON
+    try {
+        json_encode($responseData);
+    } catch (Exception $jsonError) {
+        error_log("JSON encoding error: " . $jsonError->getMessage());
+        respond(false, 'Failed to encode response data');
+    }
+    
     respond(true, 'Student data retrieved successfully', $responseData);
+} catch (MongoDB\Driver\Exception\Exception $mongoError) {
+    error_log("MongoDB exception in FetchStudentData.php: " . $mongoError->getMessage());
+    error_log("MongoDB exception trace: " . $mongoError->getTraceAsString());
+    respond(false, 'Database error: Connection timeout or query failed. Please try again.');
 } catch (Exception $e) {
     error_log("FetchStudentData.php exception: " . $e->getMessage());
     error_log("Exception trace: " . $e->getTraceAsString());
     respond(false, 'Server error: ' . $e->getMessage());
+}
+
+// Final fallback - if we somehow get here without responding
+if (!headers_sent()) {
+    respond(false, 'Unknown error occurred');
 }
