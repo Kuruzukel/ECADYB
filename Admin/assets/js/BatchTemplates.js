@@ -1725,7 +1725,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
 
         const result = await uploadPromise;
 
-        // Just update global upload state if no more active uploads
         if (currentUploadControllers.length === 0) {
           globalIsUploading = false;
         }
