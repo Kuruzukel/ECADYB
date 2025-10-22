@@ -1663,7 +1663,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
                 reject(e);
               }
             } else {
-              // Remove from pending on HTTP error
               const pendingIndex = pendingUploads.findIndex(
                 (f) =>
                   f.slot === slot &&
