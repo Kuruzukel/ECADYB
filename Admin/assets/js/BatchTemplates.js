@@ -250,7 +250,6 @@ window.resetUploadStates = function () {
     input.value = "";
   });
 
-  // Hide overlay
   const uploadOverlay = document.getElementById("upload-overlay");
   if (uploadOverlay) {
     uploadOverlay.style.display = "none";
