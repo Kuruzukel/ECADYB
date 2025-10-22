@@ -1163,7 +1163,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
       console.log("File 0 name:", files[0]?.name);
       console.log("File 1 name:", files[1]?.name);
 
-      // Swap the assignments: first file selected is back, second is front
       const backImageUrl =
         files.length > 0 ? URL.createObjectURL(files[0]) : null;
       const frontImageUrl =
