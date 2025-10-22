@@ -927,7 +927,6 @@ function restoreSingleSection(sectionHeader) {
 
     initializeSectionUploadBoxes(newSection, currentXhrs, isUploadCancelled);
 
-    // Update upload box states after restoration
     if (window.updateUploadBoxStates) {
       window.updateUploadBoxStates();
     }
