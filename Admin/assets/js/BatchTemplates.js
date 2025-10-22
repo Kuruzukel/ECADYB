@@ -1991,7 +1991,6 @@ function confirmSelectTemplate() {
     console.log("Section header text:", batchYear);
     console.log("Full section HTML:", window.pendingSelectSection.outerHTML);
 
-    // Store the batch year in localStorage
     if (batchYear) {
       localStorage.setItem("selectedBatchYear", batchYear);
       console.log("Stored batch year:", batchYear);
