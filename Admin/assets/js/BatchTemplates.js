@@ -246,7 +246,6 @@ window.resetUploadStates = function () {
   pendingUploads = [];
   isCancelling = false;
 
-  // Reset all file inputs
   document.querySelectorAll('input[type="file"]').forEach((input) => {
     input.value = "";
   });
