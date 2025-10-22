@@ -2336,7 +2336,6 @@ window.addEventListener("DOMContentLoaded", () => {
     const savedBatchYear = localStorage.getItem("selectedBatchYear");
     let selectedSection = null;
 
-    // Try to restore saved batch year first (from confirmSelectTemplate)
     if (savedBatchYear) {
       sections.forEach((section) => {
         const headerText = section
