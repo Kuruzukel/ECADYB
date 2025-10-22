@@ -1682,7 +1682,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
             if (xhrIndex > -1) {
               currentUploadControllers.splice(xhrIndex, 1);
             }
-            // Remove from pending
             const pendingIndex = pendingUploads.findIndex(
               (f) =>
                 f.slot === slot && f.side === side && f.batch_year === batchYear
