@@ -125,13 +125,18 @@ h1 .chevron i {
 }
 
 .section-header::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
   transition: left 0.5s;
 }
 
@@ -575,7 +580,6 @@ h1 .chevron i {
   transform: translateY(-1px);
 }
 
-/* Batch Year Selector Styles */
 .batch-year-selector {
   display: flex;
   flex-direction: column;
@@ -591,7 +595,11 @@ h1 .chevron i {
   font-size: 15px;
   font-weight: 500;
   color: #ffffff;
-  background: linear-gradient(145deg, rgba(33, 150, 243, 0.2), rgba(44, 62, 80, 0.6));
+  background: linear-gradient(
+    145deg,
+    rgba(33, 150, 243, 0.2),
+    rgba(44, 62, 80, 0.6)
+  );
   border: 2px solid rgba(33, 150, 243, 0.5);
   border-radius: 8px;
   cursor: pointer;
@@ -602,7 +610,11 @@ h1 .chevron i {
 
 .batch-year-dropdown:hover {
   border-color: rgba(33, 150, 243, 0.8);
-  background: linear-gradient(145deg, rgba(33, 150, 243, 0.3), rgba(44, 62, 80, 0.7));
+  background: linear-gradient(
+    145deg,
+    rgba(33, 150, 243, 0.3),
+    rgba(44, 62, 80, 0.7)
+  );
   box-shadow: 0 6px 16px rgba(33, 150, 243, 0.2);
 }
 
@@ -637,7 +649,6 @@ h1 .chevron i {
   margin-right: 6px;
 }
 
-/* Warning notification styles */
 .notification.warning {
   background: linear-gradient(135deg, #fbbf24, #f59e0b);
 }
