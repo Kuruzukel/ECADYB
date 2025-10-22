@@ -10,5 +10,3 @@ if (getenv('RAILWAY_PUBLIC_URL')) {
 function getBaseUrl() {
     return BASE_URL;
 }
-?>
-

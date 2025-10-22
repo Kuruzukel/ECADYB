@@ -388,6 +388,9 @@ header.fading {
   margin-top: -2.5rem;
   margin-bottom: 1rem;
   width: 100%;
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
 }
 .hero-btn,
 .hero-btn-secondary {
@@ -407,6 +410,10 @@ header.fading {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border: 1.5px solid #112d4e;
   position: relative;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  pointer-events: auto;
+  z-index: 10;
 }
 .hero-btn:hover {
   background: rgb(13, 57, 217);
@@ -421,6 +428,10 @@ header.fading {
   border: 1.5px solid #0c27be;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  pointer-events: auto;
+  z-index: 10;
 }
 .hero-btn-secondary:hover {
   background: #e0e7ff;
@@ -2188,6 +2199,7 @@ header.fading {
 
   .center-nav {
     display: none;
+    pointer-events: none;
   }
 
   .center-nav a {
@@ -2203,6 +2215,10 @@ header.fading {
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+    z-index: 1001;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
 
   .hamburger-menu.active + .center-nav,
@@ -2218,6 +2234,7 @@ header.fading {
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     border-radius: 16px;
     z-index: 1000;
+    pointer-events: auto;
     transform: translateX(0);
     animation: slideDown 0.3s ease;
     backdrop-filter: blur(10px);
@@ -2663,6 +2680,7 @@ header.fading {
 
   .center-nav {
     display: none;
+    pointer-events: none;
   }
 
   .center-nav a {
@@ -2678,6 +2696,10 @@ header.fading {
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+    z-index: 1001;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
 
   .hamburger-menu.active + .center-nav,
@@ -2693,6 +2715,7 @@ header.fading {
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     border-radius: 16px;
     z-index: 1000;
+    pointer-events: auto;
     transform: translateX(0);
     animation: slideDown 0.3s ease;
     backdrop-filter: blur(10px);
@@ -3179,6 +3202,7 @@ header.fading {
 
   .center-nav {
     display: none;
+    pointer-events: none;
   }
 
   .center-nav a {
@@ -3194,6 +3218,10 @@ header.fading {
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+    z-index: 1001;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
 
   .hamburger-menu.active + .center-nav,
@@ -3209,6 +3237,7 @@ header.fading {
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     border-radius: 16px;
     z-index: 1000;
+    pointer-events: auto;
     transform: translateX(0);
     animation: slideDown 0.3s ease;
     backdrop-filter: blur(10px);
