@@ -4,11 +4,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if (!hamburgerMenu || !centerNav) return;
 
-  hamburgerMenu.addEventListener("click", function (e) {
+  const toggleMenu = function (e) {
     e.stopPropagation();
+    e.preventDefault();
     this.classList.toggle("active");
     centerNav.classList.toggle("mobile-active");
-  });
+  };
+
+  hamburgerMenu.addEventListener("click", toggleMenu);
+  hamburgerMenu.addEventListener("touchend", function(e) {
+    e.preventDefault();
+    toggleMenu.call(this, e);
+  }, { passive: false });
 
   const navLinks = centerNav.querySelectorAll("a");
   navLinks.forEach((link) => {
@@ -55,8 +62,10 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   heroButtons.forEach((button) => {
-    button.addEventListener("click", function (e) {
+    // Handle both click and touch events
+    const handleInteraction = function (e) {
       e.preventDefault();
+      e.stopPropagation();
 
       this.classList.add("clicked");
 
@@ -72,7 +81,13 @@ document.addEventListener("DOMContentLoaded", function () {
           behavior: "smooth",
         });
       }
-    });
+    };
+
+    button.addEventListener("click", handleInteraction);
+    button.addEventListener("touchend", function(e) {
+      e.preventDefault();
+      handleInteraction.call(this, e);
+    }, { passive: false });
   });
 });
 
@@ -139,7 +154,7 @@ let isDragging = false;
 track.addEventListener("touchstart", (e) => {
   startX = e.touches[0].clientX;
   isDragging = true;
-});
+}, { passive: true });
 
 track.addEventListener("touchmove", (e) => {
   if (!isDragging) return;
@@ -148,7 +163,7 @@ track.addEventListener("touchmove", (e) => {
   track.style.transform = `translateX(calc(-${
     (currentIndex + 1) * 100
   }% + ${diff}px))`;
-});
+}, { passive: true });
 
 track.addEventListener("touchend", (e) => {
   isDragging = false;
@@ -511,6 +526,10 @@ document.addEventListener("DOMContentLoaded", function () {
     loginBtn.replaceWith(loginBtn.cloneNode(true));
     const newLoginBtn = document.getElementById("loginDropdownBtn");
     newLoginBtn.addEventListener("click", handleLoginClick);
+    newLoginBtn.addEventListener("touchend", function(e) {
+      e.preventDefault();
+      handleLoginClick.call(this, e);
+    }, { passive: false });
 
     newLoginBtn.onclick = handleLoginClick;
   }
@@ -519,6 +538,10 @@ document.addEventListener("DOMContentLoaded", function () {
     mobileLoginBtn.replaceWith(mobileLoginBtn.cloneNode(true));
     const newMobileBtn = document.getElementById("mobileLoginDropdownBtn");
     newMobileBtn.addEventListener("click", handleLoginClick);
+    newMobileBtn.addEventListener("touchend", function(e) {
+      e.preventDefault();
+      handleLoginClick.call(this, e);
+    }, { passive: false });
 
     newMobileBtn.onclick = handleLoginClick;
   }

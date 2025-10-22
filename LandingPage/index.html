@@ -72,8 +72,11 @@
         cssPath = BASE_URL + 'LandingPage/style.css';
       }
       
-      // Dynamically set the stylesheet href
-      document.write('<link rel="stylesheet" href="' + cssPath + '" />');
+      // Dynamically set the stylesheet href (avoiding document.write)
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = cssPath;
+      document.head.appendChild(link);
     </script>
 
     <link

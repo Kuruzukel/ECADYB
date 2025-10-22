@@ -278,6 +278,10 @@ header.fading {
   transition: all 0.3s ease;
   box-shadow: 0 2px 12px rgba(99, 102, 241, 0.18);
   border: 1px solid #0c27be;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .login-btn:hover {
@@ -314,6 +318,9 @@ header.fading {
   align-items: center;
   justify-content: center;
   overflow: hidden;
+}
+.main_blur_overlay {
+  pointer-events: none;
 }
 .main-hero-background {
   position: absolute;
@@ -389,7 +396,7 @@ header.fading {
   margin-bottom: 1rem;
   width: 100%;
   position: relative;
-  z-index: 10;
+  z-index: 100;
   pointer-events: auto;
 }
 .hero-btn,
@@ -411,9 +418,11 @@ header.fading {
   border: 1.5px solid #112d4e;
   position: relative;
   touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   pointer-events: auto;
-  z-index: 10;
+  z-index: 100;
+  user-select: none;
+  -webkit-user-select: none;
 }
 .hero-btn:hover {
   background: rgb(13, 57, 217);
@@ -429,9 +438,11 @@ header.fading {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   pointer-events: auto;
-  z-index: 10;
+  z-index: 100;
+  user-select: none;
+  -webkit-user-select: none;
 }
 .hero-btn-secondary:hover {
   background: #e0e7ff;
@@ -1401,6 +1412,10 @@ header.fading {
   transition: all 0.3s ease;
   margin-left: auto;
   align-self: center;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .hamburger-menu:active {
