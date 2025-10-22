@@ -2377,7 +2377,6 @@ window.addEventListener("DOMContentLoaded", () => {
     );
   } else {
     console.warn("No sections found on page load - this shouldn't happen");
-    // It will disable all boxes when sections are added later
   }
 
   setAvailableSections();
