@@ -1098,7 +1098,7 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
               );
               isFileInputOpen = false;
             }
-          }, 500); // Small delay to ensure change event fires first if files selected
+          }, 500);
           window.removeEventListener("focus", resetFlag);
         };
         window.addEventListener("focus", resetFlag, { once: true });
