@@ -2002,7 +2002,6 @@ function confirmSelectTemplate() {
       console.warn("No batch year found in section header!");
     }
 
-    // Call the centralized updateUploadBoxStates function
     if (typeof window.updateUploadBoxStates === "function") {
       window.updateUploadBoxStates();
     }
