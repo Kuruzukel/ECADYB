@@ -1468,7 +1468,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
 
         const xhr = new XMLHttpRequest();
 
-        // Track this upload as pending BEFORE it starts
         const fileInfo = {
           slot: slot,
           batch_year: batchYear,
