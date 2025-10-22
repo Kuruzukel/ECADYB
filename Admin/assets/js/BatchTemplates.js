@@ -2366,7 +2366,6 @@ window.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    // Default to first section if nothing saved
     if (!selectedSection) {
       selectedSection = sections[0];
       console.log("No saved selection, defaulting to first section");
