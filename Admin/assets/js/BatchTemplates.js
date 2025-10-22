@@ -2147,7 +2147,6 @@ window.addEventListener("DOMContentLoaded", () => {
           box.style.pointerEvents = "auto";
           box.style.opacity = "1";
         } else if (!isActionBox) {
-          // Disable upload boxes for non-selected batches
           box.classList.add("disabled");
           box.style.pointerEvents = "none";
           box.style.opacity = "0.5";
