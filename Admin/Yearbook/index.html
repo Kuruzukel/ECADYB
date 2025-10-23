@@ -621,6 +621,7 @@
       function calculateTotalPages() {
         var studentPages = 0;
         var studentsPerPage = 4;
+        var managementPages = 2; // Default placeholder pages
 
         if (studentData && studentData.total_students) {
           studentPages = Math.ceil(
@@ -641,12 +642,38 @@
           );
         }
 
-        var totalPages = 1 + 2 + studentPages + 1; // 1 front + 2 management + student pages + 1 back
+        // Check if we have actual top management data
+        var template = 1;
+        if (coverData && coverData.template) {
+          template = coverData.template;
+        } else {
+          var savedTemplate = localStorage.getItem("selectedBatchTemplateNumber");
+          if (savedTemplate) {
+            template = parseInt(savedTemplate);
+          }
+        }
+
+        var batchYear = localStorage.getItem("selectedBatchYear");
+        var cacheKey = "template_" + template + "_" + (batchYear || "default");
+
+        if (window.topManagementCache && window.topManagementCache[cacheKey]) {
+          var topManagementData = window.topManagementCache[cacheKey];
+          if (topManagementData && topManagementData.success && topManagementData.data && topManagementData.data.length > 0) {
+            managementPages = topManagementData.data.length;
+            console.log("Using actual top management pages:", managementPages, "from CSV data");
+          } else {
+            console.log("No top management data found - using 2 placeholder pages");
+          }
+        } else {
+          console.log("Top management cache not available - using 2 placeholder pages");
+        }
+
+        var totalPages = 1 + managementPages + studentPages + 1; // 1 front + management pages + student pages + 1 back
 
         console.log(
           "Calculated total pages:",
           totalPages,
-          "(1 front + 2 management + " + studentPages + " students + 1 back)"
+          "(1 front + " + managementPages + " management + " + studentPages + " students + 1 back)"
         );
 
         return totalPages;
@@ -1017,12 +1044,40 @@
         console.log("Cover data:", coverData);
         console.log("Student data:", studentData);
 
+        // Pre-fetch top management data before calculating total pages
+        var template = 1;
+        if (coverData && coverData.template) {
+          template = coverData.template;
+        } else {
+          var savedTemplate = localStorage.getItem("selectedBatchTemplateNumber");
+          if (savedTemplate) {
+            template = parseInt(savedTemplate);
+          }
+        }
+
+        var batchYear = localStorage.getItem("selectedBatchYear");
+        var cacheKey = "template_" + template + "_" + (batchYear || "default");
+
+        // Check if we already have the data cached
+        if (window.topManagementCache && window.topManagementCache[cacheKey]) {
+          console.log("Top management data already cached, proceeding with initialization");
+          initializeMagazine();
+        } else {
+          console.log("Pre-fetching top management data before initialization");
+          fetchTopManagementCached(template, function(response) {
+            console.log("Top management data fetched, now initializing magazine");
+            initializeMagazine();
+          });
+        }
+      }
+
+      function initializeMagazine() {
         $("#canvas").fadeIn(1000);
 
         var flipbook = $(".magazine");
 
         if (flipbook.width() == 0 || flipbook.height() == 0) {
-          setTimeout(loadApp, 10);
+          setTimeout(initializeMagazine, 10);
           return;
         }
 

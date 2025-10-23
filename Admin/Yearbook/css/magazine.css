@@ -1287,6 +1287,118 @@
   font-size: 16px;
 }
 
+/* Fullscreen mode specific styles for top management pages */
+:fullscreen .top-management-page {
+  padding: 30px 60px;  /* More padding in fullscreen */
+}
+
+:fullscreen .management-photo {
+  width: 280px;   /* Larger photo in fullscreen */
+  height: 280px;  /* Larger photo in fullscreen */
+  margin-bottom: 30px;  /* More spacing */
+}
+
+:fullscreen .management-name {
+  font-size: 30px;  /* Larger name text in fullscreen */
+}
+
+:fullscreen .management-position {
+  font-size: 18px;  /* Larger position text in fullscreen */
+}
+
+:fullscreen .management-message {
+  font-size: 16px;  /* Larger message text in fullscreen */
+  line-height: 1.6;  /* Better line spacing */
+}
+
+:fullscreen .management-info {
+  gap: 40px;  /* More spacing between photo and info */
+}
+
+/* Webkit fullscreen support for top management */
+:-webkit-full-screen .top-management-page {
+  padding: 30px 60px;
+}
+
+:-webkit-full-screen .management-photo {
+  width: 280px;
+  height: 280px;
+  margin-bottom: 30px;
+}
+
+:-webkit-full-screen .management-name {
+  font-size: 30px;
+}
+
+:-webkit-full-screen .management-position {
+  font-size: 18px;
+}
+
+:-webkit-full-screen .management-message {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+:-webkit-full-screen .management-info {
+  gap: 40px;
+}
+
+/* Mozilla fullscreen support for top management */
+:-moz-full-screen .top-management-page {
+  padding: 30px 60px;
+}
+
+:-moz-full-screen .management-photo {
+  width: 280px;
+  height: 280px;
+  margin-bottom: 30px;
+}
+
+:-moz-full-screen .management-name {
+  font-size: 30px;
+}
+
+:-moz-full-screen .management-position {
+  font-size: 18px;
+}
+
+:-moz-full-screen .management-message {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+:-moz-full-screen .management-info {
+  gap: 40px;
+}
+
+/* MS fullscreen support for top management */
+:-ms-fullscreen .top-management-page {
+  padding: 30px 60px;
+}
+
+:-ms-fullscreen .management-photo {
+  width: 280px;
+  height: 280px;
+  margin-bottom: 30px;
+}
+
+:-ms-fullscreen .management-name {
+  font-size: 30px;
+}
+
+:-ms-fullscreen .management-position {
+  font-size: 18px;
+}
+
+:-ms-fullscreen .management-message {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+:-ms-fullscreen .management-info {
+  gap: 40px;
+}
+
 .top-management-page {
   position: absolute;
   top: 0;
