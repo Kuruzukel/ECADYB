@@ -1615,14 +1615,17 @@
         document.addEventListener("fullscreenchange", function () {
           updateFullscreenIcon();
           updateFullscreenBackground();
+          resizeViewport(); // Resize magazine when entering/exiting fullscreen
         });
         document.addEventListener("webkitfullscreenchange", function () {
           updateFullscreenIcon();
           updateFullscreenBackground();
+          resizeViewport(); // Resize magazine when entering/exiting fullscreen
         });
         document.addEventListener("msfullscreenchange", function () {
           updateFullscreenIcon();
           updateFullscreenBackground();
+          resizeViewport(); // Resize magazine when entering/exiting fullscreen
         });
 
         $("#fullscreenBtn").on("click", function () {

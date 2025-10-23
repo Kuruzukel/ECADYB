@@ -1231,6 +1231,62 @@
   line-height: 0.5;
 }
 
+/* Fullscreen mode specific styles for student cards */
+:fullscreen .cards-container {
+  grid-gap: 35px;  /* Larger spacing in fullscreen */
+  padding: 20px;   /* More padding in fullscreen */
+}
+
+:fullscreen .student-image {
+  height: 290px;   /* Taller images in fullscreen */
+}
+
+:fullscreen .student-card h3 {
+  font-size: 16px; /* Larger text in fullscreen */
+}
+
+/* Webkit fullscreen support */
+:-webkit-full-screen .cards-container {
+  grid-gap: 35px;
+  padding: 20px;
+}
+
+:-webkit-full-screen .student-image {
+  height: 290px;
+}
+
+:-webkit-full-screen .student-card h3 {
+  font-size: 16px;
+}
+
+/* Mozilla fullscreen support */
+:-moz-full-screen .cards-container {
+  grid-gap: 35px;
+  padding: 20px;
+}
+
+:-moz-full-screen .student-image {
+  height: 290px;
+}
+
+:-moz-full-screen .student-card h3 {
+  font-size: 16px;
+}
+
+/* MS fullscreen support */
+:-ms-fullscreen .cards-container {
+  grid-gap: 35px;
+  padding: 20px;
+}
+
+:-ms-fullscreen .student-image {
+  height: 290px;
+}
+
+:-ms-fullscreen .student-card h3 {
+  font-size: 16px;
+}
+
 .top-management-page {
   position: absolute;
   top: 0;

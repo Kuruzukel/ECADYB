@@ -1541,11 +1541,21 @@ function resizeViewport() {
     .zoom("resize");
 
   if ($(".magazine").turn("zoom") == 1) {
+    // Check if we're in fullscreen mode
+    var isFullscreen = document.fullscreenElement || 
+                       document.webkitFullscreenElement || 
+                       document.mozFullScreenElement || 
+                       document.msFullscreenElement;
+    
+    // Use different base dimensions for fullscreen vs normal mode
+    var baseWidth = isFullscreen ? 1200 : options.width;   // Change 1400 to your desired fullscreen width
+    var baseHeight = isFullscreen ? 750 : options.height;  // Change 900 to your desired fullscreen height
+    
     var bound = calculateBound({
-      width: options.width,
-      height: options.height,
-      boundWidth: Math.min(options.width, width),
-      boundHeight: Math.min(options.height, height),
+      width: baseWidth,
+      height: baseHeight,
+      boundWidth: Math.min(baseWidth, width),
+      boundHeight: Math.min(baseHeight, height),
     });
 
     if (bound.width % 2 !== 0) bound.width -= 1;
