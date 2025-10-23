@@ -298,7 +298,7 @@ function forceResetFileUI(inputId) {
 
 function cancelUpload() {
   console.log("Cancel upload triggered");
-  
+
   isCancelling = true;
 
   if (currentUploadController) {
@@ -309,7 +309,6 @@ function cancelUpload() {
 
   hideUploadOverlay();
 
-  // Reset all file inputs
   document.querySelectorAll(".upload-input").forEach((input) => {
     if (input.files && input.files.length > 0) {
       input.value = "";
@@ -321,7 +320,7 @@ function cancelUpload() {
   currentOperation = null;
 
   showNotification("Upload cancelled", "error");
-  
+
   // Reset cancelling flag after a short delay
   setTimeout(() => {
     isCancelling = false;
@@ -339,7 +338,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const savedBatchYear = localStorage.getItem("selectedBatchYear");
     if (savedBatchYear) {
       // Try to select the saved batch year (without "Batch Year " prefix)
-      const cleanBatchYear = savedBatchYear.replace('Batch Year ', '');
+      const cleanBatchYear = savedBatchYear.replace("Batch Year ", "");
       batchYearSelect.value = cleanBatchYear;
       console.log("Loaded saved batch year:", cleanBatchYear);
     }
@@ -454,11 +453,17 @@ window.addEventListener("DOMContentLoaded", () => {
         if (input.id === "student-photos" || input.id === "management-photos") {
           // Check if batch year is selected
           const selectedBatchYear = localStorage.getItem("selectedBatchYear");
-          
+
           console.log("=== BATCH YEAR VALIDATION ===");
-          console.log("selectedBatchYear from localStorage:", selectedBatchYear);
-          console.log("Batch year select element value:", document.getElementById("batch-year-select")?.value);
-          
+          console.log(
+            "selectedBatchYear from localStorage:",
+            selectedBatchYear
+          );
+          console.log(
+            "Batch year select element value:",
+            document.getElementById("batch-year-select")?.value
+          );
+
           if (!selectedBatchYear) {
             console.log("❌ No batch year selected - showing warning");
             showNotification(
@@ -468,13 +473,13 @@ window.addEventListener("DOMContentLoaded", () => {
             forceResetFileUI(input.id);
             return;
           }
-          
+
           console.log("✅ Batch year validation passed:", selectedBatchYear);
 
           // Validate number of files (maximum 20 images)
           const MAX_FILES = 20;
           const fileCount = input.files.length;
-          
+
           if (fileCount > MAX_FILES) {
             showNotification(
               `You can only upload a maximum of ${MAX_FILES} images at a time. You selected ${fileCount} images. Please reduce the number of files.`,
@@ -483,21 +488,27 @@ window.addEventListener("DOMContentLoaded", () => {
             forceResetFileUI(input.id);
             return;
           }
-          
+
           // Validate total file size (maximum 500MB)
           let totalSize = 0;
           for (let i = 0; i < input.files.length; i++) {
             totalSize += input.files[i].size;
           }
-          
+
           const totalSizeMB = totalSize / (1024 * 1024);
           const MAX_SIZE_MB = 500; // Maximum 500MB
-          
-          console.log(`Total files: ${fileCount}, Total upload size: ${totalSizeMB.toFixed(2)} MB`);
-          
+
+          console.log(
+            `Total files: ${fileCount}, Total upload size: ${totalSizeMB.toFixed(
+              2
+            )} MB`
+          );
+
           if (totalSizeMB > MAX_SIZE_MB) {
             showNotification(
-              `Total file size (${totalSizeMB.toFixed(2)} MB) exceeds the maximum limit of ${MAX_SIZE_MB} MB. Please reduce the number of files or compress them.`,
+              `Total file size (${totalSizeMB.toFixed(
+                2
+              )} MB) exceeds the maximum limit of ${MAX_SIZE_MB} MB. Please reduce the number of files or compress them.`,
               "error"
             );
             forceResetFileUI(input.id);
@@ -505,18 +516,21 @@ window.addEventListener("DOMContentLoaded", () => {
           }
 
           currentOperation = "uploading_photos";
-          
+
           // Reset cancelling flag
           isCancelling = false;
-          
+
           // Show overlay and start upload immediately
           showUploadOverlay("photos");
           const uploadText = document.getElementById("uploadText");
-          
+
           console.log("=== FILE UPLOAD DEBUG ===");
           console.log("Input ID:", input.id);
           console.log("Number of files selected:", input.files.length);
-          console.log("File names:", Array.from(input.files).map(f => f.name));
+          console.log(
+            "File names:",
+            Array.from(input.files).map((f) => f.name)
+          );
           console.log("FormData entries before sending:");
           for (let [key, value] of formData.entries()) {
             if (value instanceof File) {
@@ -525,11 +539,11 @@ window.addEventListener("DOMContentLoaded", () => {
               console.log(`  ${key}: ${value}`);
             }
           }
-          
+
           // Start upload immediately (no countdown delay for faster uploads)
           console.log("🚀 Starting instant photo upload");
           let uploadCancelled = false;
-          
+
           // Quick check if cancelled
           if (isCancelling) {
             console.log(`✅ Upload cancelled before start`);
@@ -537,10 +551,13 @@ window.addEventListener("DOMContentLoaded", () => {
             forceResetFileUI(input.id);
             return;
           }
-          
+
           // Update overlay text
           if (uploadText) {
-            const uploadType = input.id === "student-photos" ? "Student photos" : "Management photos";
+            const uploadType =
+              input.id === "student-photos"
+                ? "Student photos"
+                : "Management photos";
             uploadText.textContent = `Uploading ${uploadType}...`;
           }
 
@@ -551,7 +568,10 @@ window.addEventListener("DOMContentLoaded", () => {
 
           // Add batch year to FormData
           console.log("=== BATCH YEAR DEBUG ===");
-          console.log("selectedBatchYear from localStorage:", selectedBatchYear);
+          console.log(
+            "selectedBatchYear from localStorage:",
+            selectedBatchYear
+          );
           formData.append("batch_year", selectedBatchYear);
           console.log("Added batch year to FormData:", selectedBatchYear);
 
@@ -602,7 +622,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 console.log("Response status:", xhr.status);
                 console.log("Response headers:", xhr.getAllResponseHeaders());
                 console.log("Response text:", xhr.responseText);
-                
+
                 if (xhr.status >= 200 && xhr.status < 300) {
                   try {
                     const result = JSON.parse(xhr.responseText);
@@ -618,7 +638,7 @@ window.addEventListener("DOMContentLoaded", () => {
                   reject(new Error(`Upload failed with status ${xhr.status}`));
                 }
               };
-              
+
               xhr.onerror = () => {
                 console.error("=== UPLOAD ERROR ===");
                 console.error("Network error occurred");
@@ -629,11 +649,15 @@ window.addEventListener("DOMContentLoaded", () => {
                 abortError.name = "AbortError";
                 reject(abortError);
               };
-              
+
               console.log("=== SENDING REQUEST ===");
               console.log("Opening POST request to:", uploadEndpoint);
               xhr.open("POST", uploadEndpoint);
-              console.log("Sending FormData with", formData.getAll('files[]').length, "files");
+              console.log(
+                "Sending FormData with",
+                formData.getAll("files[]").length,
+                "files"
+              );
               xhr.send(formData);
             });
 
