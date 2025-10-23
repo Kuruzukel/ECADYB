@@ -1054,13 +1054,14 @@ function loadPage(page, pageElement) {
                 studentStatus
               );
 
-              // Only fetch and display photos if student status is active
-              if (studentIdForPhotos && studentStatus === "active") {
+              // Fetch photos for both active and pending students
+              if (studentIdForPhotos) {
                 (function (
                   currentStudent,
                   currentPhotoElement,
                   currentStudentId,
-                  currentStudentName
+                  currentStudentName,
+                  currentStatus
                 ) {
                   fetchStudentPhotos(currentStudentId, function (photos) {
                     if (photos && photos.length > 0 && photos[0] && photos[0].photos && photos[0].photos.student_photo_1) {
@@ -1070,9 +1071,59 @@ function loadPage(page, pageElement) {
                           "Setting TOGA photo for",
                           currentStudentName,
                           ":",
-                          togaUrl
+                          togaUrl,
+                          "Status:",
+                          currentStatus
                         );
                         currentPhotoElement.attr("src", togaUrl);
+                        
+                        // Apply blur effect if status is pending
+                        if (currentStatus === "pending") {
+                          currentPhotoElement.css({
+                            "filter": "blur(8px)",
+                            "-webkit-filter": "blur(8px)"
+                          });
+                          currentPhotoElement.parent().css({
+                            "position": "relative"
+                          });
+                          
+                          // Add "Coming Soon..." overlay
+                          var comingSoonOverlay = $("<div/>", {
+                            class: "coming-soon-overlay",
+                            html: '<span class="coming-soon-text">Coming Soon...</span>',
+                            css: {
+                              "position": "absolute",
+                              "top": "0",
+                              "left": "0",
+                              "width": "100%",
+                              "height": "100%",
+                              "display": "flex",
+                              "align-items": "center",
+                              "justify-content": "center",
+                              "background": "rgba(0, 0, 0, 0.3)",
+                              "pointer-events": "none",
+                              "z-index": "2"
+                            }
+                          });
+                          
+                          comingSoonOverlay.find(".coming-soon-text").css({
+                            "font-style": "italic",
+                            "font-size": "14px",
+                            "font-weight": "600",
+                            "color": "#ffffff",
+                            "text-shadow": "0 2px 8px rgba(0, 0, 0, 0.8)",
+                            "background": "rgba(0, 0, 0, 0.6)",
+                            "padding": "8px 16px",
+                            "border-radius": "20px",
+                            "backdrop-filter": "blur(4px)",
+                            "-webkit-backdrop-filter": "blur(4px)",
+                            "border": "1px solid rgba(255, 255, 255, 0.2)",
+                            "letter-spacing": "0.5px"
+                          });
+                          
+                          currentPhotoElement.parent().append(comingSoonOverlay);
+                          console.log("Applied blur filter and Coming Soon overlay to pending student photo:", currentStudentName);
+                        }
                       }
                     } else {
                       console.log("No valid photo data found for student", currentStudentName);
@@ -1082,16 +1133,9 @@ function loadPage(page, pageElement) {
                   student,
                   studentPhoto,
                   studentIdForPhotos,
-                  studentNameForPhotos
-                );
-              } else if (studentStatus === "pending") {
-                // If status is pending, keep the "No Photo" placeholder (already set as default)
-                console.log(
-                  "Student",
                   studentNameForPhotos,
-                  "has pending status - displaying No Photo placeholder"
+                  studentStatus
                 );
-                // The studentPhoto already has the defaultPhotoUrl set, so no need to change it
               }
 
               var studentName = $("<h3/>", {
