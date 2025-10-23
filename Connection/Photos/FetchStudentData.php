@@ -220,28 +220,9 @@ try {
 
     error_log("Total students across all collections: $totalStudentsCount");
 
-    // If no students found with academic year filter, try without filter as fallback
+    // If no students found with academic year filter, don't fallback to all students
     if ($totalStudentsCount === 0 && !empty($academicYearFilter)) {
-        error_log("No students found with academic year filter, trying without filter as fallback");
-        $academicYearFilter = []; // Reset filter
-        $totalStudentsCount = 0;
-        
-        foreach ($collections as $collectionName) {
-            try {
-                $collectionNames = iterator_to_array($db->listCollectionNames());
-                $collectionExists = in_array($collectionName, $collectionNames);
-
-                if ($collectionExists) {
-                    $collection = $db->$collectionName;
-                    $studentCount = $collection->countDocuments($academicYearFilter);
-                    $totalStudentsCount += $studentCount;
-                    error_log("Fallback - Found $studentCount students in collection $collectionName without filter");
-                }
-            } catch (Exception $e) {
-                error_log("Error counting collection $collectionName in fallback: " . $e->getMessage());
-            }
-        }
-        error_log("Fallback - Total students across all collections: $totalStudentsCount");
+        error_log("No students found with academic year filter - keeping filter active to prevent showing students from other batch years");
     }
 
     $totalPages = ceil($totalStudentsCount / $limit);

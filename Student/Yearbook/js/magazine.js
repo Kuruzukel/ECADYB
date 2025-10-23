@@ -657,7 +657,7 @@ function loadPage(page, pageElement) {
       img.attr("src", coverData.back_url);
     } else if (
       page >= 2 &&
-      page <= 5 &&
+      page <= 3 &&
       typeof coverData !== "undefined" &&
       coverData !== null
     ) {
@@ -893,7 +893,7 @@ function loadPage(page, pageElement) {
         }
       });
     } else if (
-      page >= 6 &&
+      page >= 4 &&
       page < totalPages &&
       typeof coverData !== "undefined" &&
       coverData !== null &&
@@ -918,7 +918,7 @@ function loadPage(page, pageElement) {
         var template = coverData && coverData.template ? coverData.template : 1;
 
         var studentsPerYearbookPage = 4;
-        var studentStartIndex = (page - 6) * studentsPerYearbookPage;
+        var studentStartIndex = (page - 4) * studentsPerYearbookPage;
         var studentEndIndex = studentStartIndex + studentsPerYearbookPage;
 
         var studentsPerAPIPage = 50;
@@ -978,6 +978,8 @@ function loadPage(page, pageElement) {
             }
 
             if (studentsForThisPage.length === 0) {
+              // Check if this is page 7 (second student page) for "No Students Available" message
+              var isPage7 = (page === 7);
               var emptyMessage = $("<div/>", {
                 class: "modern-empty-state",
                 html: `
@@ -988,8 +990,8 @@ function loadPage(page, pageElement) {
                         <path d="M8 12h8M12 8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                       </svg>
                     </div>
-                    <h3 class="empty-state-title">No Students Available</h3>
-                    <p class="empty-state-description">There are no students registered for this page.</p>
+                    <h3 class="empty-state-title">Student Data Required</h3>
+                    <p class="empty-state-description">No student data found for academic year ${getCurrentBatchYear()}. Please upload CSV of the Students to the Batch Upload Section first.</p>
                   </div>
                 `,
               });
@@ -1286,7 +1288,7 @@ function loadLargePage(page, pageElement) {
       );
     }
   } else if (
-    page >= 6 &&
+    page >= 4 &&
     page < totalPages &&
     typeof coverData !== "undefined" &&
     coverData !== null &&
@@ -1367,7 +1369,7 @@ function loadSmallPage(page, pageElement) {
       );
     }
   } else if (
-    page >= 6 &&
+    page >= 4 &&
     page < totalPages &&
     typeof coverData !== "undefined" &&
     coverData !== null &&
