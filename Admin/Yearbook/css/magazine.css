@@ -408,7 +408,6 @@
   background: linear-gradient(135deg, #8b4513 0%, #b8941e 100%);
 }
 
-/* Firefox scrollbar */
 #thumbnail-list {
   scrollbar-width: thin;
   scrollbar-color: #d4af37 rgba(250, 248, 245, 0.3);
