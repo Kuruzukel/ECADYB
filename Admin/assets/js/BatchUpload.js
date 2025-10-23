@@ -481,7 +481,6 @@ window.addEventListener("DOMContentLoaded", () => {
             return;
           }
 
-          // Validate total file size (maximum 500MB)
           let totalSize = 0;
           for (let i = 0; i < input.files.length; i++) {
             totalSize += input.files[i].size;
