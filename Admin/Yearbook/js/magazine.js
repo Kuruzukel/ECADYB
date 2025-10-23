@@ -20,7 +20,6 @@ function clearTopManagementCache() {
 }
 
 function fetchTopManagementCached(template, callback) {
-  // Get batch year from localStorage to include in cache key
   var batchYear = localStorage.getItem("selectedBatchYear");
   var cacheKey = "template_" + template + "_" + (batchYear || "default");
 
