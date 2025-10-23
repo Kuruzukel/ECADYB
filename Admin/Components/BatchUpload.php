@@ -46,13 +46,12 @@ $programMap = [
     "bse" => "BS Entrepreneurship"
 ];
 
-// Fetch available academic years from database
 $academicYears = [];
 try {
     $mongoUrl = getenv('MONGODB_URI') ?: getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
     $client = new Client($mongoUrl);
     $db = $client->ECADYB;
-    
+
     $collections = array_keys($programMap);
     foreach ($collections as $collectionKey) {
         $collection = $db->$collectionKey;
@@ -66,7 +65,7 @@ try {
     sort($academicYears);
 } catch (Exception $e) {
     error_log("Error fetching academic years: " . $e->getMessage());
-    $academicYears = ['2024-2025', '2025-2026', '2026-2027']; // Fallback default years
+    $academicYears = ['2024-2025', '2025-2026', '2026-2027'];
 }
 
 function isValidCSV($fileTmpName)
@@ -507,76 +506,81 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </select>
                                 <p class="batch-year-note">
                                     <i class="fas fa-info-circle"></i>
-                                    Please select an academic year before uploading photos. This ensures photos are associated with the correct batch.
+                                    Please select an academic year before uploading photos. This ensures photos are
+                                    associated with the correct batch.
                                     <br><br>
                                     <i class="fas fa-file-csv"></i>
-                                    Note: CSV files contain an academic year header, so you don't need to filter by academic year when uploading CSV files.
+                                    Note: CSV files contain an academic year header, so you don't need to filter by
+                                    academic year when uploading CSV files.
                                     <br><br>
                                     <i class="fas fa-images"></i>
                                     Note: You can only upload a maximum of 20 images at a time for student photos.
                                 </p>
 
                                 <div class="form-group">
-                            <div class="section">
-                                <div class="section-header">Top Management Message</div>
-                                <div class="file-card" id="card-top-management">
-                                    <label class="custom-upload" for="top_management_message">Upload Top Management Message
-                                        CSV
-                                        File</label>
-                                    <input type="file" name="top_management_message" id="top_management_message"
-                                        class="upload-input" accept=".csv">
-                                    <div class="file-info" id="info-top-management">
-                                        <p><i class="fas fa-file-csv"></i> <span class="file-name"></span></p>
+                                    <div class="section">
+                                        <div class="section-header">Top Management Message</div>
+                                        <div class="file-card" id="card-top-management">
+                                            <label class="custom-upload" for="top_management_message">Upload Top
+                                                Management Message
+                                                CSV
+                                                File</label>
+                                            <input type="file" name="top_management_message" id="top_management_message"
+                                                class="upload-input" accept=".csv">
+                                            <div class="file-info" id="info-top-management">
+                                                <p><i class="fas fa-file-csv"></i> <span class="file-name"></span></p>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
 
-                            <div class="section">
-                                <div class="section-header">Student Information</div>
-                                <div class="file-card" id="card-student-info">
-                                    <label class="custom-upload" for="student-info">Upload Student Information CSV
-                                        Files</label>
-                                    <input type="file" name="student_info[]" id="student-info" class="upload-input"
-                                        accept=".csv" multiple>
-                                    <div class="file-info" id="info-student-info">
-                                        <p><i class="fas fa-file-csv"></i> <span class="file-name"></span></p>
+                                    <div class="section">
+                                        <div class="section-header">Student Information</div>
+                                        <div class="file-card" id="card-student-info">
+                                            <label class="custom-upload" for="student-info">Upload Student Information
+                                                CSV
+                                                Files</label>
+                                            <input type="file" name="student_info[]" id="student-info"
+                                                class="upload-input" accept=".csv" multiple>
+                                            <div class="file-info" id="info-student-info">
+                                                <p><i class="fas fa-file-csv"></i> <span class="file-name"></span></p>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
 
-                            <div class="section">
-                                <div class="section-header">Student Photos</div>
-                                <div class="file-card" id="card-student-photos">
-                                    <label class="custom-upload" for="student-photos">Upload Student Photos</label>
-                                    <input type="file" name="student_photos[]" id="student-photos" class="upload-input"
-                                        accept="image/*" multiple>
-                                    <div class="file-info" id="info-student-photos">
-                                        <p><i class="fas fa-images"></i> <span class="file-name"></span></p>
+                                    <div class="section">
+                                        <div class="section-header">Student Photos</div>
+                                        <div class="file-card" id="card-student-photos">
+                                            <label class="custom-upload" for="student-photos">Upload Student
+                                                Photos</label>
+                                            <input type="file" name="student_photos[]" id="student-photos"
+                                                class="upload-input" accept="image/*" multiple>
+                                            <div class="file-info" id="info-student-photos">
+                                                <p><i class="fas fa-images"></i> <span class="file-name"></span></p>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
 
-                            <div class="section">
-                                <div class="section-header">Top Management Photos</div>
-                                <div class="file-card" id="card-management-photos">
-                                    <label class="custom-upload" for="management-photos">Upload Top Management
-                                        Photos</label>
-                                    <input type="file" name="management_photos[]" id="management-photos"
-                                        class="upload-input" accept="image/*" multiple>
-                                    <div class="file-info" id="info-management-photos">
-                                        <p><i class="fas fa-images"></i> <span class="file-name"></span></p>
+                                    <div class="section">
+                                        <div class="section-header">Top Management Photos</div>
+                                        <div class="file-card" id="card-management-photos">
+                                            <label class="custom-upload" for="management-photos">Upload Top Management
+                                                Photos</label>
+                                            <input type="file" name="management_photos[]" id="management-photos"
+                                                class="upload-input" accept="image/*" multiple>
+                                            <div class="file-info" id="info-management-photos">
+                                                <p><i class="fas fa-images"></i> <span class="file-name"></span></p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
+
                             </div>
                         </div>
 
                     </div>
                 </div>
-                
-                            </div>
-                        </div>
 
-                       
+
 
                 <div id="notification-container"></div>
         </div>
