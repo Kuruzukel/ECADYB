@@ -469,7 +469,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
           console.log("✅ Batch year validation passed:", selectedBatchYear);
 
-          // Validate number of files (maximum 20 images)
           const MAX_FILES = 20;
           const fileCount = input.files.length;
 
