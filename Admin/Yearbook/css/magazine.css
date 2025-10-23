@@ -1670,6 +1670,74 @@
   background: #1d4ed8;
 }
 
+/* Fullscreen mode specific styles for navigation controls */
+:fullscreen .nav-controls {
+  padding: 8px 16px;  /* Larger padding in fullscreen */
+  gap: 6px;           /* More spacing between buttons */
+  bottom: 1.5rem;    /* Move up from bottom */
+}
+
+:fullscreen .nav-btn {
+  width: 38px;        /* Larger buttons in fullscreen */
+  height: 38px;       /* Larger buttons in fullscreen */
+}
+
+:fullscreen .nav-btn svg {
+  width: 15px;        /* Larger icons in fullscreen */
+  height: 15px;       /* Larger icons in fullscreen */
+}
+
+/* Webkit fullscreen support for navigation controls */
+:-webkit-full-screen .nav-controls {
+  padding: 8px 16px;
+  gap: 6px;
+  bottom: 1.5rem;
+}
+
+:-webkit-full-screen .nav-btn {
+  width: 38px;
+  height: 38px;
+}
+
+:-webkit-full-screen .nav-btn svg {
+  width: 15px;
+  height: 15px;
+}
+
+/* Mozilla fullscreen support for navigation controls */
+:-moz-full-screen .nav-controls {
+  padding: 8px 16px;
+  gap: 6px;
+  bottom: 1.5rem;
+}
+
+:-moz-full-screen .nav-btn {
+  width: 38px;
+  height: 38px;
+}
+
+:-moz-full-screen .nav-btn svg {
+  width: 15px;
+  height: 15px;
+}
+
+/* MS fullscreen support for navigation controls */
+:-ms-fullscreen .nav-controls {
+  padding: 8px 16px;
+  gap: 6px;
+  bottom: 1.5rem;
+}
+
+:-ms-fullscreen .nav-btn {
+  width: 38px;
+  height: 38px;
+}
+
+:-ms-fullscreen .nav-btn svg {
+  width: 15px;
+  height: 15px;
+}
+
 @media (max-width: 768px) {
   .nav-controls {
     bottom: 0.5rem;
