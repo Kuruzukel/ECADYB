@@ -663,40 +663,55 @@ function loadPage(page, pageElement) {
       img.attr("src", "https://ECADYB.b-cdn.net/img/YBCOVERFRONT%20.png");
     } else if (
       page >= 2 &&
-      page <= 3 &&
+      page < totalPages &&
       typeof coverData !== "undefined" &&
       coverData !== null
     ) {
-      console.log("Loading top management page:", page);
-
-      if (coverData.background_url) {
-        console.log("Using background_url for management page", page, ":", coverData.background_url);
-        img.attr("src", coverData.background_url);
-      } else {
-        console.log("Using default background for management page", page);
-        img.attr("src", "https://ECADYB.b-cdn.net/img/YB%20BG..png");
-      }
-
-      var managementPage = $("<div/>", {
-        class: "top-management-page",
-      });
-
-      var loadingIndicator = $("<div/>", {
-        class: "management-loading",
-        text: "Loading top management data...",
-      });
-
-      managementPage.append(loadingIndicator);
-      pageElement.append(managementPage);
-
+      // Determine if this should be a management page or student page
       var template = 1;
       if (coverData.template) {
         template = coverData.template;
       }
 
-      var managementIndex = page - 2;
+      var batchYear = localStorage.getItem("selectedBatchYear");
+      var cacheKey = "template_" + template + "_" + (batchYear || "default");
+      var managementPages = 2; // Default placeholder pages
 
-      fetchTopManagementCached(template, function (response) {
+      if (window.topManagementCache && window.topManagementCache[cacheKey]) {
+        var topManagementData = window.topManagementCache[cacheKey];
+        if (topManagementData && topManagementData.success && topManagementData.data && topManagementData.data.length > 0) {
+          managementPages = topManagementData.data.length;
+        }
+      }
+
+      var isManagementPage = page < (2 + managementPages);
+
+      if (isManagementPage) {
+        console.log("Loading top management page:", page);
+
+        if (coverData.background_url) {
+          console.log("Using background_url for management page", page, ":", coverData.background_url);
+          img.attr("src", coverData.background_url);
+        } else {
+          console.log("Using default background for management page", page);
+          img.attr("src", "https://ECADYB.b-cdn.net/img/YB%20BG..png");
+        }
+
+        var managementPage = $("<div/>", {
+          class: "top-management-page",
+        });
+
+        var loadingIndicator = $("<div/>", {
+          class: "management-loading",
+          text: "Loading top management data...",
+        });
+
+        managementPage.append(loadingIndicator);
+        pageElement.append(managementPage);
+
+        var managementIndex = page - 2;
+
+        fetchTopManagementCached(template, function (response) {
         console.log("=== TOP MANAGEMENT PAGE LOADING ===");
         console.log("Page:", page);
         console.log("Management Index:", managementIndex);
@@ -891,34 +906,30 @@ function loadPage(page, pageElement) {
           managementPage.append(errorMessage);
         }
       });
-    } else if (
-      page >= 4 &&
-      page < totalPages &&
-      typeof coverData !== "undefined" &&
-      coverData !== null
-    ) {
-      console.log("Loading student page:", page);
-      
-      if (coverData.background_url) {
-        console.log("Using background_url for student page", page, ":", coverData.background_url);
-        img.attr("src", coverData.background_url);
       } else {
-        console.log("Using default background for student page", page);
-        img.attr("src", "https://ECADYB.b-cdn.net/img/YB%20BG..png");
-      }
+        // This is a student page
+        console.log("Loading student page:", page);
+        
+        if (coverData.background_url) {
+          console.log("Using background_url for student page", page, ":", coverData.background_url);
+          img.attr("src", coverData.background_url);
+        } else {
+          console.log("Using default background for student page", page);
+          img.attr("src", "https://ECADYB.b-cdn.net/img/YB%20BG..png");
+        }
 
-      img.on("load", function () {
-        var cardsContainer = $("<div/>", {
-          class: "cards-container",
-        });
+        img.on("load", function () {
+          var cardsContainer = $("<div/>", {
+            class: "cards-container",
+          });
 
-        var urlParams = new URLSearchParams(window.location.search);
-        var department = urlParams.get("department") || "BSME";
+          var urlParams = new URLSearchParams(window.location.search);
+          var department = urlParams.get("department") || "BSME";
 
-        var template = coverData && coverData.template ? coverData.template : 1;
+          var template = coverData && coverData.template ? coverData.template : 1;
 
-        var studentsPerYearbookPage = 4;
-        var studentStartIndex = (page - 4) * studentsPerYearbookPage;
+          var studentsPerYearbookPage = 4;
+          var studentStartIndex = (page - (2 + managementPages)) * studentsPerYearbookPage;
         var studentEndIndex = studentStartIndex + studentsPerYearbookPage;
 
         var studentsPerAPIPage = 50;
@@ -1165,6 +1176,7 @@ function loadPage(page, pageElement) {
           }
         );
       });
+      }
     } else if (
       typeof coverData !== "undefined" &&
       coverData !== null &&
@@ -1465,11 +1477,21 @@ function resizeViewport() {
     .zoom("resize");
 
   if ($(".magazine").turn("zoom") == 1) {
+    // Check if we're in fullscreen mode
+    var isFullscreen = document.fullscreenElement ||
+                       document.webkitFullscreenElement ||
+                       document.mozFullScreenElement ||
+                       document.msFullscreenElement;
+
+    // Use different base dimensions for fullscreen vs normal mode
+    var baseWidth = isFullscreen ? 1200 : options.width;
+    var baseHeight = isFullscreen ? 750 : options.height;
+
     var bound = calculateBound({
-      width: options.width,
-      height: options.height,
-      boundWidth: Math.min(options.width, width),
-      boundHeight: Math.min(options.height, height),
+      width: baseWidth,
+      height: baseHeight,
+      boundWidth: Math.min(baseWidth, width),
+      boundHeight: Math.min(baseHeight, height),
     });
 
     if (bound.width % 2 !== 0) bound.width -= 1;

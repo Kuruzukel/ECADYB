@@ -1508,6 +1508,242 @@
   background: #1d4ed8;
 }
 
+/* Fullscreen mode specific styles for student cards */
+:fullscreen .cards-container {
+  grid-gap: 35px;  /* Larger spacing in fullscreen */
+  padding: 20px;   /* More padding in fullscreen */
+}
+
+:fullscreen .student-image {
+  height: 290px;   /* Taller images in fullscreen */
+}
+
+:fullscreen .student-card h3 {
+  font-size: 16px; /* Larger text in fullscreen */
+}
+
+/* Webkit fullscreen support */
+:-webkit-full-screen .cards-container {
+  grid-gap: 35px;
+  padding: 20px;
+}
+
+:-webkit-full-screen .student-image {
+  height: 290px;
+}
+
+:-webkit-full-screen .student-card h3 {
+  font-size: 16px;
+}
+
+/* Mozilla fullscreen support */
+:-moz-full-screen .cards-container {
+  grid-gap: 35px;
+  padding: 20px;
+}
+
+:-moz-full-screen .student-image {
+  height: 290px;
+}
+
+:-moz-full-screen .student-card h3 {
+  font-size: 16px;
+}
+
+/* MS fullscreen support */
+:-ms-fullscreen .cards-container {
+  grid-gap: 35px;
+  padding: 20px;
+}
+
+:-ms-fullscreen .student-image {
+  height: 290px;
+}
+
+:-ms-fullscreen .student-card h3 {
+  font-size: 16px;
+}
+
+/* Fullscreen mode specific styles for top management pages */
+:fullscreen .top-management-page {
+  padding: 30px 60px;  /* More padding in fullscreen */
+}
+
+:fullscreen .management-photo {
+  width: 280px;   /* Larger photo in fullscreen */
+  height: 280px;  /* Larger photo in fullscreen */
+  margin-bottom: 30px;  /* More spacing */
+}
+
+:fullscreen .management-name {
+  font-size: 30px;  /* Larger name text in fullscreen */
+}
+
+:fullscreen .management-position {
+  font-size: 18px;  /* Larger position text in fullscreen */
+}
+
+:fullscreen .management-message {
+  font-size: 17px;  /* Larger message text in fullscreen */
+  line-height: 1.6;  /* Better line spacing */
+}
+
+:fullscreen .management-info {
+  gap: 40px;  /* More spacing between photo and info */
+}
+
+/* Webkit fullscreen support for top management */
+:-webkit-full-screen .top-management-page {
+  padding: 30px 60px;
+}
+
+:-webkit-full-screen .management-photo {
+  width: 280px;
+  height: 280px;
+  margin-bottom: 30px;
+}
+
+:-webkit-full-screen .management-name {
+  font-size: 30px;
+}
+
+:-webkit-full-screen .management-position {
+  font-size: 18px;
+}
+
+:-webkit-full-screen .management-message {
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+:-webkit-full-screen .management-info {
+  gap: 40px;
+}
+
+/* Mozilla fullscreen support for top management */
+:-moz-full-screen .top-management-page {
+  padding: 30px 60px;
+}
+
+:-moz-full-screen .management-photo {
+  width: 280px;
+  height: 280px;
+  margin-bottom: 30px;
+}
+
+:-moz-full-screen .management-name {
+  font-size: 30px;
+}
+
+:-moz-full-screen .management-position {
+  font-size: 18px;
+}
+
+:-moz-full-screen .management-message {
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+:-moz-full-screen .management-info {
+  gap: 40px;
+}
+
+/* MS fullscreen support for top management */
+:-ms-fullscreen .top-management-page {
+  padding: 30px 60px;
+}
+
+:-ms-fullscreen .management-photo {
+  width: 280px;
+  height: 280px;
+  margin-bottom: 30px;
+}
+
+:-ms-fullscreen .management-name {
+  font-size: 30px;
+}
+
+:-ms-fullscreen .management-position {
+  font-size: 18px;
+}
+
+:-ms-fullscreen .management-message {
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+:-ms-fullscreen .management-info {
+  gap: 40px;
+}
+
+/* Fullscreen mode specific styles for navigation controls */
+:fullscreen .nav-controls {
+  padding: 8px 16px;  /* Larger padding in fullscreen */
+  gap: 6px;           /* More spacing between buttons */
+  bottom: 1.5rem;    /* Move up from bottom */
+}
+
+:fullscreen .nav-btn {
+  width: 38px;        /* Larger buttons in fullscreen */
+  height: 38px;       /* Larger buttons in fullscreen */
+}
+
+:fullscreen .nav-btn svg {
+  width: 15px;        /* Larger icons in fullscreen */
+  height: 15px;       /* Larger icons in fullscreen */
+}
+
+/* Webkit fullscreen support for navigation controls */
+:-webkit-full-screen .nav-controls {
+  padding: 8px 16px;
+  gap: 6px;
+  bottom: 1.5rem;
+}
+
+:-webkit-full-screen .nav-btn {
+  width: 38px;
+  height: 38px;
+}
+
+:-webkit-full-screen .nav-btn svg {
+  width: 15px;
+  height: 15px;
+}
+
+/* Mozilla fullscreen support for navigation controls */
+:-moz-full-screen .nav-controls {
+  padding: 8px 16px;
+  gap: 6px;
+  bottom: 1.5rem;
+}
+
+:-moz-full-screen .nav-btn {
+  width: 38px;
+  height: 38px;
+}
+
+:-moz-full-screen .nav-btn svg {
+  width: 15px;
+  height: 15px;
+}
+
+/* MS fullscreen support for navigation controls */
+:-ms-fullscreen .nav-controls {
+  padding: 8px 16px;
+  gap: 6px;
+  bottom: 1.5rem;
+}
+
+:-ms-fullscreen .nav-btn {
+  width: 38px;
+  height: 38px;
+}
+
+:-ms-fullscreen .nav-btn svg {
+  width: 15px;
+  height: 15px;
+}
+
 @media (max-width: 768px) {
   .nav-controls {
     bottom: 0.5rem;
