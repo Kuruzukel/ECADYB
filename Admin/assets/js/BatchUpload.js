@@ -342,7 +342,6 @@ window.addEventListener("DOMContentLoaded", () => {
     batchYearSelect.addEventListener("change", (e) => {
       const selectedYear = e.target.value;
       if (selectedYear) {
-        // Store with "Batch Year " prefix for consistency with BatchTemplates.js
         const formattedYear = "Batch Year " + selectedYear;
         localStorage.setItem("selectedBatchYear", formattedYear);
         console.log("Batch year selected and saved:", formattedYear);
