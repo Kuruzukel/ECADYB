@@ -587,7 +587,6 @@ window.addEventListener("DOMContentLoaded", () => {
           console.log("Window location origin:", window.location.origin);
 
           try {
-            // Use XMLHttpRequest for better upload progress tracking
             const xhr = new XMLHttpRequest();
             currentUploadController = { abort: () => xhr.abort() };
 
