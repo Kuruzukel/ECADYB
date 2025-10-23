@@ -251,7 +251,8 @@ $departmentCode = $departmentCodes[$studentDepartment] ?? 'BSME';
 
         // Update iframe src and show it
         if (iframe && iframeContainer) {
-          iframe.src = `/ECADYB/Student/Yearbook/index.html?department=${departmentCode}`;
+          // Add fullscreen=true parameter to trigger fullscreen styles in the iframe
+          iframe.src = `/ECADYB/Student/Yearbook/index.html?department=${departmentCode}&fullscreen=true`;
           iframe.title = `Digital Yearbook - ${departmentName}`;
           iframeContainer.style.display = 'block';
           

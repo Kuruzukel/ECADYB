@@ -1477,15 +1477,23 @@ function resizeViewport() {
     .zoom("resize");
 
   if ($(".magazine").turn("zoom") == 1) {
-    // Check if we're in fullscreen mode
-    var isFullscreen = document.fullscreenElement ||
-                       document.webkitFullscreenElement ||
-                       document.mozFullScreenElement ||
-                       document.msFullscreenElement;
+    // Check if we're in fullscreen mode (either actual fullscreen or via URL parameter)
+    var isActualFullscreen = document.fullscreenElement ||
+                             document.webkitFullscreenElement ||
+                             document.mozFullScreenElement ||
+                             document.msFullscreenElement;
+    
+    // Check URL parameter for fullscreen mode (for iframe usage)
+    var urlParams = new URLSearchParams(window.location.search);
+    var isFullscreenParam = urlParams.get('fullscreen') === 'true';
+    
+    var isFullscreen = isActualFullscreen || isFullscreenParam;
 
     // Use different base dimensions for fullscreen vs normal mode
     var baseWidth = isFullscreen ? 1200 : options.width;
     var baseHeight = isFullscreen ? 750 : options.height;
+    
+    console.log('ResizeViewport - isFullscreen:', isFullscreen, 'baseWidth:', baseWidth, 'baseHeight:', baseHeight);
 
     var bound = calculateBound({
       width: baseWidth,

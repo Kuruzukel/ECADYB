@@ -1235,6 +1235,20 @@
       $("#canvas").hide();
 
       $(document).ready(function () {
+        // Check for fullscreen URL parameter and apply class to body and html for CSS styling
+        var urlParams = new URLSearchParams(window.location.search);
+        var isFullscreenParam = urlParams.get('fullscreen') === 'true';
+        
+        if (isFullscreenParam) {
+          document.documentElement.classList.add('iframe-fullscreen-mode');
+          document.body.classList.add('iframe-fullscreen-mode');
+          console.log('Iframe fullscreen mode enabled via URL parameter');
+          console.log('Body classes:', document.body.className);
+          console.log('HTML classes:', document.documentElement.className);
+        } else {
+          console.log('Fullscreen parameter not detected. URL:', window.location.href);
+        }
+        
         // Event delegation for student card clicks - works even after page navigation
         $(document).on("click", ".student-card", function (e) {
           e.preventDefault();
