@@ -1231,7 +1231,6 @@ function loadPage(page, pageElement) {
 function zoomTo(event) {
   setTimeout(function () {
     // } else {
-    //   if ($(".magazine-viewport").zoom("value") == 1) {
     //     $(".magazine-viewport").zoom("zoomIn", event);
     //   } else {
     //     $(".magazine-viewport").zoom("zoomOut");
