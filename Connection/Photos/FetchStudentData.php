@@ -356,6 +356,7 @@ try {
                                     'milestones' => array_map($sanitize, $milestones),
                                     'honors' => $sanitize($student['honors'] ?? ''),
                                     'photo_url' => $sanitize($student['photo_url'] ?? ''),
+                                    'status' => $sanitize($student['status'] ?? 'pending'),
                                     'collection' => $collectionName
                                 ];
                                 
