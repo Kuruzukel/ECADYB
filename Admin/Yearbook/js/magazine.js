@@ -164,7 +164,6 @@ function fetchStudentPhotos(studentId, callback) {
       console.log("Requested ID:", studentId);
       console.log("Response:", response);
 
-      // Validate response structure
       if (!response) {
         console.error("Empty response received from FetchStudentPhotos.php");
         callback([]);
