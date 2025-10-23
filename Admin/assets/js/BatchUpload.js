@@ -508,7 +508,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
           currentOperation = "uploading_photos";
 
-          // Reset cancelling flag
           isCancelling = false;
 
           // Show overlay and start upload immediately
