@@ -145,7 +145,6 @@ function fetchStudentPhotos(studentId, callback) {
   console.log("Batch Year:", batchYear);
   console.log("Timestamp:", new Date().toISOString());
 
-  // Build request data
   var requestData = {
     student_id: studentId,
     template: template,
