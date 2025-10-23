@@ -594,7 +594,6 @@ window.addEventListener("DOMContentLoaded", () => {
               if (e.lengthComputable) {
                 const percentComplete = Math.round((e.loaded / e.total) * 100);
                 console.log(`Upload progress: ${percentComplete}%`);
-                // Progress tracked in console only, UI shows simple message
               }
             });
 
