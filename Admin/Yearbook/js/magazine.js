@@ -702,6 +702,9 @@ function loadPage(page, pageElement) {
     ) {
       console.log("Using front_url for page 1:", coverData.front_url);
       img.attr("src", coverData.front_url);
+    } else if (page === 1) {
+      console.log("Using default front cover for page 1");
+      img.attr("src", "https://ECADYB.b-cdn.net/img/YBCOVERFRONT%20.png");
     } else if (
       page === totalPages &&
       typeof coverData !== "undefined" &&
@@ -710,6 +713,9 @@ function loadPage(page, pageElement) {
     ) {
       console.log("Using back_url for page", page, ":", coverData.back_url);
       img.attr("src", coverData.back_url);
+    } else if (page === totalPages) {
+      console.log("Using default back cover for page", page);
+      img.attr("src", "https://ECADYB.b-cdn.net/img/YBCOVERFRONT%20.png");
     } else if (
       page >= 2 &&
       page <= 3 &&
@@ -719,18 +725,11 @@ function loadPage(page, pageElement) {
       console.log("Loading top management page:", page);
 
       if (coverData.background_url) {
-        console.log(
-          "Using background_url for management page",
-          page,
-          ":",
-          coverData.background_url
-        );
+        console.log("Using background_url for management page", page, ":", coverData.background_url);
         img.attr("src", coverData.background_url);
       } else {
-        img.attr(
-          "src",
-          "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23ffffff'/%3E%3C/svg%3E"
-        );
+        console.log("Using default background for management page", page);
+        img.attr("src", "https://ECADYB.b-cdn.net/img/YB%20BG..png");
       }
 
       var managementPage = $("<div/>", {
@@ -957,16 +956,17 @@ function loadPage(page, pageElement) {
       page >= 4 &&
       page < totalPages &&
       typeof coverData !== "undefined" &&
-      coverData !== null &&
-      coverData.background_url
+      coverData !== null
     ) {
-      console.log(
-        "Using background_url for page",
-        page,
-        ":",
-        coverData.background_url
-      );
-      img.attr("src", coverData.background_url);
+      console.log("Loading student page:", page);
+      
+      if (coverData.background_url) {
+        console.log("Using background_url for student page", page, ":", coverData.background_url);
+        img.attr("src", coverData.background_url);
+      } else {
+        console.log("Using default background for student page", page);
+        img.attr("src", "https://ECADYB.b-cdn.net/img/YB%20BG..png");
+      }
 
       img.on("load", function () {
         var cardsContainer = $("<div/>", {
@@ -1043,8 +1043,6 @@ function loadPage(page, pageElement) {
             }
 
             if (studentsForThisPage.length === 0) {
-              // Check if this is page 7 (second student page) for "No Students Available" message
-              var isPage7 = (page === 7);
               var emptyMessage = $("<div/>", {
                 class: "modern-empty-state",
                 html: `
