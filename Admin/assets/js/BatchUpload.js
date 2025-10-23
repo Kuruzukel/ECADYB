@@ -529,7 +529,6 @@ window.addEventListener("DOMContentLoaded", () => {
             }
           }
 
-          // Start upload immediately (no countdown delay for faster uploads)
           console.log("🚀 Starting instant photo upload");
           let uploadCancelled = false;
 
