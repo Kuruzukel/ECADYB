@@ -397,7 +397,6 @@ function loadStudentsForPage(
   );
 
   fetchStudentDataCached(department, template, apiPage, function (response) {
-    // Enhanced error handling and logging
     if (
       response &&
       response.success &&
