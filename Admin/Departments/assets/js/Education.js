@@ -138,47 +138,54 @@ function applyTheme(theme) {
   document.body.style.display = "";
 }
 
-// Listen for batch template selection changes
-window.addEventListener('batchTemplateSelected', function(e) {
-  console.log('Batch template selected:', e.detail.batchName);
-  const iframe = document.querySelector('iframe');
+window.addEventListener("batchTemplateSelected", function (e) {
+  console.log("Batch template selected:", e.detail.batchName);
+  const iframe = document.querySelector("iframe");
   if (iframe) {
     iframe.contentWindow.location.reload();
   }
 });
 
-// Also reload on storage change (for when batch is selected in another tab)
-window.addEventListener('storage', function(e) {
-  if (e.key === 'selectedBatchTemplateNumber' || e.key === 'selectedBatchYear') {
-    console.log('Batch changed via storage - key:', e.key, 'value:', e.newValue);
-    const iframe = document.querySelector('iframe');
+window.addEventListener("storage", function (e) {
+  if (
+    e.key === "selectedBatchTemplateNumber" ||
+    e.key === "selectedBatchYear"
+  ) {
+    console.log(
+      "Batch changed via storage - key:",
+      e.key,
+      "value:",
+      e.newValue
+    );
+    const iframe = document.querySelector("iframe");
     if (iframe) {
       iframe.contentWindow.location.reload();
     }
   }
 });
 
-document.querySelector('iframe').addEventListener('load', function() {
+document.querySelector("iframe").addEventListener("load", function () {
   const iframeDoc = this.contentDocument || this.contentWindow.document;
   const iframeRoot = iframeDoc.documentElement;
 
   const computedStyles = getComputedStyle(document.documentElement);
   [
-    '--header-bg',
-    '--body-bg',
-    '--sidebar-bg',
-    '--content-bg',
-    '--menu-bg-active',
-    '--menu-border-active',
-    '--menu-hover-bg'
-  ].forEach(varName => {
+    "--header-bg",
+    "--body-bg",
+    "--sidebar-bg",
+    "--content-bg",
+    "--menu-bg-active",
+    "--menu-border-active",
+    "--menu-hover-bg",
+  ].forEach((varName) => {
     const value = computedStyles.getPropertyValue(varName);
     iframeRoot.style.setProperty(varName, value);
   });
 
-  const iframeBody = iframeDoc.querySelector('body');
+  const iframeBody = iframeDoc.querySelector("body");
   if (iframeBody) {
-    iframeBody.style.backgroundColor = computedStyles.getPropertyValue('--content-bg');
+    iframeBody.style.backgroundColor =
+      computedStyles.getPropertyValue("--content-bg");
   }
 });
 
@@ -190,36 +197,41 @@ function applyTheme(themeName) {
   }
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-  const savedTheme = localStorage.getItem('dashboard-theme') || 'Default';
+window.addEventListener("DOMContentLoaded", () => {
+  const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
   applyTheme(savedTheme);
 });
 
-document.addEventListener('DOMContentLoaded', function() {
-  const elements = document.querySelectorAll('.catalog-app, #viewer, #flipbook');
+document.addEventListener("DOMContentLoaded", function () {
+  const elements = document.querySelectorAll(
+    ".catalog-app, #viewer, #flipbook"
+  );
 
-  elements.forEach(el => {
-    el.addEventListener('mousedown', function(e) {
+  elements.forEach((el) => {
+    el.addEventListener("mousedown", function (e) {
       const startX = e.clientX;
       const startY = e.clientY;
-      const startWidth = parseInt(document.defaultView.getComputedStyle(el).width,
-        10);
-      const startHeight = parseInt(document.defaultView.getComputedStyle(el)
-        .height,
-        10);
+      const startWidth = parseInt(
+        document.defaultView.getComputedStyle(el).width,
+        10
+      );
+      const startHeight = parseInt(
+        document.defaultView.getComputedStyle(el).height,
+        10
+      );
 
       function doDrag(e) {
-        el.style.width = startWidth + e.clientX - startX + 'px';
-        el.style.height = startHeight + e.clientY - startY + 'px';
+        el.style.width = startWidth + e.clientX - startX + "px";
+        el.style.height = startHeight + e.clientY - startY + "px";
       }
 
       function stopDrag() {
-        window.removeEventListener('mousemove', doDrag);
-        window.removeEventListener('mouseup', stopDrag);
+        window.removeEventListener("mousemove", doDrag);
+        window.removeEventListener("mouseup", stopDrag);
       }
 
-      window.addEventListener('mousemove', doDrag);
-      window.addEventListener('mouseup', stopDrag);
+      window.addEventListener("mousemove", doDrag);
+      window.addEventListener("mouseup", stopDrag);
     });
   });
 });
