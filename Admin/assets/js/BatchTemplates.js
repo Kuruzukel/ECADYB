@@ -1503,9 +1503,13 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
 
             if (uploadText) {
               if (isBatch) {
-                uploadText.textContent = `Preparing upload... (${secondsLeft}s to cancel)`;
+                uploadText.textContent = `Preparing upload covers (${secondsLeft}s to cancel)`;
               } else {
-                uploadText.textContent = `Preparing Slot ${slot} ${side}... (${secondsLeft}s to cancel)`;
+                if (slot === 8) {
+                  uploadText.textContent = `Preparing Background Cover (${secondsLeft}s to cancel)`;
+                } else {
+                  uploadText.textContent = `Preparing Covers Slot ${slot} (${secondsLeft}s to cancel)`;
+                }
               }
             }
 
@@ -1541,7 +1545,11 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
             `✓ Cancellation window expired, starting actual upload for Slot ${slot} ${side}`
           );
           if (uploadText) {
-            uploadText.textContent = `Uploading Slot ${slot} ${side}...`;
+            if (slot === 8) {
+              uploadText.textContent = `Uploading Background Cover`;
+            } else {
+              uploadText.textContent = `Uploading Covers Slot ${slot}`;
+            }
           }
 
           let uploadStartTime = Date.now();
@@ -1556,9 +1564,11 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
               );
 
               if (uploadText) {
-                uploadText.textContent = `Uploading Slot ${slot} ${side}... ${percentComplete.toFixed(
-                  0
-                )}%`;
+                if (slot === 8) {
+                  uploadText.textContent = `Uploading Background Cover`;
+                } else {
+                  uploadText.textContent = `Uploading Covers Slot ${slot}`;
+                }
               }
             }
           });
@@ -2082,6 +2092,10 @@ window.addEventListener("DOMContentLoaded", () => {
         .textContent.trim();
       console.log("✓ Selected section:", templateName);
       localStorage.setItem("selectedBatchTemplate", templateName);
+      
+      // Also store as batch year for consistency
+      localStorage.setItem("selectedBatchYear", templateName);
+      console.log("Stored batch year:", templateName);
 
       const templateMatch = templateName.match(/Batch Template (\d+)/);
       if (templateMatch && templateMatch[1]) {
@@ -2318,6 +2332,11 @@ window.addEventListener("DOMContentLoaded", () => {
     const savedBatchYear = localStorage.getItem("selectedBatchYear");
     let selectedSection = null;
 
+    console.log("=== Restoring Selection on Page Load ===");
+    console.log("Saved batch year:", savedBatchYear);
+    console.log("Saved template:", savedTemplate);
+    console.log("Total sections found:", sections.length);
+
     if (savedBatchYear) {
       sections.forEach((section) => {
         const headerText = section
@@ -2326,11 +2345,15 @@ window.addEventListener("DOMContentLoaded", () => {
         if (headerText === savedBatchYear) {
           selectedSection = section;
           console.log(
-            "Restored selected section from savedBatchYear:",
+            "✓ Restored selected section from savedBatchYear:",
             savedBatchYear
           );
         }
       });
+      
+      if (!selectedSection) {
+        console.warn("⚠️ Could not find section matching savedBatchYear:", savedBatchYear);
+      }
     }
 
     if (!selectedSection && savedTemplate) {

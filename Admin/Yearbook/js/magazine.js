@@ -932,9 +932,6 @@ function loadPage(page, pageElement) {
           console.log("Response message:", response.message);
           console.log("Response data:", response.data);
 
-          var currentBatchYear =
-            localStorage.getItem("selectedBatchYear") || "none";
-
           var errorMessage = $("<div/>", {
             class: "management-message modern-empty-state",
             html: `
@@ -950,7 +947,6 @@ function loadPage(page, pageElement) {
                   response.message ||
                   "Please upload CSV of the Top Management to the Batch Upload Section first."
                 }</p>
-                <p class="empty-state-description">Debug: Template=${template}, BatchYear=${currentBatchYear}</p>
               </div>
             `,
           });

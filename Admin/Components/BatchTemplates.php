@@ -7,6 +7,7 @@
     <title>Batch Templates</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="<?= $basePath ?>/Admin/assets/css/BatchTemplates.css">
+    <link rel="stylesheet" href="<?= $basePath ?>/Admin/assets/css/UploadBox.css">
 </head>
 
 <body>
@@ -30,6 +31,7 @@
             <title>Batch Templates</title>
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
             <link rel="stylesheet" href="<?= $basePath ?>/Admin/assets/css/BatchTemplates.css">
+            <link rel="stylesheet" href="<?= $basePath ?>/Admin/assets/css/UploadBox.css">
         </head>
 
         <body>
