@@ -532,7 +532,6 @@ window.addEventListener("DOMContentLoaded", () => {
           console.log("🚀 Starting instant photo upload");
           let uploadCancelled = false;
 
-          // Quick check if cancelled
           if (isCancelling) {
             console.log(`✅ Upload cancelled before start`);
             uploadCancelled = true;
