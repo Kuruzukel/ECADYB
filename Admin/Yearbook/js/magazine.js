@@ -475,7 +475,6 @@ function loadStudentsForPage(
         response
       );
 
-      // Try to provide more context about the failure
       if (response) {
         if (!response.success) {
           console.warn(
