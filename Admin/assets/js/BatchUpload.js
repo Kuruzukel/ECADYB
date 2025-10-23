@@ -487,7 +487,7 @@ window.addEventListener("DOMContentLoaded", () => {
           }
 
           const totalSizeMB = totalSize / (1024 * 1024);
-          const MAX_SIZE_MB = 500; // Maximum 500MB
+          const MAX_SIZE_MB = 500;
 
           console.log(
             `Total files: ${fileCount}, Total upload size: ${totalSizeMB.toFixed(
