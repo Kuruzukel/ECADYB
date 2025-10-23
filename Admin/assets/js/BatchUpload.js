@@ -590,7 +590,6 @@ window.addEventListener("DOMContentLoaded", () => {
             const xhr = new XMLHttpRequest();
             currentUploadController = { abort: () => xhr.abort() };
 
-            // Track upload progress (silently, without displaying details)
             xhr.upload.addEventListener("progress", (e) => {
               if (e.lengthComputable) {
                 const percentComplete = Math.round((e.loaded / e.total) * 100);
