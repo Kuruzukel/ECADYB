@@ -686,7 +686,6 @@ function loadPage(page, pageElement) {
       coverData
     );
 
-    // Add page number to bottom of page (excluding front and back covers)
     if (page > 1 && page < totalPages) {
       var pageNumberDiv = $("<div/>", {
         class: "page-number",
