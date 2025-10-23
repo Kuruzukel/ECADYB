@@ -510,7 +510,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
           isCancelling = false;
 
-          // Show overlay and start upload immediately
           showUploadOverlay("photos");
           const uploadText = document.getElementById("uploadText");
 
