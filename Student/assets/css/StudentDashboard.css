@@ -493,6 +493,21 @@ header.fading {
   pointer-events: none;
 }
 
+/* Ensure curl inside iframe container doesn't overlay iframe content */
+.yearbook-iframe-container .yearbook-lower-curl {
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* In fullscreen, keep curl behind everything */
+.yearbook-iframe-container:fullscreen .yearbook-lower-curl,
+.yearbook-iframe-container:-webkit-full-screen .yearbook-lower-curl,
+.yearbook-iframe-container:-moz-full-screen .yearbook-lower-curl,
+.yearbook-iframe-container:-ms-fullscreen .yearbook-lower-curl {
+  z-index: 1;
+  pointer-events: none;
+}
+
 .yearbook-lower-curl svg {
   display: block;
   width: 100%;
@@ -520,6 +535,12 @@ header.fading {
   background: transparent;
   box-sizing: border-box;
   margin-top: 4.3rem;
+}
+
+/* Ensure iframe is above the curl */
+.yearbook-iframe-container iframe {
+  position: relative;
+  z-index: 10;
 }
 
 .yearbook-intro-content {
