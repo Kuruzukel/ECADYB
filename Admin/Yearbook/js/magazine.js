@@ -521,7 +521,6 @@ function fetchStudentDataCached(department, template, apiPage, callback) {
 
   var studentsPerAPIPage = 50;
 
-  // Get batch year from localStorage
   var batchYear = localStorage.getItem("selectedBatchYear");
 
   // Build request data
