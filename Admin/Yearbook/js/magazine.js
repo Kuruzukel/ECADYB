@@ -1,5 +1,6 @@
-// Determine base path for API calls
-window.basePath = window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '';
+window.basePath = window.location.pathname.includes("/ECADYB/")
+  ? "/ECADYB"
+  : "";
 
 window.studentDataCache = window.studentDataCache || {};
 window.studentDataPendingRequests = window.studentDataPendingRequests || {};
@@ -22,10 +23,15 @@ function clearTopManagementCache() {
 function fetchTopManagementCached(template, callback) {
   // Get batch year from localStorage to include in cache key
   var batchYear = localStorage.getItem("selectedBatchYear");
-  var cacheKey = "template_" + template + "_" + (batchYear || 'default');
+  var cacheKey = "template_" + template + "_" + (batchYear || "default");
 
   if (window.topManagementCache[cacheKey]) {
-    console.log("Using cached top management data for template", template, "batch year", batchYear);
+    console.log(
+      "Using cached top management data for template",
+      template,
+      "batch year",
+      batchYear
+    );
     callback(window.topManagementCache[cacheKey]);
     return;
   }
@@ -44,7 +50,12 @@ function fetchTopManagementCached(template, callback) {
 
   window.topManagementPendingRequests[cacheKey] = [callback];
 
-  console.log("Fetching top management data for template", template, "batch year", batchYear);
+  console.log(
+    "Fetching top management data for template",
+    template,
+    "batch year",
+    batchYear
+  );
 
   // Build request data
   var requestData = {
@@ -58,7 +69,10 @@ function fetchTopManagementCached(template, callback) {
   console.log("Template:", template);
   console.log("Batch Year:", batchYear);
   console.log("Request Data:", requestData);
-  console.log("Request URL:", window.basePath + "/Connection/Photos/FetchTopManagement.php");
+  console.log(
+    "Request URL:",
+    window.basePath + "/Connection/Photos/FetchTopManagement.php"
+  );
 
   $.ajax({
     url: window.basePath + "/Connection/Photos/FetchTopManagement.php",
@@ -69,9 +83,12 @@ function fetchTopManagementCached(template, callback) {
       console.log("=== TOP MANAGEMENT RESPONSE ===");
       console.log("Response:", response);
       console.log("Success:", response.success);
-      console.log("Data length:", response.data ? response.data.length : 'no data');
+      console.log(
+        "Data length:",
+        response.data ? response.data.length : "no data"
+      );
       console.log("Data:", response.data);
-      
+
       window.topManagementCache[cacheKey] = response;
 
       var callbacks = window.topManagementPendingRequests[cacheKey];
@@ -151,29 +168,42 @@ function fetchStudentPhotos(studentId, callback) {
       console.log("=== PHOTOS RESPONSE ===");
       console.log("Requested ID:", studentId);
       console.log("Response:", response);
-      
+
       // Validate response structure
       if (!response) {
         console.error("Empty response received from FetchStudentPhotos.php");
         callback([]);
         return;
-      } else if (typeof response !== 'object') {
-        console.error("Invalid response format received from FetchStudentPhotos.php:", typeof response);
+      } else if (typeof response !== "object") {
+        console.error(
+          "Invalid response format received from FetchStudentPhotos.php:",
+          typeof response
+        );
         callback([]);
         return;
-      } else if (!response.hasOwnProperty('success')) {
+      } else if (!response.hasOwnProperty("success")) {
         console.error("Response missing 'success' property");
         callback([]);
         return;
       }
-      
-      if (response.success && response.data && Array.isArray(response.data) && response.data.length > 0) {
+
+      if (
+        response.success &&
+        response.data &&
+        Array.isArray(response.data) &&
+        response.data.length > 0
+      ) {
         console.log("Found photos for student ID", studentId);
         console.log("Photo data:", response.data[0]);
         window.studentPhotosCache[studentId] = response.data;
         callback(response.data);
       } else {
-        console.log("No photos found for student ID:", studentId, "Response message:", response.message || "No message");
+        console.log(
+          "No photos found for student ID:",
+          studentId,
+          "Response message:",
+          response.message || "No message"
+        );
         callback([]);
       }
     },
@@ -374,11 +404,21 @@ function loadStudentsForPage(
 
   fetchStudentDataCached(department, template, apiPage, function (response) {
     // Enhanced error handling and logging
-    if (response && response.success && response.data && Array.isArray(response.data.students)) {
+    if (
+      response &&
+      response.success &&
+      response.data &&
+      Array.isArray(response.data.students)
+    ) {
       var students = response.data.students;
       var totalStudents = response.data.total_students || 0;
 
-      console.log("Successfully loaded", students.length, "students for API page", apiPage);
+      console.log(
+        "Successfully loaded",
+        students.length,
+        "students for API page",
+        apiPage
+      );
 
       var studentsFromThisPage = students.slice(
         localStartIndex,
@@ -390,7 +430,12 @@ function loadStudentsForPage(
         var nextApiPage = apiPage + 1;
         var remainingCount = studentsNeeded;
 
-        console.log("Need additional", studentsNeeded, "students from next API page", nextApiPage);
+        console.log(
+          "Need additional",
+          studentsNeeded,
+          "students from next API page",
+          nextApiPage
+        );
 
         fetchStudentDataCached(
           department,
@@ -408,8 +453,13 @@ function loadStudentsForPage(
               var studentsFromNextPage = nextStudents.slice(0, remainingCount);
               studentsFromThisPage =
                 studentsFromThisPage.concat(studentsFromNextPage);
-              
-              console.log("Successfully loaded additional", studentsFromNextPage.length, "students from API page", nextApiPage);
+
+              console.log(
+                "Successfully loaded additional",
+                studentsFromNextPage.length,
+                "students from API page",
+                nextApiPage
+              );
             } else {
               console.warn(
                 "Failed to load additional students for API page",
@@ -432,20 +482,26 @@ function loadStudentsForPage(
         "- returning empty array. Response received:",
         response
       );
-      
+
       // Try to provide more context about the failure
       if (response) {
         if (!response.success) {
-          console.warn("API returned success=false with message:", response.message);
+          console.warn(
+            "API returned success=false with message:",
+            response.message
+          );
         } else if (!response.data) {
           console.warn("API returned no data object");
         } else if (!Array.isArray(response.data.students)) {
-          console.warn("API returned data.students but it's not an array:", typeof response.data.students);
+          console.warn(
+            "API returned data.students but it's not an array:",
+            typeof response.data.students
+          );
         }
       } else {
         console.warn("No response received from API");
       }
-      
+
       callback([]);
     }
   });
@@ -488,7 +544,10 @@ function fetchStudentDataCached(department, template, apiPage, callback) {
     requestData.batch_year = batchYear;
   }
 
-  console.log("Making request to FetchStudentData.php with parameters:", requestData);
+  console.log(
+    "Making request to FetchStudentData.php with parameters:",
+    requestData
+  );
 
   $.ajax({
     url: window.basePath + "/Connection/Photos/FetchStudentData.php",
@@ -503,31 +562,34 @@ function fetchStudentDataCached(department, template, apiPage, callback) {
       console.log("Template:", template);
       console.log("Batch Year:", batchYear);
       console.log("Response:", response);
-      
+
       // Validate response structure
       if (!response) {
         console.error("Empty response received from FetchStudentData.php");
         response = {
           success: false,
           message: "Empty response received from server",
-          data: { students: [] }
+          data: { students: [] },
         };
-      } else if (typeof response !== 'object') {
-        console.error("Invalid response format received from FetchStudentData.php:", typeof response);
+      } else if (typeof response !== "object") {
+        console.error(
+          "Invalid response format received from FetchStudentData.php:",
+          typeof response
+        );
         response = {
           success: false,
           message: "Invalid response format received from server",
-          data: { students: [] }
+          data: { students: [] },
         };
-      } else if (!response.hasOwnProperty('success')) {
+      } else if (!response.hasOwnProperty("success")) {
         console.error("Response missing 'success' property");
         response = {
           success: false,
           message: "Response missing required properties",
-          data: { students: [] }
+          data: { students: [] },
         };
       }
-      
+
       window.studentDataCache[cacheKey] = response;
 
       var callbacks = window.studentDataPendingRequests[cacheKey];
@@ -546,7 +608,10 @@ function fetchStudentDataCached(department, template, apiPage, callback) {
       );
       console.log("XHR Response:", xhr.responseText);
       console.log("XHR Status:", xhr.status);
-      console.log("Request URL:", window.basePath + "/Connection/Photos/FetchStudentData.php");
+      console.log(
+        "Request URL:",
+        window.basePath + "/Connection/Photos/FetchStudentData.php"
+      );
       console.log("Request Data:", requestData);
       console.log("XHR Object:", xhr);
 
@@ -555,7 +620,10 @@ function fetchStudentDataCached(department, template, apiPage, callback) {
 
       var errorResponse = {
         success: false,
-        message: "Failed to fetch student data - " + status + (error ? ": " + error : ""),
+        message:
+          "Failed to fetch student data - " +
+          status +
+          (error ? ": " + error : ""),
         data: { students: [] },
       };
 
@@ -634,7 +702,7 @@ function loadPage(page, pageElement) {
     if (page > 1 && page < totalPages) {
       var pageNumberDiv = $("<div/>", {
         class: "page-number",
-        text: page
+        text: page,
       });
       pageElement.append(pageNumberDiv);
     }
@@ -705,12 +773,18 @@ function loadPage(page, pageElement) {
         console.log("Response:", response);
         console.log("Response Success:", response.success);
         console.log("Response Data:", response.data);
-        console.log("Data Length:", response.data ? response.data.length : 'no data');
+        console.log(
+          "Data Length:",
+          response.data ? response.data.length : "no data"
+        );
 
         loadingIndicator.remove();
 
         if (response.success && response.data && response.data.length > 0) {
-          console.log("Top management data available, checking index:", managementIndex);
+          console.log(
+            "Top management data available, checking index:",
+            managementIndex
+          );
           if (managementIndex < response.data.length) {
             var currentManager = response.data[managementIndex];
             console.log("Current Manager:", currentManager);
@@ -870,9 +944,10 @@ function loadPage(page, pageElement) {
           console.log("Response success:", response.success);
           console.log("Response message:", response.message);
           console.log("Response data:", response.data);
-          
-          var currentBatchYear = localStorage.getItem("selectedBatchYear") || 'none';
-          
+
+          var currentBatchYear =
+            localStorage.getItem("selectedBatchYear") || "none";
+
           var errorMessage = $("<div/>", {
             class: "management-message modern-empty-state",
             html: `
@@ -949,14 +1024,19 @@ function loadPage(page, pageElement) {
               "Students for page",
               page,
               ":",
-              studentsForThisPage ? studentsForThisPage.length : 'undefined',
+              studentsForThisPage ? studentsForThisPage.length : "undefined",
               "students starting from index",
               studentStartIndex
             );
 
             // Enhanced error handling for student data
             if (!studentsForThisPage || !Array.isArray(studentsForThisPage)) {
-              console.error("Invalid student data received for page", page, ":", studentsForThisPage);
+              console.error(
+                "Invalid student data received for page",
+                page,
+                ":",
+                studentsForThisPage
+              );
               var errorMessage = $("<div/>", {
                 class: "modern-empty-state",
                 html: `
@@ -1006,21 +1086,28 @@ function loadPage(page, pageElement) {
 
             for (var i = 0; i < studentsForThisPage.length; i++) {
               var student = studentsForThisPage[i];
-              
+
               // Validate student object
-              if (!student || typeof student !== 'object') {
-                console.warn("Invalid student object at index", i, "for page", page, ":", student);
+              if (!student || typeof student !== "object") {
+                console.warn(
+                  "Invalid student object at index",
+                  i,
+                  "for page",
+                  page,
+                  ":",
+                  student
+                );
                 continue;
               }
-              
+
               var globalIndex = studentStartIndex + i;
 
               console.log("=== PROCESSING STUDENT ===");
               console.log("Global Index:", globalIndex);
-              console.log("Student Name:", student.name || 'Unknown');
-              console.log("Student ID:", student.student_id || 'Unknown');
-              console.log("MongoDB ID:", student.id || 'Unknown');
-              console.log("Program:", student.program || 'Unknown');
+              console.log("Student Name:", student.name || "Unknown");
+              console.log("Student ID:", student.student_id || "Unknown");
+              console.log("MongoDB ID:", student.id || "Unknown");
+              console.log("Program:", student.program || "Unknown");
               console.log("Full Student Object:", student);
 
               var card = $("<div/>", {
@@ -1036,7 +1123,7 @@ function loadPage(page, pageElement) {
 
               var studentPhoto = $("<img/>", {
                 src: defaultPhotoUrl,
-                alt: student.name || 'Unknown Student',
+                alt: student.name || "Unknown Student",
                 crossOrigin: "anonymous",
                 onerror:
                   'this.src=\'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="135" height="155" viewBox="0 0 135 155"%3E%3Crect width="135" height="155" fill="%23f0f0f0"/%3E%3Ctext x="67.5" y="77.5" font-family="Arial" font-size="12" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Photo%3C/text%3E%3C/svg%3E\';',
@@ -1045,7 +1132,7 @@ function loadPage(page, pageElement) {
               studentImg.append(studentPhoto);
 
               var studentIdForPhotos = student.student_id;
-              var studentNameForPhotos = student.name || 'Unknown Student';
+              var studentNameForPhotos = student.name || "Unknown Student";
               console.log(
                 "Fetching TOGA photo for student:",
                 studentNameForPhotos,
@@ -1061,7 +1148,13 @@ function loadPage(page, pageElement) {
                   currentStudentName
                 ) {
                   fetchStudentPhotos(currentStudentId, function (photos) {
-                    if (photos && photos.length > 0 && photos[0] && photos[0].photos && photos[0].photos.student_photo_1) {
+                    if (
+                      photos &&
+                      photos.length > 0 &&
+                      photos[0] &&
+                      photos[0].photos &&
+                      photos[0].photos.student_photo_1
+                    ) {
                       var togaUrl = photos[0].photos.student_photo_1.url;
                       if (togaUrl) {
                         console.log(
@@ -1073,7 +1166,10 @@ function loadPage(page, pageElement) {
                         currentPhotoElement.attr("src", togaUrl);
                       }
                     } else {
-                      console.log("No valid photo data found for student", currentStudentName);
+                      console.log(
+                        "No valid photo data found for student",
+                        currentStudentName
+                      );
                     }
                   });
                 })(
@@ -1085,16 +1181,25 @@ function loadPage(page, pageElement) {
               }
 
               var studentName = $("<h3/>", {
-                text: student.name || 'Unknown Student',
+                text: student.name || "Unknown Student",
               });
 
               // Store student data in data attributes for event delegation
               card.attr("data-student-id", student.student_id || "");
               card.attr("data-student-name", student.name || "Unknown Student");
               card.attr("data-student-year", student.year || "N/A");
-              card.attr("data-student-motto", student.motto || "No motto provided");
-              card.attr("data-student-milestones", JSON.stringify(student.milestones || []));
-              card.attr("data-student-honors", JSON.stringify(student.honors || []));
+              card.attr(
+                "data-student-motto",
+                student.motto || "No motto provided"
+              );
+              card.attr(
+                "data-student-milestones",
+                JSON.stringify(student.milestones || [])
+              );
+              card.attr(
+                "data-student-honors",
+                JSON.stringify(student.honors || [])
+              );
               card.attr("data-student-program", student.program || "");
               card.attr("data-student-section", student.section || "");
 
@@ -1255,7 +1360,7 @@ function loadLargePage(page, pageElement) {
     pageElement.find(".page-number").remove();
     var pageNumberDiv = $("<div/>", {
       class: "page-number",
-      text: page
+      text: page,
     });
     pageElement.append(pageNumberDiv);
   }
@@ -1336,7 +1441,7 @@ function loadSmallPage(page, pageElement) {
     pageElement.find(".page-number").remove();
     var pageNumberDiv = $("<div/>", {
       class: "page-number",
-      text: page
+      text: page,
     });
     pageElement.append(pageNumberDiv);
   }
