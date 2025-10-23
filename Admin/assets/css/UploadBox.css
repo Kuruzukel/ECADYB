@@ -49,21 +49,21 @@
 }
 
 .upload-box:nth-child(4) {
-  border-color: #217ff7; /* Bright Blue */
+  border-color: #3b82f6; /* Brighter Blue */
 }
 
 .upload-box:nth-child(4):hover {
-  border-color: #1a66c7;
-  box-shadow: 0 0 15px rgba(33, 127, 247, 0.4);
+  border-color: #2563eb;
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
 }
 
 .upload-box:nth-child(5) {
-  border-color: #035911; /* Dark Green */
+  border-color: #10b981; /* Brighter Green */
 }
 
 .upload-box:nth-child(5):hover {
-  border-color: #02440d;
-  box-shadow: 0 0 15px rgba(3, 89, 17, 0.4);
+  border-color: #059669;
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
 }
 
 .upload-box:nth-child(6) {
@@ -143,11 +143,11 @@
 }
 
 .upload-box:nth-child(4) .plus-icon {
-  color: #1a5fc4;
+  color: #3b82f6;
 }
 
 .upload-box:nth-child(5) .plus-icon {
-  color: #023a0c;
+  color: #10b981;
 }
 
 .upload-box:nth-child(6) .plus-icon {
