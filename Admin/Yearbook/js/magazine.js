@@ -137,7 +137,6 @@ function fetchStudentPhotos(studentId, callback) {
     }
   }
 
-  // Get batch year from localStorage
   var batchYear = localStorage.getItem("selectedBatchYear");
 
   console.log("=== FETCHING PHOTOS ===");
