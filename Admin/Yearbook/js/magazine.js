@@ -1164,10 +1164,10 @@ function loadPage(page, pageElement) {
                             "position": "relative"
                           });
                           
-                          // Add "Coming Soon..." overlay
+                          // Add "Abangan sa susunod na clearance" overlay
                           var comingSoonOverlay = $("<div/>", {
                             class: "coming-soon-overlay",
-                            html: '<span class="coming-soon-text">Coming Soon...</span>',
+                            html: '<span class="coming-soon-text">Abangan sa susunod na clearance</span>',
                             css: {
                               "position": "absolute",
                               "top": "0",
@@ -1177,7 +1177,6 @@ function loadPage(page, pageElement) {
                               "display": "flex",
                               "align-items": "center",
                               "justify-content": "center",
-                              "background": "rgba(0, 0, 0, 0.3)",
                               "pointer-events": "none",
                               "z-index": "2"
                             }
@@ -1189,12 +1188,7 @@ function loadPage(page, pageElement) {
                             "font-weight": "600",
                             "color": "#ffffff",
                             "text-shadow": "0 2px 8px rgba(0, 0, 0, 0.8)",
-                            "background": "rgba(0, 0, 0, 0.6)",
                             "padding": "8px 16px",
-                            "border-radius": "20px",
-                            "backdrop-filter": "blur(4px)",
-                            "-webkit-backdrop-filter": "blur(4px)",
-                            "border": "1px solid rgba(255, 255, 255, 0.2)",
                             "letter-spacing": "0.5px"
                           });
                           
