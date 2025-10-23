@@ -1101,7 +1101,7 @@ function loadPage(page, pageElement) {
                           // Add "Picture gusto, bayad ayaw? aray mo" overlay
                           var comingSoonOverlay = $("<div/>", {
                             class: "coming-soon-overlay",
-                            html: '<span class="coming-soon-text">Picture gusto, bayad ayaw? aray mo</span>',
+                            html: '<span class="coming-soon-text">Coming Soon...</span>',
                             css: {
                               "position": "absolute",
                               "top": "0",
@@ -1119,7 +1119,7 @@ function loadPage(page, pageElement) {
                           
                           comingSoonOverlay.find(".coming-soon-text").css({
                             "font-style": "italic",
-                            "font-size": "14px",
+                            "font-size": "18px",
                             "font-weight": "600",
                             "color": "#ffffff",
                             "text-shadow": "0 2px 8px rgba(0, 0, 0, 0.8)",
@@ -1128,7 +1128,8 @@ function loadPage(page, pageElement) {
                             "text-align": "center",
                             "display": "inline-block",
                             "max-width": "100%",
-                            "word-wrap": "break-word"
+                            "word-wrap": "break-word",
+                            "margin-top": "5rem"
                           });
                           
                           currentPhotoElement.parent().append(comingSoonOverlay);
