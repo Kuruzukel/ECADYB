@@ -543,7 +543,7 @@ function fetchStudentDataCached(department, template, apiPage, callback) {
     method: "GET",
     data: requestData,
     dataType: "json",
-    timeout: 10000, // 10 second timeout
+    timeout: 10000,
     success: function (response) {
       console.log("=== STUDENT DATA RESPONSE ===");
       console.log("API Page:", apiPage);
