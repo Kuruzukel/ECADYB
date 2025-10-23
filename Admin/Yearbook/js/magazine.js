@@ -1100,14 +1100,14 @@ function loadPage(page, pageElement) {
               });
 
               var defaultPhotoUrl =
-                'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100%25" height="100%25" viewBox="0 0 135 155" preserveAspectRatio="xMidYMid slice"%3E%3Crect width="135" height="155" fill="%23f0f0f0"/%3E%3Ctext x="67.5" y="77.5" font-family="Arial" font-size="12" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Photo%3C/text%3E%3C/svg%3E';
+                'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100%25" height="100%25" viewBox="0 0 135 155" preserveAspectRatio="xMidYMid slice"%3E%3Crect width="135" height="155" fill="%23f0f0f0"/%3E%3Ctext x="67.5" y="50" font-family="Arial" font-size="10" fill="%23666" text-anchor="middle" font-weight="600"%3ENo Photo%3C/text%3E%3Ctext x="67.5" y="70" font-family="Arial" font-size="8" fill="%23999" text-anchor="middle"%3EUpload via%3C/text%3E%3Ctext x="67.5" y="85" font-family="Arial" font-size="8" fill="%23999" text-anchor="middle"%3EBatch Upload%3C/text%3E%3C/svg%3E';
 
               var studentPhoto = $("<img/>", {
                 src: defaultPhotoUrl,
                 alt: student.name || "Unknown Student",
                 crossOrigin: "anonymous",
                 onerror:
-                  'this.src=\'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100%25" height="100%25" viewBox="0 0 135 155" preserveAspectRatio="xMidYMid slice"%3E%3Crect width="135" height="155" fill="%23f0f0f0"/%3E%3Ctext x="67.5" y="77.5" font-family="Arial" font-size="12" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Photo%3C/text%3E%3C/svg%3E\';',
+                  'this.src=\'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100%25" height="100%25" viewBox="0 0 135 155" preserveAspectRatio="xMidYMid slice"%3E%3Crect width="135" height="155" fill="%23f0f0f0"/%3E%3Ctext x="67.5" y="50" font-family="Arial" font-size="10" fill="%23666" text-anchor="middle" font-weight="600"%3ENo Photo%3C/text%3E%3Ctext x="67.5" y="70" font-family="Arial" font-size="8" fill="%23999" text-anchor="middle"%3EUpload via%3C/text%3E%3Ctext x="67.5" y="85" font-family="Arial" font-size="8" fill="%23999" text-anchor="middle"%3EBatch Upload%3C/text%3E%3C/svg%3E\';',
               });
 
               studentImg.append(studentPhoto);
