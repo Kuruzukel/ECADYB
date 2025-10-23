@@ -445,7 +445,6 @@ window.addEventListener("DOMContentLoaded", () => {
         const formData = new FormData();
 
         if (input.id === "student-photos" || input.id === "management-photos") {
-          // Check if batch year is selected
           const selectedBatchYear = localStorage.getItem("selectedBatchYear");
 
           console.log("=== BATCH YEAR VALIDATION ===");
