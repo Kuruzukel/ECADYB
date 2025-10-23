@@ -13,7 +13,6 @@ window.studentPhotosCache = window.studentPhotosCache || {};
 window.topManagementCache = window.topManagementCache || {};
 window.topManagementPendingRequests = window.topManagementPendingRequests || {};
 
-// Function to clear top management cache when batch year changes
 function clearTopManagementCache() {
   console.log("Clearing top management cache due to batch year change");
   window.topManagementCache = {};
