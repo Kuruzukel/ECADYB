@@ -332,7 +332,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
   const batchYearSelect = document.getElementById("batch-year-select");
   if (batchYearSelect) {
-    // Load saved batch year from localStorage
     const savedBatchYear = localStorage.getItem("selectedBatchYear");
     if (savedBatchYear) {
       // Try to select the saved batch year (without "Batch Year " prefix)
