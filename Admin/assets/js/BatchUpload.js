@@ -539,7 +539,6 @@ window.addEventListener("DOMContentLoaded", () => {
             return;
           }
 
-          // Update overlay text
           if (uploadText) {
             const uploadType =
               input.id === "student-photos"
