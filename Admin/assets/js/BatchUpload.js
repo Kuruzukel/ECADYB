@@ -597,7 +597,6 @@ window.addEventListener("DOMContentLoaded", () => {
               }
             });
 
-            // Handle upload completion
             const uploadPromise = new Promise((resolve, reject) => {
               xhr.onload = () => {
                 console.log("=== UPLOAD RESPONSE DEBUG ===");
