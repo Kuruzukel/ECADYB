@@ -84,7 +84,6 @@ try {
     $db = $client->ECADYB;
     $collection = $db->Yearbook_Covers;
 
-    // Build query - use both batch_year and template when available
     $query = ['slot' => $slot, 'template' => $template];
     $backgroundQuery = ['slot' => 8, 'template' => $template];
 
