@@ -1233,7 +1233,6 @@ function zoomTo(event) {
     // } else {
     //   } else {
     //     $(".magazine-viewport").zoom("zoomOut");
-    //   }
   }, 1);
 }
 
