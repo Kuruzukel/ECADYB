@@ -158,7 +158,7 @@ function fetchStudentPhotos(studentId, callback) {
     method: "GET",
     data: requestData,
     dataType: "json",
-    timeout: 10000, // 10 second timeout
+    timeout: 10000,
     success: function (response) {
       console.log("=== PHOTOS RESPONSE ===");
       console.log("Requested ID:", studentId);
