@@ -1073,7 +1073,6 @@ function loadPage(page, pageElement) {
             for (var i = 0; i < studentsForThisPage.length; i++) {
               var student = studentsForThisPage[i];
 
-              // Validate student object
               if (!student || typeof student !== "object") {
                 console.warn(
                   "Invalid student object at index",
