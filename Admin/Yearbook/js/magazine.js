@@ -1016,7 +1016,6 @@ function loadPage(page, pageElement) {
               studentStartIndex
             );
 
-            // Enhanced error handling for student data
             if (!studentsForThisPage || !Array.isArray(studentsForThisPage)) {
               console.error(
                 "Invalid student data received for page",
