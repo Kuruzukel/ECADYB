@@ -1237,7 +1237,6 @@ function zoomTo(event) {
     //   } else {
     //     $(".magazine-viewport").zoom("zoomOut");
     //   }
-    // }
   }, 1);
 }
 
