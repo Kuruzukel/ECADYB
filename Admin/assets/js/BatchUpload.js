@@ -339,7 +339,6 @@ window.addEventListener("DOMContentLoaded", () => {
       console.log("Loaded saved batch year:", cleanBatchYear);
     }
 
-    // Handle batch year selection
     batchYearSelect.addEventListener("change", (e) => {
       const selectedYear = e.target.value;
       if (selectedYear) {
