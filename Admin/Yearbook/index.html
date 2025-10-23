@@ -18,7 +18,8 @@
       :-webkit-full-screen body,
       :-moz-full-screen body,
       :-ms-fullscreen body {
-        background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center center/cover no-repeat !important;
+        background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center
+          center/cover no-repeat !important;
       }
 
       html,
@@ -123,27 +124,55 @@
     />
     <script>
       // Detect base path for asset loading
-      var assetBasePath = window.location.pathname.includes('/ECADYB/') ? '/ECADYB/' : '/ECADYB/';
+      var assetBasePath = window.location.pathname.includes("/ECADYB/")
+        ? "/ECADYB/"
+        : "/ECADYB/";
     </script>
     <script
       type="text/javascript"
       src="/ECADYB/Turn.js/extras/jquery.min.js"
     ></script>
     <script type="text/javascript" src="/ECADYB/Turn.js/lib/hash.js"></script>
-    <script type="text/javascript" src="/ECADYB/Turn.js/lib/turn.min.js"></script>
-    <script type="text/javascript" src="/ECADYB/Turn.js/lib/zoom.min.js"></script>
-    <script type="text/javascript" src="/ECADYB/Admin/Yearbook/js/magazine.js?v=1736979600"></script>
-    <link rel="stylesheet" href="/ECADYB/Admin/Yearbook/css/magazine.css?v=1736979600" />
+    <script
+      type="text/javascript"
+      src="/ECADYB/Turn.js/lib/turn.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="/ECADYB/Turn.js/lib/zoom.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="/ECADYB/Admin/Yearbook/js/magazine.js?v=1736979600"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="/ECADYB/Admin/Yearbook/css/magazine.css?v=1736979600"
+    />
 
     <script type="text/javascript">
       // Define $.isTouch for touch device detection
-      $.isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-      $.mouseEvents = $.isTouch ? { over: 'touchstart', out: 'touchend', move: 'touchmove', down: 'touchstart', up: 'touchend' } : { over: 'mouseover', out: 'mouseout', move: 'mousemove', down: 'mousedown', up: 'mouseup' };
-      
+      $.isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+      $.mouseEvents = $.isTouch
+        ? {
+            over: "touchstart",
+            out: "touchend",
+            move: "touchmove",
+            down: "touchstart",
+            up: "touchend",
+          }
+        : {
+            over: "mouseover",
+            out: "mouseout",
+            move: "mousemove",
+            down: "mousedown",
+            up: "mouseup",
+          };
+
       // Debug: Log touch detection
       console.log("$.isTouch:", $.isTouch, typeof $.isTouch);
       console.log("$.mouseEvents:", $.mouseEvents);
-      
+
       var coverData = null;
       var studentData = null;
 
@@ -243,7 +272,7 @@
         if (batchYear) {
           requestData.batch_year = batchYear;
         }
-        
+
         $.ajax({
           url: window.basePath + "/Connection/Photos/FetchStudentData.php",
           method: "GET",
@@ -422,14 +451,24 @@
           );
 
           if (typeof loadStudentsForPage === "function") {
-            console.log("Attempting to load students for page", pageNumber, "with startIndex", studentStartIndex);
+            console.log(
+              "Attempting to load students for page",
+              pageNumber,
+              "with startIndex",
+              studentStartIndex
+            );
             loadStudentsForPage(
               yearbook.code,
               template,
               studentStartIndex,
               1,
               function (students) {
-                console.log("Received students data for page", pageNumber, ":", students);
+                console.log(
+                  "Received students data for page",
+                  pageNumber,
+                  ":",
+                  students
+                );
                 if (students && students.length > 0) {
                   var firstStudent = students[0];
                   if (firstStudent) {
@@ -439,10 +478,18 @@
                       firstStudent.course ||
                       firstStudent.department;
                     if (section) {
-                      console.log("Found section", section, "for page", pageNumber);
+                      console.log(
+                        "Found section",
+                        section,
+                        "for page",
+                        pageNumber
+                      );
                       return section.toUpperCase();
                     } else {
-                      console.log("No section information found for student", firstStudent);
+                      console.log(
+                        "No section information found for student",
+                        firstStudent
+                      );
                     }
                   } else {
                     console.log("No valid first student found in array");
@@ -874,13 +921,12 @@
         var selectedTemplate =
           localStorage.getItem("selectedBatchTemplateNumber") || 1;
         selectedTemplate = parseInt(selectedTemplate);
-        
-        // Get batch year from localStorage
+
         var batchYear = localStorage.getItem("selectedBatchYear");
-        
+
         console.log("Using template from localStorage:", selectedTemplate);
         console.log("Using batch year from localStorage:", batchYear);
-        
+
         // Clear top management cache if batch year has changed
         if (typeof clearTopManagementCache === "function") {
           clearTopManagementCache();
@@ -894,7 +940,7 @@
         if (batchYear) {
           requestData.batch_year = batchYear;
         }
-        
+
         $.ajax({
           url: window.basePath + "/Admin/Yearbook/FetchCoverData.php",
           method: "GET",
@@ -910,7 +956,9 @@
             ) {
               if (response.data.department_page) {
                 var redirectUrl =
-                  "/Admin/Departments/" + response.data.department_page + ".php";
+                  "/Admin/Departments/" +
+                  response.data.department_page +
+                  ".php";
                 window.location.href =
                   redirectUrl + "?department=" + response.data.department;
                 return;
@@ -1257,14 +1305,16 @@
             name: card.attr("data-student-name"),
             year: card.attr("data-student-year"),
             motto: card.attr("data-student-motto"),
-            milestones: JSON.parse(card.attr("data-student-milestones") || "[]"),
+            milestones: JSON.parse(
+              card.attr("data-student-milestones") || "[]"
+            ),
             honors: JSON.parse(card.attr("data-student-honors") || "[]"),
             program: card.attr("data-student-program"),
-            section: card.attr("data-student-section")
+            section: card.attr("data-student-section"),
           };
 
           console.log("Card clicked for student:", clickedStudent);
-          
+
           // Ensure modal is properly closed before reopening
           if (modal.hasClass("active")) {
             modal.removeClass("active");
@@ -1274,16 +1324,19 @@
           // Populate modal with student data
           modal.find(".student-name").text(clickedStudent.name);
           modal.find(".academic-year span").text(clickedStudent.year || "N/A");
-          modal.find(".motto p").text(clickedStudent.motto || "No motto provided");
+          modal
+            .find(".motto p")
+            .text(clickedStudent.motto || "No motto provided");
 
           var milestonesContainer = modal.find(".milestones");
           var milestonesTitle = modal.find(".milestones h3");
-          
+
           // Remove existing milestone paragraphs (keep only the h3)
           milestonesContainer.find("p").remove();
 
           // Check if student has milestones (honors will be handled separately in Latin Awards)
-          var hasMilestones = clickedStudent.milestones && clickedStudent.milestones.length > 0;
+          var hasMilestones =
+            clickedStudent.milestones && clickedStudent.milestones.length > 0;
 
           if (hasMilestones) {
             milestonesContainer.show();
@@ -1291,7 +1344,11 @@
 
             clickedStudent.milestones.forEach(function (milestone) {
               // Filter out sample data
-              if (milestone && !milestone.toLowerCase().includes('sample') && milestone.trim() !== '') {
+              if (
+                milestone &&
+                !milestone.toLowerCase().includes("sample") &&
+                milestone.trim() !== ""
+              ) {
                 milestonesContainer.append("<p>" + milestone + "</p>");
               }
             });
@@ -1301,21 +1358,27 @@
 
           // Populate Latin Awards section
           var latinAwardsContainer = modal.find(".latin-awards");
-          
+
           // Remove existing award paragraphs (keep only the h3)
           latinAwardsContainer.find("p").remove();
-          
+
           // Check if student has Latin awards/honors
           if (clickedStudent.honors) {
             // Handle both string and array formats
-            if (typeof clickedStudent.honors === 'string' && clickedStudent.honors.trim() !== '') {
+            if (
+              typeof clickedStudent.honors === "string" &&
+              clickedStudent.honors.trim() !== ""
+            ) {
               // If honors is a string, split by common separators and add each as a paragraph
-              var honorsArray = clickedStudent.honors.split(/[,;|\n]/).map(function(honor) {
-                return honor.trim();
-              }).filter(function(honor) {
-                return honor.length > 0;
-              });
-              
+              var honorsArray = clickedStudent.honors
+                .split(/[,;|\n]/)
+                .map(function (honor) {
+                  return honor.trim();
+                })
+                .filter(function (honor) {
+                  return honor.length > 0;
+                });
+
               if (honorsArray.length > 0) {
                 latinAwardsContainer.show();
                 honorsArray.forEach(function (honor) {
@@ -1324,7 +1387,10 @@
               } else {
                 latinAwardsContainer.hide();
               }
-            } else if (Array.isArray(clickedStudent.honors) && clickedStudent.honors.length > 0) {
+            } else if (
+              Array.isArray(clickedStudent.honors) &&
+              clickedStudent.honors.length > 0
+            ) {
               // If honors is already an array
               latinAwardsContainer.show();
               clickedStudent.honors.forEach(function (honor) {
@@ -1340,37 +1406,44 @@
           }
 
           // Fetch and display student photos
-          var defaultPhotoUrl = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect width="300" height="300" fill="%23f0f0f0"/%3E%3Ctext x="150" y="150" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Student Photo%3C/text%3E%3C/svg%3E';
+          var defaultPhotoUrl =
+            'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect width="300" height="300" fill="%23f0f0f0"/%3E%3Ctext x="150" y="150" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Student Photo%3C/text%3E%3C/svg%3E';
           modal.find(".student-image-large img").attr("src", defaultPhotoUrl);
 
           // Determine base path for API calls
-          var basePath = window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '';
-          
+          var basePath = window.location.pathname.includes("/ECADYB/")
+            ? "/ECADYB"
+            : "";
+
           // Get batch year from localStorage
           var batchYear = localStorage.getItem("selectedBatchYear");
-          
+
           // Build request data
           var requestData = {
             student_id: clickedStudent.student_id,
-            template: localStorage.getItem('selectedBatchTemplateNumber') || 1
+            template: localStorage.getItem("selectedBatchTemplateNumber") || 1,
           };
           if (batchYear) {
             requestData.batch_year = batchYear;
           }
-          
+
           // Fetch student photos
           $.ajax({
-            url: basePath + '/Connection/Photos/FetchStudentPhotos.php',
-            method: 'GET',
+            url: basePath + "/Connection/Photos/FetchStudentPhotos.php",
+            method: "GET",
             data: requestData,
-            dataType: 'json',
-            success: function(response) {
-              console.log('Student photos response:', response);
-              
-              if (response.success && response.data && response.data.length > 0) {
+            dataType: "json",
+            success: function (response) {
+              console.log("Student photos response:", response);
+
+              if (
+                response.success &&
+                response.data &&
+                response.data.length > 0
+              ) {
                 var photos = response.data[0].photos;
                 var photoUrls = [];
-                
+
                 // Collect all available photo URLs
                 if (photos.student_photo_1 && photos.student_photo_1.url) {
                   photoUrls.push(photos.student_photo_1.url);
@@ -1381,30 +1454,32 @@
                 if (photos.student_photo_3 && photos.student_photo_3.url) {
                   photoUrls.push(photos.student_photo_3.url);
                 }
-                
-                console.log('Available photo URLs:', photoUrls);
-                
+
+                console.log("Available photo URLs:", photoUrls);
+
                 // Set the first available photo
                 if (photoUrls.length > 0) {
-                  modal.find(".student-image-large img").attr("src", photoUrls[0]);
-                  modal.data('student-photos', photoUrls);
-                  modal.data('current-photo-index', 0);
-                  console.log('Set student photo:', photoUrls[0]);
+                  modal
+                    .find(".student-image-large img")
+                    .attr("src", photoUrls[0]);
+                  modal.data("student-photos", photoUrls);
+                  modal.data("current-photo-index", 0);
+                  console.log("Set student photo:", photoUrls[0]);
                 } else {
-                  console.log('No photos available for student');
+                  console.log("No photos available for student");
                 }
               } else {
-                console.log('No photos found for student');
+                console.log("No photos found for student");
               }
             },
-            error: function(xhr, status, error) {
-              console.error('Error fetching student photos:', error);
-              console.error('Response:', xhr.responseText);
-            }
+            error: function (xhr, status, error) {
+              console.error("Error fetching student photos:", error);
+              console.error("Response:", xhr.responseText);
+            },
           });
 
           // Show modal with a small delay
-          setTimeout(function() {
+          setTimeout(function () {
             modal.addClass("active");
             $("body").addClass("modal-active");
 
@@ -1509,15 +1584,17 @@
         }
 
         function updateFullscreenBackground() {
-          var isFullscreen = document.fullscreenElement || 
-                           document.webkitFullscreenElement || 
-                           document.mozFullScreenElement || 
-                           document.msFullscreenElement;
-          
-          var curlElement = document.querySelector('.yearbook-lower-curl');
-          
+          var isFullscreen =
+            document.fullscreenElement ||
+            document.webkitFullscreenElement ||
+            document.mozFullScreenElement ||
+            document.msFullscreenElement;
+
+          var curlElement = document.querySelector(".yearbook-lower-curl");
+
           if (isFullscreen) {
-            document.body.style.background = "url('https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png') center center/cover no-repeat";
+            document.body.style.background =
+              "url('https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png') center center/cover no-repeat";
             if (curlElement) {
               curlElement.style.display = "block";
             }
@@ -1529,15 +1606,15 @@
           }
         }
 
-        document.addEventListener("fullscreenchange", function() {
+        document.addEventListener("fullscreenchange", function () {
           updateFullscreenIcon();
           updateFullscreenBackground();
         });
-        document.addEventListener("webkitfullscreenchange", function() {
+        document.addEventListener("webkitfullscreenchange", function () {
           updateFullscreenIcon();
           updateFullscreenBackground();
         });
-        document.addEventListener("msfullscreenchange", function() {
+        document.addEventListener("msfullscreenchange", function () {
           updateFullscreenIcon();
           updateFullscreenBackground();
         });
@@ -1550,32 +1627,36 @@
         $(".nav-prev").on("click", function (e) {
           e.preventDefault();
           e.stopPropagation();
-          
+
           var modal = $(".student-modal");
-          var photos = modal.data('student-photos');
-          var currentIndex = modal.data('current-photo-index') || 0;
-          
+          var photos = modal.data("student-photos");
+          var currentIndex = modal.data("current-photo-index") || 0;
+
           if (photos && photos.length > 0) {
             currentIndex = (currentIndex - 1 + photos.length) % photos.length;
-            modal.data('current-photo-index', currentIndex);
-            modal.find(".student-image-large img").attr("src", photos[currentIndex]);
-            console.log('Previous photo:', photos[currentIndex]);
+            modal.data("current-photo-index", currentIndex);
+            modal
+              .find(".student-image-large img")
+              .attr("src", photos[currentIndex]);
+            console.log("Previous photo:", photos[currentIndex]);
           }
         });
 
         $(".nav-next").on("click", function (e) {
           e.preventDefault();
           e.stopPropagation();
-          
+
           var modal = $(".student-modal");
-          var photos = modal.data('student-photos');
-          var currentIndex = modal.data('current-photo-index') || 0;
-          
+          var photos = modal.data("student-photos");
+          var currentIndex = modal.data("current-photo-index") || 0;
+
           if (photos && photos.length > 0) {
             currentIndex = (currentIndex + 1) % photos.length;
-            modal.data('current-photo-index', currentIndex);
-            modal.find(".student-image-large img").attr("src", photos[currentIndex]);
-            console.log('Next photo:', photos[currentIndex]);
+            modal.data("current-photo-index", currentIndex);
+            modal
+              .find(".student-image-large img")
+              .attr("src", photos[currentIndex]);
+            console.log("Next photo:", photos[currentIndex]);
           }
         });
 
