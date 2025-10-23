@@ -1230,7 +1230,6 @@ function loadPage(page, pageElement) {
 
 function zoomTo(event) {
   setTimeout(function () {
-    //   $(".magazine-viewport").data().regionClicked = false;
     // } else {
     //   if ($(".magazine-viewport").zoom("value") == 1) {
     //     $(".magazine-viewport").zoom("zoomIn", event);
