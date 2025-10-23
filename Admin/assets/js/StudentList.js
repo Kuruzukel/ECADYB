@@ -840,6 +840,15 @@ function initializeStatusUpdates() {
                 : "status-pending"
             }`;
           }
+          
+          // Clear the cache for the current page so it reloads with updated data
+          const urlParams = new URLSearchParams(window.location.search);
+          const academicYear = urlParams.get("academic_year") || "";
+          const department = urlParams.get("department") || "bsme";
+          const pageNum = urlParams.get("pageNum") || "1";
+          const cacheKey = `${academicYear}-${department}-${pageNum}`;
+          pageCache.delete(cacheKey);
+          
           applyFilters();
 
           if (!isSelectAllOperation) {
