@@ -81,7 +81,6 @@ try {
         'socketTimeoutMS' => 5000
     ]);
 
-    // Use ECADYB database instead of BatchTemplate databases
     $db = $client->ECADYB;
     $collection = $db->Yearbook_Covers;
 
