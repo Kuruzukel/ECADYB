@@ -321,7 +321,6 @@ function cancelUpload() {
 
   showNotification("Upload cancelled", "error");
 
-  // Reset cancelling flag after a short delay
   setTimeout(() => {
     isCancelling = false;
   }, 500);
