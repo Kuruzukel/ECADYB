@@ -552,7 +552,6 @@ window.addEventListener("DOMContentLoaded", () => {
             formData.append(`files[]`, input.files[i]);
           }
 
-          // Add batch year to FormData
           console.log("=== BATCH YEAR DEBUG ===");
           console.log(
             "selectedBatchYear from localStorage:",
