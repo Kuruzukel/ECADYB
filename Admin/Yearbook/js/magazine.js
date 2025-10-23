@@ -1232,7 +1232,6 @@ function zoomTo(event) {
   setTimeout(function () {
     // } else {
     //   } else {
-    //     $(".magazine-viewport").zoom("zoomOut");
   }, 1);
 }
 
