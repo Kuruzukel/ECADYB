@@ -330,7 +330,6 @@ window.addEventListener("DOMContentLoaded", () => {
   const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
   applyTheme(savedTheme);
 
-  // Initialize batch year selector
   const batchYearSelect = document.getElementById("batch-year-select");
   if (batchYearSelect) {
     // Load saved batch year from localStorage
