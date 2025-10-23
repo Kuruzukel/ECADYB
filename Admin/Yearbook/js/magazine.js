@@ -1229,9 +1229,7 @@ function loadPage(page, pageElement) {
 }
 
 function zoomTo(event) {
-  setTimeout(function () {
-    // } else {
-  }, 1);
+  setTimeout(function () {}, 1);
 }
 
 function loadRegions(page, element) {
