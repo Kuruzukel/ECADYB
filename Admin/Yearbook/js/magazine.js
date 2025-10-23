@@ -1164,10 +1164,10 @@ function loadPage(page, pageElement) {
                             "position": "relative"
                           });
                           
-                          // Add "Abangan sa susunod na clearance" overlay
+                          // Add "Picture gusto, bayad ayaw? aray mo" overlay
                           var comingSoonOverlay = $("<div/>", {
                             class: "coming-soon-overlay",
-                            html: '<span class="coming-soon-text">Abangan sa susunod na clearance</span>',
+                            html: '<span class="coming-soon-text">Picture gusto, bayad ayaw? aray mo</span>',
                             css: {
                               "position": "absolute",
                               "top": "0",
@@ -1178,7 +1178,8 @@ function loadPage(page, pageElement) {
                               "align-items": "center",
                               "justify-content": "center",
                               "pointer-events": "none",
-                              "z-index": "2"
+                              "z-index": "2",
+                              "text-align": "center"
                             }
                           });
                           
@@ -1189,7 +1190,11 @@ function loadPage(page, pageElement) {
                             "color": "#ffffff",
                             "text-shadow": "0 2px 8px rgba(0, 0, 0, 0.8)",
                             "padding": "8px 16px",
-                            "letter-spacing": "0.5px"
+                            "letter-spacing": "0.5px",
+                            "text-align": "center",
+                            "display": "inline-block",
+                            "max-width": "100%",
+                            "word-wrap": "break-word"
                           });
                           
                           currentPhotoElement.parent().append(comingSoonOverlay);
