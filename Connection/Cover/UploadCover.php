@@ -142,7 +142,6 @@ try {
 
     $upperName = strtoupper($originalName);
 
-    // Skip filename validation for slot 8 (background) to improve performance
     if ($slot !== 8) {
         $slotMapping = [
             'BSME' => 1,
