@@ -519,7 +519,6 @@ try {
         }
     }
 
-    // Clear uploadedFileInfo as upload completed successfully
     global $uploadedFileInfo;
     $uploadedFileInfo = null;
 
