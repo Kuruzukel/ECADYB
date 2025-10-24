@@ -291,7 +291,6 @@ try {
         respond(false, 'Failed to upload to Bunny: ' . ($curlErr ?: 'HTTP ' . $httpCode));
     }
 
-    // Track uploaded file for potential cleanup
     global $uploadedFileInfo;
     $uploadedFileInfo = [
         'storageUrl' => $storageUrl,
