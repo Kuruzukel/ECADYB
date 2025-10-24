@@ -1590,7 +1590,7 @@ function resizeViewport() {
       document.msFullscreenElement;
 
     var baseWidth = isFullscreen ? 1200 : options.width;
-    var baseHeight = isFullscreen ? 750 : options.height; // Change 900 to your desired fullscreen height
+    var baseHeight = isFullscreen ? 750 : options.height;
 
     var bound = calculateBound({
       width: baseWidth,
