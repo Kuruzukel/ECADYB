@@ -362,7 +362,6 @@ try {
         'upload_time' => new \MongoDB\BSON\UTCDateTime()
     ];
 
-    // Check completion for all slots including background
     $checkCompletion = true;
 
     if ($slot === 8) {
