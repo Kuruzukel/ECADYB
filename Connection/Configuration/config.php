@@ -1,5 +1,4 @@
 <?php
-// Detect if we're on Railway or localhost
 if (getenv('RAILWAY_PUBLIC_URL')) {
     define('BASE_URL', '/');
 } else {
@@ -7,6 +6,7 @@ if (getenv('RAILWAY_PUBLIC_URL')) {
 }
 
 // Make BASE_URL available to JavaScript
-function getBaseUrl() {
+function getBaseUrl()
+{
     return BASE_URL;
 }
