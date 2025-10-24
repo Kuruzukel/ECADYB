@@ -1,5 +1,4 @@
 <?php
-// Clean any existing output first
 while (ob_get_level()) {
     ob_end_clean();
 }
@@ -41,21 +40,21 @@ try {
 }
 
 // Register shutdown function to catch fatal errors
-register_shutdown_function(function() {
+register_shutdown_function(function () {
     $error = error_get_last();
     if ($error !== null && in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
         while (ob_get_level()) {
             ob_end_clean();
         }
-        
+
         error_log("FetchStudentData Fatal Error: " . $error['message'] . " in " . $error['file'] . " on line " . $error['line']);
-        
+
         $response = [
             'success' => false,
             'message' => 'Server error occurred while fetching student data',
             'error_details' => $error['message']
         ];
-        
+
         $jsonOutput = json_encode($response);
         header('Content-Type: application/json');
         header('Content-Length: ' . strlen($jsonOutput));
@@ -86,9 +85,9 @@ function respond($success, $message = '', $data = [])
         ];
         $jsonOutput = json_encode($errorResponse);
     }
-    
+
     error_log("FetchStudentData Response: " . substr($jsonOutput, 0, 200) . "... (total length: " . strlen($jsonOutput) . " bytes)");
-    
+
     header('Content-Type: application/json; charset=utf-8');
     header('Content-Length: ' . strlen($jsonOutput));
     header('Connection: close'); // Ensure connection closes properly
@@ -110,7 +109,7 @@ try {
 
     // Add debug mode
     $debugMode = isset($_GET['debug']) && $_GET['debug'] === '1';
-    
+
     if ($debugMode) {
         error_log("=== DEBUG MODE ENABLED ===");
         error_log("Request parameters: " . json_encode($_GET));
@@ -134,7 +133,7 @@ try {
         'BSN' => ['bsn'],
         'BSTM' => ['bstm']
     ];
-    
+
     // Debug: Log the department mapping
     error_log("Department mapping for $department: " . json_encode($departmentCollections[$department] ?? 'NOT FOUND'));
 
@@ -154,7 +153,7 @@ try {
     error_log("=== FETCH STUDENT DATA REQUEST ===");
     error_log("Department: $department, Template: $template, Page: $page, Limit: $limit, Batch Year: $batchYear");
     error_log("Connecting to MongoDB database: " . $mongoDbName . " for department: " . $department);
-    
+
     $mongoUrl = getenv('MONGO_URL') ?: getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 
     $mongoClient = new MongoDB\Client($mongoUrl, [
@@ -202,13 +201,13 @@ try {
 
             if ($collectionExists) {
                 $collection = $db->$collectionName;
-                
+
                 // Debug: Get a sample document to see the structure
                 $sampleDoc = $collection->findOne([]);
                 if ($sampleDoc) {
                     error_log("Sample document from $collectionName: " . json_encode($sampleDoc));
                 }
-                
+
                 $studentCount = $collection->countDocuments($academicYearFilter);
                 $totalStudentsCount += $studentCount;
                 error_log("Found $studentCount students in collection $collectionName" . ($academicYearFilter ? " with filter: " . json_encode($academicYearFilter) : ""));
@@ -264,14 +263,14 @@ try {
                     // Calculate skip and limit for this collection
                     $collectionSkip = max(0, $targetSkip - $studentsProcessed);
                     $collectionLimit = min($studentsNeeded, $collectionCount - $collectionSkip);
-                    
+
                     error_log("Collection $collectionName: Skip $collectionSkip, Limit $collectionLimit (students needed: $studentsNeeded, collection count: $collectionCount)");
 
                     if ($collectionLimit > 0) {
                         try {
                             error_log("Executing MongoDB query for collection $collectionName with skip=$collectionSkip, limit=$collectionLimit");
                             $queryStartTime = microtime(true);
-                            
+
                             $students = $collection->find($academicYearFilter, [
                                 'sort' => ['department section' => 1, 'last name' => 1],
                                 'skip' => $collectionSkip,
@@ -280,7 +279,7 @@ try {
                                 'noCursorTimeout' => true // Prevent cursor timeout on slow queries
                             ]);
                             $processedCount = 0;
-                            
+
                             $queryEndTime = microtime(true);
                             $queryDuration = round(($queryEndTime - $queryStartTime) * 1000, 2);
                             error_log("MongoDB query executed in {$queryDuration}ms for collection $collectionName");
@@ -335,7 +334,7 @@ try {
                                 $honors = $student['honors'] ?? '';
 
                                 // Sanitize strings to ensure valid UTF-8 and prevent JSON encoding issues
-                                $sanitize = function($value) {
+                                $sanitize = function ($value) {
                                     if (is_string($value)) {
                                         // Remove any non-UTF-8 characters and control characters
                                         $value = mb_convert_encoding($value, 'UTF-8', 'UTF-8');
@@ -344,7 +343,7 @@ try {
                                     }
                                     return $value;
                                 };
-                                
+
                                 $allStudents[] = [
                                     'id' => (string)$student['_id'],
                                     'student_id' => $sanitize($student['student id'] ?? $student['student_id'] ?? ''),
@@ -359,7 +358,7 @@ try {
                                     'status' => $sanitize($student['status'] ?? 'pending'),
                                     'collection' => $collectionName
                                 ];
-                                
+
                                 // Break if we've collected enough students
                                 if (count($allStudents) >= $targetLimit) {
                                     error_log("Reached target limit of $targetLimit students, breaking collection loop");
@@ -392,7 +391,7 @@ try {
             error_log("Error fetching from collection $collectionName: " . $e->getMessage());
         }
     }
-    
+
     error_log("Finished processing all collections. Total students collected: " . count($allStudents));
 
     error_log("Returning " . count($allStudents) . " students for page $page");
@@ -404,17 +403,17 @@ try {
     $totalStudents = $totalStudentsCount;
 
     $yearbookPagesNeeded = ceil($totalStudents / $studentsPerPage);
-    
+
     error_log("Calculated pagination - Total students: $totalStudents, Students per page: $studentsPerPage, Yearbook pages needed: $yearbookPagesNeeded");
 
     // If no students found, provide helpful error message
     if ($totalStudents === 0) {
-        $message = $batchYear ? 
+        $message = $batchYear ?
             "No students found for department $department and academic year " . str_replace('Batch Year ', '', $batchYear) . ". Please check if student data has been uploaded for this batch year." :
             "No students found for department $department. Please check if student data has been uploaded.";
-        
+
         error_log("No students found - sending empty response with message: $message");
-        
+
         respond(true, $message, [
             'data' => [
                 'students' => [],
@@ -456,7 +455,7 @@ try {
     ];
 
     error_log("Sending paginated response: Page $page of $totalPages, " . count($allStudents) . " students returned");
-    
+
     // Final safety check - ensure we're about to send valid JSON
     try {
         json_encode($responseData);
@@ -464,7 +463,7 @@ try {
         error_log("JSON encoding error: " . $jsonError->getMessage());
         respond(false, 'Failed to encode response data');
     }
-    
+
     respond(true, 'Student data retrieved successfully', $responseData);
 } catch (MongoDB\Driver\Exception\Exception $mongoError) {
     error_log("MongoDB exception in FetchStudentData.php: " . $mongoError->getMessage());
