@@ -1,8 +1,15 @@
 <?php
+// Suppress all output except JSON
+error_reporting(0);
+ini_set('display_errors', 0);
+
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Content-Type');
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -33,10 +40,42 @@ try {
         exit;
     }
 
-    $collection = $database->selectCollection('students');
-    $student = $collection->findOne(['email' => $email]);
+    $user = null;
+    
+    // First, check admin accounts collection
+    try {
+        $mongoClient = $GLOBALS['mongoClient'] ?? null;
+        if (!$mongoClient) {
+            // Fallback: create new client if global not available
+            require_once __DIR__ . '/../../vendor/autoload.php';
+            $mongoClient = new \MongoDB\Client("mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957/");
+        }
+        $adminDB = $mongoClient->admin;
+        $adminCollection = $adminDB->accounts;
+        
+        $user = $adminCollection->findOne(['email' => $email]);
+    } catch (Exception $e) {
+        error_log("Admin check error: " . $e->getMessage());
+    }
+    
+    // If not found in admin, search student department collections
+    if (!$user) {
+        // Define all department collections to search
+        $departmentCollections = ['bsn', 'bsme', 'bscje', 'bstm', 'bse', 'bsis', 'beced', 'bsma', 'bsmt', 'btvted'];
+        
+        // Search through each department collection
+        foreach ($departmentCollections as $collectionName) {
+            $collection = $database->selectCollection($collectionName);
+            $user = $collection->findOne(['email' => $email]);
+            
+            if ($user) {
+                // Found the student, no need to search further
+                break;
+            }
+        }
+    }
 
-    if (!$student) {
+    if (!$user) {
         echo json_encode(['success' => false, 'message' => 'Email not found in database']);
         exit;
     }
@@ -93,24 +132,49 @@ try {
     </html>
     ";
 
-    $headers = [
-        'MIME-Version: 1.0',
-        'Content-type: text/html; charset=UTF-8',
-        'From: Exact Colleges of Asia <noreply@exactcolleges.edu.ph>',
-        'Reply-To: support@exactcolleges.edu.ph',
-        'X-Mailer: PHP/' . phpversion()
-    ];
-
-    $mailSent = mail($email, $subject, $message, implode("\r\n", $headers));
-
-    if ($mailSent) {
+    // Load email configuration
+    require_once __DIR__ . '/../Configuration/EmailConfig.php';
+    
+    // Use PHPMailer for Gmail SMTP
+    $mail = new PHPMailer(true);
+    
+    try {
+        // Gmail SMTP Configuration
+        $mail->isSMTP();
+        $mail->Host       = GMAIL_SMTP_HOST;
+        $mail->SMTPAuth   = true;
+        $mail->Username   = GMAIL_USERNAME;
+        $mail->Password   = GMAIL_APP_PASSWORD;
+        $mail->SMTPSecure = GMAIL_SMTP_ENCRYPTION;
+        $mail->Port       = GMAIL_SMTP_PORT;
+        
+        // Email settings
+        $mail->setFrom(EMAIL_FROM_ADDRESS, EMAIL_FROM_NAME);
+        $mail->addAddress($email);
+        $mail->isHTML(true);
+        $mail->Subject = $subject;
+        $mail->Body    = $message;
+        
+        $mail->send();
+        
         echo json_encode([
             'success' => true,
-            'message' => 'Verification code sent successfully',
-            'otp' => $otp
+            'message' => 'Verification code sent successfully to your email',
+            'otp' => $otp,
+            'email_sent' => true
         ]);
-    } else {
-        echo json_encode(['success' => false, 'message' => 'Failed to send email. Please try again.']);
+        
+    } catch (Exception $e) {
+        // Email sending failed - fall back to display mode for testing
+        error_log("PHPMailer Error: {$mail->ErrorInfo}. OTP: $otp");
+        
+        echo json_encode([
+            'success' => true,
+            'message' => 'Email service unavailable. Your verification code is displayed in the notification.',
+            'otp' => $otp,
+            'email_sent' => false,
+            'error' => $mail->ErrorInfo
+        ]);
     }
 } catch (Exception $e) {
     error_log("SendOTP error: " . $e->getMessage());

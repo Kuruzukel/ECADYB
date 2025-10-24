@@ -1,4 +1,8 @@
 <?php
+// Suppress all output except JSON
+error_reporting(0);
+ini_set('display_errors', 0);
+
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST');
@@ -33,10 +37,47 @@ try {
         exit;
     }
 
-    $collection = $database->selectCollection('students');
-    $student = $collection->findOne(['email' => $email]);
+    $found = false;
+    
+    // First, check admin accounts collection
+    try {
+        $mongoClient = $GLOBALS['mongoClient'] ?? null;
+        if (!$mongoClient) {
+            // Fallback: create new client if global not available
+            require_once __DIR__ . '/../../vendor/autoload.php';
+            $mongoClient = new \MongoDB\Client("mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957/");
+        }
+        $adminDB = $mongoClient->admin;
+        $adminCollection = $adminDB->accounts;
+        
+        $adminAccount = $adminCollection->findOne(['email' => $email]);
+        
+        if ($adminAccount) {
+            $found = true;
+        }
+    } catch (Exception $e) {
+        error_log("Admin check error: " . $e->getMessage());
+    }
+    
+    // If not found in admin, search student department collections
+    if (!$found) {
+        // Define all department collections to search
+        $departmentCollections = ['bsn', 'bsme', 'bscje', 'bstm', 'bse', 'bsis', 'beced', 'bsma', 'bsmt', 'btvted'];
+        
+        // Search through each department collection
+        foreach ($departmentCollections as $collectionName) {
+            $collection = $database->selectCollection($collectionName);
+            $student = $collection->findOne(['email' => $email]);
+            
+            if ($student) {
+                // Found the student, no need to search further
+                $found = true;
+                break;
+            }
+        }
+    }
 
-    if ($student) {
+    if ($found) {
         echo json_encode(['success' => true, 'exists' => true]);
     } else {
         echo json_encode(['success' => true, 'exists' => false]);

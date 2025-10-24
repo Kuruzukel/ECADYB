@@ -6,6 +6,9 @@ composer.lock
 .env.local
 .env.production
 
+# Email Configuration (contains sensitive credentials)
+Connection/Configuration/EmailConfig.php
+
 # IDE files
 .vscode/
 .idea/

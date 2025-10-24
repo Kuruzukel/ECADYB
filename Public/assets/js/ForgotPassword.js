@@ -233,7 +233,15 @@ async function handleGetCode() {
       emailVerified = true;
       emailExists = true;
       
-      showNotification("Please check your email inbox for your verification code.", "success");
+      // Check if email was actually sent or if it's localhost testing mode
+      if (otpResult.email_sent === false) {
+        // Localhost testing mode - show OTP in notification
+        showNotification("⚠️ TESTING MODE: Your verification code is: " + otpResult.otp + " (Email service unavailable on localhost)", "success");
+      } else {
+        // Production mode - email was sent
+        showNotification("Please check your email inbox for your verification code.", "success");
+      }
+      
       getCodeText.textContent = "Code Sent";
       getCodeText.style.color = "#28a745";
       getCodeText.style.pointerEvents = "none";
@@ -386,10 +394,11 @@ function showNotification(message, type) {
     notification.classList.add('show');
   }, 10);
   
-  // Auto-hide after 4 seconds (or 5 seconds for success)
+  // Auto-hide after 4 seconds (or 15 seconds for success messages with OTP code)
+  const autoHideDelay = message.includes('verification code is:') ? 15000 : (type === 'success' ? 5000 : 4000);
   setTimeout(() => {
     closeNotification(`${type}-message`);
-  }, type === 'success' ? 5000 : 4000);
+  }, autoHideDelay);
 }
 
 function closeNotification(id) {

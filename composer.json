@@ -1,7 +1,8 @@
 {
   "require": {
     "psr/log": "3.0.2",
-    "mongodb/mongodb": "^2.0"
+    "mongodb/mongodb": "^2.0",
+    "phpmailer/phpmailer": "^7.0"
   },
   "config": {
     "optimize-autoloader": true,
