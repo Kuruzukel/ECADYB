@@ -1183,7 +1183,6 @@ function loadPage(page, pageElement) {
                           );
                           currentPhotoElement.attr("src", togaUrl);
 
-                          // Apply blur effect if status is pending
                           if (currentStatus === "pending") {
                             currentPhotoElement.css({
                               filter: "blur(8px)",
