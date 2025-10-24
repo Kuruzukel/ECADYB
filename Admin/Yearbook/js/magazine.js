@@ -1155,7 +1155,6 @@ function loadPage(page, pageElement) {
                   studentStatus
                 );
 
-                // Fetch photos for both active and pending students
                 if (studentIdForPhotos) {
                   (function (
                     currentStudent,
