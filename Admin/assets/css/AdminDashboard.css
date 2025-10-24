@@ -34,7 +34,9 @@ header {
   border-radius: 8px;
   display: flex;
   align-items: center;
-  overflow: hidden;
+  overflow: visible;
+  position: relative;
+  z-index: 100;
 }
 
 .logoadmin {
@@ -162,8 +164,8 @@ header {
   padding: 0 1rem;
   color: rgb(255, 255, 255);
   font-size: 18px;
-  gap: 1rem;
   padding-right: 1rem;
+  position: relative;
 }
 
 .menu-btn {
@@ -279,6 +281,217 @@ header {
 .search-container .search-button i {
   font-size: 16px;
   color: rgba(255, 255, 255, 0.8);
+}
+
+.admin-profile-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0.1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  margin-left: 1rem;
+  z-index: 9998;
+}
+
+.admin-profile-container:hover {
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.admin-profile-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+  display: block;
+}
+
+.admin-profile-container:hover .admin-profile-img {
+  border-color: var(--menu-border-active);
+  transform: scale(1.05);
+}
+
+/* Dropdown Styles */
+.admin-dropdown {
+  position: absolute;
+  top: calc(100% + 15px);
+  right: 0;
+  min-width: 280px;
+  background: var(--content-bg);
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 9999;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Create a hover bridge to prevent dropdown from disappearing */
+.admin-dropdown::after {
+  content: '';
+  position: absolute;
+  top: -15px;
+  left: 0;
+  right: 0;
+  height: 15px;
+  background: transparent;
+}
+
+.admin-profile-container:hover .admin-dropdown,
+.admin-dropdown:hover {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.admin-dropdown::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  right: 20px;
+  width: 12px;
+  height: 12px;
+  background: var(--content-bg);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  transform: rotate(45deg);
+  z-index: -1;
+}
+
+.admin-dropdown-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+}
+
+.admin-dropdown-header i {
+  font-size: 16px;
+  color: var(--menu-border-active);
+}
+
+.admin-dropdown-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: background 0.2s ease;
+}
+
+.admin-dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.admin-dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.admin-dropdown-item i {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.admin-dropdown-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.admin-dropdown-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 600;
+}
+
+.admin-dropdown-value {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 500;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Light Mode Styles */
+body.theme-light-mode .admin-profile-container {
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body.theme-light-mode .admin-profile-container:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+body.theme-light-mode .admin-profile-img {
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+body.theme-light-mode .admin-profile-container:hover .admin-profile-img {
+  border-color: var(--menu-border-active);
+}
+
+body.theme-light-mode .admin-dropdown {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+}
+
+body.theme-light-mode .admin-dropdown::before {
+  background: #ffffff;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body.theme-light-mode .admin-dropdown-header {
+  background: rgba(0, 0, 0, 0.03);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  color: #1e293b;
+}
+
+body.theme-light-mode .admin-dropdown-item {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+body.theme-light-mode .admin-dropdown-item:hover {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+body.theme-light-mode .admin-dropdown-item i {
+  color: #64748b;
+}
+
+body.theme-light-mode .admin-dropdown-label {
+  color: #64748b;
+}
+
+body.theme-light-mode .admin-dropdown-value {
+  color: #1e293b;
 }
 
 body.theme-light-mode .search-container {
@@ -470,9 +683,10 @@ main {
   height: 100vh;
   width: 100%;
   border-radius: 8px;
-  overflow: hidden;
+  overflow: visible;
   opacity: 1;
   transition: opacity 0.2s ease;
+  position: relative;
 }
 
 .contents.loading {
@@ -534,6 +748,25 @@ header h3 {
     height: 2rem;
   }
 
+  .admin-profile-container {
+    padding: 0.3rem;
+    margin-left: 0.5rem;
+  }
+
+  .admin-profile-img {
+    width: 32px;
+    height: 32px;
+  }
+
+  .admin-dropdown {
+    min-width: 250px;
+    right: -10px;
+  }
+
+  .search-container {
+    max-width: 120px;
+  }
+
   #logout-tab {
     background-color: rgb(208, 1, 1);
     bottom: 79rem;
@@ -567,6 +800,45 @@ header h3 {
     margin: 0;
     padding: 0;
     overflow: hidden;
+  }
+
+  .admin-profile-container {
+    padding: 0.3rem;
+    margin-left: 0.5rem;
+  }
+
+  .admin-dropdown {
+    min-width: 260px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .admin-profile-container {
+    padding: 0.3rem;
+    margin-left: 0.5rem;
+  }
+
+  .admin-profile-img {
+    width: 35px;
+    height: 35px;
+  }
+
+  .admin-dropdown {
+    min-width: 240px;
+    right: -5px;
+  }
+
+  .admin-dropdown-header {
+    padding: 0.875rem 1rem;
+    font-size: 13px;
+  }
+
+  .admin-dropdown-item {
+    padding: 0.875rem 1rem;
+  }
+
+  .search-container {
+    max-width: 180px;
   }
 }
 

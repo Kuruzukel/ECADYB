@@ -9,6 +9,7 @@ $client   = new Client($mongoUrl);
 $GLOBALS['mongoClient'] = $client;
 
 $ecadybDB = $client->ECADYB;
+$departmentsDB = $client->ECADYB; // Alias for student departments
 
 $GLOBALS['database'] = $ecadybDB;
 
@@ -34,7 +35,7 @@ $studentPhotosCollection = $ecadybDB->Student_Photos;
 
 $yearbookCoversCollection = $ecadybDB->Yearbook_Covers;
 
-$adminCollection = $ecadybDB->Admin;
-
+// Admin database and collection
 $adminDB              = $client->admin;
+$adminCollection      = $adminDB->accounts;
 $adminSampleCollection = $adminDB->AdminSample;

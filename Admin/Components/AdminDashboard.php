@@ -22,6 +22,39 @@ if (!$mongoPath || !file_exists($mongoPath)) {
 }
 
 require $mongoPath;
+
+// Start session first
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Fetch admin profile data
+$adminProfile = null;
+$adminName = 'Admin';
+$adminEmail = 'admin@ecadyb.edu.ph';
+$adminProfileImage = 'https://ECADYB.b-cdn.net/img/Profile.png'; // Default profile image
+
+if (isset($_SESSION['username']) && !empty($_SESSION['username'])) {
+    try {
+        $adminData = $adminCollection->findOne(['username' => $_SESSION['username']]);
+        if ($adminData) {
+            $adminName = $adminData['name'] ?? 'Admin';
+            $adminEmail = $adminData['email'] ?? 'admin@ecadyb.edu.ph';
+            $adminProfileImage = $adminData['profile'] ?? 'https://ECADYB.b-cdn.net/img/Profile.png';
+            
+            // Debug: Log successful fetch (remove after testing)
+            error_log("Admin profile fetched: " . $adminName . " | Email: " . $adminEmail);
+        } else {
+            // Debug: Log if no admin found (remove after testing)
+            error_log("No admin found for username: " . $_SESSION['username']);
+        }
+    } catch (Exception $e) {
+        // Use default values if query fails
+        error_log("Failed to fetch admin profile: " . $e->getMessage());
+    }
+} else {
+    error_log("No session username found");
+}
 ?>
 
 
@@ -359,6 +392,32 @@ require $mongoPath;
                                 <i class="fas fa-search"></i>
                             </button>
                         </div>
+
+                        <div class="admin-profile-container">
+                            <img src="<?= htmlspecialchars($adminProfileImage) ?>" alt="Admin Profile" class="admin-profile-img">
+                            <div class="admin-dropdown">
+                                <div class="admin-dropdown-header">
+                                    <i class="fas fa-user-circle"></i>
+                                    <span>Account Details</span>
+                                </div>
+                                <div class="admin-dropdown-item">
+                                    <i class="fas fa-user"></i>
+                                    <div class="admin-dropdown-content">
+                                        <span class="admin-dropdown-label">Name</span>
+                                        <span class="admin-dropdown-value"><?= htmlspecialchars($adminName) ?></span>
+                                    </div>
+                                </div>
+                                <div class="admin-dropdown-item">
+                                    <i class="fas fa-envelope"></i>
+                                    <div class="admin-dropdown-content">
+                                        <span class="admin-dropdown-label">Email</span>
+                                        <span class="admin-dropdown-value"><?= htmlspecialchars($adminEmail) ?></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Debug info (remove after testing) -->
+                        <!-- Name: <?= $adminName ?>, Email: <?= $adminEmail ?> -->
 
                     </div>
                 </header>
