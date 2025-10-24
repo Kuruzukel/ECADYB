@@ -1191,20 +1191,25 @@ function formatAnnouncementDate(date, time) {
   if (!date) return 'Recently';
   
   const announcementDate = new Date(date + ' ' + time);
-  const now = new Date();
-  const diffMs = now - announcementDate;
-  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
   
-  if (diffHours < 1) {
-    return 'Just now';
-  } else if (diffHours < 24) {
-    return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
-  } else if (diffDays < 7) {
-    return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
-  } else {
-    return announcementDate.toLocaleDateString();
-  }
+  // Format options for date
+  const dateOptions = { 
+    year: 'numeric', 
+    month: 'short', 
+    day: 'numeric' 
+  };
+  
+  // Format options for time
+  const timeOptions = { 
+    hour: 'numeric', 
+    minute: '2-digit',
+    hour12: true 
+  };
+  
+  const formattedDate = announcementDate.toLocaleDateString('en-US', dateOptions);
+  const formattedTime = announcementDate.toLocaleTimeString('en-US', timeOptions);
+  
+  return `${formattedDate} at ${formattedTime}`;
 }
 
 // Load announcements when page loads
