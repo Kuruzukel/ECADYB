@@ -22,12 +22,12 @@ $uploadCancelled = false;
 $uploadedFileInfo = null; // Track uploaded file for cleanup
 
 // Register shutdown function to clean up on connection abort
-register_shutdown_function(function() {
+register_shutdown_function(function () {
     global $uploadCancelled, $uploadedFileInfo;
-    
+
     if (connection_aborted() && $uploadedFileInfo !== null) {
         error_log("UploadCover.php: Shutdown function detected connection abort - cleaning up file: " . $uploadedFileInfo['storageUrl']);
-        
+
         // Delete from BunnyCDN
         $deleteCh = curl_init($uploadedFileInfo['storageUrl']);
         curl_setopt_array($deleteCh, [
@@ -39,7 +39,7 @@ register_shutdown_function(function() {
         ]);
         curl_exec($deleteCh);
         curl_close($deleteCh);
-        
+
         // Delete from MongoDB if filter is set
         if (isset($uploadedFileInfo['mongoCollection']) && isset($uploadedFileInfo['filter'])) {
             try {
@@ -49,7 +49,7 @@ register_shutdown_function(function() {
                 error_log("UploadCover.php: Shutdown cleanup - MongoDB deletion error: " . $e->getMessage());
             }
         }
-        
+
         error_log("UploadCover.php: Shutdown cleanup completed");
     }
 });
@@ -493,14 +493,13 @@ try {
         curl_exec($deleteCh);
         curl_close($deleteCh);
 
-        // Delete MongoDB entry using the filter that was used for upsert
         try {
             $deleteResult = $collection->deleteOne($filter);
             error_log("UploadCover.php deleted MongoDB entry: " . $deleteResult->getDeletedCount() . " documents");
         } catch (Exception $e) {
             error_log("UploadCover.php error deleting MongoDB entry: " . $e->getMessage());
         }
-        
+
         respond(false, 'Upload cancelled');
     }
 
@@ -527,7 +526,7 @@ try {
     respond(true, 'Upload successful', $responseData);
 } catch (Exception $e) {
     error_log("UploadCover.php exception: " . $e->getMessage());
-    
+
     // Clean up any file that was uploaded to BunnyCDN before the error
     if (isset($storageUrl) && isset($bunnyAccessKey)) {
         error_log("UploadCover.php cleaning up file from BunnyCDN due to exception: $storageUrl");
@@ -543,6 +542,6 @@ try {
         curl_close($deleteCh);
         error_log("UploadCover.php cleaned up file: " . ($filename ?? 'unknown'));
     }
-    
+
     respond(false, 'Server error: ' . $e->getMessage());
 }
