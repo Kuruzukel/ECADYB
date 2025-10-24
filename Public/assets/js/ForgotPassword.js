@@ -242,9 +242,24 @@ async function handleGetCode() {
         showNotification("Please check your email inbox for your verification code.", "success");
       }
       
-      getCodeText.textContent = "Code Sent";
+      // Start 60-second countdown
+      let countdown = 60;
+      getCodeText.textContent = `Resend (${countdown}s)`;
       getCodeText.style.color = "#28a745";
       getCodeText.style.pointerEvents = "none";
+      
+      const countdownInterval = setInterval(() => {
+        countdown--;
+        if (countdown > 0) {
+          getCodeText.textContent = `Resend (${countdown}s)`;
+        } else {
+          clearInterval(countdownInterval);
+          getCodeText.textContent = "Get Code";
+          getCodeText.style.color = "#6366f1";
+          getCodeText.style.pointerEvents = "auto";
+          otpSent = false; // Allow resending after countdown
+        }
+      }, 1000);
       
       // Enable verification code input only after OTP is sent
       verificationCodeInput.disabled = false;
