@@ -73,7 +73,6 @@ function respond($success, $message = '', $data = [])
 
     $jsonOutput = json_encode($response, JSON_PARTIAL_OUTPUT_ON_ERROR);
     if ($jsonOutput === false) {
-        // JSON encoding failed, send error response
         $errorResponse = [
             'success' => false,
             'message' => 'Failed to encode response: ' . json_last_error_msg(),
