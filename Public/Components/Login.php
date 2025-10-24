@@ -143,25 +143,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             unset($_SESSION['login_success']);
             unset($_SESSION['redirect_to']);
         }
-        if (!empty($error_message)) {
-            echo ' data-error-message="' . htmlspecialchars($error_message) . '"';
-        }
         ?>>
-    <div id="errorModal" class="error-modal">
-        <div class="error-modal-content">
-            <button class="error-modal-close" onclick="hideErrorModal()">&times;</button>
-            <div class="error-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24">
-                    <path fill="white"
-                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zM13 17h-2v-2h2v2zm0-4h-2V7h2v6z" />
-                </svg>
-            </div>
-            <div class="error-text">
-                <p id="errorMessage"></p>
-            </div>
+    <?php if (!empty($error_message)): ?>
+        <div id="error-message" class="notification error-message show">
+            <span class="notification-message"><?php echo htmlspecialchars($error_message); ?></span>
+            <button class="notification-close" onclick="closeNotification('error-message')">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
-    </div>
-
+    <?php endif; ?>
+    
     <div class="loginCard">
         <form method="POST" action="">
             <p class="title">GRADUATION GALLERY</p>

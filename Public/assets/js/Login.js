@@ -15,35 +15,46 @@ function limitID() {
   }
 }
 
-function showErrorModal(message, type = "error") {
-  const errorModal = document.getElementById("errorModal");
-  const errorMessage = document.getElementById("errorMessage");
+function showNotification(message, type) {
+  // Remove any existing notification
+  const existingNotification = document.querySelector('.notification');
+  if (existingNotification) {
+    existingNotification.remove();
+  }
 
-  errorModal.className = `error-modal ${
-    type === "success" ? "success-modal" : ""
-  }`;
-
-  errorMessage.textContent = message;
-  errorModal.classList.add("show");
-
+  // Create notification element
+  const notification = document.createElement('div');
+  notification.className = `notification ${type}-message`;
+  notification.id = `${type}-message`;
+  
+  notification.innerHTML = `
+    <span class="notification-message">${message}</span>
+    <button class="notification-close" onclick="closeNotification('${type}-message')">
+      <i class="fas fa-times"></i>
+    </button>
+  `;
+  
+  document.body.appendChild(notification);
+  
+  // Trigger animation
   setTimeout(() => {
-    errorModal.querySelector(".error-modal-content").style.animation =
-      "errorModalSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards";
-  }, 50);
-
+    notification.classList.add('show');
+  }, 10);
+  
+  // Auto-hide after 4 seconds
   setTimeout(() => {
-    hideErrorModal();
-  }, 3500);
+    closeNotification(`${type}-message`);
+  }, 4000);
 }
 
-function hideErrorModal() {
-  const errorModal = document.getElementById("errorModal");
-  errorModal.classList.add("hide");
-
-  setTimeout(() => {
-    errorModal.classList.remove("show", "hide");
-    errorModal.className = "error-modal";
-  }, 400);
+function closeNotification(id) {
+  const notification = document.getElementById(id);
+  if (notification) {
+    notification.classList.remove('show');
+    setTimeout(() => {
+      notification.remove();
+    }, 500);
+  }
 }
 
 function validateForm() {
@@ -53,26 +64,26 @@ function validateForm() {
   clearFieldHighlights();
 
   if (!username && !password) {
-    showErrorModal("Please fill in all required fields.");
+    showNotification("Please fill in all required fields.", "error");
     highlightField("idInput");
     highlightField("loginPass");
     return false;
   }
 
   if (!username) {
-    showErrorModal("Please enter your username or student ID.");
+    showNotification("Please enter your username or student ID.", "error");
     highlightField("idInput");
     return false;
   }
 
   if (!password) {
-    showErrorModal("Please enter your password.");
+    showNotification("Please enter your password.", "error");
     highlightField("loginPass");
     return false;
   }
 
   if (password.length > 8) {
-    showErrorModal("Password must not exceed 8 characters.");
+    showNotification("Password must not exceed 8 characters.", "error");
     highlightField("loginPass");
     return false;
   }
@@ -121,9 +132,11 @@ window.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  const errorMessage = document.body.getAttribute("data-error-message");
-  if (errorMessage && !loginSuccess) {
-    showErrorModal(errorMessage);
+  const errorMessage = document.getElementById("error-message");
+  if (errorMessage && errorMessage.classList.contains("show")) {
+    setTimeout(() => {
+      closeNotification('error-message');
+    }, 4000);
   }
 
   const loginForm = document.querySelector("form");
@@ -151,15 +164,6 @@ window.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => {
         window.location.href = BASE_URL + "LandingPage/";
       }, 1000);
-    });
-  }
-
-  const errorModal = document.getElementById("errorModal");
-  if (errorModal) {
-    errorModal.addEventListener("click", function (e) {
-      if (e.target === errorModal) {
-        hideErrorModal();
-      }
     });
   }
 });
