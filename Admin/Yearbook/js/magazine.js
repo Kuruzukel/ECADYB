@@ -181,49 +181,157 @@ function findAndNavigateToStudent(department, template, studentData, allStudents
           console.log("✓ Successfully navigated to student's page");
           
           // Highlight the student image area (excluding h3 name)
+          // Wait for page turn animation and content to load
           setTimeout(function() {
             var cardIndex = studentIndex % studentsPerPage;
-            console.log("Looking for student image area at index:", cardIndex);
+            console.log("Looking for student card at index:", cardIndex);
             
-            var $studentImageAreas = $(".student-image");
-            console.log("Total student image areas found:", $studentImageAreas.length);
+            // First, clear any existing yellow borders from previous searches
+            console.log("🧹 Clearing any existing yellow borders...");
+            $(".student-image").each(function() {
+              $(this).removeAttr('style');
+            });
             
-            var $studentImageArea = $studentImageAreas.eq(cardIndex);
-            console.log("Student image area found:", $studentImageArea.length > 0);
+            // Find the current visible pages
+            var currentPage = $magazine.turn("page");
+            console.log("Current magazine page:", currentPage);
             
-            if ($studentImageArea.length) {
-              console.log("Adding yellow border to student image area");
+            // Get the page elements that are currently visible
+            var $visiblePages = $magazine.find(".page").filter(function() {
+              return $(this).is(":visible");
+            });
+            console.log("Visible pages found:", $visiblePages.length);
+            
+            // Function to find and highlight student
+            function highlightStudent(retryCount) {
+              retryCount = retryCount || 0;
               
-              // Add yellow border to the image area only (not including h3)
-              $studentImageArea.css({
-                "border": "4px solid #fcda15",
-                "transition": "border 0.3s ease"
-              });
+              // Look for student cards in the visible pages
+              var $studentCards = $visiblePages.find(".student-card");
+              console.log("Student cards found on visible pages:", $studentCards.length);
               
-              // Fade out border after 3 seconds
-              setTimeout(function() {
-                $studentImageArea.css({
-                  "transition": "border 3s ease"
-                });
-                
-                // Remove border completely after fade completes
+              if ($studentCards.length === 0 && retryCount < 20) {
+                // Cards not loaded yet, retry after a short delay
+                console.log("⏳ Student cards not loaded yet, retrying... (attempt " + (retryCount + 1) + "/20)");
                 setTimeout(function() {
-                  $studentImageArea.css({
-                    "border": ""
+                  // Refresh visible pages
+                  $visiblePages = $magazine.find(".page").filter(function() {
+                    return $(this).is(":visible");
                   });
-                }, 3000);
-              }, 3000);
+                  highlightStudent(retryCount + 1);
+                }, 400);
+                return;
+              } else if ($studentCards.length === 0) {
+                console.error("❌ Failed to find student cards after " + retryCount + " attempts");
+                // Still notify parent even if highlighting failed
+                notifyNavigationComplete();
+                return;
+              }
+              
+              // Find the specific student card by index
+              var $targetCard = $studentCards.eq(cardIndex);
+              console.log("Target student card found:", $targetCard.length > 0);
+              
+              if ($targetCard.length > 0) {
+                var $studentImageArea = $targetCard.find(".student-image");
+                console.log("Student image area in target card:", $studentImageArea.length > 0);
+                
+                // Check if the image area has actual content (img element or background)
+                var $imgElement = $studentImageArea.find("img");
+                var hasImageContent = $imgElement.length > 0 || $studentImageArea.css("background-image") !== "none";
+                
+                console.log("Image element found:", $imgElement.length > 0);
+                console.log("Has background image:", $studentImageArea.css("background-image") !== "none");
+                console.log("Has image content:", hasImageContent);
+                
+                if ($studentImageArea.length && hasImageContent) {
+                  console.log("✅ Adding yellow border to student image area");
+                  
+                  // Apply a SINGLE, BOLD yellow border with high visibility
+                  // Use !important and inline styles to override any existing CSS
+                  
+                  // Add border to the student image container
+                  $studentImageArea.attr('style', 
+                    'border: 2px solid #fcda15 !important; ' +
+                    'box-shadow: 0 0 10px rgba(252, 218, 21, 0.8) !important; ' +
+                    'border-radius: 8px !important; ' +
+                    'outline: 2px solid #ffd700 !important; ' +
+                    'outline-offset: 2px !important; ' +
+                    'transition: all 0.3s ease !important;'
+                  );
+                  
+                  console.log("🎨 Applied BOLD yellow border with 8px thickness");
+                  
+                  // Fade out border after 5 seconds
+                  setTimeout(function() {
+                    $studentImageArea.attr('style', 
+                      'border: 2px solid #fcda15 !important; ' +
+                      'box-shadow: 0 0 10px rgba(252, 218, 21, 0.8) !important; ' +
+                      'border-radius: 8px !important; ' +
+                      'outline: 2px solid #ffd700 !important; ' +
+                      'outline-offset: 2px !important; ' +
+                      'transition: all 3s ease !important;'
+                    );
+                    
+                    // Remove border completely after fade completes
+                    setTimeout(function() {
+                      $studentImageArea.removeAttr('style');
+                    }, 3000);
+                  }, 5000);
+                  
+                  // Notify parent window that navigation is complete
+                  notifyNavigationComplete();
+                } else if ($studentImageArea.length && retryCount < 15) {
+                  // Image area exists but no image content yet, retry
+                  console.log("⏳ Student image area exists but no image content yet, retrying... (attempt " + (retryCount + 1) + "/15)");
+                  setTimeout(function() {
+                    highlightStudent(retryCount + 1);
+                  }, 500);
+                  return;
+                } else {
+                  console.warn("⚠️ Student image area not found or no image content in target card");
+                  // Still notify parent even if highlighting failed
+                  notifyNavigationComplete();
+                }
+              } else {
+                console.warn("⚠️ Target student card at index " + cardIndex + " not found");
+                // Still notify parent even if highlighting failed
+                notifyNavigationComplete();
+              }
             }
             
-            // Notify parent window that navigation is complete
-            console.log("📍 Sending navigation complete signal to parent window");
-            if (window.parent && window.parent !== window) {
-              window.parent.postMessage({
-                type: 'yearbook-navigation-complete',
-                timestamp: new Date().toISOString()
-              }, '*');
+            // Helper function to notify parent window
+            function notifyNavigationComplete() {
+              console.log("📍 Sending navigation complete signal to parent window");
+              if (window.parent && window.parent !== window) {
+                window.parent.postMessage({
+                  type: 'yearbook-navigation-complete',
+                  timestamp: new Date().toISOString()
+                }, '*');
+              }
             }
-          }, 1500);
+            
+            // Start highlighting process
+            highlightStudent();
+            
+            // Also set up a listener for when images are loaded
+            var imageLoadListener = function() {
+              console.log("🖼️ Image loaded, checking if we need to highlight...");
+              // Re-run highlighting in case images weren't ready before
+              setTimeout(function() {
+                highlightStudent();
+              }, 100);
+            };
+            
+            // Listen for image load events on the target page
+            $visiblePages.find("img").on("load", imageLoadListener);
+            
+            // Clean up listener after 10 seconds
+            setTimeout(function() {
+              $visiblePages.find("img").off("load", imageLoadListener);
+            }, 10000);
+            
+          }, 3000); // Wait 3 seconds for page turn animation and content to load
         } else {
           console.error("Magazine not initialized or turn not available");
         }
@@ -261,11 +369,15 @@ function tryNavigateToStudent() {
   if (magazineExists && turnFunctionExists) {
     console.log("✓ Magazine is ready, starting navigation");
     navigateToSearchedStudent();
+    // Mark that initial navigation has been attempted
+    hasInitialNavigationRun = true;
   } else if (navigationAttempts < maxNavigationAttempts) {
     console.log("✗ Magazine not ready yet, retrying in 1 second... (attempt", navigationAttempts, "of", maxNavigationAttempts + ")");
     setTimeout(tryNavigateToStudent, 1000);
   } else {
     console.error("✗ Magazine failed to initialize after", maxNavigationAttempts, "attempts");
+    // Even if failed, mark as run to allow subsequent searches
+    hasInitialNavigationRun = true;
   }
 }
 
@@ -281,6 +393,7 @@ function checkIfNavigationNeeded() {
   if (!urlStudentId && !urlStudentName && !searchSelectedStudent) {
     // No navigation needed, notify parent window immediately
     console.log("📍 No student navigation required, sending complete signal");
+    hasInitialNavigationRun = true; // Mark as run even if no navigation needed
     if (window.parent && window.parent !== window) {
       window.parent.postMessage({
         type: 'yearbook-navigation-complete',
@@ -288,6 +401,11 @@ function checkIfNavigationNeeded() {
       }, '*');
     }
     return false;
+  }
+  // Store the initial student ID for tracking
+  if (urlStudentId && !lastSearchedStudentId) {
+    lastSearchedStudentId = urlStudentId;
+    console.log("📝 Initial student ID stored:", lastSearchedStudentId);
   }
   return true;
 }
@@ -299,6 +417,66 @@ setTimeout(function() {
     tryNavigateToStudent();
   }
 }, 4000);
+
+// Add listener for when parent window changes URL parameters (subsequent searches)
+var lastSearchedStudentId = null;
+var hasInitialNavigationRun = false;
+
+function checkForNewStudentSearch() {
+  var urlParams = new URLSearchParams(window.location.search);
+  var currentStudentId = urlParams.get("student_id");
+  var currentStudentName = urlParams.get("student_name");
+  
+  // Skip if no student parameters
+  if (!currentStudentId) {
+    return;
+  }
+  
+  // If there's a student_id and it's different from the last one we processed
+  if (currentStudentId !== lastSearchedStudentId) {
+    console.log("🔄 New student search detected:", currentStudentId, currentStudentName);
+    console.log("Previous student:", lastSearchedStudentId);
+    console.log("Has initial navigation run:", hasInitialNavigationRun);
+    
+    // Update tracking
+    lastSearchedStudentId = currentStudentId;
+    
+    // Only trigger if initial navigation has already run (to avoid duplicate on first load)
+    if (hasInitialNavigationRun) {
+      console.log("🎯 This is a subsequent search - triggering navigation immediately!");
+      
+      // Reset navigation attempts for new search
+      navigationAttempts = 0;
+      
+      // Wait for magazine to be ready, then navigate
+      setTimeout(function() {
+        console.log("📍 Starting navigation for student:", currentStudentId);
+        navigateToSearchedStudent();
+      }, 1000);
+    }
+  }
+}
+
+// Check for URL changes periodically (for when parent window updates the iframe src)
+setInterval(checkForNewStudentSearch, 300);
+
+// Also expose navigation function to parent window for direct triggering
+window.triggerStudentNavigation = function(studentId, studentName, department) {
+  console.log("🎯 Manual navigation triggered from parent:", {
+    studentId: studentId,
+    studentName: studentName,
+    department: department
+  });
+  
+  // Reset navigation attempts
+  navigationAttempts = 0;
+  lastSearchedStudentId = studentId;
+  
+  // Trigger navigation
+  setTimeout(function() {
+    navigateToSearchedStudent();
+  }, 500);
+};
 
 function fetchTopManagementCached(template, callback) {
   var batchYear = localStorage.getItem("selectedBatchYear");
