@@ -21,7 +21,6 @@ if (session_status() == PHP_SESSION_NONE) {
 $uploadCancelled = false;
 $uploadedFileInfo = null;
 
-// Register shutdown function to clean up on connection abort
 register_shutdown_function(function () {
     global $uploadCancelled, $uploadedFileInfo;
 
