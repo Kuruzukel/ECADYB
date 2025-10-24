@@ -7,7 +7,6 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     exit();
 }
 
-// Include headers configuration for Railway
 require __DIR__ . '/../Connection/Configuration/HeadersConfig.php';
 
 // Include the AdminDashboard component
