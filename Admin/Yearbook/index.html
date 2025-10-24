@@ -318,7 +318,6 @@
       function getCurrentBatchYear() {
         var batchYear = localStorage.getItem("selectedBatchYear");
         if (batchYear) {
-          // Convert "Batch Year 2025-2026" to "2025-2026"
           return batchYear.replace("Batch Year ", "");
         }
         return "2025-2026"; // Default fallback
