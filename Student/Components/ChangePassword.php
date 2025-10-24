@@ -1,15 +1,19 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+require_once __DIR__ . '/../../Connection/Configuration/config.php';
 
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'student') {
-    header("Location: /Public/Components/Login.php");
+    header("Location: " . BASE_URL . "Public/Components/Login.php");
     exit;
 }
 
 $error_message = '';
 $success_message = '';
 
-require __DIR__ . '/../../Connection/Configuration/MongoConnect.php';
+require_once __DIR__ . '/../../Connection/Configuration/MongoConnect.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $currentPassword = trim($_POST['current_password'] ?? '');

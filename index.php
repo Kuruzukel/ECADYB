@@ -1,6 +1,7 @@
 <?php
 session_start();
 
+require __DIR__ . '/Connection/Configuration/HeadersConfig.php';
 require __DIR__ . '/vendor/autoload.php';
 
 use MongoDB\Client;

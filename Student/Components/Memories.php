@@ -1,6 +1,8 @@
 <?php
-session_start();
-require __DIR__ . '/../../Connection/Configuration/config.php';
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+require_once __DIR__ . '/../../Connection/Configuration/config.php';
 
 // Check if user is logged in and is a student
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'student') {

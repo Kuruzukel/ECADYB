@@ -1,8 +1,9 @@
 <?php
 
 if (!headers_sent()) {
-    header('X-Frame-Options: SAMEORIGIN');
-    header('Content-Security-Policy: frame-ancestors \'self\' *;');
+    // Allow iframe embedding from any origin
+    // Removed X-Frame-Options to allow embedding
+    header('Content-Security-Policy: frame-ancestors *;');
 
     header('Access-Control-Allow-Origin: *');
     header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
