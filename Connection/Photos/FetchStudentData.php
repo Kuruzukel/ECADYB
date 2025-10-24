@@ -128,7 +128,6 @@ try {
         'BSTM' => ['bstm']
     ];
 
-    // Debug: Log the department mapping
     error_log("Department mapping for $department: " . json_encode($departmentCollections[$department] ?? 'NOT FOUND'));
 
     $department = strtoupper($department);
