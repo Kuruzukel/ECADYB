@@ -1069,7 +1069,6 @@
         var batchYear = localStorage.getItem("selectedBatchYear");
         var cacheKey = "template_" + template + "_" + (batchYear || "default");
 
-        // Check if we already have the data cached
         if (window.topManagementCache && window.topManagementCache[cacheKey]) {
           console.log(
             "Top management data already cached, proceeding with initialization"
