@@ -729,7 +729,7 @@ function loadPage(page, pageElement) {
 
       var batchYear = localStorage.getItem("selectedBatchYear");
       var cacheKey = "template_" + template + "_" + (batchYear || "default");
-      var managementPages = 2; // Default placeholder pages
+      var managementPages = 2;
 
       if (window.topManagementCache && window.topManagementCache[cacheKey]) {
         var topManagementData = window.topManagementCache[cacheKey];
