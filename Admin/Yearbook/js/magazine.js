@@ -19,6 +19,215 @@ function clearTopManagementCache() {
   window.topManagementPendingRequests = {};
 }
 
+// Navigate to selected student from search
+function navigateToSearchedStudent() {
+  try {
+    // Check URL parameters first
+    var urlParams = new URLSearchParams(window.location.search);
+    var department = urlParams.get("department");
+    var urlStudentId = urlParams.get("student_id");
+    var urlStudentName = urlParams.get("student_name");
+
+    var studentData = null;
+
+    // Try to get student data from URL parameters first
+    if (urlStudentId && urlStudentName) {
+      studentData = {
+        student_id: urlStudentId,
+        name: decodeURIComponent(urlStudentName)
+      };
+      console.log("Student data from URL parameters:", studentData);
+    } 
+    // Fallback to sessionStorage
+    else {
+      var searchSelectedStudent = sessionStorage.getItem("searchSelectedStudent");
+      if (!searchSelectedStudent) {
+        return;
+      }
+      studentData = JSON.parse(searchSelectedStudent);
+      console.log("Student data from sessionStorage:", studentData);
+      
+      // Clear the sessionStorage after retrieving
+      sessionStorage.removeItem("searchSelectedStudent");
+    }
+
+    if (!department) {
+      console.log("No department in URL, cannot navigate to student");
+      return;
+    }
+
+    console.log("=== NAVIGATING TO SEARCHED STUDENT ===");
+    console.log("Student Data:", studentData);
+    console.log("Department:", department);
+
+    // Get the template number from various possible sources
+    var template = 1;
+    
+    // Try window.coverData first
+    if (typeof window.coverData !== "undefined" && window.coverData && window.coverData.template) {
+      template = window.coverData.template;
+      console.log("Got template from window.coverData:", template);
+    } 
+    // Try global coverData
+    else if (typeof coverData !== "undefined" && coverData && coverData.template) {
+      template = coverData.template;
+      console.log("Got template from coverData:", template);
+    } 
+    // Try localStorage
+    else {
+      var savedTemplate = localStorage.getItem("selectedBatchTemplateNumber");
+      if (savedTemplate) {
+        template = parseInt(savedTemplate);
+        console.log("Got template from localStorage:", template);
+      } else {
+        console.log("Using default template: 1");
+      }
+    }
+    
+    console.log("=== TEMPLATE INFO ===");
+    console.log("Final template for navigation:", template);
+    
+    // Get batch year
+    var batchYear = localStorage.getItem("selectedBatchYear");
+    console.log("Batch year for navigation:", batchYear);
+
+    // First, ensure all students are loaded for this department
+    console.log("=== FORCING STUDENT DATA LOAD ===");
+    console.log("Calling loadAllStudentsForDepartment with:", department, template);
+    
+    loadAllStudentsForDepartment(department, template, function(allStudents) {
+      console.log("=== ALL STUDENTS LOADED BY CALLBACK ===");
+      console.log("Total students loaded:", allStudents ? allStudents.length : 0);
+      
+      // Now proceed with finding the student
+      findAndNavigateToStudent(department, template, studentData, allStudents);
+    });
+  } catch (e) {
+    console.error("Error navigating to searched student:", e);
+  }
+}
+
+// Separate function to find and navigate to student
+function findAndNavigateToStudent(department, template, studentData, allStudents) {
+  try {
+    if (!allStudents || allStudents.length === 0) {
+      console.error("=== NO STUDENTS DATA ===");
+      console.error("Cannot navigate - no students loaded");
+      return;
+    }
+    
+    console.log("=== SEARCHING FOR STUDENT ===");
+    console.log("Student to find:", studentData);
+    console.log("Searching in", allStudents.length, "students");
+
+    // Find the student index directly (we already have all students)
+    var studentIndex = -1;
+    console.log("Searching through students...");
+    
+    for (var i = 0; i < allStudents.length; i++) {
+      var student = allStudents[i];
+      console.log("Checking student", i, ":", student.name, "ID:", student.student_id);
+      
+      // Check multiple fields to find a match
+      if (student.student_id === studentData.student_id || 
+          student.id === studentData.id ||
+          student.name === studentData.name) {
+        studentIndex = i;
+        console.log("✓ MATCH FOUND at index", i);
+        break;
+      }
+    }
+
+    if (studentIndex >= 0) {
+      console.log("=== STUDENT FOUND ===");
+      console.log("Student Index:", studentIndex);
+      console.log("Student:", allStudents[studentIndex]);
+
+          // Get actual number of management pages from cache
+          var managementPages = 4; // Default
+          var topMgmtCacheKey = "template_" + template + "_" + localStorage.getItem("selectedBatchYear");
+          if (window.topManagementCache[topMgmtCacheKey]) {
+            var topMgmtData = window.topManagementCache[topMgmtCacheKey];
+            if (topMgmtData.success && topMgmtData.data && Array.isArray(topMgmtData.data)) {
+              managementPages = topMgmtData.data.length;
+              console.log("Using actual top management pages count:", managementPages);
+            }
+          }
+          
+          // Calculate yearbook page
+          // Formula: frontCover(1) + managementPages(4) + studentPageOffset
+          // Student pages start at page 6 (after front + 4 mgmt pages)
+          var studentsPerPage = 4;
+          var frontCoverPages = 1;
+          var studentPageOffset = Math.floor(studentIndex / studentsPerPage);
+          var yearbookPage = frontCoverPages + managementPages + studentPageOffset + 1;
+
+          console.log("=== NAVIGATION CALCULATION ===");
+          console.log("Front Cover Pages:", frontCoverPages);
+          console.log("Management Pages:", managementPages);
+          console.log("Students Per Page:", studentsPerPage);
+          console.log("Student Index:", studentIndex);
+          console.log("Calculated Yearbook Page:", yearbookPage);
+
+          // Wait for the magazine to be fully initialized
+          setTimeout(function() {
+            var $magazine = $(".magazine");
+            console.log("Magazine element found:", $magazine.length > 0);
+            console.log("Magazine has turn:", typeof $magazine.turn);
+            
+            if ($magazine.length > 0 && $magazine.turn) {
+              console.log("Turning to page:", yearbookPage);
+              $magazine.turn("page", yearbookPage);
+              console.log("✓ Successfully navigated to student's page");
+            } else {
+              console.error("Magazine not initialized or turn not available");
+            }
+          }, 2000);
+    } else {
+      console.error("=== STUDENT NOT FOUND ===");
+      console.error("Searched for:", studentData);
+      console.error("Total students available:", allStudents.length);
+      console.error("All student IDs:", allStudents.map(function(s) { return s.student_id; }));
+    }
+  } catch (e) {
+    console.error("Error navigating to searched student:", e);
+  }
+}
+
+// Make the navigation function globally accessible
+window.navigateToSearchedStudent = navigateToSearchedStudent;
+
+// Try multiple times to ensure the magazine is loaded
+var navigationAttempts = 0;
+var maxNavigationAttempts = 10;
+
+function tryNavigateToStudent() {
+  navigationAttempts++;
+  console.log("=== NAVIGATION ATTEMPT", navigationAttempts, "===");
+  
+  // Check if magazine exists and is initialized
+  var $magazine = $(".magazine");
+  var magazineExists = $magazine.length > 0;
+  var turnFunctionExists = typeof $magazine.turn === 'function';
+  
+  console.log("Magazine element exists:", magazineExists);
+  console.log("Turn function exists:", turnFunctionExists);
+  
+  if (magazineExists && turnFunctionExists) {
+    console.log("✓ Magazine is ready, starting navigation");
+    navigateToSearchedStudent();
+  } else if (navigationAttempts < maxNavigationAttempts) {
+    console.log("✗ Magazine not ready yet, retrying in 1 second... (attempt", navigationAttempts, "of", maxNavigationAttempts + ")");
+    setTimeout(tryNavigateToStudent, 1000);
+  } else {
+    console.error("✗ Magazine failed to initialize after", maxNavigationAttempts, "attempts");
+  }
+}
+
+// Start trying to navigate after 4 seconds (increased from 2 to allow students to load)
+console.log("Navigation will start in 4 seconds...");
+setTimeout(tryNavigateToStudent, 4000);
+
 function fetchTopManagementCached(template, callback) {
   var batchYear = localStorage.getItem("selectedBatchYear");
   var cacheKey = "template_" + template + "_" + (batchYear || "default");

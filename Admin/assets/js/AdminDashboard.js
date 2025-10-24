@@ -522,17 +522,38 @@ function handleStudentSelection(student) {
   // Hide suggestions
   hideSuggestions();
 
-  // Navigate to student list page and highlight the student
   const basePath = window.location.pathname.includes("/ECADYB/")
     ? "/ECADYB"
     : "";
   
-  // Store selected student in sessionStorage for highlighting
-  sessionStorage.setItem("selectedStudentId", student.id);
-  sessionStorage.setItem("selectedStudentMongoId", student.student_id);
+  // Map collection to yearbook page
+  const collectionToYearbook = {
+    'bsme': 'maritime',
+    'bsmt': 'maritime',
+    'bscje': 'criminology',
+    'bstm': 'tourism',
+    'btvted': 'education',
+    'beced': 'education',
+    'bsn': 'nursing',
+    'bsis': 'informationsys',
+    'bsma': 'businessad',
+    'bse': 'businessad'
+  };
 
-  // Redirect to student list page
-  window.location.href = `${basePath}/Admin?page=student-list&highlight=${encodeURIComponent(student.id)}`;
+  const yearbookPage = collectionToYearbook[student.collection] || 'maritime';
+  
+  // Store selected student information for the yearbook to navigate to
+  sessionStorage.setItem("searchSelectedStudent", JSON.stringify({
+    id: student.id,
+    student_id: student.student_id,
+    name: student.name,
+    department_section: student.department_section,
+    academic_year: student.academic_year,
+    collection: student.collection
+  }));
+
+  // Redirect to yearbook page with student info
+  window.location.href = `${basePath}/Admin?page=${yearbookPage}&student_id=${encodeURIComponent(student.student_id)}&student_name=${encodeURIComponent(student.name)}`;
 }
 
 function showSuggestions() {
