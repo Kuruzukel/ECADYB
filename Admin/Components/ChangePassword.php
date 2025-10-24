@@ -43,7 +43,7 @@
                 </div>
 
                 <div class="changepass-body" style="min-height: 570px;">
-                    <form id="changepassForm" action="submit_change.php" method="post">
+                    <form id="changepassForm" method="post">
 
                         <div class="pass field">
                             <div class="handle">
@@ -57,7 +57,7 @@
                             </div>
                             <div class="passwordField" data-isvisible="false">
                                 <input name="currentPassword" id="currentPassword" type="password" placeholder="Current Password"
-                                    maxlength="8" autocomplete="off" required>
+                                    minlength="8" maxlength="8" autocomplete="off" required>
                                 <div class="eyeIcon open">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                         <g fill="none">
@@ -92,7 +92,7 @@
                                 </div>
                                 <div class="passwordField" data-isvisible="false">
                                     <input name="newPassword" id="newPassword" type="password" placeholder="New Password"
-                                        maxlength="8" autocomplete="off" required>
+                                        minlength="8" maxlength="8" autocomplete="off" required>
                                     <div class="eyeIcon open">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                             <g fill="none">
@@ -127,7 +127,7 @@
                                     </div>
                                     <div class="passwordField" data-isvisible="false">
                                         <input name="confirmPassword" id="confirmPassword" type="password"
-                                            placeholder="Confirm Password" maxlength="8" autocomplete="off" required>
+                                            placeholder="Confirm Password" minlength="8" maxlength="8" autocomplete="off" required>
                                         <div class="eyeIcon open">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                                 <g fill="none">
