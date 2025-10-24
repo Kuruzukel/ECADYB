@@ -734,18 +734,28 @@ function loadPage(page, pageElement) {
 
       if (window.topManagementCache && window.topManagementCache[cacheKey]) {
         var topManagementData = window.topManagementCache[cacheKey];
-        if (topManagementData && topManagementData.success && topManagementData.data && topManagementData.data.length > 0) {
+        if (
+          topManagementData &&
+          topManagementData.success &&
+          topManagementData.data &&
+          topManagementData.data.length > 0
+        ) {
           managementPages = topManagementData.data.length;
         }
       }
 
-      var isManagementPage = page < (2 + managementPages);
+      var isManagementPage = page < 2 + managementPages;
 
       if (isManagementPage) {
         console.log("Loading top management page:", page);
 
         if (coverData.background_url) {
-          console.log("Using background_url for management page", page, ":", coverData.background_url);
+          console.log(
+            "Using background_url for management page",
+            page,
+            ":",
+            coverData.background_url
+          );
           img.attr("src", coverData.background_url);
         } else {
           console.log("Using default background for management page", page);
@@ -767,145 +777,147 @@ function loadPage(page, pageElement) {
         var managementIndex = page - 2;
 
         fetchTopManagementCached(template, function (response) {
-        console.log("=== TOP MANAGEMENT PAGE LOADING ===");
-        console.log("Page:", page);
-        console.log("Management Index:", managementIndex);
-        console.log("Template:", template);
-        console.log("Response:", response);
-        console.log("Response Success:", response.success);
-        console.log("Response Data:", response.data);
-        console.log(
-          "Data Length:",
-          response.data ? response.data.length : "no data"
-        );
-
-        loadingIndicator.remove();
-
-        if (response.success && response.data && response.data.length > 0) {
+          console.log("=== TOP MANAGEMENT PAGE LOADING ===");
+          console.log("Page:", page);
+          console.log("Management Index:", managementIndex);
+          console.log("Template:", template);
+          console.log("Response:", response);
+          console.log("Response Success:", response.success);
+          console.log("Response Data:", response.data);
           console.log(
-            "Top management data available, checking index:",
-            managementIndex
+            "Data Length:",
+            response.data ? response.data.length : "no data"
           );
-          if (managementIndex < response.data.length) {
-            var currentManager = response.data[managementIndex];
-            console.log("Current Manager:", currentManager);
 
-            var photoContainer = $("<div/>", {
-              class: "management-photo",
-            });
+          loadingIndicator.remove();
 
-            var infoContainer = $("<div/>", {
-              class: "management-info",
-            });
+          if (response.success && response.data && response.data.length > 0) {
+            console.log(
+              "Top management data available, checking index:",
+              managementIndex
+            );
+            if (managementIndex < response.data.length) {
+              var currentManager = response.data[managementIndex];
+              console.log("Current Manager:", currentManager);
 
-            var photoUrl =
-              currentManager.photo_url ||
-              'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="270" height="270" viewBox="0 0 270 270"%3E%3Crect width="270" height="270" fill="%23f0f0f0"/%3E%3Ctext x="135" y="135" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Image Available%3C/text%3E%3C/svg%3E';
-            var photo = $("<img/>", {
-              src: photoUrl,
-              alt: currentManager.name,
-              crossOrigin: "anonymous",
-              onerror:
-                'this.src=\'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="270" height="270" viewBox="0 0 270 270"%3E%3Crect width="270" height="270" fill="%23f0f0f0"/%3E%3Ctext x="135" y="135" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Image Available%3C/text%3E%3C/svg%3E\';',
-            });
-            photoContainer.append(photo);
+              var photoContainer = $("<div/>", {
+                class: "management-photo",
+              });
 
-            var name = $("<h2/>", {
-              class: "management-name",
-              text: currentManager.name || "Top Management Name",
-            });
+              var infoContainer = $("<div/>", {
+                class: "management-info",
+              });
 
-            var position = $("<h3/>", {
-              class: "management-position",
-              text: currentManager.position || "Position Title",
-            });
+              var photoUrl =
+                currentManager.photo_url ||
+                'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="270" height="270" viewBox="0 0 270 270"%3E%3Crect width="270" height="270" fill="%23f0f0f0"/%3E%3Ctext x="135" y="135" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Image Available%3C/text%3E%3C/svg%3E';
+              var photo = $("<img/>", {
+                src: photoUrl,
+                alt: currentManager.name,
+                crossOrigin: "anonymous",
+                onerror:
+                  'this.src=\'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="270" height="270" viewBox="0 0 270 270"%3E%3Crect width="270" height="270" fill="%23f0f0f0"/%3E%3Ctext x="135" y="135" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Image Available%3C/text%3E%3C/svg%3E\';',
+              });
+              photoContainer.append(photo);
 
-            var namePositionContainer = $("<div/>", {
-              class: "management-name-position",
-            });
+              var name = $("<h2/>", {
+                class: "management-name",
+                text: currentManager.name || "Top Management Name",
+              });
 
-            namePositionContainer.append(name).append(position);
+              var position = $("<h3/>", {
+                class: "management-position",
+                text: currentManager.position || "Position Title",
+              });
 
-            var messageContainer = $("<div/>", {
-              class: "message-container",
-            });
+              var namePositionContainer = $("<div/>", {
+                class: "management-name-position",
+              });
 
-            var messageText =
-              currentManager.message ||
-              "No message available for this top management position. Messages typically contain inspirational words, guidance, or congratulations for the graduating class.";
-            var message = $("<div/>", {
-              class: "management-message",
-              text: messageText,
-            });
+              namePositionContainer.append(name).append(position);
 
-            var messageWrapper = $("<div/>", {
-              class: "message-wrapper",
-            });
+              var messageContainer = $("<div/>", {
+                class: "message-container",
+              });
 
-            messageWrapper.append(message);
-            messageContainer.append(messageWrapper);
+              var messageText =
+                currentManager.message ||
+                "No message available for this top management position. Messages typically contain inspirational words, guidance, or congratulations for the graduating class.";
+              var message = $("<div/>", {
+                class: "management-message",
+                text: messageText,
+              });
 
-            infoContainer.append(namePositionContainer);
+              var messageWrapper = $("<div/>", {
+                class: "message-wrapper",
+              });
 
-            var photoAndInfoContainer = $("<div/>", {
-              class: "photo-and-info-container",
-            });
+              messageWrapper.append(message);
+              messageContainer.append(messageWrapper);
 
-            photoAndInfoContainer.append(photoContainer).append(infoContainer);
+              infoContainer.append(namePositionContainer);
 
-            managementPage
-              .append(photoAndInfoContainer)
-              .append(messageContainer);
+              var photoAndInfoContainer = $("<div/>", {
+                class: "photo-and-info-container",
+              });
 
-            setTimeout(function () {
-              waitForImagesAndGenerateThumbnail(page, pageElement);
-            }, 500);
-          } else {
-            var placeholderContainer = $("<div/>", {
-              class: "top-management-page",
-            });
+              photoAndInfoContainer
+                .append(photoContainer)
+                .append(infoContainer);
 
-            var photoContainer = $("<div/>", {
-              class: "management-photo",
-            });
+              managementPage
+                .append(photoAndInfoContainer)
+                .append(messageContainer);
 
-            var photo = $("<img/>", {
-              src: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="270" height="270" viewBox="0 0 270 270"%3E%3Crect width="270" height="270" fill="%23f0f0f0"/%3E%3Ctext x="135" y="135" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Image Available%3C/text%3E%3C/svg%3E',
-              alt: "Top Management Placeholder",
-            });
-            photoContainer.append(photo);
+              setTimeout(function () {
+                waitForImagesAndGenerateThumbnail(page, pageElement);
+              }, 500);
+            } else {
+              var placeholderContainer = $("<div/>", {
+                class: "top-management-page",
+              });
 
-            var infoContainer = $("<div/>", {
-              class: "management-info",
-            });
+              var photoContainer = $("<div/>", {
+                class: "management-photo",
+              });
 
-            var name = $("<h2/>", {
-              class: "management-name",
-              text: "Top Management Name",
-            });
+              var photo = $("<img/>", {
+                src: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="270" height="270" viewBox="0 0 270 270"%3E%3Crect width="270" height="270" fill="%23f0f0f0"/%3E%3Ctext x="135" y="135" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Image Available%3C/text%3E%3C/svg%3E',
+                alt: "Top Management Placeholder",
+              });
+              photoContainer.append(photo);
 
-            var position = $("<h3/>", {
-              class: "management-position",
-              text: "Position Title",
-            });
+              var infoContainer = $("<div/>", {
+                class: "management-info",
+              });
 
-            var namePositionContainer = $("<div/>", {
-              class: "management-name-position",
-            });
+              var name = $("<h2/>", {
+                class: "management-name",
+                text: "Top Management Name",
+              });
 
-            namePositionContainer.append(name).append(position);
+              var position = $("<h3/>", {
+                class: "management-position",
+                text: "Position Title",
+              });
 
-            var messageContainer = $("<div/>", {
-              class: "message-container",
-            });
+              var namePositionContainer = $("<div/>", {
+                class: "management-name-position",
+              });
 
-            var messageWrapper = $("<div/>", {
-              class: "message-wrapper",
-            });
+              namePositionContainer.append(name).append(position);
 
-            var message = $("<div/>", {
-              class: "management-message modern-empty-state",
-              html: `
+              var messageContainer = $("<div/>", {
+                class: "message-container",
+              });
+
+              var messageWrapper = $("<div/>", {
+                class: "message-wrapper",
+              });
+
+              var message = $("<div/>", {
+                class: "management-message modern-empty-state",
+                html: `
                 <div class="empty-state-container">
                   <div class="empty-state-icon">
                     <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -917,38 +929,40 @@ function loadPage(page, pageElement) {
                   <p class="empty-state-description">Please upload CSV of the Top Management to the Batch Upload Section first.</p>
                 </div>
               `,
-            });
+              });
 
-            messageWrapper.append(message);
-            messageContainer.append(messageWrapper);
+              messageWrapper.append(message);
+              messageContainer.append(messageWrapper);
 
-            infoContainer.append(namePositionContainer);
+              infoContainer.append(namePositionContainer);
 
-            var photoAndInfoContainer = $("<div/>", {
-              class: "photo-and-info-container",
-            });
+              var photoAndInfoContainer = $("<div/>", {
+                class: "photo-and-info-container",
+              });
 
-            photoAndInfoContainer.append(photoContainer).append(infoContainer);
+              photoAndInfoContainer
+                .append(photoContainer)
+                .append(infoContainer);
 
-            placeholderContainer
-              .append(photoAndInfoContainer)
-              .append(messageContainer);
+              placeholderContainer
+                .append(photoAndInfoContainer)
+                .append(messageContainer);
 
-            managementPage.append(placeholderContainer);
+              managementPage.append(placeholderContainer);
 
-            setTimeout(function () {
-              waitForImagesAndGenerateThumbnail(page, pageElement);
-            }, 500);
-          }
-        } else {
-          console.log("No top management data available");
-          console.log("Response success:", response.success);
-          console.log("Response message:", response.message);
-          console.log("Response data:", response.data);
+              setTimeout(function () {
+                waitForImagesAndGenerateThumbnail(page, pageElement);
+              }, 500);
+            }
+          } else {
+            console.log("No top management data available");
+            console.log("Response success:", response.success);
+            console.log("Response message:", response.message);
+            console.log("Response data:", response.data);
 
-          var errorMessage = $("<div/>", {
-            class: "management-message modern-empty-state",
-            html: `
+            var errorMessage = $("<div/>", {
+              class: "management-message modern-empty-state",
+              html: `
               <div class="empty-state-container">
                 <div class="empty-state-icon">
                   <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -963,16 +977,21 @@ function loadPage(page, pageElement) {
                 }</p>
               </div>
             `,
-          });
-          managementPage.append(errorMessage);
-        }
-      });
+            });
+            managementPage.append(errorMessage);
+          }
+        });
       } else {
         // This is a student page
         console.log("Loading student page:", page);
-        
+
         if (coverData.background_url) {
-          console.log("Using background_url for student page", page, ":", coverData.background_url);
+          console.log(
+            "Using background_url for student page",
+            page,
+            ":",
+            coverData.background_url
+          );
           img.attr("src", coverData.background_url);
         } else {
           console.log("Using default background for student page", page);
@@ -987,52 +1006,54 @@ function loadPage(page, pageElement) {
           var urlParams = new URLSearchParams(window.location.search);
           var department = urlParams.get("department") || "BSME";
 
-          var template = coverData && coverData.template ? coverData.template : 1;
+          var template =
+            coverData && coverData.template ? coverData.template : 1;
 
           var studentsPerYearbookPage = 4;
-          var studentStartIndex = (page - (2 + managementPages)) * studentsPerYearbookPage;
-        var studentEndIndex = studentStartIndex + studentsPerYearbookPage;
+          var studentStartIndex =
+            (page - (2 + managementPages)) * studentsPerYearbookPage;
+          var studentEndIndex = studentStartIndex + studentsPerYearbookPage;
 
-        var studentsPerAPIPage = 50;
-        var apiPage = Math.floor(studentStartIndex / studentsPerAPIPage) + 1;
+          var studentsPerAPIPage = 50;
+          var apiPage = Math.floor(studentStartIndex / studentsPerAPIPage) + 1;
 
-        console.log(
-          "Loading yearbook page:",
-          page,
-          "Students needed:",
-          studentStartIndex,
-          "-",
-          studentEndIndex - 1,
-          "Fetching API page:",
-          apiPage
-        );
+          console.log(
+            "Loading yearbook page:",
+            page,
+            "Students needed:",
+            studentStartIndex,
+            "-",
+            studentEndIndex - 1,
+            "Fetching API page:",
+            apiPage
+          );
 
-        var studentsPerPage = 4;
-        loadStudentsForPage(
-          department,
-          template,
-          studentStartIndex,
-          studentsPerPage,
-          function (studentsForThisPage) {
-            console.log(
-              "Students for page",
-              page,
-              ":",
-              studentsForThisPage ? studentsForThisPage.length : "undefined",
-              "students starting from index",
-              studentStartIndex
-            );
-
-            if (!studentsForThisPage || !Array.isArray(studentsForThisPage)) {
-              console.error(
-                "Invalid student data received for page",
+          var studentsPerPage = 4;
+          loadStudentsForPage(
+            department,
+            template,
+            studentStartIndex,
+            studentsPerPage,
+            function (studentsForThisPage) {
+              console.log(
+                "Students for page",
                 page,
                 ":",
-                studentsForThisPage
+                studentsForThisPage ? studentsForThisPage.length : "undefined",
+                "students starting from index",
+                studentStartIndex
               );
-              var errorMessage = $("<div/>", {
-                class: "modern-empty-state",
-                html: `
+
+              if (!studentsForThisPage || !Array.isArray(studentsForThisPage)) {
+                console.error(
+                  "Invalid student data received for page",
+                  page,
+                  ":",
+                  studentsForThisPage
+                );
+                var errorMessage = $("<div/>", {
+                  class: "modern-empty-state",
+                  html: `
                   <div class="empty-state-container">
                     <div class="empty-state-icon">
                       <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1044,19 +1065,19 @@ function loadPage(page, pageElement) {
                     <p class="empty-state-description">Failed to load student data for this page.</p>
                   </div>
                 `,
-              });
-              pageElement.append(errorMessage);
+                });
+                pageElement.append(errorMessage);
 
-              setTimeout(function () {
-                waitForImagesAndGenerateThumbnail(page, pageElement);
-              }, 500);
-              return;
-            }
+                setTimeout(function () {
+                  waitForImagesAndGenerateThumbnail(page, pageElement);
+                }, 500);
+                return;
+              }
 
-            if (studentsForThisPage.length === 0) {
-              var emptyMessage = $("<div/>", {
-                class: "modern-empty-state",
-                html: `
+              if (studentsForThisPage.length === 0) {
+                var emptyMessage = $("<div/>", {
+                  class: "modern-empty-state",
+                  html: `
                   <div class="empty-state-container">
                     <div class="empty-state-icon">
                       <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1068,203 +1089,211 @@ function loadPage(page, pageElement) {
                     <p class="empty-state-description">No student data found for academic year ${getCurrentBatchYear()}. Please upload CSV of the Students to the Batch Upload Section first.</p>
                   </div>
                 `,
-              });
-              pageElement.append(emptyMessage);
+                });
+                pageElement.append(emptyMessage);
+
+                setTimeout(function () {
+                  waitForImagesAndGenerateThumbnail(page, pageElement);
+                }, 500);
+                return;
+              }
+
+              for (var i = 0; i < studentsForThisPage.length; i++) {
+                var student = studentsForThisPage[i];
+
+                if (!student || typeof student !== "object") {
+                  console.warn(
+                    "Invalid student object at index",
+                    i,
+                    "for page",
+                    page,
+                    ":",
+                    student
+                  );
+                  continue;
+                }
+
+                var globalIndex = studentStartIndex + i;
+
+                console.log("=== PROCESSING STUDENT ===");
+                console.log("Global Index:", globalIndex);
+                console.log("Student Name:", student.name || "Unknown");
+                console.log("Student ID:", student.student_id || "Unknown");
+                console.log("MongoDB ID:", student.id || "Unknown");
+                console.log("Program:", student.program || "Unknown");
+                console.log("Full Student Object:", student);
+
+                var card = $("<div/>", {
+                  class: "student-card",
+                });
+
+                var studentImg = $("<div/>", {
+                  class: "student-image",
+                });
+
+                var defaultPhotoUrl =
+                  'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100%25" height="100%25" viewBox="0 0 135 155" preserveAspectRatio="xMidYMid slice"%3E%3Crect width="135" height="155" fill="%23f0f0f0"/%3E%3Ctext x="67.5" y="50" font-family="Arial" font-size="10" fill="%23666" text-anchor="middle" font-weight="600"%3ENo Photo%3C/text%3E%3Ctext x="67.5" y="70" font-family="Arial" font-size="8" fill="%23999" text-anchor="middle"%3EUpload via%3C/text%3E%3Ctext x="67.5" y="85" font-family="Arial" font-size="8" fill="%23999" text-anchor="middle"%3EBatch Upload%3C/text%3E%3C/svg%3E';
+
+                var studentPhoto = $("<img/>", {
+                  src: defaultPhotoUrl,
+                  alt: student.name || "Unknown Student",
+                  crossOrigin: "anonymous",
+                  onerror:
+                    'this.src=\'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100%25" height="100%25" viewBox="0 0 135 155" preserveAspectRatio="xMidYMid slice"%3E%3Crect width="135" height="155" fill="%23f0f0f0"/%3E%3Ctext x="67.5" y="50" font-family="Arial" font-size="10" fill="%23666" text-anchor="middle" font-weight="600"%3ENo Photo%3C/text%3E%3Ctext x="67.5" y="70" font-family="Arial" font-size="8" fill="%23999" text-anchor="middle"%3EUpload via%3C/text%3E%3Ctext x="67.5" y="85" font-family="Arial" font-size="8" fill="%23999" text-anchor="middle"%3EBatch Upload%3C/text%3E%3C/svg%3E\';',
+                });
+
+                studentImg.append(studentPhoto);
+
+                var studentIdForPhotos = student.student_id;
+                var studentNameForPhotos = student.name || "Unknown Student";
+                var studentStatus = (student.status || "pending").toLowerCase();
+
+                console.log(
+                  "Fetching TOGA photo for student:",
+                  studentNameForPhotos,
+                  "with student_id:",
+                  studentIdForPhotos,
+                  "status:",
+                  studentStatus
+                );
+
+                // Fetch photos for both active and pending students
+                if (studentIdForPhotos) {
+                  (function (
+                    currentStudent,
+                    currentPhotoElement,
+                    currentStudentId,
+                    currentStudentName,
+                    currentStatus
+                  ) {
+                    fetchStudentPhotos(currentStudentId, function (photos) {
+                      if (
+                        photos &&
+                        photos.length > 0 &&
+                        photos[0] &&
+                        photos[0].photos &&
+                        photos[0].photos.student_photo_1
+                      ) {
+                        var togaUrl = photos[0].photos.student_photo_1.url;
+                        if (togaUrl) {
+                          console.log(
+                            "Setting TOGA photo for",
+                            currentStudentName,
+                            ":",
+                            togaUrl,
+                            "Status:",
+                            currentStatus
+                          );
+                          currentPhotoElement.attr("src", togaUrl);
+
+                          // Apply blur effect if status is pending
+                          if (currentStatus === "pending") {
+                            currentPhotoElement.css({
+                              filter: "blur(8px)",
+                              "-webkit-filter": "blur(8px)",
+                            });
+                            currentPhotoElement.parent().css({
+                              position: "relative",
+                            });
+
+                            // Add "Picture gusto, bayad ayaw? aray mo" overlay
+                            var comingSoonOverlay = $("<div/>", {
+                              class: "coming-soon-overlay",
+                              html: '<span class="coming-soon-text">Coming Soon...</span>',
+                              css: {
+                                position: "absolute",
+                                top: "0",
+                                left: "0",
+                                width: "100%",
+                                height: "100%",
+                                display: "flex",
+                                "align-items": "center",
+                                "justify-content": "center",
+                                "pointer-events": "none",
+                                "z-index": "2",
+                                "text-align": "center",
+                              },
+                            });
+
+                            comingSoonOverlay.find(".coming-soon-text").css({
+                              "font-style": "italic",
+                              "font-size": "18px",
+                              "font-weight": "600",
+                              color: "#ffffff",
+                              "text-shadow": "0 2px 8px rgba(0, 0, 0, 0.8)",
+                              padding: "8px 16px",
+                              "letter-spacing": "0.5px",
+                              "text-align": "center",
+                              display: "inline-block",
+                              "max-width": "100%",
+                              "word-wrap": "break-word",
+                              "margin-top": "5rem",
+                            });
+
+                            currentPhotoElement
+                              .parent()
+                              .append(comingSoonOverlay);
+                            console.log(
+                              "Applied blur filter and Coming Soon overlay to pending student photo:",
+                              currentStudentName
+                            );
+                          }
+                        }
+                      } else {
+                        console.log(
+                          "No valid photo data found for student",
+                          currentStudentName
+                        );
+                      }
+                    });
+                  })(
+                    student,
+                    studentPhoto,
+                    studentIdForPhotos,
+                    studentNameForPhotos,
+                    studentStatus
+                  );
+                }
+
+                var studentName = $("<h3/>", {
+                  text: student.name || "Unknown Student",
+                });
+
+                card.attr("data-student-id", student.student_id || "");
+                card.attr(
+                  "data-student-name",
+                  student.name || "Unknown Student"
+                );
+                card.attr("data-student-year", student.year || "N/A");
+                card.attr(
+                  "data-student-motto",
+                  student.motto || "No motto provided"
+                );
+                card.attr(
+                  "data-student-milestones",
+                  JSON.stringify(student.milestones || [])
+                );
+                card.attr(
+                  "data-student-honors",
+                  JSON.stringify(student.honors || [])
+                );
+                card.attr("data-student-program", student.program || "");
+                card.attr("data-student-section", student.section || "");
+                card.attr("data-student-status", studentStatus);
+
+                card.append(studentImg).append(studentName);
+
+                cardsContainer.append(card);
+              }
+
+              pageElement.append(cardsContainer);
 
               setTimeout(function () {
                 waitForImagesAndGenerateThumbnail(page, pageElement);
               }, 500);
-              return;
             }
-
-            for (var i = 0; i < studentsForThisPage.length; i++) {
-              var student = studentsForThisPage[i];
-
-              if (!student || typeof student !== "object") {
-                console.warn(
-                  "Invalid student object at index",
-                  i,
-                  "for page",
-                  page,
-                  ":",
-                  student
-                );
-                continue;
-              }
-
-              var globalIndex = studentStartIndex + i;
-
-              console.log("=== PROCESSING STUDENT ===");
-              console.log("Global Index:", globalIndex);
-              console.log("Student Name:", student.name || "Unknown");
-              console.log("Student ID:", student.student_id || "Unknown");
-              console.log("MongoDB ID:", student.id || "Unknown");
-              console.log("Program:", student.program || "Unknown");
-              console.log("Full Student Object:", student);
-
-              var card = $("<div/>", {
-                class: "student-card",
-              });
-
-              var studentImg = $("<div/>", {
-                class: "student-image",
-              });
-
-              var defaultPhotoUrl =
-                'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100%25" height="100%25" viewBox="0 0 135 155" preserveAspectRatio="xMidYMid slice"%3E%3Crect width="135" height="155" fill="%23f0f0f0"/%3E%3Ctext x="67.5" y="50" font-family="Arial" font-size="10" fill="%23666" text-anchor="middle" font-weight="600"%3ENo Photo%3C/text%3E%3Ctext x="67.5" y="70" font-family="Arial" font-size="8" fill="%23999" text-anchor="middle"%3EUpload via%3C/text%3E%3Ctext x="67.5" y="85" font-family="Arial" font-size="8" fill="%23999" text-anchor="middle"%3EBatch Upload%3C/text%3E%3C/svg%3E';
-
-              var studentPhoto = $("<img/>", {
-                src: defaultPhotoUrl,
-                alt: student.name || "Unknown Student",
-                crossOrigin: "anonymous",
-                onerror:
-                  'this.src=\'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100%25" height="100%25" viewBox="0 0 135 155" preserveAspectRatio="xMidYMid slice"%3E%3Crect width="135" height="155" fill="%23f0f0f0"/%3E%3Ctext x="67.5" y="50" font-family="Arial" font-size="10" fill="%23666" text-anchor="middle" font-weight="600"%3ENo Photo%3C/text%3E%3Ctext x="67.5" y="70" font-family="Arial" font-size="8" fill="%23999" text-anchor="middle"%3EUpload via%3C/text%3E%3Ctext x="67.5" y="85" font-family="Arial" font-size="8" fill="%23999" text-anchor="middle"%3EBatch Upload%3C/text%3E%3C/svg%3E\';',
-              });
-
-              studentImg.append(studentPhoto);
-
-              var studentIdForPhotos = student.student_id;
-              var studentNameForPhotos = student.name || "Unknown Student";
-              var studentStatus = (student.status || "pending").toLowerCase();
-              
-              console.log(
-                "Fetching TOGA photo for student:",
-                studentNameForPhotos,
-                "with student_id:",
-                studentIdForPhotos,
-                "status:",
-                studentStatus
-              );
-
-              // Fetch photos for both active and pending students
-              if (studentIdForPhotos) {
-                (function (
-                  currentStudent,
-                  currentPhotoElement,
-                  currentStudentId,
-                  currentStudentName,
-                  currentStatus
-                ) {
-                  fetchStudentPhotos(currentStudentId, function (photos) {
-                    if (
-                      photos &&
-                      photos.length > 0 &&
-                      photos[0] &&
-                      photos[0].photos &&
-                      photos[0].photos.student_photo_1
-                    ) {
-                      var togaUrl = photos[0].photos.student_photo_1.url;
-                      if (togaUrl) {
-                        console.log(
-                          "Setting TOGA photo for",
-                          currentStudentName,
-                          ":",
-                          togaUrl,
-                          "Status:",
-                          currentStatus
-                        );
-                        currentPhotoElement.attr("src", togaUrl);
-                        
-                        // Apply blur effect if status is pending
-                        if (currentStatus === "pending") {
-                          currentPhotoElement.css({
-                            "filter": "blur(8px)",
-                            "-webkit-filter": "blur(8px)"
-                          });
-                          currentPhotoElement.parent().css({
-                            "position": "relative"
-                          });
-                          
-                          // Add "Picture gusto, bayad ayaw? aray mo" overlay
-                          var comingSoonOverlay = $("<div/>", {
-                            class: "coming-soon-overlay",
-                            html: '<span class="coming-soon-text">Coming Soon...</span>',
-                            css: {
-                              "position": "absolute",
-                              "top": "0",
-                              "left": "0",
-                              "width": "100%",
-                              "height": "100%",
-                              "display": "flex",
-                              "align-items": "center",
-                              "justify-content": "center",
-                              "pointer-events": "none",
-                              "z-index": "2",
-                              "text-align": "center"
-                            }
-                          });
-                          
-                          comingSoonOverlay.find(".coming-soon-text").css({
-                            "font-style": "italic",
-                            "font-size": "18px",
-                            "font-weight": "600",
-                            "color": "#ffffff",
-                            "text-shadow": "0 2px 8px rgba(0, 0, 0, 0.8)",
-                            "padding": "8px 16px",
-                            "letter-spacing": "0.5px",
-                            "text-align": "center",
-                            "display": "inline-block",
-                            "max-width": "100%",
-                            "word-wrap": "break-word",
-                            "margin-top": "5rem"
-                          });
-                          
-                          currentPhotoElement.parent().append(comingSoonOverlay);
-                          console.log("Applied blur filter and Coming Soon overlay to pending student photo:", currentStudentName);
-                        }
-                      }
-                    } else {
-                      console.log(
-                        "No valid photo data found for student",
-                        currentStudentName
-                      );
-                    }
-                  });
-                })(
-                  student,
-                  studentPhoto,
-                  studentIdForPhotos,
-                  studentNameForPhotos,
-                  studentStatus
-                );
-              }
-
-              var studentName = $("<h3/>", {
-                text: student.name || "Unknown Student",
-              });
-
-              card.attr("data-student-id", student.student_id || "");
-              card.attr("data-student-name", student.name || "Unknown Student");
-              card.attr("data-student-year", student.year || "N/A");
-              card.attr(
-                "data-student-motto",
-                student.motto || "No motto provided"
-              );
-              card.attr(
-                "data-student-milestones",
-                JSON.stringify(student.milestones || [])
-              );
-              card.attr(
-                "data-student-honors",
-                JSON.stringify(student.honors || [])
-              );
-              card.attr("data-student-program", student.program || "");
-              card.attr("data-student-section", student.section || "");
-              card.attr("data-student-status", studentStatus);
-
-              card.append(studentImg).append(studentName);
-
-              cardsContainer.append(card);
-            }
-
-            pageElement.append(cardsContainer);
-
-            setTimeout(function () {
-              waitForImagesAndGenerateThumbnail(page, pageElement);
-            }, 500);
-          }
-        );
-      });
+          );
+        });
       }
     } else if (
       typeof coverData !== "undefined" &&
@@ -1554,16 +1583,16 @@ function resizeViewport() {
     .zoom("resize");
 
   if ($(".magazine").turn("zoom") == 1) {
-    // Check if we're in fullscreen mode
-    var isFullscreen = document.fullscreenElement || 
-                       document.webkitFullscreenElement || 
-                       document.mozFullScreenElement || 
-                       document.msFullscreenElement;
-    
+    var isFullscreen =
+      document.fullscreenElement ||
+      document.webkitFullscreenElement ||
+      document.mozFullScreenElement ||
+      document.msFullscreenElement;
+
     // Use different base dimensions for fullscreen vs normal mode
-    var baseWidth = isFullscreen ? 1200 : options.width;   // Change 1400 to your desired fullscreen width
-    var baseHeight = isFullscreen ? 750 : options.height;  // Change 900 to your desired fullscreen height
-    
+    var baseWidth = isFullscreen ? 1200 : options.width; // Change 1400 to your desired fullscreen width
+    var baseHeight = isFullscreen ? 750 : options.height; // Change 900 to your desired fullscreen height
+
     var bound = calculateBound({
       width: baseWidth,
       height: baseHeight,
