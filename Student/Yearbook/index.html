@@ -574,16 +574,29 @@
         var batchYear = localStorage.getItem("selectedBatchYear");
         var cacheKey = "template_" + template + "_" + (batchYear || "default");
 
+        console.log("=== CALCULATE TOTAL PAGES - TOP MANAGEMENT CHECK ===");
+        console.log("Cache Key:", cacheKey);
+        console.log("Top Management Cache exists?", !!window.topManagementCache);
+        console.log("Cache for this key exists?", !!(window.topManagementCache && window.topManagementCache[cacheKey]));
+        
         if (window.topManagementCache && window.topManagementCache[cacheKey]) {
           var topManagementData = window.topManagementCache[cacheKey];
+          console.log("Top Management Data:", topManagementData);
+          console.log("Success?", topManagementData.success);
+          console.log("Data array?", topManagementData.data);
+          console.log("Data length?", topManagementData.data ? topManagementData.data.length : "NO DATA");
+          
           if (topManagementData && topManagementData.success && topManagementData.data && topManagementData.data.length > 0) {
             managementPages = topManagementData.data.length;
-            console.log("Using actual top management pages:", managementPages, "from CSV data");
+            console.log("✓ Using actual top management pages:", managementPages, "from CSV data");
+            console.log("✓ Top Management Records:", topManagementData.data);
           } else {
-            console.log("No top management data found - using 2 placeholder pages");
+            console.log("✗ No top management data found - using 2 placeholder pages");
+            console.log("✗ Reason: success=" + topManagementData.success + ", has data=" + (!!topManagementData.data) + ", length=" + (topManagementData.data ? topManagementData.data.length : 0));
           }
         } else {
-          console.log("Top management cache not available - using 2 placeholder pages");
+          console.log("✗ Top management cache not available - using 2 placeholder pages");
+          console.log("✗ All cache keys:", window.topManagementCache ? Object.keys(window.topManagementCache) : "No cache at all");
         }
 
         var totalPages = 1 + managementPages + studentPages + 1; // 1 front + management pages + student pages + 1 back
@@ -963,18 +976,52 @@
         console.log("Cover data:", coverData);
         console.log("Student data:", studentData);
 
+        // Pre-fetch top management data before initializing magazine
+        var template = 1;
+        if (coverData && coverData.template) {
+          template = coverData.template;
+        } else {
+          var savedTemplate = localStorage.getItem("selectedBatchTemplateNumber");
+          if (savedTemplate) {
+            template = parseInt(savedTemplate);
+          }
+        }
+
+        var batchYear = localStorage.getItem("selectedBatchYear");
+        var cacheKey = "template_" + template + "_" + (batchYear || "default");
+
+        if (window.topManagementCache && window.topManagementCache[cacheKey]) {
+          console.log(
+            "Top management data already cached, proceeding with initialization"
+          );
+          initializeMagazine();
+        } else {
+          console.log("Pre-fetching top management data before initialization");
+          fetchTopManagementCached(template, function (response) {
+            console.log(
+              "Top management data fetched, now initializing magazine"
+            );
+            initializeMagazine();
+          });
+        }
+      }
+
+      function initializeMagazine() {
         $("#canvas").fadeIn(1000);
 
         var flipbook = $(".magazine");
 
         if (flipbook.width() == 0 || flipbook.height() == 0) {
-          setTimeout(loadApp, 10);
+          setTimeout(initializeMagazine, 10);
           return;
         }
 
         var totalPages = calculateTotalPages();
 
         console.log("Setting total pages to:", totalPages);
+
+        // Repopulate thumbnails now that we have the correct page count with top management data
+        populateThumbnails();
 
         flipbook.turn({
           width: 922,
