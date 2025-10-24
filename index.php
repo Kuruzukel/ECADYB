@@ -94,6 +94,20 @@ $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 // Add debug information to help troubleshoot routing issues
 // error_log("Request URI: " . $requestUri);
 
+// Handle favicon.ico request
+if ($requestUri === '/favicon.ico' || $requestUri === '/ECADYB/favicon.ico') {
+    $faviconPath = BASE_PATH . '/img/PREVIEWLOGO.png';
+    if (file_exists($faviconPath)) {
+        header('Content-Type: image/png');
+        header('Cache-Control: public, max-age=31536000'); // Cache for 1 year
+        readfile($faviconPath);
+        exit;
+    } else {
+        http_response_code(204); // No Content - prevents browser from logging 404
+        exit;
+    }
+}
+
 // Handle direct file access by redirecting to proper routes
 $directFileRedirects = [
     '/ECADYB/Admin/Components/AdminDashboard.php' => '/ECADYB/Admin',

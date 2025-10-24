@@ -35,7 +35,7 @@ $studentProfilePhoto = $_SESSION['profile_photo'] ?? '';
   </nav>
   <div class="notification-icon-container">
     <i class="fa-solid fa-bell notification-icon" id="notificationIcon"></i>
-    <span class="notification-badge" id="notificationBadge">3</span>
+    <span class="notification-badge" id="notificationBadge">0</span>
     <div class="notification-dropdown" id="notificationDropdown">
       <div class="notification-header">
         <h3>Notifications</h3>
