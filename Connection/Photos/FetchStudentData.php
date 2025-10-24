@@ -37,6 +37,9 @@ try {
     exit;
 }
 
+use MongoDB\Driver\Exception\ExecutionTimeoutException;
+use MongoDB\Driver\Exception\Exception as MongoDBException;
+
 register_shutdown_function(function () {
     $error = error_get_last();
     if ($error !== null && in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
@@ -348,7 +351,7 @@ try {
 
                             error_log("Processed $processedCount students from collection $collectionName, total students now: " . count($allStudents));
                             $studentsProcessed += $processedCount;
-                        } catch (MongoDB\Driver\Exception\ExecutionTimeoutException $e) {
+                        } catch (ExecutionTimeoutException $e) {
                             error_log("MongoDB query timeout for collection $collectionName: " . $e->getMessage());
                             $studentsProcessed += $collectionCount;
                         } catch (Exception $e) {
@@ -441,7 +444,7 @@ try {
     }
 
     respond(true, 'Student data retrieved successfully', $responseData);
-} catch (MongoDB\Driver\Exception\Exception $mongoError) {
+} catch (MongoDBException $mongoError) {
     error_log("MongoDB exception in FetchStudentData.php: " . $mongoError->getMessage());
     error_log("MongoDB exception trace: " . $mongoError->getTraceAsString());
     respond(false, 'Database error: Connection timeout or query failed. Please try again.');
