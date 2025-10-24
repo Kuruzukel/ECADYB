@@ -337,6 +337,8 @@ header {
   z-index: 9999;
   overflow: hidden;
   pointer-events: none;
+  font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
 }
 
 /* Create a hover bridge to prevent dropdown from disappearing */
@@ -383,6 +385,8 @@ header {
   font-weight: 600;
   font-size: 14px;
   letter-spacing: 0.5px;
+  font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
 }
 
 .admin-dropdown-header i {
@@ -428,6 +432,8 @@ header {
   letter-spacing: 0.5px;
   color: rgba(255, 255, 255, 0.5);
   font-weight: 600;
+  font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
 }
 
 .admin-dropdown-value {
@@ -436,6 +442,8 @@ header {
   font-weight: 500;
   word-wrap: break-word;
   overflow-wrap: break-word;
+  font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
 }
 
 /* Light Mode Styles */

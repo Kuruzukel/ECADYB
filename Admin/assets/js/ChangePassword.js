@@ -188,6 +188,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const cancelBtn = document.getElementById("cancel-btn");
   const form = document.getElementById("changepassForm");
 
+  // Move modal to body to escape parent container constraints
+  if (modalOverlay && modalOverlay.parentElement !== document.body) {
+    document.body.appendChild(modalOverlay);
+  }
+
   postBtn.addEventListener("click", (e) => {
     e.preventDefault();
     
@@ -203,6 +208,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
     if (newPassword !== confirmPassword) {
       showNotification("New password and confirm password do not match.", "error");
+      clearAllFields();
       return;
     }
     
@@ -226,6 +232,13 @@ document.addEventListener("DOMContentLoaded", () => {
   confirmBtn.addEventListener("click", () => {
     modalOverlay.style.display = "none";
     submitPasswordChange();
+  });
+
+  // Close modal when clicking outside
+  modalOverlay.addEventListener("click", (e) => {
+    if (e.target === modalOverlay) {
+      modalOverlay.style.display = "none";
+    }
   });
   
   // Function to submit password change via AJAX
@@ -256,6 +269,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 2000);
       } else {
         showNotification(data.message, "error");
+        // Clear fields if password mismatch error
+        if (data.message.includes("do not match")) {
+          clearAllFields();
+        }
       }
     })
     .catch(error => {
@@ -264,6 +281,13 @@ document.addEventListener("DOMContentLoaded", () => {
       showNotification("An error occurred. Please try again.", "error");
       console.error("Error:", error);
     });
+  }
+  
+  // Function to clear all password fields
+  function clearAllFields() {
+    document.getElementById("currentPassword").value = "";
+    document.getElementById("newPassword").value = "";
+    document.getElementById("confirmPassword").value = "";
   }
   
   // Function to show notifications
