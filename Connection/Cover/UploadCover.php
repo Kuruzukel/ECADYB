@@ -244,7 +244,7 @@ try {
         CURLOPT_PROGRESSFUNCTION => function ($resource, $download_size, $downloaded, $upload_size, $uploaded) {
             if (connection_aborted()) {
                 error_log("UploadCover.php upload cancelled during progress - aborting curl");
-                return -1; // This will cause curl to abort
+                return -1;
             }
             return 0;
         }
