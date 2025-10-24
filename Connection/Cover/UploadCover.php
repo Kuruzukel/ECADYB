@@ -409,7 +409,6 @@ try {
             'template' => $template
         ];
 
-        // Add MongoDB info to uploadedFileInfo for shutdown cleanup
         global $uploadedFileInfo;
         if ($uploadedFileInfo !== null) {
             $uploadedFileInfo['mongoCollection'] = $collection;
