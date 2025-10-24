@@ -85,7 +85,7 @@ function respond($success, $message = '', $data = [])
 
     header('Content-Type: application/json; charset=utf-8');
     header('Content-Length: ' . strlen($jsonOutput));
-    header('Connection: close'); // Ensure connection closes properly
+    header('Connection: close');
     echo $jsonOutput;
     flush(); // Force send
     exit;
