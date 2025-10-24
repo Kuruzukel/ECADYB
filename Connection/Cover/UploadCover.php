@@ -188,7 +188,6 @@ try {
     $safeExt      = preg_replace('/[^A-Za-z0-9]/', '', $ext) ?: 'jpg';
     $versionToken = (string) round(microtime(true) * 1000);
 
-    // Create batch year folder structure
     $safeBatchYear = $batchYear ? preg_replace('/[^A-Za-z0-9-]/', '', $batchYear) : 'Default';
     $safeFolder = 'Yearbook Covers/' . $safeBatchYear;
 
