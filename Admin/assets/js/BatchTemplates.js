@@ -173,32 +173,41 @@ function showNotification(message, type = "success") {
     clearTimeout(notificationTimeout);
   }
 
-  let icon = "fa-check-circle";
-  if (type === "error") {
-    icon = "fa-exclamation-circle";
-  } else if (type === "info") {
-    icon = "fa-info-circle";
-  } else if (type === "warning") {
-    icon = "fa-exclamation-triangle";
-  }
-
+  // Map old type names to new class names
+  let messageClass = type === "error" ? "error-message" : "success-message";
+  
   const notif = document.createElement("div");
-  notif.className = `notification ${type} show`;
+  notif.className = `notification ${messageClass}`;
+  notif.id = `${type}-notification`;
   notif.innerHTML = `
-    <i class="fas ${icon}"></i>
-    <span>${message}</span>
+    <span class="notification-message">${message}</span>
+    <button class="notification-close" onclick="closeNotification('${type}-notification')">
+      <i class="fas fa-times"></i>
+    </button>
   `;
   container.appendChild(notif);
 
+  // Trigger animation
+  setTimeout(() => {
+    notif.classList.add('show');
+  }, 10);
+
   const duration = type === "info" ? 2000 : 5000;
   notificationTimeout = setTimeout(() => {
-    notif.classList.remove("show");
+    closeNotification(`${type}-notification`);
+  }, duration);
+}
+
+function closeNotification(id) {
+  const notification = document.getElementById(id);
+  if (notification) {
+    notification.classList.remove('show');
     setTimeout(() => {
-      notif.remove();
+      notification.remove();
       notificationTimeout = null;
       currentOperation = null;
     }, 500);
-  }, duration);
+  }
 }
 
 function getBasePath() {
