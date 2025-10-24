@@ -162,7 +162,6 @@ try {
         respond(false, 'Client disconnected');
     }
 
-    // Use MONGO_URL or MONGODB_URI (Railway standard) with fallback
     $mongoUrl = getenv('MONGO_URL') ?: getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 
     try {
