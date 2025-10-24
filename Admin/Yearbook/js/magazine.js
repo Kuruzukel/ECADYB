@@ -143,46 +143,83 @@ function findAndNavigateToStudent(department, template, studentData, allStudents
       console.log("Student Index:", studentIndex);
       console.log("Student:", allStudents[studentIndex]);
 
-          // Get actual number of management pages from cache
-          var managementPages = 4; // Default
-          var topMgmtCacheKey = "template_" + template + "_" + localStorage.getItem("selectedBatchYear");
-          if (window.topManagementCache[topMgmtCacheKey]) {
-            var topMgmtData = window.topManagementCache[topMgmtCacheKey];
-            if (topMgmtData.success && topMgmtData.data && Array.isArray(topMgmtData.data)) {
-              managementPages = topMgmtData.data.length;
-              console.log("Using actual top management pages count:", managementPages);
-            }
-          }
+      // Get actual number of management pages from cache
+      var managementPages = 4; // Default
+      var topMgmtCacheKey = "template_" + template + "_" + localStorage.getItem("selectedBatchYear");
+      if (window.topManagementCache[topMgmtCacheKey]) {
+        var topMgmtData = window.topManagementCache[topMgmtCacheKey];
+        if (topMgmtData.success && topMgmtData.data && Array.isArray(topMgmtData.data)) {
+          managementPages = topMgmtData.data.length;
+          console.log("Using actual top management pages count:", managementPages);
+        }
+      }
+      
+      // Calculate yearbook page
+      // Formula: frontCover(1) + managementPages(4) + studentPageOffset
+      // Student pages start at page 6 (after front + 4 mgmt pages)
+      var studentsPerPage = 4;
+      var frontCoverPages = 1;
+      var studentPageOffset = Math.floor(studentIndex / studentsPerPage);
+      var yearbookPage = frontCoverPages + managementPages + studentPageOffset + 1;
+
+      console.log("=== NAVIGATION CALCULATION ===");
+      console.log("Front Cover Pages:", frontCoverPages);
+      console.log("Management Pages:", managementPages);
+      console.log("Students Per Page:", studentsPerPage);
+      console.log("Student Index:", studentIndex);
+      console.log("Calculated Yearbook Page:", yearbookPage);
+
+      // Wait for the magazine to be fully initialized
+      setTimeout(function() {
+        var $magazine = $(".magazine");
+        console.log("Magazine element found:", $magazine.length > 0);
+        console.log("Magazine has turn:", typeof $magazine.turn);
+        
+        if ($magazine.length > 0 && $magazine.turn) {
+          console.log("Turning to page:", yearbookPage);
+          $magazine.turn("page", yearbookPage);
+          console.log("✓ Successfully navigated to student's page");
           
-          // Calculate yearbook page
-          // Formula: frontCover(1) + managementPages(4) + studentPageOffset
-          // Student pages start at page 6 (after front + 4 mgmt pages)
-          var studentsPerPage = 4;
-          var frontCoverPages = 1;
-          var studentPageOffset = Math.floor(studentIndex / studentsPerPage);
-          var yearbookPage = frontCoverPages + managementPages + studentPageOffset + 1;
-
-          console.log("=== NAVIGATION CALCULATION ===");
-          console.log("Front Cover Pages:", frontCoverPages);
-          console.log("Management Pages:", managementPages);
-          console.log("Students Per Page:", studentsPerPage);
-          console.log("Student Index:", studentIndex);
-          console.log("Calculated Yearbook Page:", yearbookPage);
-
-          // Wait for the magazine to be fully initialized
+          // Highlight the student image area (excluding h3 name)
           setTimeout(function() {
-            var $magazine = $(".magazine");
-            console.log("Magazine element found:", $magazine.length > 0);
-            console.log("Magazine has turn:", typeof $magazine.turn);
+            var cardIndex = studentIndex % studentsPerPage;
+            console.log("Looking for student image area at index:", cardIndex);
             
-            if ($magazine.length > 0 && $magazine.turn) {
-              console.log("Turning to page:", yearbookPage);
-              $magazine.turn("page", yearbookPage);
-              console.log("✓ Successfully navigated to student's page");
-            } else {
-              console.error("Magazine not initialized or turn not available");
+            var $studentImageAreas = $(".student-image");
+            console.log("Total student image areas found:", $studentImageAreas.length);
+            
+            var $studentImageArea = $studentImageAreas.eq(cardIndex);
+            console.log("Student image area found:", $studentImageArea.length > 0);
+            
+            if ($studentImageArea.length) {
+              console.log("Adding yellow border to student image area");
+              
+              // Add yellow border to the image area only (not including h3)
+              $studentImageArea.css({
+                "border": "4px solid #fcda15",
+                "transition": "border 0.3s ease"
+              });
+              
+              // Fade out border after 3 seconds
+              setTimeout(function() {
+                $studentImageArea.css({
+                  "border": "4px solid transparent",
+                  "transition": "border 3s ease"
+                });
+                
+                // Remove border completely after fade completes
+                setTimeout(function() {
+                  $studentImageArea.css({
+                    "border": ""
+                  });
+                }, 3000);
+              }, 3000);
             }
-          }, 2000);
+          }, 1500);
+        } else {
+          console.error("Magazine not initialized or turn not available");
+        }
+      }, 2000);
     } else {
       console.error("=== STUDENT NOT FOUND ===");
       console.error("Searched for:", studentData);
@@ -224,7 +261,7 @@ function tryNavigateToStudent() {
   }
 }
 
-// Start trying to navigate after 4 seconds (increased from 2 to allow students to load)
+// Start trying to navigate after 4 seconds
 console.log("Navigation will start in 4 seconds...");
 setTimeout(tryNavigateToStudent, 4000);
 
