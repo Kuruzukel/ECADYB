@@ -219,7 +219,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
                 <div class="logoContainer"></div>
-                <button type="back" onclick="window.location.href='StudentDashboard.php'">
+                <button type="button" onclick="window.location.href='StudentDashboard.php'">
                     <i class="fas fa-arrow-left"></i> Back to Homepage
                 </button>
         </form>
