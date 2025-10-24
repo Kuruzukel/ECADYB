@@ -71,7 +71,6 @@ function respond($success, $message = '', $data = [])
         'message' => $message
     ], $data);
 
-    // Validate that response can be JSON encoded
     $jsonOutput = json_encode($response, JSON_PARTIAL_OUTPUT_ON_ERROR);
     if ($jsonOutput === false) {
         // JSON encoding failed, send error response
