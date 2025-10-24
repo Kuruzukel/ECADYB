@@ -202,36 +202,4 @@ window.addEventListener("DOMContentLoaded", () => {
   applyTheme(savedTheme);
 });
 
-document.addEventListener("DOMContentLoaded", function () {
-  const elements = document.querySelectorAll(
-    ".catalog-app, #viewer, #flipbook"
-  );
-
-  elements.forEach((el) => {
-    el.addEventListener("mousedown", function (e) {
-      const startX = e.clientX;
-      const startY = e.clientY;
-      const startWidth = parseInt(
-        document.defaultView.getComputedStyle(el).width,
-        10
-      );
-      const startHeight = parseInt(
-        document.defaultView.getComputedStyle(el).height,
-        10
-      );
-
-      function doDrag(e) {
-        el.style.width = startWidth + e.clientX - startX + "px";
-        el.style.height = startHeight + e.clientY - startY + "px";
-      }
-
-      function stopDrag() {
-        window.removeEventListener("mousemove", doDrag);
-        window.removeEventListener("mouseup", stopDrag);
-      }
-
-      window.addEventListener("mousemove", doDrag);
-      window.addEventListener("mouseup", stopDrag);
-    });
-  });
-});
+// Dragging/resizing functionality removed - catalog-app should remain static

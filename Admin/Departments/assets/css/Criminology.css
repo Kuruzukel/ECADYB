@@ -31,6 +31,12 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-drag: none;
+  -webkit-user-drag: none;
 }
 
 .catalog-app {
@@ -40,6 +46,13 @@ body {
   position: relative;
   border-radius: 8px;
   background-color: var(--content-bg);
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-drag: none;
+  -webkit-user-drag: none;
+  cursor: default;
 }
 
 html:fullscreen .catalog-app,

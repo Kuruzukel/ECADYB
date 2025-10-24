@@ -19,22 +19,22 @@
     }
     ?>
     <div class="container">
-        <div class="catalog-root">
-            <div class="catalog-app">
+        <div class="catalog-root" draggable="false">
+            <div class="catalog-app" draggable="false">
                 <!-- Simple Loader -->
-                <div class="yearbook-loader-overlay">
-                    <div class="loader-content">
-                        <div class="spinner">
-                            <div class="spinner-dot"></div>
-                            <div class="spinner-dot"></div>
-                            <div class="spinner-dot"></div>
-                            <div class="spinner-dot"></div>
-                            <div class="spinner-dot"></div>
-                            <div class="spinner-dot"></div>
-                            <div class="spinner-dot"></div>
-                            <div class="spinner-dot"></div>
+                <div class="yearbook-loader-overlay" draggable="false">
+                    <div class="loader-content" draggable="false">
+                        <div class="spinner" draggable="false">
+                            <div class="spinner-dot" draggable="false"></div>
+                            <div class="spinner-dot" draggable="false"></div>
+                            <div class="spinner-dot" draggable="false"></div>
+                            <div class="spinner-dot" draggable="false"></div>
+                            <div class="spinner-dot" draggable="false"></div>
+                            <div class="spinner-dot" draggable="false"></div>
+                            <div class="spinner-dot" draggable="false"></div>
+                            <div class="spinner-dot" draggable="false"></div>
                         </div>
-                        <div class="loader-text">Loading Yearbook...</div>
+                        <div class="loader-text" draggable="false">Loading Yearbook...</div>
                     </div>
                 </div>
                 
