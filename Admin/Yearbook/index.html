@@ -1099,7 +1099,16 @@
       }
 
       function initializeMagazine() {
-        $("#canvas").fadeIn(1000);
+        $("#canvas").fadeIn(1000, function() {
+          // Notify parent window that magazine is visible
+          console.log("📍 Magazine is now visible, sending signal to parent");
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({
+              type: 'yearbook-cover-visible',
+              timestamp: new Date().toISOString()
+            }, '*');
+          }
+        });
 
         var flipbook = $(".magazine");
 
@@ -1338,6 +1347,15 @@
         resizeViewport();
 
         $(".magazine").addClass("animated");
+        
+        // Notify parent window that magazine is fully initialized
+        console.log("📍 Magazine initialization complete, sending signal to parent");
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({
+            type: 'yearbook-magazine-initialized',
+            timestamp: new Date().toISOString()
+          }, '*');
+        }
 
         if (typeof initializeCornerHover === "function") {
           initializeCornerHover();

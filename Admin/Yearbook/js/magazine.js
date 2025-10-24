@@ -214,6 +214,15 @@ function findAndNavigateToStudent(department, template, studentData, allStudents
                 }, 3000);
               }, 3000);
             }
+            
+            // Notify parent window that navigation is complete
+            console.log("📍 Sending navigation complete signal to parent window");
+            if (window.parent && window.parent !== window) {
+              window.parent.postMessage({
+                type: 'yearbook-navigation-complete',
+                timestamp: new Date().toISOString()
+              }, '*');
+            }
           }, 1500);
         } else {
           console.error("Magazine not initialized or turn not available");
@@ -260,9 +269,36 @@ function tryNavigateToStudent() {
   }
 }
 
+function checkIfNavigationNeeded() {
+  // Check URL parameters for student navigation
+  var urlParams = new URLSearchParams(window.location.search);
+  var urlStudentId = urlParams.get("student_id");
+  var urlStudentName = urlParams.get("student_name");
+  
+  // Check sessionStorage as fallback
+  var searchSelectedStudent = sessionStorage.getItem("searchSelectedStudent");
+  
+  if (!urlStudentId && !urlStudentName && !searchSelectedStudent) {
+    // No navigation needed, notify parent window immediately
+    console.log("📍 No student navigation required, sending complete signal");
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({
+        type: 'yearbook-navigation-complete',
+        timestamp: new Date().toISOString()
+      }, '*');
+    }
+    return false;
+  }
+  return true;
+}
+
 // Start trying to navigate after 4 seconds
 console.log("Navigation will start in 4 seconds...");
-setTimeout(tryNavigateToStudent, 4000);
+setTimeout(function() {
+  if (checkIfNavigationNeeded()) {
+    tryNavigateToStudent();
+  }
+}, 4000);
 
 function fetchTopManagementCached(template, callback) {
   var batchYear = localStorage.getItem("selectedBatchYear");
