@@ -57,7 +57,6 @@ try {
         $deletedCount = $deleteResult->getDeletedCount();
     }
 
-    // Clean output buffer and return JSON
     while (ob_get_level()) {
         ob_end_clean();
     }
