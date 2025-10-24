@@ -1,10 +1,5 @@
 <?php
 
-/**
- * MongoDB BSON Stubs for VSCode IntelliSense
- * These are dummy classes to help with code completion
- */
-
 namespace MongoDB\BSON;
 
 class UTCDateTime
