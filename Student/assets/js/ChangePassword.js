@@ -18,9 +18,17 @@ function limitID() {
 
 window.addEventListener("DOMContentLoaded", () => {
   const errorMessage = document.getElementById("error-message");
+  const successMessage = document.getElementById("success-message");
+  
   if (errorMessage && errorMessage.classList.contains("show")) {
     setTimeout(() => {
       errorMessage.classList.remove("show");
+    }, 4000);
+  }
+  
+  if (successMessage && successMessage.classList.contains("show")) {
+    setTimeout(() => {
+      successMessage.classList.remove("show");
     }, 4000);
   }
 });
