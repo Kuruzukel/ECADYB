@@ -9,5 +9,4 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
 
 require __DIR__ . '/../Connection/Configuration/HeadersConfig.php';
 
-// Include the AdminDashboard component
 require __DIR__ . '/Components/AdminDashboard.php';
