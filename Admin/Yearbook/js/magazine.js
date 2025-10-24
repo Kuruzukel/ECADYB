@@ -981,7 +981,6 @@ function loadPage(page, pageElement) {
           }
         });
       } else {
-        // This is a student page
         console.log("Loading student page:", page);
 
         if (coverData.background_url) {
