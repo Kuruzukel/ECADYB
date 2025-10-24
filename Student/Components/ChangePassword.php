@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (strlen($newPassword) > 8) {
         $error_message = "Password must not exceed 8 characters.";
     } elseif ($newPassword !== $confirmPassword) {
-        $error_message = "❌ New password and confirm password do not match.";
+        $error_message = "New password and confirm password do not match.";
     } else {
         $collection = $departmentsDB->{array_search($_SESSION['department'], $collections)};
 
@@ -37,9 +37,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ['student id' => $_SESSION['student_id']],
                 ['$set' => ['password' => $newPassword]]
             );
-            $success_message = "✅ Password changed successfully!";
+            $success_message = "Password changed successfully!";
         } else {
-            $error_message = "❌ Current password is incorrect.";
+            $error_message = "Current password is incorrect.";
         }
     }
 }
@@ -81,16 +81,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <div class="loginCard">
         <?php if (!empty($error_message)): ?>
-            <div id="error-message" class="error-message show">
-                <?php echo htmlspecialchars($error_message); ?>
+            <div id="error-message" class="notification error-message show">
+                <span class="notification-message"><?php echo htmlspecialchars($error_message); ?></span>
+                <button class="notification-close" onclick="closeNotification('error-message')">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
         <?php endif; ?>
         <?php if (!empty($success_message)): ?>
-            <div id="success-message" class="success-message show">
-                <?php echo htmlspecialchars($success_message); ?>
+            <div id="success-message" class="notification success-message show">
+                <span class="notification-message"><?php echo htmlspecialchars($success_message); ?></span>
+                <button class="notification-close" onclick="closeNotification('success-message')">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
         <?php endif; ?>
-        <form method="POST" action="">
+        <form method="POST" action="" id="changePasswordForm" onsubmit="return validateForm(event)">
             <p class="title">CHANGE PASSWORD</p>
             <div class="user field">
 
@@ -108,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <div class="passwordField" data-isvisible="false">
                         <input name="current_password" id="currrentpassword" type="password" placeholder="Current Password"
-                            maxlength="8" autocomplete="off" required />
+                            maxlength="8" autocomplete="off" />
                         <div class="eyeIcon open" onclick="togglePass('currrentpassword')">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                 <g fill="none">
@@ -144,7 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <div class="passwordField" data-isvisible="false">
                         <input name="new_password" id="newpassword" type="password" placeholder="New Password" maxlength="8"
-                            autocomplete="off" required />
+                            autocomplete="off" />
                         <div class="eyeIcon open" onclick="togglePass('newpassword')">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                 <g fill="none">
@@ -180,7 +186,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <div class="passwordField" data-isvisible="false">
                         <input name="confirm_password" id="confirmpassword" type="password" placeholder="Confirm Password" maxlength="8"
-                            autocomplete="off" required />
+                            autocomplete="off" />
                         <div class="eyeIcon open" onclick="togglePass('confirmpassword')">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                 <g fill="none">
