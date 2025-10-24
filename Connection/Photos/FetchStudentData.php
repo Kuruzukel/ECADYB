@@ -87,7 +87,7 @@ function respond($success, $message = '', $data = [])
     header('Content-Length: ' . strlen($jsonOutput));
     header('Connection: close');
     echo $jsonOutput;
-    flush(); // Force send
+    flush();
     exit;
 }
 
