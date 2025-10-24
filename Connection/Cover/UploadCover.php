@@ -526,7 +526,6 @@ try {
 } catch (Exception $e) {
     error_log("UploadCover.php exception: " . $e->getMessage());
 
-    // Clean up any file that was uploaded to BunnyCDN before the error
     if (isset($storageUrl) && isset($bunnyAccessKey)) {
         error_log("UploadCover.php cleaning up file from BunnyCDN due to exception: $storageUrl");
         $deleteCh = curl_init($storageUrl);
