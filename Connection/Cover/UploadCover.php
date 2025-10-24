@@ -170,7 +170,6 @@ try {
         }
     }
 
-    // Skip side detection for slot 8 (background) as it's always 'front'
     if ($slot !== 8) {
         if (strpos($upperName, 'BACK') !== false) {
             $side = 'back';
