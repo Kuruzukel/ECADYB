@@ -102,7 +102,6 @@ try {
 
     error_log("Parsed parameters - Template: $template, Department: $department, Page: $page, Limit: $limit, BatchYear: $batchYear");
 
-    // Add debug mode
     $debugMode = isset($_GET['debug']) && $_GET['debug'] === '1';
 
     if ($debugMode) {
