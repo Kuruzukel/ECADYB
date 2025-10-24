@@ -149,10 +149,10 @@ try {
     $mongoUrl = getenv('MONGO_URL') ?: getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
 
     $mongoClient = new MongoDB\Client($mongoUrl, [
-        'serverSelectionTimeoutMS' => 15000, // Increased to 15 seconds
-        'connectTimeoutMS' => 15000, // Increased to 15 seconds
-        'socketTimeoutMS' => 60000, // Increased to 60 seconds for very long queries
-        'maxIdleTimeMS' => 60000 // Keep connections alive
+        'serverSelectionTimeoutMS' => 15000,
+        'connectTimeoutMS' => 15000,
+        'socketTimeoutMS' => 60000,
+        'maxIdleTimeMS' => 60000
     ]);
 
     try {
@@ -171,12 +171,9 @@ try {
     error_log("Processing collections for department $department: " . implode(', ', $collections));
     error_log("Available collections in ECADYB database: " . implode(', ', iterator_to_array($db->listCollectionNames())));
 
-    // Build filter for academic year if batch year is provided
     $academicYearFilter = [];
     if ($batchYear) {
-        // Convert "Batch Year 2024-2025" to "2024-2025"
         $academicYear = str_replace('Batch Year ', '', $batchYear);
-        // Try both field name variations
         $academicYearFilter = ['academic year' => $academicYear];
         error_log("Filtering students by academic year: $academicYear");
         error_log("Academic year filter: " . json_encode($academicYearFilter));
@@ -194,7 +191,6 @@ try {
             if ($collectionExists) {
                 $collection = $db->$collectionName;
 
-                // Debug: Get a sample document to see the structure
                 $sampleDoc = $collection->findOne([]);
                 if ($sampleDoc) {
                     error_log("Sample document from $collectionName: " . json_encode($sampleDoc));
@@ -211,7 +207,6 @@ try {
 
     error_log("Total students across all collections: $totalStudentsCount");
 
-    // If no students found with academic year filter, don't fallback to all students
     if ($totalStudentsCount === 0 && !empty($academicYearFilter)) {
         error_log("No students found with academic year filter - keeping filter active to prevent showing students from other batch years");
     }
@@ -229,7 +224,6 @@ try {
     error_log("Pagination calculation - Skip: $skip, Limit: $limit, Target Skip: $targetSkip, Target Limit: $targetLimit");
 
     foreach ($collections as $collectionName) {
-        // Check if we've already collected enough students
         if (count($allStudents) >= $targetLimit) {
             error_log("Already collected enough students, breaking loop");
             break;
@@ -247,12 +241,10 @@ try {
                 $collectionCount = $collection->countDocuments($academicYearFilter);
                 error_log("Collection $collectionName: Found $collectionCount students with filter: " . json_encode($academicYearFilter));
 
-                // Calculate how many students we still need
                 $studentsNeeded = $targetLimit - count($allStudents);
                 error_log("Students needed: $studentsNeeded");
 
                 if ($studentsNeeded > 0 && $collectionCount > 0) {
-                    // Calculate skip and limit for this collection
                     $collectionSkip = max(0, $targetSkip - $studentsProcessed);
                     $collectionLimit = min($studentsNeeded, $collectionCount - $collectionSkip);
 
@@ -267,8 +259,8 @@ try {
                                 'sort' => ['department section' => 1, 'last name' => 1],
                                 'skip' => $collectionSkip,
                                 'limit' => $collectionLimit,
-                                'maxTimeMS' => 45000, // Increased to 45 seconds
-                                'noCursorTimeout' => true // Prevent cursor timeout on slow queries
+                                'maxTimeMS' => 45000,
+                                'noCursorTimeout' => true
                             ]);
                             $processedCount = 0;
 
@@ -322,13 +314,10 @@ try {
                                     }
                                 }
 
-                                // Keep honors separate - don't mix with milestones
                                 $honors = $student['honors'] ?? '';
 
-                                // Sanitize strings to ensure valid UTF-8 and prevent JSON encoding issues
                                 $sanitize = function ($value) {
                                     if (is_string($value)) {
-                                        // Remove any non-UTF-8 characters and control characters
                                         $value = mb_convert_encoding($value, 'UTF-8', 'UTF-8');
                                         $value = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/u', '', $value);
                                         return trim($value);
@@ -351,7 +340,6 @@ try {
                                     'collection' => $collectionName
                                 ];
 
-                                // Break if we've collected enough students
                                 if (count($allStudents) >= $targetLimit) {
                                     error_log("Reached target limit of $targetLimit students, breaking collection loop");
                                     break;
@@ -362,7 +350,6 @@ try {
                             $studentsProcessed += $processedCount;
                         } catch (MongoDB\Driver\Exception\ExecutionTimeoutException $e) {
                             error_log("MongoDB query timeout for collection $collectionName: " . $e->getMessage());
-                            // Continue with what we have so far
                             $studentsProcessed += $collectionCount;
                         } catch (Exception $e) {
                             error_log("Error during MongoDB find for collection $collectionName: " . $e->getMessage());
@@ -389,7 +376,6 @@ try {
     error_log("Returning " . count($allStudents) . " students for page $page");
     error_log("Page $page details - Skip: $skip, Limit: $limit, Total students in DB: $totalStudentsCount");
 
-    // Must match the frontend yearbook display (4 students per page in magazine.js)
     $studentsPerPage = 4;
     $currentPageStudents = count($allStudents);
     $totalStudents = $totalStudentsCount;
@@ -398,7 +384,6 @@ try {
 
     error_log("Calculated pagination - Total students: $totalStudents, Students per page: $studentsPerPage, Yearbook pages needed: $yearbookPagesNeeded");
 
-    // If no students found, provide helpful error message
     if ($totalStudents === 0) {
         $message = $batchYear ?
             "No students found for department $department and academic year " . str_replace('Batch Year ', '', $batchYear) . ". Please check if student data has been uploaded for this batch year." :
@@ -448,7 +433,6 @@ try {
 
     error_log("Sending paginated response: Page $page of $totalPages, " . count($allStudents) . " students returned");
 
-    // Final safety check - ensure we're about to send valid JSON
     try {
         json_encode($responseData);
     } catch (Exception $jsonError) {
@@ -467,7 +451,6 @@ try {
     respond(false, 'Server error: ' . $e->getMessage());
 }
 
-// Final fallback - if we somehow get here without responding
 if (!headers_sent()) {
     respond(false, 'Unknown error occurred');
 }
