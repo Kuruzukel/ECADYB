@@ -203,7 +203,6 @@ function findAndNavigateToStudent(department, template, studentData, allStudents
               // Fade out border after 3 seconds
               setTimeout(function() {
                 $studentImageArea.css({
-                  "border": "4px solid transparent",
                   "transition": "border 3s ease"
                 });
                 
