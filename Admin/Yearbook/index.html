@@ -647,7 +647,9 @@
         if (coverData && coverData.template) {
           template = coverData.template;
         } else {
-          var savedTemplate = localStorage.getItem("selectedBatchTemplateNumber");
+          var savedTemplate = localStorage.getItem(
+            "selectedBatchTemplateNumber"
+          );
           if (savedTemplate) {
             template = parseInt(savedTemplate);
           }
@@ -658,14 +660,27 @@
 
         if (window.topManagementCache && window.topManagementCache[cacheKey]) {
           var topManagementData = window.topManagementCache[cacheKey];
-          if (topManagementData && topManagementData.success && topManagementData.data && topManagementData.data.length > 0) {
+          if (
+            topManagementData &&
+            topManagementData.success &&
+            topManagementData.data &&
+            topManagementData.data.length > 0
+          ) {
             managementPages = topManagementData.data.length;
-            console.log("Using actual top management pages:", managementPages, "from CSV data");
+            console.log(
+              "Using actual top management pages:",
+              managementPages,
+              "from CSV data"
+            );
           } else {
-            console.log("No top management data found - using 2 placeholder pages");
+            console.log(
+              "No top management data found - using 2 placeholder pages"
+            );
           }
         } else {
-          console.log("Top management cache not available - using 2 placeholder pages");
+          console.log(
+            "Top management cache not available - using 2 placeholder pages"
+          );
         }
 
         var totalPages = 1 + managementPages + studentPages + 1; // 1 front + management pages + student pages + 1 back
@@ -673,7 +688,11 @@
         console.log(
           "Calculated total pages:",
           totalPages,
-          "(1 front + " + managementPages + " management + " + studentPages + " students + 1 back)"
+          "(1 front + " +
+            managementPages +
+            " management + " +
+            studentPages +
+            " students + 1 back)"
         );
 
         return totalPages;
@@ -1049,7 +1068,9 @@
         if (coverData && coverData.template) {
           template = coverData.template;
         } else {
-          var savedTemplate = localStorage.getItem("selectedBatchTemplateNumber");
+          var savedTemplate = localStorage.getItem(
+            "selectedBatchTemplateNumber"
+          );
           if (savedTemplate) {
             template = parseInt(savedTemplate);
           }
@@ -1060,12 +1081,16 @@
 
         // Check if we already have the data cached
         if (window.topManagementCache && window.topManagementCache[cacheKey]) {
-          console.log("Top management data already cached, proceeding with initialization");
+          console.log(
+            "Top management data already cached, proceeding with initialization"
+          );
           initializeMagazine();
         } else {
           console.log("Pre-fetching top management data before initialization");
-          fetchTopManagementCached(template, function(response) {
-            console.log("Top management data fetched, now initializing magazine");
+          fetchTopManagementCached(template, function (response) {
+            console.log(
+              "Top management data fetched, now initializing magazine"
+            );
             initializeMagazine();
           });
         }
@@ -1371,7 +1396,9 @@
             honors: JSON.parse(card.attr("data-student-honors") || "[]"),
             program: card.attr("data-student-program"),
             section: card.attr("data-student-section"),
-            status: (card.attr("data-student-status") || "pending").toLowerCase(),
+            status: (
+              card.attr("data-student-status") || "pending"
+            ).toLowerCase(),
           };
 
           console.log("Card clicked for student:", clickedStudent);
@@ -1417,7 +1444,6 @@
           latinAwardsContainer.find("p").remove();
 
           if (clickedStudent.honors) {
-            // Handle both string and array formats
             if (
               typeof clickedStudent.honors === "string" &&
               clickedStudent.honors.trim() !== ""
@@ -1481,7 +1507,8 @@
             // Build request data
             var requestData = {
               student_id: clickedStudent.student_id,
-              template: localStorage.getItem("selectedBatchTemplateNumber") || 1,
+              template:
+                localStorage.getItem("selectedBatchTemplateNumber") || 1,
             };
             if (batchYear) {
               requestData.batch_year = batchYear;
