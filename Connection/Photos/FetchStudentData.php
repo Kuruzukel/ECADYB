@@ -140,7 +140,6 @@ try {
     }
 
     $template = max(1, min(3, $template));
-    // Use ECADYB database instead of BatchTemplate databases
     $mongoDbName = "ECADYB";
 
     error_log("=== FETCH STUDENT DATA REQUEST ===");
