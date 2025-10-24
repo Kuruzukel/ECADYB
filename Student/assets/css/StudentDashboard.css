@@ -3849,3 +3849,426 @@ header.fading {
     height: 16px;
   }
 }
+
+/* Edit Student Modal Styles */
+.editStudentModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0;
+}
+
+.editStudentModal.active {
+  display: flex;
+  opacity: 1;
+}
+
+.editStudentModal .modal-content {
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  border-radius: 16px;
+  padding: 1rem;
+  width: 95%;
+  height: 95%;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  animation: modalSlideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-y: hidden;
+}
+
+@keyframes modalSlideIn {
+  from {
+    transform: translateY(-50px) scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.editStudentModal .modal-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.editStudentModal .modal-icon {
+  font-size: 1.6rem;
+  color: #217ff7;
+}
+
+.editStudentModal h3 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+}
+
+.editStudentModal .modal-body {
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.editStudentModal .form-group {
+  display: flex;
+  justify-content: space-between;
+  gap: 25px;
+}
+
+.editStudentModal .section {
+  height: 100%;
+  width: 32%;
+  min-width: 250px;
+  background-color: #2d2f3a;
+  padding: 20px;
+  border-radius: 12px;
+  box-sizing: border-box;
+  min-height: 570px;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(59, 130, 246, 0.1);
+}
+
+.editStudentModal .section:hover {
+  transform: translateY(-2px);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.editStudentModal .section-header {
+  width: calc(100% + 40px);
+  height: 60px;
+  background: linear-gradient(135deg, #217ff7 0%, #3b82f6 100%);
+  color: #ffffff;
+  padding: 16px;
+  margin: -20px -20px 25px -20px;
+  border-radius: 8px 8px 0 0;
+  text-align: center;
+  font-size: 1.15em;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.editStudentModal .section-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.editStudentModal .section:hover .section-header::before {
+  left: 100%;
+}
+
+.editStudentModal label {
+  display: block;
+  margin: 16px 0 8px;
+  color: #e0e0e0;
+  font-weight: 600;
+  font-size: 0.9em;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: color 0.3s ease;
+}
+
+.editStudentModal label:first-of-type {
+  margin-top: 0;
+}
+
+.editStudentModal .section input,
+.editStudentModal .section select,
+.editStudentModal .section textarea {
+  margin-bottom: 16px;
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-color: #1e293b;
+  color: #e2e8f0;
+  font-size: 15px;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.editStudentModal .section input:focus,
+.editStudentModal .section select:focus,
+.editStudentModal .section textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background-color: #0f172a;
+  transform: translateY(-1px);
+}
+
+.editStudentModal .section input:hover,
+.editStudentModal .section select:hover,
+.editStudentModal .section textarea:hover {
+  border-color: #475569;
+  background-color: #0f172a;
+}
+
+.editStudentModal .section input::placeholder {
+  color: #64748b;
+  opacity: 1;
+}
+
+.editStudentModal .section select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23e2e8f0' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+.editStudentModal .section select option {
+  background-color: #34495e;
+  color: #ffffff;
+  padding: 10px;
+}
+
+.editStudentModal .modal-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: auto;
+}
+
+.editStudentModal .modal-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-family: inherit;
+}
+
+.editStudentModal .modal-btn.confirm {
+  background: #10b981;
+  color: #ffffff;
+}
+
+.editStudentModal .modal-btn.confirm:hover {
+  background: #059669;
+  transform: translateY(-1px);
+}
+
+.editStudentModal .modal-btn.cancel {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+.editStudentModal .modal-btn.cancel:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+}
+
+.editStudentModal .close-btn {
+  position: absolute;
+  top: 12px;
+  right: 15px;
+  font-size: 22px;
+  color: #ffffff;
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.editStudentModal .close-btn:hover {
+  transform: scale(1.15);
+  color: #f87171;
+}
+
+/* Responsive styles for modal */
+@media (max-width: 1200px) {
+  .editStudentModal .form-group {
+    flex-direction: column;
+  }
+
+  .editStudentModal .section {
+    width: 100%;
+    min-height: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .editStudentModal .modal-content {
+    width: 98%;
+    height: 98%;
+    padding: 0.5rem;
+  }
+
+  .editStudentModal h3 {
+    font-size: 1.2rem;
+  }
+
+  .editStudentModal .modal-icon {
+    font-size: 1.2rem;
+  }
+
+  .editStudentModal .section {
+    padding: 15px;
+    min-width: 200px;
+  }
+
+  .editStudentModal .modal-buttons {
+    flex-direction: column;
+  }
+
+  .editStudentModal .modal-btn {
+    width: 100%;
+  }
+}
+
+/* Notification styles for modal success/error messages */
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  min-width: 320px;
+  max-width: 400px;
+  padding: 1rem 1.2rem;
+  border-radius: 12px;
+  opacity: 0;
+  transform: translateY(-40px);
+  pointer-events: none;
+  z-index: 99999;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.notification.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.notification.success {
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  color: #166534;
+}
+
+.notification.error {
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+  color: #991b1b;
+}
+
+.notification.info {
+  background: #eff6ff;
+  border: 1px solid #93c5fd;
+  color: #1e40af;
+}
+
+.notification.warning {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  color: #92400e;
+}
+
+.notification-icon-wrapper {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.notification.success .notification-icon-wrapper {
+  background: #22c55e;
+}
+
+.notification.error .notification-icon-wrapper {
+  background: #ef4444;
+}
+
+.notification.info .notification-icon-wrapper {
+  background: #3b82f6;
+}
+
+.notification.warning .notification-icon-wrapper {
+  background: #f59e0b;
+}
+
+.notification-icon-wrapper i {
+  font-size: 1rem;
+  color: #ffffff;
+}
+
+.notification-message {
+  flex: 1;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.notification-close {
+  width: 20px;
+  height: 20px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.notification.success .notification-close {
+  color: #166534;
+}
+
+.notification.error .notification-close {
+  color: #991b1b;
+}
+
+.notification.info .notification-close {
+  color: #1e40af;
+}
+
+.notification.warning .notification-close {
+  color: #92400e;
+}
+
+.notification-close:hover {
+  opacity: 0.7;
+  transform: scale(1.1);
+}
+
+.notification-close i {
+  font-size: 1rem;
+}

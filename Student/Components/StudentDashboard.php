@@ -103,11 +103,20 @@ try {
             $studentProfilePhoto = $studentPhoto['filipiniana_url'];
         }
         
-        // Update session with additional info
+        // Update session with all student info
         $_SESSION['academic_year'] = $studentAcademicYear;
         $_SESSION['program'] = $studentProgram;
         $_SESSION['status'] = $studentStatus;
         $_SESSION['profile_photo'] = $studentProfilePhoto;
+        $_SESSION['first_name'] = $student['first name'] ?? '';
+        $_SESSION['middle_name'] = $student['middle name'] ?? '';
+        $_SESSION['last_name'] = $student['last name'] ?? '';
+        $_SESSION['email'] = $student['email'] ?? '';
+        $_SESSION['motto'] = $student['motto'] ?? '';
+        $_SESSION['honors'] = $student['honors'] ?? '';
+        $_SESSION['milestone'] = $student['milestone'] ?? '';
+        $_SESSION['collection'] = $collectionName;
+        $_SESSION['batch_template'] = $dbName;
     } else {
         // Debug: Log that student was not found
         error_log("Student not found with ID: " . $studentId . " in database: " . $dbName . " collection: " . $collectionName);

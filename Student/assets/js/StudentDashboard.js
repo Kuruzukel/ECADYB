@@ -906,7 +906,178 @@ function markAllAsRead() {
 
 function editProfile() {
   console.log("Edit Profile clicked");
-  // Add your edit profile functionality here
+  const modal = document.getElementById('editStudentModal');
+  if (modal) {
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+  }
+}
+
+function closeEditModal() {
+  const modal = document.getElementById('editStudentModal');
+  if (modal) {
+    modal.classList.remove('active');
+    document.body.style.overflow = ''; // Restore scrolling
+    
+    // Reset the form to original values
+    const form = document.getElementById('edit-student-form');
+    if (form) {
+      form.reset();
+    }
+  }
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', function(event) {
+  const modal = document.getElementById('editStudentModal');
+  if (modal && event.target === modal && modal.classList.contains('active')) {
+    closeEditModal();
+  }
+});
+
+// Close modal on ESC key
+document.addEventListener('keydown', function(event) {
+  const modal = document.getElementById('editStudentModal');
+  if (event.key === 'Escape' && modal && modal.classList.contains('active')) {
+    closeEditModal();
+  }
+});
+
+// Helper functions for form validation
+function allowOnlyLetters(input) {
+  input.value = input.value.replace(/[^a-zA-Z\s]/g, '');
+}
+
+function removeSpaces(input) {
+  input.value = input.value.replace(/\s/g, '');
+}
+
+function formatAcademicYear(input) {
+  let value = input.value.replace(/[^0-9]/g, '');
+  if (value.length > 4) {
+    value = value.substring(0, 4) + '-' + value.substring(4, 8);
+  }
+  input.value = value;
+}
+
+// Submit student information
+async function submitStudentInfo(event) {
+  event.preventDefault();
+  
+  const form = document.getElementById('edit-student-form');
+  const formData = new FormData(form);
+  
+  // Get student data from window.studentData (set in StudentDashboard.php)
+  const studentId = window.studentData?.studentId || formData.get('student_id');
+  const academicYear = window.studentData?.studentAcademicYear || formData.get('academic_year');
+  const department = window.studentData?.studentDepartment || '';
+  
+  // Map department names to collection names
+  const collectionMap = {
+    "BS Marine Engineering": "bsme",
+    "BS Marine Transportation": "bsmt",
+    "BS Criminal Justice Education": "bscje",
+    "BS Tourism Management": "bstm",
+    "BS Technical-Vocational Teacher Education": "btvted",
+    "BS Early Childhood Education": "beced",
+    "BS Nursing": "bsn",
+    "BS Information System": "bsis",
+    "BS Management Accounting": "bsma",
+    "BS Entrepreneurship": "bse"
+  };
+  
+  const collection = collectionMap[department] || 'bsme';
+  
+  // Convert FormData to the format expected by UpdateStudent.php
+  const data = {
+    'original_student_id': studentId,
+    'collection': collection,
+    'academic_year': academicYear,
+    'first name': formData.get('first_name'),
+    'middle name': formData.get('middle_name'),
+    'last name': formData.get('last_name'),
+    'email': formData.get('email'),
+    'motto': formData.get('motto'),
+    'honors': formData.get('honors'),
+    'milestone': formData.get('milestone')
+  };
+  
+  console.log('Submitting student data:', data);
+  
+  try {
+    const response = await fetch('/ECADYB/Connection/Student/UpdateStudent.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data)
+    });
+    
+    const result = await response.json();
+    
+            if (result.success) {
+              showNotification('Success! Student information updated.', 'success');
+              
+              // Close the modal after showing success notification
+              setTimeout(() => {
+                closeEditModal();
+              }, 1000);
+              
+              // Reload page after a delay to refresh session data
+              setTimeout(() => {
+                location.reload();
+              }, 2000);
+            } else {
+              showNotification('Error: ' + (result.message || 'Failed to update student information.'), 'error');
+            }
+  } catch (error) {
+    console.error('Error updating student:', error);
+    showNotification('Error: Failed to update student information.', 'error');
+  }
+}
+
+// Show notification function
+function showNotification(message, type = 'info') {
+  // Remove existing notification if any
+  const existingNotification = document.querySelector('.notification');
+  if (existingNotification) {
+    existingNotification.remove();
+  }
+  
+  // Create notification element
+  const notification = document.createElement('div');
+  notification.className = `notification ${type}`;
+  
+  // Add icon based on type
+  let icon = 'fa-info-circle';
+  if (type === 'success') icon = 'fa-check';
+  if (type === 'error') icon = 'fa-times';
+  if (type === 'warning') icon = 'fa-exclamation';
+  
+  notification.innerHTML = `
+    <div class="notification-icon-wrapper">
+      <i class="fas ${icon}"></i>
+    </div>
+    <div class="notification-message">${message}</div>
+    <button class="notification-close" onclick="this.parentElement.remove()">
+      <i class="fas fa-times"></i>
+    </button>
+  `;
+  
+  document.body.appendChild(notification);
+  
+  // Trigger animation
+  setTimeout(() => {
+    notification.classList.add('show');
+  }, 100);
+  
+  // Remove notification after 3 seconds
+  setTimeout(() => {
+    notification.classList.remove('show');
+    setTimeout(() => {
+      notification.remove();
+    }, 500);
+  }, 3000);
 }
 
 function logout() {
