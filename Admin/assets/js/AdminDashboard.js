@@ -357,4 +357,200 @@ document.addEventListener("DOMContentLoaded", () => {
       window.location.href = basePath + "/Admin/Components/AdminLogout.php";
     });
   }
+
+  // Initialize search functionality
+  initializeSearchAutocomplete();
 });
+
+// Search autocomplete functionality
+let searchTimeout = null;
+
+function initializeSearchAutocomplete() {
+  const searchInput = document.getElementById("search-input");
+  const searchSuggestions = document.getElementById("search-suggestions");
+  const searchButton = document.querySelector(".search-button");
+
+  if (!searchInput || !searchSuggestions) return;
+
+  // Handle input changes
+  searchInput.addEventListener("input", function () {
+    const query = this.value.trim();
+
+    // Clear previous timeout
+    if (searchTimeout) {
+      clearTimeout(searchTimeout);
+    }
+
+    if (query.length < 2) {
+      hideSuggestions();
+      return;
+    }
+
+    // Debounce search
+    searchTimeout = setTimeout(() => {
+      searchStudents(query);
+    }, 300);
+  });
+
+  // Handle search button click
+  if (searchButton) {
+    searchButton.addEventListener("click", function (e) {
+      e.preventDefault();
+      const query = searchInput.value.trim();
+      if (query.length >= 2) {
+        searchStudents(query);
+      }
+    });
+  }
+
+  // Handle Enter key
+  searchInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const query = this.value.trim();
+      if (query.length >= 2) {
+        searchStudents(query);
+      }
+    }
+  });
+
+  // Hide suggestions when clicking outside
+  document.addEventListener("click", function (e) {
+    if (!e.target.closest(".search-wrapper")) {
+      hideSuggestions();
+    }
+  });
+
+  // Handle focus
+  searchInput.addEventListener("focus", function () {
+    if (this.value.trim().length >= 2 && searchSuggestions.children.length > 0) {
+      showSuggestions();
+    }
+  });
+}
+
+function searchStudents(query) {
+  const searchSuggestions = document.getElementById("search-suggestions");
+  if (!searchSuggestions) return;
+
+  const basePath = window.location.pathname.includes("/ECADYB/")
+    ? "/ECADYB"
+    : "";
+  const searchUrl = `${basePath}/Connection/Student/SearchStudents.php?query=${encodeURIComponent(
+    query
+  )}&limit=10`;
+
+  // Show loading state
+  searchSuggestions.innerHTML = `
+    <div class="search-suggestion-empty">
+      <i class="fas fa-spinner fa-spin"></i> Searching...
+    </div>
+  `;
+  showSuggestions();
+
+  fetch(searchUrl)
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success && data.results && data.results.length > 0) {
+        displaySuggestions(data.results);
+      } else {
+        searchSuggestions.innerHTML = `
+          <div class="search-suggestion-empty">
+            <i class="fas fa-search"></i> No students found
+          </div>
+        `;
+      }
+    })
+    .catch((error) => {
+      console.error("Search error:", error);
+      searchSuggestions.innerHTML = `
+        <div class="search-suggestion-empty">
+          <i class="fas fa-exclamation-circle"></i> Error searching students
+        </div>
+      `;
+    });
+}
+
+function displaySuggestions(results) {
+  const searchSuggestions = document.getElementById("search-suggestions");
+  if (!searchSuggestions) return;
+
+  searchSuggestions.innerHTML = "";
+
+  results.forEach((student) => {
+    const item = document.createElement("div");
+    item.className = "search-suggestion-item";
+    
+    // Build the department and year display
+    let departmentYear = '';
+    if (student.department_section) {
+      departmentYear = escapeHtml(student.department_section);
+      if (student.academic_year) {
+        departmentYear += ' - ' + escapeHtml(student.academic_year);
+      }
+    } else if (student.academic_year) {
+      departmentYear = escapeHtml(student.academic_year);
+    }
+    
+    item.innerHTML = `
+      <div class="search-suggestion-name">${escapeHtml(student.name)}</div>
+      <div class="search-suggestion-id">Student ID: ${escapeHtml(
+        student.student_id
+      )}</div>
+      <div class="search-suggestion-program">${departmentYear}</div>
+    `;
+
+    item.addEventListener("click", function () {
+      handleStudentSelection(student);
+    });
+
+    searchSuggestions.appendChild(item);
+  });
+
+  showSuggestions();
+}
+
+function handleStudentSelection(student) {
+  console.log("Selected student:", student);
+
+  // Fill the search input with student name
+  const searchInput = document.getElementById("search-input");
+  if (searchInput) {
+    searchInput.value = student.name;
+  }
+
+  // Hide suggestions
+  hideSuggestions();
+
+  // Navigate to student list page and highlight the student
+  const basePath = window.location.pathname.includes("/ECADYB/")
+    ? "/ECADYB"
+    : "";
+  
+  // Store selected student in sessionStorage for highlighting
+  sessionStorage.setItem("selectedStudentId", student.id);
+  sessionStorage.setItem("selectedStudentMongoId", student.student_id);
+
+  // Redirect to student list page
+  window.location.href = `${basePath}/Admin?page=student-list&highlight=${encodeURIComponent(student.id)}`;
+}
+
+function showSuggestions() {
+  const searchSuggestions = document.getElementById("search-suggestions");
+  if (searchSuggestions) {
+    searchSuggestions.classList.add("show");
+  }
+}
+
+function hideSuggestions() {
+  const searchSuggestions = document.getElementById("search-suggestions");
+  if (searchSuggestions) {
+    searchSuggestions.classList.remove("show");
+  }
+}
+
+function escapeHtml(text) {
+  const div = document.createElement("div");
+  div.textContent = text;
+  return div.innerHTML;
+}

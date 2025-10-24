@@ -385,12 +385,15 @@ if (isset($_SESSION['username']) && !empty($_SESSION['username'])) {
                                 </svg>
                             </div>
                         </div>
-                        <div class="search-container">
-                            <input type="text" id="search-input" name="search-input" class="search-input"
-                                placeholder="Search..." />
-                            <button class="search-button">
-                                <i class="fas fa-search"></i>
-                            </button>
+                        <div class="search-wrapper">
+                            <div class="search-container">
+                                <input type="text" id="search-input" name="search-input" class="search-input"
+                                    placeholder="Search student ID or name..." autocomplete="off" />
+                                <button class="search-button">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                            <div class="search-suggestions" id="search-suggestions"></div>
                         </div>
 
                         <div class="admin-profile-container">

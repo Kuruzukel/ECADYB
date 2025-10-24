@@ -237,6 +237,8 @@ header {
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
+  width: 300px;
+  max-width: 400px;
 }
 
 .search-container:hover {
@@ -281,6 +283,108 @@ header {
 .search-container .search-button i {
   font-size: 16px;
   color: rgba(255, 255, 255, 0.8);
+}
+
+/* Search Suggestions Dropdown */
+.search-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+.search-suggestions {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: var(--content-bg);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  max-height: 400px;
+  overflow-y: auto;
+  z-index: 10000;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+  width: 300px;
+}
+
+.search-suggestions.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.search-suggestion-item {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  transition: background 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.search-suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.search-suggestion-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.search-suggestion-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+  font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+.search-suggestion-id {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+.search-suggestion-program {
+  font-size: 11px;
+  color: var(--menu-border-active);
+  font-weight: 500;
+  font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+.search-suggestion-empty {
+  padding: 1.5rem 1.25rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 13px;
+  font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+.search-suggestions::-webkit-scrollbar {
+  width: 6px;
+}
+
+.search-suggestions::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+.search-suggestions::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
+
+.search-suggestions::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .admin-profile-container {
@@ -521,6 +625,44 @@ body.theme-light-mode .search-container .search-button {
 
 body.theme-light-mode .search-container .search-button i {
   color: #64748b !important;
+}
+
+body.theme-light-mode .search-suggestions {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+body.theme-light-mode .search-suggestion-item {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+body.theme-light-mode .search-suggestion-item:hover {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+body.theme-light-mode .search-suggestion-name {
+  color: #1e293b;
+}
+
+body.theme-light-mode .search-suggestion-id {
+  color: #64748b;
+}
+
+body.theme-light-mode .search-suggestion-empty {
+  color: #94a3b8;
+}
+
+body.theme-light-mode .search-suggestions::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+body.theme-light-mode .search-suggestions::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+body.theme-light-mode .search-suggestions::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
 }
 
 .hidden {
@@ -772,7 +914,12 @@ header h3 {
   }
 
   .search-container {
-    max-width: 120px;
+    width: 150px;
+    max-width: 150px;
+  }
+
+  .search-suggestions {
+    width: 150px;
   }
 
   #logout-tab {
@@ -846,7 +993,12 @@ header h3 {
   }
 
   .search-container {
-    max-width: 180px;
+    width: 250px;
+    max-width: 250px;
+  }
+
+  .search-suggestions {
+    width: 250px;
   }
 }
 
