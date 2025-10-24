@@ -904,12 +904,25 @@ function markAllAsRead() {
   console.log("All notifications marked as read");
 }
 
+// Store original form values
+let originalFormValues = {};
+
 function editProfile() {
   console.log("Edit Profile clicked");
   const modal = document.getElementById('editStudentModal');
   if (modal) {
     modal.classList.add('active');
     document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    
+    // Store original values when modal opens
+    const form = document.getElementById('edit-student-form');
+    if (form) {
+      originalFormValues = {
+        email: form.querySelector('#email')?.value || '',
+        motto: form.querySelector('#motto')?.value || '',
+        milestone: form.querySelector('#milestone')?.value || ''
+      };
+    }
   }
 }
 
@@ -966,6 +979,24 @@ async function submitStudentInfo(event) {
   
   const form = document.getElementById('edit-student-form');
   const formData = new FormData(form);
+  
+  // Get current values (only editable fields)
+  const currentValues = {
+    email: formData.get('email') || '',
+    motto: formData.get('motto') || '',
+    milestone: formData.get('milestone') || ''
+  };
+  
+  // Check if any editable field has changed
+  const hasChanges = 
+    currentValues.email !== originalFormValues.email ||
+    currentValues.motto !== originalFormValues.motto ||
+    currentValues.milestone !== originalFormValues.milestone;
+  
+  if (!hasChanges) {
+    showNotification('No changes detected. Please modify at least one field before saving.', 'info');
+    return;
+  }
   
   // Get student data from window.studentData (set in StudentDashboard.php)
   const studentId = window.studentData?.studentId || formData.get('student_id');
@@ -1049,7 +1080,7 @@ function showNotification(message, type = 'info') {
   notification.className = `notification ${type}`;
   
   // Add icon based on type
-  let icon = 'fa-info-circle';
+  let icon = 'fa-info';
   if (type === 'success') icon = 'fa-check';
   if (type === 'error') icon = 'fa-times';
   if (type === 'warning') icon = 'fa-exclamation';

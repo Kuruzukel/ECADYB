@@ -201,7 +201,7 @@ if (empty($studentFirstName) && empty($studentLastName) && !empty($studentName))
 
 <!-- Edit Student Information Modal -->
 <div id="editStudentModal" class="editStudentModal">
-  <div class="modal-content" style="background: #34495e;">
+  <div class="modal-content">
     <div class="modal-header">
       <i class="fas fa-user-edit modal-icon"></i>
       <h3>Edit Profile</h3>

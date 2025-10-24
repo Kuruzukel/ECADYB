@@ -3873,6 +3873,7 @@ header.fading {
 }
 
 .editStudentModal .modal-content {
+  background: linear-gradient(135deg, #112d4e 0%, #1a237e 100%);
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
   border-radius: 16px;
@@ -3903,11 +3904,14 @@ header.fading {
   display: flex;
   align-items: center;
   gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid rgba(6, 182, 212, 0.3);
 }
 
 .editStudentModal .modal-icon {
   font-size: 1.6rem;
-  color: #217ff7;
+  color: #06b6d4;
+  filter: drop-shadow(0 0 8px rgba(6, 182, 212, 0.5));
 }
 
 .editStudentModal h3 {
@@ -3915,6 +3919,7 @@ header.fading {
   font-weight: 600;
   color: #ffffff;
   margin: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .editStudentModal .modal-body {
@@ -3940,18 +3945,19 @@ header.fading {
   display: flex;
   flex-direction: column;
   transition: all 0.3s ease;
-  border: 1px solid rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(6, 182, 212, 0.2);
 }
 
 .editStudentModal .section:hover {
   transform: translateY(-2px);
-  border-color: rgba(59, 130, 246, 0.3);
+  border-color: rgba(6, 182, 212, 0.4);
+  box-shadow: 0 8px 24px rgba(6, 182, 212, 0.15);
 }
 
 .editStudentModal .section-header {
   width: calc(100% + 40px);
   height: 60px;
-  background: linear-gradient(135deg, #217ff7 0%, #3b82f6 100%);
+  background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
   color: #ffffff;
   padding: 16px;
   margin: -20px -20px 25px -20px;
@@ -3965,6 +3971,8 @@ header.fading {
   letter-spacing: 0.5px;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .editStudentModal .section-header::before {
@@ -4017,9 +4025,10 @@ header.fading {
 .editStudentModal .section select:focus,
 .editStudentModal .section textarea:focus {
   outline: none;
-  border-color: #3b82f6;
+  border-color: #06b6d4;
   background-color: #0f172a;
   transform: translateY(-1px);
+  box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
 }
 
 .editStudentModal .section input:hover,
