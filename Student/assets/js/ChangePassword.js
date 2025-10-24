@@ -99,8 +99,9 @@ window.addEventListener("DOMContentLoaded", () => {
   }
   
   if (successMessage && successMessage.classList.contains("show")) {
+    // Redirect to login after 3 seconds
     setTimeout(() => {
-      closeNotification('success-message');
-    }, 4000);
+      window.location.href = '../../Public/Components/Login.php';
+    }, 3000);
   }
 });

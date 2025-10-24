@@ -37,7 +37,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ['student id' => $_SESSION['student_id']],
                 ['$set' => ['password' => $newPassword]]
             );
-            $success_message = "Password changed successfully!";
+            
+            // Set success message and destroy session
+            $success_message = "Password changed successfully! Redirecting to login...";
+            session_destroy();
         } else {
             $error_message = "Current password is incorrect.";
         }
