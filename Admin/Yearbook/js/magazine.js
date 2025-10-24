@@ -1192,7 +1192,6 @@ function loadPage(page, pageElement) {
                               position: "relative",
                             });
 
-                            // Add "Picture gusto, bayad ayaw? aray mo" overlay
                             var comingSoonOverlay = $("<div/>", {
                               class: "coming-soon-overlay",
                               html: '<span class="coming-soon-text">Coming Soon...</span>',
