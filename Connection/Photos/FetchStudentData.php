@@ -3,7 +3,6 @@ while (ob_get_level()) {
     ob_end_clean();
 }
 
-// Start fresh output buffering to prevent any output before JSON
 ob_start();
 
 ini_set('display_errors', 0);
