@@ -188,6 +188,33 @@
                     }
                 }.bind(this), 400);
             }
+
+            // Clear URL parameters after giving iframe time to process
+            // Delay to ensure iframe detects the student parameters first
+            setTimeout(function() {
+                this.clearURLParameters();
+            }.bind(this), 2000); // Wait 2 seconds before clearing
+        },
+
+        clearURLParameters: function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const hasStudentParams = urlParams.has('student_id') || urlParams.has('student_name');
+            
+            if (hasStudentParams) {
+                console.log('[Loader] Clearing student URL parameters...');
+                
+                // Remove student parameters but keep the page parameter
+                urlParams.delete('student_id');
+                urlParams.delete('student_name');
+                
+                // Build new URL
+                const newUrl = window.location.pathname + '?' + urlParams.toString();
+                
+                // Update URL without reload
+                window.history.replaceState({}, '', newUrl);
+                
+                console.log('[Loader] URL cleaned:', newUrl);
+            }
         }
     };
 
@@ -198,6 +225,86 @@
     } else {
         LoaderManager.init();
     }
+
+    // Monitor URL changes for subsequent student searches
+    let lastStudentId = null;
+    let isFirstLoad = true;
+    
+    function checkForStudentURLChange() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentStudentId = urlParams.get('student_id');
+        const currentStudentName = urlParams.get('student_name');
+        
+        // Skip the first load (it's handled by initial page load)
+        if (isFirstLoad && currentStudentId) {
+            lastStudentId = currentStudentId;
+            isFirstLoad = false;
+            return;
+        }
+        
+        if (currentStudentId && currentStudentId !== lastStudentId) {
+            console.log('[Loader] New student search detected in URL:', currentStudentId);
+            lastStudentId = currentStudentId;
+            
+            // Show loader again
+            const loader = document.querySelector('.yearbook-loader-overlay');
+            if (loader) {
+                loader.classList.remove('hidden');
+                loader.style.display = 'flex';
+            }
+            
+            // Send message to iframe to navigate to new student
+            const iframe = document.getElementById('yearbook-iframe');
+            if (iframe && iframe.contentWindow) {
+                console.log('[Loader] Sending navigate message to iframe for student:', currentStudentId);
+                
+                // Update the iframe URL parameters directly without full reload
+                try {
+                    const iframeSrc = new URL(iframe.src);
+                    iframeSrc.searchParams.set('student_id', currentStudentId);
+                    iframeSrc.searchParams.set('student_name', currentStudentName);
+                    
+                    // Use replaceState to update URL without reload
+                    iframe.contentWindow.postMessage({
+                        type: 'navigate-to-student',
+                        studentId: currentStudentId,
+                        studentName: currentStudentName
+                    }, '*');
+                    
+                    console.log('[Loader] Posted navigate message to iframe');
+                    
+                    // Clear any existing timers
+                    if (LoaderManager.timeout) {
+                        clearTimeout(LoaderManager.timeout);
+                    }
+                    if (LoaderManager.checkInterval) {
+                        clearInterval(LoaderManager.checkInterval);
+                    }
+                    
+                    // Reset loader state for new navigation
+                    LoaderManager.isLoaded = false;
+                    LoaderManager.magazineReady = false;
+                    LoaderManager.coverVisible = false;
+                    LoaderManager.navigationComplete = false;
+                    
+                    // Restart loading process
+                    LoaderManager.setMaxTimeout();
+                    LoaderManager.startChecking();
+                    
+                } catch (e) {
+                    console.error('[Loader] Error communicating with iframe:', e);
+                    // Fallback: full reload if postMessage fails
+                    const iframeSrc = new URL(iframe.src);
+                    iframeSrc.searchParams.set('student_id', currentStudentId);
+                    iframeSrc.searchParams.set('student_name', currentStudentName);
+                    iframe.src = iframeSrc.toString();
+                }
+            }
+        }
+    }
+    
+    // Check for URL changes every 300ms
+    setInterval(checkForStudentURLChange, 300);
 
     window.YearbookLoader = LoaderManager;
 })();

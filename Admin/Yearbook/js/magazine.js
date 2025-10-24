@@ -478,6 +478,49 @@ window.triggerStudentNavigation = function(studentId, studentName, department) {
   }, 500);
 };
 
+// Listen for postMessage from parent window for new student navigation
+window.addEventListener('message', function(event) {
+  if (event.data && event.data.type === 'navigate-to-student') {
+    console.log("📨 Received navigate-to-student message from parent:", event.data);
+    
+    var studentId = event.data.studentId;
+    var studentName = event.data.studentName;
+    
+    // Update URL parameters without reload
+    var urlParams = new URLSearchParams(window.location.search);
+    urlParams.set('student_id', studentId);
+    urlParams.set('student_name', studentName);
+    
+    // Update browser URL without reload
+    var newUrl = window.location.pathname + '?' + urlParams.toString();
+    window.history.replaceState({}, '', newUrl);
+    
+    console.log("📍 URL updated, triggering navigation to student:", studentId);
+    
+    // Mark this as a subsequent search, not initial load
+    hasInitialNavigationRun = true;
+    
+    // Update last searched student to force navigation
+    var previousStudentId = lastSearchedStudentId;
+    lastSearchedStudentId = null; // Reset to force new navigation
+    
+    // Reset navigation attempts
+    navigationAttempts = 0;
+    
+    // Trigger the navigation
+    setTimeout(function() {
+      lastSearchedStudentId = studentId;
+      navigateToSearchedStudent();
+      
+      // Send completion message back to parent
+      window.parent.postMessage({
+        type: 'yearbook-navigation-complete',
+        studentId: studentId
+      }, '*');
+    }, 500);
+  }
+});
+
 function fetchTopManagementCached(template, callback) {
   var batchYear = localStorage.getItem("selectedBatchYear");
   var cacheKey = "template_" + template + "_" + (batchYear || "default");
