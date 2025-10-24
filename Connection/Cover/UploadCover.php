@@ -27,7 +27,6 @@ register_shutdown_function(function () {
     if (connection_aborted() && $uploadedFileInfo !== null) {
         error_log("UploadCover.php: Shutdown function detected connection abort - cleaning up file: " . $uploadedFileInfo['storageUrl']);
 
-        // Delete from BunnyCDN
         $deleteCh = curl_init($uploadedFileInfo['storageUrl']);
         curl_setopt_array($deleteCh, [
             CURLOPT_CUSTOMREQUEST  => 'DELETE',
