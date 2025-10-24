@@ -1589,7 +1589,6 @@ function resizeViewport() {
       document.mozFullScreenElement ||
       document.msFullscreenElement;
 
-    // Use different base dimensions for fullscreen vs normal mode
     var baseWidth = isFullscreen ? 1200 : options.width; // Change 1400 to your desired fullscreen width
     var baseHeight = isFullscreen ? 750 : options.height; // Change 900 to your desired fullscreen height
 
