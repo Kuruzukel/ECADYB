@@ -38,7 +38,6 @@ register_shutdown_function(function () {
         curl_exec($deleteCh);
         curl_close($deleteCh);
 
-        // Delete from MongoDB if filter is set
         if (isset($uploadedFileInfo['mongoCollection']) && isset($uploadedFileInfo['filter'])) {
             try {
                 $deleteResult = $uploadedFileInfo['mongoCollection']->deleteOne($uploadedFileInfo['filter']);
