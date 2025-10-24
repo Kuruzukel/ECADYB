@@ -80,16 +80,6 @@ function setupEventListeners() {
       window.location.href = "Login.php";
     });
   }
-
-  // Error modal click outside to close
-  const errorModal = document.getElementById("errorModal");
-  if (errorModal) {
-    errorModal.addEventListener("click", function(e) {
-      if (e.target === errorModal) {
-        hideErrorModal();
-      }
-    });
-  }
 }
 
 function limitID() {
@@ -189,13 +179,13 @@ async function handleGetCode() {
   const email = emailInput.value.trim();
   
   if (!email) {
-    showErrorModal("Please enter your email address first.");
+    showNotification("Please enter your email address first.", "error");
     highlightField("idInput");
     return;
   }
   
   if (!validateEmail()) {
-    showErrorModal("Please enter a valid email address.");
+    showNotification("Please enter a valid email address format (e.g., user@example.com).", "error");
     highlightField("idInput");
     return;
   }
@@ -217,7 +207,7 @@ async function handleGetCode() {
     const emailCheckResult = await emailCheckResponse.json();
     
     if (!emailCheckResult.exists) {
-      showErrorModal("Email address not found in our database. Please check your email address or contact support.");
+      showNotification("This email address is not registered in our system. Please check your email or contact support for assistance.", "error");
       highlightField("idInput");
       resetGetCodeButton();
       return;
@@ -243,7 +233,7 @@ async function handleGetCode() {
       emailVerified = true;
       emailExists = true;
       
-      showErrorModal("Please check your email inbox for your verification code.", "success");
+      showNotification("Please check your email inbox for your verification code.", "success");
       getCodeText.textContent = "Code Sent";
       getCodeText.style.color = "#28a745";
       getCodeText.style.pointerEvents = "none";
@@ -256,13 +246,13 @@ async function handleGetCode() {
       // Focus on verification code input
       verificationCodeInput.focus();
     } else {
-      showErrorModal(otpResult.message || "Failed to send verification code. Please try again.");
+      showNotification(otpResult.message || "Failed to send verification code. Please try again.", "error");
       resetGetCodeButton();
     }
     
   } catch (error) {
     console.error('Error:', error);
-    showErrorModal("Network error. Please check your connection and try again.");
+    showNotification("Network error. Please check your connection and try again.", "error");
     resetGetCodeButton();
   }
 }
@@ -280,40 +270,40 @@ async function handleFormSubmission() {
   
   // Check if all fields are empty
   if (!email && !verificationCode) {
-    showErrorModal("Please fill in all required fields.");
+    showNotification("Please fill in all required fields.", "error");
     return;
   }
   
   // Check if only verification code is filled
   if (!email && verificationCode) {
-    showErrorModal("Please enter your email address first before entering the verification code.");
+    showNotification("Please enter your email address first before entering the verification code.", "error");
     highlightField("idInput");
     return;
   }
   
   // Check if email is empty
   if (!email) {
-    showErrorModal("Please enter your email address.");
+    showNotification("Please enter your email address.", "error");
     highlightField("idInput");
     return;
   }
   
   // Check if verification code input is disabled (OTP not sent)
   if (verificationCodeInput.disabled) {
-    showErrorModal("Please click 'Get Code' to receive your verification code first.");
+    showNotification("Please click 'Get Code' to receive your verification code first.", "error");
     return;
   }
   
   // Check if verification code is empty
   if (!verificationCode) {
-    showErrorModal("Please enter the verification code.");
+    showNotification("Please enter the verification code.", "error");
     highlightField("verificationCodeInput");
     return;
   }
   
   // Validate email format
   if (!validateEmail()) {
-    showErrorModal("Please enter a valid email address.");
+    showNotification("Please enter a valid email address format (e.g., user@example.com).", "error");
     highlightField("idInput");
     return;
   }
@@ -325,7 +315,7 @@ async function handleFormSubmission() {
   
   // Verify OTP if available
   if (otpCode && verificationCode !== otpCode) {
-    showErrorModal("Invalid verification code. Please check and try again.");
+    showNotification("Invalid verification code. Please check and try again.", "error");
     highlightField("verificationCodeInput");
     return;
   }
@@ -350,55 +340,66 @@ async function handleFormSubmission() {
     const result = await response.json();
     
     if (result.success) {
-      showErrorModal("Password reset successful! Please check your email for your new password.", "success");
+      showNotification("Password reset successful! Please check your email for your new password.", "success");
       
       // Redirect to login after 3 seconds
       setTimeout(() => {
         window.location.href = "Login.php";
       }, 3000);
     } else {
-      showErrorModal(result.message || "Password reset failed. Please try again.");
+      showNotification(result.message || "Password reset failed. Please try again.", "error");
       submitButton.textContent = "Submit";
       submitButton.disabled = false;
     }
     
   } catch (error) {
     console.error('Error:', error);
-    showErrorModal("Network error. Please check your connection and try again.");
+    showNotification("Network error. Please check your connection and try again.", "error");
     submitButton.textContent = "Submit";
     submitButton.disabled = false;
   }
 }
 
-function showErrorModal(message, type = "error") {
-  const errorModal = document.getElementById("errorModal");
-  const errorMessage = document.getElementById("errorMessage");
+function showNotification(message, type) {
+  // Remove any existing notification
+  const existingNotification = document.querySelector('.notification');
+  if (existingNotification) {
+    existingNotification.remove();
+  }
 
-  errorModal.className = `error-modal ${
-    type === "success" ? "success-modal" : ""
-  }`;
-
-  errorMessage.textContent = message;
-  errorModal.classList.add("show");
-
+  // Create notification element
+  const notification = document.createElement('div');
+  notification.className = `notification ${type}-message`;
+  notification.id = `${type}-message`;
+  
+  notification.innerHTML = `
+    <span class="notification-message">${message}</span>
+    <button class="notification-close" onclick="closeNotification('${type}-message')">
+      <i class="fas fa-times"></i>
+    </button>
+  `;
+  
+  document.body.appendChild(notification);
+  
+  // Trigger animation
   setTimeout(() => {
-    errorModal.querySelector(".error-modal-content").style.animation =
-      "errorModalSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards";
-  }, 50);
-
+    notification.classList.add('show');
+  }, 10);
+  
+  // Auto-hide after 4 seconds (or 5 seconds for success)
   setTimeout(() => {
-    hideErrorModal();
-  }, type === "success" ? 5000 : 3500);
+    closeNotification(`${type}-message`);
+  }, type === 'success' ? 5000 : 4000);
 }
 
-function hideErrorModal() {
-  const errorModal = document.getElementById("errorModal");
-  errorModal.classList.add("hide");
-
-  setTimeout(() => {
-    errorModal.classList.remove("show", "hide");
-    errorModal.className = "error-modal";
-  }, 400);
+function closeNotification(id) {
+  const notification = document.getElementById(id);
+  if (notification) {
+    notification.classList.remove('show');
+    setTimeout(() => {
+      notification.remove();
+    }, 500);
+  }
 }
 
 function highlightField(fieldId, message = null) {
@@ -409,7 +410,7 @@ function highlightField(fieldId, message = null) {
     field.style.transition = "all 0.3s ease";
 
     if (message) {
-      showErrorModal(message);
+      showNotification(message, "error");
     }
 
     setTimeout(() => {
@@ -429,11 +430,11 @@ function clearFieldHighlight(fieldId) {
 function checkForServerMessages() {
   const errorMessage = document.body.getAttribute("data-error-message");
   if (errorMessage) {
-    showErrorModal(errorMessage);
+    showNotification(errorMessage, "error");
   }
 
   const successMessage = document.body.getAttribute("data-success-message");
   if (successMessage) {
-    showErrorModal(successMessage, "success");
+    showNotification(successMessage, "success");
   }
 }
