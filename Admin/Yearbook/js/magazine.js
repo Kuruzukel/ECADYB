@@ -126,7 +126,6 @@ function findAndNavigateToStudent(
     console.log("Student to find:", studentData);
     console.log("Searching in", allStudents.length, "students");
 
-    // Find the student index directly (we already have all students)
     var studentIndex = -1;
     console.log("Searching through students...");
 
