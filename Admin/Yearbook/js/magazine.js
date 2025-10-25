@@ -475,7 +475,6 @@ function checkForNewStudentSearch() {
     console.log("Previous student:", lastSearchedStudentId);
     console.log("Has initial navigation run:", hasInitialNavigationRun);
 
-    // Update tracking
     lastSearchedStudentId = currentStudentId;
 
     // Only trigger if initial navigation has already run (to avoid duplicate on first load)
