@@ -140,7 +140,6 @@ function findAndNavigateToStudent(
         student.student_id
       );
 
-      // Check multiple fields to find a match
       if (
         student.student_id === studentData.student_id ||
         student.id === studentData.id ||
