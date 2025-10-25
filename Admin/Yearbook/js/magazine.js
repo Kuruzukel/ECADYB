@@ -1972,7 +1972,6 @@ function addRegion(region, pageElement) {
 }
 
 function regionClick(event) {
-  //       $(".magazine-viewport").data().regionClicked = false;
   //     }, 100);
   //     var regionType = $.trim(region.attr("class").replace("region", ""));
   //     return processRegion(region, regionType);
