@@ -400,7 +400,6 @@ function tryNavigateToStudent() {
   if (magazineExists && turnFunctionExists) {
     console.log("✓ Magazine is ready, starting navigation");
     navigateToSearchedStudent();
-    // Mark that initial navigation has been attempted
     hasInitialNavigationRun = true;
   } else if (navigationAttempts < maxNavigationAttempts) {
     console.log(
