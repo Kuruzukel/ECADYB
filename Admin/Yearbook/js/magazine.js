@@ -65,9 +65,7 @@ function navigateToSearchedStudent() {
     ) {
       template = window.coverData.template;
       console.log("Got template from window.coverData:", template);
-    }
-    // Try global coverData
-    else if (
+    } else if (
       typeof coverData !== "undefined" &&
       coverData &&
       coverData.template
