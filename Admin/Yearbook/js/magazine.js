@@ -56,7 +56,6 @@ function navigateToSearchedStudent() {
     console.log("Student Data:", studentData);
     console.log("Department:", department);
 
-    // Get the template number from various possible sources
     var template = 1;
 
     // Try window.coverData first
