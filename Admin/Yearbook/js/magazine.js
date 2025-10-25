@@ -508,7 +508,6 @@ window.triggerStudentNavigation = function (
   navigationAttempts = 0;
   lastSearchedStudentId = studentId;
 
-  // Trigger navigation
   setTimeout(function () {
     navigateToSearchedStudent();
   }, 500);
