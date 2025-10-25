@@ -196,14 +196,15 @@ try {
         // Load email configuration from environment variables (Railway) or config file (localhost)
         // Priority: Environment Variables > EmailConfig.php > Fallback defaults
 
-        // Check for environment variables first (Railway deployment)
-        $smtpHost = getenv('SMTP_HOST') ?: $_ENV['SMTP_HOST'] ?? null;
-        $smtpPort = getenv('SMTP_PORT') ?: $_ENV['SMTP_PORT'] ?? null;
-        $smtpUsername = getenv('SMTP_USERNAME') ?: $_ENV['SMTP_USERNAME'] ?? null;
-        $smtpPassword = getenv('SMTP_PASSWORD') ?: $_ENV['SMTP_PASSWORD'] ?? null;
-        $smtpFromEmail = getenv('SMTP_FROM_EMAIL') ?: $_ENV['SMTP_FROM_EMAIL'] ?? null;
-        $smtpFromName = getenv('SMTP_FROM_NAME') ?: $_ENV['SMTP_FROM_NAME'] ?? null;
-        $smtpEncryption = getenv('SMTP_ENCRYPTION') ?: $_ENV['SMTP_ENCRYPTION'] ?? 'tls';
+        // Check for REAL environment variables (Railway deployment) - NOT $_ENV which can be polluted
+        // Only use getenv() to avoid $_ENV pollution from sample files
+        $smtpHost = getenv('SMTP_HOST') ?: null;
+        $smtpPort = getenv('SMTP_PORT') ?: null;
+        $smtpUsername = getenv('SMTP_USERNAME') ?: null;
+        $smtpPassword = getenv('SMTP_PASSWORD') ?: null;
+        $smtpFromEmail = getenv('SMTP_FROM_EMAIL') ?: null;
+        $smtpFromName = getenv('SMTP_FROM_NAME') ?: null;
+        $smtpEncryption = getenv('SMTP_ENCRYPTION') ?: 'tls';
 
         // If environment variables not set, try loading from EmailConfig.php (localhost)
         if (!$smtpHost || !$smtpUsername || !$smtpPassword) {
@@ -266,8 +267,8 @@ try {
             $mail->Timeout = $isRailway ? 30 : 15; // Railway needs more time
             $mail->SMTPKeepAlive = false;
 
-            // Debug output - enable in both environments, logs to error_log
-            $mail->SMTPDebug = 2; // Keep enabled to track issues
+            // Debug output - disable in production (set to 0), enable (2) for troubleshooting
+            $mail->SMTPDebug = 0; // 0 = off, 2 = verbose
             $mail->Debugoutput = function ($str, $level) {
                 error_log("SMTP Debug ($level): $str");
             };
