@@ -156,7 +156,7 @@ function findAndNavigateToStudent(
       console.log("Student Index:", studentIndex);
       console.log("Student:", allStudents[studentIndex]);
 
-      var managementPages = 4; // Default
+      var managementPages = 4;
       var topMgmtCacheKey =
         "template_" +
         template +
