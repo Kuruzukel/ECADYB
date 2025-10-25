@@ -19,7 +19,6 @@ function clearTopManagementCache() {
   window.topManagementPendingRequests = {};
 }
 
-// Navigate to selected student from search
 function navigateToSearchedStudent() {
   try {
     // Check URL parameters first
