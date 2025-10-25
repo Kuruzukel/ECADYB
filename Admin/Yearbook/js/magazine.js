@@ -21,7 +21,6 @@ function clearTopManagementCache() {
 
 function navigateToSearchedStudent() {
   try {
-    // Check URL parameters first
     var urlParams = new URLSearchParams(window.location.search);
     var department = urlParams.get("department");
     var urlStudentId = urlParams.get("student_id");
