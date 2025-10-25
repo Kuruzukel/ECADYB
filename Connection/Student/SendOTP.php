@@ -1,21 +1,36 @@
 <?php
-// Suppress all output except JSON
-error_reporting(0);
+// Ensure JSON is always returned
 ini_set('display_errors', 0);
+error_reporting(E_ALL);
 
+// Set JSON header first
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Content-Type');
 
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
+// Handle OPTIONS request
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode(['success' => false, 'message' => 'Method not allowed']);
     exit;
 }
+
+try {
+    require_once __DIR__ . '/../../vendor/autoload.php';
+} catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Failed to load dependencies']);
+    exit;
+}
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 try {
     $input = json_decode(file_get_contents('php://input'), true);
@@ -178,5 +193,10 @@ try {
     }
 } catch (Exception $e) {
     error_log("SendOTP error: " . $e->getMessage());
-    echo json_encode(['success' => false, 'message' => 'An error occurred while sending the verification code']);
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'An error occurred while sending the verification code', 'error' => $e->getMessage()]);
+} catch (Error $e) {
+    error_log("SendOTP fatal error: " . $e->getMessage());
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Fatal error occurred', 'error' => $e->getMessage()]);
 }

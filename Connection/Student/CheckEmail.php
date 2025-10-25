@@ -1,16 +1,30 @@
 <?php
-// Suppress all output except JSON
-error_reporting(0);
+// Ensure JSON is always returned
 ini_set('display_errors', 0);
+error_reporting(E_ALL);
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Content-Type');
 
+// Handle OPTIONS request
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+    exit;
+}
+
+try {
+    require_once __DIR__ . '/../../vendor/autoload.php';
+} catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Failed to load dependencies']);
     exit;
 }
 
@@ -84,5 +98,10 @@ try {
     }
 } catch (Exception $e) {
     error_log("CheckEmail error: " . $e->getMessage());
-    echo json_encode(['success' => false, 'message' => 'Database error occurred']);
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Database error occurred', 'error' => $e->getMessage()]);
+} catch (Error $e) {
+    error_log("CheckEmail fatal error: " . $e->getMessage());
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Fatal error occurred', 'error' => $e->getMessage()]);
 }

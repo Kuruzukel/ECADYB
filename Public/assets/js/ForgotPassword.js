@@ -14,29 +14,29 @@ const form = document.querySelector("form");
 // Initialize the page
 window.addEventListener("DOMContentLoaded", () => {
   document.body.classList.add("page-transition-in");
-  
+
   // Enable submit button initially
   submitButton.disabled = false;
   submitButton.style.opacity = "1";
   submitButton.style.cursor = "pointer";
-  
+
   // Disable verification code input initially
   verificationCodeInput.disabled = true;
   verificationCodeInput.style.opacity = "0.5";
   verificationCodeInput.style.cursor = "not-allowed";
-  
+
   updateGetCodeButton();
-  
+
   // Add event listeners
   setupEventListeners();
-  
+
   // Check for error messages from server
   checkForServerMessages();
 });
 
 function setupEventListeners() {
   // Email input validation
-  emailInput.addEventListener("input", function() {
+  emailInput.addEventListener("input", function () {
     limitID();
     validateEmail();
     updateSubmitButton();
@@ -51,7 +51,7 @@ function setupEventListeners() {
   });
 
   // Verification code input validation & sanitize to digits only, max 6
-  verificationCodeInput.addEventListener("input", function() {
+  verificationCodeInput.addEventListener("input", function () {
     const sanitized = verificationCodeInput.value.replace(/\D+/g, '').slice(0, 6);
     if (verificationCodeInput.value !== sanitized) {
       verificationCodeInput.value = sanitized;
@@ -62,12 +62,12 @@ function setupEventListeners() {
   });
 
   // Get Code button click
-  getCodeText.addEventListener("click", function() {
+  getCodeText.addEventListener("click", function () {
     handleGetCode();
   });
 
   // Form submission
-  form.addEventListener("submit", function(e) {
+  form.addEventListener("submit", function (e) {
     e.preventDefault();
     handleFormSubmission();
   });
@@ -75,7 +75,7 @@ function setupEventListeners() {
   // Back button
   const backButton = document.querySelector('button[type="back"]');
   if (backButton) {
-    backButton.addEventListener("click", function(e) {
+    backButton.addEventListener("click", function (e) {
       e.preventDefault();
       window.location.href = "Login.php";
     });
@@ -92,33 +92,34 @@ function limitID() {
 function validateEmail() {
   const email = emailInput.value.trim();
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  
+
   if (!email) {
     clearFieldHighlight("idInput");
     emailExists = false;
     return false;
   }
-  
+
   if (!emailRegex.test(email)) {
     // keep validation silent during typing; show errors on action (Get Code)
     emailExists = false;
     return false;
   }
-  
+
   clearFieldHighlight("idInput");
   return true;
 }
 
 async function checkEmailExists(email) {
   try {
-    const response = await fetch('../../Connection/Student/CheckEmail.php', {
+    const basePath = window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '';
+    const response = await fetch(`${window.location.origin}${basePath}/Connection/Student/CheckEmail.php`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ email: email })
     });
-    
+
     const result = await response.json();
     return result.exists;
   } catch (error) {
@@ -129,25 +130,25 @@ async function checkEmailExists(email) {
 
 function validateVerificationCode() {
   const code = verificationCodeInput.value.trim();
-  
+
   if (!code) {
     // Don't show error for empty field initially
     clearFieldHighlight("verificationCodeInput");
     return false;
   }
-  
+
   if (code.length !== 6) {
     // Only show error if there's content but it's not 6 digits
     highlightField("verificationCodeInput", "Verification code must be 6 digits.");
     return false;
   }
-  
+
   if (!/^\d{6}$/.test(code)) {
     // Only show error if there's content but it contains non-digits
     highlightField("verificationCodeInput", "Verification code must contain only numbers.");
     return false;
   }
-  
+
   clearFieldHighlight("verificationCodeInput");
   return true;
 }
@@ -163,7 +164,7 @@ function updateGetCodeButton() {
   const email = emailInput.value.trim();
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const isValidEmail = email && emailRegex.test(email);
-  
+
   if (!isValidEmail || otpSent) {
     getCodeText.style.opacity = "0.5";
     getCodeText.style.cursor = "not-allowed";
@@ -177,62 +178,74 @@ function updateGetCodeButton() {
 
 async function handleGetCode() {
   const email = emailInput.value.trim();
-  
+
   if (!email) {
     showNotification("Please enter your email address first.", "error");
     highlightField("idInput");
     return;
   }
-  
+
   if (!validateEmail()) {
     showNotification("Please enter a valid email address format (e.g., user@example.com).", "error");
     highlightField("idInput");
     return;
   }
-  
+
   // Show loading state
   getCodeText.textContent = "Checking...";
   getCodeText.style.pointerEvents = "none";
-  
+
   try {
     // Check if email exists in database
-    const emailCheckResponse = await fetch('../../Connection/Student/CheckEmail.php', {
+    const basePath = window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '';
+    const emailCheckResponse = await fetch(`${window.location.origin}${basePath}/Connection/Student/CheckEmail.php`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ email: email })
     });
-    
+
+    if (!emailCheckResponse.ok) {
+      throw new Error(`Server error: ${emailCheckResponse.status}`);
+    }
+
     const emailCheckResult = await emailCheckResponse.json();
-    
+
     if (!emailCheckResult.exists) {
       showNotification("This email address is not registered in our system. Please check your email or contact support for assistance.", "error");
       highlightField("idInput");
       resetGetCodeButton();
       return;
     }
-    
+
     // Update loading text
     getCodeText.textContent = "Sending...";
-    
+
     // Generate and send OTP
-    const otpResponse = await fetch('../../Connection/Student/SendOTP.php', {
+    const basePath = window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '';
+    const otpResponse = await fetch(`${window.location.origin}${basePath}/Connection/Student/SendOTP.php`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ email: email })
     });
-    
+
+    if (!otpResponse.ok) {
+      const errorText = await otpResponse.text();
+      console.error('OTP Response error:', errorText);
+      throw new Error(`Server error: ${otpResponse.status}`);
+    }
+
     const otpResult = await otpResponse.json();
-    
+
     if (otpResult.success) {
       otpCode = otpResult.otp;
       otpSent = true;
       emailVerified = true;
       emailExists = true;
-      
+
       // Check if email was actually sent or if it's localhost testing mode
       if (otpResult.email_sent === false) {
         // Localhost testing mode - show OTP in notification
@@ -241,13 +254,13 @@ async function handleGetCode() {
         // Production mode - email was sent
         showNotification("Please check your email inbox for your verification code.", "success");
       }
-      
+
       // Start 60-second countdown
       let countdown = 60;
       getCodeText.textContent = `Resend (${countdown}s)`;
       getCodeText.style.color = "#28a745";
       getCodeText.style.pointerEvents = "none";
-      
+
       const countdownInterval = setInterval(() => {
         countdown--;
         if (countdown > 0) {
@@ -260,19 +273,19 @@ async function handleGetCode() {
           otpSent = false; // Allow resending after countdown
         }
       }, 1000);
-      
+
       // Enable verification code input only after OTP is sent
       verificationCodeInput.disabled = false;
       verificationCodeInput.style.opacity = "1";
       verificationCodeInput.style.cursor = "text";
-      
+
       // Focus on verification code input
       verificationCodeInput.focus();
     } else {
       showNotification(otpResult.message || "Failed to send verification code. Please try again.", "error");
       resetGetCodeButton();
     }
-    
+
   } catch (error) {
     console.error('Error:', error);
     showNotification("Network error. Please check your connection and try again.", "error");
@@ -290,63 +303,63 @@ function resetGetCodeButton() {
 async function handleFormSubmission() {
   const email = emailInput.value.trim();
   const verificationCode = verificationCodeInput.value.trim();
-  
+
   // Check if all fields are empty
   if (!email && !verificationCode) {
     showNotification("Please fill in all required fields.", "error");
     return;
   }
-  
+
   // Check if only verification code is filled
   if (!email && verificationCode) {
     showNotification("Please enter your email address first before entering the verification code.", "error");
     highlightField("idInput");
     return;
   }
-  
+
   // Check if email is empty
   if (!email) {
     showNotification("Please enter your email address.", "error");
     highlightField("idInput");
     return;
   }
-  
+
   // Check if verification code input is disabled (OTP not sent)
   if (verificationCodeInput.disabled) {
     showNotification("Please click 'Get Code' to receive your verification code first.", "error");
     return;
   }
-  
+
   // Check if verification code is empty
   if (!verificationCode) {
     showNotification("Please enter the verification code.", "error");
     highlightField("verificationCodeInput");
     return;
   }
-  
+
   // Validate email format
   if (!validateEmail()) {
     showNotification("Please enter a valid email address format (e.g., user@example.com).", "error");
     highlightField("idInput");
     return;
   }
-  
+
   // Validate verification code format
   if (!validateVerificationCode()) {
     return; // Error message already shown by validateVerificationCode
   }
-  
+
   // Verify OTP if available
   if (otpCode && verificationCode !== otpCode) {
     showNotification("Invalid verification code. Please check and try again.", "error");
     highlightField("verificationCodeInput");
     return;
   }
-  
+
   // Show loading state
   submitButton.textContent = "Processing...";
   submitButton.disabled = true;
-  
+
   try {
     // Submit the form with verification
     const response = await fetch('../../Connection/Student/ForgotPassword.php', {
@@ -354,17 +367,17 @@ async function handleFormSubmission() {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ 
-        email: email, 
-        verificationCode: verificationCode 
+      body: JSON.stringify({
+        email: email,
+        verificationCode: verificationCode
       })
     });
-    
+
     const result = await response.json();
-    
+
     if (result.success) {
       showNotification("Password reset successful! Please check your email for your new password.", "success");
-      
+
       // Redirect to login after 3 seconds
       setTimeout(() => {
         window.location.href = "Login.php";
@@ -374,7 +387,7 @@ async function handleFormSubmission() {
       submitButton.textContent = "Submit";
       submitButton.disabled = false;
     }
-    
+
   } catch (error) {
     console.error('Error:', error);
     showNotification("Network error. Please check your connection and try again.", "error");
@@ -394,21 +407,21 @@ function showNotification(message, type) {
   const notification = document.createElement('div');
   notification.className = `notification ${type}-message`;
   notification.id = `${type}-message`;
-  
+
   notification.innerHTML = `
     <span class="notification-message">${message}</span>
     <button class="notification-close" onclick="closeNotification('${type}-message')">
       <i class="fas fa-times"></i>
     </button>
   `;
-  
+
   document.body.appendChild(notification);
-  
+
   // Trigger animation
   setTimeout(() => {
     notification.classList.add('show');
   }, 10);
-  
+
   // Auto-hide after 4 seconds (or 15 seconds for success messages with OTP code)
   const autoHideDelay = message.includes('verification code is:') ? 15000 : (type === 'success' ? 5000 : 4000);
   setTimeout(() => {

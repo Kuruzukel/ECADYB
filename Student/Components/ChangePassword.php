@@ -13,9 +13,8 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'student') {
 $error_message = '';
 $success_message = '';
 
-require_once __DIR__ . '/../../Connection/Configuration/MongoConnect.php';
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    require_once __DIR__ . '/../../Connection/Configuration/MongoConnect.php';
     $currentPassword = trim($_POST['current_password'] ?? '');
     $newPassword     = trim($_POST['new_password'] ?? '');
     $confirmPassword = trim($_POST['confirm_password'] ?? '');
@@ -77,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="twitter:image:alt" content="Exact Colleges of Asia Graduation Gallery Preview Logo" />
 
     <link rel="icon" href="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png" type="image/png" />
-    <link href="../assets/css/ChangePassword.css" rel="stylesheet" />
+    <link href="../assets/css/ChangePassword.css?v=<?= time() ?>" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 
@@ -225,6 +224,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
     </div>
 </body>
-<script src="../assets/js/ChangePassword.js"></script>
+<script src="../assets/js/ChangePassword.js?v=<?= time() ?>"></script>
 
 </html>
