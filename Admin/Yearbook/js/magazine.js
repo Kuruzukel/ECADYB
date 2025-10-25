@@ -220,7 +220,6 @@ function findAndNavigateToStudent(
             function highlightStudent(retryCount) {
               retryCount = retryCount || 0;
 
-              // Look for student cards in the visible pages
               var $studentCards = $visiblePages.find(".student-card");
               console.log(
                 "Student cards found on visible pages:",
