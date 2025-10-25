@@ -196,15 +196,17 @@ try {
         // Load email configuration from environment variables (Railway) or config file (localhost)
         // Priority: Environment Variables > EmailConfig.php > Fallback defaults
 
-        // Check for REAL environment variables (Railway deployment) - NOT $_ENV which can be polluted
-        // Only use getenv() to avoid $_ENV pollution from sample files
-        $smtpHost = getenv('SMTP_HOST') ?: null;
-        $smtpPort = getenv('SMTP_PORT') ?: null;
-        $smtpUsername = getenv('SMTP_USERNAME') ?: null;
-        $smtpPassword = getenv('SMTP_PASSWORD') ?: null;
-        $smtpFromEmail = getenv('SMTP_FROM_EMAIL') ?: null;
-        $smtpFromName = getenv('SMTP_FROM_NAME') ?: null;
-        $smtpEncryption = getenv('SMTP_ENCRYPTION') ?: 'tls';
+        // Load .env file first (for Railway deployment with .env file)
+        require_once __DIR__ . '/../Configuration/EnvLoader.php';
+
+        // Check for environment variables from both getenv() and $_ENV (after dotenv load)
+        $smtpHost = getenv('SMTP_HOST') ?: ($_ENV['SMTP_HOST'] ?? null);
+        $smtpPort = getenv('SMTP_PORT') ?: ($_ENV['SMTP_PORT'] ?? null);
+        $smtpUsername = getenv('SMTP_USERNAME') ?: ($_ENV['SMTP_USERNAME'] ?? null);
+        $smtpPassword = getenv('SMTP_PASSWORD') ?: ($_ENV['SMTP_PASSWORD'] ?? null);
+        $smtpFromEmail = getenv('SMTP_FROM_EMAIL') ?: ($_ENV['SMTP_FROM_EMAIL'] ?? null);
+        $smtpFromName = getenv('SMTP_FROM_NAME') ?: ($_ENV['SMTP_FROM_NAME'] ?? null);
+        $smtpEncryption = getenv('SMTP_ENCRYPTION') ?: ($_ENV['SMTP_ENCRYPTION'] ?? 'tls');
 
         // If environment variables not set, try loading from EmailConfig.php (localhost)
         if (!$smtpHost || !$smtpUsername || !$smtpPassword) {
@@ -239,13 +241,13 @@ try {
 
         // Validate email configuration
         if (!$smtpHost || !$smtpUsername || !$smtpPassword) {
-            error_log("ERROR: Email configuration incomplete. SMTP_HOST: " . ($smtpHost ? "set" : "missing") .
+            error_log("✗ ERROR: Email configuration incomplete. SMTP_HOST: " . ($smtpHost ? "set" : "missing") .
                 ", SMTP_USERNAME: " . ($smtpUsername ? "set" : "missing") .
                 ", SMTP_PASSWORD: " . ($smtpPassword ? "set" : "missing"));
             return; // Skip email sending if configuration is incomplete
         }
 
-        error_log("Email config loaded - Host: $smtpHost, Port: $smtpPort, User: $smtpUsername");
+        error_log("✓ Email config loaded - Host: $smtpHost, Port: $smtpPort, User: $smtpUsername, Encryption: $smtpEncryption");
 
         // Use PHPMailer for Gmail SMTP
         $mail = new PHPMailer(true);
@@ -253,6 +255,7 @@ try {
         try {
             // Detect if running on Railway or localhost
             $isRailway = (getenv('RAILWAY_ENVIRONMENT') || getenv('RAILWAY_PUBLIC_URL')) ? true : false;
+            error_log("Environment detected: " . ($isRailway ? "Railway" : "Localhost"));
 
             // SMTP Configuration using variables from environment or config file
             $mail->isSMTP();
@@ -264,11 +267,11 @@ try {
             $mail->Port       = (int)$smtpPort;
 
             // Timeout settings - more lenient for Railway
-            $mail->Timeout = $isRailway ? 30 : 15; // Railway needs more time
+            $mail->Timeout = $isRailway ? 60 : 15; // Railway needs more time (increased to 60s)
             $mail->SMTPKeepAlive = false;
 
-            // Debug output - disable in production (set to 0), enable (2) for troubleshooting
-            $mail->SMTPDebug = 0; // 0 = off, 2 = verbose
+            // Debug output - enable for Railway to see what's happening
+            $mail->SMTPDebug = $isRailway ? 2 : 0; // Enable debug on Railway
             $mail->Debugoutput = function ($str, $level) {
                 error_log("SMTP Debug ($level): $str");
             };
@@ -283,7 +286,7 @@ try {
                         'allow_self_signed' => true
                     )
                 );
-                error_log("Using Railway-compatible SSL settings");
+                error_log("Using Railway-compatible SSL settings for email: $email");
             } else {
                 // Localhost uses proper SSL verification
                 $mail->SMTPOptions = array(
@@ -293,7 +296,7 @@ try {
                         'allow_self_signed' => false
                     )
                 );
-                error_log("Using standard SSL settings for localhost");
+                error_log("Using standard SSL settings for localhost for email: $email");
             }
 
             // Email settings using variables
@@ -309,18 +312,21 @@ try {
             $emailSent = false;
             $lastError = '';
 
+            error_log("Attempting to send email to: $email via SMTP: $smtpHost:$smtpPort");
+            
             try {
                 $emailSent = $mail->send();
-                error_log("Email sent successfully to: $email");
+                error_log("✓ Email sent successfully to: $email (OTP: $otp)");
             } catch (Exception $e) {
                 $lastError = $mail->ErrorInfo;
-                error_log("PHPMailer send failed: {$mail->ErrorInfo}");
-                error_log("Exception details: " . $e->getMessage());
+                error_log("✗ PHPMailer send failed for $email");
+                error_log("Error Info: {$mail->ErrorInfo}");
+                error_log("Exception: " . $e->getMessage());
+                error_log("Stack trace: " . $e->getTraceAsString());
             }
 
             if (!$emailSent) {
-                error_log("Email failed to send. Last error: $lastError");
-                // You could also update the response here if needed
+                error_log("✗ FINAL STATUS: Email failed to send to $email. Last error: $lastError");
             }
         } catch (Exception $e) {
             error_log("PHPMailer configuration error: " . $e->getMessage());
