@@ -1,96 +1,80 @@
-# GRADUATION GALLERY APPLICATION
+# Graduation Gallery Application
 
-A PHP application with MongoDB integration for managing graduation yearbooks and student galleries, designed to be deployed on Railway.
+A modern web application for managing graduation yearbooks and student galleries, built with PHP and MongoDB.
 
-## Deployment on Railway
+## Overview
 
-### 🚨 CRITICAL: Fix "Database connection error"
+This application provides a comprehensive platform for educational institutions to manage digital yearbooks, student profiles, and graduation galleries with secure authentication and media management capabilities.
 
-If you're seeing a "Database connection error" on your deployed site, you need to set environment variables in Railway:
+## Environment Configuration
 
-**Quick Fix Steps:**
+### Required Variables
 
-1. Go to [Railway Dashboard](https://railway.app/dashboard)
-2. Select your project → Variables tab
-3. Add `MONGO_URL` or `MONGODB_URI` with your MongoDB connection string
-4. Wait for auto-redeploy (or click "Deploy")
+**Database**
 
-### Prerequisites
-
-- Railway account
-- MongoDB service added to your Railway project
-
-### Required Environment Variables
-
-**MongoDB (REQUIRED):**
-
-- `MONGO_URL` or `MONGODB_URI`: Your MongoDB connection string
-  - Get this from your MongoDB Atlas dashboard or Railway MongoDB plugin
+- `MONGO_URL` or `MONGODB_URI` - MongoDB connection string
   - Format: `mongodb+srv://[username]:[password]@[cluster]/[database]`
-  - If using Railway's MongoDB plugin, it will auto-set `MONGODB_URI`
-  - See `RAILWAY_SETUP.md` for detailed setup instructions
 
-**Bunny CDN (Required for file uploads):**
+**CDN Storage**
 
-- `BUNNY_STORAGE_ZONE`: Your Bunny CDN storage zone name
-- `BUNNY_ACCESS_KEY`: Your Bunny CDN API access key
-- `BUNNY_CDN_HOST`: Your Bunny CDN host URL (e.g., `https://your-cdn.b-cdn.net`)
+- `BUNNY_STORAGE_ZONE` - Storage zone name
+- `BUNNY_ACCESS_KEY` - API access key
+- `BUNNY_CDN_HOST` - CDN host URL
 
-**Email (Required for password reset):**
+**Email Service**
 
-- `SMTP_HOST`: SMTP server (e.g., `smtp.gmail.com`)
-- `SMTP_PORT`: Port number (e.g., `587`)
-- `SMTP_USERNAME`: Your email address
-- `SMTP_PASSWORD`: Your email password or app-specific password
-- `SMTP_FROM_EMAIL`: Email to send from
-- `SMTP_FROM_NAME`: Display name (e.g., `"Graduation Gallery"`)
-- `SMTP_ENCRYPTION`: `tls` or `ssl`
+- `SMTP_HOST` - SMTP server hostname
+- `SMTP_PORT` - SMTP port (587 or 465)
+- `SMTP_USERNAME` - Authentication username
+- `SMTP_PASSWORD` - Authentication password
+- `SMTP_FROM_EMAIL` - Sender email address
+- `SMTP_FROM_NAME` - Sender display name
+- `SMTP_ENCRYPTION` - Encryption protocol (tls/ssl)
 
-### Deployment Steps
+## Deployment
+
+### Railway Platform
 
 1. Connect your GitHub repository to Railway
-2. Railway will automatically detect the PHP application and install the MongoDB extension
-3. The application will use the `MONGO_URL` environment variable to connect to your MongoDB service
-4. Deploy and your application will be available at the provided Railway URL
+2. Configure environment variables in the Railway dashboard
+3. Deploy automatically with included configuration files
 
-### Troubleshooting Deployment Issues
-
-If you encounter deployment errors:
-
-1. Railway will automatically install the MongoDB PHP extension
-2. The `composer.json` file is configured to ignore platform requirements during installation
-3. All connection files have been updated to use environment variables instead of hardcoded localhost
-4. Both Docker and Nixpacks configurations are available as deployment options
+The application supports both Nixpacks and Docker deployment strategies.
 
 ### Local Development
 
-To run locally:
+```bash
+# Install dependencies
+composer install
 
-1. Install Composer dependencies: `composer install`
-2. Copy `.env.example` to `.env` and configure your environment variables:
-   ```bash
-   cp .env.example .env
-   ```
-3. Edit `.env` and set your configuration:
-   - `MONGO_URL`: Your MongoDB connection string
-   - `BUNNY_STORAGE_ZONE`: Your Bunny CDN storage zone name
-   - `BUNNY_ACCESS_KEY`: Your Bunny CDN API access key
-   - `BUNNY_CDN_HOST`: Your Bunny CDN host URL
-4. Run with PHP's built-in server: `php -S localhost:8000`
+# Configure environment
+cp .env.example .env
 
-**Important:** Never commit the `.env` file to version control. It's already included in `.gitignore`.
+# Edit .env with your credentials
+# Start development server
+php -S localhost:8000
+```
 
-### File Structure
+## Project Structure
 
-- `Connection/`: MongoDB connection and data operations
-- `Admin/`: Administrative interface components
-- `LandingPage/`: Main application interface
-- `vendor/`: Composer dependencies (including MongoDB PHP driver)
+```
+Connection/     Database operations and API endpoints
+Admin/          Administrative interface
+Student/        Student portal
+LandingPage/    Public-facing interface
+vendor/         PHP dependencies
+```
 
-### Configuration Files
+## Technical Stack
 
-- `railway.json`: Railway deployment configuration (Nixpacks)
-- `Dockerfile`: Alternative Docker deployment configuration
-- `nixpacks.toml`: Nixpacks build configuration
-- `composer.json`: PHP dependencies
-- `.railwayignore`: Files to exclude from deployment
+- PHP 7.4+
+- MongoDB with PHP extension
+- Composer dependency management
+- Bunny CDN for media storage
+- PHPMailer for email functionality
+
+## Documentation
+
+- `RAILWAY_SETUP.md` - Detailed deployment guide
+- `DEPLOYMENT.md` - General deployment instructions
+- `SECURITY.md` - Security guidelines
