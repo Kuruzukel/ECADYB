@@ -17,7 +17,6 @@
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
-    user-drag: none;
     -webkit-user-drag: none;
     pointer-events: auto;
 }
@@ -27,9 +26,7 @@
     -webkit-user-select: none !important;
     -moz-user-select: none !important;
     -ms-user-select: none !important;
-    user-drag: none !important;
     -webkit-user-drag: none !important;
-    draggable: false !important;
     pointer-events: none !important;
 }
 
@@ -56,7 +53,6 @@
     display: inline-block;
     user-select: none;
     -webkit-user-drag: none;
-    user-drag: none;
 }
 
 .spinner-dot {
@@ -143,7 +139,6 @@
     letter-spacing: 0.5px;
     user-select: none;
     -webkit-user-drag: none;
-    user-drag: none;
 }
 
 /* Responsive Design */
