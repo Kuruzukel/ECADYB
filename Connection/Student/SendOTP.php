@@ -107,7 +107,15 @@ try {
         exit;
     }
 
-    $otp = str_pad(random_int(100000, 999999), 6, '0', STR_PAD_LEFT);
+    // Generate OTP with safe random number generation
+    try {
+        // Try random_int first (PHP 7+, cryptographically secure)
+        $otp = str_pad(random_int(100000, 999999), 6, '0', STR_PAD_LEFT);
+    } catch (Exception $e) {
+        // Fallback to mt_rand if random_int fails
+        error_log("random_int failed, using mt_rand: " . $e->getMessage());
+        $otp = str_pad(mt_rand(100000, 999999), 6, '0', STR_PAD_LEFT);
+    }
 
     if (session_status() == PHP_SESSION_NONE) {
         session_start();
