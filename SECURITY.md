@@ -75,21 +75,25 @@ GitHub automatically scans for exposed secrets. If you see alerts:
 
 **BAD - Triggers Security Scanners:**
 
-```
-MONGO_URL=mongodb+srv://admin:password123@cluster0.mongodb.net/database
-```
+Using realistic-looking credentials even if fake:
+
+- `MONGO_URL=mongodb+srv://admin:password123@cluster.mongodb.net/database`
+- `API_KEY=sk-1234567890abcdefghijklmnop`
 
 **GOOD - Clearly Placeholders:**
 
-```
-MONGO_URL=mongodb+srv://<USERNAME>:<PASSWORD>@<CLUSTER>.mongodb.net/<DATABASE>
-```
+Use ALL_CAPS or obvious placeholder text:
 
-or
+- `MONGO_URL=mongodb+srv://YOUR_USERNAME:YOUR_PASSWORD@YOUR_CLUSTER.mongodb.net/DATABASE`
+- `API_KEY=YOUR_API_KEY_HERE`
+- `DATABASE_URL=postgresql://USERNAME:PASSWORD@HOST:PORT/DATABASE`
 
-```
-MONGO_URL=mongodb+srv://YOUR_USERNAME:YOUR_PASSWORD@YOUR_CLUSTER.mongodb.net/ECADYB
-```
+**BEST - Broken/Descriptive Format:**
+
+Break the pattern or use descriptive text:
+
+- Format: `mongodb+srv://USERNAME:PASSWORD@CLUSTER.mongodb.net/DATABASE`
+- Get your API key from: `Settings > API Keys`
 
 ### Best Practices
 

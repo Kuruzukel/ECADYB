@@ -25,10 +25,10 @@
 If you added Railway's MongoDB plugin, it will auto-create `MONGODB_URI`. If not, add:
 
 ```
-MONGO_URL=mongodb+srv://<USERNAME>:<PASSWORD>@<CLUSTER>.mongodb.net/ECADYB?retryWrites=true&w=majority
+MONGO_URL=mongodb+srv://YOUR_MONGO_USERNAME:YOUR_MONGO_PASSWORD@YOUR_CLUSTER_NAME.mongodb.net/ECADYB?retryWrites=true&w=majority
 ```
 
-**IMPORTANT:** Replace `<USERNAME>`, `<PASSWORD>`, and `<CLUSTER>` with your actual MongoDB credentials!
+**IMPORTANT:** Replace YOUR_MONGO_USERNAME, YOUR_MONGO_PASSWORD, and YOUR_CLUSTER_NAME with your actual MongoDB credentials!
 
 #### Required - Bunny CDN (for file uploads)
 
@@ -102,17 +102,13 @@ SMTP_ENCRYPTION=tls
 
 **MongoDB Atlas (Cloud):**
 
-```
-mongodb+srv://<USERNAME>:<PASSWORD>@<CLUSTER>.xxxxx.mongodb.net/ECADYB?retryWrites=true&w=majority
-```
+Format: `mongodb+srv://USERNAME:PASSWORD@CLUSTER_NAME.xxxxx.mongodb.net/ECADYB?retryWrites=true&w=majority`
 
-Replace `<USERNAME>`, `<PASSWORD>`, and `<CLUSTER>` with your actual values.
+Replace USERNAME, PASSWORD, and CLUSTER_NAME with your actual values from MongoDB Atlas.
 
 **Railway MongoDB Plugin:**
 
-```
-mongodb://<USERNAME>:<PASSWORD>@<HOSTNAME>:<PORT>/<DATABASE>
-```
+Format: `mongodb://USERNAME:PASSWORD@HOSTNAME:PORT/DATABASE`
 
 _(Railway auto-generates this as `MONGODB_URI` - use it directly)_
 
