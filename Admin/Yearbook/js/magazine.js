@@ -427,7 +427,6 @@ function checkIfNavigationNeeded() {
   var searchSelectedStudent = sessionStorage.getItem("searchSelectedStudent");
 
   if (!urlStudentId && !urlStudentName && !searchSelectedStudent) {
-    // No navigation needed, notify parent window immediately
     console.log("📍 No student navigation required, sending complete signal");
     hasInitialNavigationRun = true; // Mark as run even if no navigation needed
     if (window.parent && window.parent !== window) {
