@@ -357,7 +357,6 @@ function findAndNavigateToStudent(
 
             $visiblePages.find("img").on("load", imageLoadListener);
 
-            // Clean up listener after 10 seconds
             setTimeout(function () {
               $visiblePages.find("img").off("load", imageLoadListener);
             }, 10000);
