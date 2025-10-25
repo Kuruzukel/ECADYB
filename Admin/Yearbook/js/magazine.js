@@ -190,7 +190,6 @@ function findAndNavigateToStudent(
       console.log("Student Index:", studentIndex);
       console.log("Calculated Yearbook Page:", yearbookPage);
 
-      // Wait for the magazine to be fully initialized
       setTimeout(function () {
         var $magazine = $(".magazine");
         console.log("Magazine element found:", $magazine.length > 0);
