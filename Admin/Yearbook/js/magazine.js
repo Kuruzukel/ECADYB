@@ -259,7 +259,6 @@ function findAndNavigateToStudent(
                   $studentImageArea.length > 0
                 );
 
-                // Check if the image area has actual content (img element or background)
                 var $imgElement = $studentImageArea.find("img");
                 var hasImageContent =
                   $imgElement.length > 0 ||
