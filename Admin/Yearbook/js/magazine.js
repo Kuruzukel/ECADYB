@@ -424,7 +424,6 @@ function checkIfNavigationNeeded() {
   var urlStudentId = urlParams.get("student_id");
   var urlStudentName = urlParams.get("student_name");
 
-  // Check sessionStorage as fallback
   var searchSelectedStudent = sessionStorage.getItem("searchSelectedStudent");
 
   if (!urlStudentId && !urlStudentName && !searchSelectedStudent) {
