@@ -226,18 +226,16 @@ try {
         echo json_encode([
             'success' => true,
             'message' => 'Verification code sent successfully to your email',
-            'otp' => $otp,
             'email_sent' => true
         ]);
         
     } catch (Exception $e) {
-        // Email sending failed - fall back to display mode for testing
-        error_log("PHPMailer Error: {$mail->ErrorInfo}. OTP: $otp");
+        // Email sending failed - return error
+        error_log("PHPMailer Error: {$mail->ErrorInfo}");
         
         echo json_encode([
-            'success' => true,
-            'message' => 'Email service unavailable. Your verification code is displayed in the notification.',
-            'otp' => $otp,
+            'success' => false,
+            'message' => 'Failed to send verification code. Please try again later.',
             'email_sent' => false,
             'error' => $mail->ErrorInfo
         ]);

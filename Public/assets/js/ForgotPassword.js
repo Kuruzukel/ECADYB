@@ -245,14 +245,8 @@ async function handleGetCode() {
       emailVerified = true;
       emailExists = true;
 
-      // Check if email was actually sent or if it's localhost testing mode
-      if (otpResult.email_sent === false) {
-        // Localhost testing mode - show OTP in notification
-        showNotification("⚠️ TESTING MODE: Your verification code is: " + otpResult.otp + " (Email service unavailable on localhost)", "success");
-      } else {
-        // Production mode - email was sent
-        showNotification("Please check your email inbox for your verification code.", "success");
-      }
+      // Email was sent successfully
+      showNotification("Verification code sent successfully! Please check your email inbox.", "success");
 
       // Start 60-second countdown
       let countdown = 60;
