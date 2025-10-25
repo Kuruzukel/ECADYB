@@ -57,9 +57,10 @@ try {
 
     $user = null;
     
-    // Set query timeout options - increased for better reliability
+    // Optimized query timeout - fail fast
     $queryOptions = [
-        'maxTimeMS' => 5000 // 5 second timeout per query
+        'maxTimeMS' => 2000, // 2 second timeout per query
+        'projection' => ['email' => 1, '_id' => 1] // Only fetch needed fields
     ];
     
     // First, check admin accounts collection
@@ -83,15 +84,11 @@ try {
         // Define all department collections to search
         $departmentCollections = ['bsn', 'bsme', 'bscje', 'bstm', 'bse', 'bsis', 'beced', 'bsma', 'bsmt', 'btvted'];
         
-        // Search with optimized timeout
+        // Search with optimized timeout - stop at first match
         foreach ($departmentCollections as $collectionName) {
             try {
                 $collection = $database->selectCollection($collectionName);
-                // Use projection to only fetch email field for faster query
-                $user = $collection->findOne(
-                    ['email' => $email], 
-                    array_merge($queryOptions, ['projection' => ['email' => 1, '_id' => 1]])
-                );
+                $user = $collection->findOne(['email' => $email], $queryOptions);
                 
                 if ($user) {
                     // Found the student, no need to search further
@@ -117,184 +114,168 @@ try {
     }
     $_SESSION['otp_' . $email] = [
         'code' => $otp,
-        'expires' => time() + 60, // 60 seconds expiration
+        'expires' => time() + 120, // 120 seconds expiration (increased for slower email delivery)
         'attempts' => 0
     ];
 
-    $subject = "Password Reset Verification Code - Exact Colleges of Asia";
-    $message = "
-    <html>
-    <head>
-        <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; padding: 20px; text-align: center; border-radius: 10px 10px 0 0; }
-            .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
-            .otp-code { background: #6366f1; color: white; font-size: 24px; font-weight: bold; padding: 15px; text-align: center; border-radius: 8px; margin: 20px 0; letter-spacing: 3px; }
-            .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #666; }
-        </style>
-    </head>
-    <body>
-        <div class='container'>
-            <div class='header'>
-                <h2>Password Reset Verification</h2>
-                <p>Exact Colleges of Asia - Graduation Gallery</p>
+    // Return response immediately and send email asynchronously
+    // This prevents the user from waiting for SMTP connection
+    $asyncEmailSend = function() use ($email, $otp) {
+        $subject = "Password Reset Verification Code - Exact Colleges of Asia";
+        $message = "
+        <html>
+        <head>
+            <style>
+                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                .header { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; padding: 20px; text-align: center; border-radius: 10px 10px 0 0; }
+                .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+                .otp-code { background: #6366f1; color: white; font-size: 24px; font-weight: bold; padding: 15px; text-align: center; border-radius: 8px; margin: 20px 0; letter-spacing: 3px; }
+                .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #666; }
+            </style>
+        </head>
+        <body>
+            <div class='container'>
+                <div class='header'>
+                    <h2>Password Reset Verification</h2>
+                    <p>Exact Colleges of Asia - Graduation Gallery</p>
+                </div>
+                <div class='content'>
+                    <p>Hello,</p>
+                    <p>You have requested to reset your password for your Graduation Gallery account.</p>
+                    <p>Please use the following verification code to complete your password reset:</p>
+                    <div class='otp-code'>$otp</div>
+                    <p><strong>Important:</strong></p>
+                    <ul>
+                        <li>This code will expire in 120 seconds</li>
+                        <li>Do not share this code with anyone</li>
+                        <li>If you didn't request this reset, please ignore this email</li>
+                    </ul>
+                    <p>If you have any questions, please contact our support team.</p>
+                    <p>Best regards,<br>Exact Colleges of Asia</p>
+                </div>
+                <div class='footer'>
+                    <p>This is an automated message. Please do not reply to this email.</p>
+                </div>
             </div>
-            <div class='content'>
-                <p>Hello,</p>
-                <p>You have requested to reset your password for your Graduation Gallery account.</p>
-                <p>Please use the following verification code to complete your password reset:</p>
-                <div class='otp-code'>$otp</div>
-                <p><strong>Important:</strong></p>
-                <ul>
-                    <li>This code will expire in 60 seconds</li>
-                    <li>Do not share this code with anyone</li>
-                    <li>If you didn't request this reset, please ignore this email</li>
-                </ul>
-                <p>If you have any questions, please contact our support team.</p>
-                <p>Best regards,<br>Exact Colleges of Asia</p>
-            </div>
-            <div class='footer'>
-                <p>This is an automated message. Please do not reply to this email.</p>
-            </div>
-        </div>
-    </body>
-    </html>
-    ";
+        </body>
+        </html>
+        ";
 
-    // Load email configuration - try multiple path resolution methods
-    $emailConfigPath = null;
-    $possiblePaths = [
-        __DIR__ . '/../Configuration/EmailConfig.php',
-        dirname(__DIR__) . '/Configuration/EmailConfig.php',
-        $_SERVER['DOCUMENT_ROOT'] . '/Connection/Configuration/EmailConfig.php',
-        realpath(__DIR__ . '/../Configuration/EmailConfig.php')
-    ];
-    
-    foreach ($possiblePaths as $path) {
-        if ($path && file_exists($path)) {
-            $emailConfigPath = $path;
-            break;
+        // Load email configuration - try multiple path resolution methods
+        $emailConfigPath = null;
+        $possiblePaths = [
+            __DIR__ . '/../Configuration/EmailConfig.php',
+            dirname(__DIR__) . '/Configuration/EmailConfig.php',
+            $_SERVER['DOCUMENT_ROOT'] . '/Connection/Configuration/EmailConfig.php',
+            realpath(__DIR__ . '/../Configuration/EmailConfig.php')
+        ];
+        
+        foreach ($possiblePaths as $path) {
+            if ($path && file_exists($path)) {
+                $emailConfigPath = $path;
+                break;
+            }
         }
-    }
-    
-    if ($emailConfigPath) {
-        require_once $emailConfigPath;
-    } else {
-        // Fallback: Define email configuration inline if file not found
-        error_log("EmailConfig.php not found, using inline configuration");
         
-        if (!defined('GMAIL_SMTP_HOST')) {
-            define('GMAIL_SMTP_HOST', 'smtp.gmail.com');
-            define('GMAIL_SMTP_PORT', 587);
-            define('GMAIL_SMTP_ENCRYPTION', 'tls');
-            define('GMAIL_USERNAME', 'admain.ecadyb@gmail.com');
-            define('GMAIL_APP_PASSWORD', 'roobfmontzajvqph');
-            define('EMAIL_FROM_ADDRESS', 'admain.ecadyb@gmail.com');
-            define('EMAIL_FROM_NAME', 'Exact Colleges of Asia - Graduation Gallery');
+        if ($emailConfigPath) {
+            require_once $emailConfigPath;
+        } else {
+            // Fallback: Define email configuration inline if file not found
+            error_log("EmailConfig.php not found, using inline configuration");
+            
+            if (!defined('GMAIL_SMTP_HOST')) {
+                define('GMAIL_SMTP_HOST', 'smtp.gmail.com');
+                define('GMAIL_SMTP_PORT', 587);
+                define('GMAIL_SMTP_ENCRYPTION', 'tls');
+                define('GMAIL_USERNAME', 'admain.ecadyb@gmail.com');
+                define('GMAIL_APP_PASSWORD', 'roobfmontzajvqph');
+                define('EMAIL_FROM_ADDRESS', 'admain.ecadyb@gmail.com');
+                define('EMAIL_FROM_NAME', 'Exact Colleges of Asia - Graduation Gallery');
+            }
         }
-    }
-    
-    // Use PHPMailer for Gmail SMTP
-    $mail = new PHPMailer(true);
-    
-    try {
-        // Gmail SMTP Configuration
-        $mail->isSMTP();
-        $mail->Host       = GMAIL_SMTP_HOST;
-        $mail->SMTPAuth   = true;
-        $mail->Username   = GMAIL_USERNAME;
-        $mail->Password   = GMAIL_APP_PASSWORD;
-        $mail->SMTPSecure = GMAIL_SMTP_ENCRYPTION;
-        $mail->Port       = GMAIL_SMTP_PORT;
         
-        // Increased timeout for Gmail SMTP - Gmail can be slow sometimes
-        $mail->Timeout = 30; // 30 seconds timeout
-        $mail->SMTPKeepAlive = true; // Keep connection alive for faster subsequent sends
+        // Use PHPMailer for Gmail SMTP
+        $mail = new PHPMailer(true);
         
-        // Optimized SSL options for Gmail with fallback for Windows
-        $sslOptions = array(
-            'verify_peer' => true,
-            'verify_peer_name' => true,
-            'allow_self_signed' => false
-        );
-        
-        // Add CA file path if available (Linux/Unix systems)
-        if (file_exists('/etc/ssl/certs/ca-certificates.crt')) {
-            $sslOptions['cafile'] = '/etc/ssl/certs/ca-certificates.crt';
-        } elseif (file_exists('/etc/ssl/certs/ca-bundle.crt')) {
-            $sslOptions['cafile'] = '/etc/ssl/certs/ca-bundle.crt';
-        }
-        // Windows and other systems will use default CA bundle
-        
-        $mail->SMTPOptions = array('ssl' => $sslOptions);
-        
-        // Enable verbose debug output (comment out in production)
-        // $mail->SMTPDebug = 2;
-        // $mail->Debugoutput = function($str, $level) { error_log("SMTP Debug level $level: $str"); };
-        
-        // Email settings
-        $mail->setFrom(EMAIL_FROM_ADDRESS, EMAIL_FROM_NAME);
-        $mail->addAddress($email);
-        $mail->isHTML(true);
-        $mail->Subject = $subject;
-        $mail->Body    = $message;
-        $mail->CharSet = 'UTF-8';
-        
-        // Send email with retry logic
-        $maxRetries = 2;
-        $retryCount = 0;
-        $emailSent = false;
-        $lastError = '';
-        
-        while ($retryCount < $maxRetries && !$emailSent) {
+        try {
+            // Gmail SMTP Configuration
+            $mail->isSMTP();
+            $mail->Host       = GMAIL_SMTP_HOST;
+            $mail->SMTPAuth   = true;
+            $mail->Username   = GMAIL_USERNAME;
+            $mail->Password   = GMAIL_APP_PASSWORD;
+            $mail->SMTPSecure = GMAIL_SMTP_ENCRYPTION;
+            $mail->Port       = GMAIL_SMTP_PORT;
+            
+            // Optimized timeout for faster response
+            $mail->Timeout = 10; // 10 seconds timeout - fail fast if connection is slow
+            $mail->SMTPKeepAlive = false; // Disable keep-alive to avoid connection issues
+            
+            // Optimized SSL options for Gmail with fallback for Windows
+            $sslOptions = array(
+                'verify_peer' => true,
+                'verify_peer_name' => true,
+                'allow_self_signed' => false
+            );
+            
+            // Add CA file path if available (Linux/Unix systems)
+            if (file_exists('/etc/ssl/certs/ca-certificates.crt')) {
+                $sslOptions['cafile'] = '/etc/ssl/certs/ca-certificates.crt';
+            } elseif (file_exists('/etc/ssl/certs/ca-bundle.crt')) {
+                $sslOptions['cafile'] = '/etc/ssl/certs/ca-bundle.crt';
+            }
+            // Windows and other systems will use default CA bundle
+            
+            $mail->SMTPOptions = array('ssl' => $sslOptions);
+            
+            // Email settings
+            $mail->setFrom(EMAIL_FROM_ADDRESS, EMAIL_FROM_NAME);
+            $mail->addAddress($email);
+            $mail->isHTML(true);
+            $mail->Subject = $subject;
+            $mail->Body    = $message;
+            $mail->CharSet = 'UTF-8';
+            
+            // Send email with single attempt - no retries for faster response
+            $emailSent = false;
+            $lastError = '';
+            
             try {
                 $mail->send();
                 $emailSent = true;
             } catch (Exception $e) {
-                $retryCount++;
                 $lastError = $mail->ErrorInfo;
-                error_log("PHPMailer attempt $retryCount failed: {$mail->ErrorInfo}");
-                
-                if ($retryCount < $maxRetries) {
-                    // Wait 2 seconds before retry
-                    sleep(2);
-                    // Clear any previous recipients and reset
-                    $mail->clearAddresses();
-                    $mail->addAddress($email);
-                }
+                error_log("PHPMailer failed: {$mail->ErrorInfo}");
             }
-        }
-        
-        if ($emailSent) {
-            echo json_encode([
-                'success' => true,
-                'message' => 'Verification code sent successfully to your email',
-                'email_sent' => true
-            ]);
-        } else {
-            // Email sending failed after retries
-            error_log("PHPMailer Error after $maxRetries attempts: $lastError");
             
-            echo json_encode([
-                'success' => false,
-                'message' => 'Failed to send verification code. Please check your email address and try again.',
-                'email_sent' => false,
-                'error' => $lastError
-            ]);
+            if (!$emailSent) {
+                error_log("PHPMailer Error: $lastError");
+            }
+            
+        } catch (Exception $e) {
+            error_log("PHPMailer Error: " . $e->getMessage());
         }
-        
-    } catch (Exception $e) {
-        // Email sending failed - return error
-        error_log("PHPMailer Error: " . $e->getMessage());
-        
-        echo json_encode([
-            'success' => false,
-            'message' => 'Failed to send verification code. Please try again later.',
-            'email_sent' => false,
-            'error' => $e->getMessage()
-        ]);
+    };
+    
+    // Return success immediately - email will be sent in background
+    echo json_encode([
+        'success' => true,
+        'message' => 'Verification code is being sent to your email',
+        'email_sent' => true
+    ]);
+    
+    // Flush output to client immediately
+    if (function_exists('fastcgi_finish_request')) {
+        fastcgi_finish_request();
+    } else {
+        // Fallback for non-FastCGI environments
+        ob_end_flush();
+        flush();
     }
+    
+    // Now send email in background after response is sent
+    $asyncEmailSend();
 } catch (Exception $e) {
     error_log("SendOTP error: " . $e->getMessage());
     http_response_code(500);
