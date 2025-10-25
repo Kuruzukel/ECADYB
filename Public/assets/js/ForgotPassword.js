@@ -222,8 +222,8 @@ async function handleGetCode() {
     // Update loading text
     getCodeText.textContent = "Sending...";
 
-    // Generate and send OTP
-    const otpResponse = await fetch(`${window.location.origin}${basePath}/Connection/Student/SendOTP.php`, {
+    // Generate and send OTP (using SendGrid for Railway compatibility)
+    const otpResponse = await fetch(`${window.location.origin}${basePath}/Connection/Student/SendOTPSendGrid.php`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

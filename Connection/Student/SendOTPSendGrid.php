@@ -1,0 +1,196 @@
+<?php
+// Ensure JSON is always returned
+ini_set('display_errors', 0);
+error_reporting(E_ALL);
+
+// Set JSON header first
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST');
+header('Access-Control-Allow-Headers: Content-Type');
+
+// Handle OPTIONS request
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+    exit;
+}
+
+try {
+    require_once __DIR__ . '/../../vendor/autoload.php';
+    require_once __DIR__ . '/../Configuration/EnvLoader.php';
+} catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Failed to load dependencies']);
+    exit;
+}
+
+try {
+    $input = json_decode(file_get_contents('php://input'), true);
+
+    if (!isset($input['email']) || empty($input['email'])) {
+        echo json_encode(['success' => false, 'message' => 'Email is required']);
+        exit;
+    }
+
+    $email = trim($input['email']);
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        echo json_encode(['success' => false, 'message' => 'Invalid email format']);
+        exit;
+    }
+
+    require_once __DIR__ . '/../Configuration/MongoConnect.php';
+
+    $database = $GLOBALS['database'] ?? null;
+    if (!$database) {
+        echo json_encode(['success' => false, 'message' => 'Database connection not available']);
+        exit;
+    }
+
+    $user = null;
+    $queryOptions = [
+        'maxTimeMS' => 2000,
+        'projection' => ['email' => 1, '_id' => 1]
+    ];
+
+    // Check admin accounts
+    try {
+        $mongoClient = $GLOBALS['mongoClient'] ?? null;
+        if (!$mongoClient) {
+            require_once __DIR__ . '/../../vendor/autoload.php';
+            require_once __DIR__ . '/../Configuration/EnvLoader.php';
+            $mongoClient = new \MongoDB\Client(getMongoUrl());
+        }
+        $adminDB = $mongoClient->admin;
+        $adminCollection = $adminDB->accounts;
+        $user = $adminCollection->findOne(['email' => $email], $queryOptions);
+    } catch (Exception $e) {
+        error_log("Admin check error: " . $e->getMessage());
+    }
+
+    // Check student departments
+    if (!$user) {
+        $departmentCollections = ['bsn', 'bsme', 'bscje', 'bstm', 'bse', 'bsis', 'beced', 'bsma', 'bsmt', 'btvted'];
+        foreach ($departmentCollections as $collectionName) {
+            try {
+                $collection = $database->selectCollection($collectionName);
+                $user = $collection->findOne(['email' => $email], $queryOptions);
+                if ($user) break;
+            } catch (Exception $e) {
+                error_log("Collection $collectionName search error: " . $e->getMessage());
+                continue;
+            }
+        }
+    }
+
+    if (!$user) {
+        echo json_encode(['success' => false, 'message' => 'Email not found in database']);
+        exit;
+    }
+
+    // Generate OTP
+    try {
+        $otp = str_pad(random_int(100000, 999999), 6, '0', STR_PAD_LEFT);
+    } catch (Exception $e) {
+        error_log("random_int failed, using mt_rand: " . $e->getMessage());
+        $otp = str_pad(mt_rand(100000, 999999), 6, '0', STR_PAD_LEFT);
+    }
+
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
+    $_SESSION['otp_' . $email] = [
+        'code' => $otp,
+        'expires' => time() + 60,
+        'attempts' => 0
+    ];
+
+    echo json_encode([
+        'success' => true,
+        'message' => 'Verification code is being sent to your email',
+        'email_sent' => true
+    ]);
+
+    if (ob_get_level() > 0) ob_end_flush();
+    flush();
+    if (session_status() == PHP_SESSION_ACTIVE) session_write_close();
+    if (function_exists('fastcgi_finish_request')) fastcgi_finish_request();
+
+    // Send email using SendGrid
+    $sendGridApiKey = getenv('SENDGRID_API_KEY') ?: ($_ENV['SENDGRID_API_KEY'] ?? null);
+    
+    if (!$sendGridApiKey) {
+        error_log("✗ SendGrid API key not configured");
+        return;
+    }
+
+    $fromEmail = getenv('SMTP_FROM_EMAIL') ?: ($_ENV['SMTP_FROM_EMAIL'] ?? 'admain.ecadyb@gmail.com');
+    $fromName = getenv('SMTP_FROM_NAME') ?: ($_ENV['SMTP_FROM_NAME'] ?? 'Graduation Gallery');
+
+    $emailContent = new \SendGrid\Mail\Mail();
+    $emailContent->setFrom($fromEmail, $fromName);
+    $emailContent->setSubject("Password Reset Verification Code - Exact Colleges of Asia");
+    $emailContent->addTo($email);
+    
+    $htmlContent = "
+    <html>
+    <head>
+        <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; padding: 20px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+            .otp-code { background: #6366f1; color: white; font-size: 24px; font-weight: bold; padding: 15px; text-align: center; border-radius: 8px; margin: 20px 0; letter-spacing: 3px; }
+            .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #666; }
+        </style>
+    </head>
+    <body>
+        <div class='container'>
+            <div class='header'>
+                <h2>Password Reset Verification</h2>
+                <p>Exact Colleges of Asia - Graduation Gallery</p>
+            </div>
+            <div class='content'>
+                <p>Hello,</p>
+                <p>You have requested to reset your password for your Graduation Gallery account.</p>
+                <p>Please use the following verification code to complete your password reset:</p>
+                <div class='otp-code'>$otp</div>
+                <p><strong>Important:</strong></p>
+                <ul>
+                    <li>This code will expire in 60 seconds</li>
+                    <li>Do not share this code with anyone</li>
+                    <li>If you didn't request this reset, please ignore this email</li>
+                </ul>
+                <p>If you have any questions, please contact our support team.</p>
+                <p>Best regards,<br>Exact Colleges of Asia</p>
+            </div>
+            <div class='footer'>
+                <p>This is an automated message. Please do not reply to this email.</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    ";
+    
+    $emailContent->addContent("text/html", $htmlContent);
+
+    $sendgrid = new \SendGrid($sendGridApiKey);
+    
+    try {
+        $response = $sendgrid->send($emailContent);
+        error_log("✓ SendGrid email sent successfully to: $email (Status: " . $response->statusCode() . ")");
+    } catch (Exception $e) {
+        error_log("✗ SendGrid error: " . $e->getMessage());
+    }
+
+} catch (Exception $e) {
+    error_log("SendOTP error: " . $e->getMessage());
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'An error occurred']);
+}
