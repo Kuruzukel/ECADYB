@@ -274,7 +274,6 @@ function findAndNavigateToStudent(
                 if ($studentImageArea.length && hasImageContent) {
                   console.log("✅ Adding yellow border to student image area");
 
-                  // Add border to the student image container
                   $studentImageArea.attr(
                     "style",
                     "border: 2px solid #fcda15 !important; " +
