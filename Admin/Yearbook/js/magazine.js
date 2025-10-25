@@ -415,7 +415,6 @@ function tryNavigateToStudent() {
       maxNavigationAttempts,
       "attempts"
     );
-    // Even if failed, mark as run to allow subsequent searches
     hasInitialNavigationRun = true;
   }
 }
