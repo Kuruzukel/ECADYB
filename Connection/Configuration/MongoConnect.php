@@ -12,7 +12,7 @@ if (file_exists($dotenvPath . '.env')) {
 
 $mongoUrl = getenv('MONGO_URL') ?: $_ENV['MONGO_URL'] ?? getenv('MONGODB_URI') ?? null;
 if (!$mongoUrl) {
-    die('MongoDB URL not configured. Please set MONGO_URL in .env file');
+    throw new Exception('MongoDB URL not configured. Please set MONGO_URL in .env file');
 }
 $client   = new Client($mongoUrl);
 

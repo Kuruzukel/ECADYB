@@ -14,8 +14,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-require __DIR__ . '/../../vendor/autoload.php';
-require_once __DIR__ . '/../Configuration/MongoConnect.php';
+try {
+    require __DIR__ . '/../../vendor/autoload.php';
+    require_once __DIR__ . '/../Configuration/MongoConnect.php';
+} catch (Exception $e) {
+    header('Content-Type: application/json');
+    echo json_encode(['success' => false, 'message' => 'Failed to load dependencies: ' . $e->getMessage()]);
+    exit;
+}
 
 function respond($success, $message = '', $data = [])
 {

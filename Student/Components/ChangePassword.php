@@ -14,35 +14,40 @@ $error_message = '';
 $success_message = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    require_once __DIR__ . '/../../Connection/Configuration/MongoConnect.php';
-    $currentPassword = trim($_POST['current_password'] ?? '');
-    $newPassword     = trim($_POST['new_password'] ?? '');
-    $confirmPassword = trim($_POST['confirm_password'] ?? '');
+    try {
+        require_once __DIR__ . '/../../Connection/Configuration/MongoConnect.php';
+        $currentPassword = trim($_POST['current_password'] ?? '');
+        $newPassword     = trim($_POST['new_password'] ?? '');
+        $confirmPassword = trim($_POST['confirm_password'] ?? '');
 
-    if (strlen($newPassword) > 8) {
-        $error_message = "Password must not exceed 8 characters.";
-    } elseif ($newPassword !== $confirmPassword) {
-        $error_message = "New password and confirm password do not match.";
-    } else {
-        $collection = $departmentsDB->{array_search($_SESSION['department'], $collections)};
-
-        $student = $collection->findOne([
-            'student id' => $_SESSION['student_id'],
-            'password'   => $currentPassword
-        ]);
-
-        if ($student) {
-            $collection->updateOne(
-                ['student id' => $_SESSION['student_id']],
-                ['$set' => ['password' => $newPassword]]
-            );
-            
-            // Set success message and destroy session
-            $success_message = "Password changed successfully! Redirecting to login...";
-            session_destroy();
+        if (strlen($newPassword) > 8) {
+            $error_message = "Password must not exceed 8 characters.";
+        } elseif ($newPassword !== $confirmPassword) {
+            $error_message = "New password and confirm password do not match.";
         } else {
-            $error_message = "Current password is incorrect.";
+            $collection = $departmentsDB->{array_search($_SESSION['department'], $collections)};
+
+            $student = $collection->findOne([
+                'student id' => $_SESSION['student_id'],
+                'password'   => $currentPassword
+            ]);
+
+            if ($student) {
+                $collection->updateOne(
+                    ['student id' => $_SESSION['student_id']],
+                    ['$set' => ['password' => $newPassword]]
+                );
+                
+                // Set success message and destroy session
+                $success_message = "Password changed successfully! Redirecting to login...";
+                session_destroy();
+            } else {
+                $error_message = "Current password is incorrect.";
+            }
         }
+    } catch (Exception $e) {
+        error_log("ChangePassword error: " . $e->getMessage());
+        $error_message = "Database error occurred. Please try again later.";
     }
 }
 ?>

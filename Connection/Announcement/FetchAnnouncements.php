@@ -1,8 +1,8 @@
 <?php
 header('Content-Type: application/json');
-require __DIR__ . '/../Configuration/MongoConnect.php';
 
 try {
+    require __DIR__ . '/../Configuration/MongoConnect.php';
     $announcements = $calendarCollection->find(
         ['status' => 'active'],
         [

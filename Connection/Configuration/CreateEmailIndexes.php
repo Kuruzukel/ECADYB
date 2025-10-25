@@ -4,10 +4,9 @@
  * Run this script once to optimize email search performance
  */
 
-require_once __DIR__ . '/../../vendor/autoload.php';
-require_once __DIR__ . '/MongoConnect.php';
-
 try {
+    require_once __DIR__ . '/../../vendor/autoload.php';
+    require_once __DIR__ . '/MongoConnect.php';
     $database = $GLOBALS['database'];
     $mongoClient = $GLOBALS['mongoClient'];
     
