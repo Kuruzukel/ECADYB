@@ -126,7 +126,6 @@ try {
         'attempts' => 0
     ];
 
-    // Return success response IMMEDIATELY before sending email
     // IMPORTANT: Remove 'otp' from response in PRODUCTION for security
     echo json_encode([
         'success' => true,
