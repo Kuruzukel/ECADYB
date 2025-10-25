@@ -447,7 +447,6 @@ function checkIfNavigationNeeded() {
   return true;
 }
 
-// Start trying to navigate after 4 seconds
 console.log("Navigation will start in 4 seconds...");
 setTimeout(function () {
   if (checkIfNavigationNeeded()) {
