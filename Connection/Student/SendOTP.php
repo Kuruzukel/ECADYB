@@ -56,13 +56,13 @@ try {
     }
 
     $user = null;
-    
+
     // Optimized query timeout - fail fast
     $queryOptions = [
         'maxTimeMS' => 2000, // 2 second timeout per query
         'projection' => ['email' => 1, '_id' => 1] // Only fetch needed fields
     ];
-    
+
     // First, check admin accounts collection
     try {
         $mongoClient = $GLOBALS['mongoClient'] ?? null;
@@ -73,23 +73,23 @@ try {
         }
         $adminDB = $mongoClient->admin;
         $adminCollection = $adminDB->accounts;
-        
+
         $user = $adminCollection->findOne(['email' => $email], $queryOptions);
     } catch (Exception $e) {
         error_log("Admin check error: " . $e->getMessage());
     }
-    
+
     // If not found in admin, search student department collections
     if (!$user) {
         // Define all department collections to search
         $departmentCollections = ['bsn', 'bsme', 'bscje', 'bstm', 'bse', 'bsis', 'beced', 'bsma', 'bsmt', 'btvted'];
-        
+
         // Search with optimized timeout - stop at first match
         foreach ($departmentCollections as $collectionName) {
             try {
                 $collection = $database->selectCollection($collectionName);
                 $user = $collection->findOne(['email' => $email], $queryOptions);
-                
+
                 if ($user) {
                     // Found the student, no need to search further
                     break;
@@ -125,7 +125,7 @@ try {
         'expires' => time() + 120, // 120 seconds expiration
         'attempts' => 0
     ];
-    
+
     // Return success response IMMEDIATELY before sending email
     // IMPORTANT: Remove 'otp' from response in PRODUCTION for security
     echo json_encode([
@@ -134,25 +134,25 @@ try {
         // 'otp' => $otp, // DEVELOPMENT ONLY - Uncomment for testing on localhost
         'email_sent' => true
     ]);
-    
+
     // Force output to be sent to client immediately
     if (ob_get_level() > 0) {
         ob_end_flush();
     }
     flush();
-    
+
     // Close session to release lock (important for concurrent requests)
     if (session_status() == PHP_SESSION_ACTIVE) {
         session_write_close();
     }
-    
+
     // For FastCGI, finish the request to the client
     if (function_exists('fastcgi_finish_request')) {
         fastcgi_finish_request();
     }
-    
+
     // NOW send email in background after client has received response
-    $asyncEmailSend = function() use ($email, $otp) {
+    $asyncEmailSend = function () use ($email, $otp) {
         $subject = "Password Reset Verification Code - Exact Colleges of Asia";
         $message = "
         <html>
@@ -202,20 +202,20 @@ try {
             $_SERVER['DOCUMENT_ROOT'] . '/Connection/Configuration/EmailConfig.php',
             realpath(__DIR__ . '/../Configuration/EmailConfig.php')
         ];
-        
+
         foreach ($possiblePaths as $path) {
             if ($path && file_exists($path)) {
                 $emailConfigPath = $path;
                 break;
             }
         }
-        
+
         if ($emailConfigPath) {
             require_once $emailConfigPath;
         } else {
             // Fallback: Define email configuration inline if file not found
             error_log("EmailConfig.php not found, using inline configuration");
-            
+
             if (!defined('GMAIL_SMTP_HOST')) {
                 define('GMAIL_SMTP_HOST', 'smtp.gmail.com');
                 define('GMAIL_SMTP_PORT', 587);
@@ -226,10 +226,10 @@ try {
                 define('EMAIL_FROM_NAME', 'Exact Colleges of Asia - Graduation Gallery');
             }
         }
-        
+
         // Use PHPMailer for Gmail SMTP
         $mail = new PHPMailer(true);
-        
+
         try {
             // Gmail SMTP Configuration - Optimized for Railway
             $mail->isSMTP();
@@ -239,23 +239,23 @@ try {
             $mail->Password   = GMAIL_APP_PASSWORD;
             $mail->SMTPSecure = GMAIL_SMTP_ENCRYPTION;
             $mail->Port       = GMAIL_SMTP_PORT;
-            
+
             // Aggressive timeout for faster response
             $mail->Timeout = 5; // Reduced to 5 seconds - fail very fast
             $mail->SMTPKeepAlive = false; // Disable keep-alive
-            
+
             // Optimized SSL options - less strict for faster connection on Railway
             $sslOptions = array(
                 'verify_peer' => false, // Disable peer verification for speed (Railway environments)
                 'verify_peer_name' => false, // Disable peer name verification
                 'allow_self_signed' => true // Allow self-signed certs for flexibility
             );
-            
+
             $mail->SMTPOptions = array('ssl' => $sslOptions);
-            
+
             // Disable debug output in production
             $mail->SMTPDebug = 0;
-            
+
             // Email settings
             $mail->setFrom(EMAIL_FROM_ADDRESS, EMAIL_FROM_NAME);
             $mail->addAddress($email);
@@ -263,11 +263,11 @@ try {
             $mail->Subject = $subject;
             $mail->Body    = $message;
             $mail->CharSet = 'UTF-8';
-            
+
             // Send email with single attempt - no retries for faster response
             $emailSent = false;
             $lastError = '';
-            
+
             try {
                 $mail->send();
                 $emailSent = true;
@@ -275,16 +275,15 @@ try {
                 $lastError = $mail->ErrorInfo;
                 error_log("PHPMailer failed: {$mail->ErrorInfo}");
             }
-            
+
             if (!$emailSent) {
                 error_log("PHPMailer Error: $lastError");
             }
-            
         } catch (Exception $e) {
             error_log("PHPMailer Error: " . $e->getMessage());
         }
     };
-    
+
     // Execute the email send function (response already sent above)
     $asyncEmailSend();
 } catch (Exception $e) {
