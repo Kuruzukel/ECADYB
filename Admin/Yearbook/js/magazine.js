@@ -494,7 +494,6 @@ function checkForNewStudentSearch() {
 
 setInterval(checkForNewStudentSearch, 300);
 
-// Also expose navigation function to parent window for direct triggering
 window.triggerStudentNavigation = function (
   studentId,
   studentName,
