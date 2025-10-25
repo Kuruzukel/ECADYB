@@ -1093,44 +1093,53 @@ function loadPage(page, pageElement) {
                               "filter": "blur(8px)",
                               "-webkit-filter": "blur(8px)"
                             });
-                            currentPhotoElement.parent().css({
-                              "position": "relative"
+                            // Ensure parent has proper positioning and dimensions
+                            var $parent = currentPhotoElement.parent();
+                            $parent.css({
+                              "position": "relative",
+                              "overflow": "hidden"
                             });
 
-                            // Add "Picture gusto, bayad ayaw? aray mo" overlay
+                            // Add "Coming Soon..." overlay with inline styles to override any CSS
                             var comingSoonOverlay = $("<div/>", {
-                              class: "coming-soon-overlay",
-                              html: '<span class="coming-soon-text">Coming Soon...</span>',
-                              css: {
-                                "position": "absolute",
-                                "top": "0",
-                                "left": "0",
-                                "width": "100%",
-                                "height": "100%",
-                                "display": "flex",
-                                "align-items": "center",
-                                "justify-content": "center",
-                                "pointer-events": "none",
-                                "z-index": "2",
-                                "text-align": "center"
-                              }
+                              class: "coming-soon-overlay"
                             });
 
-                            comingSoonOverlay.find(".coming-soon-text").css({
-                              "font-style": "italic",
-                              "font-size": "18px",
-                              "font-weight": "600",
-                              "color": "#ffffff",
-                              "text-shadow": "0 2px 8px rgba(0, 0, 0, 0.8)",
-                              "padding": "8px 16px",
-                              "letter-spacing": "0.5px",
-                              "text-align": "center",
-                              "display": "inline-block",
-                              "max-width": "100%",
-                              "word-wrap": "break-word"
+                            comingSoonOverlay.attr("style",
+                              "position: absolute !important; " +
+                              "top: 0 !important; " +
+                              "left: 0 !important; " +
+                              "width: 100% !important; " +
+                              "height: 100% !important; " +
+                              "display: flex !important; " +
+                              "align-items: center !important; " +
+                              "justify-content: center !important; " +
+                              "pointer-events: none !important; " +
+                              "z-index: 999 !important; " +
+                              "margin: 0 !important; " +
+                              "padding: 0 !important;"
+                            );
+
+                            var comingSoonText = $("<span/>", {
+                              class: "coming-soon-text",
+                              text: "Coming Soon..."
                             });
 
-                            currentPhotoElement.parent().append(comingSoonOverlay);
+                            comingSoonText.attr("style",
+                              "font-style: italic !important; " +
+                              "font-size: 16px !important; " +
+                              "font-weight: 600 !important; " +
+                              "color: #ffffff !important; " +
+                              "text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9) !important; " +
+                              "padding: 4px 12px !important; " +
+                              "letter-spacing: 0.5px !important; " +
+                              "white-space: nowrap !important; " +
+                              "background: rgba(0, 0, 0, 0.3) !important; " +
+                              "border-radius: 4px !important;"
+                            );
+
+                            comingSoonOverlay.append(comingSoonText);
+                            $parent.append(comingSoonOverlay);
                             console.log("Applied blur filter and Coming Soon overlay to pending student photo:", currentStudentName);
                           }
                         }

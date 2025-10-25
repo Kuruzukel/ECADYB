@@ -147,15 +147,30 @@ try {
     </html>
     ";
 
-    // Load email configuration
-    $emailConfigPath = __DIR__ . '/../Configuration/EmailConfig.php';
-    if (!file_exists($emailConfigPath)) {
-        error_log("EmailConfig.php not found at: " . $emailConfigPath);
+    // Load email configuration - try multiple path resolution methods
+    $emailConfigPath = null;
+    $possiblePaths = [
+        __DIR__ . '/../Configuration/EmailConfig.php',
+        dirname(__DIR__) . '/Configuration/EmailConfig.php',
+        $_SERVER['DOCUMENT_ROOT'] . '/Connection/Configuration/EmailConfig.php',
+        realpath(__DIR__ . '/../Configuration/EmailConfig.php')
+    ];
+    
+    foreach ($possiblePaths as $path) {
+        if ($path && file_exists($path)) {
+            $emailConfigPath = $path;
+            break;
+        }
+    }
+    
+    if (!$emailConfigPath) {
+        error_log("EmailConfig.php not found. Tried paths: " . implode(', ', $possiblePaths));
         http_response_code(500);
         echo json_encode([
             'success' => false,
             'message' => 'Email configuration file not found',
-            'debug_path' => $emailConfigPath
+            'debug_paths' => $possiblePaths,
+            'document_root' => $_SERVER['DOCUMENT_ROOT'] ?? 'not set'
         ]);
         exit;
     }
