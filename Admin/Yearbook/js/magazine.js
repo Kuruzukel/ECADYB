@@ -288,7 +288,6 @@ function findAndNavigateToStudent(
                     "🎨 Applied BOLD yellow border with 8px thickness"
                   );
 
-                  // Fade out border after 5 seconds
                   setTimeout(function () {
                     $studentImageArea.attr(
                       "style",
