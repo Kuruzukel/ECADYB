@@ -344,7 +344,6 @@ function findAndNavigateToStudent(
               }
             }
 
-            // Start highlighting process
             highlightStudent();
 
             // Also set up a listener for when images are loaded
