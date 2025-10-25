@@ -505,7 +505,6 @@ window.triggerStudentNavigation = function (
     department: department,
   });
 
-  // Reset navigation attempts
   navigationAttempts = 0;
   lastSearchedStudentId = studentId;
 
