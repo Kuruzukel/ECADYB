@@ -34,19 +34,21 @@ function navigateToSearchedStudent() {
     if (urlStudentId && urlStudentName) {
       studentData = {
         student_id: urlStudentId,
-        name: decodeURIComponent(urlStudentName)
+        name: decodeURIComponent(urlStudentName),
       };
       console.log("Student data from URL parameters:", studentData);
-    } 
+    }
     // Fallback to sessionStorage
     else {
-      var searchSelectedStudent = sessionStorage.getItem("searchSelectedStudent");
+      var searchSelectedStudent = sessionStorage.getItem(
+        "searchSelectedStudent"
+      );
       if (!searchSelectedStudent) {
         return;
       }
       studentData = JSON.parse(searchSelectedStudent);
       console.log("Student data from sessionStorage:", studentData);
-      
+
       // Clear the sessionStorage after retrieving
       sessionStorage.removeItem("searchSelectedStudent");
     }
@@ -62,17 +64,25 @@ function navigateToSearchedStudent() {
 
     // Get the template number from various possible sources
     var template = 1;
-    
+
     // Try window.coverData first
-    if (typeof window.coverData !== "undefined" && window.coverData && window.coverData.template) {
+    if (
+      typeof window.coverData !== "undefined" &&
+      window.coverData &&
+      window.coverData.template
+    ) {
       template = window.coverData.template;
       console.log("Got template from window.coverData:", template);
-    } 
+    }
     // Try global coverData
-    else if (typeof coverData !== "undefined" && coverData && coverData.template) {
+    else if (
+      typeof coverData !== "undefined" &&
+      coverData &&
+      coverData.template
+    ) {
       template = coverData.template;
       console.log("Got template from coverData:", template);
-    } 
+    }
     // Try localStorage
     else {
       var savedTemplate = localStorage.getItem("selectedBatchTemplateNumber");
@@ -83,22 +93,29 @@ function navigateToSearchedStudent() {
         console.log("Using default template: 1");
       }
     }
-    
+
     console.log("=== TEMPLATE INFO ===");
     console.log("Final template for navigation:", template);
-    
+
     // Get batch year
     var batchYear = localStorage.getItem("selectedBatchYear");
     console.log("Batch year for navigation:", batchYear);
 
     // First, ensure all students are loaded for this department
     console.log("=== FORCING STUDENT DATA LOAD ===");
-    console.log("Calling loadAllStudentsForDepartment with:", department, template);
-    
-    loadAllStudentsForDepartment(department, template, function(allStudents) {
+    console.log(
+      "Calling loadAllStudentsForDepartment with:",
+      department,
+      template
+    );
+
+    loadAllStudentsForDepartment(department, template, function (allStudents) {
       console.log("=== ALL STUDENTS LOADED BY CALLBACK ===");
-      console.log("Total students loaded:", allStudents ? allStudents.length : 0);
-      
+      console.log(
+        "Total students loaded:",
+        allStudents ? allStudents.length : 0
+      );
+
       // Now proceed with finding the student
       findAndNavigateToStudent(department, template, studentData, allStudents);
     });
@@ -108,14 +125,19 @@ function navigateToSearchedStudent() {
 }
 
 // Separate function to find and navigate to student
-function findAndNavigateToStudent(department, template, studentData, allStudents) {
+function findAndNavigateToStudent(
+  department,
+  template,
+  studentData,
+  allStudents
+) {
   try {
     if (!allStudents || allStudents.length === 0) {
       console.error("=== NO STUDENTS DATA ===");
       console.error("Cannot navigate - no students loaded");
       return;
     }
-    
+
     console.log("=== SEARCHING FOR STUDENT ===");
     console.log("Student to find:", studentData);
     console.log("Searching in", allStudents.length, "students");
@@ -123,15 +145,24 @@ function findAndNavigateToStudent(department, template, studentData, allStudents
     // Find the student index directly (we already have all students)
     var studentIndex = -1;
     console.log("Searching through students...");
-    
+
     for (var i = 0; i < allStudents.length; i++) {
       var student = allStudents[i];
-      console.log("Checking student", i, ":", student.name, "ID:", student.student_id);
-      
+      console.log(
+        "Checking student",
+        i,
+        ":",
+        student.name,
+        "ID:",
+        student.student_id
+      );
+
       // Check multiple fields to find a match
-      if (student.student_id === studentData.student_id || 
-          student.id === studentData.id ||
-          student.name === studentData.name) {
+      if (
+        student.student_id === studentData.student_id ||
+        student.id === studentData.id ||
+        student.name === studentData.name
+      ) {
         studentIndex = i;
         console.log("✓ MATCH FOUND at index", i);
         break;
@@ -145,22 +176,34 @@ function findAndNavigateToStudent(department, template, studentData, allStudents
 
       // Get actual number of management pages from cache
       var managementPages = 4; // Default
-      var topMgmtCacheKey = "template_" + template + "_" + localStorage.getItem("selectedBatchYear");
+      var topMgmtCacheKey =
+        "template_" +
+        template +
+        "_" +
+        localStorage.getItem("selectedBatchYear");
       if (window.topManagementCache[topMgmtCacheKey]) {
         var topMgmtData = window.topManagementCache[topMgmtCacheKey];
-        if (topMgmtData.success && topMgmtData.data && Array.isArray(topMgmtData.data)) {
+        if (
+          topMgmtData.success &&
+          topMgmtData.data &&
+          Array.isArray(topMgmtData.data)
+        ) {
           managementPages = topMgmtData.data.length;
-          console.log("Using actual top management pages count:", managementPages);
+          console.log(
+            "Using actual top management pages count:",
+            managementPages
+          );
         }
       }
-      
+
       // Calculate yearbook page
       // Formula: frontCover(1) + managementPages(4) + studentPageOffset
       // Student pages start at page 6 (after front + 4 mgmt pages)
       var studentsPerPage = 4;
       var frontCoverPages = 1;
       var studentPageOffset = Math.floor(studentIndex / studentsPerPage);
-      var yearbookPage = frontCoverPages + managementPages + studentPageOffset + 1;
+      var yearbookPage =
+        frontCoverPages + managementPages + studentPageOffset + 1;
 
       console.log("=== NAVIGATION CALCULATION ===");
       console.log("Front Cover Pages:", frontCoverPages);
@@ -170,167 +213,204 @@ function findAndNavigateToStudent(department, template, studentData, allStudents
       console.log("Calculated Yearbook Page:", yearbookPage);
 
       // Wait for the magazine to be fully initialized
-      setTimeout(function() {
+      setTimeout(function () {
         var $magazine = $(".magazine");
         console.log("Magazine element found:", $magazine.length > 0);
         console.log("Magazine has turn:", typeof $magazine.turn);
-        
+
         if ($magazine.length > 0 && $magazine.turn) {
           console.log("Turning to page:", yearbookPage);
           $magazine.turn("page", yearbookPage);
           console.log("✓ Successfully navigated to student's page");
-          
+
           // Highlight the student image area (excluding h3 name)
           // Wait for page turn animation and content to load
-          setTimeout(function() {
+          setTimeout(function () {
             var cardIndex = studentIndex % studentsPerPage;
             console.log("Looking for student card at index:", cardIndex);
-            
+
             // First, clear any existing yellow borders from previous searches
             console.log("🧹 Clearing any existing yellow borders...");
-            $(".student-image").each(function() {
-              $(this).removeAttr('style');
+            $(".student-image").each(function () {
+              $(this).removeAttr("style");
             });
-            
+
             // Find the current visible pages
             var currentPage = $magazine.turn("page");
             console.log("Current magazine page:", currentPage);
-            
+
             // Get the page elements that are currently visible
-            var $visiblePages = $magazine.find(".page").filter(function() {
+            var $visiblePages = $magazine.find(".page").filter(function () {
               return $(this).is(":visible");
             });
             console.log("Visible pages found:", $visiblePages.length);
-            
+
             // Function to find and highlight student
             function highlightStudent(retryCount) {
               retryCount = retryCount || 0;
-              
+
               // Look for student cards in the visible pages
               var $studentCards = $visiblePages.find(".student-card");
-              console.log("Student cards found on visible pages:", $studentCards.length);
-              
+              console.log(
+                "Student cards found on visible pages:",
+                $studentCards.length
+              );
+
               if ($studentCards.length === 0 && retryCount < 20) {
                 // Cards not loaded yet, retry after a short delay
-                console.log("⏳ Student cards not loaded yet, retrying... (attempt " + (retryCount + 1) + "/20)");
-                setTimeout(function() {
+                console.log(
+                  "⏳ Student cards not loaded yet, retrying... (attempt " +
+                    (retryCount + 1) +
+                    "/20)"
+                );
+                setTimeout(function () {
                   // Refresh visible pages
-                  $visiblePages = $magazine.find(".page").filter(function() {
+                  $visiblePages = $magazine.find(".page").filter(function () {
                     return $(this).is(":visible");
                   });
                   highlightStudent(retryCount + 1);
                 }, 400);
                 return;
               } else if ($studentCards.length === 0) {
-                console.error("❌ Failed to find student cards after " + retryCount + " attempts");
+                console.error(
+                  "❌ Failed to find student cards after " +
+                    retryCount +
+                    " attempts"
+                );
                 // Still notify parent even if highlighting failed
                 notifyNavigationComplete();
                 return;
               }
-              
+
               // Find the specific student card by index
               var $targetCard = $studentCards.eq(cardIndex);
               console.log("Target student card found:", $targetCard.length > 0);
-              
+
               if ($targetCard.length > 0) {
                 var $studentImageArea = $targetCard.find(".student-image");
-                console.log("Student image area in target card:", $studentImageArea.length > 0);
-                
+                console.log(
+                  "Student image area in target card:",
+                  $studentImageArea.length > 0
+                );
+
                 // Check if the image area has actual content (img element or background)
                 var $imgElement = $studentImageArea.find("img");
-                var hasImageContent = $imgElement.length > 0 || $studentImageArea.css("background-image") !== "none";
-                
+                var hasImageContent =
+                  $imgElement.length > 0 ||
+                  $studentImageArea.css("background-image") !== "none";
+
                 console.log("Image element found:", $imgElement.length > 0);
-                console.log("Has background image:", $studentImageArea.css("background-image") !== "none");
+                console.log(
+                  "Has background image:",
+                  $studentImageArea.css("background-image") !== "none"
+                );
                 console.log("Has image content:", hasImageContent);
-                
+
                 if ($studentImageArea.length && hasImageContent) {
                   console.log("✅ Adding yellow border to student image area");
-                  
+
                   // Apply a SINGLE, BOLD yellow border with high visibility
                   // Use !important and inline styles to override any existing CSS
-                  
+
                   // Add border to the student image container
-                  $studentImageArea.attr('style', 
-                    'border: 2px solid #fcda15 !important; ' +
-                    'box-shadow: 0 0 10px rgba(252, 218, 21, 0.8) !important; ' +
-                    'border-radius: 8px !important; ' +
-                    'outline: 2px solid #ffd700 !important; ' +
-                    'outline-offset: 2px !important; ' +
-                    'transition: all 0.3s ease !important;'
+                  $studentImageArea.attr(
+                    "style",
+                    "border: 2px solid #fcda15 !important; " +
+                      "box-shadow: 0 0 10px rgba(252, 218, 21, 0.8) !important; " +
+                      "border-radius: 8px !important; " +
+                      "outline: 2px solid #ffd700 !important; " +
+                      "outline-offset: 2px !important; " +
+                      "transition: all 0.3s ease !important;"
                   );
-                  
-                  console.log("🎨 Applied BOLD yellow border with 8px thickness");
-                  
+
+                  console.log(
+                    "🎨 Applied BOLD yellow border with 8px thickness"
+                  );
+
                   // Fade out border after 5 seconds
-                  setTimeout(function() {
-                    $studentImageArea.attr('style', 
-                      'border: 2px solid #fcda15 !important; ' +
-                      'box-shadow: 0 0 10px rgba(252, 218, 21, 0.8) !important; ' +
-                      'border-radius: 8px !important; ' +
-                      'outline: 2px solid #ffd700 !important; ' +
-                      'outline-offset: 2px !important; ' +
-                      'transition: all 3s ease !important;'
+                  setTimeout(function () {
+                    $studentImageArea.attr(
+                      "style",
+                      "border: 2px solid #fcda15 !important; " +
+                        "box-shadow: 0 0 10px rgba(252, 218, 21, 0.8) !important; " +
+                        "border-radius: 8px !important; " +
+                        "outline: 2px solid #ffd700 !important; " +
+                        "outline-offset: 2px !important; " +
+                        "transition: all 3s ease !important;"
                     );
-                    
+
                     // Remove border completely after fade completes
-                    setTimeout(function() {
-                      $studentImageArea.removeAttr('style');
+                    setTimeout(function () {
+                      $studentImageArea.removeAttr("style");
                     }, 3000);
                   }, 5000);
-                  
+
                   // Notify parent window that navigation is complete
                   notifyNavigationComplete();
                 } else if ($studentImageArea.length && retryCount < 15) {
                   // Image area exists but no image content yet, retry
-                  console.log("⏳ Student image area exists but no image content yet, retrying... (attempt " + (retryCount + 1) + "/15)");
-                  setTimeout(function() {
+                  console.log(
+                    "⏳ Student image area exists but no image content yet, retrying... (attempt " +
+                      (retryCount + 1) +
+                      "/15)"
+                  );
+                  setTimeout(function () {
                     highlightStudent(retryCount + 1);
                   }, 500);
                   return;
                 } else {
-                  console.warn("⚠️ Student image area not found or no image content in target card");
+                  console.warn(
+                    "⚠️ Student image area not found or no image content in target card"
+                  );
                   // Still notify parent even if highlighting failed
                   notifyNavigationComplete();
                 }
               } else {
-                console.warn("⚠️ Target student card at index " + cardIndex + " not found");
+                console.warn(
+                  "⚠️ Target student card at index " + cardIndex + " not found"
+                );
                 // Still notify parent even if highlighting failed
                 notifyNavigationComplete();
               }
             }
-            
+
             // Helper function to notify parent window
             function notifyNavigationComplete() {
-              console.log("📍 Sending navigation complete signal to parent window");
+              console.log(
+                "📍 Sending navigation complete signal to parent window"
+              );
               if (window.parent && window.parent !== window) {
-                window.parent.postMessage({
-                  type: 'yearbook-navigation-complete',
-                  timestamp: new Date().toISOString()
-                }, '*');
+                window.parent.postMessage(
+                  {
+                    type: "yearbook-navigation-complete",
+                    timestamp: new Date().toISOString(),
+                  },
+                  "*"
+                );
               }
             }
-            
+
             // Start highlighting process
             highlightStudent();
-            
+
             // Also set up a listener for when images are loaded
-            var imageLoadListener = function() {
-              console.log("🖼️ Image loaded, checking if we need to highlight...");
+            var imageLoadListener = function () {
+              console.log(
+                "🖼️ Image loaded, checking if we need to highlight..."
+              );
               // Re-run highlighting in case images weren't ready before
-              setTimeout(function() {
+              setTimeout(function () {
                 highlightStudent();
               }, 100);
             };
-            
+
             // Listen for image load events on the target page
             $visiblePages.find("img").on("load", imageLoadListener);
-            
+
             // Clean up listener after 10 seconds
-            setTimeout(function() {
+            setTimeout(function () {
               $visiblePages.find("img").off("load", imageLoadListener);
             }, 10000);
-            
           }, 3000); // Wait 3 seconds for page turn animation and content to load
         } else {
           console.error("Magazine not initialized or turn not available");
@@ -340,7 +420,12 @@ function findAndNavigateToStudent(department, template, studentData, allStudents
       console.error("=== STUDENT NOT FOUND ===");
       console.error("Searched for:", studentData);
       console.error("Total students available:", allStudents.length);
-      console.error("All student IDs:", allStudents.map(function(s) { return s.student_id; }));
+      console.error(
+        "All student IDs:",
+        allStudents.map(function (s) {
+          return s.student_id;
+        })
+      );
     }
   } catch (e) {
     console.error("Error navigating to searched student:", e);
@@ -357,25 +442,34 @@ var maxNavigationAttempts = 10;
 function tryNavigateToStudent() {
   navigationAttempts++;
   console.log("=== NAVIGATION ATTEMPT", navigationAttempts, "===");
-  
+
   // Check if magazine exists and is initialized
   var $magazine = $(".magazine");
   var magazineExists = $magazine.length > 0;
-  var turnFunctionExists = typeof $magazine.turn === 'function';
-  
+  var turnFunctionExists = typeof $magazine.turn === "function";
+
   console.log("Magazine element exists:", magazineExists);
   console.log("Turn function exists:", turnFunctionExists);
-  
+
   if (magazineExists && turnFunctionExists) {
     console.log("✓ Magazine is ready, starting navigation");
     navigateToSearchedStudent();
     // Mark that initial navigation has been attempted
     hasInitialNavigationRun = true;
   } else if (navigationAttempts < maxNavigationAttempts) {
-    console.log("✗ Magazine not ready yet, retrying in 1 second... (attempt", navigationAttempts, "of", maxNavigationAttempts + ")");
+    console.log(
+      "✗ Magazine not ready yet, retrying in 1 second... (attempt",
+      navigationAttempts,
+      "of",
+      maxNavigationAttempts + ")"
+    );
     setTimeout(tryNavigateToStudent, 1000);
   } else {
-    console.error("✗ Magazine failed to initialize after", maxNavigationAttempts, "attempts");
+    console.error(
+      "✗ Magazine failed to initialize after",
+      maxNavigationAttempts,
+      "attempts"
+    );
     // Even if failed, mark as run to allow subsequent searches
     hasInitialNavigationRun = true;
   }
@@ -386,19 +480,22 @@ function checkIfNavigationNeeded() {
   var urlParams = new URLSearchParams(window.location.search);
   var urlStudentId = urlParams.get("student_id");
   var urlStudentName = urlParams.get("student_name");
-  
+
   // Check sessionStorage as fallback
   var searchSelectedStudent = sessionStorage.getItem("searchSelectedStudent");
-  
+
   if (!urlStudentId && !urlStudentName && !searchSelectedStudent) {
     // No navigation needed, notify parent window immediately
     console.log("📍 No student navigation required, sending complete signal");
     hasInitialNavigationRun = true; // Mark as run even if no navigation needed
     if (window.parent && window.parent !== window) {
-      window.parent.postMessage({
-        type: 'yearbook-navigation-complete',
-        timestamp: new Date().toISOString()
-      }, '*');
+      window.parent.postMessage(
+        {
+          type: "yearbook-navigation-complete",
+          timestamp: new Date().toISOString(),
+        },
+        "*"
+      );
     }
     return false;
   }
@@ -412,7 +509,7 @@ function checkIfNavigationNeeded() {
 
 // Start trying to navigate after 4 seconds
 console.log("Navigation will start in 4 seconds...");
-setTimeout(function() {
+setTimeout(function () {
   if (checkIfNavigationNeeded()) {
     tryNavigateToStudent();
   }
@@ -426,30 +523,36 @@ function checkForNewStudentSearch() {
   var urlParams = new URLSearchParams(window.location.search);
   var currentStudentId = urlParams.get("student_id");
   var currentStudentName = urlParams.get("student_name");
-  
+
   // Skip if no student parameters
   if (!currentStudentId) {
     return;
   }
-  
+
   // If there's a student_id and it's different from the last one we processed
   if (currentStudentId !== lastSearchedStudentId) {
-    console.log("🔄 New student search detected:", currentStudentId, currentStudentName);
+    console.log(
+      "🔄 New student search detected:",
+      currentStudentId,
+      currentStudentName
+    );
     console.log("Previous student:", lastSearchedStudentId);
     console.log("Has initial navigation run:", hasInitialNavigationRun);
-    
+
     // Update tracking
     lastSearchedStudentId = currentStudentId;
-    
+
     // Only trigger if initial navigation has already run (to avoid duplicate on first load)
     if (hasInitialNavigationRun) {
-      console.log("🎯 This is a subsequent search - triggering navigation immediately!");
-      
+      console.log(
+        "🎯 This is a subsequent search - triggering navigation immediately!"
+      );
+
       // Reset navigation attempts for new search
       navigationAttempts = 0;
-      
+
       // Wait for magazine to be ready, then navigate
-      setTimeout(function() {
+      setTimeout(function () {
         console.log("📍 Starting navigation for student:", currentStudentId);
         navigateToSearchedStudent();
       }, 1000);
@@ -461,62 +564,72 @@ function checkForNewStudentSearch() {
 setInterval(checkForNewStudentSearch, 300);
 
 // Also expose navigation function to parent window for direct triggering
-window.triggerStudentNavigation = function(studentId, studentName, department) {
+window.triggerStudentNavigation = function (
+  studentId,
+  studentName,
+  department
+) {
   console.log("🎯 Manual navigation triggered from parent:", {
     studentId: studentId,
     studentName: studentName,
-    department: department
+    department: department,
   });
-  
+
   // Reset navigation attempts
   navigationAttempts = 0;
   lastSearchedStudentId = studentId;
-  
+
   // Trigger navigation
-  setTimeout(function() {
+  setTimeout(function () {
     navigateToSearchedStudent();
   }, 500);
 };
 
 // Listen for postMessage from parent window for new student navigation
-window.addEventListener('message', function(event) {
-  if (event.data && event.data.type === 'navigate-to-student') {
-    console.log("📨 Received navigate-to-student message from parent:", event.data);
-    
+window.addEventListener("message", function (event) {
+  if (event.data && event.data.type === "navigate-to-student") {
+    console.log(
+      "📨 Received navigate-to-student message from parent:",
+      event.data
+    );
+
     var studentId = event.data.studentId;
     var studentName = event.data.studentName;
-    
+
     // Update URL parameters without reload
     var urlParams = new URLSearchParams(window.location.search);
-    urlParams.set('student_id', studentId);
-    urlParams.set('student_name', studentName);
-    
+    urlParams.set("student_id", studentId);
+    urlParams.set("student_name", studentName);
+
     // Update browser URL without reload
-    var newUrl = window.location.pathname + '?' + urlParams.toString();
-    window.history.replaceState({}, '', newUrl);
-    
+    var newUrl = window.location.pathname + "?" + urlParams.toString();
+    window.history.replaceState({}, "", newUrl);
+
     console.log("📍 URL updated, triggering navigation to student:", studentId);
-    
+
     // Mark this as a subsequent search, not initial load
     hasInitialNavigationRun = true;
-    
+
     // Update last searched student to force navigation
     var previousStudentId = lastSearchedStudentId;
     lastSearchedStudentId = null; // Reset to force new navigation
-    
+
     // Reset navigation attempts
     navigationAttempts = 0;
-    
+
     // Trigger the navigation
-    setTimeout(function() {
+    setTimeout(function () {
       lastSearchedStudentId = studentId;
       navigateToSearchedStudent();
-      
+
       // Send completion message back to parent
-      window.parent.postMessage({
-        type: 'yearbook-navigation-complete',
-        studentId: studentId
-      }, '*');
+      window.parent.postMessage(
+        {
+          type: "yearbook-navigation-complete",
+          studentId: studentId,
+        },
+        "*"
+      );
     }, 500);
   }
 });
@@ -1859,7 +1972,6 @@ function addRegion(region, pageElement) {
 }
 
 function regionClick(event) {
-  //   var region = $(event.target);
   //   if (region.hasClass("region")) {
   //     $(".magazine-viewport").data().regionClicked = true;
   //     setTimeout(function () {
