@@ -204,7 +204,17 @@ function findAndNavigateToStudent(
             var cardIndex = studentIndex % studentsPerPage;
             console.log("Looking for student card at index:", cardIndex);
 
-            console.log("🧹 Clearing any existing yellow borders...");
+            console.log("🧹 Clearing any existing yellow borders and timeouts...");
+
+            // Clear any existing border removal timeouts
+            if (window.borderRemovalTimeouts) {
+              window.borderRemovalTimeouts.forEach(function (timeoutId) {
+                clearTimeout(timeoutId);
+              });
+            }
+            window.borderRemovalTimeouts = [];
+
+            // Remove all existing borders
             $(".student-image").each(function () {
               $(this).removeAttr("style");
             });
@@ -229,8 +239,8 @@ function findAndNavigateToStudent(
               if ($studentCards.length === 0 && retryCount < 20) {
                 console.log(
                   "⏳ Student cards not loaded yet, retrying... (attempt " +
-                    (retryCount + 1) +
-                    "/20)"
+                  (retryCount + 1) +
+                  "/20)"
                 );
                 setTimeout(function () {
                   $visiblePages = $magazine.find(".page").filter(function () {
@@ -242,8 +252,8 @@ function findAndNavigateToStudent(
               } else if ($studentCards.length === 0) {
                 console.error(
                   "❌ Failed to find student cards after " +
-                    retryCount +
-                    " attempts"
+                  retryCount +
+                  " attempts"
                 );
                 notifyNavigationComplete();
                 return;
@@ -277,39 +287,50 @@ function findAndNavigateToStudent(
                   $studentImageArea.attr(
                     "style",
                     "border: 2px solid #fcda15 !important; " +
-                      "box-shadow: 0 0 10px rgba(252, 218, 21, 0.8) !important; " +
-                      "border-radius: 8px !important; " +
-                      "outline: 2px solid #ffd700 !important; " +
-                      "outline-offset: 2px !important; " +
-                      "transition: all 0.3s ease !important;"
+                    "box-shadow: 0 0 10px rgba(252, 218, 21, 0.8) !important; " +
+                    "border-radius: 8px !important; " +
+                    "outline: 2px solid #ffd700 !important; " +
+                    "outline-offset: 2px !important; " +
+                    "transition: all 0.3s ease !important;"
                   );
 
                   console.log(
                     "🎨 Applied BOLD yellow border with 8px thickness"
                   );
 
-                  setTimeout(function () {
+                  // Store timeout IDs so they can be cleared on next search
+                  var timeout1 = setTimeout(function () {
                     $studentImageArea.attr(
                       "style",
                       "border: 2px solid #fcda15 !important; " +
-                        "box-shadow: 0 0 10px rgba(252, 218, 21, 0.8) !important; " +
-                        "border-radius: 8px !important; " +
-                        "outline: 2px solid #ffd700 !important; " +
-                        "outline-offset: 2px !important; " +
-                        "transition: all 3s ease !important;"
+                      "box-shadow: 0 0 10px rgba(252, 218, 21, 0.8) !important; " +
+                      "border-radius: 8px !important; " +
+                      "outline: 2px solid #ffd700 !important; " +
+                      "outline-offset: 2px !important; " +
+                      "transition: all 3s ease !important;"
                     );
 
-                    setTimeout(function () {
+                    var timeout2 = setTimeout(function () {
                       $studentImageArea.removeAttr("style");
                     }, 3000);
+
+                    if (!window.borderRemovalTimeouts) {
+                      window.borderRemovalTimeouts = [];
+                    }
+                    window.borderRemovalTimeouts.push(timeout2);
                   }, 5000);
+
+                  if (!window.borderRemovalTimeouts) {
+                    window.borderRemovalTimeouts = [];
+                  }
+                  window.borderRemovalTimeouts.push(timeout1);
 
                   notifyNavigationComplete();
                 } else if ($studentImageArea.length && retryCount < 15) {
                   console.log(
                     "⏳ Student image area exists but no image content yet, retrying... (attempt " +
-                      (retryCount + 1) +
-                      "/15)"
+                    (retryCount + 1) +
+                    "/15)"
                   );
                   setTimeout(function () {
                     highlightStudent(retryCount + 1);
@@ -1512,9 +1533,8 @@ function loadPage(page, pageElement) {
                   </svg>
                 </div>
                 <h3 class="empty-state-title">Top Management Data Required</h3>
-                <p class="empty-state-description">${
-                  response.message ||
-                  "Please upload CSV of the Top Management to the Batch Upload Section first."
+                <p class="empty-state-description">${response.message ||
+                "Please upload CSV of the Top Management to the Batch Upload Section first."
                 }</p>
               </div>
             `,
@@ -1849,8 +1869,8 @@ function loadPage(page, pageElement) {
       img.attr(
         "src",
         "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23f0f0f0'/%3E%3Ctext x='50' y='55' font-family='Arial' font-size='12' fill='%23999' text-anchor='middle'%3EPage " +
-          page +
-          "%3C/text%3E%3C/svg%3E"
+        page +
+        "%3C/text%3E%3C/svg%3E"
       );
     }
 
@@ -1861,7 +1881,7 @@ function loadPage(page, pageElement) {
 }
 
 function zoomTo(event) {
-  setTimeout(function () {}, 1);
+  setTimeout(function () { }, 1);
 }
 
 function loadRegions(page, element) {
@@ -1877,7 +1897,7 @@ function loadRegions(page, element) {
         addRegion(region, element);
       });
     })
-    .fail(function () {});
+    .fail(function () { });
 }
 
 function addRegion(region, pageElement) {
@@ -1898,7 +1918,7 @@ function addRegion(region, pageElement) {
   reg.appendTo(pageElement);
 }
 
-function regionClick(event) {}
+function regionClick(event) { }
 
 function processRegion(region, regionType) {
   data = decodeParams(region.attr("region-data"));
@@ -2001,8 +2021,8 @@ function loadLargePage(page, pageElement) {
     img.attr(
       "src",
       "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23f0f0f0'/%3E%3Ctext x='50' y='55' font-family='Arial' font-size='12' fill='%23999' text-anchor='middle'%3ELarge Page " +
-        page +
-        "%3C/text%3E%3C/svg%3E"
+      page +
+      "%3C/text%3E%3C/svg%3E"
     );
   }
 }
@@ -2081,8 +2101,8 @@ function loadSmallPage(page, pageElement) {
     img.attr(
       "src",
       "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23f0f0f0'/%3E%3Ctext x='50' y='55' font-family='Arial' font-size='12' fill='%23999' text-anchor='middle'%3ESmall Page " +
-        page +
-        "%3C/text%3E%3C/svg%3E"
+      page +
+      "%3C/text%3E%3C/svg%3E"
     );
   }
 }
