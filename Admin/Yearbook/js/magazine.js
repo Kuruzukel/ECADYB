@@ -346,7 +346,6 @@ function findAndNavigateToStudent(
 
             highlightStudent();
 
-            // Also set up a listener for when images are loaded
             var imageLoadListener = function () {
               console.log(
                 "🖼️ Image loaded, checking if we need to highlight..."
