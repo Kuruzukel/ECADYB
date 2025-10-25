@@ -57,9 +57,9 @@ try {
 
     $user = null;
     
-    // Set query timeout options
+    // Set query timeout options - increased for better reliability
     $queryOptions = [
-        'maxTimeMS' => 2000 // 2 second timeout per query
+        'maxTimeMS' => 5000 // 5 second timeout per query
     ];
     
     // First, check admin accounts collection
@@ -78,16 +78,20 @@ try {
         error_log("Admin check error: " . $e->getMessage());
     }
     
-    // If not found in admin, search student department collections in parallel
+    // If not found in admin, search student department collections
     if (!$user) {
         // Define all department collections to search
         $departmentCollections = ['bsn', 'bsme', 'bscje', 'bstm', 'bse', 'bsis', 'beced', 'bsma', 'bsmt', 'btvted'];
         
-        // Use indexed search with timeout - search with limit to speed up
+        // Search with optimized timeout
         foreach ($departmentCollections as $collectionName) {
             try {
                 $collection = $database->selectCollection($collectionName);
-                $user = $collection->findOne(['email' => $email], $queryOptions);
+                // Use projection to only fetch email field for faster query
+                $user = $collection->findOne(
+                    ['email' => $email], 
+                    array_merge($queryOptions, ['projection' => ['email' => 1, '_id' => 1]])
+                );
                 
                 if ($user) {
                     // Found the student, no need to search further
@@ -204,15 +208,30 @@ try {
         $mail->SMTPSecure = GMAIL_SMTP_ENCRYPTION;
         $mail->Port       = GMAIL_SMTP_PORT;
         
-        // Set timeout to prevent long waits
-        $mail->Timeout = 10; // 10 seconds timeout
-        $mail->SMTPOptions = array(
-            'ssl' => array(
-                'verify_peer' => false,
-                'verify_peer_name' => false,
-                'allow_self_signed' => true
-            )
+        // Increased timeout for Gmail SMTP - Gmail can be slow sometimes
+        $mail->Timeout = 30; // 30 seconds timeout
+        $mail->SMTPKeepAlive = true; // Keep connection alive for faster subsequent sends
+        
+        // Optimized SSL options for Gmail with fallback for Windows
+        $sslOptions = array(
+            'verify_peer' => true,
+            'verify_peer_name' => true,
+            'allow_self_signed' => false
         );
+        
+        // Add CA file path if available (Linux/Unix systems)
+        if (file_exists('/etc/ssl/certs/ca-certificates.crt')) {
+            $sslOptions['cafile'] = '/etc/ssl/certs/ca-certificates.crt';
+        } elseif (file_exists('/etc/ssl/certs/ca-bundle.crt')) {
+            $sslOptions['cafile'] = '/etc/ssl/certs/ca-bundle.crt';
+        }
+        // Windows and other systems will use default CA bundle
+        
+        $mail->SMTPOptions = array('ssl' => $sslOptions);
+        
+        // Enable verbose debug output (comment out in production)
+        // $mail->SMTPDebug = 2;
+        // $mail->Debugoutput = function($str, $level) { error_log("SMTP Debug level $level: $str"); };
         
         // Email settings
         $mail->setFrom(EMAIL_FROM_ADDRESS, EMAIL_FROM_NAME);
@@ -220,24 +239,60 @@ try {
         $mail->isHTML(true);
         $mail->Subject = $subject;
         $mail->Body    = $message;
+        $mail->CharSet = 'UTF-8';
         
-        $mail->send();
+        // Send email with retry logic
+        $maxRetries = 2;
+        $retryCount = 0;
+        $emailSent = false;
+        $lastError = '';
         
-        echo json_encode([
-            'success' => true,
-            'message' => 'Verification code sent successfully to your email',
-            'email_sent' => true
-        ]);
+        while ($retryCount < $maxRetries && !$emailSent) {
+            try {
+                $mail->send();
+                $emailSent = true;
+            } catch (Exception $e) {
+                $retryCount++;
+                $lastError = $mail->ErrorInfo;
+                error_log("PHPMailer attempt $retryCount failed: {$mail->ErrorInfo}");
+                
+                if ($retryCount < $maxRetries) {
+                    // Wait 2 seconds before retry
+                    sleep(2);
+                    // Clear any previous recipients and reset
+                    $mail->clearAddresses();
+                    $mail->addAddress($email);
+                }
+            }
+        }
+        
+        if ($emailSent) {
+            echo json_encode([
+                'success' => true,
+                'message' => 'Verification code sent successfully to your email',
+                'email_sent' => true
+            ]);
+        } else {
+            // Email sending failed after retries
+            error_log("PHPMailer Error after $maxRetries attempts: $lastError");
+            
+            echo json_encode([
+                'success' => false,
+                'message' => 'Failed to send verification code. Please check your email address and try again.',
+                'email_sent' => false,
+                'error' => $lastError
+            ]);
+        }
         
     } catch (Exception $e) {
         // Email sending failed - return error
-        error_log("PHPMailer Error: {$mail->ErrorInfo}");
+        error_log("PHPMailer Error: " . $e->getMessage());
         
         echo json_encode([
             'success' => false,
             'message' => 'Failed to send verification code. Please try again later.',
             'email_sent' => false,
-            'error' => $mail->ErrorInfo
+            'error' => $e->getMessage()
         ]);
     }
 } catch (Exception $e) {
