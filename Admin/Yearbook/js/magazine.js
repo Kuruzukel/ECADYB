@@ -217,7 +217,6 @@ function findAndNavigateToStudent(
             });
             console.log("Visible pages found:", $visiblePages.length);
 
-            // Function to find and highlight student
             function highlightStudent(retryCount) {
               retryCount = retryCount || 0;
 
