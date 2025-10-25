@@ -449,7 +449,17 @@ function searchStudents(query) {
   showSuggestions();
 
   fetch(searchUrl)
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      // Check if response is JSON
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        throw new Error("Server returned non-JSON response");
+      }
+      return response.json();
+    })
     .then((data) => {
       if (data.success && data.results && data.results.length > 0) {
         displaySuggestions(data.results);

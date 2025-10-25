@@ -1,4 +1,8 @@
 <?php
+// Ensure JSON is always returned, even on fatal errors
+ini_set('display_errors', 0);
+error_reporting(E_ALL);
+
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, OPTIONS');
@@ -13,6 +17,7 @@ try {
     require __DIR__ . '/../../vendor/autoload.php';
     require_once __DIR__ . '/../Configuration/MongoConnect.php';
 } catch (Exception $e) {
+    http_response_code(500);
     echo json_encode([
         'success' => false,
         'message' => 'Failed to load required files: ' . $e->getMessage()
@@ -130,9 +135,17 @@ try {
 
 } catch (Exception $e) {
     error_log("SearchStudents.php exception: " . $e->getMessage());
+    http_response_code(500);
     echo json_encode([
         'success' => false,
         'message' => 'Search error: ' . $e->getMessage()
+    ]);
+} catch (Error $e) {
+    error_log("SearchStudents.php fatal error: " . $e->getMessage());
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Fatal error occurred'
     ]);
 }
 
