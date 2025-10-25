@@ -22,13 +22,18 @@
 
 #### Required - MongoDB Connection
 
-If you added Railway's MongoDB plugin, it will auto-create `MONGODB_URI`. If not, add:
+**Option A: Using Railway's MongoDB Plugin (Recommended)**
+- Railway will automatically create `MONGODB_URI` variable
+- No manual configuration needed!
 
-```
-MONGO_URL=mongodb+srv://YOUR_MONGO_USERNAME:YOUR_MONGO_PASSWORD@YOUR_CLUSTER_NAME.mongodb.net/ECADYB?retryWrites=true&w=majority
-```
-
-**IMPORTANT:** Replace YOUR_MONGO_USERNAME, YOUR_MONGO_PASSWORD, and YOUR_CLUSTER_NAME with your actual MongoDB credentials!
+**Option B: Using External MongoDB (e.g., MongoDB Atlas)**
+- Variable name: `MONGO_URL`
+- Get your connection string from MongoDB Atlas:
+  1. Go to your cluster → Connect → Connect your application
+  2. Copy the connection string
+  3. Paste it in Railway's Variables tab
+- The string looks like: `mongodb+srv://[username]:[password]@[cluster-name].mongodb.net/ECADYB`
+- Make sure to replace [username], [password], and [cluster-name] with your actual values
 
 #### Required - Bunny CDN (for file uploads)
 
@@ -102,15 +107,13 @@ SMTP_ENCRYPTION=tls
 
 **MongoDB Atlas (Cloud):**
 
-Format: `mongodb+srv://USERNAME:PASSWORD@CLUSTER_NAME.xxxxx.mongodb.net/ECADYB?retryWrites=true&w=majority`
+Structure: `mongodb+srv://` + `[username]:[password]` + `@[cluster].mongodb.net/[database]`
 
-Replace USERNAME, PASSWORD, and CLUSTER_NAME with your actual values from MongoDB Atlas.
+Get the complete string from: MongoDB Atlas Dashboard → Clusters → Connect → Drivers
 
 **Railway MongoDB Plugin:**
 
-Format: `mongodb://USERNAME:PASSWORD@HOSTNAME:PORT/DATABASE`
-
-_(Railway auto-generates this as `MONGODB_URI` - use it directly)_
+Railway auto-generates the complete connection string as `MONGODB_URI` - just use it directly!
 
 **Local MongoDB (for testing only):**
 

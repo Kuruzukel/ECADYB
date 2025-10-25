@@ -73,27 +73,28 @@ GitHub automatically scans for exposed secrets. If you see alerts:
 
 ### Safe Documentation Examples
 
-**BAD - Triggers Security Scanners:**
+**❌ BAD - Triggers Security Scanners:**
 
-Using realistic-looking credentials even if fake:
+Even fake credentials can trigger scanners if they match patterns:
+- Complete connection strings with `://` protocol
+- Realistic-looking API keys
+- Full credential examples in code blocks
 
-- `MONGO_URL=mongodb+srv://admin:password123@cluster.mongodb.net/database`
-- `API_KEY=sk-1234567890abcdefghijklmnop`
+**✅ GOOD - Use Broken Patterns:**
 
-**GOOD - Clearly Placeholders:**
+Break up the string so scanners don't recognize the pattern:
+- Structure: `mongodb+srv://` + `[user]:[pass]` + `@[host]/[db]`
+- Format: `protocol://[credentials]@[host]/[database]`
+- Describe where to get it: "Copy from MongoDB Atlas Dashboard"
 
-Use ALL_CAPS or obvious placeholder text:
+**✅ BEST - Reference External Sources:**
 
-- `MONGO_URL=mongodb+srv://YOUR_USERNAME:YOUR_PASSWORD@YOUR_CLUSTER.mongodb.net/DATABASE`
-- `API_KEY=YOUR_API_KEY_HERE`
-- `DATABASE_URL=postgresql://USERNAME:PASSWORD@HOST:PORT/DATABASE`
+Instead of showing examples:
+- "Get your connection string from MongoDB Atlas dashboard"
+- "Copy the value from Railway Variables tab"
+- "See the official documentation at [link]"
 
-**BEST - Broken/Descriptive Format:**
-
-Break the pattern or use descriptive text:
-
-- Format: `mongodb+srv://USERNAME:PASSWORD@CLUSTER.mongodb.net/DATABASE`
-- Get your API key from: `Settings > API Keys`
+This way, no patterns are exposed that could trigger false positives!
 
 ### Best Practices
 

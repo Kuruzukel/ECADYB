@@ -52,10 +52,11 @@ If Nixpacks fails, you can use the Docker deployment.
 #### MongoDB Configuration (REQUIRED)
 
 - `MONGO_URL` or `MONGODB_URI`: Your MongoDB connection string
-  - Format: `mongodb+srv://USERNAME:PASSWORD@CLUSTER.mongodb.net/DATABASE?retryWrites=true&w=majority`
+  - Get from MongoDB Atlas dashboard (connection string) or Railway MongoDB plugin
+  - The connection string format is: `mongodb+srv://[user]:[pass]@[host]/[db]`
   - If you're using Railway's MongoDB plugin, it will automatically set `MONGODB_URI`
   - The application checks both `MONGO_URL` and `MONGODB_URI`
-  - **Replace USERNAME, PASSWORD, CLUSTER, and DATABASE with your actual credentials**
+  - **Never commit this value to Git - set it only in Railway dashboard**
 
 #### Bunny CDN Configuration (Required for file uploads)
 
