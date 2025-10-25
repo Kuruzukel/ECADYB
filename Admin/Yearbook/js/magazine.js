@@ -319,7 +319,6 @@ function findAndNavigateToStudent(
                   console.warn(
                     "⚠️ Student image area not found or no image content in target card"
                   );
-                  // Still notify parent even if highlighting failed
                   notifyNavigationComplete();
                 }
               } else {
