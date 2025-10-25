@@ -88,7 +88,6 @@ function navigateToSearchedStudent() {
     var batchYear = localStorage.getItem("selectedBatchYear");
     console.log("Batch year for navigation:", batchYear);
 
-    // First, ensure all students are loaded for this department
     console.log("=== FORCING STUDENT DATA LOAD ===");
     console.log(
       "Calling loadAllStudentsForDepartment with:",
