@@ -177,7 +177,6 @@ function findAndNavigateToStudent(
         }
       }
 
-      // Calculate yearbook page
       // Formula: frontCover(1) + managementPages(4) + studentPageOffset
       // Student pages start at page 6 (after front + 4 mgmt pages)
       var studentsPerPage = 4;
