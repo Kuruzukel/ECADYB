@@ -18,6 +18,7 @@ Click this link: [https://github.com/Kuruzukel/ECADYB/security/secret-scanning](
 
 1. Look for the **"Close as"** dropdown button (or "Dismiss alerts" button)
 2. Click it and select one of these reasons:
+
    - ✅ **"False positive"** (Recommended - these are documentation examples, not real secrets)
    - ✅ **"Used in tests"** (Also appropriate since they're examples)
    - ⚠️ **NOT** "Revoked" (these were never real credentials)
@@ -37,6 +38,7 @@ Click this link: [https://github.com/Kuruzukel/ECADYB/security/secret-scanning](
 ## Why This Happened
 
 GitHub's secret scanner detected patterns that **look like** MongoDB connection strings, even though they contained:
+
 - Placeholder text like `[username]`, `[password]`
 - All-caps fake values like `YOUR_USERNAME`
 - Documentation examples, not real credentials
@@ -65,7 +67,7 @@ The documentation has been updated to:
 
 ✅ Use broken patterns like: `mongodb+srv://` + `[user]:[pass]` + `@[host]/[db]`  
 ✅ Reference external sources instead of showing complete examples  
-✅ Use square brackets `[placeholder]` instead of complete examples  
+✅ Use square brackets `[placeholder]` instead of complete examples
 
 This should prevent new alerts from appearing!
 
@@ -92,10 +94,10 @@ If new alerts appear even after commit `221df6f7`:
 ## Questions?
 
 These alerts are **100% safe to dismiss** because:
+
 - ❌ They were never real credentials
 - ❌ They were never valid connection strings
 - ✅ They were always documentation examples
 - ✅ No security risk exists
 
 **You can safely dismiss all 12 alerts as "False positive"!**
-

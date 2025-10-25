@@ -76,6 +76,7 @@ GitHub automatically scans for exposed secrets. If you see alerts:
 **❌ BAD - Triggers Security Scanners:**
 
 Even fake credentials can trigger scanners if they match patterns:
+
 - Complete connection strings with `://` protocol
 - Realistic-looking API keys
 - Full credential examples in code blocks
@@ -83,6 +84,7 @@ Even fake credentials can trigger scanners if they match patterns:
 **✅ GOOD - Use Broken Patterns:**
 
 Break up the string so scanners don't recognize the pattern:
+
 - Structure: `mongodb+srv://` + `[user]:[pass]` + `@[host]/[db]`
 - Format: `protocol://[credentials]@[host]/[database]`
 - Describe where to get it: "Copy from MongoDB Atlas Dashboard"
@@ -90,6 +92,7 @@ Break up the string so scanners don't recognize the pattern:
 **✅ BEST - Reference External Sources:**
 
 Instead of showing examples:
+
 - "Get your connection string from MongoDB Atlas dashboard"
 - "Copy the value from Railway Variables tab"
 - "See the official documentation at [link]"

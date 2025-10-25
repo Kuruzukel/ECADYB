@@ -23,10 +23,12 @@
 #### Required - MongoDB Connection
 
 **Option A: Using Railway's MongoDB Plugin (Recommended)**
+
 - Railway will automatically create `MONGODB_URI` variable
 - No manual configuration needed!
 
 **Option B: Using External MongoDB (e.g., MongoDB Atlas)**
+
 - Variable name: `MONGO_URL`
 - Get your connection string from MongoDB Atlas:
   1. Go to your cluster → Connect → Connect your application
