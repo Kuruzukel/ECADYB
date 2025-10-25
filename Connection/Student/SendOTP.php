@@ -122,7 +122,7 @@ try {
     }
     $_SESSION['otp_' . $email] = [
         'code' => $otp,
-        'expires' => time() + 120,
+        'expires' => time() + 60,
         'attempts' => 0
     ];
 
@@ -178,7 +178,7 @@ try {
                     <div class='otp-code'>$otp</div>
                     <p><strong>Important:</strong></p>
                     <ul>
-                        <li>This code will expire in 120 seconds</li>
+                        <li>This code will expire in 60 seconds</li>
                         <li>Do not share this code with anyone</li>
                         <li>If you didn't request this reset, please ignore this email</li>
                     </ul>
