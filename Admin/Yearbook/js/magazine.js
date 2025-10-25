@@ -390,7 +390,6 @@ function tryNavigateToStudent() {
   navigationAttempts++;
   console.log("=== NAVIGATION ATTEMPT", navigationAttempts, "===");
 
-  // Check if magazine exists and is initialized
   var $magazine = $(".magazine");
   var magazineExists = $magazine.length > 0;
   var turnFunctionExists = typeof $magazine.turn === "function";
