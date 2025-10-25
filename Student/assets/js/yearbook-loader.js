@@ -172,19 +172,22 @@
 
             if (this.timeout) {
                 clearTimeout(this.timeout);
+                this.timeout = null;
             }
 
             if (this.checkInterval) {
                 clearInterval(this.checkInterval);
+                this.checkInterval = null;
             }
 
             if (this.loaderElement) {
                 this.loaderElement.classList.add('hidden');
-
+                
+                // Don't remove from DOM - keep it for reuse on next yearbook transition
                 setTimeout(function () {
-                    if (this.loaderElement && this.loaderElement.parentNode) {
-                        this.loaderElement.remove();
-                        console.log('[Loader] Loader removed from DOM');
+                    if (this.loaderElement) {
+                        this.loaderElement.style.display = 'none';
+                        console.log('[Loader] Loader hidden (kept in DOM for reuse)');
                     }
                 }.bind(this), 400);
             }
@@ -245,11 +248,15 @@
             console.log('[Loader] New student search detected in URL:', currentStudentId);
             lastStudentId = currentStudentId;
 
-            // Show loader again
+            // Show loader again - ensure it's fully visible
             const loader = document.querySelector('.yearbook-loader-overlay');
             if (loader) {
                 loader.classList.remove('hidden');
                 loader.style.display = 'flex';
+                loader.style.opacity = '1';
+                loader.style.visibility = 'visible';
+                loader.style.pointerEvents = 'auto';
+                console.log('[Loader] Loader shown for student navigation');
             }
 
             // Send message to iframe to navigate to new student
@@ -275,9 +282,11 @@
                     // Clear any existing timers
                     if (LoaderManager.timeout) {
                         clearTimeout(LoaderManager.timeout);
+                        LoaderManager.timeout = null;
                     }
                     if (LoaderManager.checkInterval) {
                         clearInterval(LoaderManager.checkInterval);
+                        LoaderManager.checkInterval = null;
                     }
 
                     // Reset loader state for new navigation
@@ -285,6 +294,10 @@
                     LoaderManager.magazineReady = false;
                     LoaderManager.coverVisible = false;
                     LoaderManager.navigationComplete = false;
+
+                    // Update loader references
+                    LoaderManager.loaderElement = loader;
+                    LoaderManager.iframe = iframe;
 
                     // Restart loading process
                     LoaderManager.setMaxTimeout();

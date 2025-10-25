@@ -252,6 +252,8 @@ $departmentCode = $departmentCodes[$studentDepartment] ?? 'BSME';
         const allItems = document.querySelectorAll('.yearbook-item');
         const loader = document.querySelector('.yearbook-loader-overlay');
 
+        console.log('[Yearbook] Opening yearbook:', departmentCode, departmentName);
+
         // Remove active class from all items
         allItems.forEach(item => item.classList.remove('active'));
         
@@ -271,16 +273,22 @@ $departmentCode = $departmentCodes[$studentDepartment] ?? 'BSME';
           itemsContainer.style.display = 'none';
         }
 
-        // Show loader and reset its state
+        // ALWAYS show loader for every iframe transition
         if (loader) {
+          // Force remove the loader from DOM if it exists and recreate it
           loader.classList.remove('hidden');
           loader.style.display = 'flex';
           loader.style.opacity = '1';
           loader.style.visibility = 'visible';
+          loader.style.pointerEvents = 'auto';
+          console.log('[Yearbook] Loader shown');
         }
 
-        // Reset loader manager state if it exists
+        // Reset loader manager state completely for new yearbook
         if (window.YearbookLoader) {
+          console.log('[Yearbook] Resetting loader manager state');
+          
+          // Reset all flags
           window.YearbookLoader.isLoaded = false;
           window.YearbookLoader.magazineReady = false;
           window.YearbookLoader.coverVisible = false;
@@ -289,36 +297,49 @@ $departmentCode = $departmentCodes[$studentDepartment] ?? 'BSME';
           // Clear any existing timers
           if (window.YearbookLoader.timeout) {
             clearTimeout(window.YearbookLoader.timeout);
+            window.YearbookLoader.timeout = null;
           }
           if (window.YearbookLoader.checkInterval) {
             clearInterval(window.YearbookLoader.checkInterval);
+            window.YearbookLoader.checkInterval = null;
           }
           
-          // Restart loading process
+          // Update references
           window.YearbookLoader.loaderElement = loader;
           window.YearbookLoader.iframe = iframe;
+          
+          // Restart loading process
           window.YearbookLoader.setMaxTimeout();
           window.YearbookLoader.startChecking();
         }
 
-        // Update iframe src and show it
-        if (iframe && iframeContainer) {
-          // Add fullscreen=true parameter to trigger fullscreen styles in the iframe
-          iframe.src = `/ECADYB/Student/Yearbook/index.html?department=${departmentCode}&fullscreen=true`;
-          iframe.title = `Digital Yearbook - ${departmentName}`;
-          iframeContainer.style.display = 'block';
-          
-          // Request full screen mode
-          if (iframeContainer.requestFullscreen) {
-            iframeContainer.requestFullscreen().catch(err => {
-              console.log('Full screen request failed:', err);
-            });
-          } else if (iframeContainer.webkitRequestFullscreen) {
-            iframeContainer.webkitRequestFullscreen();
-          } else if (iframeContainer.msRequestFullscreen) {
-            iframeContainer.msRequestFullscreen();
-          }
+        // Clear current iframe src first to force full reload
+        if (iframe) {
+          iframe.src = '';
         }
+
+        // Update iframe src and show container after a brief delay to ensure clean reload
+        setTimeout(() => {
+          if (iframe && iframeContainer) {
+            // Add fullscreen=true parameter to trigger fullscreen styles in the iframe
+            iframe.src = `/ECADYB/Student/Yearbook/index.html?department=${departmentCode}&fullscreen=true`;
+            iframe.title = `Digital Yearbook - ${departmentName}`;
+            iframeContainer.style.display = 'block';
+            
+            console.log('[Yearbook] Iframe src updated:', iframe.src);
+            
+            // Request full screen mode
+            if (iframeContainer.requestFullscreen) {
+              iframeContainer.requestFullscreen().catch(err => {
+                console.log('Full screen request failed:', err);
+              });
+            } else if (iframeContainer.webkitRequestFullscreen) {
+              iframeContainer.webkitRequestFullscreen();
+            } else if (iframeContainer.msRequestFullscreen) {
+              iframeContainer.msRequestFullscreen();
+            }
+          }
+        }, 100);
       }
 
       // Function to close yearbook iframe
@@ -328,6 +349,9 @@ $departmentCode = $departmentCodes[$studentDepartment] ?? 'BSME';
         const iframe = document.getElementById('yearbookIframe');
         const itemsContainer = document.querySelector('.yearbook-items-container');
         const allItems = document.querySelectorAll('.yearbook-item');
+        const loader = document.querySelector('.yearbook-loader-overlay');
+
+        console.log('[Yearbook] Closing yearbook iframe');
 
         // Exit full screen mode
         if (document.exitFullscreen) {
@@ -351,6 +375,36 @@ $departmentCode = $departmentCodes[$studentDepartment] ?? 'BSME';
         // Show yearbook slider
         if (itemsContainer) {
           itemsContainer.style.display = 'flex';
+        }
+
+        // Reset loader state completely for next yearbook
+        if (window.YearbookLoader) {
+          console.log('[Yearbook] Resetting loader for next transition');
+          
+          // Clear any existing timers
+          if (window.YearbookLoader.timeout) {
+            clearTimeout(window.YearbookLoader.timeout);
+            window.YearbookLoader.timeout = null;
+          }
+          if (window.YearbookLoader.checkInterval) {
+            clearInterval(window.YearbookLoader.checkInterval);
+            window.YearbookLoader.checkInterval = null;
+          }
+          
+          // Reset all flags
+          window.YearbookLoader.isLoaded = false;
+          window.YearbookLoader.magazineReady = false;
+          window.YearbookLoader.coverVisible = false;
+          window.YearbookLoader.navigationComplete = false;
+        }
+
+        // Hide loader and prepare it for next use
+        if (loader) {
+          loader.classList.add('hidden');
+          // Don't remove from DOM, just hide it for reuse
+          setTimeout(() => {
+            loader.style.display = 'none';
+          }, 400);
         }
 
         // Hide and reset iframe
