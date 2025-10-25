@@ -122,7 +122,7 @@ try {
     }
     $_SESSION['otp_' . $email] = [
         'code' => $otp,
-        'expires' => time() + 120, // 120 seconds expiration
+        'expires' => time() + 120,
         'attempts' => 0
     ];
 
