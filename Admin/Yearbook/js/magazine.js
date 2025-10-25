@@ -304,7 +304,6 @@ function findAndNavigateToStudent(
                     }, 3000);
                   }, 5000);
 
-                  // Notify parent window that navigation is complete
                   notifyNavigationComplete();
                 } else if ($studentImageArea.length && retryCount < 15) {
                   // Image area exists but no image content yet, retry
