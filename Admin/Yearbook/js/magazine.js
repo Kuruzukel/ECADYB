@@ -466,7 +466,6 @@ function checkForNewStudentSearch() {
     return;
   }
 
-  // If there's a student_id and it's different from the last one we processed
   if (currentStudentId !== lastSearchedStudentId) {
     console.log(
       "🔄 New student search detected:",
