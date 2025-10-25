@@ -513,7 +513,6 @@ window.triggerStudentNavigation = function (
   }, 500);
 };
 
-// Listen for postMessage from parent window for new student navigation
 window.addEventListener("message", function (event) {
   if (event.data && event.data.type === "navigate-to-student") {
     console.log(
