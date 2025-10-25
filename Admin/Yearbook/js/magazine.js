@@ -1972,7 +1972,6 @@ function addRegion(region, pageElement) {
 }
 
 function regionClick(event) {
-  //     $(".magazine-viewport").data().regionClicked = true;
   //     setTimeout(function () {
   //       $(".magazine-viewport").data().regionClicked = false;
   //     }, 100);
