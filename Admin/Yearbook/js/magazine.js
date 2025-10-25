@@ -28,7 +28,6 @@ function navigateToSearchedStudent() {
 
     var studentData = null;
 
-    // Try to get student data from URL parameters first
     if (urlStudentId && urlStudentName) {
       studentData = {
         student_id: urlStudentId,
