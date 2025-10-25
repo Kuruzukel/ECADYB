@@ -178,6 +178,7 @@ function updateGetCodeButton() {
 
 async function handleGetCode() {
   const email = emailInput.value.trim();
+  const basePath = window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '';
 
   if (!email) {
     showNotification("Please enter your email address first.", "error");
@@ -197,7 +198,6 @@ async function handleGetCode() {
 
   try {
     // Check if email exists in database
-    const basePath = window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '';
     const emailCheckResponse = await fetch(`${window.location.origin}${basePath}/Connection/Student/CheckEmail.php`, {
       method: 'POST',
       headers: {
@@ -223,7 +223,6 @@ async function handleGetCode() {
     getCodeText.textContent = "Sending...";
 
     // Generate and send OTP
-    const basePath = window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '';
     const otpResponse = await fetch(`${window.location.origin}${basePath}/Connection/Student/SendOTP.php`, {
       method: 'POST',
       headers: {
