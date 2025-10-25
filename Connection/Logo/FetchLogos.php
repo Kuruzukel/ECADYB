@@ -37,7 +37,8 @@ use MongoDB\Client;
 
 try {
 
-    $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
+    require_once __DIR__ . '/../Configuration/EnvLoader.php';
+    $mongoUrl = getMongoUrl();
 
     $client = new Client($mongoUrl, [
         'serverSelectionTimeoutMS' => 5000,

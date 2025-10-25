@@ -109,11 +109,11 @@ try {
     error_log("UploadStudentPhotos: CONTENT_TYPE: " . ($_SERVER['CONTENT_TYPE'] ?? 'not set'));
     error_log("UploadStudentPhotos: CONTENT_LENGTH: " . ($_SERVER['CONTENT_LENGTH'] ?? 'not set'));
     error_log("UploadStudentPhotos: All SERVER vars: " . json_encode($_SERVER));
-    
+
     // Get batch year from form data
     $batchYear = isset($_POST['batch_year']) ? trim($_POST['batch_year']) : null;
     $academicYear = null;
-    
+
     if ($batchYear) {
         // Convert "Batch Year 2024-2025" to "2024-2025"
         $academicYear = str_replace('Batch Year ', '', $batchYear);
@@ -166,16 +166,16 @@ try {
     } else {
         error_log("  - Single file name: " . $uploadedFiles['name']);
     }
-    
+
     // Validate maximum number of files (20 images limit)
     $MAX_FILES = 20;
     $fileCount = is_array($uploadedFiles['name']) ? count($uploadedFiles['name']) : 1;
-    
+
     if ($fileCount > $MAX_FILES) {
         error_log("UploadStudentPhotos.php - Too many files: $fileCount (max: $MAX_FILES)");
         respond(false, "You can only upload a maximum of $MAX_FILES images at a time. You attempted to upload $fileCount images. Please reduce the number of files.");
     }
-    
+
     error_log("UploadStudentPhotos.php - File count validation passed: $fileCount files");
 
     if (!is_array($uploadedFiles['name'])) {
@@ -194,8 +194,9 @@ try {
     $results = [];
     $uploadedFilesToCleanup = []; // Track files uploaded to BunnyCDN for cleanup
 
-        $mongoDbName = "ECADYB";
-    $mongoUrl = getenv('MONGO_URL') ?: getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
+    $mongoDbName = "ECADYB";
+    require_once __DIR__ . '/../Configuration/EnvLoader.php';
+    $mongoUrl = getMongoUrl();
     error_log("UploadStudentPhotos.php using MongoDB URL: $mongoUrl");
     error_log("UploadStudentPhotos.php using database: $mongoDbName, collection: Photos");
 
@@ -310,11 +311,11 @@ try {
             $baseFolder = 'Student Photos';
             error_log("UploadStudentPhotos: No academic year, using default folder: $baseFolder");
         }
-        
+
         // Determine photo type folder based on filename
         $photoTypeFolder = '';
         $originalNameWithoutExt = pathinfo($fileName, PATHINFO_FILENAME);
-        
+
         if (strpos($originalNameWithoutExt, '-FILIPINIANA') !== false) {
             $photoTypeFolder = 'FILIPINIANA';
             error_log("Detected FILIPINIANA photo for $fileName");
@@ -328,10 +329,10 @@ try {
             $photoTypeFolder = 'UNIFORM'; // Default to UNIFORM for photos without type suffix
             error_log("No photo type detected for $fileName, defaulting to UNIFORM");
         }
-        
+
         $safeFolder = $baseFolder . '/' . $photoTypeFolder;
         error_log("UploadStudentPhotos: Using full folder path: $safeFolder");
-        
+
         $filename = sprintf('%s.%s', $safeFileName, $safeExt);
         $path = $safeFolder . '/' . $filename;
         $storageUrl = "https://storage.bunnycdn.com/{$bunnyStorageZone}/" . str_replace(' ', '%20', $path);
@@ -452,7 +453,7 @@ try {
             if ($academicYear) {
                 $filter['academic year'] = $academicYear;
             }
-            
+
             error_log("UploadStudentPhotos.php checking for existing document with filter: " . json_encode($filter));
             $existingDocument = $collection->findOne($filter);
 
@@ -603,7 +604,7 @@ try {
     respond(true, "Processed {$uploadedCount} of " . count($uploadedFiles['name']) . " files successfully", $responseData);
 } catch (Exception $e) {
     error_log("UploadStudentPhotos.php exception: " . $e->getMessage());
-    
+
     // Clean up any files that were uploaded to BunnyCDN before the error
     if (!empty($uploadedFilesToCleanup)) {
         error_log("Cleaning up " . count($uploadedFilesToCleanup) . " files from BunnyCDN due to exception");
@@ -621,6 +622,6 @@ try {
             error_log("Cleaned up file: " . $fileInfo['filename']);
         }
     }
-    
+
     respond(false, 'Server error: ' . $e->getMessage());
 }

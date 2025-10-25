@@ -20,7 +20,8 @@ use MongoDB\Client;
 
 try {
     $mongoDbName = "ECADYB";
-    $mongoUrl = getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
+    require_once __DIR__ . '/../Configuration/EnvLoader.php';
+    $mongoUrl = getMongoUrl();
 
     $mongoClient = new MongoDB\Client($mongoUrl);
 

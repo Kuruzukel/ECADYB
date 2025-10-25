@@ -102,11 +102,11 @@ try {
 
     // Debug: Log all POST data
     error_log("UploadTopManagementPhotos: POST data received: " . json_encode($_POST));
-    
+
     // Get batch year from form data
     $batchYear = isset($_POST['batch_year']) ? trim($_POST['batch_year']) : null;
     $academicYear = null;
-    
+
     if ($batchYear) {
         // Convert "Batch Year 2024-2025" to "2024-2025"
         $academicYear = str_replace('Batch Year ', '', $batchYear);
@@ -153,16 +153,16 @@ try {
             'size' => [$uploadedFiles['size']]
         ];
     }
-    
+
     // Validate maximum number of files (20 images limit)
     $MAX_FILES = 20;
     $fileCount = count($uploadedFiles['name']);
-    
+
     if ($fileCount > $MAX_FILES) {
         error_log("UploadTopManagementPhotos.php - Too many files: $fileCount (max: $MAX_FILES)");
         respond(false, "You can only upload a maximum of $MAX_FILES images at a time. You attempted to upload $fileCount images. Please reduce the number of files.");
     }
-    
+
     error_log("UploadTopManagementPhotos.php - File count validation passed: $fileCount files");
 
     $uploadedCount = 0;
@@ -234,11 +234,11 @@ try {
             $baseFolder = 'Top Management Photos';
             error_log("UploadTopManagementPhotos: No academic year, using default folder: $baseFolder");
         }
-        
+
         // Determine photo type folder based on filename
         $photoTypeFolder = '';
         $nameWithoutExt = pathinfo($fileName, PATHINFO_FILENAME);
-        
+
         if (strpos($nameWithoutExt, '-FILIPINIANA') !== false) {
             $photoTypeFolder = 'FILIPINIANA';
             error_log("Detected FILIPINIANA photo for $fileName");
@@ -252,10 +252,10 @@ try {
             $photoTypeFolder = 'UNIFORM'; // Default to UNIFORM for photos without type suffix
             error_log("No photo type detected for $fileName, defaulting to UNIFORM");
         }
-        
+
         $safeFolder = $baseFolder . '/' . $photoTypeFolder;
         error_log("UploadTopManagementPhotos: Using full folder path: $safeFolder");
-        
+
         $filename = sprintf('%s.%s', $safeFileName, $safeExt);
         $path = $safeFolder . '/' . $filename;
         $storageUrl = "https://storage.bunnycdn.com/{$bunnyStorageZone}/" . str_replace(' ', '%20', $path);
@@ -339,7 +339,8 @@ try {
         }
 
         $mongoDbName = "ECADYB";
-        $mongoUrl = getenv('MONGO_URL') ?: getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
+        require_once __DIR__ . '/../Configuration/EnvLoader.php';
+        $mongoUrl = getMongoUrl();
         error_log("UploadTopManagementPhotos.php using MongoDB URL: $mongoUrl");
         error_log("UploadTopManagementPhotos.php using database: $mongoDbName, collection: Photos");
 
@@ -482,16 +483,16 @@ try {
             if ($academicYear) {
                 $filter['academic year'] = $academicYear;
             }
-            
+
             error_log("UploadTopManagementPhotos.php upserting document with filter: " . json_encode($filter));
             error_log("UploadTopManagementPhotos.php document data: " . json_encode($document));
-            
+
             $result = $collection->updateOne(
                 $filter,
                 ['$set' => $document],
                 ['upsert' => true]
             );
-            
+
             if ($result->getUpsertedId()) {
                 $document['_id'] = (string) $result->getUpsertedId();
                 error_log("UploadTopManagementPhotos.php inserted new document with ID: " . $document['_id']);
@@ -560,7 +561,7 @@ try {
     respond(true, "Processed {$uploadedCount} of " . count($uploadedFiles['name']) . " files successfully", $responseData);
 } catch (Exception $e) {
     error_log("UploadTopManagementPhotos.php exception: " . $e->getMessage());
-    
+
     // Clean up any files that were uploaded to BunnyCDN before the error
     if (!empty($uploadedFilesToCleanup)) {
         error_log("Cleaning up " . count($uploadedFilesToCleanup) . " files from BunnyCDN due to exception");
@@ -578,6 +579,6 @@ try {
             error_log("Cleaned up file: " . $fileInfo['filename']);
         }
     }
-    
+
     respond(false, 'Server error: ' . $e->getMessage());
 }

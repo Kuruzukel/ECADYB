@@ -293,6 +293,19 @@ namespace {
         }
     }
 
+    if (!function_exists('rand')) {
+        /**
+         * Generate a random integer
+         * @param int $min Optional lowest value to be returned (default: 0)
+         * @param int $max Optional highest value to be returned (default: getrandmax())
+         * @return int A random integer value between min and max
+         */
+        function rand(int $min = 0, int $max = 0): int
+        {
+            return 0;
+        }
+    }
+
     if (!function_exists('str_pad')) {
         /**
          * Pad a string to a certain length with another string

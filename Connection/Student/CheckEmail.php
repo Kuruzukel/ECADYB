@@ -52,43 +52,44 @@ try {
     }
 
     $found = false;
-    
+
     // Set query timeout options
     $queryOptions = [
         'maxTimeMS' => 2000 // 2 second timeout per query
     ];
-    
+
     // First, check admin accounts collection
     try {
         $mongoClient = $GLOBALS['mongoClient'] ?? null;
         if (!$mongoClient) {
             // Fallback: create new client if global not available
             require_once __DIR__ . '/../../vendor/autoload.php';
-            $mongoClient = new \MongoDB\Client("mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957/");
+            require_once __DIR__ . '/../Configuration/EnvLoader.php';
+            $mongoClient = new \MongoDB\Client(getMongoUrl());
         }
         $adminDB = $mongoClient->admin;
         $adminCollection = $adminDB->accounts;
-        
+
         $adminAccount = $adminCollection->findOne(['email' => $email], $queryOptions);
-        
+
         if ($adminAccount) {
             $found = true;
         }
     } catch (Exception $e) {
         error_log("Admin check error: " . $e->getMessage());
     }
-    
+
     // If not found in admin, search student department collections
     if (!$found) {
         // Define all department collections to search
         $departmentCollections = ['bsn', 'bsme', 'bscje', 'bstm', 'bse', 'bsis', 'beced', 'bsma', 'bsmt', 'btvted'];
-        
+
         // Search through each department collection with timeout
         foreach ($departmentCollections as $collectionName) {
             try {
                 $collection = $database->selectCollection($collectionName);
                 $student = $collection->findOne(['email' => $email], $queryOptions);
-                
+
                 if ($student) {
                     // Found the student, no need to search further
                     $found = true;

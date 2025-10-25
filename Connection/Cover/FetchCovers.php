@@ -37,10 +37,11 @@ use MongoDB\Client;
 try {
     $batchYear = isset($_GET['batch_year']) ? trim($_GET['batch_year']) : '';
     $template = isset($_GET['template']) ? (int)$_GET['template'] : 1;
-    
+
     error_log("FetchCovers.php received parameters: batch_year='$batchYear', template=$template");
-    
-    $mongoUrl = getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
+
+    require_once __DIR__ . '/../Configuration/EnvLoader.php';
+    $mongoUrl = getMongoUrl();
     error_log("FetchCovers.php using MongoDB URL: $mongoUrl");
 
     $client = new Client($mongoUrl, [
@@ -61,7 +62,7 @@ try {
     if (!empty($batchYear)) {
         $filter['batch_year'] = $batchYear;
     }
-    
+
     error_log("FetchCovers.php query filter: " . json_encode($filter));
 
     $cursor = $collection->find(

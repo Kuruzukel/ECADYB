@@ -162,7 +162,8 @@ try {
         respond(false, 'Client disconnected');
     }
 
-    $mongoUrl = getenv('MONGO_URL') ?: getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
+    require_once __DIR__ . '/../Configuration/EnvLoader.php';
+    $mongoUrl = getMongoUrl();
 
     try {
         $client = new Client($mongoUrl, [

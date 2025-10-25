@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../../vendor/autoload.php';
+
 use MongoDB\Client;
 
 // Get student information from session
@@ -20,70 +21,71 @@ $studentProfilePhoto = $_SESSION['profile_photo'] ?? '';
 
 // Fetch student data from MongoDB if not already in session
 if (empty($studentEmail) || empty($studentFirstName)) {
-    
-    try {
-        $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
-        $client = new Client($mongoUrl);
-        
-        // Collections mapping
-        $collections = [
-            "BS Marine Engineering" => "bsme",
-            "BS Marine Transportation" => "bsmt",
-            "BS Criminal Justice Education" => "bscje",
-            "BS Tourism Management" => "bstm",
-            "BS Technical-Vocational Teacher Education" => "btvted",
-            "BS Early Childhood Education" => "beced",
-            "BS Nursing" => "bsn",
-            "BS Information System" => "bsis",
-            "BS Management Accounting" => "bsma",
-            "BS Entrepreneurship" => "bse"
-        ];
-        
-        // Determine which database and collection to use
-        $dbName = $_SESSION['batch_template'] ?? "ECADYB";
-        $collectionName = $collections[$studentDepartment] ?? 'bsme';
-        
-        $db = $client->$dbName;
-        $collection = $db->$collectionName;
-        
-        // Find the student by student ID
-        $student = $collection->findOne([
-            '$or' => [
-                ['student id' => $studentId],
-                ['student_id' => $studentId]
-            ]
-        ]);
-        
-        if ($student) {
-            // Store all data in session
-            $studentFirstName = $_SESSION['first_name'] = $student['first name'] ?? '';
-            $studentMiddleName = $_SESSION['middle_name'] = $student['middle name'] ?? '';
-            $studentLastName = $_SESSION['last_name'] = $student['last name'] ?? '';
-            $studentEmail = $_SESSION['email'] = $student['email'] ?? '';
-            $studentMotto = $_SESSION['motto'] = $student['motto'] ?? '';
-            $studentHonors = $_SESSION['honors'] = $student['honors'] ?? '';
-            $studentMilestone = $_SESSION['milestone'] = $student['milestone'] ?? '';
-            $studentAcademicYear = $_SESSION['academic_year'] = $student['academic year'] ?? '';
-            $studentProgram = $_SESSION['program'] = $student['program'] ?? '';
-        }
-    } catch (Exception $e) {
-        error_log("Error fetching student data in Header.php: " . $e->getMessage());
+
+  try {
+    require_once __DIR__ . '/../../Connection/Configuration/EnvLoader.php';
+    $mongoUrl = getMongoUrl();
+    $client = new Client($mongoUrl);
+
+    // Collections mapping
+    $collections = [
+      "BS Marine Engineering" => "bsme",
+      "BS Marine Transportation" => "bsmt",
+      "BS Criminal Justice Education" => "bscje",
+      "BS Tourism Management" => "bstm",
+      "BS Technical-Vocational Teacher Education" => "btvted",
+      "BS Early Childhood Education" => "beced",
+      "BS Nursing" => "bsn",
+      "BS Information System" => "bsis",
+      "BS Management Accounting" => "bsma",
+      "BS Entrepreneurship" => "bse"
+    ];
+
+    // Determine which database and collection to use
+    $dbName = $_SESSION['batch_template'] ?? "ECADYB";
+    $collectionName = $collections[$studentDepartment] ?? 'bsme';
+
+    $db = $client->$dbName;
+    $collection = $db->$collectionName;
+
+    // Find the student by student ID
+    $student = $collection->findOne([
+      '$or' => [
+        ['student id' => $studentId],
+        ['student_id' => $studentId]
+      ]
+    ]);
+
+    if ($student) {
+      // Store all data in session
+      $studentFirstName = $_SESSION['first_name'] = $student['first name'] ?? '';
+      $studentMiddleName = $_SESSION['middle_name'] = $student['middle name'] ?? '';
+      $studentLastName = $_SESSION['last_name'] = $student['last name'] ?? '';
+      $studentEmail = $_SESSION['email'] = $student['email'] ?? '';
+      $studentMotto = $_SESSION['motto'] = $student['motto'] ?? '';
+      $studentHonors = $_SESSION['honors'] = $student['honors'] ?? '';
+      $studentMilestone = $_SESSION['milestone'] = $student['milestone'] ?? '';
+      $studentAcademicYear = $_SESSION['academic_year'] = $student['academic year'] ?? '';
+      $studentProgram = $_SESSION['program'] = $student['program'] ?? '';
     }
+  } catch (Exception $e) {
+    error_log("Error fetching student data in Header.php: " . $e->getMessage());
+  }
 }
 
 // Fallback: Parse full name if individual fields are empty
 if (empty($studentFirstName) && empty($studentLastName) && !empty($studentName)) {
-    $nameParts = explode(' ', trim($studentName));
-    if (count($nameParts) >= 3) {
-        $studentFirstName = $nameParts[0];
-        $studentMiddleName = $nameParts[1];
-        $studentLastName = implode(' ', array_slice($nameParts, 2));
-    } elseif (count($nameParts) == 2) {
-        $studentFirstName = $nameParts[0];
-        $studentLastName = $nameParts[1];
-    } elseif (count($nameParts) == 1) {
-        $studentFirstName = $nameParts[0];
-    }
+  $nameParts = explode(' ', trim($studentName));
+  if (count($nameParts) >= 3) {
+    $studentFirstName = $nameParts[0];
+    $studentMiddleName = $nameParts[1];
+    $studentLastName = implode(' ', array_slice($nameParts, 2));
+  } elseif (count($nameParts) == 2) {
+    $studentFirstName = $nameParts[0];
+    $studentLastName = $nameParts[1];
+  } elseif (count($nameParts) == 1) {
+    $studentFirstName = $nameParts[0];
+  }
 }
 ?>
 <header>
@@ -91,8 +93,7 @@ if (empty($studentFirstName) && empty($studentLastName) && !empty($studentName))
     <img
       src="https://ECADYB.b-cdn.net/img/ADMINGRALLERYLOGO.png"
       alt="Logo"
-      class="logo-img"
-    />
+      class="logo-img" />
     <span>GRADUATION GALLERY</span>
   </div>
   <nav class="center-nav">
@@ -104,8 +105,7 @@ if (empty($studentFirstName) && empty($studentLastName) && !empty($studentName))
       <button
         class="mobile-login-btn"
         id="mobileLoginDropdownBtn"
-        onclick="window.location.href='/ECADYB/login'"
-      >
+        onclick="window.location.href='/ECADYB/login'">
         Log In
       </button>
     </div>
@@ -134,13 +134,11 @@ if (empty($studentFirstName) && empty($studentLastName) && !empty($studentName))
       src="<?php echo htmlspecialchars($studentProfilePhoto ?: 'https://ECADYB.b-cdn.net/img/Profile.png'); ?>"
       alt="Profile"
       class="profile-icon"
-      id="profileIcon"
-    />
+      id="profileIcon" />
     <div class="dropdown-menu" id="profileDropdownMenu">
       <button
         class="dropdown-item"
-        onclick="window.location.href='/ECADYB/Student/Components/ChangePassword.php'"
-      >
+        onclick="window.location.href='/ECADYB/Student/Components/ChangePassword.php'">
         Change Password
       </button>
       <button class="dropdown-item" onclick="editProfile()">
@@ -155,43 +153,37 @@ if (empty($studentFirstName) && empty($studentLastName) && !empty($studentName))
       class="hamburger-icon"
       viewBox="0 0 24 24"
       fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+      xmlns="http://www.w3.org/2000/svg">
       <path
         class="hamburger-line line-1"
         d="M3 6h18"
         stroke="currentColor"
         stroke-width="2"
-        stroke-linecap="round"
-      />
+        stroke-linecap="round" />
       <path
         class="hamburger-line line-2"
         d="M3 12h18"
         stroke="currentColor"
         stroke-width="2"
-        stroke-linecap="round"
-      />
+        stroke-linecap="round" />
       <path
         class="hamburger-line line-3"
         d="M3 18h18"
         stroke="currentColor"
         stroke-width="2"
-        stroke-linecap="round"
-      />
+        stroke-linecap="round" />
       <path
         class="close-line close-1"
         d="M18 6L6 18"
         stroke="currentColor"
         stroke-width="2"
-        stroke-linecap="round"
-      />
+        stroke-linecap="round" />
       <path
         class="close-line close-2"
         d="M6 6L18 18"
         stroke="currentColor"
         stroke-width="2"
-        stroke-linecap="round"
-      />
+        stroke-linecap="round" />
     </svg>
   </button>
 </header>
@@ -210,7 +202,7 @@ if (empty($studentFirstName) && empty($studentLastName) && !empty($studentName))
     <div class="modal-body">
       <form id="edit-student-form" onsubmit="return false;">
         <input type="hidden" id="student-id-hidden" name="student_id" value="<?php echo htmlspecialchars($studentId); ?>">
-        
+
         <div class="form-group">
           <!-- Personal Information Section -->
           <div class="section">
@@ -294,4 +286,3 @@ if (empty($studentFirstName) && empty($studentLastName) && !empty($studentName))
     </div>
   </div>
 </div>
-

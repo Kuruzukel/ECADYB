@@ -11,9 +11,12 @@ A PHP application with MongoDB integration for managing graduation yearbooks and
 
 ### Environment Variables
 
-Make sure to set the following environment variable in your Railway project:
+Make sure to set the following environment variables in your Railway project:
 
 - `MONGO_URL`: Your Railway MongoDB connection string
+- `BUNNY_STORAGE_ZONE`: Your Bunny CDN storage zone name
+- `BUNNY_ACCESS_KEY`: Your Bunny CDN API access key
+- `BUNNY_CDN_HOST`: Your Bunny CDN host URL
 
 ### Deployment Steps
 
@@ -36,9 +39,18 @@ If you encounter deployment errors:
 To run locally:
 
 1. Install Composer dependencies: `composer install`
-2. Set up a local MongoDB instance
-3. Set the `MONGO_URL` environment variable to your local MongoDB connection string
+2. Copy `.env.example` to `.env` and configure your environment variables:
+   ```bash
+   cp .env.example .env
+   ```
+3. Edit `.env` and set your configuration:
+   - `MONGO_URL`: Your MongoDB connection string
+   - `BUNNY_STORAGE_ZONE`: Your Bunny CDN storage zone name
+   - `BUNNY_ACCESS_KEY`: Your Bunny CDN API access key
+   - `BUNNY_CDN_HOST`: Your Bunny CDN host URL
 4. Run with PHP's built-in server: `php -S localhost:8000`
+
+**Important:** Never commit the `.env` file to version control. It's already included in `.gitignore`.
 
 ### File Structure
 

@@ -56,7 +56,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         "bse" => "BS Entrepreneurship"
     ];
 
-    $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
+    require_once __DIR__ . '/../../Connection/Configuration/EnvLoader.php';
+    $mongoUrl = getMongoUrl();
 
     $dbName = "ECADYB";
 
@@ -170,7 +171,8 @@ $programMap = [
     "bse" => "BS Entrepreneurship"
 ];
 
-$mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
+require_once __DIR__ . '/../../Connection/Configuration/EnvLoader.php';
+$mongoUrl = getMongoUrl();
 $academicYears = [];
 
 try {

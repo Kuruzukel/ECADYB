@@ -149,7 +149,8 @@ try {
     error_log("Department: $department, Template: $template, Page: $page, Limit: $limit, Batch Year: $batchYear");
     error_log("Connecting to MongoDB database: " . $mongoDbName . " for department: " . $department);
 
-    $mongoUrl = getenv('MONGO_URL') ?: getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
+    require_once __DIR__ . '/../Configuration/EnvLoader.php';
+    $mongoUrl = getMongoUrl();
 
     $mongoClient = new MongoDB\Client($mongoUrl, [
         'serverSelectionTimeoutMS' => 15000,

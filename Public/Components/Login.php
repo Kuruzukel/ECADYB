@@ -4,10 +4,11 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 require __DIR__ . '/../../vendor/autoload.php';
 require_once __DIR__ . '/../../Connection/Configuration/config.php';
+require_once __DIR__ . '/../../Connection/Configuration/EnvLoader.php';
 
 use MongoDB\Client;
 
-$client = new Client("mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957/");
+$client = new Client(getMongoUrl());
 $adminDB = $client->admin;
 $adminCollection = $adminDB->accounts;
 
@@ -48,17 +49,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['username'] = $username;
             $_SESSION['login_success'] = 'admin';
             $_SESSION['redirect_to'] = '../../Admin/Components/AdminDashboard.php';
-            
+
             // Redirect to admin dashboard
             header('Location: ' . BASE_URL . 'Admin');
             exit();
         } else {
             $loginFound = false;
-            
+
             // Search across all batch template databases
             foreach ($batchTemplates as $batchTemplate) {
                 $departmentsDB = $client->$batchTemplate;
-                
+
                 foreach ($collections as $collectionName => $course) {
                     $collection = $departmentsDB->{$collectionName};
 
@@ -79,7 +80,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     if ($student) {
                         // Get student ID from either field name variation
                         $studentIdValue = $student['student id'] ?? $student['student_id'] ?? $username;
-                        
+
                         $_SESSION['role']       = 'student';
                         $_SESSION['student_id'] = $studentIdValue;
                         $_SESSION['name']       = trim(($student['first name'] ?? '') . ' ' . ($student['middle name'] ?? '') . ' ' . ($student['last name'] ?? ''));
@@ -89,7 +90,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $_SESSION['login_success'] = 'student';
                         $_SESSION['redirect_to'] = '../../Student/Components/StudentDashboard.php';
                         $loginFound = true;
-                        
+
                         // Redirect to student dashboard
                         header('Location: ' . BASE_URL . 'Student');
                         exit();
@@ -152,7 +153,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </button>
         </div>
     <?php endif; ?>
-    
+
     <div class="loginCard">
         <form method="POST" action="">
             <p class="title">GRADUATION GALLERY</p>

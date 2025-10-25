@@ -45,15 +45,20 @@ try {
         respond(false, 'Invalid slot. Must be between 1 and 9.');
     }
 
-    $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
+    require_once __DIR__ . '/../Configuration/EnvLoader.php';
+    $mongoUrl = getMongoUrl();
 
     if (file_exists(__DIR__ . '/../Configuration/BunnyConfig.php')) {
         require __DIR__ . '/../Configuration/BunnyConfig.php';
     }
 
-    $bunnyStorageZone = getenv('BUNNY_STORAGE_ZONE') ?: (defined('BUNNY_STORAGE_ZONE') ? BUNNY_STORAGE_ZONE : ($GLOBALS['BUNNY_STORAGE_ZONE'] ?? 'ecadyb'));
-    $bunnyAccessKey = getenv('BUNNY_ACCESS_KEY') ?: (defined('BUNNY_ACCESS_KEY') ? BUNNY_ACCESS_KEY : ($GLOBALS['BUNNY_ACCESS_KEY'] ?? 'db959684-d63e-41f4-a1c7de4737a9-2dd8-41fb'));
-    $bunnyCdnHost = getenv('BUNNY_CDN_HOST') ?: (defined('BUNNY_CDN_HOST') ? BUNNY_CDN_HOST : ($GLOBALS['BUNNY_CDN_HOST'] ?? 'https://ECADYB.b-cdn.net'));
+    $bunnyStorageZone = getBunnyStorageZone();
+    $bunnyAccessKey = getBunnyAccessKey();
+    $bunnyCdnHost = getBunnyCdnHost();
+
+    if (!$bunnyStorageZone || !$bunnyAccessKey || !$bunnyCdnHost) {
+        respond(false, 'Bunny CDN configuration incomplete');
+    }
 
     try {
         $client = new Client($mongoUrl, [

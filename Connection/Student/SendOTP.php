@@ -69,7 +69,8 @@ try {
         if (!$mongoClient) {
             // Fallback: create new client if global not available
             require_once __DIR__ . '/../../vendor/autoload.php';
-            $mongoClient = new \MongoDB\Client("mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957/");
+            require_once __DIR__ . '/../Configuration/EnvLoader.php';
+            $mongoClient = new \MongoDB\Client(getMongoUrl());
         }
         $adminDB = $mongoClient->admin;
         $adminCollection = $adminDB->accounts;

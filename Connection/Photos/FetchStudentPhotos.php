@@ -61,11 +61,12 @@ set_exception_handler(function ($exception) {
 
 try {
     $studentId = isset($_GET['student_id']) ? $_GET['student_id'] : null;
-    
+
     error_log("FetchStudentPhotos.php called with student_id: " . ($studentId ?: 'null'));
 
     $mongoDbName = "ECADYB";
-    $mongoUrl = getenv('MONGO_URL') ?: getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
+    require_once __DIR__ . '/../Configuration/EnvLoader.php';
+    $mongoUrl = getMongoUrl();
 
     $mongoClient = new MongoDB\Client($mongoUrl);
 
@@ -75,15 +76,15 @@ try {
     if ($studentId) {
         $filter['student_id'] = $studentId;
     }
-    
+
     error_log("Querying Student_Photos collection with filter: " . json_encode($filter));
 
     $photosCursor = $photosCollection->find($filter, ['sort' => ['upload_time' => -1]]);
-    
+
     // Convert cursor to array to avoid rewind issues
     $photos = iterator_to_array($photosCursor);
     $photoCount = count($photos);
-    
+
     error_log("Found " . $photoCount . " photo records for student_id: " . ($studentId ?: 'null'));
 
     $result = [];
@@ -91,7 +92,7 @@ try {
     foreach ($photos as $photo) {
         $processedCount++;
         error_log("Processing photo record #" . $processedCount . " for student_id: " . ($studentId ?: 'null'));
-        
+
         $studentData = [
             'id' => (string)$photo['_id'],
             'student_id' => $photo['student_id'] ?? '',
@@ -121,7 +122,7 @@ try {
 
         $result[] = $studentData;
     }
-    
+
     error_log("Returning " . count($result) . " photo records for student_id: " . ($studentId ?: 'null'));
 
     respond(true, 'Student photos retrieved successfully', ['data' => $result]);

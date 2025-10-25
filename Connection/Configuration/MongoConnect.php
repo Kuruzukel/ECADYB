@@ -3,7 +3,17 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 use MongoDB\Client;
 
-$mongoUrl = getenv('MONGO_URL') ?: getenv('MONGODB_URI') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
+// Load .env file
+$dotenvPath = __DIR__ . '/../../';
+if (file_exists($dotenvPath . '.env')) {
+    $dotenv = Dotenv\Dotenv::createImmutable($dotenvPath);
+    $dotenv->load();
+}
+
+$mongoUrl = getenv('MONGO_URL') ?: $_ENV['MONGO_URL'] ?? getenv('MONGODB_URI') ?? null;
+if (!$mongoUrl) {
+    die('MongoDB URL not configured. Please set MONGO_URL in .env file');
+}
 $client   = new Client($mongoUrl);
 
 $GLOBALS['mongoClient'] = $client;

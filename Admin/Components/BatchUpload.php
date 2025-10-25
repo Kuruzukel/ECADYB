@@ -48,7 +48,8 @@ $programMap = [
 
 $academicYears = [];
 try {
-    $mongoUrl = getenv('MONGODB_URI') ?: getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
+    require_once __DIR__ . '/../../Connection/Configuration/EnvLoader.php';
+    $mongoUrl = getMongoUrl();
     $client = new Client($mongoUrl);
     $db = $client->ECADYB;
 
@@ -289,7 +290,8 @@ function getTopManagementDatabase($client)
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $mongoUrl = getenv('MONGODB_URI') ?: getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
+    require_once __DIR__ . '/../../Connection/Configuration/EnvLoader.php';
+    $mongoUrl = getMongoUrl();
     $client = new Client($mongoUrl);
 
     if (!empty($_FILES['top_management_message']['tmp_name'])) {

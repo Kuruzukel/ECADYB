@@ -24,21 +24,21 @@ require __DIR__ . '/../../vendor/autoload.php';
 use MongoDB\Client;
 
 // Register shutdown function to catch fatal errors
-register_shutdown_function(function() {
+register_shutdown_function(function () {
     $error = error_get_last();
     if ($error !== null && in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
         while (ob_get_level()) {
             ob_end_clean();
         }
-        
+
         error_log("FetchCoverData Fatal Error: " . $error['message'] . " in " . $error['file'] . " on line " . $error['line']);
-        
+
         $response = [
             'success' => false,
             'message' => 'Server error occurred while fetching cover data',
             'error_details' => $error['message']
         ];
-        
+
         $jsonOutput = json_encode($response);
         header('Content-Type: application/json');
         header('Content-Length: ' . strlen($jsonOutput));
@@ -50,7 +50,7 @@ register_shutdown_function(function() {
 try {
     $template = isset($_GET['template']) ? (int)$_GET['template'] : 1;
     $batchYear = isset($_GET['batch_year']) ? trim($_GET['batch_year']) : null;
-    
+
     $departmentSlots = [
         'BSME' => 1,
         'BSCJ' => 2,
@@ -75,7 +75,8 @@ try {
         throw new Exception('Invalid slot parameter. Must be between 1 and 8.');
     }
 
-    $mongoUrl = getenv('MONGO_URL') ?: 'mongodb://mongo:tIEbUVpHiKhDZTkghDEMqERbLDdsDRnX@shortline.proxy.rlwy.net:56957';
+    require_once __DIR__ . '/../../Connection/Configuration/EnvLoader.php';
+    $mongoUrl = getMongoUrl();
 
     $client = new Client($mongoUrl, [
         'serverSelectionTimeoutMS' => 5000,
@@ -90,7 +91,7 @@ try {
     // Build query - use both batch_year and template when available
     $query = ['slot' => $slot, 'template' => $template];
     $backgroundQuery = ['slot' => 8, 'template' => $template];
-    
+
     if ($batchYear) {
         $query['batch_year'] = $batchYear;
         $backgroundQuery['batch_year'] = $batchYear;
@@ -134,13 +135,13 @@ try {
         if (ob_get_level()) {
             ob_clean();
         }
-        
+
         $jsonOutput = json_encode([
             'success' => true,
             'data' => $response,
             'message' => 'No cover data found for this template and slot'
         ]);
-        
+
         header('Content-Type: application/json');
         header('Content-Length: ' . strlen($jsonOutput));
         echo $jsonOutput;
@@ -200,28 +201,28 @@ try {
     if (ob_get_level()) {
         ob_clean();
     }
-    
+
     $jsonOutput = json_encode([
         'success' => true,
         'data' => $response
     ]);
-    
+
     header('Content-Type: application/json');
     header('Content-Length: ' . strlen($jsonOutput));
     echo $jsonOutput;
 } catch (Exception $e) {
     error_log("FetchCoverData error: " . $e->getMessage());
-    
+
     if (ob_get_level()) {
         ob_clean();
     }
-    
+
     http_response_code(500);
     $jsonOutput = json_encode([
         'success' => false,
         'message' => $e->getMessage()
     ]);
-    
+
     header('Content-Type: application/json');
     header('Content-Length: ' . strlen($jsonOutput));
     echo $jsonOutput;
