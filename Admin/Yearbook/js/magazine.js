@@ -454,7 +454,6 @@ setTimeout(function () {
   }
 }, 4000);
 
-// Add listener for when parent window changes URL parameters (subsequent searches)
 var lastSearchedStudentId = null;
 var hasInitialNavigationRun = false;
 
