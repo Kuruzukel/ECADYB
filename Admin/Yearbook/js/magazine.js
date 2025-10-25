@@ -274,8 +274,6 @@ function findAndNavigateToStudent(
                 if ($studentImageArea.length && hasImageContent) {
                   console.log("✅ Adding yellow border to student image area");
 
-                  // Use !important and inline styles to override any existing CSS
-
                   // Add border to the student image container
                   $studentImageArea.attr(
                     "style",
