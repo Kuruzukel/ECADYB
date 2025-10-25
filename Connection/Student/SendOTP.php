@@ -114,12 +114,36 @@ try {
     }
     $_SESSION['otp_' . $email] = [
         'code' => $otp,
-        'expires' => time() + 120, // 120 seconds expiration (increased for slower email delivery)
+        'expires' => time() + 120, // 120 seconds expiration
         'attempts' => 0
     ];
-
-    // Return response immediately and send email asynchronously
-    // This prevents the user from waiting for SMTP connection
+    
+    // Return success response IMMEDIATELY before sending email
+    // IMPORTANT: Remove 'otp' from response in PRODUCTION for security
+    echo json_encode([
+        'success' => true,
+        'message' => 'Verification code is being sent to your email',
+        // 'otp' => $otp, // DEVELOPMENT ONLY - Uncomment for testing on localhost
+        'email_sent' => true
+    ]);
+    
+    // Force output to be sent to client immediately
+    if (ob_get_level() > 0) {
+        ob_end_flush();
+    }
+    flush();
+    
+    // Close session to release lock (important for concurrent requests)
+    if (session_status() == PHP_SESSION_ACTIVE) {
+        session_write_close();
+    }
+    
+    // For FastCGI, finish the request to the client
+    if (function_exists('fastcgi_finish_request')) {
+        fastcgi_finish_request();
+    }
+    
+    // NOW send email in background after client has received response
     $asyncEmailSend = function() use ($email, $otp) {
         $subject = "Password Reset Verification Code - Exact Colleges of Asia";
         $message = "
@@ -199,7 +223,7 @@ try {
         $mail = new PHPMailer(true);
         
         try {
-            // Gmail SMTP Configuration
+            // Gmail SMTP Configuration - Optimized for Railway
             $mail->isSMTP();
             $mail->Host       = GMAIL_SMTP_HOST;
             $mail->SMTPAuth   = true;
@@ -208,26 +232,21 @@ try {
             $mail->SMTPSecure = GMAIL_SMTP_ENCRYPTION;
             $mail->Port       = GMAIL_SMTP_PORT;
             
-            // Optimized timeout for faster response
-            $mail->Timeout = 10; // 10 seconds timeout - fail fast if connection is slow
-            $mail->SMTPKeepAlive = false; // Disable keep-alive to avoid connection issues
+            // Aggressive timeout for faster response
+            $mail->Timeout = 5; // Reduced to 5 seconds - fail very fast
+            $mail->SMTPKeepAlive = false; // Disable keep-alive
             
-            // Optimized SSL options for Gmail with fallback for Windows
+            // Optimized SSL options - less strict for faster connection on Railway
             $sslOptions = array(
-                'verify_peer' => true,
-                'verify_peer_name' => true,
-                'allow_self_signed' => false
+                'verify_peer' => false, // Disable peer verification for speed (Railway environments)
+                'verify_peer_name' => false, // Disable peer name verification
+                'allow_self_signed' => true // Allow self-signed certs for flexibility
             );
             
-            // Add CA file path if available (Linux/Unix systems)
-            if (file_exists('/etc/ssl/certs/ca-certificates.crt')) {
-                $sslOptions['cafile'] = '/etc/ssl/certs/ca-certificates.crt';
-            } elseif (file_exists('/etc/ssl/certs/ca-bundle.crt')) {
-                $sslOptions['cafile'] = '/etc/ssl/certs/ca-bundle.crt';
-            }
-            // Windows and other systems will use default CA bundle
-            
             $mail->SMTPOptions = array('ssl' => $sslOptions);
+            
+            // Disable debug output in production
+            $mail->SMTPDebug = 0;
             
             // Email settings
             $mail->setFrom(EMAIL_FROM_ADDRESS, EMAIL_FROM_NAME);
@@ -258,23 +277,7 @@ try {
         }
     };
     
-    // Return success immediately - email will be sent in background
-    echo json_encode([
-        'success' => true,
-        'message' => 'Verification code is being sent to your email',
-        'email_sent' => true
-    ]);
-    
-    // Flush output to client immediately
-    if (function_exists('fastcgi_finish_request')) {
-        fastcgi_finish_request();
-    } else {
-        // Fallback for non-FastCGI environments
-        ob_end_flush();
-        flush();
-    }
-    
-    // Now send email in background after response is sent
+    // Execute the email send function (response already sent above)
     $asyncEmailSend();
 } catch (Exception $e) {
     error_log("SendOTP error: " . $e->getMessage());
