@@ -492,7 +492,6 @@ function checkForNewStudentSearch() {
   }
 }
 
-// Check for URL changes periodically (for when parent window updates the iframe src)
 setInterval(checkForNewStudentSearch, 300);
 
 // Also expose navigation function to parent window for direct triggering
