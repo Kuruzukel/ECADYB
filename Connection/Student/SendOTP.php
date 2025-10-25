@@ -57,7 +57,6 @@ try {
 
     $user = null;
 
-    // Optimized query timeout - fail fast
     $queryOptions = [
         'maxTimeMS' => 2000, // 2 second timeout per query
         'projection' => ['email' => 1, '_id' => 1] // Only fetch needed fields
