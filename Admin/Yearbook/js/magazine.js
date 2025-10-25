@@ -350,7 +350,6 @@ function findAndNavigateToStudent(
               console.log(
                 "🖼️ Image loaded, checking if we need to highlight..."
               );
-              // Re-run highlighting in case images weren't ready before
               setTimeout(function () {
                 highlightStudent();
               }, 100);
