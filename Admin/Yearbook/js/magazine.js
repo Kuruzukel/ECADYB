@@ -329,7 +329,6 @@ function findAndNavigateToStudent(
               }
             }
 
-            // Helper function to notify parent window
             function notifyNavigationComplete() {
               console.log(
                 "📍 Sending navigation complete signal to parent window"
