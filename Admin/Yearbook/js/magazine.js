@@ -245,7 +245,6 @@ function findAndNavigateToStudent(
                     retryCount +
                     " attempts"
                 );
-                // Still notify parent even if highlighting failed
                 notifyNavigationComplete();
                 return;
               }
