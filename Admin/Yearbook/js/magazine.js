@@ -34,9 +34,7 @@ function navigateToSearchedStudent() {
         name: decodeURIComponent(urlStudentName),
       };
       console.log("Student data from URL parameters:", studentData);
-    }
-    // Fallback to sessionStorage
-    else {
+    } else {
       var searchSelectedStudent = sessionStorage.getItem(
         "searchSelectedStudent"
       );
