@@ -204,7 +204,6 @@ function findAndNavigateToStudent(
             var cardIndex = studentIndex % studentsPerPage;
             console.log("Looking for student card at index:", cardIndex);
 
-            // First, clear any existing yellow borders from previous searches
             console.log("🧹 Clearing any existing yellow borders...");
             $(".student-image").each(function () {
               $(this).removeAttr("style");
