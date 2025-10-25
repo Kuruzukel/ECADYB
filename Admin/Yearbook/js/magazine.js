@@ -209,7 +209,6 @@ function findAndNavigateToStudent(
               $(this).removeAttr("style");
             });
 
-            // Find the current visible pages
             var currentPage = $magazine.turn("page");
             console.log("Current magazine page:", currentPage);
 
