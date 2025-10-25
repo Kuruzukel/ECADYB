@@ -360,7 +360,7 @@ function findAndNavigateToStudent(
             setTimeout(function () {
               $visiblePages.find("img").off("load", imageLoadListener);
             }, 10000);
-          }, 3000); // Wait 3 seconds for page turn animation and content to load
+          }, 3000);
         } else {
           console.error("Magazine not initialized or turn not available");
         }
