@@ -72,9 +72,7 @@ function navigateToSearchedStudent() {
     ) {
       template = coverData.template;
       console.log("Got template from coverData:", template);
-    }
-    // Try localStorage
-    else {
+    } else {
       var savedTemplate = localStorage.getItem("selectedBatchTemplateNumber");
       if (savedTemplate) {
         template = parseInt(savedTemplate);
