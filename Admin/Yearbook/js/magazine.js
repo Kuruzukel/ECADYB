@@ -462,7 +462,6 @@ function checkForNewStudentSearch() {
   var currentStudentId = urlParams.get("student_id");
   var currentStudentName = urlParams.get("student_name");
 
-  // Skip if no student parameters
   if (!currentStudentId) {
     return;
   }
