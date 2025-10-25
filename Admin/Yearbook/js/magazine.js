@@ -197,109 +197,110 @@ function findAndNavigateToStudent(
 
         if ($magazine.length > 0 && $magazine.turn) {
           console.log("Turning to page:", yearbookPage);
-          $magazine.turn("page", yearbookPage);
-          console.log("✓ Successfully navigated to student's page");
 
-          setTimeout(function () {
-            var cardIndex = studentIndex % studentsPerPage;
-            console.log("Looking for student card at index:", cardIndex);
+          // Listen for the page turn completion
+          $magazine.one("turned", function (event, page, view) {
+            console.log("✓ Page turn completed to page:", page);
 
-            console.log("🧹 Clearing any existing yellow borders and timeouts...");
+            // Wait a bit more for content to render
+            setTimeout(function () {
+              var cardIndex = studentIndex % studentsPerPage;
+              console.log("Looking for student card at index:", cardIndex);
 
-            // Clear any existing border removal timeouts
-            if (window.borderRemovalTimeouts) {
-              window.borderRemovalTimeouts.forEach(function (timeoutId) {
-                clearTimeout(timeoutId);
-              });
-            }
-            window.borderRemovalTimeouts = [];
+              console.log("🧹 Clearing any existing yellow borders and timeouts...");
 
-            // Remove all existing borders
-            $(".student-image").each(function () {
-              $(this).removeAttr("style");
-            });
-
-            var currentPage = $magazine.turn("page");
-            console.log("Current magazine page:", currentPage);
-
-            var $visiblePages = $magazine.find(".page").filter(function () {
-              return $(this).is(":visible");
-            });
-            console.log("Visible pages found:", $visiblePages.length);
-
-            function highlightStudent(retryCount) {
-              retryCount = retryCount || 0;
-
-              var $studentCards = $visiblePages.find(".student-card");
-              console.log(
-                "Student cards found on visible pages:",
-                $studentCards.length
-              );
-
-              if ($studentCards.length === 0 && retryCount < 20) {
-                console.log(
-                  "⏳ Student cards not loaded yet, retrying... (attempt " +
-                  (retryCount + 1) +
-                  "/20)"
-                );
-                setTimeout(function () {
-                  $visiblePages = $magazine.find(".page").filter(function () {
-                    return $(this).is(":visible");
-                  });
-                  highlightStudent(retryCount + 1);
-                }, 400);
-                return;
-              } else if ($studentCards.length === 0) {
-                console.error(
-                  "❌ Failed to find student cards after " +
-                  retryCount +
-                  " attempts"
-                );
-                notifyNavigationComplete();
-                return;
+              // Clear any existing border removal timeouts
+              if (window.borderRemovalTimeouts) {
+                console.log("Clearing " + window.borderRemovalTimeouts.length + " existing timeouts");
+                window.borderRemovalTimeouts.forEach(function (timeoutId) {
+                  clearTimeout(timeoutId);
+                  console.log("Cleared timeout:", timeoutId);
+                });
               }
+              window.borderRemovalTimeouts = [];
 
-              var $targetCard = $studentCards.eq(cardIndex);
-              console.log("Target student card found:", $targetCard.length > 0);
+              // Remove all existing borders
+              var bordersCleared = 0;
+              $(".student-image").each(function () {
+                if ($(this).attr("style")) {
+                  bordersCleared++;
+                }
+                $(this).removeAttr("style");
+              });
+              console.log("Cleared borders from " + bordersCleared + " student images");
 
-              if ($targetCard.length > 0) {
-                var $studentImageArea = $targetCard.find(".student-image");
+              var currentPage = $magazine.turn("page");
+              console.log("Current magazine page:", currentPage);
+
+              var $visiblePages = $magazine.find(".page").filter(function () {
+                return $(this).is(":visible");
+              });
+              console.log("Visible pages found:", $visiblePages.length);
+
+              function highlightStudent(retryCount) {
+                retryCount = retryCount || 0;
+
+                // Refresh visible pages on each retry to ensure we're looking at current pages
+                $visiblePages = $magazine.find(".page").filter(function () {
+                  return $(this).is(":visible");
+                });
+
+                var $studentCards = $visiblePages.find(".student-card");
                 console.log(
-                  "Student image area in target card:",
-                  $studentImageArea.length > 0
+                  "Student cards found on visible pages:",
+                  $studentCards.length
                 );
 
-                var $imgElement = $studentImageArea.find("img");
-                var hasImageContent =
-                  $imgElement.length > 0 ||
-                  $studentImageArea.css("background-image") !== "none";
-
-                console.log("Image element found:", $imgElement.length > 0);
-                console.log(
-                  "Has background image:",
-                  $studentImageArea.css("background-image") !== "none"
-                );
-                console.log("Has image content:", hasImageContent);
-
-                if ($studentImageArea.length && hasImageContent) {
-                  console.log("✅ Adding yellow border to student image area");
-
-                  $studentImageArea.attr(
-                    "style",
-                    "border: 2px solid #fcda15 !important; " +
-                    "box-shadow: 0 0 10px rgba(252, 218, 21, 0.8) !important; " +
-                    "border-radius: 8px !important; " +
-                    "outline: 2px solid #ffd700 !important; " +
-                    "outline-offset: 2px !important; " +
-                    "transition: all 0.3s ease !important;"
-                  );
-
+                if ($studentCards.length === 0 && retryCount < 20) {
                   console.log(
-                    "🎨 Applied BOLD yellow border with 8px thickness"
+                    "⏳ Student cards not loaded yet, retrying... (attempt " +
+                    (retryCount + 1) +
+                    "/20)"
+                  );
+                  setTimeout(function () {
+                    $visiblePages = $magazine.find(".page").filter(function () {
+                      return $(this).is(":visible");
+                    });
+                    highlightStudent(retryCount + 1);
+                  }, 400);
+                  return;
+                } else if ($studentCards.length === 0) {
+                  console.error(
+                    "❌ Failed to find student cards after " +
+                    retryCount +
+                    " attempts"
+                  );
+                  notifyNavigationComplete();
+                  return;
+                }
+
+                var $targetCard = $studentCards.eq(cardIndex);
+                console.log("Target student card found:", $targetCard.length > 0);
+
+                if ($targetCard.length > 0) {
+                  var $studentImageArea = $targetCard.find(".student-image");
+                  console.log(
+                    "Student image area in target card:",
+                    $studentImageArea.length > 0
                   );
 
-                  // Store timeout IDs so they can be cleared on next search
-                  var timeout1 = setTimeout(function () {
+                  var $imgElement = $studentImageArea.find("img");
+                  var hasImageContent =
+                    $imgElement.length > 0 ||
+                    $studentImageArea.css("background-image") !== "none";
+
+                  console.log("Image element found:", $imgElement.length > 0);
+                  console.log(
+                    "Has background image:",
+                    $studentImageArea.css("background-image") !== "none"
+                  );
+                  console.log("Has image content:", hasImageContent);
+
+                  if ($studentImageArea.length && hasImageContent) {
+                    console.log("✅ Adding yellow border to student image area");
+                    console.log("Target element:", $studentImageArea[0]);
+                    console.log("Current style before:", $studentImageArea.attr("style"));
+
                     $studentImageArea.attr(
                       "style",
                       "border: 2px solid #fcda15 !important; " +
@@ -307,81 +308,103 @@ function findAndNavigateToStudent(
                       "border-radius: 8px !important; " +
                       "outline: 2px solid #ffd700 !important; " +
                       "outline-offset: 2px !important; " +
-                      "transition: all 3s ease !important;"
+                      "transition: all 0.3s ease !important;"
                     );
 
-                    var timeout2 = setTimeout(function () {
-                      $studentImageArea.removeAttr("style");
-                    }, 3000);
+                    console.log("Current style after:", $studentImageArea.attr("style"));
+                    console.log(
+                      "🎨 Applied BOLD yellow border with 8px thickness"
+                    );
+
+                    // Store timeout IDs so they can be cleared on next search
+                    var timeout1 = setTimeout(function () {
+                      $studentImageArea.attr(
+                        "style",
+                        "border: 2px solid #fcda15 !important; " +
+                        "box-shadow: 0 0 10px rgba(252, 218, 21, 0.8) !important; " +
+                        "border-radius: 8px !important; " +
+                        "outline: 2px solid #ffd700 !important; " +
+                        "outline-offset: 2px !important; " +
+                        "transition: all 3s ease !important;"
+                      );
+
+                      var timeout2 = setTimeout(function () {
+                        $studentImageArea.removeAttr("style");
+                      }, 3000);
+
+                      if (!window.borderRemovalTimeouts) {
+                        window.borderRemovalTimeouts = [];
+                      }
+                      window.borderRemovalTimeouts.push(timeout2);
+                    }, 5000);
 
                     if (!window.borderRemovalTimeouts) {
                       window.borderRemovalTimeouts = [];
                     }
-                    window.borderRemovalTimeouts.push(timeout2);
-                  }, 5000);
+                    window.borderRemovalTimeouts.push(timeout1);
 
-                  if (!window.borderRemovalTimeouts) {
-                    window.borderRemovalTimeouts = [];
+                    notifyNavigationComplete();
+                  } else if ($studentImageArea.length && retryCount < 15) {
+                    console.log(
+                      "⏳ Student image area exists but no image content yet, retrying... (attempt " +
+                      (retryCount + 1) +
+                      "/15)"
+                    );
+                    setTimeout(function () {
+                      highlightStudent(retryCount + 1);
+                    }, 500);
+                    return;
+                  } else {
+                    console.warn(
+                      "⚠️ Student image area not found or no image content in target card"
+                    );
+                    notifyNavigationComplete();
                   }
-                  window.borderRemovalTimeouts.push(timeout1);
-
-                  notifyNavigationComplete();
-                } else if ($studentImageArea.length && retryCount < 15) {
-                  console.log(
-                    "⏳ Student image area exists but no image content yet, retrying... (attempt " +
-                    (retryCount + 1) +
-                    "/15)"
-                  );
-                  setTimeout(function () {
-                    highlightStudent(retryCount + 1);
-                  }, 500);
-                  return;
                 } else {
                   console.warn(
-                    "⚠️ Student image area not found or no image content in target card"
+                    "⚠️ Target student card at index " + cardIndex + " not found"
                   );
                   notifyNavigationComplete();
                 }
-              } else {
-                console.warn(
-                  "⚠️ Target student card at index " + cardIndex + " not found"
-                );
-                notifyNavigationComplete();
               }
-            }
 
-            function notifyNavigationComplete() {
-              console.log(
-                "📍 Sending navigation complete signal to parent window"
-              );
-              if (window.parent && window.parent !== window) {
-                window.parent.postMessage(
-                  {
-                    type: "yearbook-navigation-complete",
-                    timestamp: new Date().toISOString(),
-                  },
-                  "*"
+              function notifyNavigationComplete() {
+                console.log(
+                  "📍 Sending navigation complete signal to parent window"
                 );
+                if (window.parent && window.parent !== window) {
+                  window.parent.postMessage(
+                    {
+                      type: "yearbook-navigation-complete",
+                      timestamp: new Date().toISOString(),
+                    },
+                    "*"
+                  );
+                }
               }
-            }
 
-            highlightStudent();
+              highlightStudent();
 
-            var imageLoadListener = function () {
-              console.log(
-                "🖼️ Image loaded, checking if we need to highlight..."
-              );
+              var imageLoadListener = function () {
+                console.log(
+                  "🖼️ Image loaded, checking if we need to highlight..."
+                );
+                setTimeout(function () {
+                  highlightStudent();
+                }, 100);
+              };
+
+              $visiblePages.find("img").on("load", imageLoadListener);
+
               setTimeout(function () {
-                highlightStudent();
-              }, 100);
-            };
+                $visiblePages.find("img").off("load", imageLoadListener);
+              }, 10000);
+            }, 2000); // Wait 2 seconds after page turn completes
+          }); // End of turned event handler
 
-            $visiblePages.find("img").on("load", imageLoadListener);
-
-            setTimeout(function () {
-              $visiblePages.find("img").off("load", imageLoadListener);
-            }, 10000);
-          }, 3000);
+          // Now actually turn the page
+          $magazine.turn("page", yearbookPage);
+          console.log("✓ Page turn initiated to:", yearbookPage);
         } else {
           console.error("Magazine not initialized or turn not available");
         }
