@@ -1972,7 +1972,6 @@ function addRegion(region, pageElement) {
 }
 
 function regionClick(event) {
-  //     return processRegion(region, regionType);
   //   }
 }
 
