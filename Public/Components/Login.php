@@ -35,7 +35,13 @@ try {
     $adminCollection = $adminDB->accounts;
 } catch (Exception $e) {
     error_log("MongoDB Connection Error in Login.php: " . $e->getMessage());
-    $error_message = "Database connection error. Please contact the administrator or try again later.";
+
+    // Provide more helpful error message for Railway deployment
+    if (getenv('RAILWAY_ENVIRONMENT') || getenv('RAILWAY_PUBLIC_URL')) {
+        $error_message = "Database connection error. MongoDB URL not configured. Please set MONGO_URL or MONGODB_URI in Railway dashboard.";
+    } else {
+        $error_message = "Database connection error. Please check your MongoDB configuration in the .env file or contact the administrator.";
+    }
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && $client !== null) {

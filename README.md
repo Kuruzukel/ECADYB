@@ -4,19 +4,45 @@ A PHP application with MongoDB integration for managing graduation yearbooks and
 
 ## Deployment on Railway
 
+### 🚨 CRITICAL: Fix "Database connection error"
+
+If you're seeing a "Database connection error" on your deployed site, you need to set environment variables in Railway:
+
+**Quick Fix Steps:**
+
+1. Go to [Railway Dashboard](https://railway.app/dashboard)
+2. Select your project → Variables tab
+3. Add `MONGO_URL` or `MONGODB_URI` with your MongoDB connection string
+4. Wait for auto-redeploy (or click "Deploy")
+
 ### Prerequisites
 
 - Railway account
 - MongoDB service added to your Railway project
 
-### Environment Variables
+### Required Environment Variables
 
-Make sure to set the following environment variables in your Railway project:
+**MongoDB (REQUIRED):**
 
-- `MONGO_URL`: Your Railway MongoDB connection string
+- `MONGO_URL` or `MONGODB_URI`: Your MongoDB connection string
+  - Format: `mongodb+srv://username:password@cluster.mongodb.net/database?retryWrites=true&w=majority`
+  - If using Railway's MongoDB plugin, it will auto-set `MONGODB_URI`
+
+**Bunny CDN (Required for file uploads):**
+
 - `BUNNY_STORAGE_ZONE`: Your Bunny CDN storage zone name
 - `BUNNY_ACCESS_KEY`: Your Bunny CDN API access key
-- `BUNNY_CDN_HOST`: Your Bunny CDN host URL
+- `BUNNY_CDN_HOST`: Your Bunny CDN host URL (e.g., `https://your-cdn.b-cdn.net`)
+
+**Email (Required for password reset):**
+
+- `SMTP_HOST`: SMTP server (e.g., `smtp.gmail.com`)
+- `SMTP_PORT`: Port number (e.g., `587`)
+- `SMTP_USERNAME`: Your email address
+- `SMTP_PASSWORD`: Your email password or app-specific password
+- `SMTP_FROM_EMAIL`: Email to send from
+- `SMTP_FROM_NAME`: Display name (e.g., `"Graduation Gallery"`)
+- `SMTP_ENCRYPTION`: `tls` or `ssl`
 
 ### Deployment Steps
 

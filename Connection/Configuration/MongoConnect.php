@@ -10,9 +10,14 @@ if (file_exists($dotenvPath . '.env')) {
     $dotenv->load();
 }
 
-$mongoUrl = getenv('MONGO_URL') ?: $_ENV['MONGO_URL'] ?? getenv('MONGODB_URI') ?? null;
+$mongoUrl = getenv('MONGO_URL') ?: $_ENV['MONGO_URL'] ?? getenv('MONGODB_URI') ?? $_ENV['MONGODB_URI'] ?? null;
 if (!$mongoUrl) {
-    throw new Exception('MongoDB URL not configured. Please set MONGO_URL in .env file');
+    // Provide more helpful error message based on environment
+    if (getenv('RAILWAY_ENVIRONMENT') || getenv('RAILWAY_PUBLIC_URL')) {
+        throw new Exception('MongoDB URL not configured. Please set MONGO_URL or MONGODB_URI in Railway dashboard under Variables tab.');
+    } else {
+        throw new Exception('MongoDB URL not configured. Please set MONGO_URL in .env file or as environment variable.');
+    }
 }
 $client   = new Client($mongoUrl);
 
