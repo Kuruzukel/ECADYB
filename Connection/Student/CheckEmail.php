@@ -53,6 +53,11 @@ try {
 
     $found = false;
     
+    // Set query timeout options
+    $queryOptions = [
+        'maxTimeMS' => 2000 // 2 second timeout per query
+    ];
+    
     // First, check admin accounts collection
     try {
         $mongoClient = $GLOBALS['mongoClient'] ?? null;
@@ -64,7 +69,7 @@ try {
         $adminDB = $mongoClient->admin;
         $adminCollection = $adminDB->accounts;
         
-        $adminAccount = $adminCollection->findOne(['email' => $email]);
+        $adminAccount = $adminCollection->findOne(['email' => $email], $queryOptions);
         
         if ($adminAccount) {
             $found = true;
@@ -78,15 +83,21 @@ try {
         // Define all department collections to search
         $departmentCollections = ['bsn', 'bsme', 'bscje', 'bstm', 'bse', 'bsis', 'beced', 'bsma', 'bsmt', 'btvted'];
         
-        // Search through each department collection
+        // Search through each department collection with timeout
         foreach ($departmentCollections as $collectionName) {
-            $collection = $database->selectCollection($collectionName);
-            $student = $collection->findOne(['email' => $email]);
-            
-            if ($student) {
-                // Found the student, no need to search further
-                $found = true;
-                break;
+            try {
+                $collection = $database->selectCollection($collectionName);
+                $student = $collection->findOne(['email' => $email], $queryOptions);
+                
+                if ($student) {
+                    // Found the student, no need to search further
+                    $found = true;
+                    break;
+                }
+            } catch (Exception $e) {
+                // Log timeout or error and continue to next collection
+                error_log("Collection $collectionName search error: " . $e->getMessage());
+                continue;
             }
         }
     }

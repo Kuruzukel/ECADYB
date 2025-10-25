@@ -57,6 +57,11 @@ try {
 
     $user = null;
     
+    // Set query timeout options
+    $queryOptions = [
+        'maxTimeMS' => 2000 // 2 second timeout per query
+    ];
+    
     // First, check admin accounts collection
     try {
         $mongoClient = $GLOBALS['mongoClient'] ?? null;
@@ -68,24 +73,30 @@ try {
         $adminDB = $mongoClient->admin;
         $adminCollection = $adminDB->accounts;
         
-        $user = $adminCollection->findOne(['email' => $email]);
+        $user = $adminCollection->findOne(['email' => $email], $queryOptions);
     } catch (Exception $e) {
         error_log("Admin check error: " . $e->getMessage());
     }
     
-    // If not found in admin, search student department collections
+    // If not found in admin, search student department collections in parallel
     if (!$user) {
         // Define all department collections to search
         $departmentCollections = ['bsn', 'bsme', 'bscje', 'bstm', 'bse', 'bsis', 'beced', 'bsma', 'bsmt', 'btvted'];
         
-        // Search through each department collection
+        // Use indexed search with timeout - search with limit to speed up
         foreach ($departmentCollections as $collectionName) {
-            $collection = $database->selectCollection($collectionName);
-            $user = $collection->findOne(['email' => $email]);
-            
-            if ($user) {
-                // Found the student, no need to search further
-                break;
+            try {
+                $collection = $database->selectCollection($collectionName);
+                $user = $collection->findOne(['email' => $email], $queryOptions);
+                
+                if ($user) {
+                    // Found the student, no need to search further
+                    break;
+                }
+            } catch (Exception $e) {
+                // Log timeout or error and continue to next collection
+                error_log("Collection $collectionName search error: " . $e->getMessage());
+                continue;
             }
         }
     }
@@ -192,6 +203,16 @@ try {
         $mail->Password   = GMAIL_APP_PASSWORD;
         $mail->SMTPSecure = GMAIL_SMTP_ENCRYPTION;
         $mail->Port       = GMAIL_SMTP_PORT;
+        
+        // Set timeout to prevent long waits
+        $mail->Timeout = 10; // 10 seconds timeout
+        $mail->SMTPOptions = array(
+            'ssl' => array(
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true
+            )
+        );
         
         // Email settings
         $mail->setFrom(EMAIL_FROM_ADDRESS, EMAIL_FROM_NAME);

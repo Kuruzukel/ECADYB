@@ -91,6 +91,7 @@ $departmentCode = $departmentCodes[$studentDepartment] ?? 'BSME';
     />
 
     <link rel="stylesheet" href="/ECADYB/Student/assets/css/StudentDashboard.css" />
+    <link rel="stylesheet" href="/ECADYB/Student/assets/css/yearbook-loader.css" />
 
     <link
       rel="stylesheet"
@@ -115,7 +116,24 @@ $departmentCode = $departmentCodes[$studentDepartment] ?? 'BSME';
         </div>
 
         <!-- Iframe Container (hidden by default) -->
-        <div class="yearbook-iframe-container" style="display: none;">
+        <div class="yearbook-iframe-container" style="display: none; position: relative;">
+          <!-- Yearbook Loader Overlay -->
+          <div class="yearbook-loader-overlay">
+            <div class="loader-content">
+              <div class="spinner">
+                <div class="spinner-dot"></div>
+                <div class="spinner-dot"></div>
+                <div class="spinner-dot"></div>
+                <div class="spinner-dot"></div>
+                <div class="spinner-dot"></div>
+                <div class="spinner-dot"></div>
+                <div class="spinner-dot"></div>
+                <div class="spinner-dot"></div>
+              </div>
+              <div class="loader-text">Loading Yearbook...</div>
+            </div>
+          </div>
+
           <iframe 
             id="yearbookIframe"
             src="" 
@@ -223,6 +241,7 @@ $departmentCode = $departmentCodes[$studentDepartment] ?? 'BSME';
 
     <?php include __DIR__ . '/Footer.php'; ?>
     <script src="/ECADYB/Student/assets/js/StudentDashboard.js"></script>
+    <script src="/ECADYB/Student/assets/js/yearbook-loader.js"></script>
     <script>
       // Function to show yearbook iframe when clicking on a yearbook item
       function showYearbookIframe(departmentCode, departmentName) {
@@ -231,6 +250,7 @@ $departmentCode = $departmentCodes[$studentDepartment] ?? 'BSME';
         const iframe = document.getElementById('yearbookIframe');
         const itemsContainer = document.querySelector('.yearbook-items-container');
         const allItems = document.querySelectorAll('.yearbook-item');
+        const loader = document.querySelector('.yearbook-loader-overlay');
 
         // Remove active class from all items
         allItems.forEach(item => item.classList.remove('active'));
@@ -249,6 +269,36 @@ $departmentCode = $departmentCodes[$studentDepartment] ?? 'BSME';
         // Hide yearbook slider
         if (itemsContainer) {
           itemsContainer.style.display = 'none';
+        }
+
+        // Show loader and reset its state
+        if (loader) {
+          loader.classList.remove('hidden');
+          loader.style.display = 'flex';
+          loader.style.opacity = '1';
+          loader.style.visibility = 'visible';
+        }
+
+        // Reset loader manager state if it exists
+        if (window.YearbookLoader) {
+          window.YearbookLoader.isLoaded = false;
+          window.YearbookLoader.magazineReady = false;
+          window.YearbookLoader.coverVisible = false;
+          window.YearbookLoader.navigationComplete = false;
+          
+          // Clear any existing timers
+          if (window.YearbookLoader.timeout) {
+            clearTimeout(window.YearbookLoader.timeout);
+          }
+          if (window.YearbookLoader.checkInterval) {
+            clearInterval(window.YearbookLoader.checkInterval);
+          }
+          
+          // Restart loading process
+          window.YearbookLoader.loaderElement = loader;
+          window.YearbookLoader.iframe = iframe;
+          window.YearbookLoader.setMaxTimeout();
+          window.YearbookLoader.startChecking();
         }
 
         // Update iframe src and show it
