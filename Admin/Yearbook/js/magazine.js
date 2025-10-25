@@ -306,7 +306,6 @@ function findAndNavigateToStudent(
 
                   notifyNavigationComplete();
                 } else if ($studentImageArea.length && retryCount < 15) {
-                  // Image area exists but no image content yet, retry
                   console.log(
                     "⏳ Student image area exists but no image content yet, retrying... (attempt " +
                       (retryCount + 1) +
