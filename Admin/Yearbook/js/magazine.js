@@ -102,7 +102,6 @@ function navigateToSearchedStudent() {
         allStudents ? allStudents.length : 0
       );
 
-      // Now proceed with finding the student
       findAndNavigateToStudent(department, template, studentData, allStudents);
     });
   } catch (e) {
