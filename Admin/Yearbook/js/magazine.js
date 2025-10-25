@@ -299,7 +299,6 @@ function findAndNavigateToStudent(
                         "transition: all 3s ease !important;"
                     );
 
-                    // Remove border completely after fade completes
                     setTimeout(function () {
                       $studentImageArea.removeAttr("style");
                     }, 3000);
