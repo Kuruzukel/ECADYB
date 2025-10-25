@@ -25,8 +25,10 @@ If you're seeing a "Database connection error" on your deployed site, you need t
 **MongoDB (REQUIRED):**
 
 - `MONGO_URL` or `MONGODB_URI`: Your MongoDB connection string
-  - Format: `mongodb+srv://username:password@cluster.mongodb.net/database?retryWrites=true&w=majority`
+  - Format: `mongodb+srv://<USERNAME>:<PASSWORD>@<CLUSTER>.mongodb.net/<DATABASE>?retryWrites=true&w=majority`
+  - Example: `mongodb+srv://dbuser:YOUR_PASSWORD_HERE@cluster0.abc123.mongodb.net/ECADYB?retryWrites=true&w=majority`
   - If using Railway's MongoDB plugin, it will auto-set `MONGODB_URI`
+  - **Replace all placeholders with your actual credentials**
 
 **Bunny CDN (Required for file uploads):**
 
