@@ -212,7 +212,6 @@ function findAndNavigateToStudent(
             var currentPage = $magazine.turn("page");
             console.log("Current magazine page:", currentPage);
 
-            // Get the page elements that are currently visible
             var $visiblePages = $magazine.find(".page").filter(function () {
               return $(this).is(":visible");
             });
