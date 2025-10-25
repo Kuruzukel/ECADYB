@@ -44,7 +44,6 @@ function navigateToSearchedStudent() {
       studentData = JSON.parse(searchSelectedStudent);
       console.log("Student data from sessionStorage:", studentData);
 
-      // Clear the sessionStorage after retrieving
       sessionStorage.removeItem("searchSelectedStudent");
     }
 
