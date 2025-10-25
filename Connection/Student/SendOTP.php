@@ -148,7 +148,18 @@ try {
     ";
 
     // Load email configuration
-    require_once __DIR__ . '/../Configuration/EmailConfig.php';
+    $emailConfigPath = __DIR__ . '/../Configuration/EmailConfig.php';
+    if (!file_exists($emailConfigPath)) {
+        error_log("EmailConfig.php not found at: " . $emailConfigPath);
+        http_response_code(500);
+        echo json_encode([
+            'success' => false,
+            'message' => 'Email configuration file not found',
+            'debug_path' => $emailConfigPath
+        ]);
+        exit;
+    }
+    require_once $emailConfigPath;
     
     // Use PHPMailer for Gmail SMTP
     $mail = new PHPMailer(true);

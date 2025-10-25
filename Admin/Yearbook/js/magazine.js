@@ -155,6 +155,10 @@ function findAndNavigateToStudent(
       console.log("=== STUDENT FOUND ===");
       console.log("Student Index:", studentIndex);
       console.log("Student:", allStudents[studentIndex]);
+      console.log("Student Name:", allStudents[studentIndex].name);
+      console.log("Student ID:", allStudents[studentIndex].student_id);
+      console.log("Searched for Name:", studentData.name);
+      console.log("Searched for ID:", studentData.student_id);
 
       var managementPages = 4;
       var topMgmtCacheKey =
@@ -204,8 +208,10 @@ function findAndNavigateToStudent(
 
             // Wait a bit more for content to render
             setTimeout(function () {
-              var cardIndex = studentIndex % studentsPerPage;
-              console.log("Looking for student card at index:", cardIndex);
+              console.log("=== FINDING STUDENT IN VISIBLE CARDS ===");
+              console.log("Student Index (global):", studentIndex);
+              console.log("Student ID to find:", studentData.student_id);
+              console.log("Student Name to find:", studentData.name);
 
               console.log("🧹 Clearing any existing yellow borders and timeouts...");
 
@@ -251,6 +257,14 @@ function findAndNavigateToStudent(
                   $studentCards.length
                 );
 
+                // Log all student names on the visible page
+                console.log("=== STUDENTS ON VISIBLE PAGE ===");
+                $studentCards.each(function (index) {
+                  var studentName = $(this).find("h3").text();
+                  var studentId = $(this).attr("data-student-id");
+                  console.log("Card " + index + ":", studentName, "ID:", studentId);
+                });
+
                 if ($studentCards.length === 0 && retryCount < 20) {
                   console.log(
                     "⏳ Student cards not loaded yet, retrying... (attempt " +
@@ -274,10 +288,22 @@ function findAndNavigateToStudent(
                   return;
                 }
 
-                var $targetCard = $studentCards.eq(cardIndex);
-                console.log("Target student card found:", $targetCard.length > 0);
+                // Find the card by student ID instead of using card index
+                var $targetCard = null;
+                var targetCardIndex = -1;
+                $studentCards.each(function (index) {
+                  var cardStudentId = $(this).attr("data-student-id");
+                  if (cardStudentId === studentData.student_id) {
+                    $targetCard = $(this);
+                    targetCardIndex = index;
+                    return false; // break the loop
+                  }
+                });
 
-                if ($targetCard.length > 0) {
+                console.log("Target card index in visible cards:", targetCardIndex);
+                console.log("Target student card found:", $targetCard && $targetCard.length > 0);
+
+                if ($targetCard && $targetCard.length > 0) {
                   var $studentImageArea = $targetCard.find(".student-image");
                   console.log(
                     "Student image area in target card:",
@@ -362,7 +388,7 @@ function findAndNavigateToStudent(
                   }
                 } else {
                   console.warn(
-                    "⚠️ Target student card at index " + cardIndex + " not found"
+                    "⚠️ Target student card not found for student ID: " + studentData.student_id
                   );
                   notifyNavigationComplete();
                 }

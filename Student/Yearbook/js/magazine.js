@@ -1127,8 +1127,7 @@ function loadPage(page, pageElement) {
                               "text-align": "center",
                               "display": "inline-block",
                               "max-width": "100%",
-                              "word-wrap": "break-word",
-                              "margin-top": "5rem"
+                              "word-wrap": "break-word"
                             });
 
                             currentPhotoElement.parent().append(comingSoonOverlay);
@@ -2378,8 +2377,11 @@ function findAndNavigateToStudent(department, template, studentData, allStudents
 
             // Wait a bit more for content to render
             setTimeout(function () {
-              var cardIndex = studentIndex % studentsPerPage;
-              console.log("Looking for student card at index:", cardIndex);
+              console.log("=== FINDING STUDENT IN VISIBLE CARDS ===");
+              console.log("Student Index (global):", studentIndex);
+              console.log("Student ID to find:", studentData.student_id);
+              console.log("Student Name to find:", studentData.name);
+              console.log("Current magazine page:", $magazine.turn("page"));
 
               console.log("🧹 Clearing any existing yellow borders and timeouts...");
 
@@ -2422,6 +2424,12 @@ function findAndNavigateToStudent(department, template, studentData, allStudents
                 var $studentCards = $visiblePages.find(".student-card");
                 console.log("Student cards found on visible pages:", $studentCards.length);
 
+                // Log all student names in visible cards for debugging
+                $studentCards.each(function (idx) {
+                  var name = $(this).find("h3").text();
+                  console.log("  Card " + idx + ":", name);
+                });
+
                 if ($studentCards.length === 0 && retryCount < 20) {
                   console.log("⏳ Student cards not loaded yet, retrying... (attempt " + (retryCount + 1) + "/20)");
                   setTimeout(function () {
@@ -2434,10 +2442,22 @@ function findAndNavigateToStudent(department, template, studentData, allStudents
                   return;
                 }
 
-                var $targetCard = $studentCards.eq(cardIndex);
-                console.log("Target student card found:", $targetCard.length > 0);
+                // Find the card by student ID instead of using card index
+                var $targetCard = null;
+                var targetCardIndex = -1;
+                $studentCards.each(function (index) {
+                  var cardStudentId = $(this).attr("data-student-id");
+                  if (cardStudentId === studentData.student_id) {
+                    $targetCard = $(this);
+                    targetCardIndex = index;
+                    return false; // break the loop
+                  }
+                });
 
-                if ($targetCard.length > 0) {
+                console.log("Target card index in visible cards:", targetCardIndex);
+                console.log("Target student card found:", $targetCard && $targetCard.length > 0);
+
+                if ($targetCard && $targetCard.length > 0) {
                   var $studentImageArea = $targetCard.find(".student-image");
                   console.log("Student image area in target card:", $studentImageArea.length > 0);
 
@@ -2503,7 +2523,7 @@ function findAndNavigateToStudent(department, template, studentData, allStudents
                     notifyNavigationComplete();
                   }
                 } else {
-                  console.warn("⚠️ Target student card at index " + cardIndex + " not found");
+                  console.warn("⚠️ Target student card not found for student ID: " + studentData.student_id);
                   notifyNavigationComplete();
                 }
               }
