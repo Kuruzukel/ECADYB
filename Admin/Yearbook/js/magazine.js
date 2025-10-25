@@ -428,7 +428,7 @@ function checkIfNavigationNeeded() {
 
   if (!urlStudentId && !urlStudentName && !searchSelectedStudent) {
     console.log("📍 No student navigation required, sending complete signal");
-    hasInitialNavigationRun = true; // Mark as run even if no navigation needed
+    hasInitialNavigationRun = true;
     if (window.parent && window.parent !== window) {
       window.parent.postMessage(
         {
