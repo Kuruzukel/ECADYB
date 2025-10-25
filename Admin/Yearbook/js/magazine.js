@@ -233,7 +233,6 @@ function findAndNavigateToStudent(
                     "/20)"
                 );
                 setTimeout(function () {
-                  // Refresh visible pages
                   $visiblePages = $magazine.find(".page").filter(function () {
                     return $(this).is(":visible");
                   });
