@@ -193,93 +193,137 @@ try {
         </html>
         ";
 
-        // Load email configuration - try multiple path resolution methods
-        $emailConfigPath = null;
-        $possiblePaths = [
-            __DIR__ . '/../Configuration/EmailConfig.php',
-            dirname(__DIR__) . '/Configuration/EmailConfig.php',
-            $_SERVER['DOCUMENT_ROOT'] . '/Connection/Configuration/EmailConfig.php',
-            realpath(__DIR__ . '/../Configuration/EmailConfig.php')
-        ];
+        // Load email configuration from environment variables (Railway) or config file (localhost)
+        // Priority: Environment Variables > EmailConfig.php > Fallback defaults
 
-        foreach ($possiblePaths as $path) {
-            if ($path && file_exists($path)) {
-                $emailConfigPath = $path;
-                break;
+        // Check for environment variables first (Railway deployment)
+        $smtpHost = getenv('SMTP_HOST') ?: $_ENV['SMTP_HOST'] ?? null;
+        $smtpPort = getenv('SMTP_PORT') ?: $_ENV['SMTP_PORT'] ?? null;
+        $smtpUsername = getenv('SMTP_USERNAME') ?: $_ENV['SMTP_USERNAME'] ?? null;
+        $smtpPassword = getenv('SMTP_PASSWORD') ?: $_ENV['SMTP_PASSWORD'] ?? null;
+        $smtpFromEmail = getenv('SMTP_FROM_EMAIL') ?: $_ENV['SMTP_FROM_EMAIL'] ?? null;
+        $smtpFromName = getenv('SMTP_FROM_NAME') ?: $_ENV['SMTP_FROM_NAME'] ?? null;
+        $smtpEncryption = getenv('SMTP_ENCRYPTION') ?: $_ENV['SMTP_ENCRYPTION'] ?? 'tls';
+
+        // If environment variables not set, try loading from EmailConfig.php (localhost)
+        if (!$smtpHost || !$smtpUsername || !$smtpPassword) {
+            $emailConfigPath = null;
+            $possiblePaths = [
+                __DIR__ . '/../Configuration/EmailConfig.php',
+                dirname(__DIR__) . '/Configuration/EmailConfig.php',
+                $_SERVER['DOCUMENT_ROOT'] . '/Connection/Configuration/EmailConfig.php',
+                realpath(__DIR__ . '/../Configuration/EmailConfig.php')
+            ];
+
+            foreach ($possiblePaths as $path) {
+                if ($path && file_exists($path)) {
+                    $emailConfigPath = $path;
+                    break;
+                }
+            }
+
+            if ($emailConfigPath) {
+                require_once $emailConfigPath;
+                $smtpHost = $smtpHost ?? (defined('GMAIL_SMTP_HOST') ? GMAIL_SMTP_HOST : 'smtp.gmail.com');
+                $smtpPort = $smtpPort ?? (defined('GMAIL_SMTP_PORT') ? GMAIL_SMTP_PORT : 587);
+                $smtpUsername = $smtpUsername ?? (defined('GMAIL_USERNAME') ? GMAIL_USERNAME : '');
+                $smtpPassword = $smtpPassword ?? (defined('GMAIL_APP_PASSWORD') ? GMAIL_APP_PASSWORD : '');
+                $smtpFromEmail = $smtpFromEmail ?? (defined('EMAIL_FROM_ADDRESS') ? EMAIL_FROM_ADDRESS : '');
+                $smtpFromName = $smtpFromName ?? (defined('EMAIL_FROM_NAME') ? EMAIL_FROM_NAME : 'Exact Colleges of Asia');
+                $smtpEncryption = $smtpEncryption ?? (defined('GMAIL_SMTP_ENCRYPTION') ? GMAIL_SMTP_ENCRYPTION : 'tls');
+            } else {
+                error_log("WARNING: Email configuration not found in environment or config file");
             }
         }
 
-        if ($emailConfigPath) {
-            require_once $emailConfigPath;
-        } else {
-            // Fallback: Define email configuration inline if file not found
-            error_log("EmailConfig.php not found, using inline configuration");
-
-            if (!defined('GMAIL_SMTP_HOST')) {
-                define('GMAIL_SMTP_HOST', 'smtp.gmail.com');
-                define('GMAIL_SMTP_PORT', 587);
-                define('GMAIL_SMTP_ENCRYPTION', 'tls');
-                define('GMAIL_USERNAME', 'admain.ecadyb@gmail.com');
-                define('GMAIL_APP_PASSWORD', 'roobfmontzajvqph');
-                define('EMAIL_FROM_ADDRESS', 'admain.ecadyb@gmail.com');
-                define('EMAIL_FROM_NAME', 'Exact Colleges of Asia - Graduation Gallery');
-            }
+        // Validate email configuration
+        if (!$smtpHost || !$smtpUsername || !$smtpPassword) {
+            error_log("ERROR: Email configuration incomplete. SMTP_HOST: " . ($smtpHost ? "set" : "missing") .
+                ", SMTP_USERNAME: " . ($smtpUsername ? "set" : "missing") .
+                ", SMTP_PASSWORD: " . ($smtpPassword ? "set" : "missing"));
+            return; // Skip email sending if configuration is incomplete
         }
+
+        error_log("Email config loaded - Host: $smtpHost, Port: $smtpPort, User: $smtpUsername");
 
         // Use PHPMailer for Gmail SMTP
         $mail = new PHPMailer(true);
 
         try {
-            // Gmail SMTP Configuration - Optimized for Railway
+            // Detect if running on Railway or localhost
+            $isRailway = (getenv('RAILWAY_ENVIRONMENT') || getenv('RAILWAY_PUBLIC_URL')) ? true : false;
+
+            // SMTP Configuration using variables from environment or config file
             $mail->isSMTP();
-            $mail->Host       = GMAIL_SMTP_HOST;
+            $mail->Host       = $smtpHost;
             $mail->SMTPAuth   = true;
-            $mail->Username   = GMAIL_USERNAME;
-            $mail->Password   = GMAIL_APP_PASSWORD;
-            $mail->SMTPSecure = GMAIL_SMTP_ENCRYPTION;
-            $mail->Port       = GMAIL_SMTP_PORT;
+            $mail->Username   = $smtpUsername;
+            $mail->Password   = $smtpPassword;
+            $mail->SMTPSecure = ($smtpEncryption === 'ssl') ? PHPMailer::ENCRYPTION_SMTPS : PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port       = (int)$smtpPort;
 
-            // Aggressive timeout for faster response
-            $mail->Timeout = 5; // Reduced to 5 seconds - fail very fast
-            $mail->SMTPKeepAlive = false; // Disable keep-alive
+            // Timeout settings - more lenient for Railway
+            $mail->Timeout = $isRailway ? 30 : 15; // Railway needs more time
+            $mail->SMTPKeepAlive = false;
 
-            // Optimized SSL options - less strict for faster connection on Railway
-            $sslOptions = array(
-                'verify_peer' => false, // Disable peer verification for speed (Railway environments)
-                'verify_peer_name' => false, // Disable peer name verification
-                'allow_self_signed' => true // Allow self-signed certs for flexibility
-            );
+            // Debug output - enable in both environments, logs to error_log
+            $mail->SMTPDebug = 2; // Keep enabled to track issues
+            $mail->Debugoutput = function ($str, $level) {
+                error_log("SMTP Debug ($level): $str");
+            };
 
-            $mail->SMTPOptions = array('ssl' => $sslOptions);
+            // SSL/TLS options - Railway-compatible (more lenient)
+            if ($isRailway) {
+                // Railway needs less strict SSL verification
+                $mail->SMTPOptions = array(
+                    'ssl' => array(
+                        'verify_peer' => false,
+                        'verify_peer_name' => false,
+                        'allow_self_signed' => true
+                    )
+                );
+                error_log("Using Railway-compatible SSL settings");
+            } else {
+                // Localhost uses proper SSL verification
+                $mail->SMTPOptions = array(
+                    'ssl' => array(
+                        'verify_peer' => true,
+                        'verify_peer_name' => true,
+                        'allow_self_signed' => false
+                    )
+                );
+                error_log("Using standard SSL settings for localhost");
+            }
 
-            // Disable debug output in production
-            $mail->SMTPDebug = 0;
-
-            // Email settings
-            $mail->setFrom(EMAIL_FROM_ADDRESS, EMAIL_FROM_NAME);
+            // Email settings using variables
+            $mail->setFrom($smtpFromEmail, $smtpFromName);
             $mail->addAddress($email);
             $mail->isHTML(true);
             $mail->Subject = $subject;
             $mail->Body    = $message;
+            $mail->AltBody = strip_tags(str_replace(['<br>', '<br/>', '<br />'], "\n", $message)); // Plain text version
             $mail->CharSet = 'UTF-8';
 
-            // Send email with single attempt - no retries for faster response
+            // Send email with better error handling
             $emailSent = false;
             $lastError = '';
 
             try {
-                $mail->send();
-                $emailSent = true;
+                $emailSent = $mail->send();
+                error_log("Email sent successfully to: $email");
             } catch (Exception $e) {
                 $lastError = $mail->ErrorInfo;
-                error_log("PHPMailer failed: {$mail->ErrorInfo}");
+                error_log("PHPMailer send failed: {$mail->ErrorInfo}");
+                error_log("Exception details: " . $e->getMessage());
             }
 
             if (!$emailSent) {
-                error_log("PHPMailer Error: $lastError");
+                error_log("Email failed to send. Last error: $lastError");
+                // You could also update the response here if needed
             }
         } catch (Exception $e) {
-            error_log("PHPMailer Error: " . $e->getMessage());
+            error_log("PHPMailer configuration error: " . $e->getMessage());
+            error_log("Stack trace: " . $e->getTraceAsString());
         }
     };
 
