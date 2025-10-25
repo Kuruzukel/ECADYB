@@ -58,7 +58,6 @@ function navigateToSearchedStudent() {
 
     var template = 1;
 
-    // Try window.coverData first
     if (
       typeof window.coverData !== "undefined" &&
       window.coverData &&
