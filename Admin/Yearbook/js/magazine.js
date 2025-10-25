@@ -85,7 +85,6 @@ function navigateToSearchedStudent() {
     console.log("=== TEMPLATE INFO ===");
     console.log("Final template for navigation:", template);
 
-    // Get batch year
     var batchYear = localStorage.getItem("selectedBatchYear");
     console.log("Batch year for navigation:", batchYear);
 
