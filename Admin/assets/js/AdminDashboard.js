@@ -196,9 +196,9 @@ async function loadAdminLogo() {
   try {
     const BASE_PATH = window.location.pathname.includes("/Admin/")
       ? window.location.pathname.substring(
-          0,
-          window.location.pathname.indexOf("/Admin/")
-        )
+        0,
+        window.location.pathname.indexOf("/Admin/")
+      )
       : window.location.origin;
     const CONNECTION_PATH = `${BASE_PATH}/Connection`;
 
@@ -436,7 +436,7 @@ function searchStudents(query) {
   const basePath = window.location.pathname.includes("/ECADYB/")
     ? "/ECADYB"
     : "";
-  const searchUrl = `${basePath}/Connection/Student/SearchStudents.php?query=${encodeURIComponent(
+  const searchUrl = `${window.location.origin}${basePath}/Connection/Student/SearchStudents.php?query=${encodeURIComponent(
     query
   )}&limit=10`;
 
@@ -456,7 +456,11 @@ function searchStudents(query) {
       // Check if response is JSON
       const contentType = response.headers.get("content-type");
       if (!contentType || !contentType.includes("application/json")) {
-        throw new Error("Server returned non-JSON response");
+        // Log the actual response for debugging
+        return response.text().then(text => {
+          console.error("Non-JSON response received:", text.substring(0, 200));
+          throw new Error("Server returned non-JSON response");
+        });
       }
       return response.json();
     })
@@ -490,7 +494,7 @@ function displaySuggestions(results) {
   results.forEach((student) => {
     const item = document.createElement("div");
     item.className = "search-suggestion-item";
-    
+
     // Build the department and year display
     let departmentYear = '';
     if (student.department_section) {
@@ -501,12 +505,12 @@ function displaySuggestions(results) {
     } else if (student.academic_year) {
       departmentYear = escapeHtml(student.academic_year);
     }
-    
+
     item.innerHTML = `
       <div class="search-suggestion-name">${escapeHtml(student.name)}</div>
       <div class="search-suggestion-id">Student ID: ${escapeHtml(
-        student.student_id
-      )}</div>
+      student.student_id
+    )}</div>
       <div class="search-suggestion-program">${departmentYear}</div>
     `;
 
@@ -535,7 +539,7 @@ function handleStudentSelection(student) {
   const basePath = window.location.pathname.includes("/ECADYB/")
     ? "/ECADYB"
     : "";
-  
+
   // Map collection to yearbook page
   const collectionToYearbook = {
     'bsme': 'maritime',
@@ -551,7 +555,7 @@ function handleStudentSelection(student) {
   };
 
   const yearbookPage = collectionToYearbook[student.collection] || 'maritime';
-  
+
   // Store selected student information for the yearbook to navigate to
   sessionStorage.setItem("searchSelectedStudent", JSON.stringify({
     id: student.id,
