@@ -381,7 +381,6 @@ function findAndNavigateToStudent(
   }
 }
 
-// Make the navigation function globally accessible
 window.navigateToSearchedStudent = navigateToSearchedStudent;
 
 // Try multiple times to ensure the magazine is loaded
