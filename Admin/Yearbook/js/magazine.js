@@ -177,7 +177,6 @@ function findAndNavigateToStudent(
         }
       }
 
-      // Student pages start at page 6 (after front + 4 mgmt pages)
       var studentsPerPage = 4;
       var frontCoverPages = 1;
       var studentPageOffset = Math.floor(studentIndex / studentsPerPage);
