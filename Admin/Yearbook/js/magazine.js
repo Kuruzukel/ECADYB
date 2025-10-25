@@ -440,7 +440,6 @@ function checkIfNavigationNeeded() {
     }
     return false;
   }
-  // Store the initial student ID for tracking
   if (urlStudentId && !lastSearchedStudentId) {
     lastSearchedStudentId = urlStudentId;
     console.log("📝 Initial student ID stored:", lastSearchedStudentId);
