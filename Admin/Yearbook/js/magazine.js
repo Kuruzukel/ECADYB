@@ -420,7 +420,6 @@ function tryNavigateToStudent() {
 }
 
 function checkIfNavigationNeeded() {
-  // Check URL parameters for student navigation
   var urlParams = new URLSearchParams(window.location.search);
   var urlStudentId = urlParams.get("student_id");
   var urlStudentName = urlParams.get("student_name");
