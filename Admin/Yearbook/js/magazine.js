@@ -325,7 +325,6 @@ function findAndNavigateToStudent(
                 console.warn(
                   "⚠️ Target student card at index " + cardIndex + " not found"
                 );
-                // Still notify parent even if highlighting failed
                 notifyNavigationComplete();
               }
             }
