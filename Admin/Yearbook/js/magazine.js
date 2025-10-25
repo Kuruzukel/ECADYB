@@ -227,7 +227,6 @@ function findAndNavigateToStudent(
               );
 
               if ($studentCards.length === 0 && retryCount < 20) {
-                // Cards not loaded yet, retry after a short delay
                 console.log(
                   "⏳ Student cards not loaded yet, retrying... (attempt " +
                     (retryCount + 1) +
