@@ -355,7 +355,6 @@ function findAndNavigateToStudent(
               }, 100);
             };
 
-            // Listen for image load events on the target page
             $visiblePages.find("img").on("load", imageLoadListener);
 
             // Clean up listener after 10 seconds
