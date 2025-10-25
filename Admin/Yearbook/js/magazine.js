@@ -482,10 +482,8 @@ function checkForNewStudentSearch() {
         "🎯 This is a subsequent search - triggering navigation immediately!"
       );
 
-      // Reset navigation attempts for new search
       navigationAttempts = 0;
 
-      // Wait for magazine to be ready, then navigate
       setTimeout(function () {
         console.log("📍 Starting navigation for student:", currentStudentId);
         navigateToSearchedStudent();
