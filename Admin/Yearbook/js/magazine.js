@@ -109,7 +109,6 @@ function navigateToSearchedStudent() {
   }
 }
 
-// Separate function to find and navigate to student
 function findAndNavigateToStudent(
   department,
   template,
