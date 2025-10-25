@@ -6,12 +6,6 @@ require __DIR__ . '/vendor/autoload.php';
 
 use MongoDB\Client;
 
-$mongoPath = __DIR__ . '/Connection/Configuration/MongoConnect.php';
-if (!file_exists($mongoPath)) {
-    die("❌ MongoConnect.php not found at: $mongoPath");
-}
-require $mongoPath;
-
 define('BASE_PATH', __DIR__);
 
 if (getenv('RAILWAY_PUBLIC_URL')) {
@@ -21,8 +15,25 @@ if (getenv('RAILWAY_PUBLIC_URL')) {
 }
 
 $error_message = '';
+$mongoConnected = false;
+$adminCollection = null;
+$departmentsDB = null;
+$collections = [];
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['password'])) {
+// Initialize MongoDB connection with error handling
+try {
+    $mongoPath = __DIR__ . '/Connection/Configuration/MongoConnect.php';
+    if (!file_exists($mongoPath)) {
+        throw new Exception("MongoConnect.php not found at: $mongoPath");
+    }
+    require $mongoPath;
+    $mongoConnected = true;
+} catch (Exception $e) {
+    error_log("MongoDB Connection Error in index.php: " . $e->getMessage());
+    $error_message = "Database connection error. The application is currently unavailable. Please contact the administrator.";
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['password']) && $mongoConnected && $adminCollection !== null && $departmentsDB !== null) {
     $studentId = trim($_POST['studentId']);
     $password  = trim($_POST['password']);
 

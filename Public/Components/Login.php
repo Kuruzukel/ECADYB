@@ -8,9 +8,9 @@ require_once __DIR__ . '/../../Connection/Configuration/EnvLoader.php';
 
 use MongoDB\Client;
 
-$client = new Client(getMongoUrl());
-$adminDB = $client->admin;
-$adminCollection = $adminDB->accounts;
+$error_message = '';
+$client = null;
+$adminCollection = null;
 
 // Only search in ECADYB database
 $batchTemplates = ['ECADYB'];
@@ -28,9 +28,17 @@ $collections = [
     "bse"    => "BS Entrepreneurship"
 ];
 
-$error_message = '';
+// Initialize MongoDB connection with error handling
+try {
+    $client = new Client(getMongoUrl());
+    $adminDB = $client->admin;
+    $adminCollection = $adminDB->accounts;
+} catch (Exception $e) {
+    error_log("MongoDB Connection Error in Login.php: " . $e->getMessage());
+    $error_message = "Database connection error. Please contact the administrator or try again later.";
+}
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] == "POST" && $client !== null) {
     $username = trim($_POST['studentId']);
     $password = trim($_POST['password']);
 
@@ -39,68 +47,73 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } elseif (strlen($password) > 8) {
         $error_message = "Password must not exceed 8 characters.";
     } else {
-        $admin = $adminCollection->findOne([
-            'username' => $username,
-            'password' => $password
-        ]);
+        try {
+            $admin = $adminCollection->findOne([
+                'username' => $username,
+                'password' => $password
+            ]);
 
-        if ($admin) {
-            $_SESSION['role']     = 'admin';
-            $_SESSION['username'] = $username;
-            $_SESSION['login_success'] = 'admin';
-            $_SESSION['redirect_to'] = '../../Admin/Components/AdminDashboard.php';
+            if ($admin) {
+                $_SESSION['role']     = 'admin';
+                $_SESSION['username'] = $username;
+                $_SESSION['login_success'] = 'admin';
+                $_SESSION['redirect_to'] = '../../Admin/Components/AdminDashboard.php';
 
-            // Redirect to admin dashboard
-            header('Location: ' . BASE_URL . 'Admin');
-            exit();
-        } else {
-            $loginFound = false;
+                // Redirect to admin dashboard
+                header('Location: ' . BASE_URL . 'Admin');
+                exit();
+            } else {
+                $loginFound = false;
 
-            // Search across all batch template databases
-            foreach ($batchTemplates as $batchTemplate) {
-                $departmentsDB = $client->$batchTemplate;
+                // Search across all batch template databases
+                foreach ($batchTemplates as $batchTemplate) {
+                    $departmentsDB = $client->$batchTemplate;
 
-                foreach ($collections as $collectionName => $course) {
-                    $collection = $departmentsDB->{$collectionName};
+                    foreach ($collections as $collectionName => $course) {
+                        $collection = $departmentsDB->{$collectionName};
 
-                    // Try to find student with either 'student id' or 'student_id' field name
-                    $student = $collection->findOne([
-                        '$or' => [
-                            [
-                                'student id' => $username,
-                                'password'   => $password
-                            ],
-                            [
-                                'student_id' => $username,
-                                'password'   => $password
+                        // Try to find student with either 'student id' or 'student_id' field name
+                        $student = $collection->findOne([
+                            '$or' => [
+                                [
+                                    'student id' => $username,
+                                    'password'   => $password
+                                ],
+                                [
+                                    'student_id' => $username,
+                                    'password'   => $password
+                                ]
                             ]
-                        ]
-                    ]);
+                        ]);
 
-                    if ($student) {
-                        // Get student ID from either field name variation
-                        $studentIdValue = $student['student id'] ?? $student['student_id'] ?? $username;
+                        if ($student) {
+                            // Get student ID from either field name variation
+                            $studentIdValue = $student['student id'] ?? $student['student_id'] ?? $username;
 
-                        $_SESSION['role']       = 'student';
-                        $_SESSION['student_id'] = $studentIdValue;
-                        $_SESSION['name']       = trim(($student['first name'] ?? '') . ' ' . ($student['middle name'] ?? '') . ' ' . ($student['last name'] ?? ''));
-                        $_SESSION['department'] = $course;
-                        $_SESSION['section']    = $student['department section'] ?? '';
-                        $_SESSION['batch_template'] = $batchTemplate; // Store which batch template was found
-                        $_SESSION['login_success'] = 'student';
-                        $_SESSION['redirect_to'] = '../../Student/Components/StudentDashboard.php';
-                        $loginFound = true;
+                            $_SESSION['role']       = 'student';
+                            $_SESSION['student_id'] = $studentIdValue;
+                            $_SESSION['name']       = trim(($student['first name'] ?? '') . ' ' . ($student['middle name'] ?? '') . ' ' . ($student['last name'] ?? ''));
+                            $_SESSION['department'] = $course;
+                            $_SESSION['section']    = $student['department section'] ?? '';
+                            $_SESSION['batch_template'] = $batchTemplate; // Store which batch template was found
+                            $_SESSION['login_success'] = 'student';
+                            $_SESSION['redirect_to'] = '../../Student/Components/StudentDashboard.php';
+                            $loginFound = true;
 
-                        // Redirect to student dashboard
-                        header('Location: ' . BASE_URL . 'Student');
-                        exit();
+                            // Redirect to student dashboard
+                            header('Location: ' . BASE_URL . 'Student');
+                            exit();
+                        }
                     }
                 }
-            }
 
-            if (!$loginFound) {
-                $error_message = "Invalid student ID or password!";
+                if (!$loginFound) {
+                    $error_message = "Invalid student ID or password!";
+                }
             }
+        } catch (Exception $e) {
+            error_log("Login query error: " . $e->getMessage());
+            $error_message = "An error occurred during login. Please try again later.";
         }
     }
 }

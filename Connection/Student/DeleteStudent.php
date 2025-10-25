@@ -31,10 +31,9 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 use MongoDB\Client;
 
-require_once __DIR__ . '/../Configuration/EnvLoader.php';
-$mongoUrl = getMongoUrl();
-
 try {
+    require_once __DIR__ . '/../Configuration/EnvLoader.php';
+    $mongoUrl = getMongoUrl();
     $client = new Client($mongoUrl);
 } catch (Exception $e) {
     http_response_code(500);

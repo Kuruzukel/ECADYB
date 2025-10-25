@@ -44,19 +44,27 @@ if (!$isIncludedInDashboard) {
 
 date_default_timezone_set('Asia/Manila');
 
-require_once __DIR__ . '/../../Connection/Configuration/EnvLoader.php';
-$mongoUrl = getMongoUrl();
-
 $dbName = "ECADYB";
+$client = null;
+$db = null;
 
-$client = new Client($mongoUrl, [
-    'connectTimeoutMS' => 5000,
-    'socketTimeoutMS' => 30000,
-    'serverSelectionTimeoutMS' => 5000,
-    'readPreference' => 'primaryPreferred'
-]);
+try {
+    require_once __DIR__ . '/../../Connection/Configuration/EnvLoader.php';
+    $mongoUrl = getMongoUrl();
 
-$db = $client->$dbName;
+    $client = new Client($mongoUrl, [
+        'connectTimeoutMS' => 5000,
+        'socketTimeoutMS' => 30000,
+        'serverSelectionTimeoutMS' => 5000,
+        'readPreference' => 'primaryPreferred'
+    ]);
+
+    $db = $client->$dbName;
+} catch (Exception $e) {
+    error_log("MongoDB Connection Error in StudentList.php: " . $e->getMessage());
+    echo "<div style='padding: 20px; color: red;'>Database connection error. Please contact the administrator.</div>";
+    exit;
+}
 
 $collections = [
     "bsme"   => "BS Marine Engineering",

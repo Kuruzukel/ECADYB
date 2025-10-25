@@ -27,9 +27,9 @@ function respond($success, $message = '', $data = [])
     exit;
 }
 
-require_once __DIR__ . '/../Configuration/EnvLoader.php';
-$mongoUrl = getMongoUrl();
 try {
+    require_once __DIR__ . '/../Configuration/EnvLoader.php';
+    $mongoUrl = getMongoUrl();
     $client = new Client($mongoUrl);
 } catch (Exception $e) {
     respond(false, "Failed to connect to MongoDB: " . $e->getMessage());

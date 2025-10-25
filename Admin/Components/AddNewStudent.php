@@ -56,12 +56,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         "bse" => "BS Entrepreneurship"
     ];
 
-    require_once __DIR__ . '/../../Connection/Configuration/EnvLoader.php';
-    $mongoUrl = getMongoUrl();
-
     $dbName = "ECADYB";
 
     try {
+        require_once __DIR__ . '/../../Connection/Configuration/EnvLoader.php';
+        $mongoUrl = getMongoUrl();
         $client = new MongoDB\Client($mongoUrl);
         $db = $client->$dbName;
     } catch (Exception $e) {
