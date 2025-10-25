@@ -383,7 +383,6 @@ function findAndNavigateToStudent(
 
 window.navigateToSearchedStudent = navigateToSearchedStudent;
 
-// Try multiple times to ensure the magazine is loaded
 var navigationAttempts = 0;
 var maxNavigationAttempts = 10;
 
