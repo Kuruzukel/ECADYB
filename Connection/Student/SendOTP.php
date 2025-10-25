@@ -163,18 +163,22 @@ try {
         }
     }
     
-    if (!$emailConfigPath) {
-        error_log("EmailConfig.php not found. Tried paths: " . implode(', ', $possiblePaths));
-        http_response_code(500);
-        echo json_encode([
-            'success' => false,
-            'message' => 'Email configuration file not found',
-            'debug_paths' => $possiblePaths,
-            'document_root' => $_SERVER['DOCUMENT_ROOT'] ?? 'not set'
-        ]);
-        exit;
+    if ($emailConfigPath) {
+        require_once $emailConfigPath;
+    } else {
+        // Fallback: Define email configuration inline if file not found
+        error_log("EmailConfig.php not found, using inline configuration");
+        
+        if (!defined('GMAIL_SMTP_HOST')) {
+            define('GMAIL_SMTP_HOST', 'smtp.gmail.com');
+            define('GMAIL_SMTP_PORT', 587);
+            define('GMAIL_SMTP_ENCRYPTION', 'tls');
+            define('GMAIL_USERNAME', 'admain.ecadyb@gmail.com');
+            define('GMAIL_APP_PASSWORD', 'roobfmontzajvqph');
+            define('EMAIL_FROM_ADDRESS', 'admain.ecadyb@gmail.com');
+            define('EMAIL_FROM_NAME', 'Exact Colleges of Asia - Graduation Gallery');
+        }
     }
-    require_once $emailConfigPath;
     
     // Use PHPMailer for Gmail SMTP
     $mail = new PHPMailer(true);
