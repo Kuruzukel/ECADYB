@@ -249,7 +249,6 @@ function findAndNavigateToStudent(
                 return;
               }
 
-              // Find the specific student card by index
               var $targetCard = $studentCards.eq(cardIndex);
               console.log("Target student card found:", $targetCard.length > 0);
 
