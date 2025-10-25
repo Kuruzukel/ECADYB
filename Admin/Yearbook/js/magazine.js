@@ -200,7 +200,6 @@ function findAndNavigateToStudent(
           $magazine.turn("page", yearbookPage);
           console.log("✓ Successfully navigated to student's page");
 
-          // Wait for page turn animation and content to load
           setTimeout(function () {
             var cardIndex = studentIndex % studentsPerPage;
             console.log("Looking for student card at index:", cardIndex);
