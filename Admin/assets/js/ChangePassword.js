@@ -195,7 +195,6 @@ document.addEventListener("DOMContentLoaded", () => {
   postBtn.addEventListener("click", (e) => {
     e.preventDefault();
 
-    // Validate form fields
     const currentPassword = document.getElementById("currentPassword").value;
     const newPassword = document.getElementById("newPassword").value;
     const confirmPassword = document.getElementById("confirmPassword").value;
