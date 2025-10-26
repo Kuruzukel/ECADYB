@@ -283,7 +283,6 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   }
 
-  // Function to clear all password fields
   function clearAllFields() {
     document.getElementById("currentPassword").value = "";
     document.getElementById("newPassword").value = "";
