@@ -31,7 +31,6 @@ if (isset($_SESSION['username']) && !empty($_SESSION['username'])) {
 
             error_log("Admin profile fetched: " . $adminName . " | Email: " . $adminEmail);
         } else {
-            // Debug: Log if no admin found (remove after testing)
             error_log("No admin found for username: " . $_SESSION['username']);
         }
     } catch (Exception $e) {
