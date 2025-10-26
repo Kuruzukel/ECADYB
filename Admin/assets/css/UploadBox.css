@@ -126,7 +126,6 @@
   transition: color 0.3s ease;
 }
 
-/* Plus icon colors matching border colors (darker for visibility) */
 .upload-box:nth-child(1) .plus-icon {
   color: #1a1d5a;
 }
