@@ -274,8 +274,6 @@ label {
   color: #e0e0e0;
 }
 
-/* Upload box styles moved to UploadBox.css */
-
 #delete-modal-overlay,
 #generate-modal-overlay,
 #download-pdf-modal-overlay,
