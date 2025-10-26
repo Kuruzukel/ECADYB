@@ -548,7 +548,6 @@ header {
     BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
 }
 
-/* Light Mode Styles */
 body.theme-light-mode .admin-profile-container {
   background: rgba(0, 0, 0, 0.05);
   border: 1px solid rgba(0, 0, 0, 0.1);
