@@ -55,7 +55,7 @@
 }
 
 .upload-box:nth-child(5) {
-  border-color: #10b981; /* Brighter Green */
+  border-color: #10b981;
 }
 
 .upload-box:nth-child(5):hover {
