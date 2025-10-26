@@ -20,7 +20,6 @@ $adminCollection = null;
 $departmentsDB = null;
 $collections = [];
 
-// Initialize MongoDB connection with error handling
 try {
     $mongoPath = __DIR__ . '/Connection/Configuration/MongoConnect.php';
     if (!file_exists($mongoPath)) {
@@ -47,7 +46,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
             $_SESSION['role']     = 'admin';
             $_SESSION['username'] = $studentId;
 
-            // Redirect to admin dashboard
             header("Location: " . BASE_URL . "Admin");
             exit;
         }
@@ -83,7 +81,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
 
                 $foundStudent = true;
 
-                // Redirect to student dashboard
                 header("Location: " . BASE_URL . "Student");
                 exit;
             }
@@ -103,43 +100,35 @@ if (!empty($error_message)) {
 
 $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-// Add debug information to help troubleshoot routing issues
-// error_log("Request URI: " . $requestUri);
-
-// Handle favicon.ico request
 if ($requestUri === '/favicon.ico' || $requestUri === '/ECADYB/favicon.ico') {
     $faviconPath = BASE_PATH . '/img/PREVIEWLOGO.png';
     if (file_exists($faviconPath)) {
         header('Content-Type: image/png');
-        header('Cache-Control: public, max-age=31536000'); // Cache for 1 year
+        header('Cache-Control: public, max-age=31536000');
         readfile($faviconPath);
         exit;
     } else {
-        http_response_code(204); // No Content - prevents browser from logging 404
+        http_response_code(204);
         exit;
     }
 }
 
-// Handle direct file access by redirecting to proper routes
 $directFileRedirects = [
     '/ECADYB/Admin/Components/AdminDashboard.php' => '/ECADYB/Admin',
     '/ECADYB/Student/Components/StudentDashboard.php' => '/ECADYB/Student',
 ];
 
-// Check for direct file access redirects first
 if (isset($directFileRedirects[$requestUri])) {
     header('Location: ' . $directFileRedirects[$requestUri], true, 301);
     exit();
 }
 
-// Redirect .html requests to .php files
 $htmlToPhpRedirects = [
     '/Student/Components/StudentDashboard.html' => '/Student/Components/StudentDashboard.php',
     '/Student/Components/About.html' => '/Student/Components/About.php',
     '/Student/Components/Yearbook.html' => '/Student/Components/Yearbook.php',
     '/Student/Components/Memories.html' => '/Student/Components/Memories.php',
     '/Student/Components/ChangePassword.html' => '/Student/Components/ChangePassword.php',
-    // ECADYB prefixed redirects for Railway
     '/ECADYB/Student/Components/StudentDashboard.html' => '/ECADYB/Student/Components/StudentDashboard.php',
     '/ECADYB/Student/Components/About.html' => '/ECADYB/Student/Components/About.php',
     '/ECADYB/Student/Components/Yearbook.html' => '/ECADYB/Student/Components/Yearbook.php',
@@ -152,7 +141,6 @@ if (isset($htmlToPhpRedirects[$requestUri])) {
     exit();
 }
 
-// Special handling for ECADYB/Admin route - moved to earlier in the file
 if ($requestUri === '/ECADYB/Admin' || $requestUri === '/ECADYB/Admin/') {
     $filePath = BASE_PATH . '/Admin/Components/AdminDashboard.php';
     if (file_exists($filePath)) {
@@ -221,7 +209,6 @@ $routes = [
     '/Connection/Student/UpdateStatus.php' => BASE_PATH . '/Connection/Student/UpdateStatus.php',
     '/Connection/Student/UpdateStudent.php' => BASE_PATH . '/Connection/Student/UpdateStudent.php',
     '/'                   => BASE_PATH . '/Public/Components/Loader.html',
-    // ECADYB prefixed routes for Railway
     '/ECADYB/LandingPage'        => BASE_PATH . '/LandingPage/index.html',
     '/ECADYB/login'              => BASE_PATH . '/Public/Components/Login.php',
     '/ECADYB/Login'              => BASE_PATH . '/Public/Components/Login.php',
@@ -428,7 +415,6 @@ $staticPaths = [
     '/Student/Yearbook/pics/'           => '/Student/Yearbook/pics/',
     '/Connection/'                      => '/Connection/',
     '/Turn.js/'                         => '/Turn.js/',
-    // ECADYB prefixed static paths for Railway
     '/ECADYB/img/'                             => '/img/',
     '/ECADYB/LandingPage/'                     => '/LandingPage/',
     '/ECADYB/Public/assets/css/'               => '/Public/assets/css/',

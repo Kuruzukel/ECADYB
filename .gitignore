@@ -10,6 +10,13 @@ composer.lock
 Connection/Configuration/EmailConfig.php
 Connection/Configuration/BunnyConfig.php
 
+# Documentation files (optional)
+DEPLOYMENT.md
+DISMISS_ALERTS.md
+RAILWAY_SETUP.md
+SECURITY.md
+SENDGRID_SETUP.md
+
 # IDE files
 .vscode/
 .idea/
