@@ -409,7 +409,6 @@ function initializeSearchAutocomplete() {
     }
   });
 
-  // Hide suggestions when clicking outside
   document.addEventListener("click", function (e) {
     if (!e.target.closest(".search-wrapper")) {
       hideSuggestions();
