@@ -317,7 +317,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.body.appendChild(notification);
 
-    // Show notification
     setTimeout(() => {
       notification.classList.add("show");
     }, 10);
