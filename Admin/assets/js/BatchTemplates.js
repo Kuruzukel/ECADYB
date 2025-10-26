@@ -2449,9 +2449,11 @@ async function captureAllYearbookPages(
 
     let timeoutHandle;
     let capturedPages = [];
+    let iframeLoadFired = false;
 
     iframe.onload = async () => {
-      console.log(`>>> Iframe loaded for ${department}`);
+      iframeLoadFired = true;
+      console.log(`✅ Iframe onload event fired for ${department}`);
       try {
         const iframeWindow = iframe.contentWindow;
         console.log("Got iframe window:", !!iframeWindow);
@@ -2628,8 +2630,9 @@ async function captureAllYearbookPages(
     };
 
     iframe.onerror = (error) => {
-      console.error(`\n>>> Iframe error event for ${department}`);
+      console.error(`\n❌ Iframe error event fired for ${department}`);
       console.error("Error:", error);
+      console.error("Iframe URL was:", yearbookUrl);
 
       clearTimeout(timeoutHandle);
       if (document.body.contains(iframe)) {
@@ -2640,16 +2643,81 @@ async function captureAllYearbookPages(
 
     // Set timeout (increased to 5 minutes for large departments)
     timeoutHandle = setTimeout(() => {
-      console.error(`\n>>> Timeout loading yearbook for ${department}`);
+      console.error(
+        `\n❌ Timeout loading yearbook for ${department} after 300s`
+      );
+      console.error("Iframe onload event fired:", iframeLoadFired);
+      console.error("Iframe URL:", yearbookUrl);
+      console.error(
+        "Iframe readyState:",
+        iframe.contentDocument ? iframe.contentDocument.readyState : "N/A"
+      );
+
+      // Check if iframe has any content
+      try {
+        const iframeDoc =
+          iframe.contentDocument || iframe.contentWindow.document;
+        if (iframeDoc) {
+          console.error("Iframe title:", iframeDoc.title || "[no title]");
+          console.error("Iframe body exists:", !!iframeDoc.body);
+          console.error(
+            "Iframe body innerHTML length:",
+            iframeDoc.body ? iframeDoc.body.innerHTML.length : 0
+          );
+        } else {
+          console.error("Cannot access iframe document - CORS issue likely");
+        }
+      } catch (e) {
+        console.error("Error checking iframe content:", e.message);
+      }
+
       if (document.body.contains(iframe)) {
         document.body.removeChild(iframe);
       }
       reject(new Error(`Timeout loading yearbook for ${department} (300s)`));
     }, 300000); // 5 minutes timeout
 
-    console.log("Setting iframe src...");
+    console.log(`Setting iframe src for ${department}:`, yearbookUrl);
     iframe.src = yearbookUrl;
-    console.log("Iframe src set, waiting for load...");
+    console.log("Iframe src set, waiting for load event...");
+
+    // Add a check to see if the page loads but onload doesn't fire
+    setTimeout(() => {
+      if (!iframeLoadFired) {
+        console.warn(
+          `⚠️ Iframe onload hasn't fired yet after 30s for ${department}`
+        );
+        console.warn("   Checking if content is loading...");
+        try {
+          const iframeDoc =
+            iframe.contentDocument || iframe.contentWindow.document;
+          if (iframeDoc && iframeDoc.body) {
+            console.warn("   - Iframe document accessible: YES");
+            console.warn("   - Document readyState:", iframeDoc.readyState);
+            console.warn("   - Body exists:", !!iframeDoc.body);
+            console.warn(
+              "   - Body has content:",
+              iframeDoc.body.innerHTML.length > 100
+            );
+
+            // If readyState is complete but onload didn't fire, manually trigger it
+            if (
+              iframeDoc.readyState === "complete" &&
+              iframeDoc.body.innerHTML.length > 100
+            ) {
+              console.warn(
+                "   📢 Document is complete but onload didn't fire. Manually triggering..."
+              );
+              iframe.onload();
+            }
+          } else {
+            console.warn("   - Iframe document accessible: NO (possible CORS)");
+          }
+        } catch (e) {
+          console.warn("   - Cannot access iframe:", e.message);
+        }
+      }
+    }, 30000); // Check after 30 seconds
   });
 }
 
@@ -2667,19 +2735,30 @@ async function waitForYearbookInit(iframeWindow, iframeDoc) {
       attempts++;
       const elapsedTime = ((Date.now() - startTime) / 1000).toFixed(1);
 
-      // Check for 404 or error pages
+      // Check for 404 or error pages (only if there's actual content)
       if (!hasLogged404 && attempts % 20 === 0) {
-        const bodyText = iframeDoc.body ? iframeDoc.body.textContent : "";
+        const bodyText = iframeDoc.body
+          ? iframeDoc.body.textContent.trim()
+          : "";
+        // Only log if there's meaningful content with error keywords
         if (
-          bodyText.includes("404") ||
-          bodyText.includes("Not Found") ||
-          bodyText.includes("Error")
+          bodyText.length > 20 &&
+          (bodyText.includes("404") || bodyText.includes("Not Found"))
         ) {
           console.error(
-            "⚠️ Possible error page detected in iframe:",
+            "⚠️ Error page detected in iframe:",
             bodyText.substring(0, 200)
           );
           hasLogged404 = true;
+        } else if (attempts === 100 && bodyText.length < 100) {
+          console.warn("⚠️ Iframe body appears mostly empty after 20s.");
+          console.warn(
+            "   This is normal if the page is still loading scripts and data."
+          );
+          console.warn(
+            "   Body snippet:",
+            bodyText.substring(0, 100) || "[empty]"
+          );
         }
       }
 
@@ -2699,20 +2778,20 @@ async function waitForYearbookInit(iframeWindow, iframeDoc) {
       const hasjQuery = iframeWindow.$ && typeof iframeWindow.$ === "function";
 
       if (!hasjQuery) {
-        if (attempts % 10 === 0) {
-          // Log every 2 seconds
+        if (attempts % 25 === 0) {
+          // Log every 5 seconds
           console.log(
-            `Waiting for jQuery... (${elapsedTime}s elapsed, attempt ${attempts}/${maxAttempts})`
+            `⏳ Waiting for jQuery... (${elapsedTime}s elapsed, attempt ${attempts}/${maxAttempts})`
           );
           // Log what scripts are loaded
           const scripts = iframeDoc.querySelectorAll("script[src]");
-          console.log(`  - Scripts found in iframe: ${scripts.length}`);
+          console.log(`   - Scripts found in iframe: ${scripts.length}`);
         }
         if (attempts < maxAttempts) {
           setTimeout(checkInit, 200);
         } else {
           console.error(
-            "jQuery not loaded after max attempts. Cannot proceed."
+            "❌ jQuery not loaded after max attempts. Cannot proceed."
           );
           console.error("Page title:", iframeDoc.title);
           console.error(
@@ -2733,23 +2812,25 @@ async function waitForYearbookInit(iframeWindow, iframeDoc) {
           const isInitialized = iframeWindow.$(".magazine").turn("is");
           const totalPages = iframeWindow.$(".magazine").turn("pages");
 
-          if (attempts % 10 === 0) {
+          if (attempts % 25 === 0) {
+            // Log every 5 seconds
             console.log(
-              `Turn.js check - Initialized: ${isInitialized}, Pages: ${totalPages} (${elapsedTime}s elapsed, attempt ${attempts}/${maxAttempts})`
+              `⏳ Turn.js check - Initialized: ${isInitialized}, Pages: ${totalPages} (${elapsedTime}s elapsed)`
             );
           }
 
           if (isInitialized && totalPages > 0) {
             console.log(
-              `✓ Yearbook initialized successfully! Total pages: ${totalPages} (took ${elapsedTime}s)`
+              `✅ Yearbook initialized successfully! Total pages: ${totalPages} (took ${elapsedTime}s)`
             );
             // Extra wait to ensure all pages are ready
             setTimeout(() => resolve(), 2000); // 2 seconds
             return;
           } else {
-            if (attempts % 10 === 0) {
+            if (attempts % 50 === 0) {
+              // Log every 10 seconds
               console.log(
-                `Turn.js found but not ready yet (initialized: ${isInitialized}, pages: ${totalPages})`
+                `   Turn.js found but not ready yet (initialized: ${isInitialized}, pages: ${totalPages})`
               );
             }
           }
@@ -2762,9 +2843,10 @@ async function waitForYearbookInit(iframeWindow, iframeDoc) {
           }
         }
       } else {
-        if (attempts % 10 === 0) {
+        if (attempts % 25 === 0) {
+          // Log every 5 seconds
           console.log(
-            `Waiting for Turn.js initialization... (${elapsedTime}s elapsed, attempt ${attempts}/${maxAttempts})`
+            `⏳ Waiting for Turn.js initialization... (${elapsedTime}s elapsed)`
           );
         }
       }
