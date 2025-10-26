@@ -244,7 +244,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Function to submit password change via AJAX
   function submitPasswordChange() {
     const formData = new FormData(form);
     const basePath = window.location.pathname.includes("/ECADYB/")
