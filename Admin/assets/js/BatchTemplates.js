@@ -175,7 +175,7 @@ function showNotification(message, type = "success") {
 
   // Map old type names to new class names
   let messageClass = type === "error" ? "error-message" : "success-message";
-  
+
   const notif = document.createElement("div");
   notif.className = `notification ${messageClass}`;
   notif.id = `${type}-notification`;
@@ -189,7 +189,7 @@ function showNotification(message, type = "success") {
 
   // Trigger animation
   setTimeout(() => {
-    notif.classList.add('show');
+    notif.classList.add("show");
   }, 10);
 
   const duration = type === "info" ? 2000 : 5000;
@@ -201,7 +201,7 @@ function showNotification(message, type = "success") {
 function closeNotification(id) {
   const notification = document.getElementById(id);
   if (notification) {
-    notification.classList.remove('show');
+    notification.classList.remove("show");
     setTimeout(() => {
       notification.remove();
       notificationTimeout = null;
@@ -2101,8 +2101,7 @@ window.addEventListener("DOMContentLoaded", () => {
         .textContent.trim();
       console.log("✓ Selected section:", templateName);
       localStorage.setItem("selectedBatchTemplate", templateName);
-      
-      // Also store as batch year for consistency
+
       localStorage.setItem("selectedBatchYear", templateName);
       console.log("Stored batch year:", templateName);
 
@@ -2359,9 +2358,12 @@ window.addEventListener("DOMContentLoaded", () => {
           );
         }
       });
-      
+
       if (!selectedSection) {
-        console.warn("⚠️ Could not find section matching savedBatchYear:", savedBatchYear);
+        console.warn(
+          "⚠️ Could not find section matching savedBatchYear:",
+          savedBatchYear
+        );
       }
     }
 
