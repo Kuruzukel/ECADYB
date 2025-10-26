@@ -2170,8 +2170,18 @@ async function generateYearbookPDF(departments) {
 
 function getYearbookUrl(department, batchYear) {
   const basePath = getBasePath();
+
+  // Map department codes - COE and CON use different codes in the yearbook
+  const deptMapping = {
+    COE: "BSE", // College of Education
+    CON: "BSN", // College of Nursing
+  };
+
+  const yearbookDept = deptMapping[department] || department;
+  console.log(`Department mapping: ${department} -> ${yearbookDept}`);
+
   // Construct yearbook URL with department parameter and fullscreen flag
-  return `${basePath}/Student/Yearbook/index.html?department=${department}&fullscreen=true`;
+  return `${basePath}/Student/Yearbook/index.html?department=${yearbookDept}&fullscreen=true`;
 }
 
 async function captureAllYearbookPages(yearbookUrl, department) {
@@ -2379,7 +2389,7 @@ async function captureAllYearbookPages(yearbookUrl, department) {
 async function waitForYearbookInit(iframeWindow, iframeDoc) {
   return new Promise((resolve) => {
     let attempts = 0;
-    const maxAttempts = 100; // 20 seconds max (200ms * 100)
+    const maxAttempts = 200; // Increased to 40 seconds (200ms * 200)
 
     const checkInit = () => {
       attempts++;
@@ -2388,9 +2398,12 @@ async function waitForYearbookInit(iframeWindow, iframeDoc) {
       const hasjQuery = iframeWindow.$ && typeof iframeWindow.$ === "function";
 
       if (!hasjQuery) {
-        console.log(
-          `Waiting for jQuery... (attempt ${attempts}/${maxAttempts})`
-        );
+        if (attempts % 10 === 0) {
+          // Log every 2 seconds
+          console.log(
+            `Waiting for jQuery... (attempt ${attempts}/${maxAttempts})`
+          );
+        }
         if (attempts < maxAttempts) {
           setTimeout(checkInit, 200);
         } else {
@@ -2409,28 +2422,40 @@ async function waitForYearbookInit(iframeWindow, iframeDoc) {
           const isInitialized = iframeWindow.$(".magazine").turn("is");
           const totalPages = iframeWindow.$(".magazine").turn("pages");
 
+          if (attempts % 5 === 0) {
+            console.log(
+              `Turn.js check - Initialized: ${isInitialized}, Pages: ${totalPages} (attempt ${attempts}/${maxAttempts})`
+            );
+          }
+
           if (isInitialized && totalPages > 0) {
             console.log(
               `Yearbook initialized successfully! Total pages: ${totalPages}`
             );
             // Extra wait to ensure all pages are ready
-            setTimeout(() => resolve(), 1000);
+            setTimeout(() => resolve(), 3000); // Increased to 3 seconds
             return;
           } else {
-            console.log(
-              `Turn.js found but not ready yet (attempt ${attempts}/${maxAttempts})`
-            );
+            if (attempts % 5 === 0) {
+              console.log(
+                `Turn.js found but not ready yet (initialized: ${isInitialized}, pages: ${totalPages})`
+              );
+            }
           }
         } catch (e) {
-          console.log(
-            `Turn.js check error (attempt ${attempts}/${maxAttempts}):`,
-            e.message
-          );
+          if (attempts % 5 === 0) {
+            console.log(
+              `Turn.js check error (attempt ${attempts}/${maxAttempts}):`,
+              e.message
+            );
+          }
         }
       } else {
-        console.log(
-          `Waiting for Turn.js initialization... (attempt ${attempts}/${maxAttempts})`
-        );
+        if (attempts % 10 === 0) {
+          console.log(
+            `Waiting for Turn.js initialization... (attempt ${attempts}/${maxAttempts})`
+          );
+        }
       }
 
       if (attempts < maxAttempts) {
@@ -2482,8 +2507,8 @@ async function navigateToPage(iframeWindow, pageNum) {
     iframeWindow.$(".magazine").turn("page", pageNum);
     console.log(`Successfully navigated to page ${pageNum}`);
 
-    // Wait for page turn animation to complete
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    // Wait for page turn animation to complete (increased to 1500ms for slow animations)
+    await new Promise((resolve) => setTimeout(resolve, 1500));
 
     return true;
   } catch (e) {
