@@ -34,7 +34,6 @@ if (isset($_SESSION['username']) && !empty($_SESSION['username'])) {
             error_log("No admin found for username: " . $_SESSION['username']);
         }
     } catch (Exception $e) {
-        // Use default values if query fails
         error_log("Failed to fetch admin profile: " . $e->getMessage());
     }
 } else {
