@@ -32,6 +32,8 @@
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
             <link rel="stylesheet" href="<?= $basePath ?>/Admin/assets/css/BatchTemplates.css">
             <link rel="stylesheet" href="<?= $basePath ?>/Admin/assets/css/UploadBox.css">
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
         </head>
 
         <body>
@@ -312,7 +314,7 @@
         </div>
 
         <div class="modal-overlay" id="download-pdf-modal-overlay">
-            <div class="modal" style="background: #34495e;">
+            <div class="modal">
                 <div class="modal-header">
                     <i class="fas fa-file-pdf modal-icon"></i>
                     <h3>Download PDF</h3>
@@ -332,7 +334,7 @@
         </div>
 
         <div class="modal-overlay" id="delete-batch-modal-overlay">
-            <div class="modal" style="background: #34495e;">
+            <div class="modal">
                 <div class="modal-header">
                     <i class="fas fa-trash-alt modal-icon"></i>
                     <h3>Delete Batch Template</h3>
@@ -352,7 +354,7 @@
         </div>
 
         <div class="modal-overlay" id="select-template-modal-overlay">
-            <div class="modal" style="background: #34495e;">
+            <div class="modal">
                 <div class="modal-header">
                     <i class="fas fa-check-circle modal-icon"></i>
                     <h3>Select Batch Template</h3>

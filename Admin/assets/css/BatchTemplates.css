@@ -276,7 +276,6 @@ label {
 
 #delete-modal-overlay,
 #generate-modal-overlay,
-#download-pdf-modal-overlay,
 #delete-batch-modal-overlay,
 #select-template-modal-overlay {
   position: fixed;
@@ -291,12 +290,26 @@ label {
   z-index: 1000;
 }
 
+/* Download PDF Modal (Custom styling) */
+#download-pdf-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  backdrop-filter: blur(2px);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
 #delete-modal-overlay .modal,
 #generate-modal-overlay .modal,
-#download-pdf-modal-overlay .modal,
 #delete-batch-modal-overlay .modal,
-#select-template-modal-overlay .modal {
-  background: transparent;
+#select-template-modal-overlay .modal,
+#download-pdf-modal-overlay .modal {
+  background: #34495e;
   border-radius: 16px;
   padding: 2rem;
   width: 90%;
@@ -310,9 +323,9 @@ label {
 
 #delete-modal-overlay .modal-header,
 #generate-modal-overlay .modal-header,
-#download-pdf-modal-overlay .modal-header,
 #delete-batch-modal-overlay .modal-header,
-#select-template-modal-overlay .modal-header {
+#select-template-modal-overlay .modal-header,
+#download-pdf-modal-overlay .modal-header {
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -321,18 +334,18 @@ label {
 }
 
 #delete-modal-overlay .modal-header .modal-icon,
-#download-pdf-modal-overlay .modal-header .modal-icon,
 #delete-batch-modal-overlay .modal-header .modal-icon,
-#select-template-modal-overlay .modal-header .modal-icon {
+#select-template-modal-overlay .modal-header .modal-icon,
+#download-pdf-modal-overlay .modal-header .modal-icon {
   font-size: 1.5rem;
   color: #217ff7;
 }
 
 #delete-modal-overlay .modal-content p,
 #generate-modal-overlay .modal-content p,
-#download-pdf-modal-overlay .modal-content p,
 #delete-batch-modal-overlay .modal-content p,
-#select-template-modal-overlay .modal-content p {
+#select-template-modal-overlay .modal-content p,
+#download-pdf-modal-overlay .modal-content p {
   color: #e0e0e0;
   font-size: 1rem;
   line-height: 1.6;
@@ -342,9 +355,9 @@ label {
 
 #delete-modal-overlay h3,
 #generate-modal-overlay h3,
-#download-pdf-modal-overlay h3,
 #delete-batch-modal-overlay h3,
-#select-template-modal-overlay h3 {
+#select-template-modal-overlay h3,
+#download-pdf-modal-overlay h3 {
   font-size: 1.6rem;
   font-weight: 600;
   color: #ffffff;
@@ -354,18 +367,18 @@ label {
 
 #delete-modal-overlay .modal-content,
 #generate-modal-overlay .modal-content,
-#download-pdf-modal-overlay .modal-content,
 #delete-batch-modal-overlay .modal-content,
-#select-template-modal-overlay .modal-content {
+#select-template-modal-overlay .modal-content,
+#download-pdf-modal-overlay .modal-content {
   background: transparent;
   border-radius: 16px;
 }
 
 #delete-modal-overlay .modal-buttons,
 #generate-modal-overlay .modal-buttons,
-#download-pdf-modal-overlay .modal-buttons,
 #delete-batch-modal-overlay .modal-buttons,
-#select-template-modal-overlay .modal-buttons {
+#select-template-modal-overlay .modal-buttons,
+#download-pdf-modal-overlay .modal-buttons {
   display: flex;
   gap: 1rem;
   justify-content: flex-end;
@@ -374,9 +387,9 @@ label {
 
 #delete-modal-overlay .modal-buttons .modal-btn,
 #generate-modal-overlay .modal-buttons .modal-btn,
-#download-pdf-modal-overlay .modal-buttons .modal-btn,
 #delete-batch-modal-overlay .modal-buttons .modal-btn,
-#select-template-modal-overlay .modal-buttons .modal-btn {
+#select-template-modal-overlay .modal-buttons .modal-btn,
+#download-pdf-modal-overlay .modal-buttons .modal-btn {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -392,9 +405,9 @@ label {
 
 #delete-modal-overlay .modal-buttons .modal-btn.confirm,
 #generate-modal-overlay .modal-buttons .modal-btn.confirm,
-#download-pdf-modal-overlay .modal-buttons .modal-btn.confirm,
 #delete-batch-modal-overlay .modal-buttons .modal-btn.confirm,
-#select-template-modal-overlay .modal-buttons .modal-btn.confirm {
+#select-template-modal-overlay .modal-buttons .modal-btn.confirm,
+#download-pdf-modal-overlay .modal-buttons .modal-btn.confirm {
   background: #10b981;
   color: #ffffff;
   font-family: Arial, sans-serif;
@@ -402,9 +415,9 @@ label {
 
 #delete-modal-overlay .modal-buttons .modal-btn.confirm:hover,
 #generate-modal-overlay .modal-buttons .modal-btn.confirm:hover,
-#download-pdf-modal-overlay .modal-buttons .modal-btn.confirm:hover,
 #delete-batch-modal-overlay .modal-buttons .modal-btn.confirm:hover,
-#select-template-modal-overlay .modal-buttons .modal-btn.confirm:hover {
+#select-template-modal-overlay .modal-buttons .modal-btn.confirm:hover,
+#download-pdf-modal-overlay .modal-buttons .modal-btn.confirm:hover {
   background: #059669;
   transform: translateY(-1px);
   font-family: Arial, sans-serif;
@@ -412,9 +425,9 @@ label {
 
 #delete-modal-overlay .modal-buttons .modal-btn.cancel,
 #generate-modal-overlay .modal-buttons .modal-btn.cancel,
-#download-pdf-modal-overlay .modal-buttons .modal-btn.cancel,
 #delete-batch-modal-overlay .modal-buttons .modal-btn.cancel,
-#select-template-modal-overlay .modal-buttons .modal-btn.cancel {
+#select-template-modal-overlay .modal-buttons .modal-btn.cancel,
+#download-pdf-modal-overlay .modal-buttons .modal-btn.cancel {
   background: #ef4444;
   color: #ffffff;
   font-family: Arial, sans-serif;
@@ -422,9 +435,9 @@ label {
 
 #delete-modal-overlay .modal-buttons .modal-btn.cancel:hover,
 #generate-modal-overlay .modal-buttons .modal-btn.cancel:hover,
-#download-pdf-modal-overlay .modal-buttons .modal-btn.cancel:hover,
 #delete-batch-modal-overlay .modal-buttons .modal-btn.cancel:hover,
-#select-template-modal-overlay .modal-buttons .modal-btn.cancel:hover {
+#select-template-modal-overlay .modal-buttons .modal-btn.cancel:hover,
+#download-pdf-modal-overlay .modal-buttons .modal-btn.cancel:hover {
   background: #dc2626;
   transform: translateY(-1px);
   font-family: Arial, sans-serif;
@@ -736,4 +749,254 @@ label {
 .upload-modal .modal-btn.cancel:hover {
   background: #dc2626;
   transform: translateY(-1px);
+}
+
+/* Department Selection Modal Styles */
+.dept-selection-modal {
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  max-width: 650px;
+  border-radius: 15px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.dept-selection-header {
+  background: linear-gradient(135deg, #1e3a5f 0%, #2c5f8d 100%);
+  border-radius: 15px 15px 0 0;
+  padding: 25px 30px;
+}
+
+.dept-selection-header .modal-icon {
+  font-size: 28px;
+  color: #fcda15;
+  margin-right: 15px;
+}
+
+.dept-selection-header h3 {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+}
+
+.dept-selection-content {
+  padding: 30px;
+}
+
+.dept-selection-subtitle {
+  margin: 0 0 25px 0;
+  font-family: Arial, sans-serif;
+  font-size: 15px;
+  color: #bdc3c7;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.dept-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 0 0 25px 0;
+}
+
+.dept-label {
+  display: flex;
+  align-items: center;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, #1e2a38 0%, #2c3e50 100%);
+  border: 2px solid #3d5a7a;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.dept-label:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(252, 218, 21, 0.2);
+  border-color: #fcda15 !important;
+}
+
+.dept-label.selected {
+  background: linear-gradient(135deg, #2980b9 0%, #3498db 100%) !important;
+  border-color: #fcda15 !important;
+  box-shadow: 0 4px 15px rgba(252, 218, 21, 0.3);
+}
+
+.dept-checkbox {
+  margin-right: 12px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: #fcda15;
+}
+
+.dept-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.dept-name {
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: Arial, sans-serif;
+}
+
+.dept-code {
+  color: #7f8c8d;
+  font-size: 11px;
+  font-family: Arial, sans-serif;
+  margin-top: 2px;
+}
+
+.dept-checkbox:checked ~ .dept-info .dept-name {
+  color: #fcda15 !important;
+}
+
+.dept-selection-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0 0 0;
+  border-top: 2px solid rgba(61, 90, 122, 0.5);
+}
+
+.select-all-btn {
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: Arial, sans-serif;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+}
+
+.select-all-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(52, 152, 219, 0.5);
+}
+
+.select-all-btn i {
+  margin-right: 8px;
+}
+
+.selected-count-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.selected-count-icon {
+  color: #fcda15;
+  font-size: 16px;
+}
+
+.selected-count-text {
+  color: #ecf0f1;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: Arial, sans-serif;
+}
+
+.dept-modal-buttons {
+  padding: 20px 30px 30px 30px;
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.dept-modal-btn {
+  padding: 12px 28px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: Arial, sans-serif;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.dept-modal-btn i {
+  margin-right: 8px;
+}
+
+.dept-modal-btn.cancel {
+  background: linear-gradient(135deg, #7f8c8d 0%, #95a5a6 100%);
+  color: white;
+}
+
+.dept-modal-btn.cancel:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(127, 140, 141, 0.4);
+}
+
+.dept-modal-btn.confirm {
+  background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+}
+
+.dept-modal-btn.confirm:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(46, 204, 113, 0.5);
+}
+
+/* Checkbox checked animation */
+.dept-checkbox:checked {
+  animation: checkPulse 0.3s ease;
+}
+
+@keyframes checkPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Label selection animation */
+.dept-label.selected {
+  animation: labelGlow 0.4s ease;
+}
+
+@keyframes labelGlow {
+  0% {
+    box-shadow: 0 0 0 rgba(252, 218, 21, 0);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(252, 218, 21, 0.6);
+  }
+  100% {
+    box-shadow: 0 4px 15px rgba(252, 218, 21, 0.3);
+  }
+}
+
+/* Button press effect */
+.dept-modal-btn:active,
+.select-all-btn:active {
+  transform: scale(0.98);
+}
+
+/* Disable button style */
+.dept-modal-btn.confirm:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: linear-gradient(135deg, #7f8c8d 0%, #95a5a6 100%);
+  box-shadow: none;
+}
+
+.dept-modal-btn.confirm:disabled:hover {
+  transform: none;
+  box-shadow: none;
 }
