@@ -188,40 +188,45 @@ document.addEventListener("DOMContentLoaded", () => {
   const cancelBtn = document.getElementById("cancel-btn");
   const form = document.getElementById("changepassForm");
 
-  // Move modal to body to escape parent container constraints
   if (modalOverlay && modalOverlay.parentElement !== document.body) {
     document.body.appendChild(modalOverlay);
   }
 
   postBtn.addEventListener("click", (e) => {
     e.preventDefault();
-    
+
     // Validate form fields
     const currentPassword = document.getElementById("currentPassword").value;
     const newPassword = document.getElementById("newPassword").value;
     const confirmPassword = document.getElementById("confirmPassword").value;
-    
+
     if (!currentPassword || !newPassword || !confirmPassword) {
       showNotification("All fields are required.", "error");
       return;
     }
-    
+
     if (newPassword !== confirmPassword) {
-      showNotification("New password and confirm password do not match.", "error");
+      showNotification(
+        "New password and confirm password do not match.",
+        "error"
+      );
       clearAllFields();
       return;
     }
-    
+
     if (newPassword.length !== 8) {
       showNotification("Password must be exactly 8 characters.", "error");
       return;
     }
-    
+
     if (currentPassword === newPassword) {
-      showNotification("New password must be different from current password.", "error");
+      showNotification(
+        "New password must be different from current password.",
+        "error"
+      );
       return;
     }
-    
+
     modalOverlay.style.display = "flex";
   });
 
@@ -240,56 +245,58 @@ document.addEventListener("DOMContentLoaded", () => {
       modalOverlay.style.display = "none";
     }
   });
-  
+
   // Function to submit password change via AJAX
   function submitPasswordChange() {
     const formData = new FormData(form);
-    const basePath = window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '';
-    
+    const basePath = window.location.pathname.includes("/ECADYB/")
+      ? "/ECADYB"
+      : "";
+
     // Show loading state
     confirmBtn.disabled = true;
     confirmBtn.textContent = "Changing...";
-    
+
     fetch(basePath + "/Connection/Admin/ChangePassword.php", {
       method: "POST",
-      body: formData
+      body: formData,
     })
-    .then(response => response.json())
-    .then(data => {
-      confirmBtn.disabled = false;
-      confirmBtn.textContent = "Yes, Change";
-      
-      if (data.success) {
-        showNotification(data.message, "success");
-        // Clear form
-        form.reset();
-        // Redirect to login after 2 seconds
-        setTimeout(() => {
-          window.location.href = basePath + "/Public/Components/Login.php";
-        }, 2000);
-      } else {
-        showNotification(data.message, "error");
-        // Clear fields if password mismatch error
-        if (data.message.includes("do not match")) {
-          clearAllFields();
+      .then((response) => response.json())
+      .then((data) => {
+        confirmBtn.disabled = false;
+        confirmBtn.textContent = "Yes, Change";
+
+        if (data.success) {
+          showNotification(data.message, "success");
+          // Clear form
+          form.reset();
+          // Redirect to login after 2 seconds
+          setTimeout(() => {
+            window.location.href = basePath + "/Public/Components/Login.php";
+          }, 2000);
+        } else {
+          showNotification(data.message, "error");
+          // Clear fields if password mismatch error
+          if (data.message.includes("do not match")) {
+            clearAllFields();
+          }
         }
-      }
-    })
-    .catch(error => {
-      confirmBtn.disabled = false;
-      confirmBtn.textContent = "Yes, Change";
-      showNotification("An error occurred. Please try again.", "error");
-      console.error("Error:", error);
-    });
+      })
+      .catch((error) => {
+        confirmBtn.disabled = false;
+        confirmBtn.textContent = "Yes, Change";
+        showNotification("An error occurred. Please try again.", "error");
+        console.error("Error:", error);
+      });
   }
-  
+
   // Function to clear all password fields
   function clearAllFields() {
     document.getElementById("currentPassword").value = "";
     document.getElementById("newPassword").value = "";
     document.getElementById("confirmPassword").value = "";
   }
-  
+
   // Function to show notifications
   function showNotification(message, type) {
     // Remove existing notifications
@@ -297,16 +304,16 @@ document.addEventListener("DOMContentLoaded", () => {
     if (existingNotification) {
       existingNotification.remove();
     }
-    
+
     // Create notification element
     const notification = document.createElement("div");
     notification.className = `notification ${type}-message`;
-    
+
     // Create message container
     const messageDiv = document.createElement("div");
     messageDiv.className = "notification-message";
     messageDiv.textContent = message;
-    
+
     // Create close button
     const closeBtn = document.createElement("button");
     closeBtn.className = "notification-close";
@@ -317,19 +324,19 @@ document.addEventListener("DOMContentLoaded", () => {
         notification.remove();
       }, 300);
     };
-    
+
     // Append elements
     notification.appendChild(messageDiv);
     notification.appendChild(closeBtn);
-    
+
     // Add to body
     document.body.appendChild(notification);
-    
+
     // Show notification
     setTimeout(() => {
       notification.classList.add("show");
     }, 10);
-    
+
     // Hide and remove after 5 seconds
     setTimeout(() => {
       notification.classList.remove("show");
