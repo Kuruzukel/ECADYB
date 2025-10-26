@@ -28,7 +28,7 @@
 }
 
 .upload-box:nth-child(2) {
-  border-color: #741013; /* Dark Red */
+  border-color: #741013;
 }
 
 .upload-box:nth-child(2):hover {
