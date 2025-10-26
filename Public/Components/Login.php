@@ -130,7 +130,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $client !== null) {
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login - Graduation Gallery</title>
+    <title>Log In - Graduation Gallery</title>
 
     <meta property="fb:app_id" content="1767810860531321" />
     <meta property="og:locale" content="en_US" />
@@ -231,7 +231,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $client !== null) {
                     <a href="ForgotPassword.html">Forgot Password?</a>
                 </div>
             </div>
-            <button type="submit">Login</button>
+            <button type="submit">Log In</button>
             <div class="logoContainer"></div>
             <button type="back">
                 <i class="fas fa-arrow-left"></i> Back to Homepage

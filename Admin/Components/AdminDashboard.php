@@ -41,7 +41,7 @@ if (isset($_SESSION['username']) && !empty($_SESSION['username'])) {
             $adminName = $adminData['name'] ?? 'Admin';
             $adminEmail = $adminData['email'] ?? 'admin@ecadyb.edu.ph';
             $adminProfileImage = $adminData['profile'] ?? 'https://ECADYB.b-cdn.net/img/Profile.png';
-            
+
             // Debug: Log successful fetch (remove after testing)
             error_log("Admin profile fetched: " . $adminName . " | Email: " . $adminEmail);
         } else {
@@ -347,7 +347,7 @@ if (isset($_SESSION['username']) && !empty($_SESSION['username'])) {
                 </a>
 
                 <a href="#" class="tab" id="logout-tab">
-                    <i class="fas fa-sign-out-alt"></i> Logout
+                    <i class="fas fa-sign-out-alt"></i> Log Out
                 </a>
                 <!-- Logout Confirmation Modal -->
                 <!--
@@ -397,7 +397,8 @@ if (isset($_SESSION['username']) && !empty($_SESSION['username'])) {
                         </div>
 
                         <div class="admin-profile-container">
-                            <img src="<?= htmlspecialchars($adminProfileImage) ?>" alt="Admin Profile" class="admin-profile-img">
+                            <img src="<?= htmlspecialchars($adminProfileImage) ?>" alt="Admin Profile"
+                                class="admin-profile-img">
                             <div class="admin-dropdown">
                                 <div class="admin-dropdown-header">
                                     <i class="fas fa-user-circle"></i>

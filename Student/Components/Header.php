@@ -90,10 +90,7 @@ if (empty($studentFirstName) && empty($studentLastName) && !empty($studentName))
 ?>
 <header>
   <div class="logo">
-    <img
-      src="https://ECADYB.b-cdn.net/img/ADMINGRALLERYLOGO.png"
-      alt="Logo"
-      class="logo-img" />
+    <img src="https://ECADYB.b-cdn.net/img/ADMINGRALLERYLOGO.png" alt="Logo" class="logo-img" />
     <span>GRADUATION GALLERY</span>
   </div>
   <nav class="center-nav">
@@ -102,10 +99,7 @@ if (empty($studentFirstName) && empty($studentLastName) && !empty($studentName))
     <a href="/ECADYB/Student/Components/Yearbook.php">Yearbooks</a>
     <a href="/ECADYB/Student/Components/Memories.php">Memories</a>
     <div class="mobile-login-dropdown">
-      <button
-        class="mobile-login-btn"
-        id="mobileLoginDropdownBtn"
-        onclick="window.location.href='/ECADYB/login'">
+      <button class="mobile-login-btn" id="mobileLoginDropdownBtn" onclick="window.location.href='/ECADYB/login'">
         Log In
       </button>
     </div>
@@ -130,59 +124,31 @@ if (empty($studentFirstName) && empty($studentLastName) && !empty($studentName))
   </div>
 
   <div class="profile-dropdown">
-    <img
-      src="<?php echo htmlspecialchars($studentProfilePhoto ?: 'https://ECADYB.b-cdn.net/img/Profile.png'); ?>"
-      alt="Profile"
-      class="profile-icon"
-      id="profileIcon" />
+    <img src="<?php echo htmlspecialchars($studentProfilePhoto ?: 'https://ECADYB.b-cdn.net/img/Profile.png'); ?>"
+      alt="Profile" class="profile-icon" id="profileIcon" />
     <div class="dropdown-menu" id="profileDropdownMenu">
-      <button
-        class="dropdown-item"
+      <button class="dropdown-item"
         onclick="window.location.href='/ECADYB/Student/Components/ChangePassword.php'">
         Change Password
       </button>
       <button class="dropdown-item" onclick="editProfile()">
         Edit Profile
       </button>
-      <button class="dropdown-item" onclick="logout()">Logout</button>
+      <button class="dropdown-item" onclick="logout()">Log Out</button>
     </div>
   </div>
 
   <button class="hamburger-menu" id="hamburgerMenu">
-    <svg
-      class="hamburger-icon"
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg">
-      <path
-        class="hamburger-line line-1"
-        d="M3 6h18"
-        stroke="currentColor"
-        stroke-width="2"
+    <svg class="hamburger-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path class="hamburger-line line-1" d="M3 6h18" stroke="currentColor" stroke-width="2"
         stroke-linecap="round" />
-      <path
-        class="hamburger-line line-2"
-        d="M3 12h18"
-        stroke="currentColor"
-        stroke-width="2"
+      <path class="hamburger-line line-2" d="M3 12h18" stroke="currentColor" stroke-width="2"
         stroke-linecap="round" />
-      <path
-        class="hamburger-line line-3"
-        d="M3 18h18"
-        stroke="currentColor"
-        stroke-width="2"
+      <path class="hamburger-line line-3" d="M3 18h18" stroke="currentColor" stroke-width="2"
         stroke-linecap="round" />
-      <path
-        class="close-line close-1"
-        d="M18 6L6 18"
-        stroke="currentColor"
-        stroke-width="2"
+      <path class="close-line close-1" d="M18 6L6 18" stroke="currentColor" stroke-width="2"
         stroke-linecap="round" />
-      <path
-        class="close-line close-2"
-        d="M6 6L18 18"
-        stroke="currentColor"
-        stroke-width="2"
+      <path class="close-line close-2" d="M6 6L18 18" stroke="currentColor" stroke-width="2"
         stroke-linecap="round" />
     </svg>
   </button>
@@ -201,7 +167,8 @@ if (empty($studentFirstName) && empty($studentLastName) && !empty($studentName))
 
     <div class="modal-body">
       <form id="edit-student-form" onsubmit="return false;">
-        <input type="hidden" id="student-id-hidden" name="student_id" value="<?php echo htmlspecialchars($studentId); ?>">
+        <input type="hidden" id="student-id-hidden" name="student_id"
+          value="<?php echo htmlspecialchars($studentId); ?>">
 
         <div class="form-group">
           <!-- Personal Information Section -->
@@ -210,23 +177,22 @@ if (empty($studentFirstName) && empty($studentLastName) && !empty($studentName))
 
             <label for="first_name">First Name:</label>
             <input type="text" id="first_name" name="first_name" autocomplete="given-name"
-              value="<?php echo htmlspecialchars($studentFirstName); ?>"
-              placeholder="First Name" readonly>
+              value="<?php echo htmlspecialchars($studentFirstName); ?>" placeholder="First Name"
+              readonly>
 
             <label for="middle_name">Middle Name:</label>
             <input type="text" id="middle_name" name="middle_name" autocomplete="additional-name"
-              value="<?php echo htmlspecialchars($studentMiddleName); ?>"
-              placeholder="Middle Name" readonly>
+              value="<?php echo htmlspecialchars($studentMiddleName); ?>" placeholder="Middle Name"
+              readonly>
 
             <label for="last_name">Last Name:</label>
             <input type="text" id="last_name" name="last_name" autocomplete="family-name"
-              value="<?php echo htmlspecialchars($studentLastName); ?>"
-              placeholder="Last Name" readonly>
+              value="<?php echo htmlspecialchars($studentLastName); ?>" placeholder="Last Name" readonly>
 
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" autocomplete="email"
-              value="<?php echo htmlspecialchars($studentEmail); ?>"
-              oninput="removeSpaces(this)" placeholder="Email">
+              value="<?php echo htmlspecialchars($studentEmail); ?>" oninput="removeSpaces(this)"
+              placeholder="Email">
           </div>
 
           <!-- Academic Information Section -->
@@ -235,24 +201,21 @@ if (empty($studentFirstName) && empty($studentLastName) && !empty($studentName))
 
             <label for="academic_year">Academic Year:</label>
             <input type="text" id="academic_year" name="academic_year" autocomplete="off"
-              value="<?php echo htmlspecialchars($studentAcademicYear); ?>"
-              placeholder="0000-0000" maxlength="9"
-              oninput="formatAcademicYear(this)" readonly>
+              value="<?php echo htmlspecialchars($studentAcademicYear); ?>" placeholder="0000-0000"
+              maxlength="9" oninput="formatAcademicYear(this)" readonly>
 
             <label for="program">Program:</label>
             <input type="text" id="program" name="program" autocomplete="off"
-              value="<?php echo htmlspecialchars($studentDepartment); ?>"
-              placeholder="Program" readonly>
+              value="<?php echo htmlspecialchars($studentDepartment); ?>" placeholder="Program" readonly>
 
             <label for="section">Section:</label>
             <input type="text" id="section" name="section" autocomplete="off"
-              value="<?php echo htmlspecialchars($studentSection); ?>"
-              placeholder="Section" readonly>
+              value="<?php echo htmlspecialchars($studentSection); ?>" placeholder="Section" readonly>
 
             <label for="student_id_display">Student ID:</label>
             <input type="text" id="student_id_display" name="student_id_display" autocomplete="off"
-              value="<?php echo htmlspecialchars($studentId); ?>"
-              placeholder="0000-000000" maxlength="11" readonly>
+              value="<?php echo htmlspecialchars($studentId); ?>" placeholder="0000-000000" maxlength="11"
+              readonly>
           </div>
 
           <!-- Additional Information Section -->
@@ -265,8 +228,7 @@ if (empty($studentFirstName) && empty($studentLastName) && !empty($studentName))
 
             <label for="honors">Latin Awards:</label>
             <input type="text" id="honors" name="honors" autocomplete="off"
-              value="<?php echo htmlspecialchars($studentHonors); ?>"
-              placeholder="Latin Awards" readonly>
+              value="<?php echo htmlspecialchars($studentHonors); ?>" placeholder="Latin Awards" readonly>
 
             <label for="milestone">Career Highlights:</label>
             <textarea id="milestone" name="milestone" autocomplete="off" rows="3"
