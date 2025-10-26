@@ -37,7 +37,7 @@
 }
 
 .upload-box:nth-child(3) {
-  border-color: #ef0fcb; /* Magenta/Pink */
+  border-color: #ef0fcb;
 }
 
 .upload-box:nth-child(3):hover {
