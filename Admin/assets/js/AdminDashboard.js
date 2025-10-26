@@ -196,9 +196,9 @@ async function loadAdminLogo() {
   try {
     const BASE_PATH = window.location.pathname.includes("/Admin/")
       ? window.location.pathname.substring(
-        0,
-        window.location.pathname.indexOf("/Admin/")
-      )
+          0,
+          window.location.pathname.indexOf("/Admin/")
+        )
       : window.location.origin;
     const CONNECTION_PATH = `${BASE_PATH}/Connection`;
 
@@ -353,7 +353,9 @@ document.addEventListener("DOMContentLoaded", () => {
     logoutTab.addEventListener("click", function (e) {
       e.preventDefault();
       e.stopPropagation();
-      const basePath = window.location.pathname.includes("/ECADYB/") ? "/ECADYB" : "";
+      const basePath = window.location.pathname.includes("/ECADYB/")
+        ? "/ECADYB"
+        : "";
       window.location.href = basePath + "/Admin/Components/AdminLogout.php";
     });
   }
@@ -423,7 +425,10 @@ function initializeSearchAutocomplete() {
 
   // Handle focus
   searchInput.addEventListener("focus", function () {
-    if (this.value.trim().length >= 2 && searchSuggestions.children.length > 0) {
+    if (
+      this.value.trim().length >= 2 &&
+      searchSuggestions.children.length > 0
+    ) {
       showSuggestions();
     }
   });
@@ -436,11 +441,12 @@ function searchStudents(query) {
   const basePath = window.location.pathname.includes("/ECADYB/")
     ? "/ECADYB"
     : "";
-  const searchUrl = `${window.location.origin}${basePath}/Connection/Student/SearchStudents.php?query=${encodeURIComponent(
+  const searchUrl = `${
+    window.location.origin
+  }${basePath}/Connection/Student/SearchStudents.php?query=${encodeURIComponent(
     query
   )}&limit=10`;
 
-  // Show loading state
   searchSuggestions.innerHTML = `
     <div class="search-suggestion-empty">
       <i class="fas fa-spinner fa-spin"></i> Searching...
@@ -457,7 +463,7 @@ function searchStudents(query) {
       const contentType = response.headers.get("content-type");
       if (!contentType || !contentType.includes("application/json")) {
         // Log the actual response for debugging
-        return response.text().then(text => {
+        return response.text().then((text) => {
           console.error("Non-JSON response received:", text.substring(0, 200));
           throw new Error("Server returned non-JSON response");
         });
@@ -496,11 +502,11 @@ function displaySuggestions(results) {
     item.className = "search-suggestion-item";
 
     // Build the department and year display
-    let departmentYear = '';
+    let departmentYear = "";
     if (student.department_section) {
       departmentYear = escapeHtml(student.department_section);
       if (student.academic_year) {
-        departmentYear += ' - ' + escapeHtml(student.academic_year);
+        departmentYear += " - " + escapeHtml(student.academic_year);
       }
     } else if (student.academic_year) {
       departmentYear = escapeHtml(student.academic_year);
@@ -509,8 +515,8 @@ function displaySuggestions(results) {
     item.innerHTML = `
       <div class="search-suggestion-name">${escapeHtml(student.name)}</div>
       <div class="search-suggestion-id">Student ID: ${escapeHtml(
-      student.student_id
-    )}</div>
+        student.student_id
+      )}</div>
       <div class="search-suggestion-program">${departmentYear}</div>
     `;
 
@@ -542,32 +548,37 @@ function handleStudentSelection(student) {
 
   // Map collection to yearbook page
   const collectionToYearbook = {
-    'bsme': 'maritime',
-    'bsmt': 'maritime',
-    'bscje': 'criminology',
-    'bstm': 'tourism',
-    'btvted': 'education',
-    'beced': 'education',
-    'bsn': 'nursing',
-    'bsis': 'informationsys',
-    'bsma': 'businessad',
-    'bse': 'businessad'
+    bsme: "maritime",
+    bsmt: "maritime",
+    bscje: "criminology",
+    bstm: "tourism",
+    btvted: "education",
+    beced: "education",
+    bsn: "nursing",
+    bsis: "informationsys",
+    bsma: "businessad",
+    bse: "businessad",
   };
 
-  const yearbookPage = collectionToYearbook[student.collection] || 'maritime';
+  const yearbookPage = collectionToYearbook[student.collection] || "maritime";
 
   // Store selected student information for the yearbook to navigate to
-  sessionStorage.setItem("searchSelectedStudent", JSON.stringify({
-    id: student.id,
-    student_id: student.student_id,
-    name: student.name,
-    department_section: student.department_section,
-    academic_year: student.academic_year,
-    collection: student.collection
-  }));
+  sessionStorage.setItem(
+    "searchSelectedStudent",
+    JSON.stringify({
+      id: student.id,
+      student_id: student.student_id,
+      name: student.name,
+      department_section: student.department_section,
+      academic_year: student.academic_year,
+      collection: student.collection,
+    })
+  );
 
   // Redirect to yearbook page with student info
-  window.location.href = `${basePath}/Admin?page=${yearbookPage}&student_id=${encodeURIComponent(student.student_id)}&student_name=${encodeURIComponent(student.name)}`;
+  window.location.href = `${basePath}/Admin?page=${yearbookPage}&student_id=${encodeURIComponent(
+    student.student_id
+  )}&student_name=${encodeURIComponent(student.name)}`;
 }
 
 function showSuggestions() {
