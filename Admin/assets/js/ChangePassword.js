@@ -270,7 +270,6 @@ document.addEventListener("DOMContentLoaded", () => {
           }, 2000);
         } else {
           showNotification(data.message, "error");
-          // Clear fields if password mismatch error
           if (data.message.includes("do not match")) {
             clearAllFields();
           }
