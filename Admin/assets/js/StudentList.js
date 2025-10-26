@@ -509,6 +509,60 @@ function clearSelectAllState() {
   setTimeout(updateSelectAllState, 0);
 }
 
+async function checkAndRefreshAcademicYearFilter() {
+  try {
+    const lastUpdated = localStorage.getItem("academicYearsLastUpdated");
+    const cachedYears = localStorage.getItem("cachedAcademicYears");
+
+    // If updated within last 10 seconds, refresh the filter
+    if (lastUpdated && cachedYears) {
+      const timeSinceUpdate = Date.now() - parseInt(lastUpdated);
+      if (timeSinceUpdate < 10000) {
+        // 10 seconds
+        console.log(
+          "🔄 Recent academic year update detected, refreshing filter..."
+        );
+
+        const academicYearFilter = document.getElementById(
+          "academic-year-filter"
+        );
+        if (!academicYearFilter) return;
+
+        const currentlySelected = academicYearFilter.value;
+        const years = JSON.parse(cachedYears);
+
+        // Store first option
+        const firstOption = academicYearFilter.options[0].cloneNode(true);
+
+        // Clear and rebuild
+        academicYearFilter.innerHTML = "";
+        academicYearFilter.appendChild(firstOption);
+
+        years.forEach((year) => {
+          const option = document.createElement("option");
+          option.value = year;
+          option.textContent = `Batch Year ${year}`;
+          if (year === currentlySelected) {
+            option.selected = true;
+          }
+          academicYearFilter.appendChild(option);
+        });
+
+        console.log(
+          "✅ Academic year filter refreshed with",
+          years.length,
+          "years"
+        );
+
+        // Clear the flag after refreshing
+        localStorage.removeItem("academicYearsLastUpdated");
+      }
+    }
+  } catch (error) {
+    console.error("Error checking academic year updates:", error);
+  }
+}
+
 function initializeFilters() {
   const entriesCount = document.getElementById("entries-count");
   const departmentFilter = document.getElementById("department-filter");
@@ -516,6 +570,9 @@ function initializeFilters() {
   const academicYearFilter = document.getElementById("academic-year-filter");
 
   if (academicYearFilter) {
+    // Check if academic years were recently updated (from CSV upload)
+    checkAndRefreshAcademicYearFilter();
+
     academicYearFilter.addEventListener("change", function () {
       pageCache.clear();
 

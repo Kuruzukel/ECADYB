@@ -163,6 +163,7 @@ let notificationTimeout = null;
 let currentOperation = null;
 let currentUploadController = null;
 let isCancelling = false;
+let shouldRefreshAfterNotification = false;
 
 function showNotification(message, type = "success") {
   const container = document.getElementById("notification-container");
@@ -182,7 +183,7 @@ function showNotification(message, type = "success") {
   notif.id = `${type}-notification`;
   notif.innerHTML = `
     <span class="notification-message">${message}</span>
-    <button class="notification-close" onclick="closeNotification('${type}-notification')">
+    <button type="button" class="notification-close" onclick="closeNotification('${type}-notification')">
       <i class="fas fa-times"></i>
     </button>
   `;
@@ -198,6 +199,114 @@ function showNotification(message, type = "success") {
   }, duration);
 }
 
+async function refreshParentAcademicYearFilter() {
+  try {
+    console.log("Refreshing academic year filter with new data...");
+
+    // Find the academic year filter dropdowns (both StudentList and BatchUpload pages)
+    const academicYearFilter = document.getElementById("academic-year-filter"); // StudentList page
+    const batchYearSelect = document.getElementById("batch-year-select"); // BatchUpload page
+
+    const filterToUpdate = academicYearFilter || batchYearSelect;
+
+    if (!filterToUpdate) {
+      console.log("No academic year filter found on this page");
+      return;
+    }
+
+    // Store the currently selected value
+    const currentlySelected = filterToUpdate.value;
+    console.log("Currently selected academic year:", currentlySelected);
+
+    // Get the base path
+    const basePath = window.location.pathname.includes("/ECADYB/")
+      ? "/ECADYB"
+      : "";
+
+    // Fetch updated academic years from the server
+    console.log(
+      "Fetching academic years from:",
+      `${basePath}/Connection/Student/FetchAcademicYears.php`
+    );
+    const response = await fetch(
+      `${basePath}/Connection/Student/FetchAcademicYears.php`
+    );
+    const data = await response.json();
+
+    if (data.success && data.academicYears) {
+      console.log("Fetched academic years:", data.academicYears);
+
+      // Store the first "Select..." option
+      const firstOption = filterToUpdate.options[0].cloneNode(true);
+
+      // Clear existing options
+      filterToUpdate.innerHTML = "";
+
+      // Re-add the first option
+      filterToUpdate.appendChild(firstOption);
+
+      // Add updated academic year options
+      data.academicYears.forEach((year) => {
+        const option = document.createElement("option");
+        option.value = year;
+        option.textContent = `Batch Year ${year}`;
+
+        // Re-select the previously selected year if it still exists
+        if (year === currentlySelected) {
+          option.selected = true;
+        }
+
+        filterToUpdate.appendChild(option);
+      });
+
+      console.log(
+        "✅ Academic year filter updated successfully with",
+        data.academicYears.length,
+        "years"
+      );
+      console.log("📋 Available years:", data.academicYears.join(", "));
+
+      // Store updated years in localStorage for other pages
+      localStorage.setItem(
+        "cachedAcademicYears",
+        JSON.stringify(data.academicYears)
+      );
+      localStorage.setItem("academicYearsLastUpdated", Date.now().toString());
+      console.log(
+        "💾 Cached academic years in localStorage for cross-page access"
+      );
+
+      // If the previously selected year is no longer available, keep the selection on "Select..."
+      if (
+        currentlySelected &&
+        !data.academicYears.includes(currentlySelected)
+      ) {
+        filterToUpdate.value = "";
+        console.log(
+          "Previously selected year no longer available, cleared selection"
+        );
+      }
+
+      // Visual feedback - briefly highlight the dropdown
+      if (filterToUpdate) {
+        filterToUpdate.style.transition = "all 0.3s ease";
+        filterToUpdate.style.boxShadow = "0 0 10px rgba(252, 218, 21, 0.5)";
+        setTimeout(() => {
+          filterToUpdate.style.boxShadow = "";
+        }, 1000);
+      }
+    } else {
+      console.error(
+        "❌ Failed to fetch academic years:",
+        data.message || "Unknown error"
+      );
+      console.error("Response data:", data);
+    }
+  } catch (error) {
+    console.error("Error refreshing academic year filter:", error);
+  }
+}
+
 function closeNotification(id) {
   const notification = document.getElementById(id);
   if (notification) {
@@ -206,6 +315,17 @@ function closeNotification(id) {
       notification.remove();
       notificationTimeout = null;
       currentOperation = null;
+
+      // Only refresh if a CSV upload was successful (not photo uploads)
+      console.log(
+        "🔔 Notification closed. shouldRefreshAfterNotification:",
+        shouldRefreshAfterNotification
+      );
+      if (shouldRefreshAfterNotification) {
+        console.log("🔄 Triggering academic year filter refresh...");
+        refreshParentAcademicYearFilter();
+        shouldRefreshAfterNotification = false;
+      }
     }, 500);
   }
 }
@@ -730,6 +850,17 @@ window.addEventListener("DOMContentLoaded", () => {
                 "script[data-notification]"
               );
               if (notificationScript) {
+                // Mark that we should refresh after this notification closes
+                // since CSV upload affects academic year data
+                console.log(
+                  "📝 CSV upload detected - marking for filter refresh"
+                );
+                shouldRefreshAfterNotification = true;
+                console.log(
+                  "✅ shouldRefreshAfterNotification set to:",
+                  shouldRefreshAfterNotification
+                );
+
                 eval(notificationScript.textContent);
 
                 localStorage.removeItem("selectAllState");
