@@ -264,7 +264,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (data.success) {
           showNotification(data.message, "success");
-          // Clear form
           form.reset();
           // Redirect to login after 2 seconds
           setTimeout(() => {
