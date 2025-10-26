@@ -530,7 +530,6 @@ function displaySuggestions(results) {
 function handleStudentSelection(student) {
   console.log("Selected student:", student);
 
-  // Fill the search input with student name
   const searchInput = document.getElementById("search-input");
   if (searchInput) {
     searchInput.value = student.name;
