@@ -768,27 +768,58 @@ label {
 }
 
 .dept-selection-modal-header {
-  background: linear-gradient(135deg, #217ff7 0%, #1e5dbf 100%);
-  padding: 18px 24px;
+  background: linear-gradient(135deg, #217ff7 0%, #3b82f6 100%);
+  padding: 0;
+  height: 50px;
   border-bottom: 2px solid rgba(252, 218, 21, 0.3);
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 12px;
   flex-shrink: 0;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px 16px 0 0;
+}
+
+.dept-selection-modal-header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+.dept-selection-modal-header:hover::before {
+  left: 100%;
 }
 
 .dept-selection-modal-header .modal-icon {
-  font-size: 24px;
+  font-size: 22px;
   color: #fcda15;
+  position: relative;
+  z-index: 1;
 }
 
 .dept-selection-modal-header h3 {
   margin: 0;
   font-family: Arial, sans-serif;
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 1.1em;
+  font-weight: 600;
   color: #ffffff;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.5px;
+  position: relative;
+  z-index: 1;
 }
 
 .dept-selection-modal-body {
@@ -826,7 +857,6 @@ label {
 .dept-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 8px;
   margin: 0 0 16px 0;
   flex: 1;
 }

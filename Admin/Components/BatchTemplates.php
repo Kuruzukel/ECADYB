@@ -320,55 +320,47 @@
                     <h3>Select Yearbook Departments</h3>
                 </div>
                 <div class="dept-selection-modal-body">
-                    <p class="dept-selection-subtitle">Choose which department yearbooks you want to download</p>
                     <div class="dept-grid">
                         <label class="dept-label">
-                            <input type="checkbox" class="dept-checkbox" value="Business Administration">
+                            <input type="checkbox" class="dept-checkbox" value="BSME">
                             <div class="dept-info">
-                                <span class="dept-name">Business Administration</span>
-                                <span class="dept-code">BSBA</span>
+                                <span class="dept-name">Bachelor of Science in Marine Engineering</span>
                             </div>
                         </label>
                         <label class="dept-label">
-                            <input type="checkbox" class="dept-checkbox" value="Criminology">
+                            <input type="checkbox" class="dept-checkbox" value="BSCJE">
                             <div class="dept-info">
-                                <span class="dept-name">Criminology</span>
-                                <span class="dept-code">BSCJE</span>
+                                <span class="dept-name">Bachelor of Science in Criminal Justice and Education</span>
                             </div>
                         </label>
                         <label class="dept-label">
-                            <input type="checkbox" class="dept-checkbox" value="Education">
+                            <input type="checkbox" class="dept-checkbox" value="BSTM">
                             <div class="dept-info">
-                                <span class="dept-name">Education</span>
-                                <span class="dept-code">BSE</span>
+                                <span class="dept-name">Bachelor of Science in Tourism Management</span>
                             </div>
                         </label>
                         <label class="dept-label">
-                            <input type="checkbox" class="dept-checkbox" value="Information System">
+                            <input type="checkbox" class="dept-checkbox" value="BSIS">
                             <div class="dept-info">
-                                <span class="dept-name">Information System</span>
-                                <span class="dept-code">BSIS</span>
+                                <span class="dept-name">Bachelor of Science in Information System</span>
                             </div>
                         </label>
                         <label class="dept-label">
-                            <input type="checkbox" class="dept-checkbox" value="Maritime">
+                            <input type="checkbox" class="dept-checkbox" value="BSBA">
                             <div class="dept-info">
-                                <span class="dept-name">Maritime</span>
-                                <span class="dept-code">BSME</span>
+                                <span class="dept-name">Bachelor of Science in Business Administration</span>
                             </div>
                         </label>
                         <label class="dept-label">
-                            <input type="checkbox" class="dept-checkbox" value="Nursing">
+                            <input type="checkbox" class="dept-checkbox" value="COE">
                             <div class="dept-info">
-                                <span class="dept-name">Nursing</span>
-                                <span class="dept-code">BSN</span>
+                                <span class="dept-name">College of Education</span>
                             </div>
                         </label>
                         <label class="dept-label">
-                            <input type="checkbox" class="dept-checkbox" value="Tourism">
+                            <input type="checkbox" class="dept-checkbox" value="CON">
                             <div class="dept-info">
-                                <span class="dept-name">Tourism</span>
-                                <span class="dept-code">BSTM</span>
+                                <span class="dept-name">College of Nursing</span>
                             </div>
                         </label>
                     </div>
