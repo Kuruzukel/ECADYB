@@ -363,7 +363,6 @@ document.addEventListener("DOMContentLoaded", () => {
   initializeSearchAutocomplete();
 });
 
-// Search autocomplete functionality
 let searchTimeout = null;
 
 function initializeSearchAutocomplete() {
