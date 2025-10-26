@@ -188,7 +188,6 @@ function showNotification(message, type = "success") {
   `;
   container.appendChild(notif);
 
-  // Trigger animation
   setTimeout(() => {
     notif.classList.add("show");
   }, 10);
