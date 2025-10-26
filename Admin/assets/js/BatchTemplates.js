@@ -1158,6 +1158,26 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
         downloadBtn.addEventListener("click", (e) => {
           e.stopPropagation();
           console.log("Download button clicked for:", sectionHeader);
+
+          // Check if button is disabled and show appropriate message
+          if (downloadBtn.disabled) {
+            const isAvailable = section.classList.contains("available");
+            const isSelected = section.classList.contains("selected");
+
+            if (!isAvailable) {
+              showNotification(
+                "This batch is not available for download. Only batches with green headers can be downloaded.",
+                "error"
+              );
+            } else if (!isSelected) {
+              showNotification(
+                "Please select this batch first before downloading PDF",
+                "error"
+              );
+            }
+            return;
+          }
+
           downloadPDF(sectionHeader);
         });
       }
@@ -2141,8 +2161,11 @@ async function confirmDownloadPDF() {
     // Small delay before showing success notification
     await new Promise((resolve) => setTimeout(resolve, 100));
 
+    const pdfCount = selectedDepartments.length;
     showNotification(
-      `PDF downloaded successfully for ${deptNames}!`,
+      `${pdfCount} PDF${
+        pdfCount > 1 ? "s" : ""
+      } downloaded successfully! (${deptNames})`,
       "success"
     );
   } catch (error) {
@@ -2196,22 +2219,15 @@ async function generateYearbookPDF(departments, progressNotification) {
   const { jsPDF } = window.jspdf;
   console.log("jsPDF loaded successfully");
 
-  // Create PDF in landscape orientation using standard screen dimensions
-  // Using 16:9 aspect ratio (1920x1080 scaled to fit A4 landscape)
-  console.log("Creating PDF document...");
-  const pdf = new jsPDF({
-    orientation: "landscape",
-    unit: "px",
-    format: [1920, 1080], // Fullscreen dimensions
-    compress: true,
-  });
-  console.log("PDF document created");
-
-  let isFirstPage = true;
-  let totalPagesAdded = 0;
   const totalDepartments = departments.length;
   let currentDeptIndex = 0;
 
+  // Format all departments for display
+  const allDepartmentsText = departments.join(", ");
+
+  let allPDFsSuccessful = true;
+
+  // Generate separate PDF for each department
   for (const department of departments) {
     currentDeptIndex++;
 
@@ -2225,13 +2241,26 @@ async function generateYearbookPDF(departments, progressNotification) {
       `\n=== Processing department ${currentDeptIndex}/${totalDepartments}: ${department} ===`
     );
 
+    // Create a new PDF for this department
+    console.log(`Creating PDF document for ${department}...`);
+    const pdf = new jsPDF({
+      orientation: "landscape",
+      unit: "px",
+      format: [1920, 1080], // Fullscreen dimensions
+      compress: true,
+    });
+    console.log(`PDF document created for ${department}`);
+
+    let isFirstPage = true;
+    let totalPagesAdded = 0;
+
     // Update progress: Starting department
     const baseProgress = ((currentDeptIndex - 1) / totalDepartments) * 100;
     updatePersistentNotification(
       progressNotification,
-      `Preparing PDF... ${Math.round(
+      `Preparing PDF ${currentDeptIndex}/${totalDepartments}... ${Math.round(
         baseProgress
-      )}%<br><small>Loading ${department}...</small>`
+      )}%<br><small>Loading ${department}... [${allDepartmentsText}]</small>`
     );
 
     // Get yearbook URL for this department
@@ -2245,13 +2274,13 @@ async function generateYearbookPDF(departments, progressNotification) {
       // Update progress callback for page capture
       const onPageProgress = (currentPage, totalPages) => {
         const deptProgress =
-          (currentPage / totalPages) * (50 / totalDepartments);
+          (currentPage / totalPages) * (80 / totalDepartments);
         const overallProgress = baseProgress + deptProgress;
         updatePersistentNotification(
           progressNotification,
-          `Preparing PDF... ${Math.round(
+          `Preparing PDF ${currentDeptIndex}/${totalDepartments}... ${Math.round(
             overallProgress
-          )}%<br><small>Capturing ${department} pages (${currentPage}/${totalPages})</small>`
+          )}%<br><small>Capturing ${department} pages (${currentPage}/${totalPages}) [${allDepartmentsText}]</small>`
         );
       };
 
@@ -2270,15 +2299,16 @@ async function generateYearbookPDF(departments, progressNotification) {
 
       if (pageCanvases.length === 0) {
         console.warn(`No pages captured for ${department}, skipping...`);
+        allPDFsSuccessful = false;
         continue;
       }
 
-      // Update progress: Adding pages to PDF
+      // Update progress: Adding pages to PDF (no change, still at 80%)
       updatePersistentNotification(
         progressNotification,
-        `Preparing PDF... ${Math.round(
-          baseProgress + 50 / totalDepartments
-        )}%<br><small>Adding ${department} to PDF...</small>`
+        `Preparing PDF ${currentDeptIndex}/${totalDepartments}... ${Math.round(
+          baseProgress + 80 / totalDepartments
+        )}%<br><small>Adding ${department} to PDF... [${allDepartmentsText}]</small>`
       );
 
       for (let i = 0; i < pageCanvases.length; i++) {
@@ -2310,17 +2340,43 @@ async function generateYearbookPDF(departments, progressNotification) {
           `Page added successfully. Total pages in PDF: ${totalPagesAdded}`
         );
 
-        // Update progress for each page being added
+        // Update progress for each page being added (complete up to 100% of this department)
         const addProgress =
-          ((i + 1) / pageCanvases.length) * (50 / totalDepartments);
+          ((i + 1) / pageCanvases.length) * (100 / totalDepartments) -
+          80 / totalDepartments; // Subtract what we already did (capture phase)
         updatePersistentNotification(
           progressNotification,
-          `Preparing PDF... ${Math.round(
-            baseProgress + 50 / totalDepartments + addProgress
+          `Preparing PDF ${currentDeptIndex}/${totalDepartments}... ${Math.round(
+            baseProgress + 80 / totalDepartments + addProgress
           )}%<br><small>Adding ${department} pages (${i + 1}/${
             pageCanvases.length
-          })</small>`
+          }) [${allDepartmentsText}]</small>`
         );
+      }
+
+      // Save this department's PDF
+      if (totalPagesAdded > 0) {
+        const deptProgress = (currentDeptIndex / totalDepartments) * 100;
+        updatePersistentNotification(
+          progressNotification,
+          `Preparing PDF ${currentDeptIndex}/${totalDepartments}... ${Math.round(
+            deptProgress
+          )}%<br><small>Saving ${department} PDF... [${allDepartmentsText}]</small>`
+        );
+
+        const fileName = `${batchYear.replace(
+          /\s+/g,
+          "_"
+        )}_Yearbook_${department}.pdf`;
+        console.log(`Saving PDF for ${department} as:`, fileName);
+        pdf.save(fileName);
+        console.log(`PDF saved successfully for ${department}!`);
+
+        // Small delay between downloads to prevent browser blocking
+        await new Promise((resolve) => setTimeout(resolve, 500));
+      } else {
+        console.warn(`No pages added for ${department}, skipping save`);
+        allPDFsSuccessful = false;
       }
     } catch (error) {
       console.error(`\n=== ERROR capturing pages for ${department} ===`);
@@ -2328,50 +2384,45 @@ async function generateYearbookPDF(departments, progressNotification) {
       console.error("Error message:", error.message);
       console.error("Error stack:", error.stack);
       showNotification(
-        `Error capturing ${department}. Continuing with next...`,
+        `Error generating PDF for ${department}. Continuing with next...`,
         "error"
       );
+      allPDFsSuccessful = false;
       // Continue with other departments
     }
   }
 
-  console.log(`\n=== PDF Generation Complete ===`);
-  console.log(`Total pages added to PDF: ${totalPagesAdded}`);
+  console.log(`\n=== All PDF Generation Complete ===`);
 
-  if (totalPagesAdded === 0) {
-    throw new Error("No pages were captured. Please try again.");
+  if (!allPDFsSuccessful && currentDeptIndex === 0) {
+    throw new Error("No PDFs were generated. Please try again.");
   }
 
-  // Update to 100% before saving
+  // Update to 100%
   updatePersistentNotification(
     progressNotification,
-    `Preparing PDF... 100%<br><small>Finalizing document...</small>`
+    `Complete! 100%<br><small>All PDFs downloaded [${allDepartmentsText}]</small>`
   );
-
-  // Save the PDF
-  const fileName = `${batchYear.replace(
-    /\s+/g,
-    "_"
-  )}_Yearbook_${departments.join("_")}.pdf`;
-  console.log("Saving PDF as:", fileName);
-  pdf.save(fileName);
-  console.log("PDF saved successfully!");
 }
 
 function getYearbookUrl(department, batchYear) {
   const basePath = getBasePath();
 
-  // Map department codes - COE and CON use different codes in the yearbook
+  // Map department codes - Some departments use different codes in the yearbook
   const deptMapping = {
-    COE: "BSE", // College of Education
-    CON: "BSN", // College of Nursing
+    COE: "BSE", // College of Education → BS Education
+    CON: "BSN", // College of Nursing → BS Nursing
+    BSCJE: "BSCJ", // BS Criminal Justice Education → BS Criminal Justice
   };
 
   const yearbookDept = deptMapping[department] || department;
   console.log(`Department mapping: ${department} -> ${yearbookDept}`);
+  console.log(`Using batch year: ${batchYear}`);
 
-  // Construct yearbook URL with department parameter and fullscreen flag
-  return `${basePath}/Student/Yearbook/index.html?department=${yearbookDept}&fullscreen=true`;
+  // Construct yearbook URL with department, batch year, and fullscreen flag
+  return `${basePath}/Student/Yearbook/index.html?department=${yearbookDept}&batchYear=${encodeURIComponent(
+    batchYear
+  )}&fullscreen=true`;
 }
 
 async function captureAllYearbookPages(
@@ -2420,6 +2471,12 @@ async function captureAllYearbookPages(
 
         // Wait for the yearbook to fully initialize
         console.log("Waiting for yearbook initialization...");
+
+        // Show initialization progress
+        if (onPageProgress) {
+          onPageProgress(0, 1);
+        }
+
         await waitForYearbookInit(iframeWindow, iframeDoc);
         console.log("Yearbook initialized!");
 
@@ -2581,14 +2638,14 @@ async function captureAllYearbookPages(
       reject(new Error(`Failed to load yearbook for ${department}`));
     };
 
-    // Set timeout
+    // Set timeout (increased to 5 minutes for large departments)
     timeoutHandle = setTimeout(() => {
       console.error(`\n>>> Timeout loading yearbook for ${department}`);
       if (document.body.contains(iframe)) {
         document.body.removeChild(iframe);
       }
-      reject(new Error(`Timeout loading yearbook for ${department} (120s)`));
-    }, 120000); // 2 minutes timeout
+      reject(new Error(`Timeout loading yearbook for ${department} (300s)`));
+    }, 300000); // 5 minutes timeout
 
     console.log("Setting iframe src...");
     iframe.src = yearbookUrl;
@@ -2597,12 +2654,46 @@ async function captureAllYearbookPages(
 }
 
 async function waitForYearbookInit(iframeWindow, iframeDoc) {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     let attempts = 0;
-    const maxAttempts = 200; // Increased to 40 seconds (200ms * 200)
+    const maxAttempts = 600; // Increased to 2 minutes (200ms * 600) for large departments
+    const startTime = Date.now();
+
+    // Check for errors in the iframe
+    let hasLogged404 = false;
+    let hasLoggedJSError = false;
 
     const checkInit = () => {
       attempts++;
+      const elapsedTime = ((Date.now() - startTime) / 1000).toFixed(1);
+
+      // Check for 404 or error pages
+      if (!hasLogged404 && attempts % 20 === 0) {
+        const bodyText = iframeDoc.body ? iframeDoc.body.textContent : "";
+        if (
+          bodyText.includes("404") ||
+          bodyText.includes("Not Found") ||
+          bodyText.includes("Error")
+        ) {
+          console.error(
+            "⚠️ Possible error page detected in iframe:",
+            bodyText.substring(0, 200)
+          );
+          hasLogged404 = true;
+        }
+      }
+
+      // Check for JavaScript errors
+      if (
+        !hasLoggedJSError &&
+        iframeWindow.console &&
+        iframeWindow.console.error
+      ) {
+        // Intercept console errors (if accessible)
+        if (attempts === 1) {
+          console.log("✓ Iframe window is accessible");
+        }
+      }
 
       const magazine = iframeDoc.querySelector(".magazine");
       const hasjQuery = iframeWindow.$ && typeof iframeWindow.$ === "function";
@@ -2611,16 +2702,26 @@ async function waitForYearbookInit(iframeWindow, iframeDoc) {
         if (attempts % 10 === 0) {
           // Log every 2 seconds
           console.log(
-            `Waiting for jQuery... (attempt ${attempts}/${maxAttempts})`
+            `Waiting for jQuery... (${elapsedTime}s elapsed, attempt ${attempts}/${maxAttempts})`
           );
+          // Log what scripts are loaded
+          const scripts = iframeDoc.querySelectorAll("script[src]");
+          console.log(`  - Scripts found in iframe: ${scripts.length}`);
         }
         if (attempts < maxAttempts) {
           setTimeout(checkInit, 200);
         } else {
-          console.warn(
-            "jQuery not loaded after max attempts, resolving anyway"
+          console.error(
+            "jQuery not loaded after max attempts. Cannot proceed."
           );
-          resolve();
+          console.error("Page title:", iframeDoc.title);
+          console.error(
+            "Scripts loaded:",
+            Array.from(iframeDoc.querySelectorAll("script[src]"))
+              .map((s) => s.src)
+              .join(", ")
+          );
+          reject(new Error("jQuery failed to load in yearbook"));
         }
         return;
       }
@@ -2632,30 +2733,30 @@ async function waitForYearbookInit(iframeWindow, iframeDoc) {
           const isInitialized = iframeWindow.$(".magazine").turn("is");
           const totalPages = iframeWindow.$(".magazine").turn("pages");
 
-          if (attempts % 5 === 0) {
+          if (attempts % 10 === 0) {
             console.log(
-              `Turn.js check - Initialized: ${isInitialized}, Pages: ${totalPages} (attempt ${attempts}/${maxAttempts})`
+              `Turn.js check - Initialized: ${isInitialized}, Pages: ${totalPages} (${elapsedTime}s elapsed, attempt ${attempts}/${maxAttempts})`
             );
           }
 
           if (isInitialized && totalPages > 0) {
             console.log(
-              `Yearbook initialized successfully! Total pages: ${totalPages}`
+              `✓ Yearbook initialized successfully! Total pages: ${totalPages} (took ${elapsedTime}s)`
             );
             // Extra wait to ensure all pages are ready
-            setTimeout(() => resolve(), 3000); // Increased to 3 seconds
+            setTimeout(() => resolve(), 2000); // 2 seconds
             return;
           } else {
-            if (attempts % 5 === 0) {
+            if (attempts % 10 === 0) {
               console.log(
                 `Turn.js found but not ready yet (initialized: ${isInitialized}, pages: ${totalPages})`
               );
             }
           }
         } catch (e) {
-          if (attempts % 5 === 0) {
+          if (attempts % 10 === 0) {
             console.log(
-              `Turn.js check error (attempt ${attempts}/${maxAttempts}):`,
+              `Turn.js check error (${elapsedTime}s elapsed, attempt ${attempts}/${maxAttempts}):`,
               e.message
             );
           }
@@ -2663,7 +2764,7 @@ async function waitForYearbookInit(iframeWindow, iframeDoc) {
       } else {
         if (attempts % 10 === 0) {
           console.log(
-            `Waiting for Turn.js initialization... (attempt ${attempts}/${maxAttempts})`
+            `Waiting for Turn.js initialization... (${elapsedTime}s elapsed, attempt ${attempts}/${maxAttempts})`
           );
         }
       }
@@ -2671,8 +2772,40 @@ async function waitForYearbookInit(iframeWindow, iframeDoc) {
       if (attempts < maxAttempts) {
         setTimeout(checkInit, 200);
       } else {
-        console.warn("Max init attempts reached, resolving anyway");
-        resolve();
+        console.error(`Max init attempts reached after ${elapsedTime}s`);
+        console.error("Final state check:");
+        console.error("  - Magazine element exists:", !!magazine);
+        console.error("  - jQuery loaded:", hasjQuery);
+        console.error("  - Turn.js available:", !!hasTurnJs);
+        console.error("  - Page title:", iframeDoc.title);
+        console.error(
+          "  - Body classes:",
+          iframeDoc.body ? iframeDoc.body.className : "N/A"
+        );
+
+        // Log any visible error messages in the page
+        const errorElements = iframeDoc.querySelectorAll(
+          ".error, [class*='error']"
+        );
+        if (errorElements.length > 0) {
+          console.error("  - Error elements found:", errorElements.length);
+          errorElements.forEach((el, i) => {
+            console.error(
+              `    Error ${i + 1}:`,
+              el.textContent.substring(0, 100)
+            );
+          });
+        }
+
+        // Check if there's student data loaded
+        const studentCards = iframeDoc.querySelectorAll(".student-card");
+        console.error("  - Student cards found:", studentCards.length);
+
+        reject(
+          new Error(
+            "Yearbook initialization timeout - Turn.js failed to initialize"
+          )
+        );
       }
     };
 
@@ -2782,6 +2915,8 @@ async function capturePage(iframeDoc) {
         logging: false,
         width: 1920,
         height: 1080,
+        foreignObjectRendering: false, // Disable foreign object rendering to avoid some iframe issues
+        removeContainer: true, // Clean up immediately
       });
       console.log("Drawing yearbook content at scale...");
       // Draw the captured content scaled to fit our canvas
@@ -2796,6 +2931,8 @@ async function capturePage(iframeDoc) {
         logging: false,
         width: 1920,
         height: 1080,
+        foreignObjectRendering: false, // Disable foreign object rendering to avoid some iframe issues
+        removeContainer: true, // Clean up immediately
       });
       ctx.drawImage(yearbookCanvas, 0, 0, 1920, 1080);
     }
@@ -2930,6 +3067,44 @@ function updateDepartmentCount() {
   }
 }
 
+// Function to update Download PDF button states based on section availability
+function updateDownloadPdfButtonStates() {
+  const sections = document.querySelectorAll(".section");
+
+  sections.forEach((section) => {
+    const downloadPdfBtn = section.querySelector(".download-pdf-btn");
+
+    if (downloadPdfBtn) {
+      // Check if the section has the 'available' class (green header)
+      // AND if it's selected (yellow header when selected)
+      const isAvailable = section.classList.contains("available");
+      const isSelected = section.classList.contains("selected");
+
+      if (isAvailable && isSelected) {
+        // Enable button ONLY for green AND selected batches
+        downloadPdfBtn.disabled = false;
+        downloadPdfBtn.style.opacity = "1";
+        downloadPdfBtn.style.cursor = "pointer";
+        downloadPdfBtn.title = "Download PDF";
+      } else if (!isAvailable) {
+        // Disable if not available (not green)
+        downloadPdfBtn.disabled = true;
+        downloadPdfBtn.style.opacity = "0.5";
+        downloadPdfBtn.style.cursor = "not-allowed";
+        downloadPdfBtn.title =
+          "This batch is not available for download (must have green header)";
+      } else if (!isSelected) {
+        // Disable if not selected
+        downloadPdfBtn.disabled = true;
+        downloadPdfBtn.style.opacity = "0.5";
+        downloadPdfBtn.style.cursor = "not-allowed";
+        downloadPdfBtn.title =
+          "Please select this batch first (click 'Select Batch' button)";
+      }
+    }
+  });
+}
+
 function initializeDepartmentSelection() {
   const checkboxes = document.querySelectorAll(".dept-checkbox");
   const selectAllBtn = document.getElementById("select-all-dept-btn");
@@ -3013,6 +3188,9 @@ function confirmDeleteBatch() {
 
     window.pendingDeleteSection = null;
     window.pendingDeleteBatchName = null;
+
+    // Update download PDF button states after batch deletion
+    updateDownloadPdfButtonStates();
   }
   closeDeleteBatchModal();
 }
@@ -3067,6 +3245,9 @@ function confirmSelectTemplate() {
 
     window.pendingSelectSection = null;
     window.pendingSelectBatchName = null;
+
+    // Update download PDF button states after section selection changes
+    updateDownloadPdfButtonStates();
   }
   closeSelectTemplateModal();
 }
@@ -3160,6 +3341,7 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 
     updateUploadBoxStates();
+    updateDownloadPdfButtonStates();
   }
 
   function updateUploadBoxStates() {
@@ -3382,6 +3564,9 @@ window.addEventListener("DOMContentLoaded", () => {
         section.classList.remove("available");
       });
     }
+
+    // Update download PDF button states after sections are updated
+    updateDownloadPdfButtonStates();
   }
 
   window.setAvailableSections = setAvailableSections;
@@ -3547,4 +3732,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // Initialize department selection modal
   initializeDepartmentSelection();
+
+  // Initialize download PDF button states based on section header color
+  updateDownloadPdfButtonStates();
 });

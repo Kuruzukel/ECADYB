@@ -1,5 +1,30 @@
 // Determine base path for API calls
-window.basePath = window.location.pathname.includes('/ECADYB/') ? '/ECADYB' : '';
+window.basePath = window.location.pathname.includes("/ECADYB/")
+  ? "/ECADYB"
+  : "";
+
+// Read batch year from URL parameters if provided (for iframe/PDF generation)
+(function () {
+  var urlParams = new URLSearchParams(window.location.search);
+  var batchYearFromUrl = urlParams.get("batchYear");
+
+  if (batchYearFromUrl) {
+    console.log("Setting batch year from URL parameter:", batchYearFromUrl);
+    localStorage.setItem("selectedBatchYear", batchYearFromUrl);
+    // Clear caches when batch year is set from URL
+    window.topManagementCache = {};
+    window.topManagementPendingRequests = {};
+    window.studentDataCache = {};
+    window.studentDataPendingRequests = {};
+    window.allStudentsCache = {};
+    window.studentPhotosCache = {};
+  } else {
+    console.log(
+      "No batch year in URL, using localStorage:",
+      localStorage.getItem("selectedBatchYear")
+    );
+  }
+})();
 
 window.studentDataCache = window.studentDataCache || {};
 window.studentDataPendingRequests = window.studentDataPendingRequests || {};
@@ -22,10 +47,15 @@ function clearTopManagementCache() {
 function fetchTopManagementCached(template, callback) {
   // Get batch year from localStorage to include in cache key
   var batchYear = localStorage.getItem("selectedBatchYear");
-  var cacheKey = "template_" + template + "_" + (batchYear || 'default');
+  var cacheKey = "template_" + template + "_" + (batchYear || "default");
 
   if (window.topManagementCache[cacheKey]) {
-    console.log("Using cached top management data for template", template, "batch year", batchYear);
+    console.log(
+      "Using cached top management data for template",
+      template,
+      "batch year",
+      batchYear
+    );
     callback(window.topManagementCache[cacheKey]);
     return;
   }
@@ -44,7 +74,12 @@ function fetchTopManagementCached(template, callback) {
 
   window.topManagementPendingRequests[cacheKey] = [callback];
 
-  console.log("Fetching top management data for template", template, "batch year", batchYear);
+  console.log(
+    "Fetching top management data for template",
+    template,
+    "batch year",
+    batchYear
+  );
 
   // Build request data
   var requestData = {
@@ -58,7 +93,10 @@ function fetchTopManagementCached(template, callback) {
   console.log("Template:", template);
   console.log("Batch Year:", batchYear);
   console.log("Request Data:", requestData);
-  console.log("Request URL:", window.basePath + "/Connection/Photos/FetchTopManagement.php");
+  console.log(
+    "Request URL:",
+    window.basePath + "/Connection/Photos/FetchTopManagement.php"
+  );
 
   $.ajax({
     url: window.basePath + "/Connection/Photos/FetchTopManagement.php",
@@ -69,7 +107,10 @@ function fetchTopManagementCached(template, callback) {
       console.log("=== TOP MANAGEMENT RESPONSE ===");
       console.log("Response:", response);
       console.log("Success:", response.success);
-      console.log("Data length:", response.data ? response.data.length : 'no data');
+      console.log(
+        "Data length:",
+        response.data ? response.data.length : "no data"
+      );
       console.log("Data:", response.data);
 
       window.topManagementCache[cacheKey] = response;
@@ -157,23 +198,36 @@ function fetchStudentPhotos(studentId, callback) {
         console.error("Empty response received from FetchStudentPhotos.php");
         callback([]);
         return;
-      } else if (typeof response !== 'object') {
-        console.error("Invalid response format received from FetchStudentPhotos.php:", typeof response);
+      } else if (typeof response !== "object") {
+        console.error(
+          "Invalid response format received from FetchStudentPhotos.php:",
+          typeof response
+        );
         callback([]);
         return;
-      } else if (!response.hasOwnProperty('success')) {
+      } else if (!response.hasOwnProperty("success")) {
         console.error("Response missing 'success' property");
         callback([]);
         return;
       }
 
-      if (response.success && response.data && Array.isArray(response.data) && response.data.length > 0) {
+      if (
+        response.success &&
+        response.data &&
+        Array.isArray(response.data) &&
+        response.data.length > 0
+      ) {
         console.log("Found photos for student ID", studentId);
         console.log("Photo data:", response.data[0]);
         window.studentPhotosCache[studentId] = response.data;
         callback(response.data);
       } else {
-        console.log("No photos found for student ID:", studentId, "Response message:", response.message || "No message");
+        console.log(
+          "No photos found for student ID:",
+          studentId,
+          "Response message:",
+          response.message || "No message"
+        );
         callback([]);
       }
     },
@@ -374,11 +428,21 @@ function loadStudentsForPage(
 
   fetchStudentDataCached(department, template, apiPage, function (response) {
     // Enhanced error handling and logging
-    if (response && response.success && response.data && Array.isArray(response.data.students)) {
+    if (
+      response &&
+      response.success &&
+      response.data &&
+      Array.isArray(response.data.students)
+    ) {
       var students = response.data.students;
       var totalStudents = response.data.total_students || 0;
 
-      console.log("Successfully loaded", students.length, "students for API page", apiPage);
+      console.log(
+        "Successfully loaded",
+        students.length,
+        "students for API page",
+        apiPage
+      );
 
       var studentsFromThisPage = students.slice(
         localStartIndex,
@@ -390,7 +454,12 @@ function loadStudentsForPage(
         var nextApiPage = apiPage + 1;
         var remainingCount = studentsNeeded;
 
-        console.log("Need additional", studentsNeeded, "students from next API page", nextApiPage);
+        console.log(
+          "Need additional",
+          studentsNeeded,
+          "students from next API page",
+          nextApiPage
+        );
 
         fetchStudentDataCached(
           department,
@@ -409,7 +478,12 @@ function loadStudentsForPage(
               studentsFromThisPage =
                 studentsFromThisPage.concat(studentsFromNextPage);
 
-              console.log("Successfully loaded additional", studentsFromNextPage.length, "students from API page", nextApiPage);
+              console.log(
+                "Successfully loaded additional",
+                studentsFromNextPage.length,
+                "students from API page",
+                nextApiPage
+              );
             } else {
               console.warn(
                 "Failed to load additional students for API page",
@@ -436,11 +510,17 @@ function loadStudentsForPage(
       // Try to provide more context about the failure
       if (response) {
         if (!response.success) {
-          console.warn("API returned success=false with message:", response.message);
+          console.warn(
+            "API returned success=false with message:",
+            response.message
+          );
         } else if (!response.data) {
           console.warn("API returned no data object");
         } else if (!Array.isArray(response.data.students)) {
-          console.warn("API returned data.students but it's not an array:", typeof response.data.students);
+          console.warn(
+            "API returned data.students but it's not an array:",
+            typeof response.data.students
+          );
         }
       } else {
         console.warn("No response received from API");
@@ -488,7 +568,10 @@ function fetchStudentDataCached(department, template, apiPage, callback) {
     requestData.batch_year = batchYear;
   }
 
-  console.log("Making request to FetchStudentData.php with parameters:", requestData);
+  console.log(
+    "Making request to FetchStudentData.php with parameters:",
+    requestData
+  );
 
   $.ajax({
     url: window.basePath + "/Connection/Photos/FetchStudentData.php",
@@ -510,21 +593,24 @@ function fetchStudentDataCached(department, template, apiPage, callback) {
         response = {
           success: false,
           message: "Empty response received from server",
-          data: { students: [] }
+          data: { students: [] },
         };
-      } else if (typeof response !== 'object') {
-        console.error("Invalid response format received from FetchStudentData.php:", typeof response);
+      } else if (typeof response !== "object") {
+        console.error(
+          "Invalid response format received from FetchStudentData.php:",
+          typeof response
+        );
         response = {
           success: false,
           message: "Invalid response format received from server",
-          data: { students: [] }
+          data: { students: [] },
         };
-      } else if (!response.hasOwnProperty('success')) {
+      } else if (!response.hasOwnProperty("success")) {
         console.error("Response missing 'success' property");
         response = {
           success: false,
           message: "Response missing required properties",
-          data: { students: [] }
+          data: { students: [] },
         };
       }
 
@@ -546,7 +632,10 @@ function fetchStudentDataCached(department, template, apiPage, callback) {
       );
       console.log("XHR Response:", xhr.responseText);
       console.log("XHR Status:", xhr.status);
-      console.log("Request URL:", window.basePath + "/Connection/Photos/FetchStudentData.php");
+      console.log(
+        "Request URL:",
+        window.basePath + "/Connection/Photos/FetchStudentData.php"
+      );
       console.log("Request Data:", requestData);
       console.log("XHR Object:", xhr);
 
@@ -555,7 +644,10 @@ function fetchStudentDataCached(department, template, apiPage, callback) {
 
       var errorResponse = {
         success: false,
-        message: "Failed to fetch student data - " + status + (error ? ": " + error : ""),
+        message:
+          "Failed to fetch student data - " +
+          status +
+          (error ? ": " + error : ""),
         data: { students: [] },
       };
 
@@ -634,7 +726,7 @@ function loadPage(page, pageElement) {
     if (page > 1 && page < totalPages) {
       var pageNumberDiv = $("<div/>", {
         class: "page-number",
-        text: page
+        text: page,
       });
       pageElement.append(pageNumberDiv);
     }
@@ -679,18 +771,28 @@ function loadPage(page, pageElement) {
 
       if (window.topManagementCache && window.topManagementCache[cacheKey]) {
         var topManagementData = window.topManagementCache[cacheKey];
-        if (topManagementData && topManagementData.success && topManagementData.data && topManagementData.data.length > 0) {
+        if (
+          topManagementData &&
+          topManagementData.success &&
+          topManagementData.data &&
+          topManagementData.data.length > 0
+        ) {
           managementPages = topManagementData.data.length;
         }
       }
 
-      var isManagementPage = page < (2 + managementPages);
+      var isManagementPage = page < 2 + managementPages;
 
       if (isManagementPage) {
         console.log("Loading top management page:", page);
 
         if (coverData.background_url) {
-          console.log("Using background_url for management page", page, ":", coverData.background_url);
+          console.log(
+            "Using background_url for management page",
+            page,
+            ":",
+            coverData.background_url
+          );
           img.attr("src", coverData.background_url);
         } else {
           console.log("Using default background for management page", page);
@@ -719,12 +821,18 @@ function loadPage(page, pageElement) {
           console.log("Response:", response);
           console.log("Response Success:", response.success);
           console.log("Response Data:", response.data);
-          console.log("Data Length:", response.data ? response.data.length : 'no data');
+          console.log(
+            "Data Length:",
+            response.data ? response.data.length : "no data"
+          );
 
           loadingIndicator.remove();
 
           if (response.success && response.data && response.data.length > 0) {
-            console.log("Top management data available, checking index:", managementIndex);
+            console.log(
+              "Top management data available, checking index:",
+              managementIndex
+            );
             if (managementIndex < response.data.length) {
               var currentManager = response.data[managementIndex];
               console.log("Current Manager:", currentManager);
@@ -790,7 +898,9 @@ function loadPage(page, pageElement) {
                 class: "photo-and-info-container",
               });
 
-              photoAndInfoContainer.append(photoContainer).append(infoContainer);
+              photoAndInfoContainer
+                .append(photoContainer)
+                .append(infoContainer);
 
               managementPage
                 .append(photoAndInfoContainer)
@@ -867,7 +977,9 @@ function loadPage(page, pageElement) {
                 class: "photo-and-info-container",
               });
 
-              photoAndInfoContainer.append(photoContainer).append(infoContainer);
+              photoAndInfoContainer
+                .append(photoContainer)
+                .append(infoContainer);
 
               placeholderContainer
                 .append(photoAndInfoContainer)
@@ -896,8 +1008,9 @@ function loadPage(page, pageElement) {
                   </svg>
                 </div>
                 <h3 class="empty-state-title">Top Management Data Required</h3>
-                <p class="empty-state-description">${response.message ||
-                "Please upload CSV of the Top Management to the Batch Upload Section first."
+                <p class="empty-state-description">${
+                  response.message ||
+                  "Please upload CSV of the Top Management to the Batch Upload Section first."
                 }</p>
               </div>
             `,
@@ -910,7 +1023,12 @@ function loadPage(page, pageElement) {
         console.log("Loading student page:", page);
 
         if (coverData.background_url) {
-          console.log("Using background_url for student page", page, ":", coverData.background_url);
+          console.log(
+            "Using background_url for student page",
+            page,
+            ":",
+            coverData.background_url
+          );
           img.attr("src", coverData.background_url);
         } else {
           console.log("Using default background for student page", page);
@@ -925,10 +1043,12 @@ function loadPage(page, pageElement) {
           var urlParams = new URLSearchParams(window.location.search);
           var department = urlParams.get("department") || "BSME";
 
-          var template = coverData && coverData.template ? coverData.template : 1;
+          var template =
+            coverData && coverData.template ? coverData.template : 1;
 
           var studentsPerYearbookPage = 4;
-          var studentStartIndex = (page - (2 + managementPages)) * studentsPerYearbookPage;
+          var studentStartIndex =
+            (page - (2 + managementPages)) * studentsPerYearbookPage;
           var studentEndIndex = studentStartIndex + studentsPerYearbookPage;
 
           var studentsPerAPIPage = 50;
@@ -956,14 +1076,19 @@ function loadPage(page, pageElement) {
                 "Students for page",
                 page,
                 ":",
-                studentsForThisPage ? studentsForThisPage.length : 'undefined',
+                studentsForThisPage ? studentsForThisPage.length : "undefined",
                 "students starting from index",
                 studentStartIndex
               );
 
               // Enhanced error handling for student data
               if (!studentsForThisPage || !Array.isArray(studentsForThisPage)) {
-                console.error("Invalid student data received for page", page, ":", studentsForThisPage);
+                console.error(
+                  "Invalid student data received for page",
+                  page,
+                  ":",
+                  studentsForThisPage
+                );
                 var errorMessage = $("<div/>", {
                   class: "modern-empty-state",
                   html: `
@@ -1015,8 +1140,15 @@ function loadPage(page, pageElement) {
                 var student = studentsForThisPage[i];
 
                 // Validate student object
-                if (!student || typeof student !== 'object') {
-                  console.warn("Invalid student object at index", i, "for page", page, ":", student);
+                if (!student || typeof student !== "object") {
+                  console.warn(
+                    "Invalid student object at index",
+                    i,
+                    "for page",
+                    page,
+                    ":",
+                    student
+                  );
                   continue;
                 }
 
@@ -1024,10 +1156,10 @@ function loadPage(page, pageElement) {
 
                 console.log("=== PROCESSING STUDENT ===");
                 console.log("Global Index:", globalIndex);
-                console.log("Student Name:", student.name || 'Unknown');
-                console.log("Student ID:", student.student_id || 'Unknown');
-                console.log("MongoDB ID:", student.id || 'Unknown');
-                console.log("Program:", student.program || 'Unknown');
+                console.log("Student Name:", student.name || "Unknown");
+                console.log("Student ID:", student.student_id || "Unknown");
+                console.log("MongoDB ID:", student.id || "Unknown");
+                console.log("Program:", student.program || "Unknown");
                 console.log("Full Student Object:", student);
 
                 var card = $("<div/>", {
@@ -1043,7 +1175,7 @@ function loadPage(page, pageElement) {
 
                 var studentPhoto = $("<img/>", {
                   src: defaultPhotoUrl,
-                  alt: student.name || 'Unknown Student',
+                  alt: student.name || "Unknown Student",
                   crossOrigin: "anonymous",
                   onerror:
                     'this.src=\'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100%25" height="100%25" viewBox="0 0 135 155" preserveAspectRatio="xMidYMid slice"%3E%3Crect width="135" height="155" fill="%23f0f0f0"/%3E%3Ctext x="67.5" y="50" font-family="Arial" font-size="10" fill="%23666" text-anchor="middle" font-weight="600"%3ENo Photo%3C/text%3E%3Ctext x="67.5" y="70" font-family="Arial" font-size="8" fill="%23999" text-anchor="middle"%3EUpload via%3C/text%3E%3Ctext x="67.5" y="85" font-family="Arial" font-size="8" fill="%23999" text-anchor="middle"%3EBatch Upload%3C/text%3E%3C/svg%3E\';',
@@ -1052,7 +1184,7 @@ function loadPage(page, pageElement) {
                 studentImg.append(studentPhoto);
 
                 var studentIdForPhotos = student.student_id;
-                var studentNameForPhotos = student.name || 'Unknown Student';
+                var studentNameForPhotos = student.name || "Unknown Student";
                 var studentStatus = (student.status || "pending").toLowerCase();
 
                 console.log(
@@ -1074,7 +1206,13 @@ function loadPage(page, pageElement) {
                     currentStatus
                   ) {
                     fetchStudentPhotos(currentStudentId, function (photos) {
-                      if (photos && photos.length > 0 && photos[0] && photos[0].photos && photos[0].photos.student_photo_1) {
+                      if (
+                        photos &&
+                        photos.length > 0 &&
+                        photos[0] &&
+                        photos[0].photos &&
+                        photos[0].photos.student_photo_1
+                      ) {
                         var togaUrl = photos[0].photos.student_photo_1.url;
                         if (togaUrl) {
                           console.log(
@@ -1090,61 +1228,69 @@ function loadPage(page, pageElement) {
                           // Apply blur effect if status is pending
                           if (currentStatus === "pending") {
                             currentPhotoElement.css({
-                              "filter": "blur(8px)",
-                              "-webkit-filter": "blur(8px)"
+                              filter: "blur(8px)",
+                              "-webkit-filter": "blur(8px)",
                             });
                             // Ensure parent has proper positioning and dimensions
                             var $parent = currentPhotoElement.parent();
                             $parent.css({
-                              "position": "relative",
-                              "overflow": "hidden"
+                              position: "relative",
+                              overflow: "hidden",
                             });
 
                             // Add "Coming Soon..." overlay with inline styles to override any CSS
                             var comingSoonOverlay = $("<div/>", {
-                              class: "coming-soon-overlay"
+                              class: "coming-soon-overlay",
                             });
 
-                            comingSoonOverlay.attr("style",
+                            comingSoonOverlay.attr(
+                              "style",
                               "position: absolute !important; " +
-                              "top: 0 !important; " +
-                              "left: 0 !important; " +
-                              "width: 100% !important; " +
-                              "height: 100% !important; " +
-                              "display: flex !important; " +
-                              "align-items: center !important; " +
-                              "justify-content: center !important; " +
-                              "pointer-events: none !important; " +
-                              "z-index: 999 !important; " +
-                              "margin: 0 !important; " +
-                              "padding: 0 !important;"
+                                "top: 0 !important; " +
+                                "left: 0 !important; " +
+                                "width: 100% !important; " +
+                                "height: 100% !important; " +
+                                "display: flex !important; " +
+                                "align-items: center !important; " +
+                                "justify-content: center !important; " +
+                                "pointer-events: none !important; " +
+                                "z-index: 999 !important; " +
+                                "margin: 0 !important; " +
+                                "padding: 0 !important;"
                             );
 
                             var comingSoonText = $("<span/>", {
                               class: "coming-soon-text",
-                              text: "Coming Soon..."
+                              text: "Coming Soon...",
                             });
 
-                            comingSoonText.attr("style",
+                            comingSoonText.attr(
+                              "style",
                               "font-style: italic !important; " +
-                              "font-size: 16px !important; " +
-                              "font-weight: 600 !important; " +
-                              "color: #ffffff !important; " +
-                              "text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9) !important; " +
-                              "padding: 4px 12px !important; " +
-                              "letter-spacing: 0.5px !important; " +
-                              "white-space: nowrap !important; " +
-                              "background: rgba(0, 0, 0, 0.3) !important; " +
-                              "border-radius: 4px !important;"
+                                "font-size: 16px !important; " +
+                                "font-weight: 600 !important; " +
+                                "color: #ffffff !important; " +
+                                "text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9) !important; " +
+                                "padding: 4px 12px !important; " +
+                                "letter-spacing: 0.5px !important; " +
+                                "white-space: nowrap !important; " +
+                                "background: rgba(0, 0, 0, 0.3) !important; " +
+                                "border-radius: 4px !important;"
                             );
 
                             comingSoonOverlay.append(comingSoonText);
                             $parent.append(comingSoonOverlay);
-                            console.log("Applied blur filter and Coming Soon overlay to pending student photo:", currentStudentName);
+                            console.log(
+                              "Applied blur filter and Coming Soon overlay to pending student photo:",
+                              currentStudentName
+                            );
                           }
                         }
                       } else {
-                        console.log("No valid photo data found for student", currentStudentName);
+                        console.log(
+                          "No valid photo data found for student",
+                          currentStudentName
+                        );
                       }
                     });
                   })(
@@ -1157,16 +1303,28 @@ function loadPage(page, pageElement) {
                 }
 
                 var studentName = $("<h3/>", {
-                  text: student.name || 'Unknown Student',
+                  text: student.name || "Unknown Student",
                 });
 
                 // Store student data in data attributes for event delegation
                 card.attr("data-student-id", student.student_id || "");
-                card.attr("data-student-name", student.name || "Unknown Student");
+                card.attr(
+                  "data-student-name",
+                  student.name || "Unknown Student"
+                );
                 card.attr("data-student-year", student.year || "N/A");
-                card.attr("data-student-motto", student.motto || "No motto provided");
-                card.attr("data-student-milestones", JSON.stringify(student.milestones || []));
-                card.attr("data-student-honors", JSON.stringify(student.honors || []));
+                card.attr(
+                  "data-student-motto",
+                  student.motto || "No motto provided"
+                );
+                card.attr(
+                  "data-student-milestones",
+                  JSON.stringify(student.milestones || [])
+                );
+                card.attr(
+                  "data-student-honors",
+                  JSON.stringify(student.honors || [])
+                );
                 card.attr("data-student-program", student.program || "");
                 card.attr("data-student-section", student.section || "");
                 card.attr("data-student-status", studentStatus);
@@ -1202,8 +1360,8 @@ function loadPage(page, pageElement) {
       img.attr(
         "src",
         "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23f0f0f0'/%3E%3Ctext x='50' y='55' font-family='Arial' font-size='12' fill='%23999' text-anchor='middle'%3EPage " +
-        page +
-        "%3C/text%3E%3C/svg%3E"
+          page +
+          "%3C/text%3E%3C/svg%3E"
       );
     }
 
@@ -1240,7 +1398,7 @@ function loadRegions(page, element) {
         addRegion(region, element);
       });
     })
-    .fail(function () { });
+    .fail(function () {});
 }
 
 function addRegion(region, pageElement) {
@@ -1329,7 +1487,7 @@ function loadLargePage(page, pageElement) {
     pageElement.find(".page-number").remove();
     var pageNumberDiv = $("<div/>", {
       class: "page-number",
-      text: page
+      text: page,
     });
     pageElement.append(pageNumberDiv);
   }
@@ -1375,8 +1533,8 @@ function loadLargePage(page, pageElement) {
     img.attr(
       "src",
       "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23f0f0f0'/%3E%3Ctext x='50' y='55' font-family='Arial' font-size='12' fill='%23999' text-anchor='middle'%3ELarge Page " +
-      page +
-      "%3C/text%3E%3C/svg%3E"
+        page +
+        "%3C/text%3E%3C/svg%3E"
     );
   }
 }
@@ -1410,7 +1568,7 @@ function loadSmallPage(page, pageElement) {
     pageElement.find(".page-number").remove();
     var pageNumberDiv = $("<div/>", {
       class: "page-number",
-      text: page
+      text: page,
     });
     pageElement.append(pageNumberDiv);
   }
@@ -1456,8 +1614,8 @@ function loadSmallPage(page, pageElement) {
     img.attr(
       "src",
       "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23f0f0f0'/%3E%3Ctext x='50' y='55' font-family='Arial' font-size='12' fill='%23999' text-anchor='middle'%3ESmall Page " +
-      page +
-      "%3C/text%3E%3C/svg%3E"
+        page +
+        "%3C/text%3E%3C/svg%3E"
     );
   }
 }
@@ -1486,14 +1644,15 @@ function resizeViewport() {
 
   if ($(".magazine").turn("zoom") == 1) {
     // Check if we're in fullscreen mode (either actual fullscreen or via URL parameter)
-    var isActualFullscreen = document.fullscreenElement ||
+    var isActualFullscreen =
+      document.fullscreenElement ||
       document.webkitFullscreenElement ||
       document.mozFullScreenElement ||
       document.msFullscreenElement;
 
     // Check URL parameter for fullscreen mode (for iframe usage)
     var urlParams = new URLSearchParams(window.location.search);
-    var isFullscreenParam = urlParams.get('fullscreen') === 'true';
+    var isFullscreenParam = urlParams.get("fullscreen") === "true";
 
     var isFullscreen = isActualFullscreen || isFullscreenParam;
 
@@ -1501,7 +1660,14 @@ function resizeViewport() {
     var baseWidth = isFullscreen ? 1200 : options.width;
     var baseHeight = isFullscreen ? 750 : options.height;
 
-    console.log('ResizeViewport - isFullscreen:', isFullscreen, 'baseWidth:', baseWidth, 'baseHeight:', baseHeight);
+    console.log(
+      "ResizeViewport - isFullscreen:",
+      isFullscreen,
+      "baseWidth:",
+      baseWidth,
+      "baseHeight:",
+      baseHeight
+    );
 
     var bound = calculateBound({
       width: baseWidth,
@@ -1882,27 +2048,47 @@ function generateAllThumbnails() {
 
   console.log("Starting optimized thumbnail generation...");
 
-  setTimeout(function () {
-    $(".magazine .page").each(function (index) {
-      var pageElement = $(this);
-      var pageNumber = index + 1;
+  // Use requestAnimationFrame for better performance
+  requestAnimationFrame(function () {
+    var pages = $(".magazine .page").toArray();
+    var currentIndex = 0;
 
-      var hasContent =
-        pageElement.find("img").length > 0 ||
-        pageElement.find(".top-management-page").length > 0 ||
-        pageElement.find(".cards-container").length > 0;
+    function processBatch() {
+      var batchSize = 3; // Process 3 pages at a time
+      var endIndex = Math.min(currentIndex + batchSize, pages.length);
 
-      if (hasContent) {
-        var delay = pageNumber <= 3 ? index * 200 : index * 800;
-        setTimeout(function () {
-          console.log("Generating thumbnail for page", pageNumber);
-          generatePageThumbnail(pageNumber, pageElement);
-        }, delay);
-      } else {
-        console.log("Skipping page", pageNumber, "- no content found");
+      for (var i = currentIndex; i < endIndex; i++) {
+        var pageElement = $(pages[i]);
+        var pageNumber = i + 1;
+
+        var hasContent =
+          pageElement.find("img").length > 0 ||
+          pageElement.find(".top-management-page").length > 0 ||
+          pageElement.find(".cards-container").length > 0;
+
+        if (hasContent) {
+          (function (pNum, pElem) {
+            var delay = pNum <= 3 ? (pNum - 1) * 150 : (pNum - 1) * 400;
+            setTimeout(function () {
+              console.log("Generating thumbnail for page", pNum);
+              generatePageThumbnail(pNum, pElem);
+            }, delay);
+          })(pageNumber, pageElement);
+        } else {
+          console.log("Skipping page", pageNumber, "- no content found");
+        }
       }
-    });
-  }, 2000);
+
+      currentIndex = endIndex;
+
+      // Continue processing if there are more pages
+      if (currentIndex < pages.length) {
+        requestAnimationFrame(processBatch);
+      }
+    }
+
+    setTimeout(processBatch, 1500);
+  });
 }
 
 function waitForImagesAndGenerateThumbnail(page, pageElement) {
@@ -1937,20 +2123,41 @@ function waitForImagesAndGenerateThumbnail(page, pageElement) {
 function forceRegenerateThumbnails() {
   console.log("Force regenerating all thumbnails...");
 
-  $(".magazine .page").each(function (index) {
-    var pageElement = $(this);
-    var pageNumber = index + 1;
+  // Use requestAnimationFrame and batch processing for better performance
+  requestAnimationFrame(function () {
+    var pages = $(".magazine .page").toArray();
+    var batchSize = 4; // Process 4 pages at a time
 
-    setTimeout(function () {
-      waitForImagesAndGenerateThumbnail(pageNumber, pageElement);
-    }, index * 300);
-  });
+    function processBatch(startIndex) {
+      var endIndex = Math.min(startIndex + batchSize, pages.length);
 
-  setTimeout(function () {
-    if (typeof refreshThumbnails === "function") {
-      refreshThumbnails();
+      for (var i = startIndex; i < endIndex; i++) {
+        var pageElement = $(pages[i]);
+        var pageNumber = i + 1;
+
+        (function (pNum, pElem) {
+          setTimeout(function () {
+            waitForImagesAndGenerateThumbnail(pNum, pElem);
+          }, (pNum - 1) * 200);
+        })(pageNumber, pageElement);
+      }
+
+      if (endIndex < pages.length) {
+        requestAnimationFrame(function () {
+          processBatch(endIndex);
+        });
+      } else {
+        // All pages processed, refresh thumbnails
+        setTimeout(function () {
+          if (typeof refreshThumbnails === "function") {
+            refreshThumbnails();
+          }
+        }, 2000);
+      }
     }
-  }, 3000);
+
+    processBatch(0);
+  });
 }
 
 function createManagementThumbnail(managementIndex, dataToUse) {
@@ -2246,7 +2453,6 @@ function initializeCornerHover() {
   });
 }
 
-
 // ========== STUDENT SEARCH NAVIGATION AND HIGHLIGHTING ==========
 
 function navigateToSearchedStudent() {
@@ -2265,7 +2471,9 @@ function navigateToSearchedStudent() {
       };
       console.log("Student data from URL parameters:", studentData);
     } else {
-      var searchSelectedStudent = sessionStorage.getItem("searchSelectedStudent");
+      var searchSelectedStudent = sessionStorage.getItem(
+        "searchSelectedStudent"
+      );
       if (!searchSelectedStudent) {
         return;
       }
@@ -2284,10 +2492,18 @@ function navigateToSearchedStudent() {
     console.log("Department:", department);
 
     var template = 1;
-    if (typeof window.coverData !== "undefined" && window.coverData && window.coverData.template) {
+    if (
+      typeof window.coverData !== "undefined" &&
+      window.coverData &&
+      window.coverData.template
+    ) {
       template = window.coverData.template;
       console.log("Got template from window.coverData:", template);
-    } else if (typeof coverData !== "undefined" && coverData && coverData.template) {
+    } else if (
+      typeof coverData !== "undefined" &&
+      coverData &&
+      coverData.template
+    ) {
       template = coverData.template;
       console.log("Got template from coverData:", template);
     } else {
@@ -2307,11 +2523,18 @@ function navigateToSearchedStudent() {
     console.log("Batch year for navigation:", batchYear);
 
     console.log("=== FORCING STUDENT DATA LOAD ===");
-    console.log("Calling loadAllStudentsForDepartment with:", department, template);
+    console.log(
+      "Calling loadAllStudentsForDepartment with:",
+      department,
+      template
+    );
 
     loadAllStudentsForDepartment(department, template, function (allStudents) {
       console.log("=== ALL STUDENTS LOADED BY CALLBACK ===");
-      console.log("Total students loaded:", allStudents ? allStudents.length : 0);
+      console.log(
+        "Total students loaded:",
+        allStudents ? allStudents.length : 0
+      );
       findAndNavigateToStudent(department, template, studentData, allStudents);
     });
   } catch (e) {
@@ -2319,7 +2542,12 @@ function navigateToSearchedStudent() {
   }
 }
 
-function findAndNavigateToStudent(department, template, studentData, allStudents) {
+function findAndNavigateToStudent(
+  department,
+  template,
+  studentData,
+  allStudents
+) {
   try {
     if (!allStudents || allStudents.length === 0) {
       console.error("=== NO STUDENTS DATA ===");
@@ -2336,9 +2564,20 @@ function findAndNavigateToStudent(department, template, studentData, allStudents
 
     for (var i = 0; i < allStudents.length; i++) {
       var student = allStudents[i];
-      console.log("Checking student", i, ":", student.name, "ID:", student.student_id);
+      console.log(
+        "Checking student",
+        i,
+        ":",
+        student.name,
+        "ID:",
+        student.student_id
+      );
 
-      if (student.student_id === studentData.student_id || student.id === studentData.id || student.name === studentData.name) {
+      if (
+        student.student_id === studentData.student_id ||
+        student.id === studentData.id ||
+        student.name === studentData.name
+      ) {
         studentIndex = i;
         console.log("✓ MATCH FOUND at index", i);
         break;
@@ -2351,19 +2590,31 @@ function findAndNavigateToStudent(department, template, studentData, allStudents
       console.log("Student:", allStudents[studentIndex]);
 
       var managementPages = 4;
-      var topMgmtCacheKey = "template_" + template + "_" + localStorage.getItem("selectedBatchYear");
+      var topMgmtCacheKey =
+        "template_" +
+        template +
+        "_" +
+        localStorage.getItem("selectedBatchYear");
       if (window.topManagementCache[topMgmtCacheKey]) {
         var topMgmtData = window.topManagementCache[topMgmtCacheKey];
-        if (topMgmtData.success && topMgmtData.data && Array.isArray(topMgmtData.data)) {
+        if (
+          topMgmtData.success &&
+          topMgmtData.data &&
+          Array.isArray(topMgmtData.data)
+        ) {
           managementPages = topMgmtData.data.length;
-          console.log("Using actual top management pages count:", managementPages);
+          console.log(
+            "Using actual top management pages count:",
+            managementPages
+          );
         }
       }
 
       var studentsPerPage = 4;
       var frontCoverPages = 1;
       var studentPageOffset = Math.floor(studentIndex / studentsPerPage);
-      var yearbookPage = frontCoverPages + managementPages + studentPageOffset + 1;
+      var yearbookPage =
+        frontCoverPages + managementPages + studentPageOffset + 1;
 
       console.log("=== NAVIGATION CALCULATION ===");
       console.log("Front Cover Pages:", frontCoverPages);
@@ -2392,11 +2643,17 @@ function findAndNavigateToStudent(department, template, studentData, allStudents
               console.log("Student Name to find:", studentData.name);
               console.log("Current magazine page:", $magazine.turn("page"));
 
-              console.log("🧹 Clearing any existing yellow borders and timeouts...");
+              console.log(
+                "🧹 Clearing any existing yellow borders and timeouts..."
+              );
 
               // Clear any existing border removal timeouts
               if (window.borderRemovalTimeouts) {
-                console.log("Clearing " + window.borderRemovalTimeouts.length + " existing timeouts");
+                console.log(
+                  "Clearing " +
+                    window.borderRemovalTimeouts.length +
+                    " existing timeouts"
+                );
                 window.borderRemovalTimeouts.forEach(function (timeoutId) {
                   clearTimeout(timeoutId);
                   console.log("Cleared timeout:", timeoutId);
@@ -2412,7 +2669,9 @@ function findAndNavigateToStudent(department, template, studentData, allStudents
                 }
                 $(this).removeAttr("style");
               });
-              console.log("Cleared borders from " + bordersCleared + " student images");
+              console.log(
+                "Cleared borders from " + bordersCleared + " student images"
+              );
 
               var currentPage = $magazine.turn("page");
               console.log("Current magazine page:", currentPage);
@@ -2431,7 +2690,10 @@ function findAndNavigateToStudent(department, template, studentData, allStudents
                 });
 
                 var $studentCards = $visiblePages.find(".student-card");
-                console.log("Student cards found on visible pages:", $studentCards.length);
+                console.log(
+                  "Student cards found on visible pages:",
+                  $studentCards.length
+                );
 
                 // Log all student names in visible cards for debugging
                 $studentCards.each(function (idx) {
@@ -2440,13 +2702,21 @@ function findAndNavigateToStudent(department, template, studentData, allStudents
                 });
 
                 if ($studentCards.length === 0 && retryCount < 20) {
-                  console.log("⏳ Student cards not loaded yet, retrying... (attempt " + (retryCount + 1) + "/20)");
+                  console.log(
+                    "⏳ Student cards not loaded yet, retrying... (attempt " +
+                      (retryCount + 1) +
+                      "/20)"
+                  );
                   setTimeout(function () {
                     highlightStudent(retryCount + 1);
                   }, 400);
                   return;
                 } else if ($studentCards.length === 0) {
-                  console.error("❌ Failed to find student cards after " + retryCount + " attempts");
+                  console.error(
+                    "❌ Failed to find student cards after " +
+                      retryCount +
+                      " attempts"
+                  );
                   notifyNavigationComplete();
                   return;
                 }
@@ -2463,97 +2733,135 @@ function findAndNavigateToStudent(department, template, studentData, allStudents
                   }
                 });
 
-                console.log("Target card index in visible cards:", targetCardIndex);
-                console.log("Target student card found:", $targetCard && $targetCard.length > 0);
+                console.log(
+                  "Target card index in visible cards:",
+                  targetCardIndex
+                );
+                console.log(
+                  "Target student card found:",
+                  $targetCard && $targetCard.length > 0
+                );
 
                 if ($targetCard && $targetCard.length > 0) {
                   var $studentImageArea = $targetCard.find(".student-image");
-                  console.log("Student image area in target card:", $studentImageArea.length > 0);
+                  console.log(
+                    "Student image area in target card:",
+                    $studentImageArea.length > 0
+                  );
 
                   var $imgElement = $studentImageArea.find("img");
-                  var hasImageContent = $imgElement.length > 0 || $studentImageArea.css("background-image") !== "none";
+                  var hasImageContent =
+                    $imgElement.length > 0 ||
+                    $studentImageArea.css("background-image") !== "none";
 
                   console.log("Image element found:", $imgElement.length > 0);
-                  console.log("Has background image:", $studentImageArea.css("background-image") !== "none");
+                  console.log(
+                    "Has background image:",
+                    $studentImageArea.css("background-image") !== "none"
+                  );
                   console.log("Has image content:", hasImageContent);
 
                   if ($studentImageArea.length && hasImageContent) {
-                    console.log("✅ Adding yellow border to student image area");
+                    console.log(
+                      "✅ Adding yellow border to student image area"
+                    );
                     console.log("Target element:", $studentImageArea[0]);
-                    console.log("Current style before:", $studentImageArea.attr("style"));
-
-                    $studentImageArea.attr("style",
-                      "border: 2px solid #fcda15 !important; " +
-                      "box-shadow: 0 0 10px rgba(252, 218, 21, 0.8) !important; " +
-                      "border-radius: 8px !important; " +
-                      "outline: 2px solid #ffd700 !important; " +
-                      "outline-offset: 2px !important; " +
-                      "transition: all 0.3s ease !important;"
+                    console.log(
+                      "Current style before:",
+                      $studentImageArea.attr("style")
                     );
 
-                    console.log("Current style after:", $studentImageArea.attr("style"));
-                    console.log("🎨 Applied BOLD yellow border");
-
-                    // Store timeout IDs so they can be cleared on next search
-                    var timeout1 = setTimeout(function () {
-                      $studentImageArea.attr("style",
-                        "border: 2px solid #fcda15 !important; " +
+                    $studentImageArea.attr(
+                      "style",
+                      "border: 2px solid #fcda15 !important; " +
                         "box-shadow: 0 0 10px rgba(252, 218, 21, 0.8) !important; " +
                         "border-radius: 8px !important; " +
                         "outline: 2px solid #ffd700 !important; " +
                         "outline-offset: 2px !important; " +
-                        "transition: all 3s ease !important;"
-                      );
+                        "transition: all 0.3s ease !important;"
+                    );
 
-                      var timeout2 = setTimeout(function () {
-                        $studentImageArea.removeAttr("style");
-                      }, 3000);
+                    console.log(
+                      "Current style after:",
+                      $studentImageArea.attr("style")
+                    );
+                    console.log("🎨 Applied BOLD yellow border");
 
-                      if (!window.borderRemovalTimeouts) {
-                        window.borderRemovalTimeouts = [];
-                      }
-                      window.borderRemovalTimeouts.push(timeout2);
-                    }, 5000);
-
+                    // Use requestAnimationFrame for smoother animations
                     if (!window.borderRemovalTimeouts) {
                       window.borderRemovalTimeouts = [];
                     }
-                    window.borderRemovalTimeouts.push(timeout1);
+
+                    requestAnimationFrame(function () {
+                      $studentImageArea.attr(
+                        "style",
+                        "border: 2px solid #fcda15 !important; " +
+                          "box-shadow: 0 0 10px rgba(252, 218, 21, 0.8) !important; " +
+                          "border-radius: 8px !important; " +
+                          "outline: 2px solid #ffd700 !important; " +
+                          "outline-offset: 2px !important; " +
+                          "transition: all 3s ease !important;"
+                      );
+
+                      var timeout2 = setTimeout(function () {
+                        requestAnimationFrame(function () {
+                          $studentImageArea.removeAttr("style");
+                        });
+                      }, 3000);
+
+                      window.borderRemovalTimeouts.push(timeout2);
+                    });
 
                     notifyNavigationComplete();
                   } else if ($studentImageArea.length && retryCount < 15) {
-                    console.log("⏳ Student image area exists but no image content yet, retrying... (attempt " + (retryCount + 1) + "/15)");
+                    console.log(
+                      "⏳ Student image area exists but no image content yet, retrying... (attempt " +
+                        (retryCount + 1) +
+                        "/15)"
+                    );
                     setTimeout(function () {
                       highlightStudent(retryCount + 1);
                     }, 500);
                     return;
                   } else {
-                    console.warn("⚠️ Student image area not found or no image content in target card");
+                    console.warn(
+                      "⚠️ Student image area not found or no image content in target card"
+                    );
                     notifyNavigationComplete();
                   }
                 } else {
-                  console.warn("⚠️ Target student card not found for student ID: " + studentData.student_id);
+                  console.warn(
+                    "⚠️ Target student card not found for student ID: " +
+                      studentData.student_id
+                  );
                   notifyNavigationComplete();
                 }
               }
 
               function notifyNavigationComplete() {
-                console.log("📍 Sending navigation complete signal to parent window");
+                console.log(
+                  "📍 Sending navigation complete signal to parent window"
+                );
                 if (window.parent && window.parent !== window) {
-                  window.parent.postMessage({
-                    type: "yearbook-navigation-complete",
-                    timestamp: new Date().toISOString(),
-                  }, "*");
+                  window.parent.postMessage(
+                    {
+                      type: "yearbook-navigation-complete",
+                      timestamp: new Date().toISOString(),
+                    },
+                    "*"
+                  );
                 }
               }
 
               highlightStudent();
 
               var imageLoadListener = function () {
-                console.log("🖼️ Image loaded, checking if we need to highlight...");
-                setTimeout(function () {
+                console.log(
+                  "🖼️ Image loaded, checking if we need to highlight..."
+                );
+                requestAnimationFrame(function () {
                   highlightStudent();
-                }, 100);
+                });
               };
 
               $visiblePages.find("img").on("load", imageLoadListener);
@@ -2604,10 +2912,19 @@ function tryNavigateToStudent() {
     navigateToSearchedStudent();
     hasInitialNavigationRun = true;
   } else if (navigationAttempts < maxNavigationAttempts) {
-    console.log("✗ Magazine not ready yet, retrying in 1 second... (attempt", navigationAttempts, "of", maxNavigationAttempts + ")");
+    console.log(
+      "✗ Magazine not ready yet, retrying in 1 second... (attempt",
+      navigationAttempts,
+      "of",
+      maxNavigationAttempts + ")"
+    );
     setTimeout(tryNavigateToStudent, 1000);
   } else {
-    console.error("✗ Magazine failed to initialize after", maxNavigationAttempts, "attempts");
+    console.error(
+      "✗ Magazine failed to initialize after",
+      maxNavigationAttempts,
+      "attempts"
+    );
     hasInitialNavigationRun = true;
   }
 }
@@ -2647,14 +2964,20 @@ function checkForNewStudentSearch() {
   }
 
   if (currentStudentId !== lastSearchedStudentId) {
-    console.log("🔄 New student search detected:", currentStudentId, currentStudentName);
+    console.log(
+      "🔄 New student search detected:",
+      currentStudentId,
+      currentStudentName
+    );
     console.log("Previous student:", lastSearchedStudentId);
     console.log("Has initial navigation run:", hasInitialNavigationRun);
 
     lastSearchedStudentId = currentStudentId;
 
     if (hasInitialNavigationRun) {
-      console.log("🎯 This is a subsequent search - triggering navigation immediately!");
+      console.log(
+        "🎯 This is a subsequent search - triggering navigation immediately!"
+      );
       navigationAttempts = 0;
 
       setTimeout(function () {
@@ -2667,8 +2990,16 @@ function checkForNewStudentSearch() {
 
 setInterval(checkForNewStudentSearch, 300);
 
-window.triggerStudentNavigation = function (studentId, studentName, department) {
-  console.log("🎯 Manual navigation triggered:", { studentId: studentId, studentName: studentName, department: department });
+window.triggerStudentNavigation = function (
+  studentId,
+  studentName,
+  department
+) {
+  console.log("🎯 Manual navigation triggered:", {
+    studentId: studentId,
+    studentName: studentName,
+    department: department,
+  });
   navigationAttempts = 0;
   lastSearchedStudentId = studentId;
   setTimeout(function () {
