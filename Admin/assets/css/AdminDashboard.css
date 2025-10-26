@@ -444,7 +444,6 @@ header {
     BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
 }
 
-/* Create a hover bridge to prevent dropdown from disappearing */
 .admin-dropdown::after {
   content: "";
   position: absolute;
