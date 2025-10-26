@@ -389,7 +389,6 @@ function initializeSearchAutocomplete() {
     }, 300);
   });
 
-  // Handle search button click
   if (searchButton) {
     searchButton.addEventListener("click", function (e) {
       e.preventDefault();
