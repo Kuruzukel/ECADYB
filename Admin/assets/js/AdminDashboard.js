@@ -375,7 +375,6 @@ function initializeSearchAutocomplete() {
   searchInput.addEventListener("input", function () {
     const query = this.value.trim();
 
-    // Clear previous timeout
     if (searchTimeout) {
       clearTimeout(searchTimeout);
     }
