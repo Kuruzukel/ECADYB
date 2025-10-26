@@ -302,7 +302,6 @@ document.addEventListener("DOMContentLoaded", () => {
     messageDiv.className = "notification-message";
     messageDiv.textContent = message;
 
-    // Create close button
     const closeBtn = document.createElement("button");
     closeBtn.className = "notification-close";
     closeBtn.innerHTML = '<i class="fas fa-times"></i>';
