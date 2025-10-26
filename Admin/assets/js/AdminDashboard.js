@@ -384,7 +384,6 @@ function initializeSearchAutocomplete() {
       return;
     }
 
-    // Debounce search
     searchTimeout = setTimeout(() => {
       searchStudents(query);
     }, 300);
