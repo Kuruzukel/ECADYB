@@ -201,5 +201,3 @@ window.addEventListener("DOMContentLoaded", () => {
   const savedTheme = localStorage.getItem("dashboard-theme") || "Default";
   applyTheme(savedTheme);
 });
-
-// Dragging/resizing functionality removed - catalog-app should remain static
