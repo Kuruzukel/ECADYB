@@ -289,7 +289,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("confirmPassword").value = "";
   }
 
-  // Function to show notifications
   function showNotification(message, type) {
     // Remove existing notifications
     const existingNotification = document.querySelector(".notification");
