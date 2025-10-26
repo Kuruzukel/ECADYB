@@ -525,6 +525,11 @@ label {
   border: 1px solid #fca5a5;
 }
 
+.notification.info-message {
+  background: #eff6ff;
+  border: 1px solid #93c5fd;
+}
+
 .notification-message {
   flex: 1;
   font-weight: 500;
@@ -537,6 +542,10 @@ label {
 
 .notification.error-message .notification-message {
   color: #dc2626;
+}
+
+.notification.info-message .notification-message {
+  color: #2563eb;
 }
 
 .notification-close {

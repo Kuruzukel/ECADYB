@@ -208,6 +208,52 @@ function closeNotification(id) {
   }
 }
 
+// Show a persistent notification that doesn't auto-hide
+function showPersistentNotification(message, type = "info") {
+  const container = document.getElementById("notification-container");
+  if (!container) return null;
+
+  // Remove existing notifications
+  const existingNotifications = container.querySelectorAll(".notification");
+  existingNotifications.forEach((notif) => notif.remove());
+
+  // Clear any existing timeout
+  if (notificationTimeout) {
+    clearTimeout(notificationTimeout);
+    notificationTimeout = null;
+  }
+
+  let messageClass =
+    type === "error"
+      ? "error-message"
+      : type === "info"
+      ? "info-message"
+      : "success-message";
+
+  const notif = document.createElement("div");
+  notif.className = `notification ${messageClass} persistent`;
+  notif.innerHTML = `
+    <span class="notification-message">${message}</span>
+  `;
+  container.appendChild(notif);
+
+  setTimeout(() => {
+    notif.classList.add("show");
+  }, 10);
+
+  return notif;
+}
+
+// Close a specific persistent notification
+function closePersistentNotification(notification) {
+  if (notification) {
+    notification.classList.remove("show");
+    setTimeout(() => {
+      notification.remove();
+    }, 300);
+  }
+}
+
 function getBasePath() {
   const currentPath = window.location.pathname;
 
@@ -1943,7 +1989,7 @@ function downloadPDF(batchName) {
   openDownloadPdfModal(batchName);
 }
 
-function confirmDownloadPDF() {
+async function confirmDownloadPDF() {
   const selectedDepartments = getSelectedDepartments();
 
   if (selectedDepartments.length === 0) {
@@ -1951,14 +1997,54 @@ function confirmDownloadPDF() {
     return;
   }
 
-  console.log("Downloading PDF for departments:", selectedDepartments);
+  console.log("=== PDF DOWNLOAD STARTED ===");
+  console.log("Selected departments:", selectedDepartments);
+  console.log("Batch year:", window.currentBatchForDownload);
 
-  showNotification(
-    `PDF download for ${selectedDepartments.length} department(s) will be implemented soon!`,
+  closeDownloadPdfModal();
+
+  // Create department names list for display
+  const deptNames = selectedDepartments.join(", ");
+
+  // Show loading notification and keep it visible (don't auto-hide)
+  const preparingNotification = showPersistentNotification(
+    `Preparing PDF for ${deptNames}...`,
     "info"
   );
 
-  closeDownloadPdfModal();
+  try {
+    console.log("Calling generateYearbookPDF...");
+    await generateYearbookPDF(selectedDepartments);
+    console.log("PDF generation completed successfully");
+
+    // Remove the preparing notification before showing success
+    if (preparingNotification) {
+      closePersistentNotification(preparingNotification);
+    }
+
+    // Small delay before showing success notification
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    showNotification(
+      `PDF downloaded successfully for ${deptNames}!`,
+      "success"
+    );
+  } catch (error) {
+    console.error("=== PDF GENERATION ERROR ===");
+    console.error("Error:", error);
+    console.error("Error message:", error.message);
+    console.error("Error stack:", error.stack);
+
+    // Remove the preparing notification before showing error
+    if (preparingNotification) {
+      closePersistentNotification(preparingNotification);
+    }
+
+    // Small delay before showing error notification
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    showNotification(`Failed to generate PDF: ${error.message}`, "error");
+  }
 
   // Reset checkboxes for next time
   setTimeout(() => {
@@ -1969,6 +2055,616 @@ function confirmDownloadPDF() {
     });
     updateDepartmentCount();
   }, 300);
+}
+
+async function generateYearbookPDF(departments) {
+  console.log("=== generateYearbookPDF STARTED ===");
+  const batchYear = window.currentBatchForDownload || "Yearbook";
+  console.log("Batch year:", batchYear);
+  console.log("Departments to process:", departments);
+
+  // Check if html2canvas is loaded
+  console.log("Checking html2canvas:", typeof html2canvas);
+  if (typeof html2canvas === "undefined") {
+    console.error("html2canvas library not loaded!");
+    throw new Error("html2canvas library not available");
+  }
+
+  // Load jsPDF if not already loaded
+  console.log("Checking jsPDF:", typeof window.jspdf);
+  if (typeof window.jspdf === "undefined") {
+    console.error("jsPDF library not loaded!");
+    throw new Error("jsPDF library not available");
+  }
+
+  const { jsPDF } = window.jspdf;
+  console.log("jsPDF loaded successfully");
+
+  // Create PDF in landscape orientation using standard screen dimensions
+  // Using 16:9 aspect ratio (1920x1080 scaled to fit A4 landscape)
+  console.log("Creating PDF document...");
+  const pdf = new jsPDF({
+    orientation: "landscape",
+    unit: "px",
+    format: [1920, 1080], // Fullscreen dimensions
+    compress: true,
+  });
+  console.log("PDF document created");
+
+  let isFirstPage = true;
+  let totalPagesAdded = 0;
+
+  for (const department of departments) {
+    console.log(`\n=== Processing department: ${department} ===`);
+
+    // Get yearbook URL for this department
+    const yearbookUrl = getYearbookUrl(department, batchYear);
+    console.log("Yearbook URL:", yearbookUrl);
+
+    try {
+      // Open yearbook and capture all pages
+      console.log(`Starting capture for ${department}...`);
+      const pageCanvases = await captureAllYearbookPages(
+        yearbookUrl,
+        department
+      );
+      console.log(`Captured ${pageCanvases.length} pages for ${department}`);
+
+      if (pageCanvases.length === 0) {
+        console.warn(`No pages captured for ${department}, skipping...`);
+        continue;
+      }
+
+      for (let i = 0; i < pageCanvases.length; i++) {
+        const pageCanvas = pageCanvases[i];
+        console.log(
+          `Adding page ${i + 1}/${pageCanvases.length} for ${department} to PDF`
+        );
+
+        if (!isFirstPage) {
+          pdf.addPage([1920, 1080], "landscape");
+          console.log("Added new page to PDF");
+        }
+        isFirstPage = false;
+
+        // Convert canvas to image and add to PDF
+        const imgData = pageCanvas.toDataURL("image/jpeg", 0.95);
+        console.log(`Image data generated (length: ${imgData.length} chars)`);
+
+        // Add full page image
+        pdf.addImage(imgData, "JPEG", 0, 0, 1920, 1080, undefined, "FAST");
+        totalPagesAdded++;
+        console.log(
+          `Page added successfully. Total pages in PDF: ${totalPagesAdded}`
+        );
+      }
+    } catch (error) {
+      console.error(`\n=== ERROR capturing pages for ${department} ===`);
+      console.error("Error:", error);
+      console.error("Error message:", error.message);
+      console.error("Error stack:", error.stack);
+      showNotification(
+        `Error capturing ${department}. Continuing with next...`,
+        "error"
+      );
+      // Continue with other departments
+    }
+  }
+
+  console.log(`\n=== PDF Generation Complete ===`);
+  console.log(`Total pages added to PDF: ${totalPagesAdded}`);
+
+  if (totalPagesAdded === 0) {
+    throw new Error("No pages were captured. Please try again.");
+  }
+
+  // Save the PDF
+  const fileName = `${batchYear.replace(
+    /\s+/g,
+    "_"
+  )}_Yearbook_${departments.join("_")}.pdf`;
+  console.log("Saving PDF as:", fileName);
+  pdf.save(fileName);
+  console.log("PDF saved successfully!");
+}
+
+function getYearbookUrl(department, batchYear) {
+  const basePath = getBasePath();
+  // Construct yearbook URL with department parameter and fullscreen flag
+  return `${basePath}/Student/Yearbook/index.html?department=${department}&fullscreen=true`;
+}
+
+async function captureAllYearbookPages(yearbookUrl, department) {
+  return new Promise((resolve, reject) => {
+    console.log(`\n>>> Opening yearbook for ${department}:`, yearbookUrl);
+
+    // Create hidden iframe to load yearbook
+    const iframe = document.createElement("iframe");
+    iframe.style.position = "fixed";
+    iframe.style.top = "-99999px";
+    iframe.style.left = "-99999px";
+    iframe.style.width = "1920px";
+    iframe.style.height = "1080px";
+    iframe.style.border = "none";
+    iframe.style.zIndex = "-9999";
+
+    console.log("Appending iframe to body...");
+    document.body.appendChild(iframe);
+    console.log("Iframe appended successfully");
+
+    let timeoutHandle;
+    let capturedPages = [];
+
+    iframe.onload = async () => {
+      console.log(`>>> Iframe loaded for ${department}`);
+      try {
+        const iframeWindow = iframe.contentWindow;
+        console.log("Got iframe window:", !!iframeWindow);
+
+        const iframeDoc = iframe.contentDocument || iframeWindow.document;
+        console.log("Got iframe document:", !!iframeDoc);
+
+        if (!iframeDoc) {
+          throw new Error(
+            "Cannot access iframe document - possible CORS issue"
+          );
+        }
+
+        console.log(
+          `Yearbook loaded for ${department}, waiting for initialization...`
+        );
+
+        // Wait for the yearbook to fully initialize
+        console.log("Waiting for yearbook initialization...");
+        await waitForYearbookInit(iframeWindow, iframeDoc);
+        console.log("Yearbook initialized!");
+
+        // Wait for images to load
+        console.log("Waiting for images to load...");
+        await waitForImages(iframeDoc);
+        console.log("Images loaded!");
+
+        // Get total pages from the yearbook
+        console.log("Getting total pages...");
+        const totalPages = await getTotalPagesFromYearbook(iframeWindow);
+        console.log(`Total pages for ${department}:`, totalPages);
+
+        if (totalPages === 0 || !totalPages) {
+          throw new Error(`No pages found for ${department}`);
+        }
+
+        // Capture each page - Turn.js shows spreads (2 pages at a time)
+        // We navigate to odd pages only to capture each unique spread
+        // Page 1 = Front cover (single)
+        // Page 2 = Shows spread of pages 2-3
+        // Page 4 = Shows spread of pages 4-5
+        // etc.
+
+        let captureCount = 0;
+
+        // Capture front cover (page 1)
+        console.log(`\n>>> Capturing front cover (page 1) for ${department}`);
+        const nav1Success = await navigateToPage(iframeWindow, 1);
+        if (nav1Success) {
+          await new Promise((resolve) => setTimeout(resolve, 2000));
+          let canvas = await capturePage(iframeDoc);
+          if (canvas) {
+            console.log(
+              `Front cover captured (${canvas.width}x${canvas.height})`
+            );
+            capturedPages.push(canvas);
+            captureCount++;
+          }
+        } else {
+          console.error("Failed to navigate to front cover, skipping...");
+        }
+
+        // Capture spreads starting from page 2 (increment by 2 to avoid duplicates)
+        for (let pageNum = 2; pageNum < totalPages; pageNum += 2) {
+          console.log(
+            `\n>>> Capturing spread at page ${pageNum} (pages ${pageNum}-${
+              pageNum + 1
+            }) for ${department}`
+          );
+
+          // Navigate to page
+          console.log(`Navigating to page ${pageNum}...`);
+          const navSuccess = await navigateToPage(iframeWindow, pageNum);
+
+          if (!navSuccess) {
+            console.warn(`Failed to navigate to page ${pageNum}, skipping...`);
+            continue;
+          }
+
+          console.log(`Navigated to page ${pageNum}`);
+
+          // Wait for page to render (increased wait time for better rendering)
+          console.log("Waiting for page to render (2000ms)...");
+          await new Promise((resolve) => setTimeout(resolve, 2000));
+          console.log("Page should be rendered now");
+
+          // Capture the current view
+          console.log("Capturing spread...");
+          let canvas = await capturePage(iframeDoc);
+          if (canvas) {
+            console.log(
+              `Spread captured successfully (${canvas.width}x${canvas.height})`
+            );
+            capturedPages.push(canvas);
+            captureCount++;
+          } else {
+            console.warn(`Failed to capture spread at page ${pageNum}`);
+          }
+        }
+
+        // If total pages is even, capture the last page (back cover)
+        if (totalPages > 1 && totalPages % 2 === 0) {
+          console.log(
+            `\n>>> Capturing back cover (page ${totalPages}) for ${department}`
+          );
+          const navLastSuccess = await navigateToPage(iframeWindow, totalPages);
+          if (navLastSuccess) {
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+            let canvas = await capturePage(iframeDoc);
+            if (canvas) {
+              console.log(
+                `Back cover captured (${canvas.width}x${canvas.height})`
+              );
+              capturedPages.push(canvas);
+              captureCount++;
+            }
+          } else {
+            console.error("Failed to navigate to back cover, skipping...");
+          }
+        }
+
+        console.log(`Total spreads captured: ${captureCount}`);
+
+        // Clean up
+        console.log("Cleaning up iframe...");
+        clearTimeout(timeoutHandle);
+        document.body.removeChild(iframe);
+        console.log("Iframe removed");
+
+        console.log(
+          `\n>>> Successfully captured ${capturedPages.length} pages for ${department}`
+        );
+
+        if (capturedPages.length === 0) {
+          reject(new Error(`No pages were captured for ${department}`));
+        } else {
+          resolve(capturedPages);
+        }
+      } catch (error) {
+        console.error(`\n>>> ERROR in iframe.onload for ${department}`);
+        console.error("Error:", error);
+        console.error("Error message:", error.message);
+        console.error("Error stack:", error.stack);
+
+        clearTimeout(timeoutHandle);
+        if (document.body.contains(iframe)) {
+          document.body.removeChild(iframe);
+          console.log("Iframe removed after error");
+        }
+        reject(error);
+      }
+    };
+
+    iframe.onerror = (error) => {
+      console.error(`\n>>> Iframe error event for ${department}`);
+      console.error("Error:", error);
+
+      clearTimeout(timeoutHandle);
+      if (document.body.contains(iframe)) {
+        document.body.removeChild(iframe);
+      }
+      reject(new Error(`Failed to load yearbook for ${department}`));
+    };
+
+    // Set timeout
+    timeoutHandle = setTimeout(() => {
+      console.error(`\n>>> Timeout loading yearbook for ${department}`);
+      if (document.body.contains(iframe)) {
+        document.body.removeChild(iframe);
+      }
+      reject(new Error(`Timeout loading yearbook for ${department} (120s)`));
+    }, 120000); // 2 minutes timeout
+
+    console.log("Setting iframe src...");
+    iframe.src = yearbookUrl;
+    console.log("Iframe src set, waiting for load...");
+  });
+}
+
+async function waitForYearbookInit(iframeWindow, iframeDoc) {
+  return new Promise((resolve) => {
+    let attempts = 0;
+    const maxAttempts = 100; // 20 seconds max (200ms * 100)
+
+    const checkInit = () => {
+      attempts++;
+
+      const magazine = iframeDoc.querySelector(".magazine");
+      const hasjQuery = iframeWindow.$ && typeof iframeWindow.$ === "function";
+
+      if (!hasjQuery) {
+        console.log(
+          `Waiting for jQuery... (attempt ${attempts}/${maxAttempts})`
+        );
+        if (attempts < maxAttempts) {
+          setTimeout(checkInit, 200);
+        } else {
+          console.warn(
+            "jQuery not loaded after max attempts, resolving anyway"
+          );
+          resolve();
+        }
+        return;
+      }
+
+      const hasTurnJs = iframeWindow.$(".magazine").turn;
+
+      if (magazine && hasTurnJs && typeof hasTurnJs === "function") {
+        try {
+          const isInitialized = iframeWindow.$(".magazine").turn("is");
+          const totalPages = iframeWindow.$(".magazine").turn("pages");
+
+          if (isInitialized && totalPages > 0) {
+            console.log(
+              `Yearbook initialized successfully! Total pages: ${totalPages}`
+            );
+            // Extra wait to ensure all pages are ready
+            setTimeout(() => resolve(), 1000);
+            return;
+          } else {
+            console.log(
+              `Turn.js found but not ready yet (attempt ${attempts}/${maxAttempts})`
+            );
+          }
+        } catch (e) {
+          console.log(
+            `Turn.js check error (attempt ${attempts}/${maxAttempts}):`,
+            e.message
+          );
+        }
+      } else {
+        console.log(
+          `Waiting for Turn.js initialization... (attempt ${attempts}/${maxAttempts})`
+        );
+      }
+
+      if (attempts < maxAttempts) {
+        setTimeout(checkInit, 200);
+      } else {
+        console.warn("Max init attempts reached, resolving anyway");
+        resolve();
+      }
+    };
+
+    checkInit();
+  });
+}
+
+async function getTotalPagesFromYearbook(iframeWindow) {
+  try {
+    if (iframeWindow.$ && iframeWindow.$(".magazine").turn) {
+      const totalPages = iframeWindow.$(".magazine").turn("pages");
+      return totalPages || 1;
+    }
+  } catch (e) {
+    console.error("Error getting total pages:", e);
+  }
+  return 1; // Default to 1 page if can't determine
+}
+
+async function navigateToPage(iframeWindow, pageNum) {
+  try {
+    if (!iframeWindow.$ || !iframeWindow.$(".magazine").turn) {
+      console.error("Turn.js not available for navigation");
+      return false;
+    }
+
+    // Check if page exists
+    const totalPages = iframeWindow.$(".magazine").turn("pages");
+    if (pageNum < 1 || pageNum > totalPages) {
+      console.error(`Page ${pageNum} is out of range (1-${totalPages})`);
+      return false;
+    }
+
+    // Check if Turn.js is initialized
+    const isInitialized = iframeWindow.$(".magazine").turn("is");
+    if (!isInitialized) {
+      console.error("Turn.js not initialized yet");
+      return false;
+    }
+
+    // Navigate to page
+    iframeWindow.$(".magazine").turn("page", pageNum);
+    console.log(`Successfully navigated to page ${pageNum}`);
+
+    // Wait for page turn animation to complete
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    return true;
+  } catch (e) {
+    console.error(`Error navigating to page ${pageNum}:`, e);
+    console.error("Error name:", e.name);
+    console.error("Error message:", e.message);
+    return false;
+  }
+}
+
+async function capturePage(iframeDoc) {
+  console.log(">>> capturePage called");
+  try {
+    // Hide navigation controls before capturing
+    console.log("Hiding navigation controls...");
+    const navControls = iframeDoc.querySelector(".nav-controls");
+    const originalNavDisplay = navControls ? navControls.style.display : null;
+    if (navControls) {
+      navControls.style.display = "none";
+      console.log("Navigation controls hidden");
+    }
+
+    // Check if html2canvas is available
+    if (typeof html2canvas === "undefined") {
+      console.error("html2canvas is not defined!");
+      return null;
+    }
+
+    // Create a canvas with exact fullscreen dimensions
+    const finalCanvas = document.createElement("canvas");
+    finalCanvas.width = 1920;
+    finalCanvas.height = 1080;
+    const ctx = finalCanvas.getContext("2d");
+
+    console.log("Created canvas:", finalCanvas.width, "x", finalCanvas.height);
+
+    // Step 1: Draw the background image
+    console.log("Loading background image...");
+    const bgImage = await loadImage(
+      "https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png"
+    );
+    if (bgImage) {
+      console.log("Drawing background image...");
+      ctx.drawImage(bgImage, 0, 0, 1920, 1080);
+    } else {
+      // Fallback background color
+      console.log("Using fallback background color");
+      ctx.fillStyle = "#000042";
+      ctx.fillRect(0, 0, 1920, 1080);
+    }
+
+    // Step 2: Capture the yearbook content at higher resolution
+    console.log("Capturing yearbook content...");
+    const canvas = iframeDoc.querySelector("#canvas");
+    if (canvas) {
+      const yearbookCanvas = await html2canvas(canvas, {
+        backgroundColor: null,
+        scale: 2, // Higher scale for better quality and larger size
+        useCORS: true,
+        allowTaint: true,
+        logging: false,
+        width: 1920,
+        height: 1080,
+      });
+      console.log("Drawing yearbook content at scale...");
+      // Draw the captured content scaled to fit our canvas
+      ctx.drawImage(yearbookCanvas, 0, 0, 1920, 1080);
+    } else {
+      console.warn("Canvas element not found, capturing body instead");
+      const yearbookCanvas = await html2canvas(iframeDoc.body, {
+        backgroundColor: null,
+        scale: 2, // Higher scale for better quality and larger size
+        useCORS: true,
+        allowTaint: true,
+        logging: false,
+        width: 1920,
+        height: 1080,
+      });
+      ctx.drawImage(yearbookCanvas, 0, 0, 1920, 1080);
+    }
+
+    // Step 3: Draw the lower curl SVG
+    console.log("Drawing lower curl...");
+    await drawLowerCurl(ctx, 1920, 1080);
+
+    // Restore navigation controls
+    if (navControls && originalNavDisplay !== null) {
+      navControls.style.display = originalNavDisplay;
+      console.log("Navigation controls restored");
+    }
+
+    console.log("Final canvas composition completed!");
+    console.log(
+      "Final canvas dimensions:",
+      finalCanvas.width,
+      "x",
+      finalCanvas.height
+    );
+    return finalCanvas;
+  } catch (error) {
+    console.error(">>> ERROR in capturePage:");
+    console.error("Error:", error);
+    console.error("Error message:", error.message);
+    console.error("Error stack:", error.stack);
+
+    // Restore navigation controls even on error
+    const navControls = iframeDoc.querySelector(".nav-controls");
+    if (navControls) {
+      navControls.style.display = "";
+    }
+
+    return null;
+  }
+}
+
+// Helper function to load an image
+function loadImage(url) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => {
+      console.log("Image loaded successfully:", url);
+      resolve(img);
+    };
+    img.onerror = (error) => {
+      console.error("Failed to load image:", url, error);
+      resolve(null);
+    };
+    img.src = url;
+  });
+}
+
+// Helper function to draw the lower curl SVG
+async function drawLowerCurl(ctx, width, height) {
+  try {
+    // Create SVG for the lower curl
+    const svgString = `
+      <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" width="1920" height="80">
+        <path d="M0,60 Q180,100 360,60 T720,60 T1080,60 T1440,60 L1440,120 L0,120 Z" fill="#1a237e" opacity="0.4" />
+        <path d="M0,80 Q180,40 360,80 T720,80 T1080,80 T1440,80 L1440,120 L0,120 Z" fill="#112d4e" opacity="0.7" />
+        <path d="M0,100 Q180,60 360,100 T720,100 T1080,100 T1440,100 L1440,120 L0,120 Z" fill="#021326" />
+      </svg>
+    `;
+
+    // Convert SVG to image
+    const svgBlob = new Blob([svgString], {
+      type: "image/svg+xml;charset=utf-8",
+    });
+    const url = URL.createObjectURL(svgBlob);
+    const img = await loadImage(url);
+
+    if (img) {
+      // Draw the curl at the bottom of the canvas
+      const curlHeight = 80;
+      const curlY = height - curlHeight;
+      ctx.drawImage(img, 0, curlY, width, curlHeight);
+      console.log("Lower curl drawn successfully");
+    }
+
+    URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error("Error drawing lower curl:", error);
+  }
+}
+
+function waitForImages(doc) {
+  return new Promise((resolve) => {
+    const images = doc.querySelectorAll("img");
+    const imagePromises = Array.from(images).map((img) => {
+      if (img.complete) return Promise.resolve();
+      return new Promise((resolve) => {
+        img.onload = resolve;
+        img.onerror = resolve; // Resolve even on error to not block
+      });
+    });
+
+    Promise.all(imagePromises).then(resolve);
+
+    // Timeout after 10 seconds
+    setTimeout(resolve, 10000);
+  });
 }
 
 function getSelectedDepartments() {
