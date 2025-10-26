@@ -173,7 +173,6 @@ function showNotification(message, type = "success") {
     clearTimeout(notificationTimeout);
   }
 
-  // Map old type names to new class names
   let messageClass = type === "error" ? "error-message" : "success-message";
 
   const notif = document.createElement("div");
