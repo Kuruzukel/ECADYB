@@ -535,7 +535,6 @@ function handleStudentSelection(student) {
     searchInput.value = student.name;
   }
 
-  // Hide suggestions
   hideSuggestions();
 
   const basePath = window.location.pathname.includes("/ECADYB/")
