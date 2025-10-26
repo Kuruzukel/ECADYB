@@ -541,7 +541,6 @@ function handleStudentSelection(student) {
     ? "/ECADYB"
     : "";
 
-  // Map collection to yearbook page
   const collectionToYearbook = {
     bsme: "maritime",
     bsmt: "maritime",
