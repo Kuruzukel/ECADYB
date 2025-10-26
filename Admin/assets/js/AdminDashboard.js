@@ -415,7 +415,6 @@ function initializeSearchAutocomplete() {
     }
   });
 
-  // Handle focus
   searchInput.addEventListener("focus", function () {
     if (
       this.value.trim().length >= 2 &&
