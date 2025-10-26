@@ -238,7 +238,6 @@ document.addEventListener("DOMContentLoaded", () => {
     submitPasswordChange();
   });
 
-  // Close modal when clicking outside
   modalOverlay.addEventListener("click", (e) => {
     if (e.target === modalOverlay) {
       modalOverlay.style.display = "none";
