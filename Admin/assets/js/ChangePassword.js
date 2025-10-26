@@ -321,7 +321,6 @@ document.addEventListener("DOMContentLoaded", () => {
       notification.classList.add("show");
     }, 10);
 
-    // Hide and remove after 5 seconds
     setTimeout(() => {
       notification.classList.remove("show");
       setTimeout(() => {
