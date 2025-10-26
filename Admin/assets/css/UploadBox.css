@@ -1,5 +1,3 @@
-/* Upload Box Styles */
-
 .upload-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -312,4 +310,3 @@
 .action-btn:active {
   transform: translateY(0);
 }
-
