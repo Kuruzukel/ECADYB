@@ -613,9 +613,8 @@ function _showNotification(message, type = "success") {
   const existingNotifications = container.querySelectorAll(".notification");
   existingNotifications.forEach((notif) => notif.remove());
 
-  // Map old type names to new class names
   let messageClass = type === "error" ? "error-message" : "success-message";
-  
+
   const notif = document.createElement("div");
   notif.className = `notification ${messageClass}`;
   notif.id = `${type}-notification`;
@@ -627,9 +626,8 @@ function _showNotification(message, type = "success") {
   `;
   container.appendChild(notif);
 
-  // Trigger animation
   setTimeout(() => {
-    notif.classList.add('show');
+    notif.classList.add("show");
   }, 10);
 
   const duration = type === "info" ? 2000 : 5000;
@@ -641,7 +639,7 @@ function _showNotification(message, type = "success") {
 function closeNotification(id) {
   const notification = document.getElementById(id);
   if (notification) {
-    notification.classList.remove('show');
+    notification.classList.remove("show");
     setTimeout(() => {
       notification.remove();
     }, 500);
@@ -851,15 +849,14 @@ function initializeStatusUpdates() {
                 : "status-pending"
             }`;
           }
-          
-          // Clear the cache for the current page so it reloads with updated data
+
           const urlParams = new URLSearchParams(window.location.search);
           const academicYear = urlParams.get("academic_year") || "";
           const department = urlParams.get("department") || "bsme";
           const pageNum = urlParams.get("pageNum") || "1";
           const cacheKey = `${academicYear}-${department}-${pageNum}`;
           pageCache.delete(cacheKey);
-          
+
           applyFilters();
 
           if (!isSelectAllOperation) {
