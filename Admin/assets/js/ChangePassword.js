@@ -312,7 +312,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }, 300);
     };
 
-    // Append elements
     notification.appendChild(messageDiv);
     notification.appendChild(closeBtn);
 
