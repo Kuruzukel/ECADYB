@@ -3812,9 +3812,7 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Initialize department selection modal
   initializeDepartmentSelection();
 
-  // Initialize download PDF button states based on section header color
   updateDownloadPdfButtonStates();
 });
