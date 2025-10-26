@@ -18,7 +18,6 @@
   transition: all 0.3s ease;
 }
 
-/* Different border colors for each upload box */
 .upload-box:nth-child(1) {
   border-color: #2e3192; /* Dark Blue */
 }
