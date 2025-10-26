@@ -265,7 +265,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if (data.success) {
           showNotification(data.message, "success");
           form.reset();
-          // Redirect to login after 2 seconds
           setTimeout(() => {
             window.location.href = basePath + "/Public/Components/Login.php";
           }, 2000);
