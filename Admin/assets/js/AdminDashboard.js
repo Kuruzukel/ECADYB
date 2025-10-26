@@ -499,7 +499,6 @@ function displaySuggestions(results) {
     const item = document.createElement("div");
     item.className = "search-suggestion-item";
 
-    // Build the department and year display
     let departmentYear = "";
     if (student.department_section) {
       departmentYear = escapeHtml(student.department_section);
