@@ -37,16 +37,14 @@
             <div class="loader-text" draggable="false">Loading Yearbook...</div>
           </div>
         </div>
-        
+
         <?php
-        // Get student parameters from URL if present
         $studentId = isset($_GET['student_id']) ? htmlspecialchars($_GET['student_id']) : '';
         $studentName = isset($_GET['student_name']) ? htmlspecialchars($_GET['student_name']) : '';
-        
-        // Build iframe URL with student parameters
+
         $iframeUrl = $basePath . '/Admin/Yearbook/index.html?department=BSME';
         if ($studentId && $studentName) {
-            $iframeUrl .= '&student_id=' . urlencode($studentId) . '&student_name=' . urlencode($studentName);
+          $iframeUrl .= '&student_id=' . urlencode($studentId) . '&student_name=' . urlencode($studentName);
         }
         ?>
         <iframe id="yearbook-iframe" src="<?= $iframeUrl ?>" width="100%" height="100%"
