@@ -100,7 +100,7 @@ try {
     $template = isset($_GET['template']) ? (int)$_GET['template'] : 1;
     $department = isset($_GET['department']) ? strtoupper($_GET['department']) : null;
     $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
-    $limit = isset($_GET['limit']) ? max(1, min(100, (int)$_GET['limit'])) : 50;
+    $limit = isset($_GET['limit']) ? max(1, min(500, (int)$_GET['limit'])) : 50;
     $batchYear = isset($_GET['batch_year']) ? trim($_GET['batch_year']) : null;
 
     error_log("Parsed parameters - Template: $template, Department: $department, Page: $page, Limit: $limit, BatchYear: $batchYear");
