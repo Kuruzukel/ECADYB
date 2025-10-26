@@ -29,7 +29,6 @@ if (isset($_SESSION['username']) && !empty($_SESSION['username'])) {
             $adminEmail = $adminData['email'] ?? 'admin@ecadyb.edu.ph';
             $adminProfileImage = $adminData['profile'] ?? 'https://ECADYB.b-cdn.net/img/Profile.png';
 
-            // Debug: Log successful fetch (remove after testing)
             error_log("Admin profile fetched: " . $adminName . " | Email: " . $adminEmail);
         } else {
             // Debug: Log if no admin found (remove after testing)
