@@ -233,7 +233,28 @@
 
       function fetchStudentData() {
         var urlParams = new URLSearchParams(window.location.search);
-        var departmentCode = urlParams.get("department") || "BSME";
+
+        // Map page parameter to department code
+        var pageParam = urlParams.get("page");
+        var departmentCode = urlParams.get("department");
+
+        if (!departmentCode && pageParam) {
+          // Map page parameter to department code
+          var pageMap = {
+            maritime: "MARITIME",
+            criminology: "BSCJ",
+            tourism: "BSTM",
+            education: "BSE",
+            nursing: "BSN",
+            information: "BSIS",
+            business: "BSBA",
+          };
+          departmentCode = pageMap[pageParam.toLowerCase()] || "MARITIME";
+        }
+
+        if (!departmentCode) {
+          departmentCode = "MARITIME";
+        }
 
         var template = 1;
         if (coverData && coverData.template) {
@@ -297,10 +318,33 @@
 
       function getCurrentYearbook() {
         var urlParams = new URLSearchParams(window.location.search);
-        var departmentCode = urlParams.get("department") || "BSME";
+
+        // Map page parameter to department code
+        var pageParam = urlParams.get("page");
+        var departmentCode = urlParams.get("department");
+
+        if (!departmentCode && pageParam) {
+          // Map page parameter to department code
+          var pageMap = {
+            maritime: "MARITIME",
+            criminology: "BSCJ",
+            tourism: "BSTM",
+            education: "BSE",
+            nursing: "BSN",
+            information: "BSIS",
+            business: "BSBA",
+          };
+          departmentCode = pageMap[pageParam.toLowerCase()] || "MARITIME";
+        }
+
+        if (!departmentCode) {
+          departmentCode = "MARITIME";
+        }
 
         var yearbookMap = {
           BSME: "Maritime Education",
+          MARITIME: "Maritime Education",
+          BSCJ: "College of Criminology",
           BSCJE: "College of Criminology",
           BSTM: "Tourism Management",
           BSE: "College of Education",
@@ -396,11 +440,22 @@
         return null;
       }
 
+      // Cache for storing section information per page
+      window.pageSectionCache = window.pageSectionCache || {};
+
       function getStudentSectionForPage(pageNumber) {
         try {
+          // Check if we already have this section cached
+          if (window.pageSectionCache[pageNumber]) {
+            return window.pageSectionCache[pageNumber];
+          }
+
           var yearbook = getCurrentYearbook();
           var studentsPerPage = 4;
-          var studentStartIndex = (pageNumber - 4) * studentsPerPage;
+          // Student pages start at page 6 (after front cover and top management pages 2-5)
+          var studentStartPage = 6;
+          var studentStartIndex =
+            (pageNumber - studentStartPage) * studentsPerPage;
 
           var template = 1;
           if (coverData && coverData.template) {
@@ -420,6 +475,7 @@
 
           var cacheKey = yearbook.code + "_" + template + "_" + apiPage;
 
+          // Try window.studentDataCache first
           if (window.studentDataCache && window.studentDataCache[cacheKey]) {
             var studentData = window.studentDataCache[cacheKey];
             if (
@@ -438,70 +494,16 @@
                     firstStudent.course ||
                     firstStudent.department;
                   if (section) {
-                    return section.toUpperCase();
+                    var sectionUpper = section.toUpperCase();
+                    window.pageSectionCache[pageNumber] = sectionUpper;
+                    return sectionUpper;
                   }
                 }
               }
             }
           }
 
-          console.log(
-            "No cached student data found for page",
-            pageNumber,
-            "- attempting to load"
-          );
-
-          if (typeof loadStudentsForPage === "function") {
-            console.log(
-              "Attempting to load students for page",
-              pageNumber,
-              "with startIndex",
-              studentStartIndex
-            );
-            loadStudentsForPage(
-              yearbook.code,
-              template,
-              studentStartIndex,
-              1,
-              function (students) {
-                console.log(
-                  "Received students data for page",
-                  pageNumber,
-                  ":",
-                  students
-                );
-                if (students && students.length > 0) {
-                  var firstStudent = students[0];
-                  if (firstStudent) {
-                    var section =
-                      firstStudent.section ||
-                      firstStudent.program ||
-                      firstStudent.course ||
-                      firstStudent.department;
-                    if (section) {
-                      console.log(
-                        "Found section",
-                        section,
-                        "for page",
-                        pageNumber
-                      );
-                      return section.toUpperCase();
-                    } else {
-                      console.log(
-                        "No section information found for student",
-                        firstStudent
-                      );
-                    }
-                  } else {
-                    console.log("No valid first student found in array");
-                  }
-                } else {
-                  console.log("No students returned for page", pageNumber);
-                }
-              }
-            );
-          }
-
+          // Try localStorage with different data structures
           if (typeof localStorage !== "undefined") {
             var savedStudentData = localStorage.getItem(
               "studentData_" + yearbook.code
@@ -509,9 +511,12 @@
             if (savedStudentData) {
               try {
                 var parsedData = JSON.parse(savedStudentData);
+
+                // Try structure: parsedData.data[index]
                 if (
                   parsedData &&
                   parsedData.data &&
+                  Array.isArray(parsedData.data) &&
                   parsedData.data.length > studentStartIndex
                 ) {
                   var firstStudent = parsedData.data[studentStartIndex];
@@ -522,7 +527,31 @@
                       firstStudent.course ||
                       firstStudent.department;
                     if (section) {
-                      return section.toUpperCase();
+                      var sectionUpper = section.toUpperCase();
+                      window.pageSectionCache[pageNumber] = sectionUpper;
+                      return sectionUpper;
+                    }
+                  }
+                }
+
+                // Try structure: parsedData.students[index]
+                if (
+                  parsedData &&
+                  parsedData.students &&
+                  Array.isArray(parsedData.students) &&
+                  parsedData.students.length > studentStartIndex
+                ) {
+                  var firstStudent = parsedData.students[studentStartIndex];
+                  if (firstStudent) {
+                    var section =
+                      firstStudent.section ||
+                      firstStudent.program ||
+                      firstStudent.course ||
+                      firstStudent.department;
+                    if (section) {
+                      var sectionUpper = section.toUpperCase();
+                      window.pageSectionCache[pageNumber] = sectionUpper;
+                      return sectionUpper;
                     }
                   }
                 }
@@ -531,6 +560,28 @@
               }
             }
           }
+
+          // If no section found yet, try to find it from a nearby page
+          // Check previous pages for section continuity (only for student pages)
+          if (pageNumber > studentStartPage) {
+            var prevSection = getStudentSectionForPage(pageNumber - 1);
+            if (prevSection && !window.pageSectionCache[pageNumber]) {
+              console.log(
+                "Using previous page section for page",
+                pageNumber,
+                ":",
+                prevSection
+              );
+              // Don't cache this as it's a guess
+              return prevSection;
+            }
+          }
+
+          console.log(
+            "No student section data found for page",
+            pageNumber,
+            "- will show generic label"
+          );
         } catch (e) {
           console.log(
             "Error getting student section for page",
@@ -585,25 +636,41 @@
           return "Back Cover";
         }
 
-        if (pageNumber >= 4 && pageNumber < totalPages) {
-          var studentPageNumber = pageNumber - 3;
-
+        // Student pages start after top management pages (page 6 onwards)
+        var studentStartPage = 6;
+        if (pageNumber >= studentStartPage && pageNumber < totalPages) {
           var studentSection = getStudentSectionForPage(pageNumber);
+
+          // Calculate the page number within the current section
+          var sectionPageNumber = 1;
+          var currentSection = studentSection;
+
+          // Count pages from the start of student pages
+          for (var i = studentStartPage; i < pageNumber; i++) {
+            var pageSection = getStudentSectionForPage(i);
+            if (pageSection === currentSection) {
+              sectionPageNumber++;
+            }
+          }
+
           console.log(
             "Student section for page",
             pageNumber,
             ":",
-            studentSection
+            studentSection,
+            "- Section Page:",
+            sectionPageNumber
           );
+
           if (studentSection) {
             return (
               "Student Graduates - " +
               studentSection +
               " - Page " +
-              studentPageNumber
+              sectionPageNumber
             );
           } else {
-            return "Student Graduates - Page " + studentPageNumber;
+            return "Student Graduates - Page " + sectionPageNumber;
           }
         }
 
