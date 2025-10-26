@@ -209,7 +209,11 @@ function closeNotification(id) {
 }
 
 // Show a persistent notification that doesn't auto-hide
-function showPersistentNotification(message, type = "info") {
+function showPersistentNotification(
+  message,
+  type = "info",
+  allowCancel = false
+) {
   const container = document.getElementById("notification-container");
   if (!container) return null;
 
@@ -234,8 +238,32 @@ function showPersistentNotification(message, type = "info") {
   notif.className = `notification ${messageClass} persistent`;
   notif.innerHTML = `
     <span class="notification-message">${message}</span>
+    ${
+      allowCancel
+        ? '<button class="notification-close-btn" title="Cancel PDF Generation">✕</button>'
+        : ""
+    }
   `;
   container.appendChild(notif);
+
+  // Add cancel button handler if allowed
+  if (allowCancel) {
+    const closeBtn = notif.querySelector(".notification-close-btn");
+    if (closeBtn) {
+      closeBtn.addEventListener("click", async () => {
+        const confirmed = await customConfirm(
+          "Are you sure you want to cancel the PDF generation?",
+          "Cancel PDF Generation",
+          "fas fa-exclamation-triangle"
+        );
+        if (confirmed) {
+          window.pdfGenerationCancelled = true;
+          closePersistentNotification(notif);
+          showNotification("PDF generation cancelled", "error");
+        }
+      });
+    }
+  }
 
   setTimeout(() => {
     notif.classList.add("show");
@@ -252,6 +280,90 @@ function closePersistentNotification(notification) {
       notification.remove();
     }, 300);
   }
+}
+
+// Update persistent notification with new message
+function updatePersistentNotification(notification, message) {
+  if (notification) {
+    const messageElement = notification.querySelector(".notification-message");
+    if (messageElement) {
+      messageElement.innerHTML = message;
+    }
+  }
+}
+
+// Custom confirm modal
+function customConfirm(
+  message,
+  title = "Confirmation",
+  icon = "fas fa-exclamation-circle"
+) {
+  return new Promise((resolve) => {
+    // Create modal overlay
+    const overlay = document.createElement("div");
+    overlay.className = "confirm-modal-overlay";
+
+    // Create modal HTML
+    overlay.innerHTML = `
+      <div class="confirm-modal-container">
+        <div class="confirm-modal-header">
+          <i class="${icon} modal-icon"></i>
+          <h3>${title}</h3>
+        </div>
+        <div class="confirm-modal-body">
+          <p>${message}</p>
+        </div>
+        <div class="confirm-modal-buttons">
+          <button class="confirm-modal-btn confirm-ok">
+            <i class="fas fa-check"></i>
+            OK
+          </button>
+          <button class="confirm-modal-btn confirm-cancel">
+            <i class="fas fa-times"></i>
+            Cancel
+          </button>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(overlay);
+
+    // Show modal with animation
+    setTimeout(() => {
+      overlay.classList.add("show");
+    }, 10);
+
+    // Handle button clicks
+    const okBtn = overlay.querySelector(".confirm-ok");
+    const cancelBtn = overlay.querySelector(".confirm-cancel");
+
+    const closeModal = (result) => {
+      overlay.classList.remove("show");
+      setTimeout(() => {
+        overlay.remove();
+        resolve(result);
+      }, 300);
+    };
+
+    okBtn.addEventListener("click", () => closeModal(true));
+    cancelBtn.addEventListener("click", () => closeModal(false));
+
+    // Close on overlay click
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) {
+        closeModal(false);
+      }
+    });
+
+    // Handle Escape key
+    const escapeHandler = (e) => {
+      if (e.key === "Escape") {
+        document.removeEventListener("keydown", escapeHandler);
+        closeModal(false);
+      }
+    };
+    document.addEventListener("keydown", escapeHandler);
+  });
 }
 
 function getBasePath() {
@@ -2006,15 +2118,19 @@ async function confirmDownloadPDF() {
   // Create department names list for display
   const deptNames = selectedDepartments.join(", ");
 
-  // Show loading notification and keep it visible (don't auto-hide)
+  // Reset cancellation flag
+  window.pdfGenerationCancelled = false;
+
+  // Show loading notification with cancel button and progress
   const preparingNotification = showPersistentNotification(
-    `Preparing PDF for ${deptNames}...`,
-    "info"
+    `Preparing PDF... 0%<br><small>Initializing...</small>`,
+    "info",
+    true // Allow cancel
   );
 
   try {
     console.log("Calling generateYearbookPDF...");
-    await generateYearbookPDF(selectedDepartments);
+    await generateYearbookPDF(selectedDepartments, preparingNotification);
     console.log("PDF generation completed successfully");
 
     // Remove the preparing notification before showing success
@@ -2057,7 +2173,7 @@ async function confirmDownloadPDF() {
   }, 300);
 }
 
-async function generateYearbookPDF(departments) {
+async function generateYearbookPDF(departments, progressNotification) {
   console.log("=== generateYearbookPDF STARTED ===");
   const batchYear = window.currentBatchForDownload || "Yearbook";
   console.log("Batch year:", batchYear);
@@ -2093,9 +2209,30 @@ async function generateYearbookPDF(departments) {
 
   let isFirstPage = true;
   let totalPagesAdded = 0;
+  const totalDepartments = departments.length;
+  let currentDeptIndex = 0;
 
   for (const department of departments) {
-    console.log(`\n=== Processing department: ${department} ===`);
+    currentDeptIndex++;
+
+    // Check for cancellation
+    if (window.pdfGenerationCancelled) {
+      console.log("PDF generation cancelled by user");
+      throw new Error("PDF generation cancelled by user");
+    }
+
+    console.log(
+      `\n=== Processing department ${currentDeptIndex}/${totalDepartments}: ${department} ===`
+    );
+
+    // Update progress: Starting department
+    const baseProgress = ((currentDeptIndex - 1) / totalDepartments) * 100;
+    updatePersistentNotification(
+      progressNotification,
+      `Preparing PDF... ${Math.round(
+        baseProgress
+      )}%<br><small>Loading ${department}...</small>`
+    );
 
     // Get yearbook URL for this department
     const yearbookUrl = getYearbookUrl(department, batchYear);
@@ -2104,18 +2241,53 @@ async function generateYearbookPDF(departments) {
     try {
       // Open yearbook and capture all pages
       console.log(`Starting capture for ${department}...`);
+
+      // Update progress callback for page capture
+      const onPageProgress = (currentPage, totalPages) => {
+        const deptProgress =
+          (currentPage / totalPages) * (50 / totalDepartments);
+        const overallProgress = baseProgress + deptProgress;
+        updatePersistentNotification(
+          progressNotification,
+          `Preparing PDF... ${Math.round(
+            overallProgress
+          )}%<br><small>Capturing ${department} pages (${currentPage}/${totalPages})</small>`
+        );
+      };
+
       const pageCanvases = await captureAllYearbookPages(
         yearbookUrl,
-        department
+        department,
+        onPageProgress
       );
       console.log(`Captured ${pageCanvases.length} pages for ${department}`);
+
+      // Check for cancellation after capture
+      if (window.pdfGenerationCancelled) {
+        console.log("PDF generation cancelled by user");
+        throw new Error("PDF generation cancelled by user");
+      }
 
       if (pageCanvases.length === 0) {
         console.warn(`No pages captured for ${department}, skipping...`);
         continue;
       }
 
+      // Update progress: Adding pages to PDF
+      updatePersistentNotification(
+        progressNotification,
+        `Preparing PDF... ${Math.round(
+          baseProgress + 50 / totalDepartments
+        )}%<br><small>Adding ${department} to PDF...</small>`
+      );
+
       for (let i = 0; i < pageCanvases.length; i++) {
+        // Check for cancellation before adding each page
+        if (window.pdfGenerationCancelled) {
+          console.log("PDF generation cancelled by user");
+          throw new Error("PDF generation cancelled by user");
+        }
+
         const pageCanvas = pageCanvases[i];
         console.log(
           `Adding page ${i + 1}/${pageCanvases.length} for ${department} to PDF`
@@ -2137,6 +2309,18 @@ async function generateYearbookPDF(departments) {
         console.log(
           `Page added successfully. Total pages in PDF: ${totalPagesAdded}`
         );
+
+        // Update progress for each page being added
+        const addProgress =
+          ((i + 1) / pageCanvases.length) * (50 / totalDepartments);
+        updatePersistentNotification(
+          progressNotification,
+          `Preparing PDF... ${Math.round(
+            baseProgress + 50 / totalDepartments + addProgress
+          )}%<br><small>Adding ${department} pages (${i + 1}/${
+            pageCanvases.length
+          })</small>`
+        );
       }
     } catch (error) {
       console.error(`\n=== ERROR capturing pages for ${department} ===`);
@@ -2157,6 +2341,12 @@ async function generateYearbookPDF(departments) {
   if (totalPagesAdded === 0) {
     throw new Error("No pages were captured. Please try again.");
   }
+
+  // Update to 100% before saving
+  updatePersistentNotification(
+    progressNotification,
+    `Preparing PDF... 100%<br><small>Finalizing document...</small>`
+  );
 
   // Save the PDF
   const fileName = `${batchYear.replace(
@@ -2184,7 +2374,11 @@ function getYearbookUrl(department, batchYear) {
   return `${basePath}/Student/Yearbook/index.html?department=${yearbookDept}&fullscreen=true`;
 }
 
-async function captureAllYearbookPages(yearbookUrl, department) {
+async function captureAllYearbookPages(
+  yearbookUrl,
+  department,
+  onPageProgress = null
+) {
   return new Promise((resolve, reject) => {
     console.log(`\n>>> Opening yearbook for ${department}:`, yearbookUrl);
 
@@ -2252,6 +2446,10 @@ async function captureAllYearbookPages(yearbookUrl, department) {
 
         let captureCount = 0;
 
+        // Calculate approximate total captures (front + spreads + back if even)
+        const approxTotalCaptures =
+          Math.ceil(totalPages / 2) + (totalPages % 2 === 0 ? 1 : 0);
+
         // Capture front cover (page 1)
         console.log(`\n>>> Capturing front cover (page 1) for ${department}`);
         const nav1Success = await navigateToPage(iframeWindow, 1);
@@ -2264,6 +2462,10 @@ async function captureAllYearbookPages(yearbookUrl, department) {
             );
             capturedPages.push(canvas);
             captureCount++;
+            // Report progress
+            if (onPageProgress) {
+              onPageProgress(captureCount, approxTotalCaptures);
+            }
           }
         } else {
           console.error("Failed to navigate to front cover, skipping...");
@@ -2302,6 +2504,10 @@ async function captureAllYearbookPages(yearbookUrl, department) {
             );
             capturedPages.push(canvas);
             captureCount++;
+            // Report progress
+            if (onPageProgress) {
+              onPageProgress(captureCount, approxTotalCaptures);
+            }
           } else {
             console.warn(`Failed to capture spread at page ${pageNum}`);
           }
@@ -2322,6 +2528,10 @@ async function captureAllYearbookPages(yearbookUrl, department) {
               );
               capturedPages.push(canvas);
               captureCount++;
+              // Report progress
+              if (onPageProgress) {
+                onPageProgress(captureCount, approxTotalCaptures);
+              }
             }
           } else {
             console.error("Failed to navigate to back cover, skipping...");

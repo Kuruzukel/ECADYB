@@ -326,7 +326,7 @@
                         <label class="dept-label">
                             <input type="checkbox" class="dept-checkbox" value="BSME">
                             <div class="dept-info">
-                                <span class="dept-name">Bachelor of Science in Marine Engineering</span>
+                                <span class="dept-name">Bachelor of Science in Maritime Education</span>
                             </div>
                         </label>
                         <label class="dept-label">
