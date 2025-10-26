@@ -62,7 +62,6 @@
   opacity: 0.25;
 }
 
-/* Position dots in a circle */
 .spinner-dot:nth-child(1) {
   top: 0;
   left: 50%;
