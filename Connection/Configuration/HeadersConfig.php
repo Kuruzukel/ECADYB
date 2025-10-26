@@ -1,8 +1,6 @@
 <?php
 
 if (!headers_sent()) {
-    // Allow iframe embedding from any origin
-    // Removed X-Frame-Options to allow embedding
     header('Content-Security-Policy: frame-ancestors *;');
 
     header('Access-Control-Allow-Origin: *');

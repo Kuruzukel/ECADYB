@@ -6,7 +6,6 @@
  * @see https://www.php.net/manual/en/book.mongodb.php
  */
 
-// BSON Type Stubs
 namespace MongoDB\BSON {
 
     class UTCDateTime
@@ -20,7 +19,6 @@ namespace MongoDB\BSON {
     }
 }
 
-// MongoDB Driver Exception Stubs
 namespace MongoDB\Driver\Exception {
 
     /**
@@ -84,7 +82,6 @@ namespace MongoDB\Driver\Exception {
     class SSLConnectionException extends ConnectionException {}
 }
 
-// MongoDB Library Stubs
 namespace MongoDB {
 
     /**
@@ -234,7 +231,6 @@ namespace MongoDB {
     }
 }
 
-// MongoDB Driver Stubs
 namespace MongoDB\Driver {
 
     /**
@@ -264,7 +260,6 @@ namespace MongoDB\Driver {
     }
 }
 
-// PHP Built-in Function Stubs (Global Namespace)
 namespace {
     if (!function_exists('random_int')) {
         /**

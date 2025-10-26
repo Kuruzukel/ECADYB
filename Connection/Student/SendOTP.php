@@ -1,15 +1,12 @@
 <?php
-// Ensure JSON is always returned
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
-// Set JSON header first
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Content-Type');
 
-// Handle OPTIONS request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit;
@@ -58,15 +55,13 @@ try {
     $user = null;
 
     $queryOptions = [
-        'maxTimeMS' => 2000, // 2 second timeout per query
-        'projection' => ['email' => 1, '_id' => 1] // Only fetch needed fields
+        'maxTimeMS' => 2000,
+        'projection' => ['email' => 1, '_id' => 1]
     ];
 
-    // First, check admin accounts collection
     try {
         $mongoClient = $GLOBALS['mongoClient'] ?? null;
         if (!$mongoClient) {
-            // Fallback: create new client if global not available
             require_once __DIR__ . '/../../vendor/autoload.php';
             require_once __DIR__ . '/../Configuration/EnvLoader.php';
             $mongoClient = new \MongoDB\Client(getMongoUrl());
@@ -79,23 +74,18 @@ try {
         error_log("Admin check error: " . $e->getMessage());
     }
 
-    // If not found in admin, search student department collections
     if (!$user) {
-        // Define all department collections to search
         $departmentCollections = ['bsn', 'bsme', 'bscje', 'bstm', 'bse', 'bsis', 'beced', 'bsma', 'bsmt', 'btvted'];
 
-        // Search with optimized timeout - stop at first match
         foreach ($departmentCollections as $collectionName) {
             try {
                 $collection = $database->selectCollection($collectionName);
                 $user = $collection->findOne(['email' => $email], $queryOptions);
 
                 if ($user) {
-                    // Found the student, no need to search further
                     break;
                 }
             } catch (Exception $e) {
-                // Log timeout or error and continue to next collection
                 error_log("Collection $collectionName search error: " . $e->getMessage());
                 continue;
             }
@@ -107,12 +97,9 @@ try {
         exit;
     }
 
-    // Generate OTP with safe random number generation
     try {
-        // Try random_int first (PHP 7+, cryptographically secure)
         $otp = str_pad(random_int(100000, 999999), 6, '0', STR_PAD_LEFT);
     } catch (Exception $e) {
-        // Fallback to mt_rand if random_int fails
         error_log("random_int failed, using mt_rand: " . $e->getMessage());
         $otp = str_pad(mt_rand(100000, 999999), 6, '0', STR_PAD_LEFT);
     }
@@ -126,31 +113,25 @@ try {
         'attempts' => 0
     ];
 
-    // IMPORTANT: Remove 'otp' from response in PRODUCTION for security
     echo json_encode([
         'success' => true,
         'message' => 'Verification code is being sent to your email',
-        // 'otp' => $otp, // DEVELOPMENT ONLY - Uncomment for testing on localhost
         'email_sent' => true
     ]);
 
-    // Force output to be sent to client immediately
     if (ob_get_level() > 0) {
         ob_end_flush();
     }
     flush();
 
-    // Close session to release lock (important for concurrent requests)
     if (session_status() == PHP_SESSION_ACTIVE) {
         session_write_close();
     }
 
-    // For FastCGI, finish the request to the client
     if (function_exists('fastcgi_finish_request')) {
         fastcgi_finish_request();
     }
 
-    // NOW send email in background after client has received response
     $asyncEmailSend = function () use ($email, $otp) {
         $subject = "Password Reset Verification Code - Exact Colleges of Asia";
         $message = "
@@ -193,13 +174,8 @@ try {
         </html>
         ";
 
-        // Load email configuration from environment variables (Railway) or config file (localhost)
-        // Priority: Environment Variables > EmailConfig.php > Fallback defaults
-
-        // Load .env file first (for Railway deployment with .env file)
         require_once __DIR__ . '/../Configuration/EnvLoader.php';
 
-        // Check for environment variables from both getenv() and $_ENV (after dotenv load)
         $smtpHost = getenv('SMTP_HOST') ?: ($_ENV['SMTP_HOST'] ?? null);
         $smtpPort = getenv('SMTP_PORT') ?: ($_ENV['SMTP_PORT'] ?? null);
         $smtpUsername = getenv('SMTP_USERNAME') ?: ($_ENV['SMTP_USERNAME'] ?? null);
@@ -208,7 +184,6 @@ try {
         $smtpFromName = getenv('SMTP_FROM_NAME') ?: ($_ENV['SMTP_FROM_NAME'] ?? null);
         $smtpEncryption = getenv('SMTP_ENCRYPTION') ?: ($_ENV['SMTP_ENCRYPTION'] ?? 'tls');
 
-        // If environment variables not set, try loading from EmailConfig.php (localhost)
         if (!$smtpHost || !$smtpUsername || !$smtpPassword) {
             $emailConfigPath = null;
             $possiblePaths = [
@@ -239,25 +214,21 @@ try {
             }
         }
 
-        // Validate email configuration
         if (!$smtpHost || !$smtpUsername || !$smtpPassword) {
             error_log("✗ ERROR: Email configuration incomplete. SMTP_HOST: " . ($smtpHost ? "set" : "missing") .
                 ", SMTP_USERNAME: " . ($smtpUsername ? "set" : "missing") .
                 ", SMTP_PASSWORD: " . ($smtpPassword ? "set" : "missing"));
-            return; // Skip email sending if configuration is incomplete
+            return;
         }
 
         error_log("✓ Email config loaded - Host: $smtpHost, Port: $smtpPort, User: $smtpUsername, Encryption: $smtpEncryption");
 
-        // Use PHPMailer for Gmail SMTP
         $mail = new PHPMailer(true);
 
         try {
-            // Detect if running on Railway or localhost
             $isRailway = (getenv('RAILWAY_ENVIRONMENT') || getenv('RAILWAY_PUBLIC_URL')) ? true : false;
             error_log("Environment detected: " . ($isRailway ? "Railway" : "Localhost"));
 
-            // SMTP Configuration using variables from environment or config file
             $mail->isSMTP();
             $mail->Host       = $smtpHost;
             $mail->SMTPAuth   = true;
@@ -266,19 +237,15 @@ try {
             $mail->SMTPSecure = ($smtpEncryption === 'ssl') ? PHPMailer::ENCRYPTION_SMTPS : PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port       = (int)$smtpPort;
 
-            // Timeout settings - more lenient for Railway
-            $mail->Timeout = $isRailway ? 60 : 15; // Railway needs more time (increased to 60s)
+            $mail->Timeout = $isRailway ? 60 : 15;
             $mail->SMTPKeepAlive = false;
 
-            // Debug output - enable for Railway to see what's happening
-            $mail->SMTPDebug = $isRailway ? 2 : 0; // Enable debug on Railway
+            $mail->SMTPDebug = $isRailway ? 2 : 0;
             $mail->Debugoutput = function ($str, $level) {
                 error_log("SMTP Debug ($level): $str");
             };
 
-            // SSL/TLS options - Railway-compatible (more lenient)
             if ($isRailway) {
-                // Railway needs less strict SSL verification
                 $mail->SMTPOptions = array(
                     'ssl' => array(
                         'verify_peer' => false,
@@ -288,7 +255,6 @@ try {
                 );
                 error_log("Using Railway-compatible SSL settings for email: $email");
             } else {
-                // Localhost uses proper SSL verification
                 $mail->SMTPOptions = array(
                     'ssl' => array(
                         'verify_peer' => true,
@@ -299,7 +265,6 @@ try {
                 error_log("Using standard SSL settings for localhost for email: $email");
             }
 
-            // Email settings using variables
             $mail->setFrom($smtpFromEmail, $smtpFromName);
             $mail->addAddress($email);
             $mail->isHTML(true);
@@ -308,12 +273,11 @@ try {
             $mail->AltBody = strip_tags(str_replace(['<br>', '<br/>', '<br />'], "\n", $message)); // Plain text version
             $mail->CharSet = 'UTF-8';
 
-            // Send email with better error handling
             $emailSent = false;
             $lastError = '';
 
             error_log("Attempting to send email to: $email via SMTP: $smtpHost:$smtpPort");
-            
+
             try {
                 $emailSent = $mail->send();
                 error_log("✓ Email sent successfully to: $email (OTP: $otp)");
@@ -334,7 +298,6 @@ try {
         }
     };
 
-    // Execute the email send function (response already sent above)
     $asyncEmailSend();
 } catch (Exception $e) {
     error_log("SendOTP error: " . $e->getMessage());

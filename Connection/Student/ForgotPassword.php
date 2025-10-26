@@ -1,5 +1,4 @@
 <?php
-// Suppress all output except JSON
 error_reporting(0);
 ini_set('display_errors', 0);
 
@@ -53,7 +52,6 @@ try {
     $userCollection = null;
     $isAdmin = false;
 
-    // First, check admin accounts collection
     try {
         $adminDB = $client->admin;
         $adminCollection = $adminDB->accounts;
@@ -68,20 +66,16 @@ try {
         error_log("Admin check error: " . $e->getMessage());
     }
 
-    // If not found in admin, search student department collections
     if (!$user) {
         $database = $client->selectDatabase('ECADYB');
 
-        // Define all department collections to search
         $departmentCollections = ['bsn', 'bsme', 'bscje', 'bstm', 'bse', 'bsis', 'beced', 'bsma', 'bsmt', 'btvted'];
 
-        // Search through each department collection
         foreach ($departmentCollections as $collectionName) {
             $collection = $database->selectCollection($collectionName);
             $user = $collection->findOne(['email' => $email]);
 
             if ($user) {
-                // Found the student, save the collection reference
                 $userCollection = $collection;
                 break;
             }
@@ -96,8 +90,6 @@ try {
 
     $newPassword = generateRandomPassword();
 
-    // Store plain text password to match existing login system
-    // TODO: In the future, update Login.php to use password_verify() for better security
     $updateResult = $userCollection->updateOne(
         ['email' => $email],
         ['$set' => ['password' => $newPassword]]
@@ -190,14 +182,11 @@ function sendPasswordEmail($email, $password)
     </body>
     </html>";
 
-    // Load email configuration
     require_once __DIR__ . '/../Configuration/EmailConfig.php';
 
-    // Use PHPMailer for Gmail SMTP
     $mail = new PHPMailer(true);
 
     try {
-        // Gmail SMTP Configuration
         $mail->isSMTP();
         $mail->Host       = GMAIL_SMTP_HOST;
         $mail->SMTPAuth   = true;
@@ -206,7 +195,6 @@ function sendPasswordEmail($email, $password)
         $mail->SMTPSecure = GMAIL_SMTP_ENCRYPTION;
         $mail->Port       = GMAIL_SMTP_PORT;
 
-        // Email settings
         $mail->setFrom(EMAIL_FROM_ADDRESS, EMAIL_FROM_NAME);
         $mail->addAddress($to);
         $mail->isHTML(true);

@@ -59,7 +59,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Use ECADYB database instead of BatchTemplate databases
     $dbName = "ECADYB";
     $db = $client->$dbName;
 
@@ -73,7 +72,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ]
         ];
 
-        // Add academic year filter if provided
         if (!empty($academicYear)) {
             $filter['academic year'] = $academicYear;
         }

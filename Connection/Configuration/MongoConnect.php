@@ -3,7 +3,6 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 use MongoDB\Client;
 
-// Load .env file
 $dotenvPath = __DIR__ . '/../../';
 if (file_exists($dotenvPath . '.env')) {
     $dotenv = Dotenv\Dotenv::createImmutable($dotenvPath);
@@ -12,7 +11,6 @@ if (file_exists($dotenvPath . '.env')) {
 
 $mongoUrl = getenv('MONGO_URL') ?: $_ENV['MONGO_URL'] ?? getenv('MONGODB_URI') ?? $_ENV['MONGODB_URI'] ?? null;
 if (!$mongoUrl) {
-    // Provide more helpful error message based on environment
     if (getenv('RAILWAY_ENVIRONMENT') || getenv('RAILWAY_PUBLIC_URL')) {
         throw new Exception('MongoDB URL not configured. Please set MONGO_URL or MONGODB_URI in Railway dashboard under Variables tab.');
     } else {
@@ -24,7 +22,7 @@ $client   = new Client($mongoUrl);
 $GLOBALS['mongoClient'] = $client;
 
 $ecadybDB = $client->ECADYB;
-$departmentsDB = $client->ECADYB; // Alias for student departments
+$departmentsDB = $client->ECADYB;
 
 $GLOBALS['database'] = $ecadybDB;
 
@@ -50,7 +48,6 @@ $studentPhotosCollection = $ecadybDB->Student_Photos;
 
 $yearbookCoversCollection = $ecadybDB->Yearbook_Covers;
 
-// Admin database and collection
 $adminDB              = $client->admin;
 $adminCollection      = $adminDB->accounts;
 $adminSampleCollection = $adminDB->AdminSample;

@@ -1,5 +1,4 @@
 <?php
-// Ensure JSON is always returned, even on fatal errors
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
@@ -39,14 +38,12 @@ try {
         exit;
     }
 
-    // All department collections
     $collectionNames = ['bsme', 'bsmt', 'bscje', 'bstm', 'btvted', 'beced', 'bsn', 'bsis', 'bsma', 'bse'];
-    
+
     $allResults = [];
     $mongoDbName = "ECADYB";
     $db = $GLOBALS['mongoClient']->selectDatabase($mongoDbName);
 
-    // Search in all collections
     foreach ($collectionNames as $collectionName) {
         if (count($allResults) >= $limit) {
             break;
@@ -54,11 +51,9 @@ try {
 
         try {
             $collection = $db->$collectionName;
-            
-            // Create a regex pattern for case-insensitive search
+
             $regexPattern = new Regex($query, 'i');
-            
-            // Search by student ID or name
+
             $searchFilter = [
                 '$or' => [
                     ['student id' => $regexPattern],
@@ -75,7 +70,6 @@ try {
             ]);
 
             foreach ($students as $student) {
-                // Build full name
                 $fullName = '';
                 if (isset($student['name']) && !empty($student['name'])) {
                     $fullName = $student['name'];
@@ -132,7 +126,6 @@ try {
         'results' => $allResults,
         'total' => count($allResults)
     ]);
-
 } catch (Exception $e) {
     error_log("SearchStudents.php exception: " . $e->getMessage());
     http_response_code(500);
@@ -148,4 +141,3 @@ try {
         'message' => 'Fatal error occurred'
     ]);
 }
-

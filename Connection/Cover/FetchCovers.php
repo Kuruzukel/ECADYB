@@ -57,7 +57,6 @@ try {
 
     error_log("FetchCovers.php using database: $dbName, collection: Covers");
 
-    // Build filter
     $filter = ['template' => $template];
     if (!empty($batchYear)) {
         $filter['batch_year'] = $batchYear;

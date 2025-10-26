@@ -1,15 +1,12 @@
 <?php
-// Ensure JSON is always returned
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
-// Set JSON header first
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Content-Type');
 
-// Handle OPTIONS request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit;
@@ -59,7 +56,6 @@ try {
         'projection' => ['email' => 1, '_id' => 1]
     ];
 
-    // Check admin accounts
     try {
         $mongoClient = $GLOBALS['mongoClient'] ?? null;
         if (!$mongoClient) {
@@ -74,7 +70,6 @@ try {
         error_log("Admin check error: " . $e->getMessage());
     }
 
-    // Check student departments
     if (!$user) {
         $departmentCollections = ['bsn', 'bsme', 'bscje', 'bstm', 'bse', 'bsis', 'beced', 'bsma', 'bsmt', 'btvted'];
         foreach ($departmentCollections as $collectionName) {
@@ -94,7 +89,6 @@ try {
         exit;
     }
 
-    // Generate OTP
     try {
         $otp = str_pad(random_int(100000, 999999), 6, '0', STR_PAD_LEFT);
     } catch (Exception $e) {
@@ -122,9 +116,8 @@ try {
     if (session_status() == PHP_SESSION_ACTIVE) session_write_close();
     if (function_exists('fastcgi_finish_request')) fastcgi_finish_request();
 
-    // Send email using SendGrid
     $sendGridApiKey = getenv('SENDGRID_API_KEY') ?: ($_ENV['SENDGRID_API_KEY'] ?? null);
-    
+
     if (!$sendGridApiKey) {
         error_log("✗ SendGrid API key not configured");
         return;
@@ -137,7 +130,7 @@ try {
     $emailContent->setFrom($fromEmail, $fromName);
     $emailContent->setSubject("Password Reset Verification Code - Exact Colleges of Asia");
     $emailContent->addTo($email);
-    
+
     $htmlContent = "
     <html>
     <head>
@@ -177,18 +170,17 @@ try {
     </body>
     </html>
     ";
-    
+
     $emailContent->addContent("text/html", $htmlContent);
 
     $sendgrid = new \SendGrid($sendGridApiKey);
-    
+
     try {
         $response = $sendgrid->send($emailContent);
         error_log("✓ SendGrid email sent successfully to: $email (Status: " . $response->statusCode() . ")");
     } catch (Exception $e) {
         error_log("✗ SendGrid error: " . $e->getMessage());
     }
-
 } catch (Exception $e) {
     error_log("SendOTP error: " . $e->getMessage());
     http_response_code(500);

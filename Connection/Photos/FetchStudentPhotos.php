@@ -87,7 +87,6 @@ try {
 
     $photosCursor = $photosCollection->find($filter, ['sort' => ['upload_time' => -1]]);
 
-    // Convert cursor to array to avoid rewind issues
     $photos = iterator_to_array($photosCursor);
     $photoCount = count($photos);
 

@@ -1,5 +1,4 @@
 <?php
-// Ensure JSON is always returned
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
@@ -8,7 +7,6 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Content-Type');
 
-// Handle OPTIONS request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit;
@@ -53,16 +51,13 @@ try {
 
     $found = false;
 
-    // Set query timeout options
     $queryOptions = [
-        'maxTimeMS' => 2000 // 2 second timeout per query
+        'maxTimeMS' => 2000
     ];
 
-    // First, check admin accounts collection
     try {
         $mongoClient = $GLOBALS['mongoClient'] ?? null;
         if (!$mongoClient) {
-            // Fallback: create new client if global not available
             require_once __DIR__ . '/../../vendor/autoload.php';
             require_once __DIR__ . '/../Configuration/EnvLoader.php';
             $mongoClient = new \MongoDB\Client(getMongoUrl());
@@ -79,24 +74,19 @@ try {
         error_log("Admin check error: " . $e->getMessage());
     }
 
-    // If not found in admin, search student department collections
     if (!$found) {
-        // Define all department collections to search
         $departmentCollections = ['bsn', 'bsme', 'bscje', 'bstm', 'bse', 'bsis', 'beced', 'bsma', 'bsmt', 'btvted'];
 
-        // Search through each department collection with timeout
         foreach ($departmentCollections as $collectionName) {
             try {
                 $collection = $database->selectCollection($collectionName);
                 $student = $collection->findOne(['email' => $email], $queryOptions);
 
                 if ($student) {
-                    // Found the student, no need to search further
                     $found = true;
                     break;
                 }
             } catch (Exception $e) {
-                // Log timeout or error and continue to next collection
                 error_log("Collection $collectionName search error: " . $e->getMessage());
                 continue;
             }

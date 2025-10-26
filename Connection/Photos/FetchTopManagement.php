@@ -2,7 +2,6 @@
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
-// Increase limits for large datasets
 ini_set('memory_limit', '256M');
 ini_set('max_execution_time', '60');
 set_time_limit(60);
@@ -31,7 +30,6 @@ try {
     exit;
 }
 
-// Register shutdown function to catch fatal errors
 register_shutdown_function(function () {
     $error = error_get_last();
     if ($error !== null && in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
@@ -89,20 +87,16 @@ try {
 
     $messageCollection = $mongoClient->$mongoDbName->Top_Management_Messages;
 
-    // Build filter for academic year if batch year is provided
     $academicYearFilter = [];
     if ($batchYear) {
-        // Convert "Batch Year 2024-2025" to "2024-2025"
         $academicYear = str_replace('Batch Year ', '', $batchYear);
         $academicYearFilter = ['academicyear' => $academicYear];
         error_log("Filtering top management by academic year: $academicYear");
     }
 
-    // First, let's check what's in the collection without any filter
     $totalCount = $messageCollection->countDocuments([]);
     error_log("Total documents in Top_Management_Messages collection: $totalCount");
 
-    // Log a sample document to see the structure
     $sampleDoc = $messageCollection->findOne([]);
     if ($sampleDoc) {
         error_log("Sample document structure: " . json_encode($sampleDoc));
@@ -121,11 +115,9 @@ try {
 
     $photosCollection = $mongoClient->$mongoDbName->Top_Management_Photos;
 
-    // Build photo filter - photos might use different field names for academic year
     $photoFilter = [];
     if ($batchYear) {
         $academicYear = str_replace('Batch Year ', '', $batchYear);
-        // Try both field name variations
         $photoFilter = [
             '$or' => [
                 ['academicyear' => $academicYear],
@@ -137,7 +129,6 @@ try {
     error_log("Querying Top_Management_Photos collection with filter: " . json_encode($photoFilter));
     $photosCursor = $photosCollection->find($photoFilter, ['sort' => ['position' => 1]]);
 
-    // Convert cursor to array to avoid rewind issues
     $photos = iterator_to_array($photosCursor);
     $photoCount = count($photos);
     error_log("Found $photoCount top management photos");
@@ -145,7 +136,6 @@ try {
     $result = [];
     $photoMap = [];
 
-    // First, collect all photos by name
     $photoIndex = 0;
     foreach ($photos as $photo) {
         $photoIndex++;
@@ -170,12 +160,10 @@ try {
     error_log("Querying Top_Management_Messages collection with filter: " . json_encode($academicYearFilter));
     $messagesCursor = $messageCollection->find($academicYearFilter, ['sort' => ['position' => 1]]);
 
-    // Convert cursor to array to avoid rewind issues
     $messages = iterator_to_array($messagesCursor);
     $messageCount = count($messages);
     error_log("Found $messageCount top management messages");
 
-    // Build result array based on messages (primary data source)
     $messageIndex = 0;
     foreach ($messages as $message) {
         $messageIndex++;
@@ -186,7 +174,6 @@ try {
 
         error_log("Message - Name: '$name', Academic Year: '$messageAcademicYear'");
 
-        // Create entry for each message, add photo if available
         $entry = [
             'id' => (string)$message['_id'],
             'name' => $name,
@@ -199,7 +186,6 @@ try {
             'upload_time' => ''
         ];
 
-        // Add photo data if available for this person
         if (isset($photoMap[$name])) {
             error_log("Found photo for '$name': " . json_encode($photoMap[$name]));
             $entry['photo_url'] = $photoMap[$name]['photo_url'];

@@ -1,5 +1,4 @@
 <?php
-// Test script to check top management data
 header('Content-Type: application/json');
 
 $template = 1;
@@ -16,4 +15,3 @@ echo "Request URL: $url\n\n";
 $response = file_get_contents($url);
 echo "Response:\n";
 echo $response;
-?>

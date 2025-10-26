@@ -1,20 +1,9 @@
 <?php
 
-/**
- * Environment Variable Loader
- * 
- * This file loads environment variables from .env file and provides
- * helper functions to access MongoDB and Bunny CDN credentials safely.
- * 
- * Include this file at the beginning of any script that needs credentials.
- */
-
-// Load composer autoloader if not already loaded
 if (!class_exists('Dotenv\Dotenv')) {
     require_once __DIR__ . '/../../vendor/autoload.php';
 }
 
-// Load .env file if it exists
 $dotenvPath = __DIR__ . '/../../';
 if (file_exists($dotenvPath . '.env') && !isset($_ENV['ENV_LOADED'])) {
     try {
@@ -36,7 +25,6 @@ function getMongoUrl()
     $mongoUrl = getenv('MONGO_URL') ?: $_ENV['MONGO_URL'] ?? getenv('MONGODB_URI') ?? $_ENV['MONGODB_URI'] ?? null;
 
     if (!$mongoUrl) {
-        // Provide more helpful error message based on environment
         if (getenv('RAILWAY_ENVIRONMENT') || getenv('RAILWAY_PUBLIC_URL')) {
             throw new Exception('MongoDB URL not configured. Please set MONGO_URL or MONGODB_URI in Railway dashboard under Variables tab. See RAILWAY_SETUP.md for detailed instructions.');
         } else {

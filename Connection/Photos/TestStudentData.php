@@ -31,11 +31,9 @@ try {
 
     echo "Connected to ECADYB database\n";
 
-    // List all collections
     $collections = iterator_to_array($db->listCollectionNames());
     echo "Available collections: " . implode(', ', $collections) . "\n";
 
-    // Test BSME collections
     $bsmeCollections = ['bsme', 'bsmt'];
 
     foreach ($bsmeCollections as $collectionName) {
@@ -44,13 +42,11 @@ try {
             $totalCount = $collection->countDocuments([]);
             echo "Collection $collectionName: $totalCount total documents\n";
 
-            // Get a sample document
             $sample = $collection->findOne([]);
             if ($sample) {
                 echo "Sample document from $collectionName:\n";
                 echo json_encode($sample, JSON_PRETTY_PRINT) . "\n";
 
-                // Test academic year filter
                 if ($batchYear) {
                     $academicYear = str_replace('Batch Year ', '', $batchYear);
                     $filteredCount = $collection->countDocuments(['academic year' => $academicYear]);

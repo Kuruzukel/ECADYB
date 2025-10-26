@@ -2,12 +2,11 @@
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
-// Increase upload limits to support up to 500MB total file uploads
-ini_set('memory_limit', '1024M');              // 1GB memory for processing
-ini_set('upload_max_filesize', '500M');        // Max 500MB per request
-ini_set('post_max_size', '500M');              // Max 500MB POST data
-ini_set('max_execution_time', '300');          // 5 minutes execution time
-ini_set('max_input_time', '300');              // 5 minutes input time
+ini_set('memory_limit', '1024M');
+ini_set('upload_max_filesize', '500M');
+ini_set('post_max_size', '500M');
+ini_set('max_execution_time', '300');
+ini_set('max_input_time', '300');
 set_time_limit(300);
 
 ob_start();
@@ -94,21 +93,17 @@ if (file_exists(__DIR__ . '/../Configuration/BunnyConfig.php')) {
 use MongoDB\Client;
 
 try {
-    // Check for connection abortion at the start
     if (connection_aborted()) {
         $uploadCancelled = true;
         respond(false, 'Upload cancelled');
     }
 
-    // Debug: Log all POST data
     error_log("UploadTopManagementPhotos: POST data received: " . json_encode($_POST));
 
-    // Get batch year from form data
     $batchYear = isset($_POST['batch_year']) ? trim($_POST['batch_year']) : null;
     $academicYear = null;
 
     if ($batchYear) {
-        // Convert "Batch Year 2024-2025" to "2024-2025"
         $academicYear = str_replace('Batch Year ', '', $batchYear);
         error_log("UploadTopManagementPhotos: Batch year received: $batchYear, converted to academic year: $academicYear");
     } else {
@@ -116,7 +111,6 @@ try {
         error_log("UploadTopManagementPhotos: Available POST keys: " . implode(', ', array_keys($_POST)));
     }
 
-    // Check for connection abortion after processing POST data
     if (connection_aborted()) {
         $uploadCancelled = true;
         respond(false, 'Upload cancelled');
@@ -154,7 +148,6 @@ try {
         ];
     }
 
-    // Validate maximum number of files (20 images limit)
     $MAX_FILES = 20;
     $fileCount = count($uploadedFiles['name']);
 
@@ -168,7 +161,7 @@ try {
     $uploadedCount = 0;
     $failedCount = 0;
     $results = [];
-    $uploadedFilesToCleanup = []; // Track files uploaded to BunnyCDN for cleanup
+    $uploadedFilesToCleanup = [];
 
     for ($i = 0; $i < count($uploadedFiles['name']); $i++) {
         if (connection_aborted()) {
@@ -226,7 +219,6 @@ try {
         $safeFileName = preg_replace('/[^A-Za-z0-9 _.-]/', '', $nameWithoutExt) ?: ('top_management_' . time());
         $safeExt = preg_replace('/[^A-Za-z0-9]/', '', $ext) ?: 'jpg';
 
-        // Create academic year folder structure with photo type subfolders
         if ($academicYear) {
             $baseFolder = 'Top Management Photos/' . $academicYear;
             error_log("UploadTopManagementPhotos: Using academic year folder: $baseFolder");
@@ -235,7 +227,6 @@ try {
             error_log("UploadTopManagementPhotos: No academic year, using default folder: $baseFolder");
         }
 
-        // Determine photo type folder based on filename
         $photoTypeFolder = '';
         $nameWithoutExt = pathinfo($fileName, PATHINFO_FILENAME);
 
@@ -249,7 +240,7 @@ try {
             $photoTypeFolder = 'UNIFORM';
             error_log("Detected UNIFORM photo for $fileName");
         } else {
-            $photoTypeFolder = 'UNIFORM'; // Default to UNIFORM for photos without type suffix
+            $photoTypeFolder = 'UNIFORM';
             error_log("No photo type detected for $fileName, defaulting to UNIFORM");
         }
 
@@ -272,13 +263,13 @@ try {
             CURLOPT_POSTFIELDS     => $fileContents,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_HEADER         => false,
-            CURLOPT_TIMEOUT        => 60,              // Increased timeout for large files
-            CURLOPT_CONNECTTIMEOUT => 10,              // Faster initial connection
+            CURLOPT_TIMEOUT        => 60,
+            CURLOPT_CONNECTTIMEOUT => 10,
             CURLOPT_SSL_VERIFYPEER => true,
-            CURLOPT_TCP_NODELAY    => true,            // Disable Nagle's algorithm for faster transfers
-            CURLOPT_FRESH_CONNECT  => false,           // Reuse connections
-            CURLOPT_FORBID_REUSE   => false,           // Allow connection reuse
-            CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_2_0  // Use HTTP/2 for faster transfers
+            CURLOPT_TCP_NODELAY    => true,
+            CURLOPT_FRESH_CONNECT  => false,
+            CURLOPT_FORBID_REUSE   => false,
+            CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_2_0
         ]);
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -313,7 +304,6 @@ try {
             continue;
         }
 
-        // Track successfully uploaded file for potential cleanup
         $uploadedFilesToCleanup[] = [
             'storageUrl' => $storageUrl,
             'bunnyAccessKey' => $bunnyAccessKey,
@@ -431,7 +421,6 @@ try {
                 'folder_path' => $safeFolder
             ];
 
-            // Add academic year if available
             if ($academicYear) {
                 $document['academic year'] = $academicYear;
                 error_log("Added academic year '$academicYear' to Top Management Photo document for '$correctName'");
@@ -477,8 +466,6 @@ try {
         }
 
         try {
-            // Use updateOne with upsert to avoid duplicates
-            // Update based on name and academic year
             $filter = ['name' => $correctName];
             if ($academicYear) {
                 $filter['academic year'] = $academicYear;
@@ -562,7 +549,6 @@ try {
 } catch (Exception $e) {
     error_log("UploadTopManagementPhotos.php exception: " . $e->getMessage());
 
-    // Clean up any files that were uploaded to BunnyCDN before the error
     if (!empty($uploadedFilesToCleanup)) {
         error_log("Cleaning up " . count($uploadedFilesToCleanup) . " files from BunnyCDN due to exception");
         foreach ($uploadedFilesToCleanup as $fileInfo) {
