@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Clean up any existing fragments in the URL on page load
   if (window.location.hash) {
     setTimeout(() => {
       if (window.history && window.history.replaceState) {
@@ -59,8 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
         targetSection.scrollIntoView({
           behavior: "smooth",
         });
-        
-        // Remove the fragment from URL after scrolling
+
         setTimeout(() => {
           if (window.history && window.history.replaceState) {
             window.history.replaceState(null, null, window.location.pathname);
@@ -87,8 +85,7 @@ document.addEventListener("DOMContentLoaded", function () {
         targetSection.scrollIntoView({
           behavior: "smooth",
         });
-        
-        // Remove the fragment from URL after scrolling
+
         setTimeout(() => {
           if (window.history && window.history.replaceState) {
             window.history.replaceState(null, null, window.location.pathname);
@@ -701,109 +698,91 @@ function closeYearbookView() {
   }
 }
 
-// Mobile yearbook slider navigation
 let currentYearbookIndex = 0;
 
 function navigateYearbook(direction) {
   try {
-    // Only apply navigation on mobile screens
     if (window.innerWidth > 480) {
       return;
     }
 
-    const items = document.querySelectorAll('.yearbook-item');
+    const items = document.querySelectorAll(".yearbook-item");
     if (!items || items.length === 0) {
       return;
     }
 
-    // Remove all classes from all items
-    items.forEach(item => {
-      item.classList.remove('mobile-active', 'mobile-prev', 'mobile-next');
+    items.forEach((item) => {
+      item.classList.remove("mobile-active", "mobile-prev", "mobile-next");
     });
 
-    // Calculate new index
-    if (direction === 'next') {
+    if (direction === "next") {
       currentYearbookIndex = (currentYearbookIndex + 1) % items.length;
-    } else if (direction === 'prev') {
-      currentYearbookIndex = (currentYearbookIndex - 1 + items.length) % items.length;
+    } else if (direction === "prev") {
+      currentYearbookIndex =
+        (currentYearbookIndex - 1 + items.length) % items.length;
     }
 
-    // Add active class to current item
-    items[currentYearbookIndex].classList.add('mobile-active');
+    items[currentYearbookIndex].classList.add("mobile-active");
 
-    // Add prev class to previous item
     const prevIndex = (currentYearbookIndex - 1 + items.length) % items.length;
-    items[prevIndex].classList.add('mobile-prev');
+    items[prevIndex].classList.add("mobile-prev");
 
-    // Add next class to next item
     const nextIndex = (currentYearbookIndex + 1) % items.length;
-    items[nextIndex].classList.add('mobile-next');
+    items[nextIndex].classList.add("mobile-next");
 
-    // Ensure click handlers are working for the new active item
     items.forEach((item, index) => {
-      // Remove existing click listeners to avoid duplicates
-      item.removeEventListener('click', handleMobileYearbookClick);
-      // Add new click listener
-      item.addEventListener('click', handleMobileYearbookClick);
+      item.removeEventListener("click", handleMobileYearbookClick);
+      item.addEventListener("click", handleMobileYearbookClick);
     });
 
-    console.log('Navigated to yearbook item:', currentYearbookIndex);
+    console.log("Navigated to yearbook item:", currentYearbookIndex);
   } catch (error) {
-    console.error('Error in navigateYearbook:', error);
+    console.error("Error in navigateYearbook:", error);
   }
 }
 
-// Separate function for mobile yearbook click handling
 function handleMobileYearbookClick(e) {
-  if (this.classList.contains('mobile-active')) {
-    // Only allow clicks on the active item
-    const imageUrl = 'https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png';
+  if (this.classList.contains("mobile-active")) {
+    const imageUrl = "https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png";
     showYearbookBackground(this, imageUrl);
   }
 }
 
-// Initialize mobile slider on page load
 function initMobileYearbookSlider() {
   try {
     if (window.innerWidth <= 480) {
-      const items = document.querySelectorAll('.yearbook-item');
+      const items = document.querySelectorAll(".yearbook-item");
       items.forEach((item, index) => {
-        item.classList.remove('mobile-active', 'mobile-prev', 'mobile-next');
+        item.classList.remove("mobile-active", "mobile-prev", "mobile-next");
       });
-      
+
       if (items.length > 0) {
         currentYearbookIndex = 0;
-        
-        // Set active item (center)
-        items[0].classList.add('mobile-active');
-        
-        // Set previous item (left side)
+
+        items[0].classList.add("mobile-active");
+
         const prevIndex = (items.length - 1) % items.length;
-        items[prevIndex].classList.add('mobile-prev');
-        
-        // Set next item (right side)
+        items[prevIndex].classList.add("mobile-prev");
+
         if (items.length > 1) {
-          items[1].classList.add('mobile-next');
+          items[1].classList.add("mobile-next");
         }
-        
-        // Add click handlers for mobile
+
         items.forEach((item, index) => {
-          item.addEventListener('click', handleMobileYearbookClick);
+          item.addEventListener("click", handleMobileYearbookClick);
         });
       }
     }
   } catch (error) {
-    console.error('Error initializing mobile yearbook slider:', error);
+    console.error("Error initializing mobile yearbook slider:", error);
   }
 }
 
-// Reinitialize on window resize
-window.addEventListener('resize', function() {
+window.addEventListener("resize", function () {
   initMobileYearbookSlider();
 });
 
-// Initialize on DOM load
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener("DOMContentLoaded", function () {
   initMobileYearbookSlider();
 });
 

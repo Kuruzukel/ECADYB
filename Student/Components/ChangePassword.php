@@ -37,8 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ['student id' => $_SESSION['student_id']],
                     ['$set' => ['password' => $newPassword]]
                 );
-                
-                // Set success message and destroy session
+
                 $success_message = "Password changed successfully! Redirecting to login...";
                 session_destroy();
             } else {
@@ -120,8 +119,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <p>Current Password:</p>
                     </div>
                     <div class="passwordField" data-isvisible="false">
-                        <input name="current_password" id="currrentpassword" type="password" placeholder="Current Password"
-                            maxlength="8" autocomplete="off" />
+                        <input name="current_password" id="currrentpassword" type="password"
+                            placeholder="Current Password" maxlength="8" autocomplete="off" />
                         <div class="eyeIcon open" onclick="togglePass('currrentpassword')">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                 <g fill="none">
@@ -156,8 +155,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <p>New Password:</p>
                     </div>
                     <div class="passwordField" data-isvisible="false">
-                        <input name="new_password" id="newpassword" type="password" placeholder="New Password" maxlength="8"
-                            autocomplete="off" />
+                        <input name="new_password" id="newpassword" type="password" placeholder="New Password"
+                            maxlength="8" autocomplete="off" />
                         <div class="eyeIcon open" onclick="togglePass('newpassword')">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                 <g fill="none">
@@ -192,8 +191,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <p>Confirm Password:</p>
                     </div>
                     <div class="passwordField" data-isvisible="false">
-                        <input name="confirm_password" id="confirmpassword" type="password" placeholder="Confirm Password" maxlength="8"
-                            autocomplete="off" />
+                        <input name="confirm_password" id="confirmpassword" type="password"
+                            placeholder="Confirm Password" maxlength="8" autocomplete="off" />
                         <div class="eyeIcon open" onclick="togglePass('confirmpassword')">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                 <g fill="none">

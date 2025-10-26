@@ -493,13 +493,11 @@ header.fading {
   pointer-events: none;
 }
 
-/* Ensure curl inside iframe container doesn't overlay iframe content */
 .yearbook-iframe-container .yearbook-lower-curl {
   z-index: 1;
   pointer-events: none;
 }
 
-/* In fullscreen, keep curl behind everything */
 .yearbook-iframe-container:fullscreen .yearbook-lower-curl,
 .yearbook-iframe-container:-webkit-full-screen .yearbook-lower-curl,
 .yearbook-iframe-container:-moz-full-screen .yearbook-lower-curl,
@@ -537,7 +535,6 @@ header.fading {
   margin-top: 4.3rem;
 }
 
-/* Ensure iframe is above the curl */
 .yearbook-iframe-container iframe {
   position: relative;
   z-index: 10;
@@ -1290,7 +1287,7 @@ header.fading {
   max-height: 350px;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 0.5rem ;
+  padding: 0.5rem;
   scrollbar-width: thin;
   scrollbar-color: rgba(252, 218, 21, 0.6) rgba(255, 255, 255, 0.1);
 }
@@ -1336,7 +1333,6 @@ header.fading {
 .notification-item:hover {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 8px;
- 
 }
 
 .notification-item-icon {
@@ -1427,7 +1423,8 @@ header.fading {
   left: 0;
   width: 100%;
   height: 100%;
-  background: url("https://ECADYB.b-cdn.net/img/ECABG.jpg") center center/cover no-repeat;
+  background: url("https://ECADYB.b-cdn.net/img/ECABG.jpg") center center/cover
+    no-repeat;
   pointer-events: none;
   filter: blur(6px);
   transform: scale(1.1);
@@ -2268,7 +2265,6 @@ header.fading {
     margin-top: 0.8rem;
   }
 
-
   .about-image {
     width: 350px;
     height: 480px;
@@ -2429,7 +2425,6 @@ header.fading {
     max-width: 96%;
     margin-top: 0.8rem;
   }
-
 
   .about-image {
     width: 300px;
@@ -2770,7 +2765,6 @@ header.fading {
     max-width: 96%;
     margin-top: 0.8rem;
   }
-
 
   .about-image {
     display: none;
@@ -3120,7 +3114,6 @@ header.fading {
     max-width: 96%;
     margin-top: 0.8rem;
   }
-
 
   .about-image {
     display: none;
@@ -3512,8 +3505,6 @@ header.fading {
     margin-top: 0.8rem;
   }
 
-
-
   .about-image {
     display: none;
   }
@@ -3702,7 +3693,6 @@ header.fading {
 @media only screen and (min-width: 320px) and (max-width: 479px) and (orientation: landscape) {
 }
 
-/* Yearbook Close Button Styles */
 .yearbook-close-btn {
   position: absolute;
   top: 5.5rem;
@@ -3725,7 +3715,6 @@ header.fading {
   z-index: 1000;
 }
 
-/* Close button in full screen mode */
 .yearbook-iframe-container:fullscreen .yearbook-close-btn,
 .yearbook-iframe-container:-webkit-full-screen .yearbook-close-btn,
 .yearbook-iframe-container:-moz-full-screen .yearbook-close-btn,
@@ -3753,7 +3742,6 @@ header.fading {
   stroke-width: 2;
 }
 
-/* Yearbook iframe container update */
 .yearbook-iframe-container {
   position: absolute;
   top: 0;
@@ -3766,7 +3754,6 @@ header.fading {
   margin-top: 4.3rem;
 }
 
-/* Full screen mode styles */
 .yearbook-iframe-container:fullscreen {
   position: fixed;
   top: 0;
@@ -3774,7 +3761,8 @@ header.fading {
   width: 100vw;
   height: 100vh;
   margin: 0;
-  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center center/cover no-repeat;
+  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center
+    center/cover no-repeat;
   z-index: 9999;
 }
 
@@ -3785,7 +3773,8 @@ header.fading {
   width: 100vw;
   height: 100vh;
   margin: 0;
-  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center center/cover no-repeat;
+  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center
+    center/cover no-repeat;
   z-index: 9999;
 }
 
@@ -3796,7 +3785,8 @@ header.fading {
   width: 100vw;
   height: 100vh;
   margin: 0;
-  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center center/cover no-repeat;
+  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center
+    center/cover no-repeat;
   z-index: 9999;
 }
 
@@ -3807,11 +3797,11 @@ header.fading {
   width: 100vw;
   height: 100vh;
   margin: 0;
-  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center center/cover no-repeat;
+  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center
+    center/cover no-repeat;
   z-index: 9999;
 }
 
-/* Yearbook items transition */
 .yearbook-items-container {
   transition: bottom 0.3s ease;
 }
@@ -3821,7 +3811,6 @@ header.fading {
   opacity: 0.8;
 }
 
-/* Responsive close button */
 @media (max-width: 768px) {
   .yearbook-close-btn {
     top: 4.5rem;
@@ -3850,7 +3839,6 @@ header.fading {
   }
 }
 
-/* Edit Student Modal Styles */
 .editStudentModal {
   position: fixed;
   top: 0;
@@ -3976,13 +3964,18 @@ header.fading {
 }
 
 .editStudentModal .section-header::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
   transition: left 0.5s;
 }
 
@@ -4114,7 +4107,6 @@ header.fading {
   color: #f87171;
 }
 
-/* Responsive styles for modal */
 @media (max-width: 1200px) {
   .editStudentModal .form-group {
     flex-direction: column;
@@ -4155,7 +4147,6 @@ header.fading {
   }
 }
 
-/* Notification styles for modal success/error messages */
 .notification {
   position: fixed;
   top: 20px;

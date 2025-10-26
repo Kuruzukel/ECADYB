@@ -4,20 +4,16 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 require_once __DIR__ . '/../../Connection/Configuration/config.php';
 
-// Check if user is logged in and is a student
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'student') {
-  // Redirect to login page if not logged in or not a student
   header('Location: ' . BASE_URL . 'Public/Components/Login.php');
   exit();
 }
 
-// Get student information from session
 $studentId = $_SESSION['student_id'] ?? '';
 $studentName = $_SESSION['name'] ?? '';
 $studentDepartment = $_SESSION['department'] ?? '';
 $studentSection = $_SESSION['section'] ?? '';
 
-// Fetch additional student details from MongoDB
 require __DIR__ . '/../../vendor/autoload.php';
 
 use MongoDB\Client;
@@ -32,7 +28,6 @@ try {
   $mongoUrl = getMongoUrl();
   $client = new Client($mongoUrl);
 
-  // Collections mapping
   $collections = [
     "BS Marine Engineering" => "bsme",
     "BS Marine Transportation" => "bsmt",
@@ -46,14 +41,12 @@ try {
     "BS Entrepreneurship" => "bse"
   ];
 
-  // Determine which database and collection to use
-  $dbName = $_SESSION['batch_template'] ?? "ECADYB"; // Use batch template from session, default to ECADYB
+  $dbName = $_SESSION['batch_template'] ?? "ECADYB";
   $collectionName = $collections[$studentDepartment] ?? 'bsme';
 
   $db = $client->$dbName;
   $collection = $db->$collectionName;
 
-  // Find the student by student ID (trying both field name variations)
   $student = $collection->findOne([
     '$or' => [
       ['student id' => $studentId],
@@ -61,10 +54,9 @@ try {
     ]
   ]);
 
-  // If not found in the expected collection, search all collections in this batch template
   if (!$student) {
     foreach ($collections as $fullName => $collName) {
-      if ($collName === $collectionName) continue; // Skip the one we already tried
+      if ($collName === $collectionName) continue;
 
       $altCollection = $db->$collName;
       $student = $altCollection->findOne([
@@ -75,7 +67,6 @@ try {
       ]);
 
       if ($student) {
-        // Update the collection name if found in a different collection
         $collectionName = $collName;
         $collection = $altCollection;
         break;
@@ -88,15 +79,12 @@ try {
     $studentProgram = $student['program'] ?? '';
     $studentStatus = $student['status'] ?? 'Pending';
 
-    // Fetch student photo from Student_Photos collection in the same database
     $studentPhotosCollection = $db->Student_Photos;
 
-    // Find the student photo by student ID
     $studentPhoto = $studentPhotosCollection->findOne([
       'student_id' => $studentId
     ]);
 
-    // Get the uniform photo URL (or toga/filipiniana as fallback)
     if ($studentPhoto && isset($studentPhoto['uniform_url'])) {
       $studentProfilePhoto = $studentPhoto['uniform_url'];
     } elseif ($studentPhoto && isset($studentPhoto['toga_url'])) {
@@ -105,7 +93,6 @@ try {
       $studentProfilePhoto = $studentPhoto['filipiniana_url'];
     }
 
-    // Update session with all student info
     $_SESSION['academic_year'] = $studentAcademicYear;
     $_SESSION['program'] = $studentProgram;
     $_SESSION['status'] = $studentStatus;
@@ -120,7 +107,6 @@ try {
     $_SESSION['collection'] = $collectionName;
     $_SESSION['batch_template'] = $dbName;
   } else {
-    // Debug: Log that student was not found
     error_log("Student not found with ID: " . $studentId . " in database: " . $dbName . " collection: " . $collectionName);
   }
 } catch (Exception $e) {
@@ -137,50 +123,30 @@ try {
 
   <meta property="fb:app_id" content="1767810860531321" />
   <meta property="og:locale" content="en_US" />
-  <meta
-    property="og:title"
-    content="Student Dashboard - Graduation Gallery" />
-  <meta
-    property="og:description"
+  <meta property="og:title" content="Student Dashboard - Graduation Gallery" />
+  <meta property="og:description"
     content="Step into your digital yearbook. Every achievement and memory comes alive." />
-  <meta
-    property="og:image"
-    content="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png" />
-  <meta
-    property="og:image:secure_url"
-    content="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png" />
+  <meta property="og:image" content="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png" />
+  <meta property="og:image:secure_url" content="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:url" content="https://grad-gallery.up.railway.app" />
   <meta property="og:type" content="website" />
 
   <meta name="twitter:card" content="summary_large_image" />
-  <meta
-    name="twitter:title"
-    content="Graduation Gallery - Student Dashboard" />
-  <meta
-    name="twitter:description"
+  <meta name="twitter:title" content="Graduation Gallery - Student Dashboard" />
+  <meta name="twitter:description"
     content="Step into your digital yearbook. Every achievement and memory comes alive." />
-  <meta
-    name="twitter:image"
-    content="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png" />
-  <meta
-    name="twitter:image:alt"
-    content="Student Dashboard Graduation Gallery Preview Logo" />
+  <meta name="twitter:image" content="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png" />
+  <meta name="twitter:image:alt" content="Student Dashboard Graduation Gallery Preview Logo" />
 
-  <link
-    rel="icon"
-    href="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png"
-    type="image/png" />
+  <link rel="icon" href="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png" type="image/png" />
 
   <link rel="stylesheet" href="/ECADYB/Student/assets/css/StudentDashboard.css" />
 
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
 
   <script>
-    // Pass student information to JavaScript
     window.studentData = {
       studentId: <?php echo json_encode($studentId); ?>,
       studentName: <?php echo json_encode($studentName); ?>,
@@ -206,10 +172,7 @@ try {
     <div class="main-hero-background"></div>
     <div class="main-hero-text">
       <div class="logo-container">
-        <img
-          src="https://ECADYB.b-cdn.net/img/GRALLERYLOGO4.0.png"
-          alt="Logo"
-          class="logo-img" />
+        <img src="https://ECADYB.b-cdn.net/img/GRALLERYLOGO4.0.png" alt="Logo" class="logo-img" />
       </div>
       <div class="hero-message">
         <div>
@@ -230,23 +193,13 @@ try {
       </div>
     </div>
     <div class="main-hero-lower-curl">
-      <svg
-        viewBox="0 0 1440 120"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        preserveAspectRatio="none"
+      <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"
         style="display: block; width: 100%; height: 60px">
-        <path
-          d="M0,60 Q180,100 360,60 T720,60 T1080,60 T1440,60 L1440,120 L0,120 Z"
-          fill="#1a237e"
+        <path d="M0,60 Q180,100 360,60 T720,60 T1080,60 T1440,60 L1440,120 L0,120 Z" fill="#1a237e"
           opacity="0.4" />
-        <path
-          d="M0,80 Q180,40 360,80 T720,80 T1080,80 T1440,80 L1440,120 L0,120 Z"
-          fill="#112d4e"
+        <path d="M0,80 Q180,40 360,80 T720,80 T1080,80 T1440,80 L1440,120 L0,120 Z" fill="#112d4e"
           opacity="0.7" />
-        <path
-          d="M0,100 Q180,60 360,100 T720,100 T1080,100 T1440,100 L1440,120 L0,120 Z"
-          fill="#021326" />
+        <path d="M0,100 Q180,60 360,100 T720,100 T1080,100 T1440,100 L1440,120 L0,120 Z" fill="#021326" />
       </svg>
     </div>
   </section>

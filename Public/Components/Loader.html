@@ -52,12 +52,16 @@
       type="image/png"
     />
     <script>
-      // Auto-detect base URL for Railway vs Localhost
-      const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-      const BASE_URL = isLocalhost ? '/ECADYB/' : '/';
-      
-      // Dynamically set the stylesheet href
-      document.write('<link rel="stylesheet" href="' + BASE_URL + 'Public/assets/css/Loader.css" />');
+      const isLocalhost =
+        window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1";
+      const BASE_URL = isLocalhost ? "/ECADYB/" : "/";
+
+      document.write(
+        '<link rel="stylesheet" href="' +
+          BASE_URL +
+          'Public/assets/css/Loader.css" />'
+      );
     </script>
   </head>
   <body>
@@ -113,8 +117,8 @@
         loading="eager"
       ></iframe>
       <script>
-        // Set iframe src with correct base URL
-        document.getElementById('preload-frame').src = BASE_URL + 'LandingPage/index.html';
+        document.getElementById("preload-frame").src =
+          BASE_URL + "LandingPage/index.html";
       </script>
       <div class="main-hero-lower-curl">
         <svg
@@ -142,9 +146,8 @@
       </div>
     </section>
     <script>
-      // Load script with correct base URL
-      const scriptTag = document.createElement('script');
-      scriptTag.src = BASE_URL + 'Public/assets/js/Loader.js?v=' + Date.now();
+      const scriptTag = document.createElement("script");
+      scriptTag.src = BASE_URL + "Public/assets/js/Loader.js?v=" + Date.now();
       document.body.appendChild(scriptTag);
     </script>
   </body>

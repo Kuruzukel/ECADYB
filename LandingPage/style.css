@@ -2596,7 +2596,6 @@ header.fading {
     display: none;
   }
 
-  /* Yearbook Detail Popup Styles for 768px-600px */
   .yearbook-detail-container {
     display: flex;
     flex-direction: column;
@@ -3126,7 +3125,6 @@ header.fading {
     display: none;
   }
 
-  /* Yearbook Detail Popup Styles for 600px-480px */
   .yearbook-detail-container {
     display: flex;
     flex-direction: column;
@@ -3599,7 +3597,6 @@ header.fading {
     cursor: pointer;
   }
 
-  /* Previous item (left side) */
   .yearbook-item.mobile-active + .yearbook-item {
     opacity: 0.6;
     pointer-events: none;
@@ -3607,7 +3604,6 @@ header.fading {
     transform: translateX(-180%) scale(0.75);
   }
 
-  /* Show previous item with a class */
   .yearbook-item.mobile-prev {
     opacity: 0.6;
     pointer-events: none;
@@ -3615,7 +3611,6 @@ header.fading {
     transform: translateX(-180%) scale(0.75);
   }
 
-  /* Show next item with a class */
   .yearbook-item.mobile-next {
     opacity: 0.6;
     pointer-events: none;
@@ -3623,7 +3618,6 @@ header.fading {
     transform: translateX(80%) scale(0.75);
   }
 
-  /* Disable hover effects on mobile */
   .yearbook-item:hover,
   .yearbook-item:not(.active):hover,
   .yearbook-item.active:hover {
@@ -3634,7 +3628,6 @@ header.fading {
     transform: none !important;
   }
 
-  /* Hide yearbook items and navigation when popup is shown */
   .yearbook-slider-main.show-yearbook-bg .yearbook-items-container {
     display: none;
   }
@@ -3788,7 +3781,6 @@ header.fading {
     padding: 0 0.3rem;
   }
 
-  /* Yearbook Detail Popup Mobile Styles */
   .yearbook-detail-container {
     display: flex;
     flex-direction: column;

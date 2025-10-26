@@ -12,7 +12,6 @@ $error_message = '';
 $client = null;
 $adminCollection = null;
 
-// Only search in ECADYB database
 $batchTemplates = ['ECADYB'];
 
 $collections = [
@@ -28,7 +27,6 @@ $collections = [
     "bse"    => "BS Entrepreneurship"
 ];
 
-// Initialize MongoDB connection with error handling
 try {
     $client = new Client(getMongoUrl());
     $adminDB = $client->admin;
@@ -36,7 +34,6 @@ try {
 } catch (Exception $e) {
     error_log("MongoDB Connection Error in Login.php: " . $e->getMessage());
 
-    // Provide more helpful error message for Railway deployment
     if (getenv('RAILWAY_ENVIRONMENT') || getenv('RAILWAY_PUBLIC_URL')) {
         $error_message = "Database connection error. MongoDB URL not configured. Please set MONGO_URL or MONGODB_URI in Railway dashboard.";
     } else {
@@ -65,20 +62,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $client !== null) {
                 $_SESSION['login_success'] = 'admin';
                 $_SESSION['redirect_to'] = '../../Admin/Components/AdminDashboard.php';
 
-                // Redirect to admin dashboard
                 header('Location: ' . BASE_URL . 'Admin');
                 exit();
             } else {
                 $loginFound = false;
 
-                // Search across all batch template databases
                 foreach ($batchTemplates as $batchTemplate) {
                     $departmentsDB = $client->$batchTemplate;
 
                     foreach ($collections as $collectionName => $course) {
                         $collection = $departmentsDB->{$collectionName};
 
-                        // Try to find student with either 'student id' or 'student_id' field name
                         $student = $collection->findOne([
                             '$or' => [
                                 [
@@ -93,7 +87,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $client !== null) {
                         ]);
 
                         if ($student) {
-                            // Get student ID from either field name variation
                             $studentIdValue = $student['student id'] ?? $student['student_id'] ?? $username;
 
                             $_SESSION['role']       = 'student';
@@ -101,12 +94,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $client !== null) {
                             $_SESSION['name']       = trim(($student['first name'] ?? '') . ' ' . ($student['middle name'] ?? '') . ' ' . ($student['last name'] ?? ''));
                             $_SESSION['department'] = $course;
                             $_SESSION['section']    = $student['department section'] ?? '';
-                            $_SESSION['batch_template'] = $batchTemplate; // Store which batch template was found
+                            $_SESSION['batch_template'] = $batchTemplate;
                             $_SESSION['login_success'] = 'student';
                             $_SESSION['redirect_to'] = '../../Student/Components/StudentDashboard.php';
                             $loginFound = true;
 
-                            // Redirect to student dashboard
                             header('Location: ' . BASE_URL . 'Student');
                             exit();
                         }

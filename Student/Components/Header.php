@@ -3,7 +3,6 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 
 use MongoDB\Client;
 
-// Get student information from session
 $studentId = $_SESSION['student_id'] ?? '';
 $studentName = $_SESSION['name'] ?? '';
 $studentFirstName = $_SESSION['first_name'] ?? '';
@@ -19,7 +18,6 @@ $studentHonors = $_SESSION['honors'] ?? '';
 $studentMilestone = $_SESSION['milestone'] ?? '';
 $studentProfilePhoto = $_SESSION['profile_photo'] ?? '';
 
-// Fetch student data from MongoDB if not already in session
 if (empty($studentEmail) || empty($studentFirstName)) {
 
   try {
@@ -27,7 +25,6 @@ if (empty($studentEmail) || empty($studentFirstName)) {
     $mongoUrl = getMongoUrl();
     $client = new Client($mongoUrl);
 
-    // Collections mapping
     $collections = [
       "BS Marine Engineering" => "bsme",
       "BS Marine Transportation" => "bsmt",
@@ -41,14 +38,12 @@ if (empty($studentEmail) || empty($studentFirstName)) {
       "BS Entrepreneurship" => "bse"
     ];
 
-    // Determine which database and collection to use
     $dbName = $_SESSION['batch_template'] ?? "ECADYB";
     $collectionName = $collections[$studentDepartment] ?? 'bsme';
 
     $db = $client->$dbName;
     $collection = $db->$collectionName;
 
-    // Find the student by student ID
     $student = $collection->findOne([
       '$or' => [
         ['student id' => $studentId],
@@ -57,7 +52,6 @@ if (empty($studentEmail) || empty($studentFirstName)) {
     ]);
 
     if ($student) {
-      // Store all data in session
       $studentFirstName = $_SESSION['first_name'] = $student['first name'] ?? '';
       $studentMiddleName = $_SESSION['middle_name'] = $student['middle name'] ?? '';
       $studentLastName = $_SESSION['last_name'] = $student['last name'] ?? '';
@@ -73,7 +67,6 @@ if (empty($studentEmail) || empty($studentFirstName)) {
   }
 }
 
-// Fallback: Parse full name if individual fields are empty
 if (empty($studentFirstName) && empty($studentLastName) && !empty($studentName)) {
   $nameParts = explode(' ', trim($studentName));
   if (count($nameParts) >= 3) {
@@ -154,10 +147,8 @@ if (empty($studentFirstName) && empty($studentLastName) && !empty($studentName))
   </button>
 </header>
 
-<!-- Notification Container -->
 <div id="notification-container"></div>
 
-<!-- Edit Student Information Modal -->
 <div id="editStudentModal" class="editStudentModal">
   <div class="modal-content">
     <div class="modal-header">
@@ -171,7 +162,6 @@ if (empty($studentFirstName) && empty($studentLastName) && !empty($studentName))
           value="<?php echo htmlspecialchars($studentId); ?>">
 
         <div class="form-group">
-          <!-- Personal Information Section -->
           <div class="section">
             <div class="section-header">Personal Information</div>
 
@@ -195,7 +185,6 @@ if (empty($studentFirstName) && empty($studentLastName) && !empty($studentName))
               placeholder="Email">
           </div>
 
-          <!-- Academic Information Section -->
           <div class="section">
             <div class="section-header">Academic Information</div>
 
@@ -218,7 +207,6 @@ if (empty($studentFirstName) && empty($studentLastName) && !empty($studentName))
               readonly>
           </div>
 
-          <!-- Additional Information Section -->
           <div class="section">
             <div class="section-header">Additional Information</div>
 

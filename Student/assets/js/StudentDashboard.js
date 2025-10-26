@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Clean up any existing fragments in the URL on page load
   if (window.location.hash) {
     setTimeout(() => {
       if (window.history && window.history.replaceState) {
@@ -51,8 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
     e.stopPropagation();
     this.classList.toggle("clicked");
     notificationDropdown.classList.toggle("show");
-    
-    // Close profile dropdown if it's open
+
     if (profileIcon && dropdownMenu) {
       profileIcon.classList.remove("clicked");
       dropdownMenu.classList.remove("show");
@@ -69,7 +67,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Mark individual notification as read when clicked
   const notificationItems = document.querySelectorAll(".notification-item");
   notificationItems.forEach((item) => {
     item.addEventListener("click", function () {
@@ -78,7 +75,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // Update badge count
   function updateNotificationBadge() {
     const unreadCount = document.querySelectorAll(
       ".notification-item.unread"
@@ -106,8 +102,7 @@ document.addEventListener("DOMContentLoaded", function () {
     e.stopPropagation();
     this.classList.toggle("clicked");
     dropdownMenu.classList.toggle("show");
-    
-    // Close notification dropdown if it's open
+
     if (notificationIcon && notificationDropdown) {
       notificationIcon.classList.remove("clicked");
       notificationDropdown.classList.remove("show");
@@ -134,8 +129,7 @@ document.addEventListener("DOMContentLoaded", function () {
   navLinks.forEach((link) => {
     link.addEventListener("click", function (e) {
       const targetHref = this.getAttribute("href");
-      
-      // Only prevent default and smooth scroll if it's an anchor link (starts with #)
+
       if (targetHref && targetHref.startsWith("#")) {
         e.preventDefault();
 
@@ -148,8 +142,7 @@ document.addEventListener("DOMContentLoaded", function () {
           targetSection.scrollIntoView({
             behavior: "smooth",
           });
-          
-          // Remove the fragment from URL after scrolling
+
           setTimeout(() => {
             if (window.history && window.history.replaceState) {
               window.history.replaceState(null, null, window.location.pathname);
@@ -157,15 +150,13 @@ document.addEventListener("DOMContentLoaded", function () {
           }, 1000);
         }
       }
-      // For regular page links, allow normal navigation
     });
   });
 
   heroButtons.forEach((button) => {
     button.addEventListener("click", function (e) {
       const targetHref = this.getAttribute("href");
-      
-      // Only prevent default and smooth scroll if it's an anchor link (starts with #)
+
       if (targetHref && targetHref.startsWith("#")) {
         e.preventDefault();
 
@@ -181,8 +172,7 @@ document.addEventListener("DOMContentLoaded", function () {
           targetSection.scrollIntoView({
             behavior: "smooth",
           });
-          
-          // Remove the fragment from URL after scrolling
+
           setTimeout(() => {
             if (window.history && window.history.replaceState) {
               window.history.replaceState(null, null, window.location.pathname);
@@ -190,7 +180,6 @@ document.addEventListener("DOMContentLoaded", function () {
           }, 1000);
         }
       } else {
-        // For page links, just add visual feedback
         this.classList.add("clicked");
         setTimeout(() => {
           this.classList.remove("clicked");
@@ -202,19 +191,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
 const track = document.getElementById("carousel-track");
 
-// Only run carousel code if the carousel element exists
 if (track) {
-  let carouselImageElements = Array.from(track.querySelectorAll(".carousel-img"));
+  let carouselImageElements = Array.from(
+    track.querySelectorAll(".carousel-img")
+  );
   let carouselImages = carouselImageElements.map((img) => img.src);
 
-  // Remove duplicates - get only unique images
   carouselImages = [...new Set(carouselImages)];
 
   let currentIndex = 0;
   let isTransitioning = false;
 
   function renderImages() {
-    // Clone first and last images for seamless loop
     const images = [
       carouselImages[carouselImages.length - 1],
       ...carouselImages,
@@ -239,7 +227,7 @@ if (track) {
 
   function moveToIndex(index) {
     if (isTransitioning) return;
-    
+
     currentIndex = index;
     isTransitioning = true;
     track.style.transition = "transform 0.6s ease-in-out";
@@ -248,15 +236,12 @@ if (track) {
 
   function handleTransitionEnd() {
     isTransitioning = false;
-    
-    // If we're at the cloned last image, jump to the real first image
+
     if (currentIndex >= carouselImages.length) {
       track.style.transition = "none";
       track.style.transform = `translateX(-100%)`;
       currentIndex = 0;
-    }
-    // If we're at the cloned first image, jump to the real last image
-    else if (currentIndex < 0) {
+    } else if (currentIndex < 0) {
       track.style.transition = "none";
       track.style.transform = `translateX(-${carouselImages.length * 100}%)`;
       currentIndex = carouselImages.length - 1;
@@ -316,7 +301,6 @@ if (track) {
     clearInterval(autoSlideInterval);
   }
 
-  // Pause auto-slide on hover
   track.addEventListener("mouseenter", stopAutoSlide);
   track.addEventListener("mouseleave", startAutoSlide);
 
@@ -331,7 +315,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const pagination = document.querySelector(".carousel-3d-pagination");
 
   if (!carousel || !items.length || !pagination) {
-    // 3D carousel not present on this page - skip initialization
     return;
   }
 
@@ -639,16 +622,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-// Service Worker registration disabled - file not found
-// if ("serviceWorker" in navigator) {
-//   window.addEventListener("load", () => {
-//     navigator.serviceWorker
-//       .register("./service-worker.js")
-//       .then((reg) => console.log("✅ Service Worker registered:", reg.scope))
-//       .catch((err) => console.log("❌ Service Worker failed:", err));
-//   });
-// }
-
 document.addEventListener("DOMContentLoaded", function () {
   setTimeout(() => {
     initializeYearbookItems();
@@ -660,11 +633,9 @@ function initializeYearbookItems() {
   const sliderMain = document.querySelector(".yearbook-slider-main");
 
   if (!itemsContainer || !sliderMain) {
-    // Check if we're on the yearbook page - if not, don't retry
     if (!document.querySelector(".yearbooks-section")) {
-      return; // Not on yearbook page, exit silently
+      return;
     }
-    // Silently retry without logging warning
     setTimeout(initializeYearbookItems, 200);
     return;
   }
@@ -904,106 +875,99 @@ function markAllAsRead() {
   console.log("All notifications marked as read");
 }
 
-// Store original form values
 let originalFormValues = {};
 
 function editProfile() {
   console.log("Edit Profile clicked");
-  const modal = document.getElementById('editStudentModal');
+  const modal = document.getElementById("editStudentModal");
   if (modal) {
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden'; // Prevent background scrolling
-    
-    // Store original values when modal opens
-    const form = document.getElementById('edit-student-form');
+    modal.classList.add("active");
+    document.body.style.overflow = "hidden";
+
+    const form = document.getElementById("edit-student-form");
     if (form) {
       originalFormValues = {
-        email: form.querySelector('#email')?.value || '',
-        motto: form.querySelector('#motto')?.value || '',
-        milestone: form.querySelector('#milestone')?.value || ''
+        email: form.querySelector("#email")?.value || "",
+        motto: form.querySelector("#motto")?.value || "",
+        milestone: form.querySelector("#milestone")?.value || "",
       };
     }
   }
 }
 
 function closeEditModal() {
-  const modal = document.getElementById('editStudentModal');
+  const modal = document.getElementById("editStudentModal");
   if (modal) {
-    modal.classList.remove('active');
-    document.body.style.overflow = ''; // Restore scrolling
-    
-    // Reset the form to original values
-    const form = document.getElementById('edit-student-form');
+    modal.classList.remove("active");
+    document.body.style.overflow = "";
+
+    const form = document.getElementById("edit-student-form");
     if (form) {
       form.reset();
     }
   }
 }
 
-// Close modal when clicking outside
-document.addEventListener('click', function(event) {
-  const modal = document.getElementById('editStudentModal');
-  if (modal && event.target === modal && modal.classList.contains('active')) {
+document.addEventListener("click", function (event) {
+  const modal = document.getElementById("editStudentModal");
+  if (modal && event.target === modal && modal.classList.contains("active")) {
     closeEditModal();
   }
 });
 
-// Close modal on ESC key
-document.addEventListener('keydown', function(event) {
-  const modal = document.getElementById('editStudentModal');
-  if (event.key === 'Escape' && modal && modal.classList.contains('active')) {
+document.addEventListener("keydown", function (event) {
+  const modal = document.getElementById("editStudentModal");
+  if (event.key === "Escape" && modal && modal.classList.contains("active")) {
     closeEditModal();
   }
 });
 
-// Helper functions for form validation
 function allowOnlyLetters(input) {
-  input.value = input.value.replace(/[^a-zA-Z\s]/g, '');
+  input.value = input.value.replace(/[^a-zA-Z\s]/g, "");
 }
 
 function removeSpaces(input) {
-  input.value = input.value.replace(/\s/g, '');
+  input.value = input.value.replace(/\s/g, "");
 }
 
 function formatAcademicYear(input) {
-  let value = input.value.replace(/[^0-9]/g, '');
+  let value = input.value.replace(/[^0-9]/g, "");
   if (value.length > 4) {
-    value = value.substring(0, 4) + '-' + value.substring(4, 8);
+    value = value.substring(0, 4) + "-" + value.substring(4, 8);
   }
   input.value = value;
 }
 
-// Submit student information
 async function submitStudentInfo(event) {
   event.preventDefault();
-  
-  const form = document.getElementById('edit-student-form');
+
+  const form = document.getElementById("edit-student-form");
   const formData = new FormData(form);
-  
-  // Get current values (only editable fields)
+
   const currentValues = {
-    email: formData.get('email') || '',
-    motto: formData.get('motto') || '',
-    milestone: formData.get('milestone') || ''
+    email: formData.get("email") || "",
+    motto: formData.get("motto") || "",
+    milestone: formData.get("milestone") || "",
   };
-  
-  // Check if any editable field has changed
-  const hasChanges = 
+
+  const hasChanges =
     currentValues.email !== originalFormValues.email ||
     currentValues.motto !== originalFormValues.motto ||
     currentValues.milestone !== originalFormValues.milestone;
-  
+
   if (!hasChanges) {
-    showNotification('No changes detected. Please modify at least one field before saving.', 'info');
+    showNotification(
+      "No changes detected. Please modify at least one field before saving.",
+      "info"
+    );
     return;
   }
-  
-  // Get student data from window.studentData (set in StudentDashboard.php)
-  const studentId = window.studentData?.studentId || formData.get('student_id');
-  const academicYear = window.studentData?.studentAcademicYear || formData.get('academic_year');
-  const department = window.studentData?.studentDepartment || '';
-  
-  // Map department names to collection names
+
+  const studentId = window.studentData?.studentId || formData.get("student_id");
+  const academicYear =
+    window.studentData?.studentAcademicYear || formData.get("academic_year");
+  const department = window.studentData?.studentDepartment || "";
+
   const collectionMap = {
     "BS Marine Engineering": "bsme",
     "BS Marine Transportation": "bsmt",
@@ -1014,77 +978,76 @@ async function submitStudentInfo(event) {
     "BS Nursing": "bsn",
     "BS Information System": "bsis",
     "BS Management Accounting": "bsma",
-    "BS Entrepreneurship": "bse"
+    "BS Entrepreneurship": "bse",
   };
-  
-  const collection = collectionMap[department] || 'bsme';
-  
-  // Convert FormData to the format expected by UpdateStudent.php
+
+  const collection = collectionMap[department] || "bsme";
+
   const data = {
-    'original_student_id': studentId,
-    'collection': collection,
-    'academic_year': academicYear,
-    'first name': formData.get('first_name'),
-    'middle name': formData.get('middle_name'),
-    'last name': formData.get('last_name'),
-    'email': formData.get('email'),
-    'motto': formData.get('motto'),
-    'honors': formData.get('honors'),
-    'milestone': formData.get('milestone')
+    original_student_id: studentId,
+    collection: collection,
+    academic_year: academicYear,
+    "first name": formData.get("first_name"),
+    "middle name": formData.get("middle_name"),
+    "last name": formData.get("last_name"),
+    email: formData.get("email"),
+    motto: formData.get("motto"),
+    honors: formData.get("honors"),
+    milestone: formData.get("milestone"),
   };
-  
-  console.log('Submitting student data:', data);
-  
+
+  console.log("Submitting student data:", data);
+
   try {
-    const response = await fetch('/ECADYB/Connection/Student/UpdateStudent.php', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data)
-    });
-    
+    const response = await fetch(
+      "/ECADYB/Connection/Student/UpdateStudent.php",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    );
+
     const result = await response.json();
-    
-            if (result.success) {
-              showNotification('Success! Student information updated.', 'success');
-              
-              // Close the modal after showing success notification
-              setTimeout(() => {
-                closeEditModal();
-              }, 1000);
-              
-              // Reload page after a delay to refresh session data
-              setTimeout(() => {
-                location.reload();
-              }, 2000);
-            } else {
-              showNotification('Error: ' + (result.message || 'Failed to update student information.'), 'error');
-            }
+
+    if (result.success) {
+      showNotification("Success! Student information updated.", "success");
+
+      setTimeout(() => {
+        closeEditModal();
+      }, 1000);
+
+      setTimeout(() => {
+        location.reload();
+      }, 2000);
+    } else {
+      showNotification(
+        "Error: " + (result.message || "Failed to update student information."),
+        "error"
+      );
+    }
   } catch (error) {
-    console.error('Error updating student:', error);
-    showNotification('Error: Failed to update student information.', 'error');
+    console.error("Error updating student:", error);
+    showNotification("Error: Failed to update student information.", "error");
   }
 }
 
-// Show notification function
-function showNotification(message, type = 'info') {
-  // Remove existing notification if any
-  const existingNotification = document.querySelector('.notification');
+function showNotification(message, type = "info") {
+  const existingNotification = document.querySelector(".notification");
   if (existingNotification) {
     existingNotification.remove();
   }
-  
-  // Create notification element
-  const notification = document.createElement('div');
+
+  const notification = document.createElement("div");
   notification.className = `notification ${type}`;
-  
-  // Add icon based on type
-  let icon = 'fa-info';
-  if (type === 'success') icon = 'fa-check';
-  if (type === 'error') icon = 'fa-times';
-  if (type === 'warning') icon = 'fa-exclamation';
-  
+
+  let icon = "fa-info";
+  if (type === "success") icon = "fa-check";
+  if (type === "error") icon = "fa-times";
+  if (type === "warning") icon = "fa-exclamation";
+
   notification.innerHTML = `
     <div class="notification-icon-wrapper">
       <i class="fas ${icon}"></i>
@@ -1094,17 +1057,15 @@ function showNotification(message, type = 'info') {
       <i class="fas fa-times"></i>
     </button>
   `;
-  
+
   document.body.appendChild(notification);
-  
-  // Trigger animation
+
   setTimeout(() => {
-    notification.classList.add('show');
+    notification.classList.add("show");
   }, 100);
-  
-  // Remove notification after 3 seconds
+
   setTimeout(() => {
-    notification.classList.remove('show');
+    notification.classList.remove("show");
     setTimeout(() => {
       notification.remove();
     }, 500);
@@ -1113,68 +1074,64 @@ function showNotification(message, type = 'info') {
 
 function logout() {
   console.log("Logout clicked");
-  // Redirect to logout page to destroy session
-  window.location.href = '/ECADYB/Student/Components/Logout.php';
+  window.location.href = "/ECADYB/Student/Components/Logout.php";
 }
 
-// Load announcements from MongoDB
 async function loadAnnouncements() {
   try {
-    const notificationList = document.getElementById('notificationList');
-    const notificationBadge = document.getElementById('notificationBadge');
-    
-    // Check if elements exist before proceeding
-    // (Silently exit if not on StudentDashboard page)
+    const notificationList = document.getElementById("notificationList");
+    const notificationBadge = document.getElementById("notificationBadge");
+
     if (!notificationList || !notificationBadge) {
       return;
     }
-    
-    const response = await fetch('/ECADYB/Connection/Announcement/FetchAnnouncements.php');
+
+    const response = await fetch(
+      "/ECADYB/Connection/Announcement/FetchAnnouncements.php"
+    );
     const result = await response.json();
-    
+
     if (result.success && result.data.length > 0) {
-      // Update notification badge count
       notificationBadge.textContent = result.count;
-      notificationBadge.classList.remove('hidden');
-      
-      // Clear loading message
-      notificationList.innerHTML = '';
-      
-      // Add each announcement
-      result.data.forEach(announcement => {
+      notificationBadge.classList.remove("hidden");
+
+      notificationList.innerHTML = "";
+
+      result.data.forEach((announcement) => {
         const notificationItem = createNotificationItem(announcement);
         notificationList.appendChild(notificationItem);
       });
     } else {
-      // No announcements or error
-      notificationList.innerHTML = '<div class="notification-item"><div class="notification-content"><p class="notification-text">No new announcements</p></div></div>';
-      notificationBadge.classList.add('hidden');
+      notificationList.innerHTML =
+        '<div class="notification-item"><div class="notification-content"><p class="notification-text">No new announcements</p></div></div>';
+      notificationBadge.classList.add("hidden");
     }
   } catch (error) {
-    console.error('Error loading announcements:', error);
-    const notificationList = document.getElementById('notificationList');
+    console.error("Error loading announcements:", error);
+    const notificationList = document.getElementById("notificationList");
     if (notificationList) {
-      notificationList.innerHTML = '<div class="notification-item"><div class="notification-content"><p class="notification-text">Error loading announcements</p></div></div>';
+      notificationList.innerHTML =
+        '<div class="notification-item"><div class="notification-content"><p class="notification-text">Error loading announcements</p></div></div>';
     }
   }
 }
 
-// Create notification item element
 function createNotificationItem(announcement) {
-  const item = document.createElement('div');
-  item.className = 'notification-item unread';
-  
-  // Determine icon based on type
-  let iconClass = 'fa-solid fa-info-circle';
-  if (announcement.type === 'announcement') {
-    iconClass = 'fa-solid fa-bullhorn';
-  } else if (announcement.type === 'event') {
-    iconClass = 'fa-solid fa-calendar';
+  const item = document.createElement("div");
+  item.className = "notification-item unread";
+
+  let iconClass = "fa-solid fa-info-circle";
+  if (announcement.type === "announcement") {
+    iconClass = "fa-solid fa-bullhorn";
+  } else if (announcement.type === "event") {
+    iconClass = "fa-solid fa-calendar";
   }
-  
-  // Format date
-  const formattedDate = formatAnnouncementDate(announcement.date, announcement.time);
-  
+
+  const formattedDate = formatAnnouncementDate(
+    announcement.date,
+    announcement.time
+  );
+
   item.innerHTML = `
     <i class="${iconClass} notification-item-icon"></i>
     <div class="notification-content">
@@ -1182,39 +1139,40 @@ function createNotificationItem(announcement) {
       <span class="notification-time">${formattedDate}</span>
     </div>
   `;
-  
+
   return item;
 }
 
-// Format announcement date and time
 function formatAnnouncementDate(date, time) {
-  if (!date) return 'Recently';
-  
-  const announcementDate = new Date(date + ' ' + time);
-  
-  // Format options for date
-  const dateOptions = { 
-    year: 'numeric', 
-    month: 'short', 
-    day: 'numeric' 
+  if (!date) return "Recently";
+
+  const announcementDate = new Date(date + " " + time);
+
+  const dateOptions = {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
   };
-  
-  // Format options for time
-  const timeOptions = { 
-    hour: 'numeric', 
-    minute: '2-digit',
-    hour12: true 
+
+  const timeOptions = {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
   };
-  
-  const formattedDate = announcementDate.toLocaleDateString('en-US', dateOptions);
-  const formattedTime = announcementDate.toLocaleTimeString('en-US', timeOptions);
-  
+
+  const formattedDate = announcementDate.toLocaleDateString(
+    "en-US",
+    dateOptions
+  );
+  const formattedTime = announcementDate.toLocaleTimeString(
+    "en-US",
+    timeOptions
+  );
+
   return `${formattedDate} at ${formattedTime}`;
 }
 
-// Load announcements when page loads
-document.addEventListener('DOMContentLoaded', function() {
-  // Add a small delay to ensure DOM is fully ready
+document.addEventListener("DOMContentLoaded", function () {
   setTimeout(() => {
     loadAnnouncements();
   }, 100);
