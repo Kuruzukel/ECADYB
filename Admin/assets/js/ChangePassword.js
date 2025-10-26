@@ -298,7 +298,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const notification = document.createElement("div");
     notification.className = `notification ${type}-message`;
 
-    // Create message container
     const messageDiv = document.createElement("div");
     messageDiv.className = "notification-message";
     messageDiv.textContent = message;
