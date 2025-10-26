@@ -19,7 +19,7 @@
 }
 
 .upload-box:nth-child(1) {
-  border-color: #2e3192; /* Dark Blue */
+  border-color: #2e3192;
 }
 
 .upload-box:nth-child(1):hover {
