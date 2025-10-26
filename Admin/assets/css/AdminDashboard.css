@@ -285,7 +285,6 @@ header {
   color: rgba(255, 255, 255, 0.8);
 }
 
-/* Search Suggestions Dropdown */
 .search-wrapper {
   position: relative;
   display: flex;
@@ -437,7 +436,8 @@ header {
   opacity: 0;
   visibility: hidden;
   transform: translateY(-10px);
-  transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 0.2s ease, visibility 0.2s ease,
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 9999;
   overflow: hidden;
   pointer-events: none;
@@ -447,7 +447,7 @@ header {
 
 /* Create a hover bridge to prevent dropdown from disappearing */
 .admin-dropdown::after {
-  content: '';
+  content: "";
   position: absolute;
   top: -15px;
   left: 0;
@@ -465,7 +465,7 @@ header {
 }
 
 .admin-dropdown::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -6px;
   right: 20px;
