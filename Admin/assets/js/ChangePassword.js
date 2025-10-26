@@ -315,7 +315,6 @@ document.addEventListener("DOMContentLoaded", () => {
     notification.appendChild(messageDiv);
     notification.appendChild(closeBtn);
 
-    // Add to body
     document.body.appendChild(notification);
 
     // Show notification
