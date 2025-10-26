@@ -137,7 +137,6 @@
   -webkit-user-drag: none;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .loader-text {
     font-size: 18px;
