@@ -290,7 +290,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function showNotification(message, type) {
-    // Remove existing notifications
     const existingNotification = document.querySelector(".notification");
     if (existingNotification) {
       existingNotification.remove();
