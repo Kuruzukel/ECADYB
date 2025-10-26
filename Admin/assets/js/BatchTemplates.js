@@ -2157,12 +2157,19 @@ window.addEventListener("DOMContentLoaded", () => {
 
       const selectBatchBtn = section.querySelector(".select-batch-btn");
       if (selectBatchBtn) {
+        const btnText = selectBatchBtn.querySelector("span");
         if (isSelected) {
           selectBatchBtn.disabled = true;
           selectBatchBtn.classList.add("selected");
+          if (btnText) {
+            btnText.textContent = "Batch Selected";
+          }
         } else {
           selectBatchBtn.disabled = false;
           selectBatchBtn.classList.remove("selected");
+          if (btnText) {
+            btnText.textContent = "Select Batch";
+          }
         }
       }
     });
