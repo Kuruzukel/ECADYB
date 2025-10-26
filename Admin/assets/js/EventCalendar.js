@@ -176,9 +176,13 @@ class EventCalendar {
   async loadEvents() {
     try {
       console.log("Loading events from fetch_announcements.php...");
-      const basePath = window.location.pathname.includes("/ECADYB/") ? "/ECADYB" : "";
+      const basePath = window.location.pathname.includes("/ECADYB/")
+        ? "/ECADYB"
+        : "";
       const response = await fetch(
-        window.location.origin + basePath + "/Connection/Announcement/FetchAnnouncement.php"
+        window.location.origin +
+          basePath +
+          "/Connection/Announcement/FetchAnnouncement.php"
       );
       console.log("Response status:", response.status);
 
@@ -442,9 +446,13 @@ class EventCalendar {
         eventDate
       );
 
-      const basePath = window.location.pathname.includes("/ECADYB/") ? "/ECADYB" : "";
+      const basePath = window.location.pathname.includes("/ECADYB/")
+        ? "/ECADYB"
+        : "";
       const response = await fetch(
-        window.location.origin + basePath + "/Connection/Announcement/DeleteAnnouncement.php",
+        window.location.origin +
+          basePath +
+          "/Connection/Announcement/DeleteAnnouncement.php",
         {
           method: "POST",
           headers: {
@@ -554,9 +562,8 @@ function showNotification(message, type = "success") {
     clearTimeout(notificationTimeout);
   }
 
-  // Map old type names to new class names
   let messageClass = type === "error" ? "error-message" : "success-message";
-  
+
   const notif = document.createElement("div");
   notif.className = `notification ${messageClass}`;
   notif.id = `${type}-notification`;
@@ -568,9 +575,8 @@ function showNotification(message, type = "success") {
   `;
   container.appendChild(notif);
 
-  // Trigger animation
   setTimeout(() => {
-    notif.classList.add('show');
+    notif.classList.add("show");
   }, 10);
 
   const duration = type === "info" ? 2000 : 5000;
@@ -582,7 +588,7 @@ function showNotification(message, type = "success") {
 function closeNotification(id) {
   const notification = document.getElementById(id);
   if (notification) {
-    notification.classList.remove('show');
+    notification.classList.remove("show");
     setTimeout(() => {
       notification.remove();
       notificationTimeout = null;
