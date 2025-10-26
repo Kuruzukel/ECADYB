@@ -372,7 +372,6 @@ function initializeSearchAutocomplete() {
 
   if (!searchInput || !searchSuggestions) return;
 
-  // Handle input changes
   searchInput.addEventListener("input", function () {
     const query = this.value.trim();
 
