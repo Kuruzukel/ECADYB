@@ -16,7 +16,6 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-// Fetch admin profile data
 $adminProfile = null;
 $adminName = 'Admin';
 $adminEmail = 'admin@ecadyb.edu.ph';
