@@ -556,7 +556,6 @@ function handleStudentSelection(student) {
 
   const yearbookPage = collectionToYearbook[student.collection] || "maritime";
 
-  // Store selected student information for the yearbook to navigate to
   sessionStorage.setItem(
     "searchSelectedStudent",
     JSON.stringify({
