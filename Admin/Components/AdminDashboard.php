@@ -3,17 +3,6 @@ define('ADMIN_DASHBOARD_INCLUDED', true);
 
 $basePath = strpos($_SERVER['REQUEST_URI'], '/ECADYB/') !== false ? '/ECADYB' : '';
 
-// Check if session is already started to avoid warnings
-// if (session_status() == PHP_SESSION_NONE) {
-//     session_start();
-// }
-
-// Check if user is logged in and is an admin
-// if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
-//     // Redirect to login page if not logged in or not an admin
-//     header('Location: ../../Public/Components/Login.php');
-//     exit();
-// }
 
 $mongoPath = realpath(__DIR__ . '/../../Connection/Configuration/MongoConnect.php');
 
