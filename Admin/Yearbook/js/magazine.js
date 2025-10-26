@@ -202,22 +202,25 @@ function findAndNavigateToStudent(
         if ($magazine.length > 0 && $magazine.turn) {
           console.log("Turning to page:", yearbookPage);
 
-          // Listen for the page turn completion
           $magazine.one("turned", function (event, page, view) {
             console.log("✓ Page turn completed to page:", page);
 
-            // Wait a bit more for content to render
             setTimeout(function () {
               console.log("=== FINDING STUDENT IN VISIBLE CARDS ===");
               console.log("Student Index (global):", studentIndex);
               console.log("Student ID to find:", studentData.student_id);
               console.log("Student Name to find:", studentData.name);
 
-              console.log("🧹 Clearing any existing yellow borders and timeouts...");
+              console.log(
+                "🧹 Clearing any existing yellow borders and timeouts..."
+              );
 
-              // Clear any existing border removal timeouts
               if (window.borderRemovalTimeouts) {
-                console.log("Clearing " + window.borderRemovalTimeouts.length + " existing timeouts");
+                console.log(
+                  "Clearing " +
+                    window.borderRemovalTimeouts.length +
+                    " existing timeouts"
+                );
                 window.borderRemovalTimeouts.forEach(function (timeoutId) {
                   clearTimeout(timeoutId);
                   console.log("Cleared timeout:", timeoutId);
@@ -225,7 +228,6 @@ function findAndNavigateToStudent(
               }
               window.borderRemovalTimeouts = [];
 
-              // Remove all existing borders
               var bordersCleared = 0;
               $(".student-image").each(function () {
                 if ($(this).attr("style")) {
@@ -233,7 +235,9 @@ function findAndNavigateToStudent(
                 }
                 $(this).removeAttr("style");
               });
-              console.log("Cleared borders from " + bordersCleared + " student images");
+              console.log(
+                "Cleared borders from " + bordersCleared + " student images"
+              );
 
               var currentPage = $magazine.turn("page");
               console.log("Current magazine page:", currentPage);
@@ -246,7 +250,6 @@ function findAndNavigateToStudent(
               function highlightStudent(retryCount) {
                 retryCount = retryCount || 0;
 
-                // Refresh visible pages on each retry to ensure we're looking at current pages
                 $visiblePages = $magazine.find(".page").filter(function () {
                   return $(this).is(":visible");
                 });
@@ -257,19 +260,23 @@ function findAndNavigateToStudent(
                   $studentCards.length
                 );
 
-                // Log all student names on the visible page
                 console.log("=== STUDENTS ON VISIBLE PAGE ===");
                 $studentCards.each(function (index) {
                   var studentName = $(this).find("h3").text();
                   var studentId = $(this).attr("data-student-id");
-                  console.log("Card " + index + ":", studentName, "ID:", studentId);
+                  console.log(
+                    "Card " + index + ":",
+                    studentName,
+                    "ID:",
+                    studentId
+                  );
                 });
 
                 if ($studentCards.length === 0 && retryCount < 20) {
                   console.log(
                     "⏳ Student cards not loaded yet, retrying... (attempt " +
-                    (retryCount + 1) +
-                    "/20)"
+                      (retryCount + 1) +
+                      "/20)"
                   );
                   setTimeout(function () {
                     $visiblePages = $magazine.find(".page").filter(function () {
@@ -281,14 +288,13 @@ function findAndNavigateToStudent(
                 } else if ($studentCards.length === 0) {
                   console.error(
                     "❌ Failed to find student cards after " +
-                    retryCount +
-                    " attempts"
+                      retryCount +
+                      " attempts"
                   );
                   notifyNavigationComplete();
                   return;
                 }
 
-                // Find the card by student ID instead of using card index
                 var $targetCard = null;
                 var targetCardIndex = -1;
                 $studentCards.each(function (index) {
@@ -296,12 +302,18 @@ function findAndNavigateToStudent(
                   if (cardStudentId === studentData.student_id) {
                     $targetCard = $(this);
                     targetCardIndex = index;
-                    return false; // break the loop
+                    return false;
                   }
                 });
 
-                console.log("Target card index in visible cards:", targetCardIndex);
-                console.log("Target student card found:", $targetCard && $targetCard.length > 0);
+                console.log(
+                  "Target card index in visible cards:",
+                  targetCardIndex
+                );
+                console.log(
+                  "Target student card found:",
+                  $targetCard && $targetCard.length > 0
+                );
 
                 if ($targetCard && $targetCard.length > 0) {
                   var $studentImageArea = $targetCard.find(".student-image");
@@ -323,35 +335,42 @@ function findAndNavigateToStudent(
                   console.log("Has image content:", hasImageContent);
 
                   if ($studentImageArea.length && hasImageContent) {
-                    console.log("✅ Adding yellow border to student image area");
+                    console.log(
+                      "✅ Adding yellow border to student image area"
+                    );
                     console.log("Target element:", $studentImageArea[0]);
-                    console.log("Current style before:", $studentImageArea.attr("style"));
+                    console.log(
+                      "Current style before:",
+                      $studentImageArea.attr("style")
+                    );
 
                     $studentImageArea.attr(
                       "style",
                       "border: 2px solid #fcda15 !important; " +
-                      "box-shadow: 0 0 10px rgba(252, 218, 21, 0.8) !important; " +
-                      "border-radius: 8px !important; " +
-                      "outline: 2px solid #ffd700 !important; " +
-                      "outline-offset: 2px !important; " +
-                      "transition: all 0.3s ease !important;"
-                    );
-
-                    console.log("Current style after:", $studentImageArea.attr("style"));
-                    console.log(
-                      "🎨 Applied BOLD yellow border with 8px thickness"
-                    );
-
-                    // Store timeout IDs so they can be cleared on next search
-                    var timeout1 = setTimeout(function () {
-                      $studentImageArea.attr(
-                        "style",
-                        "border: 2px solid #fcda15 !important; " +
                         "box-shadow: 0 0 10px rgba(252, 218, 21, 0.8) !important; " +
                         "border-radius: 8px !important; " +
                         "outline: 2px solid #ffd700 !important; " +
                         "outline-offset: 2px !important; " +
-                        "transition: all 3s ease !important;"
+                        "transition: all 0.3s ease !important;"
+                    );
+
+                    console.log(
+                      "Current style after:",
+                      $studentImageArea.attr("style")
+                    );
+                    console.log(
+                      "🎨 Applied BOLD yellow border with 8px thickness"
+                    );
+
+                    var timeout1 = setTimeout(function () {
+                      $studentImageArea.attr(
+                        "style",
+                        "border: 2px solid #fcda15 !important; " +
+                          "box-shadow: 0 0 10px rgba(252, 218, 21, 0.8) !important; " +
+                          "border-radius: 8px !important; " +
+                          "outline: 2px solid #ffd700 !important; " +
+                          "outline-offset: 2px !important; " +
+                          "transition: all 3s ease !important;"
                       );
 
                       var timeout2 = setTimeout(function () {
@@ -373,8 +392,8 @@ function findAndNavigateToStudent(
                   } else if ($studentImageArea.length && retryCount < 15) {
                     console.log(
                       "⏳ Student image area exists but no image content yet, retrying... (attempt " +
-                      (retryCount + 1) +
-                      "/15)"
+                        (retryCount + 1) +
+                        "/15)"
                     );
                     setTimeout(function () {
                       highlightStudent(retryCount + 1);
@@ -388,7 +407,8 @@ function findAndNavigateToStudent(
                   }
                 } else {
                   console.warn(
-                    "⚠️ Target student card not found for student ID: " + studentData.student_id
+                    "⚠️ Target student card not found for student ID: " +
+                      studentData.student_id
                   );
                   notifyNavigationComplete();
                 }
@@ -425,10 +445,9 @@ function findAndNavigateToStudent(
               setTimeout(function () {
                 $visiblePages.find("img").off("load", imageLoadListener);
               }, 10000);
-            }, 2000); // Wait 2 seconds after page turn completes
-          }); // End of turned event handler
+            }, 2000);
+          });
 
-          // Now actually turn the page
           $magazine.turn("page", yearbookPage);
           console.log("✓ Page turn initiated to:", yearbookPage);
         } else {
@@ -593,33 +612,26 @@ window.addEventListener("message", function (event) {
     var studentId = event.data.studentId;
     var studentName = event.data.studentName;
 
-    // Update URL parameters without reload
     var urlParams = new URLSearchParams(window.location.search);
     urlParams.set("student_id", studentId);
     urlParams.set("student_name", studentName);
 
-    // Update browser URL without reload
     var newUrl = window.location.pathname + "?" + urlParams.toString();
     window.history.replaceState({}, "", newUrl);
 
     console.log("📍 URL updated, triggering navigation to student:", studentId);
 
-    // Mark this as a subsequent search, not initial load
     hasInitialNavigationRun = true;
 
-    // Update last searched student to force navigation
     var previousStudentId = lastSearchedStudentId;
-    lastSearchedStudentId = null; // Reset to force new navigation
+    lastSearchedStudentId = null;
 
-    // Reset navigation attempts
     navigationAttempts = 0;
 
-    // Trigger the navigation
     setTimeout(function () {
       lastSearchedStudentId = studentId;
       navigateToSearchedStudent();
 
-      // Send completion message back to parent
       window.parent.postMessage(
         {
           type: "yearbook-navigation-complete",
@@ -1582,8 +1594,9 @@ function loadPage(page, pageElement) {
                   </svg>
                 </div>
                 <h3 class="empty-state-title">Top Management Data Required</h3>
-                <p class="empty-state-description">${response.message ||
-                "Please upload CSV of the Top Management to the Batch Upload Section first."
+                <p class="empty-state-description">${
+                  response.message ||
+                  "Please upload CSV of the Top Management to the Batch Upload Section first."
                 }</p>
               </div>
             `,
@@ -1918,8 +1931,8 @@ function loadPage(page, pageElement) {
       img.attr(
         "src",
         "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23f0f0f0'/%3E%3Ctext x='50' y='55' font-family='Arial' font-size='12' fill='%23999' text-anchor='middle'%3EPage " +
-        page +
-        "%3C/text%3E%3C/svg%3E"
+          page +
+          "%3C/text%3E%3C/svg%3E"
       );
     }
 
@@ -1930,7 +1943,7 @@ function loadPage(page, pageElement) {
 }
 
 function zoomTo(event) {
-  setTimeout(function () { }, 1);
+  setTimeout(function () {}, 1);
 }
 
 function loadRegions(page, element) {
@@ -1946,7 +1959,7 @@ function loadRegions(page, element) {
         addRegion(region, element);
       });
     })
-    .fail(function () { });
+    .fail(function () {});
 }
 
 function addRegion(region, pageElement) {
@@ -1967,7 +1980,7 @@ function addRegion(region, pageElement) {
   reg.appendTo(pageElement);
 }
 
-function regionClick(event) { }
+function regionClick(event) {}
 
 function processRegion(region, regionType) {
   data = decodeParams(region.attr("region-data"));
@@ -2070,8 +2083,8 @@ function loadLargePage(page, pageElement) {
     img.attr(
       "src",
       "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23f0f0f0'/%3E%3Ctext x='50' y='55' font-family='Arial' font-size='12' fill='%23999' text-anchor='middle'%3ELarge Page " +
-      page +
-      "%3C/text%3E%3C/svg%3E"
+        page +
+        "%3C/text%3E%3C/svg%3E"
     );
   }
 }
@@ -2150,8 +2163,8 @@ function loadSmallPage(page, pageElement) {
     img.attr(
       "src",
       "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23f0f0f0'/%3E%3Ctext x='50' y='55' font-family='Arial' font-size='12' fill='%23999' text-anchor='middle'%3ESmall Page " +
-      page +
-      "%3C/text%3E%3C/svg%3E"
+        page +
+        "%3C/text%3E%3C/svg%3E"
     );
   }
 }
