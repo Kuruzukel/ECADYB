@@ -16,16 +16,16 @@ $studentSection = $_SESSION['section'] ?? '';
 $studentProfilePhoto = $_SESSION['profile_photo'] ?? '';
 
 $departmentCodes = [
-  'BS Marine Engineering' => 'BSME',
-  'BS Marine Transportation' => 'BSMT',
-  'BS Criminal Justice Education' => 'BSCJE',
+  'BS Marine Engineering' => 'MARITIME',
+  'BS Marine Transportation' => 'MARITIME',
+  'BS Criminal Justice Education' => 'BSCJ',
   'BS Tourism Management' => 'BSTM',
-  'BS Technical-Vocational Teacher Education' => 'BTVTED',
-  'BS Early Childhood Education' => 'BSECED',
+  'BS Technical-Vocational Teacher Education' => 'COE',
+  'BS Early Childhood Education' => 'COE',
   'BS Nursing' => 'BSN',
   'BS Information System' => 'BSIS',
-  'BS Management Accounting' => 'BSMA',
-  'BS Entrepreneurship' => 'BSE',
+  'BS Management Accounting' => 'BSBA',
+  'BS Entrepreneurship' => 'BSBA',
   'BS Business Administration' => 'BSBA'
 ];
 
@@ -124,7 +124,7 @@ $departmentCode = $departmentCodes[$studentDepartment] ?? 'BSME';
           </li>
           <li class="yearbook-item"
             style="background-image: url('https://ECADYB.b-cdn.net/img/YB%20COVER/CriminalJusticeEducation.png');"
-            onclick="showYearbookIframe('BSCJE', 'Criminal Justice Education')" data-department="BSCJE">
+            onclick="showYearbookIframe('BSCJ', 'Criminal Justice Education')" data-department="BSCJ">
           </li>
           <li class="yearbook-item"
             style="background-image: url('https://ECADYB.b-cdn.net/img/YB%20COVER/InformationSystem.png');"
@@ -132,7 +132,7 @@ $departmentCode = $departmentCodes[$studentDepartment] ?? 'BSME';
           </li>
           <li class="yearbook-item"
             style="background-image: url('https://ECADYB.b-cdn.net/img/YB%20COVER/Education.png');"
-            onclick="showYearbookIframe('BTVTED', 'Education')" data-department="BTVTED">
+            onclick="showYearbookIframe('COE', 'Education')" data-department="COE">
           </li>
           <li class="yearbook-item"
             style="background-image: url('https://ECADYB.b-cdn.net/img/YB%20COVER/BusinessAdministration.png');"

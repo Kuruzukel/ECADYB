@@ -42,7 +42,7 @@
         $studentId = isset($_GET['student_id']) ? htmlspecialchars($_GET['student_id']) : '';
         $studentName = isset($_GET['student_name']) ? htmlspecialchars($_GET['student_name']) : '';
 
-        $iframeUrl = $basePath . '/Admin/Yearbook/index.html?department=BSE';
+        $iframeUrl = $basePath . '/Admin/Yearbook/index.html?department=COE';
         if ($studentId && $studentName) {
           $iframeUrl .= '&student_id=' . urlencode($studentId) . '&student_name=' . urlencode($studentName);
         }

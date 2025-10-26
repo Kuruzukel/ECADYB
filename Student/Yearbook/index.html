@@ -225,7 +225,7 @@
             maritime: "MARITIME",
             criminology: "BSCJ",
             tourism: "BSTM",
-            education: "BSE",
+            education: "COE",
             nursing: "BSN",
             information: "BSIS",
             business: "BSBA",
@@ -235,6 +235,45 @@
 
         if (!departmentCode) {
           departmentCode = "MARITIME";
+        }
+
+        // Ensure uppercase
+        if (departmentCode) {
+          departmentCode = departmentCode.toUpperCase();
+        }
+
+        // Clear ALL department caches and in-memory caches to prevent cross-contamination
+        try {
+          // Clear all student data from localStorage for all departments
+          var departments = [
+            "BSME",
+            "MARITIME",
+            "BSCJ",
+            "BSCJE",
+            "BSTM",
+            "COE",
+            "EDUCATION",
+            "BTVTED",
+            "BSECED",
+            "BSN",
+            "BSIS",
+            "BSBA",
+            "BSMA",
+            "BSE",
+          ];
+          departments.forEach(function (dept) {
+            localStorage.removeItem("studentData_" + dept);
+          });
+
+          // Clear in-memory caches
+          window.pageSectionCache = {};
+          window.sectionPageNumberMap = {};
+          console.log(
+            "Cleared all department caches before fetching:",
+            departmentCode
+          );
+        } catch (e) {
+          console.log("Error clearing caches:", e);
         }
 
         var template = 1;
@@ -280,6 +319,78 @@
             console.log("Student data response:", response);
             if (response.success) {
               studentData = response.data;
+
+              // Filter out students with mismatched program codes
+              if (studentData && studentData.students) {
+                var originalCount = studentData.students.length;
+                studentData.students = studentData.students.filter(function (
+                  student
+                ) {
+                  var studentProgram = (student.program || "").toUpperCase();
+                  var expectedPrograms = [];
+
+                  // Define expected program codes for each department
+                  if (
+                    departmentCode === "BSME" ||
+                    departmentCode === "MARITIME"
+                  ) {
+                    expectedPrograms = ["BSME", "BSMT", "MARITIME"];
+                  } else if (
+                    departmentCode === "BSCJ" ||
+                    departmentCode === "BSCJE"
+                  ) {
+                    expectedPrograms = ["BSCJ", "BSCJE", "CRIMINOLOGY"];
+                  } else if (
+                    departmentCode === "COE" ||
+                    departmentCode === "EDUCATION"
+                  ) {
+                    expectedPrograms = ["COE", "BTVTED", "BECED", "EDUCATION"];
+                  } else if (departmentCode === "BSIS") {
+                    expectedPrograms = ["BSIS"];
+                  } else if (departmentCode === "BSBA") {
+                    expectedPrograms = ["BSBA", "BSMA", "BSE"];
+                  } else if (departmentCode === "BSN") {
+                    expectedPrograms = ["BSN", "NURSING"];
+                  } else if (departmentCode === "BSTM") {
+                    expectedPrograms = ["BSTM", "TOURISM"];
+                  }
+
+                  // Check if student's program matches expected department
+                  var programMatches = expectedPrograms.some(function (
+                    expected
+                  ) {
+                    return (
+                      studentProgram.indexOf(expected) === 0 ||
+                      studentProgram.indexOf(expected + " -") === 0
+                    );
+                  });
+
+                  if (!programMatches && studentProgram) {
+                    console.warn(
+                      "⚠️ Filtering out student with mismatched program:",
+                      {
+                        name: student.name,
+                        student_id: student.student_id,
+                        program: student.program,
+                        expected_department: departmentCode,
+                      }
+                    );
+                  }
+
+                  return programMatches || !studentProgram;
+                });
+
+                var filteredCount = originalCount - studentData.students.length;
+                if (filteredCount > 0) {
+                  console.log(
+                    "Filtered out " +
+                      filteredCount +
+                      " student(s) with mismatched program codes"
+                  );
+                  studentData.total_students = studentData.students.length;
+                }
+              }
+
               console.log("Student data loaded:", studentData);
               console.log("Total students:", studentData.total_students);
               console.log("Students array:", studentData.students);
@@ -336,7 +447,7 @@
             maritime: "MARITIME",
             criminology: "BSCJ",
             tourism: "BSTM",
-            education: "BSE",
+            education: "COE",
             nursing: "BSN",
             information: "BSIS",
             business: "BSBA",
@@ -348,16 +459,27 @@
           departmentCode = "MARITIME";
         }
 
+        // Ensure uppercase
+        if (departmentCode) {
+          departmentCode = departmentCode.toUpperCase();
+        }
+
         var yearbookMap = {
           BSME: "Maritime Education",
           MARITIME: "Maritime Education",
+          BSMT: "Maritime Education",
           BSCJ: "College of Criminology",
           BSCJE: "College of Criminology",
           BSTM: "Tourism Management",
-          BSE: "College of Education",
+          COE: "College of Education",
+          EDUCATION: "College of Education",
+          BTVTED: "College of Education",
+          BSECED: "College of Education",
           BSN: "College of Nursing",
           BSIS: "Information System",
           BSBA: "Business Administration",
+          BSMA: "Business Administration",
+          BSE: "Business Administration", // BS Entrepreneurship
         };
 
         return {
@@ -451,17 +573,18 @@
         return null;
       }
 
-      // Cache for storing section information per page
+      // Cache for storing section information per page (department-specific)
       window.pageSectionCache = window.pageSectionCache || {};
 
       function getStudentSectionForPage(pageNumber) {
         try {
-          // Check if we already have this section cached
-          if (window.pageSectionCache[pageNumber]) {
-            return window.pageSectionCache[pageNumber];
-          }
-
           var yearbook = getCurrentYearbook();
+          var cacheKey = yearbook.code + "_" + pageNumber;
+
+          // Check if we already have this section cached
+          if (window.pageSectionCache[cacheKey]) {
+            return window.pageSectionCache[cacheKey];
+          }
           var studentsPerPage = 4;
           // Student pages start at page 6 (after front cover and top management pages 2-5)
           var studentStartPage = 6;
@@ -506,7 +629,8 @@
                     firstStudent.department;
                   if (section) {
                     var sectionUpper = section.toUpperCase();
-                    window.pageSectionCache[pageNumber] = sectionUpper;
+                    var cacheKey = yearbook.code + "_" + pageNumber;
+                    window.pageSectionCache[cacheKey] = sectionUpper;
                     return sectionUpper;
                   }
                 }
@@ -540,7 +664,8 @@
                       firstStudent.department;
                     if (section) {
                       var sectionUpper = section.toUpperCase();
-                      window.pageSectionCache[pageNumber] = sectionUpper;
+                      var cacheKey = yearbook.code + "_" + pageNumber;
+                      window.pageSectionCache[cacheKey] = sectionUpper;
                       console.log(
                         "Found section from localStorage (data) for page",
                         pageNumber,
@@ -569,7 +694,8 @@
                       firstStudent.department;
                     if (section) {
                       var sectionUpper = section.toUpperCase();
-                      window.pageSectionCache[pageNumber] = sectionUpper;
+                      var cacheKey = yearbook.code + "_" + pageNumber;
+                      window.pageSectionCache[cacheKey] = sectionUpper;
                       console.log(
                         "Found section from localStorage for page",
                         pageNumber,
@@ -590,7 +716,8 @@
           // Check previous pages for section continuity (only for student pages)
           if (pageNumber > studentStartPage) {
             var prevSection = getStudentSectionForPage(pageNumber - 1);
-            if (prevSection && !window.pageSectionCache[pageNumber]) {
+            var cacheKey = yearbook.code + "_" + pageNumber;
+            if (prevSection && !window.pageSectionCache[cacheKey]) {
               console.log(
                 "Using previous page section for page",
                 pageNumber,
@@ -619,11 +746,11 @@
         return null;
       }
 
-      // Cache for section page numbers to avoid recalculating
+      // Cache for section page numbers to avoid recalculating (department-specific)
       window.sectionPageNumberMap = window.sectionPageNumberMap || {};
 
       // Build section page number map once
-      function buildSectionPageNumberMap(totalPages) {
+      function buildSectionPageNumberMap(totalPages, departmentCode) {
         var studentStartPage = 6;
         var sectionCounters = {}; // Track page count per section
         var map = {};
@@ -739,12 +866,13 @@
         var studentStartPage = 6;
         if (pageNumber >= studentStartPage && pageNumber < totalPages) {
           // Build map once if not already built
-          if (!window.sectionPageNumberMap[totalPages]) {
-            window.sectionPageNumberMap[totalPages] =
-              buildSectionPageNumberMap(totalPages);
+          var mapCacheKey = departmentCode + "_" + totalPages;
+          if (!window.sectionPageNumberMap[mapCacheKey]) {
+            window.sectionPageNumberMap[mapCacheKey] =
+              buildSectionPageNumberMap(totalPages, departmentCode);
           }
 
-          var pageInfo = window.sectionPageNumberMap[totalPages][pageNumber];
+          var pageInfo = window.sectionPageNumberMap[mapCacheKey][pageNumber];
 
           if (pageInfo && pageInfo.section) {
             console.log(
