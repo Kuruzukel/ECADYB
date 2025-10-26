@@ -250,7 +250,6 @@ document.addEventListener("DOMContentLoaded", () => {
       ? "/ECADYB"
       : "";
 
-    // Show loading state
     confirmBtn.disabled = true;
     confirmBtn.textContent = "Changing...";
 
