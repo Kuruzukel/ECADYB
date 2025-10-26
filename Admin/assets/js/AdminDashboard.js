@@ -360,7 +360,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Initialize search functionality
   initializeSearchAutocomplete();
 });
 
