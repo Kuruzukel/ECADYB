@@ -461,7 +461,6 @@ function searchStudents(query) {
       }
       const contentType = response.headers.get("content-type");
       if (!contentType || !contentType.includes("application/json")) {
-        // Log the actual response for debugging
         return response.text().then((text) => {
           console.error("Non-JSON response received:", text.substring(0, 200));
           throw new Error("Server returned non-JSON response");
