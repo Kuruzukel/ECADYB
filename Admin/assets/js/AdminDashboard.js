@@ -568,7 +568,6 @@ function handleStudentSelection(student) {
     })
   );
 
-  // Redirect to yearbook page with student info
   window.location.href = `${basePath}/Admin?page=${yearbookPage}&student_id=${encodeURIComponent(
     student.student_id
   )}&student_name=${encodeURIComponent(student.name)}`;
