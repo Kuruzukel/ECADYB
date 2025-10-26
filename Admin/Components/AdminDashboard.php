@@ -12,7 +12,6 @@ if (!$mongoPath || !file_exists($mongoPath)) {
 
 require $mongoPath;
 
-// Start session first
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
