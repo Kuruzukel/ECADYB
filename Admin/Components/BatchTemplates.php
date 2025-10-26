@@ -314,19 +314,81 @@
         </div>
 
         <div class="modal-overlay" id="download-pdf-modal-overlay">
-            <div class="modal">
-                <div class="modal-header">
+            <div class="modal dept-selection-modal-container">
+                <div class="dept-selection-modal-header">
                     <i class="fas fa-file-pdf modal-icon"></i>
-                    <h3>Download PDF</h3>
+                    <h3>Select Yearbook Departments</h3>
                 </div>
-                <div class="modal-content">
-                    <p id="download-pdf-message">Are you sure you want to download the PDF for this batch?</p>
+                <div class="dept-selection-modal-body">
+                    <p class="dept-selection-subtitle">Choose which department yearbooks you want to download</p>
+                    <div class="dept-grid">
+                        <label class="dept-label">
+                            <input type="checkbox" class="dept-checkbox" value="Business Administration">
+                            <div class="dept-info">
+                                <span class="dept-name">Business Administration</span>
+                                <span class="dept-code">BSBA</span>
+                            </div>
+                        </label>
+                        <label class="dept-label">
+                            <input type="checkbox" class="dept-checkbox" value="Criminology">
+                            <div class="dept-info">
+                                <span class="dept-name">Criminology</span>
+                                <span class="dept-code">BSCJE</span>
+                            </div>
+                        </label>
+                        <label class="dept-label">
+                            <input type="checkbox" class="dept-checkbox" value="Education">
+                            <div class="dept-info">
+                                <span class="dept-name">Education</span>
+                                <span class="dept-code">BSE</span>
+                            </div>
+                        </label>
+                        <label class="dept-label">
+                            <input type="checkbox" class="dept-checkbox" value="Information System">
+                            <div class="dept-info">
+                                <span class="dept-name">Information System</span>
+                                <span class="dept-code">BSIS</span>
+                            </div>
+                        </label>
+                        <label class="dept-label">
+                            <input type="checkbox" class="dept-checkbox" value="Maritime">
+                            <div class="dept-info">
+                                <span class="dept-name">Maritime</span>
+                                <span class="dept-code">BSME</span>
+                            </div>
+                        </label>
+                        <label class="dept-label">
+                            <input type="checkbox" class="dept-checkbox" value="Nursing">
+                            <div class="dept-info">
+                                <span class="dept-name">Nursing</span>
+                                <span class="dept-code">BSN</span>
+                            </div>
+                        </label>
+                        <label class="dept-label">
+                            <input type="checkbox" class="dept-checkbox" value="Tourism">
+                            <div class="dept-info">
+                                <span class="dept-name">Tourism</span>
+                                <span class="dept-code">BSTM</span>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="dept-selection-footer">
+                        <button class="select-all-btn" id="select-all-dept-btn">
+                            <i class="fas fa-check-double"></i> Select All
+                        </button>
+                        <div class="selected-count-container">
+                            <i class="fas fa-info-circle selected-count-icon"></i>
+                            <span class="selected-count-text">
+                                <span id="selected-dept-count">0</span> selected
+                            </span>
+                        </div>
+                    </div>
                 </div>
-                <div class="modal-buttons">
-                    <button class="modal-btn confirm" id="confirm-download-pdf-btn">
-                        <i class="fas fa-download"></i> Yes, Download
+                <div class="dept-modal-buttons">
+                    <button class="dept-modal-btn confirm" id="confirm-download-pdf-btn">
+                        <i class="fas fa-download"></i> Download PDF
                     </button>
-                    <button class="modal-btn cancel" id="cancel-download-pdf-btn">
+                    <button class="dept-modal-btn cancel" id="cancel-download-pdf-btn">
                         <i class="fas fa-times"></i> Cancel
                     </button>
                 </div>

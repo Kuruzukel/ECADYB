@@ -447,20 +447,29 @@ function closeGenerateModal() {
 
 function openDownloadPdfModal(batchName) {
   console.log("openDownloadPdfModal called with:", batchName);
-  const messageEl = document.getElementById("download-pdf-message");
-  if (messageEl) {
-    messageEl.textContent = `Are you sure you want to download the PDF for ${batchName}?`;
-  }
+
+  // Store batch name for later use if needed
+  window.currentBatchForDownload = batchName;
+
   if (downloadPdfModal) {
-    console.log("Showing download PDF modal");
+    console.log("Showing download PDF modal for:", batchName);
     downloadPdfModal.style.display = "flex";
+    // Add show class for animation
+    setTimeout(() => {
+      downloadPdfModal.classList.add("show");
+    }, 10);
   } else {
     console.error("downloadPdfModal element not found!");
   }
 }
 
 function closeDownloadPdfModal() {
-  if (downloadPdfModal) downloadPdfModal.style.display = "none";
+  if (downloadPdfModal) {
+    downloadPdfModal.classList.remove("show");
+    setTimeout(() => {
+      downloadPdfModal.style.display = "none";
+    }, 200);
+  }
 }
 
 function openDeleteBatchModal(batchName) {
@@ -1935,12 +1944,118 @@ function downloadPDF(batchName) {
 }
 
 function confirmDownloadPDF() {
+  const selectedDepartments = getSelectedDepartments();
+
+  if (selectedDepartments.length === 0) {
+    showNotification("Please select at least one department", "error");
+    return;
+  }
+
+  console.log("Downloading PDF for departments:", selectedDepartments);
+
   showNotification(
-    "PDF download functionality will be implemented soon!",
+    `PDF download for ${selectedDepartments.length} department(s) will be implemented soon!`,
     "info"
   );
-  console.log("Downloading PDF...");
+
   closeDownloadPdfModal();
+
+  // Reset checkboxes for next time
+  setTimeout(() => {
+    const checkboxes = document.querySelectorAll(".dept-checkbox");
+    checkboxes.forEach((cb) => {
+      cb.checked = false;
+      cb.closest(".dept-label").classList.remove("selected");
+    });
+    updateDepartmentCount();
+  }, 300);
+}
+
+function getSelectedDepartments() {
+  const checkboxes = document.querySelectorAll(".dept-checkbox:checked");
+  return Array.from(checkboxes).map((cb) => cb.value);
+}
+
+function updateDepartmentCount() {
+  const count = document.querySelectorAll(".dept-checkbox:checked").length;
+  const countElement = document.getElementById("selected-dept-count");
+  const confirmBtn = document.getElementById("confirm-download-pdf-btn");
+
+  if (countElement) {
+    countElement.textContent = count;
+  }
+
+  // Enable/disable download button based on selection
+  if (confirmBtn) {
+    if (count === 0) {
+      confirmBtn.disabled = true;
+      confirmBtn.style.opacity = "0.5";
+      confirmBtn.style.cursor = "not-allowed";
+    } else {
+      confirmBtn.disabled = false;
+      confirmBtn.style.opacity = "1";
+      confirmBtn.style.cursor = "pointer";
+    }
+  }
+}
+
+function initializeDepartmentSelection() {
+  const checkboxes = document.querySelectorAll(".dept-checkbox");
+  const selectAllBtn = document.getElementById("select-all-dept-btn");
+
+  // Handle individual checkbox changes
+  checkboxes.forEach((checkbox) => {
+    checkbox.addEventListener("change", function () {
+      const label = this.closest(".dept-label");
+      if (this.checked) {
+        label.classList.add("selected");
+      } else {
+        label.classList.remove("selected");
+      }
+      updateDepartmentCount();
+      updateSelectAllButton();
+    });
+  });
+
+  // Handle select all button
+  if (selectAllBtn) {
+    selectAllBtn.addEventListener("click", function () {
+      const allChecked = Array.from(checkboxes).every((cb) => cb.checked);
+
+      checkboxes.forEach((checkbox) => {
+        checkbox.checked = !allChecked;
+        const label = checkbox.closest(".dept-label");
+        if (checkbox.checked) {
+          label.classList.add("selected");
+        } else {
+          label.classList.remove("selected");
+        }
+      });
+
+      updateDepartmentCount();
+      updateSelectAllButton();
+    });
+  }
+
+  // Update button text based on selection state
+  function updateSelectAllButton() {
+    if (!selectAllBtn) return;
+
+    const allChecked = Array.from(checkboxes).every((cb) => cb.checked);
+    const icon = selectAllBtn.querySelector("i");
+    const btnText = selectAllBtn.childNodes[selectAllBtn.childNodes.length - 1];
+
+    if (allChecked) {
+      if (icon) icon.className = "fas fa-times-circle";
+      btnText.textContent = " Deselect All";
+    } else {
+      if (icon) icon.className = "fas fa-check-double";
+      btnText.textContent = " Select All";
+    }
+  }
+
+  updateDepartmentCount();
+  updateSelectAllButton();
 }
 
 function deleteBatchTemplate(section, batchName) {
@@ -2498,4 +2613,7 @@ window.addEventListener("DOMContentLoaded", () => {
       confirmSelectTemplate();
     });
   }
+
+  // Initialize department selection modal
+  initializeDepartmentSelection();
 });
