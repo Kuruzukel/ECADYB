@@ -82,7 +82,7 @@
 }
 
 .upload-box:nth-child(8) {
-  border-color: #aaa; /* Default Gray */
+  border-color: #aaa;
 }
 
 .upload-box:nth-child(8):hover {
