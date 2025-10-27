@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="twitter:image:alt" content="Exact Colleges of Asia Graduation Gallery Preview Logo" />
 
     <link rel="icon" href="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png" type="image/png" />
-    <link href="/ECADYB/Student/assets/css/ChangePassword.css?v=<?= time() ?>" rel="stylesheet" />
+    <link href="<?php echo BASE_URL; ?>Student/assets/css/ChangePassword.css?v=2.0" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 
@@ -222,12 +222,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
                 <div class="logoContainer"></div>
-                <button type="button" onclick="window.location.href='/ECADYB/Student'">
+                <button type="button" onclick="window.location.href='<?php echo BASE_URL; ?>Student'">
                     <i class="fas fa-arrow-left"></i> Back to Homepage
                 </button>
         </form>
     </div>
 </body>
-<script src="/ECADYB/Student/assets/js/ChangePassword.js?v=<?= time() ?>"></script>
+<script src="<?php echo BASE_URL; ?>Student/assets/js/ChangePassword.js?v=2.0"></script>
 
 </html>

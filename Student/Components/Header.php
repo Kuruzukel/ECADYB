@@ -92,7 +92,7 @@ if (empty($studentFirstName) && empty($studentLastName) && !empty($studentName))
     <a href="/ECADYB/Student/Components/Yearbook.php">Yearbooks</a>
     <a href="/ECADYB/Student/Components/Memories.php">Memories</a>
     <div class="mobile-login-dropdown">
-      <button class="mobile-login-btn" id="mobileLoginDropdownBtn" onclick="window.location.href='/ECADYB/login'">
+      <button class="mobile-login-btn" id="mobileLoginDropdownBtn" onclick="window.location.href='<?php echo BASE_URL; ?>Login'">
         Log In
       </button>
     </div>

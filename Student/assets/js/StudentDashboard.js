@@ -1106,7 +1106,8 @@ function showNotification(message, type = "info") {
 
 function logout() {
   console.log("Logout clicked");
-  window.location.href = "/ECADYB/Student/Components/Logout.php";
+  const basePath = window.location.hostname === "localhost" ? "/ECADYB/" : "/";
+  window.location.href = basePath + "Student/Components/Logout.php";
 }
 
 async function loadAnnouncements() {

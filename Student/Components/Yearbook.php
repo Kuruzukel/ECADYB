@@ -58,8 +58,8 @@ $departmentCode = $departmentCodes[$studentDepartment] ?? 'BSME';
 
   <link rel="icon" href="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png" type="image/png" />
 
-  <link rel="stylesheet" href="/ECADYB/Student/assets/css/StudentDashboard.css" />
-  <link rel="stylesheet" href="/ECADYB/Student/assets/css/yearbook-loader.css" />
+  <link rel="stylesheet" href="<?php echo BASE_URL; ?>Student/assets/css/StudentDashboard.css" />
+  <link rel="stylesheet" href="<?php echo BASE_URL; ?>Student/assets/css/yearbook-loader.css" />
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
 </head>
@@ -159,8 +159,8 @@ $departmentCode = $departmentCodes[$studentDepartment] ?? 'BSME';
   </section>
 
   <?php include __DIR__ . '/Footer.php'; ?>
-  <script src="/ECADYB/Student/assets/js/StudentDashboard.js"></script>
-  <script src="/ECADYB/Student/assets/js/yearbook-loader.js"></script>
+  <script src="<?php echo BASE_URL; ?>Student/assets/js/StudentDashboard.js"></script>
+  <script src="<?php echo BASE_URL; ?>Student/assets/js/yearbook-loader.js"></script>
   <script>
     function showYearbookIframe(departmentCode, departmentName) {
       const introContent = document.querySelector('.yearbook-intro-content');
@@ -226,7 +226,8 @@ $departmentCode = $departmentCodes[$studentDepartment] ?? 'BSME';
 
       setTimeout(() => {
         if (iframe && iframeContainer) {
-          iframe.src = `/ECADYB/Student/Yearbook/index.html?department=${departmentCode}&fullscreen=true`;
+          const basePath = '<?php echo BASE_URL; ?>';
+          iframe.src = `${basePath}Student/Yearbook/index.html?department=${departmentCode}&fullscreen=true`;
           iframe.title = `Digital Yearbook - ${departmentName}`;
           iframeContainer.style.display = 'block';
 

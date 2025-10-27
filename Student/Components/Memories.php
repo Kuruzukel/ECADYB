@@ -43,7 +43,7 @@ $studentProfilePhoto = $_SESSION['profile_photo'] ?? '';
 
   <link rel="icon" href="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png" type="image/png" />
 
-  <link rel="stylesheet" href="/ECADYB/Student/assets/css/StudentDashboard.css" />
+  <link rel="stylesheet" href="<?php echo BASE_URL; ?>Student/assets/css/StudentDashboard.css" />
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
 </head>
@@ -224,7 +224,7 @@ $studentProfilePhoto = $_SESSION['profile_photo'] ?? '';
   </section>
 
   <?php include __DIR__ . '/Footer.php'; ?>
-  <script src="/ECADYB/Student/assets/js/StudentDashboard.js"></script>
+  <script src="<?php echo BASE_URL; ?>Student/assets/js/StudentDashboard.js"></script>
 </body>
 
 </html>
