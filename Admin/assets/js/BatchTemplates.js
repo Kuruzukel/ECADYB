@@ -2157,7 +2157,6 @@ async function confirmDownloadPDF() {
       closePersistentNotification(preparingNotification);
     }
 
-    // Small delay before showing error notification
     await new Promise((resolve) => setTimeout(resolve, 100));
 
     showNotification(`Failed to generate PDF: ${error.message}`, "error");
