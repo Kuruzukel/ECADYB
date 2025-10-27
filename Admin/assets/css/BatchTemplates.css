@@ -1115,7 +1115,6 @@ label {
   }
 }
 
-/* Label selection animation */
 .dept-label.selected {
   animation: labelGlow 0.5s ease;
 }
