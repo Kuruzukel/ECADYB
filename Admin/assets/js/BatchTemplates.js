@@ -598,7 +598,6 @@ function openDownloadPdfModal(batchName) {
   if (downloadPdfModal) {
     console.log("Showing download PDF modal for:", batchName);
     downloadPdfModal.style.display = "flex";
-    // Add show class for animation
     setTimeout(() => {
       downloadPdfModal.classList.add("show");
     }, 10);
