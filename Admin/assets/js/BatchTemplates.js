@@ -343,7 +343,6 @@ function customConfirm(
       }
     });
 
-    // Handle Escape key
     const escapeHandler = (e) => {
       if (e.key === "Escape") {
         document.removeEventListener("keydown", escapeHandler);
