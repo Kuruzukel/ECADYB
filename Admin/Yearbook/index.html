@@ -647,6 +647,8 @@
                 var firstStudent = students[localStartIndex];
                 if (firstStudent) {
                   var section =
+                    firstStudent.department_section ||
+                    firstStudent["department section"] ||
                     firstStudent.section ||
                     firstStudent.program ||
                     firstStudent.course ||
@@ -680,8 +682,10 @@
                 ) {
                   var firstStudent = parsedData.data[studentStartIndex];
                   if (firstStudent) {
-                    // Prioritize 'program' as it contains the full section info
+                    // Prioritize 'department_section' as it contains the full section info
                     var section =
+                      firstStudent.department_section ||
+                      firstStudent["department section"] ||
                       firstStudent.program ||
                       firstStudent.section ||
                       firstStudent.course ||
@@ -710,8 +714,10 @@
                 ) {
                   var firstStudent = parsedData.students[studentStartIndex];
                   if (firstStudent) {
-                    // Prioritize 'program' as it contains the full section info
+                    // Prioritize 'department_section' as it contains the full section info
                     var section =
+                      firstStudent.department_section ||
+                      firstStudent["department section"] ||
                       firstStudent.program ||
                       firstStudent.section ||
                       firstStudent.course ||
