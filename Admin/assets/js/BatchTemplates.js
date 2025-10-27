@@ -2424,7 +2424,6 @@ async function captureAllYearbookPages(
           `Yearbook loaded for ${department}, waiting for initialization...`
         );
 
-        // Wait for the yearbook to fully initialize
         console.log("Waiting for yearbook initialization...");
 
         // Show initialization progress
