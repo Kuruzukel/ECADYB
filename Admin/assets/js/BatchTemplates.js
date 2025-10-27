@@ -2445,7 +2445,6 @@ async function captureAllYearbookPages(
           throw new Error(`No pages found for ${department}`);
         }
 
-        // Page 1 = Front cover (single)
         // etc.
 
         let captureCount = 0;
