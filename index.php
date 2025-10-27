@@ -215,6 +215,7 @@ $routes = [
     '/Connection/Student/SearchStudents.php' => BASE_PATH . '/Connection/Student/SearchStudents.php',
     '/Connection/Student/UpdateStatus.php' => BASE_PATH . '/Connection/Student/UpdateStatus.php',
     '/Connection/Student/UpdateStudent.php' => BASE_PATH . '/Connection/Student/UpdateStudent.php',
+    '/Connection/Student/FixProgramField.php' => BASE_PATH . '/Connection/Student/FixProgramField.php',
     '/'                   => BASE_PATH . '/Public/Components/Loader.html',
     '/ECADYB/LandingPage'        => BASE_PATH . '/LandingPage/index.html',
     '/ECADYB/login'              => BASE_PATH . '/Public/Components/Login.php',
@@ -282,6 +283,7 @@ $routes = [
     '/ECADYB/Connection/Student/SendOTP.php' => BASE_PATH . '/Connection/Student/SendOTP.php',
     '/ECADYB/Connection/Student/UpdateStatus.php' => BASE_PATH . '/Connection/Student/UpdateStatus.php',
     '/ECADYB/Connection/Student/UpdateStudent.php' => BASE_PATH . '/Connection/Student/UpdateStudent.php',
+    '/ECADYB/Connection/Student/FixProgramField.php' => BASE_PATH . '/Connection/Student/FixProgramField.php',
     '/ECADYB/'                   => BASE_PATH . '/Public/Components/Loader.html',
 ];
 
