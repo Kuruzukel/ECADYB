@@ -3165,7 +3165,6 @@ function initializeDepartmentSelection() {
     });
   }
 
-  // Update button text based on selection state
   function updateSelectAllButton() {
     if (!selectAllBtn) return;
 
