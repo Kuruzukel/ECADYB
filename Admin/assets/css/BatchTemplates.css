@@ -1131,7 +1131,6 @@ label {
   }
 }
 
-/* Button press effect */
 .dept-modal-btn:active,
 .select-all-btn:active {
   transform: scale(0.96);
