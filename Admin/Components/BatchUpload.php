@@ -140,14 +140,15 @@ function importCSVToDepartments($tmpName, $departmentsDB, $programMap, $dropColl
             } elseif (count($row) === count($header)) {
                 $record = array_combine($header, $row);
 
-                $record['password'] = generateRandomPassword(8);
+                $plainPassword = generateRandomPassword(8);
+                $record['password'] = password_hash($plainPassword, PASSWORD_DEFAULT);
 
                 if (!isset($record['status']) || empty($record['status'])) {
                     $record['status'] = 'Pending';
                 }
 
                 $studentName = ($record['first name'] ?? '') . ' ' . ($record['last name'] ?? '');
-                error_log("Generated password for student: " . trim($studentName) . " - Password: " . $record['password']);
+                error_log("Generated password for student: " . trim($studentName) . " - Password: " . $plainPassword);
 
                 if (!isset($record['department section'])) continue;
 

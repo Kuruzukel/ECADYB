@@ -88,17 +88,16 @@ try {
     // Connect to MongoDB
     require_once __DIR__ . '/../../vendor/autoload.php';
     require_once __DIR__ . '/../Configuration/MongoConnect.php';
-    
+
     // Get current admin username from session
     $username = $_SESSION['username'];
-    
+
     // Verify current password
     $admin = $adminCollection->findOne([
-        'username' => $username,
-        'password' => $currentPassword
+        'username' => $username
     ]);
-    
-    if (!$admin) {
+
+    if (!$admin || !isset($admin['password']) || !password_verify($currentPassword, $admin['password'])) {
         ob_clean();
         echo json_encode([
             'success' => false,
@@ -106,19 +105,22 @@ try {
         ]);
         exit();
     }
-    
+
+    // Hash the new password
+    $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+
     // Update password
     $updateResult = $adminCollection->updateOne(
         ['username' => $username],
-        ['$set' => ['password' => $newPassword]]
+        ['$set' => ['password' => $hashedPassword]]
     );
-    
+
     if ($updateResult->getModifiedCount() > 0) {
         // Password changed successfully
         // Destroy session
         session_unset();
         session_destroy();
-        
+
         // Clear any buffered output before sending JSON
         ob_clean();
         echo json_encode([
@@ -133,7 +135,6 @@ try {
             'message' => 'Failed to update password. Please try again.'
         ]);
     }
-    
 } catch (Exception $e) {
     error_log("ChangePassword error: " . $e->getMessage());
     ob_clean();
@@ -154,4 +155,3 @@ try {
 
 // End output buffering and flush
 ob_end_flush();
-

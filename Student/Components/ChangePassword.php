@@ -28,14 +28,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $collection = $departmentsDB->{array_search($_SESSION['department'], $collections)};
 
             $student = $collection->findOne([
-                'student id' => $_SESSION['student_id'],
-                'password'   => $currentPassword
+                'student id' => $_SESSION['student_id']
             ]);
 
-            if ($student) {
+            if ($student && isset($student['password']) && password_verify($currentPassword, $student['password'])) {
+                // Hash the new password
+                $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+
                 $collection->updateOne(
                     ['student id' => $_SESSION['student_id']],
-                    ['$set' => ['password' => $newPassword]]
+                    ['$set' => ['password' => $hashedPassword]]
                 );
 
                 $success_message = "Password changed successfully! Redirecting to login...";

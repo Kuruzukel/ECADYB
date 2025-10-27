@@ -94,6 +94,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         die();
     }
 
+    $plainPassword = generateRandomPassword(8);
+    $hashedPassword = password_hash($plainPassword, PASSWORD_DEFAULT);
+
     $student = [
         "first name" => trim($_POST["first_name"]),
         "middle name" => trim($_POST["middle_name"] ?? ''),
@@ -104,12 +107,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         "program" => $programKey,
         "section" => $section,
         "department section" => strtoupper($programKey) . ' - ' . strtoupper($section),
-        "password" => generateRandomPassword(8),
+        "password" => $hashedPassword,
         "status" => "Pending"
     ];
 
     $studentName = $student["first name"] . ' ' . $student["last name"];
-    error_log("Generated password for new student: " . $studentName . " - Password: " . $student["password"]);
+    error_log("Generated password for new student: " . $studentName . " - Password: " . $plainPassword);
 
     $optionalFields = ["motto", "honors", "milestone"];
     foreach ($optionalFields as $field) {

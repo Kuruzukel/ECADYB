@@ -38,11 +38,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
 
     try {
         $admin = $adminCollection->findOne([
-            'username' => $studentId,
-            'password' => $password
+            'username' => $studentId
         ]);
 
-        if ($admin) {
+        if ($admin && isset($admin['password']) && password_verify($password, $admin['password'])) {
             $_SESSION['role']     = 'admin';
             $_SESSION['username'] = $studentId;
 
@@ -55,18 +54,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
             $collection = $departmentsDB->{$collectionName};
 
             $student = $collection->findOne([
-                '$and' => [
-                    [
-                        '$or' => [
-                            ['student id' => $studentId],
-                            ['student_id' => $studentId]
-                        ]
-                    ],
-                    ['password' => $password]
+                '$or' => [
+                    ['student id' => $studentId],
+                    ['student_id' => $studentId]
                 ]
             ]);
 
-            if ($student) {
+            if ($student && isset($student['password']) && password_verify($password, $student['password'])) {
                 $finalStudentId = $student['student id'] ?? $student['student_id'] ?? $studentId;
 
                 // Check if student ID is a placeholder value

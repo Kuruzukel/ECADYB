@@ -90,9 +90,12 @@ try {
 
     $newPassword = generateRandomPassword();
 
+    // Hash the new password
+    $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+
     $updateResult = $userCollection->updateOne(
         ['email' => $email],
-        ['$set' => ['password' => $newPassword]]
+        ['$set' => ['password' => $hashedPassword]]
     );
 
     if ($updateResult->getModifiedCount() === 0) {

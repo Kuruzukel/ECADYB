@@ -190,12 +190,13 @@ try {
 
         if (empty($studentPassword) && $studentObjectId) {
             $studentPassword = generateRandomPassword(8);
+            $hashedPassword = password_hash($studentPassword, PASSWORD_DEFAULT);
 
             try {
                 $updateCollection = $db->$selectedDepartment;
                 $result = $updateCollection->updateOne(
                     ['_id' => $studentObjectId],
-                    ['$set' => ['password' => $studentPassword]]
+                    ['$set' => ['password' => $hashedPassword]]
                 );
 
                 if ($result->getModifiedCount() > 0) {
