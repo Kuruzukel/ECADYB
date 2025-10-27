@@ -2346,7 +2346,6 @@ async function generateYearbookPDF(departments, progressNotification) {
         "error"
       );
       allPDFsSuccessful = false;
-      // Continue with other departments
     }
   }
 
