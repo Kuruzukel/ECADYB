@@ -2119,7 +2119,6 @@ async function confirmDownloadPDF() {
 
   closeDownloadPdfModal();
 
-  // Create department names list for display
   const deptNames = selectedDepartments.join(", ");
 
   // Reset cancellation flag
