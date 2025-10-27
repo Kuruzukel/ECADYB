@@ -292,7 +292,6 @@ function customConfirm(
   icon = "fas fa-exclamation-circle"
 ) {
   return new Promise((resolve) => {
-    // Create modal overlay
     const overlay = document.createElement("div");
     overlay.className = "confirm-modal-overlay";
 
