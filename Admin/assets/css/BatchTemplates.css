@@ -1136,7 +1136,6 @@ label {
   transform: scale(0.96);
 }
 
-/* Disable button style */
 .dept-modal-btn.confirm:disabled {
   opacity: 0.5;
   cursor: not-allowed;
