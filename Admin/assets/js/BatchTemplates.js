@@ -337,7 +337,6 @@ function customConfirm(
     okBtn.addEventListener("click", () => closeModal(true));
     cancelBtn.addEventListener("click", () => closeModal(false));
 
-    // Close on overlay click
     overlay.addEventListener("click", (e) => {
       if (e.target === overlay) {
         closeModal(false);
