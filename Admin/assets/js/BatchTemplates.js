@@ -2446,7 +2446,6 @@ async function captureAllYearbookPages(
         }
 
         // Page 1 = Front cover (single)
-        // Page 2 = Shows spread of pages 2-3
         // Page 4 = Shows spread of pages 4-5
         // etc.
 
