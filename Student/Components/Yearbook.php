@@ -330,9 +330,8 @@ try {
 
     /* PDF Selection Styles - Department Grid */
     .pdf-selection-container {
-      margin-top: 20px;
-      padding-top: 20px;
-      border-top: 1px solid rgba(61, 90, 122, 0.3);
+      margin-top: 0;
+      padding-top: 0;
     }
 
     .pdf-selection-subtitle {
@@ -718,25 +717,14 @@ try {
         <h3>Yearbook PDFs Available</h3>
       </div>
       <div class="completion-modal-body">
-        <p>The digital yearbook viewing period has ended.</p>
-        <div class="completion-date">
-          <i class="fas fa-calendar-check"></i>
-          <span id="completion-date-display">Access period ended</span>
-        </div>
-
         <!-- PDF Selection Container -->
         <div class="pdf-selection-container">
-          <p class="pdf-selection-subtitle">
-            Select one or more departments below to download their yearbook PDFs
-          </p>
-
           <div class="dept-grid">
             <!-- Maritime Education -->
             <label class="dept-label">
               <input type="checkbox" class="dept-checkbox" value="MARITIME">
               <div class="dept-info">
                 <span class="dept-name">Bachelor of Science in Maritime Education</span>
-                <span class="dept-code">BSME / BS Marine Engineering / BS Marine Transportation</span>
               </div>
             </label>
 
@@ -745,7 +733,6 @@ try {
               <input type="checkbox" class="dept-checkbox" value="BSTM">
               <div class="dept-info">
                 <span class="dept-name">Bachelor of Science in Tourism Management</span>
-                <span class="dept-code">BSTM</span>
               </div>
             </label>
 
@@ -754,7 +741,6 @@ try {
               <input type="checkbox" class="dept-checkbox" value="BSCJ">
               <div class="dept-info">
                 <span class="dept-name">Bachelor of Science in Criminal Justice Education</span>
-                <span class="dept-code">BSCJ / BSCJE</span>
               </div>
             </label>
 
@@ -763,7 +749,6 @@ try {
               <input type="checkbox" class="dept-checkbox" value="BSIS">
               <div class="dept-info">
                 <span class="dept-name">Bachelor of Science in Information System</span>
-                <span class="dept-code">BSIS</span>
               </div>
             </label>
 
@@ -771,8 +756,7 @@ try {
             <label class="dept-label">
               <input type="checkbox" class="dept-checkbox" value="COE">
               <div class="dept-info">
-                <span class="dept-name">College of Education</span>
-                <span class="dept-code">COE / BSTVTE / BSECE</span>
+                <span class="dept-name">Bachelor of Science in Education</span>
               </div>
             </label>
 
@@ -781,7 +765,6 @@ try {
               <input type="checkbox" class="dept-checkbox" value="BSBA">
               <div class="dept-info">
                 <span class="dept-name">Bachelor of Science in Business Administration</span>
-                <span class="dept-code">BSBA / BS Management Accounting / BS Entrepreneurship</span>
               </div>
             </label>
 
@@ -790,7 +773,6 @@ try {
               <input type="checkbox" class="dept-checkbox" value="BSN">
               <div class="dept-info">
                 <span class="dept-name">Bachelor of Science in Nursing</span>
-                <span class="dept-code">BSN / CON</span>
               </div>
             </label>
           </div>
@@ -873,12 +855,7 @@ try {
       const modal = document.getElementById('yearbook-completion-modal');
       if (modal) {
         modal.classList.add('show');
-        // Update the completion date display
-        const dateDisplay = document.getElementById('completion-date-display');
-        if (dateDisplay && COMPLETION_DATE) {
-          dateDisplay.textContent = 'Completed: ' + COMPLETION_DATE.toLocaleString();
-        }
-        console.log('[Yearbook] Showing completion modal - access period ended at', COMPLETION_DATE ? COMPLETION_DATE.toLocaleString() : 'Unknown');
+        console.log('[Yearbook] Showing PDF selection modal');
       }
     }
 
