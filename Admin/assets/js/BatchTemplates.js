@@ -243,7 +243,6 @@ function showPersistentNotification(
   `;
   container.appendChild(notif);
 
-  // Add cancel button handler if allowed
   if (allowCancel) {
     const closeBtn = notif.querySelector(".notification-close-btn");
     if (closeBtn) {
