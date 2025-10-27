@@ -125,12 +125,13 @@ try {
 
     .completion-modal-container {
       width: 90%;
-      max-width: 500px;
+      max-width: 600px;
+      max-height: 90vh;
       background: linear-gradient(145deg, #1e2a38 0%, #2c3e50 100%);
       border-radius: 20px;
       box-shadow: 0 25px 70px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.1);
       padding: 0;
-      overflow: hidden;
+      overflow-y: auto;
       border: 2px solid rgba(252, 218, 21, 0.2);
       animation: modalSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
@@ -140,6 +141,9 @@ try {
       padding: 24px;
       text-align: center;
       border-bottom: 2px solid rgba(252, 218, 21, 0.3);
+      position: sticky;
+      top: 0;
+      z-index: 10;
     }
 
     .completion-modal-header .modal-icon {
@@ -183,12 +187,80 @@ try {
       border: 1px solid rgba(252, 218, 21, 0.3);
     }
 
+    /* PDF Selection Styles */
+    .pdf-selection-container {
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(61, 90, 122, 0.3);
+    }
+
+    .pdf-selection-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fcda15;
+      margin-bottom: 16px;
+      font-family: Arial, sans-serif;
+    }
+
+    .pdf-options-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .pdf-option-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+
+    .pdf-option-card:hover {
+      background: rgba(252, 218, 21, 0.1);
+      border-color: rgba(252, 218, 21, 0.5);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    .pdf-option-card i {
+      font-size: 36px;
+      color: #ef4444;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .pdf-option-card .pdf-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #e2e8f0;
+      font-family: Arial, sans-serif;
+      margin-top: 8px;
+    }
+
+    .pdf-option-card .pdf-badge {
+      display: inline-block;
+      background: rgba(59, 130, 246, 0.2);
+      color: #3b82f6;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+
     .completion-modal-footer {
       padding: 20px 28px;
       display: flex;
       justify-content: center;
+      gap: 12px;
       border-top: 1px solid rgba(61, 90, 122, 0.3);
       background: rgba(0, 0, 0, 0.15);
+      position: sticky;
+      bottom: 0;
     }
 
     .completion-modal-btn {
@@ -353,23 +425,79 @@ try {
   <div class="yearbook-completion-modal-overlay" id="yearbook-completion-modal">
     <div class="completion-modal-container">
       <div class="completion-modal-header">
-        <i class="fas fa-lock modal-icon"></i>
-        <h3>Yearbook Access Completed</h3>
+        <i class="fas fa-file-pdf modal-icon"></i>
+        <h3>Yearbook PDFs Available</h3>
       </div>
       <div class="completion-modal-body">
         <p>The digital yearbook viewing period has ended.</p>
-        <p>Thank you for being part of our journey!</p>
         <div class="completion-date">
           <i class="fas fa-calendar-check"></i>
           <span id="completion-date-display">Access period ended</span>
         </div>
-        <p style="font-size: 14px; color: #94a3b8; margin-top: 20px;">
-          For access to archived yearbooks, please contact the administration.
+        <p style="font-size: 15px; color: #fbbf24; margin-top: 16px; font-weight: 600;">
+          <i class="fas fa-download"></i> Download yearbook PDFs below
         </p>
+
+        <!-- PDF Selection Container -->
+        <div class="pdf-selection-container">
+          <div class="pdf-selection-title">
+            <i class="fas fa-book"></i> Select Yearbook to Download
+          </div>
+          <div class="pdf-options-grid">
+            <!-- Maritime Education -->
+            <div class="pdf-option-card" onclick="downloadYearbookPDF('MARITIME', 'Maritime Education')">
+              <i class="fas fa-ship"></i>
+              <div class="pdf-name">Maritime Education</div>
+              <span class="pdf-badge">BSME</span>
+            </div>
+
+            <!-- Tourism Management -->
+            <div class="pdf-option-card" onclick="downloadYearbookPDF('BSTM', 'Tourism Management')">
+              <i class="fas fa-plane"></i>
+              <div class="pdf-name">Tourism Management</div>
+              <span class="pdf-badge">BSTM</span>
+            </div>
+
+            <!-- Criminal Justice -->
+            <div class="pdf-option-card" onclick="downloadYearbookPDF('BSCJ', 'Criminal Justice')">
+              <i class="fas fa-gavel"></i>
+              <div class="pdf-name">Criminal Justice</div>
+              <span class="pdf-badge">BSCJ</span>
+            </div>
+
+            <!-- Information System -->
+            <div class="pdf-option-card" onclick="downloadYearbookPDF('BSIS', 'Information System')">
+              <i class="fas fa-laptop-code"></i>
+              <div class="pdf-name">Information System</div>
+              <span class="pdf-badge">BSIS</span>
+            </div>
+
+            <!-- Education -->
+            <div class="pdf-option-card" onclick="downloadYearbookPDF('COE', 'Education')">
+              <i class="fas fa-graduation-cap"></i>
+              <div class="pdf-name">Education</div>
+              <span class="pdf-badge">COE</span>
+            </div>
+
+            <!-- Business Administration -->
+            <div class="pdf-option-card" onclick="downloadYearbookPDF('BSBA', 'Business Administration')">
+              <i class="fas fa-briefcase"></i>
+              <div class="pdf-name">Business Admin</div>
+              <span class="pdf-badge">BSBA</span>
+            </div>
+
+            <!-- Nursing -->
+            <div class="pdf-option-card" onclick="downloadYearbookPDF('BSN', 'Nursing')">
+              <i class="fas fa-heart-pulse"></i>
+              <div class="pdf-name">Nursing</div>
+              <span class="pdf-badge">BSN</span>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="completion-modal-footer">
         <button class="completion-modal-btn" onclick="closeCompletionModal()">
-          <i class="fas fa-check"></i> Understood
+          <i class="fas fa-times"></i> Close
         </button>
       </div>
     </div>
@@ -395,13 +523,22 @@ try {
     let COMPLETION_DATE;
     <?php if ($completionDateTimestamp): ?>
       COMPLETION_DATE = new Date(<?php echo $completionDateTimestamp; ?>);
-      console.log('[Yearbook] Completion date loaded from database:', COMPLETION_DATE.toLocaleString());
-      console.log('[Yearbook] Completion timestamp:', <?php echo $completionDateTimestamp; ?>);
-      console.log('[Yearbook] Current time:', new Date().toLocaleString());
-      console.log('[Yearbook] Is completed?', new Date() >= COMPLETION_DATE);
+      const currentTime = new Date();
+      const isExpired = currentTime >= COMPLETION_DATE;
+      console.log('[Yearbook] ============ YEARBOOK ACCESS STATUS ============');
+      console.log('[Yearbook] Completion date:', COMPLETION_DATE.toLocaleString());
+      console.log('[Yearbook] Current time:', currentTime.toLocaleString());
+      console.log('[Yearbook] Status:', isExpired ? '🔒 EXPIRED - Only completion modal will show' : '✅ ACTIVE - Yearbook loading enabled');
+      if (!isExpired) {
+        const timeLeft = COMPLETION_DATE - currentTime;
+        const hoursLeft = Math.floor(timeLeft / (1000 * 60 * 60));
+        const minutesLeft = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+        console.log('[Yearbook] Time until expiry:', hoursLeft + 'h ' + minutesLeft + 'm');
+      }
+      console.log('[Yearbook] ============================================');
     <?php else: ?>
       COMPLETION_DATE = null;
-      console.log('[Yearbook] ⚠ No completion date set - yearbook access is open');
+      console.log('[Yearbook] ⚠ No completion date set - yearbook access is open indefinitely');
       console.log('[Yearbook] Student academic year:', '<?php echo $studentAcademicYear; ?>');
       console.log('[Yearbook] Searched for batch_year:', '<?php echo isset($batchYear) ? $batchYear : "N/A"; ?>');
     <?php endif; ?>
@@ -438,6 +575,37 @@ try {
       }
     }
 
+    function downloadYearbookPDF(departmentCode, departmentName) {
+      console.log('[Yearbook PDF] Downloading:', departmentCode, departmentName);
+
+      // Get student's academic year
+      const studentAcademicYear = window.studentData?.studentAcademicYear || '';
+      const batchYear = studentAcademicYear.includes('Batch Year') ? studentAcademicYear : 'Batch Year ' + studentAcademicYear;
+
+      console.log('[Yearbook PDF] Student batch year:', batchYear);
+      console.log('[Yearbook PDF] Department:', departmentCode);
+
+      // TODO: Replace with actual PDF URLs from your database or CDN
+      // For now, this will construct a URL pattern
+      const pdfUrl = `<?php echo BASE_URL; ?>Connection/Photos/DownloadYearbookPDF.php?department=${departmentCode}&batch_year=${encodeURIComponent(batchYear)}`;
+
+      // Show loading feedback
+      const clickedCard = event.target.closest('.pdf-option-card');
+      if (clickedCard) {
+        const originalHTML = clickedCard.innerHTML;
+        clickedCard.innerHTML = '<i class="fas fa-spinner fa-spin" style="font-size: 36px; color: #3b82f6;"></i><div class="pdf-name" style="color: #3b82f6;">Preparing...</div>';
+
+        setTimeout(() => {
+          clickedCard.innerHTML = originalHTML;
+        }, 2000);
+      }
+
+      // Open PDF in new tab or trigger download
+      window.open(pdfUrl, '_blank');
+
+      console.log('[Yearbook PDF] Download initiated:', pdfUrl);
+    }
+
     function showYearbookIframe(departmentCode, departmentName) {
       console.log('[Yearbook] 🔍 Clicked on yearbook:', departmentCode, departmentName);
       console.log('[Yearbook] 🔍 COMPLETION_DATE:', COMPLETION_DATE);
@@ -448,9 +616,9 @@ try {
       console.log('[Yearbook] 🔍 isYearbookCompleted():', completed);
 
       if (completed) {
-        console.log('[Yearbook] ✅ Access completed - showing completion modal');
+        console.log('[Yearbook] 🚫 Access expired - ONLY showing completion modal (no loading/iframe)');
         showCompletionModal();
-        return;
+        return; // Exit immediately - no loading, no iframe
       } else {
         console.log('[Yearbook] ✅ Access still open - loading yearbook');
       }

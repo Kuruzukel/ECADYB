@@ -117,10 +117,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
     }
 }
 
-if (!empty($error_message)) {
-    echo "<div style='color:red; font-weight:bold; margin:10px 0;'>$error_message</div>";
-}
-
 $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 if ($requestUri === '/favicon.ico' || $requestUri === '/ECADYB/favicon.ico') {
