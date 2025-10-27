@@ -136,7 +136,7 @@ function initCarousel() {
 
 function startInfiniteScroll(oneSetWidth) {
   let startTime = null;
-  const duration = 25000; // 25 seconds to scroll through one set (faster speed)
+  const duration = 1500; // 20 seconds to scroll through one set (faster speed)
 
   function animate(timestamp) {
     if (!startTime) startTime = timestamp;
@@ -495,8 +495,11 @@ document.addEventListener("DOMContentLoaded", function () {
     document.body.classList.add("page-transition-out");
 
     setTimeout(() => {
-      // Use relative path directly to login file
-      window.location.href = "../Public/Components/login.php";
+      // Auto-detect environment and use appropriate login path
+      const baseUrl = window.location.pathname.includes("/ECADYB/")
+        ? "/ECADYB/"
+        : "/";
+      window.location.href = baseUrl + "login";
     }, 1000);
   }
 

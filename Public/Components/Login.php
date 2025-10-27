@@ -144,7 +144,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $client !== null) {
     <meta name="twitter:image:alt" content="Exact Colleges of Asia Graduation Gallery Preview Logo" />
 
     <link rel="icon" href="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png" type="image/png" />
-    <link href="../assets/css/Login.css" rel="stylesheet" />
+    <link href="<?php echo BASE_URL; ?>Public/assets/css/Login.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 
@@ -220,7 +220,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $client !== null) {
                     </div>
                 </div>
                 <div class="forgot-password">
-                    <a href="ForgotPassword.html">Forgot Password?</a>
+                    <a href="<?php echo BASE_URL; ?>Public/Components/ForgotPassword.html">Forgot Password?</a>
                 </div>
             </div>
             <button type="submit">Log In</button>
@@ -230,7 +230,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $client !== null) {
             </button>
         </form>
     </div>
-    <script src="../assets/js/Login.js"></script>
+    <script src="<?php echo BASE_URL; ?>Public/assets/js/Login.js"></script>
 
     </body>
 
