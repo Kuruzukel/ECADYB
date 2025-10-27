@@ -2212,7 +2212,6 @@ async function generateYearbookPDF(departments, progressNotification) {
       `\n=== Processing department ${currentDeptIndex}/${totalDepartments}: ${department} ===`
     );
 
-    // Create a new PDF for this department
     console.log(`Creating PDF document for ${department}...`);
     const pdf = new jsPDF({
       orientation: "landscape",
