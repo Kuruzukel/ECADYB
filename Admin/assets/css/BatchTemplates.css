@@ -1148,7 +1148,6 @@ label {
   box-shadow: none;
 }
 
-/* Modal entrance animation */
 @keyframes modalSlideIn {
   from {
     opacity: 0;
