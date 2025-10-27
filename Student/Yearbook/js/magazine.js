@@ -1238,50 +1238,8 @@ function loadPage(page, pageElement) {
                               overflow: "hidden",
                             });
 
-                            // Add "Coming Soon..." overlay with inline styles to override any CSS
-                            var comingSoonOverlay = $("<div/>", {
-                              class: "coming-soon-overlay",
-                            });
-
-                            comingSoonOverlay.attr(
-                              "style",
-                              "position: absolute !important; " +
-                                "top: 0 !important; " +
-                                "left: 0 !important; " +
-                                "width: 100% !important; " +
-                                "height: 100% !important; " +
-                                "display: flex !important; " +
-                                "align-items: center !important; " +
-                                "justify-content: center !important; " +
-                                "pointer-events: none !important; " +
-                                "z-index: 999 !important; " +
-                                "margin: 0 !important; " +
-                                "padding: 0 !important;"
-                            );
-
-                            var comingSoonText = $("<span/>", {
-                              class: "coming-soon-text",
-                              text: "Coming Soon...",
-                            });
-
-                            comingSoonText.attr(
-                              "style",
-                              "font-style: italic !important; " +
-                                "font-size: 16px !important; " +
-                                "font-weight: 600 !important; " +
-                                "color: #ffffff !important; " +
-                                "text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9) !important; " +
-                                "padding: 4px 12px !important; " +
-                                "letter-spacing: 0.5px !important; " +
-                                "white-space: nowrap !important; " +
-                                "background: rgba(0, 0, 0, 0.3) !important; " +
-                                "border-radius: 4px !important;"
-                            );
-
-                            comingSoonOverlay.append(comingSoonText);
-                            $parent.append(comingSoonOverlay);
                             console.log(
-                              "Applied blur filter and Coming Soon overlay to pending student photo:",
+                              "Applied blur filter to pending student photo:",
                               currentStudentName
                             );
                           }

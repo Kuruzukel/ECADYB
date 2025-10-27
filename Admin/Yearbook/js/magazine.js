@@ -1816,44 +1816,8 @@ function loadPage(page, pageElement) {
                               position: "relative",
                             });
 
-                            var comingSoonOverlay = $("<div/>", {
-                              class: "coming-soon-overlay",
-                              html: '<span class="coming-soon-text">Coming Soon...</span>',
-                              css: {
-                                position: "absolute",
-                                top: "0",
-                                left: "0",
-                                width: "100%",
-                                height: "100%",
-                                display: "flex",
-                                "align-items": "center",
-                                "justify-content": "center",
-                                "pointer-events": "none",
-                                "z-index": "2",
-                                "text-align": "center",
-                              },
-                            });
-
-                            comingSoonOverlay.find(".coming-soon-text").css({
-                              "font-style": "italic",
-                              "font-size": "18px",
-                              "font-weight": "600",
-                              color: "#ffffff",
-                              "text-shadow": "0 2px 8px rgba(0, 0, 0, 0.8)",
-                              padding: "8px 16px",
-                              "letter-spacing": "0.5px",
-                              "text-align": "center",
-                              display: "inline-block",
-                              "max-width": "100%",
-                              "word-wrap": "break-word",
-                              "margin-top": "5rem",
-                            });
-
-                            currentPhotoElement
-                              .parent()
-                              .append(comingSoonOverlay);
                             console.log(
-                              "Applied blur filter and Coming Soon overlay to pending student photo:",
+                              "Applied blur filter to pending student photo:",
                               currentStudentName
                             );
                           }
