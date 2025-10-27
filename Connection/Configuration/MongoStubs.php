@@ -260,6 +260,427 @@ namespace MongoDB\Driver {
     }
 }
 
+/**
+ * PSR-6 Cache Interface Stubs
+ * For Firebase JWT CachedKeySet
+ */
+
+namespace Psr\Cache {
+
+    /**
+     * CacheItemPoolInterface generates CacheItemInterface objects.
+     */
+    interface CacheItemPoolInterface
+    {
+        /**
+         * Returns a Cache Item representing the specified key.
+         */
+        public function getItem(string $key): CacheItemInterface;
+
+        /**
+         * Returns a traversable set of cache items.
+         */
+        public function getItems(array $keys = []): iterable;
+
+        /**
+         * Confirms if the cache contains specified cache item.
+         */
+        public function hasItem(string $key): bool;
+
+        /**
+         * Deletes all items in the pool.
+         */
+        public function clear(): bool;
+
+        /**
+         * Removes the item from the pool.
+         */
+        public function deleteItem(string $key): bool;
+
+        /**
+         * Removes multiple items from the pool.
+         */
+        public function deleteItems(array $keys): bool;
+
+        /**
+         * Persists a cache item immediately.
+         */
+        public function save(CacheItemInterface $item): bool;
+
+        /**
+         * Sets a cache item to be persisted later.
+         */
+        public function saveDeferred(CacheItemInterface $item): bool;
+
+        /**
+         * Persists any deferred cache items.
+         */
+        public function commit(): bool;
+    }
+
+    /**
+     * CacheItemInterface defines an interface for interacting with objects inside a cache.
+     */
+    interface CacheItemInterface
+    {
+        /**
+         * Returns the key for the current cache item.
+         */
+        public function getKey(): string;
+
+        /**
+         * Retrieves the value of the item from the cache associated with this object's key.
+         */
+        public function get(): mixed;
+
+        /**
+         * Confirms if the cache item lookup resulted in a cache hit.
+         */
+        public function isHit(): bool;
+
+        /**
+         * Sets the value represented by this cache item.
+         */
+        public function set(mixed $value): static;
+
+        /**
+         * Sets the expiration time for this cache item.
+         */
+        public function expiresAt(?\DateTimeInterface $expiration): static;
+
+        /**
+         * Sets the expiration time for this cache item.
+         */
+        public function expiresAfter(int|\DateInterval|null $time): static;
+    }
+}
+
+/**
+ * PSR-18 HTTP Client Interface Stubs
+ * For Firebase JWT CachedKeySet
+ */
+
+namespace Psr\Http\Client {
+
+    use Psr\Http\Message\RequestInterface;
+    use Psr\Http\Message\ResponseInterface;
+
+    /**
+     * Client Interface
+     */
+    interface ClientInterface
+    {
+        /**
+         * Sends a PSR-7 request and returns a PSR-7 response.
+         */
+        public function sendRequest(RequestInterface $request): ResponseInterface;
+    }
+}
+
+/**
+ * PSR-17 HTTP Factory Interface Stubs
+ * For Firebase JWT CachedKeySet
+ */
+
+namespace Psr\Http\Message {
+
+    /**
+     * Request Factory Interface
+     */
+    interface RequestFactoryInterface
+    {
+        /**
+         * Create a new request.
+         */
+        public function createRequest(string $method, $uri): RequestInterface;
+    }
+
+    /**
+     * Request Interface
+     */
+    interface RequestInterface extends MessageInterface
+    {
+        /**
+         * Retrieves the message's request target.
+         */
+        public function getRequestTarget(): string;
+
+        /**
+         * Return an instance with the specific request-target.
+         */
+        public function withRequestTarget(string $requestTarget): static;
+
+        /**
+         * Retrieves the HTTP method of the request.
+         */
+        public function getMethod(): string;
+
+        /**
+         * Return an instance with the provided HTTP method.
+         */
+        public function withMethod(string $method): static;
+
+        /**
+         * Retrieves the URI instance.
+         */
+        public function getUri(): UriInterface;
+
+        /**
+         * Returns an instance with the provided URI.
+         */
+        public function withUri(UriInterface $uri, bool $preserveHost = false): static;
+    }
+
+    /**
+     * Response Interface
+     */
+    interface ResponseInterface extends MessageInterface
+    {
+        /**
+         * Gets the response status code.
+         */
+        public function getStatusCode(): int;
+
+        /**
+         * Return an instance with the specified status code and, optionally, reason phrase.
+         */
+        public function withStatus(int $code, string $reasonPhrase = ''): static;
+
+        /**
+         * Gets the response reason phrase associated with the status code.
+         */
+        public function getReasonPhrase(): string;
+    }
+
+    /**
+     * Message Interface
+     */
+    interface MessageInterface
+    {
+        /**
+         * Retrieves the HTTP protocol version as a string.
+         */
+        public function getProtocolVersion(): string;
+
+        /**
+         * Return an instance with the specified HTTP protocol version.
+         */
+        public function withProtocolVersion(string $version): static;
+
+        /**
+         * Retrieves all message header values.
+         */
+        public function getHeaders(): array;
+
+        /**
+         * Checks if a header exists by the given case-insensitive name.
+         */
+        public function hasHeader(string $name): bool;
+
+        /**
+         * Retrieves a message header value by the given case-insensitive name.
+         */
+        public function getHeader(string $name): array;
+
+        /**
+         * Retrieves a comma-separated string of the values for a single header.
+         */
+        public function getHeaderLine(string $name): string;
+
+        /**
+         * Return an instance with the provided value replacing the specified header.
+         */
+        public function withHeader(string $name, $value): static;
+
+        /**
+         * Return an instance with the specified header appended with the given value.
+         */
+        public function withAddedHeader(string $name, $value): static;
+
+        /**
+         * Return an instance without the specified header.
+         */
+        public function withoutHeader(string $name): static;
+
+        /**
+         * Gets the body of the message.
+         */
+        public function getBody(): StreamInterface;
+
+        /**
+         * Return an instance with the specified message body.
+         */
+        public function withBody(StreamInterface $body): static;
+    }
+
+    /**
+     * Stream Interface
+     */
+    interface StreamInterface
+    {
+        /**
+         * Reads all data from the stream into a string, from the beginning to end.
+         */
+        public function __toString(): string;
+
+        /**
+         * Closes the stream and any underlying resources.
+         */
+        public function close(): void;
+
+        /**
+         * Separates any underlying resources from the stream.
+         */
+        public function detach();
+
+        /**
+         * Get the size of the stream if known.
+         */
+        public function getSize(): ?int;
+
+        /**
+         * Returns the current position of the file read/write pointer
+         */
+        public function tell(): int;
+
+        /**
+         * Returns true if the stream is at the end of the stream.
+         */
+        public function eof(): bool;
+
+        /**
+         * Returns whether or not the stream is seekable.
+         */
+        public function isSeekable(): bool;
+
+        /**
+         * Seek to a position in the stream.
+         */
+        public function seek(int $offset, int $whence = SEEK_SET): void;
+
+        /**
+         * Seek to the beginning of the stream.
+         */
+        public function rewind(): void;
+
+        /**
+         * Returns whether or not the stream is writable.
+         */
+        public function isWritable(): bool;
+
+        /**
+         * Write data to the stream.
+         */
+        public function write(string $string): int;
+
+        /**
+         * Returns whether or not the stream is readable.
+         */
+        public function isReadable(): bool;
+
+        /**
+         * Read data from the stream.
+         */
+        public function read(int $length): string;
+
+        /**
+         * Returns the remaining contents in a string
+         */
+        public function getContents(): string;
+
+        /**
+         * Get stream metadata as an associative array or retrieve a specific key.
+         */
+        public function getMetadata(?string $key = null);
+    }
+
+    /**
+     * URI Interface
+     */
+    interface UriInterface
+    {
+        /**
+         * Retrieve the scheme component of the URI.
+         */
+        public function getScheme(): string;
+
+        /**
+         * Retrieve the authority component of the URI.
+         */
+        public function getAuthority(): string;
+
+        /**
+         * Retrieve the user information component of the URI.
+         */
+        public function getUserInfo(): string;
+
+        /**
+         * Retrieve the host component of the URI.
+         */
+        public function getHost(): string;
+
+        /**
+         * Retrieve the port component of the URI.
+         */
+        public function getPort(): ?int;
+
+        /**
+         * Retrieve the path component of the URI.
+         */
+        public function getPath(): string;
+
+        /**
+         * Retrieve the query string of the URI.
+         */
+        public function getQuery(): string;
+
+        /**
+         * Retrieve the fragment component of the URI.
+         */
+        public function getFragment(): string;
+
+        /**
+         * Return an instance with the specified scheme.
+         */
+        public function withScheme(string $scheme): static;
+
+        /**
+         * Return an instance with the specified user information.
+         */
+        public function withUserInfo(string $user, ?string $password = null): static;
+
+        /**
+         * Return an instance with the specified host.
+         */
+        public function withHost(string $host): static;
+
+        /**
+         * Return an instance with the specified port.
+         */
+        public function withPort(?int $port): static;
+
+        /**
+         * Return an instance with the specified path.
+         */
+        public function withPath(string $path): static;
+
+        /**
+         * Return an instance with the specified query string.
+         */
+        public function withQuery(string $query): static;
+
+        /**
+         * Return an instance with the specified URI fragment.
+         */
+        public function withFragment(string $fragment): static;
+
+        /**
+         * Return the string representation as a URI reference.
+         */
+        public function __toString(): string;
+    }
+}
+
 namespace {
     if (!function_exists('random_int')) {
         /**
