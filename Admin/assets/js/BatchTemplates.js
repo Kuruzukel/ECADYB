@@ -2314,7 +2314,6 @@ async function generateYearbookPDF(departments, progressNotification) {
         );
       }
 
-      // Save this department's PDF
       if (totalPagesAdded > 0) {
         const deptProgress = (currentDeptIndex / totalDepartments) * 100;
         updatePersistentNotification(
