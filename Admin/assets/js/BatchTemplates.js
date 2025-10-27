@@ -2153,7 +2153,6 @@ async function confirmDownloadPDF() {
     console.error("Error message:", error.message);
     console.error("Error stack:", error.stack);
 
-    // Remove the preparing notification before showing error
     if (preparingNotification) {
       closePersistentNotification(preparingNotification);
     }
