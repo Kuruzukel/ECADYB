@@ -268,7 +268,6 @@ function showPersistentNotification(
   return notif;
 }
 
-// Close a specific persistent notification
 function closePersistentNotification(notification) {
   if (notification) {
     notification.classList.remove("show");
