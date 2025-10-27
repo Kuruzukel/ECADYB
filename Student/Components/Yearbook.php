@@ -103,6 +103,10 @@ try {
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
 
+  <!-- PDF Generation Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
   <style>
     /* Modern PDF Badge for Yearbook Items */
     .yearbook-pdf-badge {
@@ -194,6 +198,112 @@ try {
           0 0 0 6px rgba(252, 218, 21, 0.5),
           inset 0 2px 4px rgba(255, 255, 255, 0.3);
       }
+    }
+
+    /* Notification Styles (from BatchTemplates) */
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      min-width: 320px;
+      max-width: 400px;
+      padding: 1rem 1.2rem;
+      border-radius: 12px;
+      opacity: 0;
+      transform: translateY(-40px);
+      pointer-events: none;
+      z-index: 99999;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .notification.show {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .notification.success-message {
+      background: #f0fdf4;
+      border: 1px solid #86efac;
+    }
+
+    .notification.error-message {
+      background: #fef2f2;
+      border: 1px solid #fca5a5;
+    }
+
+    .notification.info-message {
+      background: #eff6ff;
+      border: 1px solid #93c5fd;
+    }
+
+    .notification-message {
+      flex: 1;
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
+    .notification.success-message .notification-message {
+      color: #16a34a;
+    }
+
+    .notification.error-message .notification-message {
+      color: #dc2626;
+    }
+
+    .notification.info-message .notification-message {
+      color: #2563eb;
+    }
+
+    .notification-close {
+      width: 20px;
+      height: 20px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+    }
+
+    .notification.success-message .notification-close {
+      color: #16a34a !important;
+    }
+
+    .notification.error-message .notification-close {
+      color: #dc2626 !important;
+    }
+
+    .notification.info-message .notification-close {
+      color: #2563eb !important;
+    }
+
+    .notification.success-message .notification-close i {
+      color: #16a34a !important;
+    }
+
+    .notification.error-message .notification-close i {
+      color: #dc2626 !important;
+    }
+
+    .notification.info-message .notification-close i {
+      color: #2563eb !important;
+    }
+
+    .notification-close:hover {
+      opacity: 0.7;
+      transform: scale(1.1);
+    }
+
+    .notification-close i {
+      font-size: 1rem;
     }
 
     /* Completion Modal Styles */
@@ -709,6 +819,9 @@ try {
 
   <?php include __DIR__ . '/Footer.php'; ?>
 
+  <!-- Notification Container -->
+  <div id="notification-container"></div>
+
   <!-- Yearbook Completion Modal -->
   <div class="yearbook-completion-modal-overlay" id="yearbook-completion-modal">
     <div class="completion-modal-container">
@@ -866,6 +979,111 @@ try {
       }
     }
 
+    // Notification System (from BatchTemplates)
+    let notificationTimeout = null;
+
+    function showNotification(message, type = 'success') {
+      const container = document.getElementById('notification-container');
+      if (!container) {
+        // Create container if it doesn't exist
+        const newContainer = document.createElement('div');
+        newContainer.id = 'notification-container';
+        document.body.appendChild(newContainer);
+        return showNotification(message, type);
+      }
+
+      const existingNotifications = container.querySelectorAll('.notification');
+      existingNotifications.forEach(notif => notif.remove());
+
+      if (notificationTimeout) {
+        clearTimeout(notificationTimeout);
+      }
+
+      let messageClass = type === 'error' ? 'error-message' : type === 'info' ? 'info-message' : 'success-message';
+
+      const notif = document.createElement('div');
+      notif.className = `notification ${messageClass}`;
+      notif.id = `${type}-notification`;
+      notif.innerHTML = `
+        <span class="notification-message">${message}</span>
+        <button class="notification-close" onclick="closeNotification('${type}-notification')">
+          <i class="fas fa-times"></i>
+        </button>
+      `;
+      container.appendChild(notif);
+
+      setTimeout(() => {
+        notif.classList.add('show');
+      }, 10);
+
+      const duration = type === 'info' ? 2000 : 5000;
+      notificationTimeout = setTimeout(() => {
+        closeNotification(`${type}-notification`);
+      }, duration);
+    }
+
+    function closeNotification(id) {
+      const notification = document.getElementById(id);
+      if (notification) {
+        notification.classList.remove('show');
+        setTimeout(() => {
+          notification.remove();
+          notificationTimeout = null;
+        }, 500);
+      }
+    }
+
+    function showPersistentNotification(message, type = 'info', allowCancel = false) {
+      const container = document.getElementById('notification-container');
+      if (!container) {
+        const newContainer = document.createElement('div');
+        newContainer.id = 'notification-container';
+        document.body.appendChild(newContainer);
+        return showPersistentNotification(message, type, allowCancel);
+      }
+
+      const existingNotifications = container.querySelectorAll('.notification');
+      existingNotifications.forEach(notif => notif.remove());
+
+      if (notificationTimeout) {
+        clearTimeout(notificationTimeout);
+        notificationTimeout = null;
+      }
+
+      let messageClass = type === 'error' ? 'error-message' : type === 'info' ? 'info-message' : 'success-message';
+
+      const notif = document.createElement('div');
+      notif.className = `notification ${messageClass} persistent`;
+      notif.innerHTML = `
+        <span class="notification-message">${message}</span>
+      `;
+      container.appendChild(notif);
+
+      setTimeout(() => {
+        notif.classList.add('show');
+      }, 10);
+
+      return notif;
+    }
+
+    function closePersistentNotification(notification) {
+      if (notification) {
+        notification.classList.remove('show');
+        setTimeout(() => {
+          notification.remove();
+        }, 300);
+      }
+    }
+
+    function updatePersistentNotification(notification, message) {
+      if (notification) {
+        const messageElement = notification.querySelector('.notification-message');
+        if (messageElement) {
+          messageElement.innerHTML = message;
+        }
+      }
+    }
+
     function getSelectedDepartments() {
       const checkboxes = document.querySelectorAll('.dept-checkbox:checked');
       return Array.from(checkboxes).map(cb => cb.value);
@@ -950,11 +1168,11 @@ try {
       updateSelectAllButton();
     }
 
-    function downloadSelectedYearbooks() {
+    async function downloadSelectedYearbooks() {
       const selectedDepartments = getSelectedDepartments();
 
       if (selectedDepartments.length === 0) {
-        alert('Please select at least one department');
+        showNotification('Please select at least one department', 'error');
         return;
       }
 
@@ -962,31 +1180,583 @@ try {
       const studentAcademicYear = window.studentData?.studentAcademicYear || '';
       const batchYear = studentAcademicYear.includes('Batch Year') ? studentAcademicYear : 'Batch Year ' + studentAcademicYear;
 
-      console.log('[Yearbook PDF] Downloading:', selectedDepartments.length, 'departments');
-      console.log('[Yearbook PDF] Student batch year:', batchYear);
-      console.log('[Yearbook PDF] Departments:', selectedDepartments);
+      console.log('=== PDF DOWNLOAD STARTED ===');
+      console.log('Selected departments:', selectedDepartments);
+      console.log('Batch year:', batchYear);
 
-      // Download each selected department
-      selectedDepartments.forEach((departmentCode, index) => {
-        setTimeout(() => {
-          const pdfUrl = `<?php echo BASE_URL; ?>Connection/Photos/DownloadYearbookPDF.php?department=${departmentCode}&batch_year=${encodeURIComponent(batchYear)}`;
-          window.open(pdfUrl, '_blank');
-          console.log('[Yearbook PDF] Download initiated:', departmentCode, pdfUrl);
-        }, index * 500); // Stagger downloads by 500ms to avoid blocking
-      });
+      // Close modal first
+      closeCompletionModal();
 
-      // Close modal and reset selections after a delay
+      const deptNames = selectedDepartments.join(', ');
+
+      // Show progress notification
+      const progressNotification = showPersistentNotification(
+        `Preparing PDF... 0%<br><small>Initializing...</small>`,
+        'info',
+        false
+      );
+
+      try {
+        console.log('Calling generateYearbookPDF...');
+        await generateYearbookPDF(selectedDepartments, batchYear, progressNotification);
+        console.log('PDF generation completed successfully');
+
+        if (progressNotification) {
+          closePersistentNotification(progressNotification);
+        }
+
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        const pdfCount = selectedDepartments.length;
+        showNotification(
+          `${pdfCount} PDF${pdfCount > 1 ? 's' : ''} downloaded successfully! (${deptNames})`,
+          'success'
+        );
+      } catch (error) {
+        console.error('=== PDF GENERATION ERROR ===');
+        console.error('Error:', error);
+
+        if (progressNotification) {
+          closePersistentNotification(progressNotification);
+        }
+
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        showNotification(`Failed to generate PDF: ${error.message}`, 'error');
+      }
+
+      // Reset selections
       setTimeout(() => {
-        closeCompletionModal();
-
-        // Reset selections
         const checkboxes = document.querySelectorAll('.dept-checkbox');
         checkboxes.forEach(cb => {
           cb.checked = false;
           cb.closest('.dept-label').classList.remove('selected');
         });
         updateDepartmentCount();
-      }, selectedDepartments.length * 500 + 500);
+      }, 300);
+    }
+
+    // PDF Generation Functions (from BatchTemplates.js)
+    async function generateYearbookPDF(departments, batchYear, progressNotification) {
+      console.log('=== generateYearbookPDF STARTED ===');
+      console.log('Batch year:', batchYear);
+      console.log('Departments to process:', departments);
+
+      if (typeof html2canvas === 'undefined') {
+        console.error('html2canvas library not loaded!');
+        throw new Error('html2canvas library not available');
+      }
+
+      if (typeof window.jspdf === 'undefined') {
+        console.error('jsPDF library not loaded!');
+        throw new Error('jsPDF library not available');
+      }
+
+      const {
+        jsPDF
+      } = window.jspdf;
+      console.log('jsPDF loaded successfully');
+
+      const totalDepartments = departments.length;
+      let currentDeptIndex = 0;
+
+      const allDepartmentsText = departments.join(', ');
+
+      for (const department of departments) {
+        currentDeptIndex++;
+
+        console.log(`\n=== Processing department ${currentDeptIndex}/${totalDepartments}: ${department} ===`);
+
+        console.log(`Creating PDF document for ${department}...`);
+        const pdf = new jsPDF({
+          orientation: 'landscape',
+          unit: 'px',
+          format: [1920, 1080],
+          compress: true
+        });
+
+        let isFirstPage = true;
+        let totalPagesAdded = 0;
+
+        const baseProgress = ((currentDeptIndex - 1) / totalDepartments) * 100;
+        updatePersistentNotification(
+          progressNotification,
+          `Preparing PDF ${currentDeptIndex}/${totalDepartments}... ${Math.round(baseProgress)}%<br><small>Loading ${department}... [${allDepartmentsText}]</small>`
+        );
+
+        const yearbookUrl = getYearbookUrl(department, batchYear);
+        console.log('Yearbook URL:', yearbookUrl);
+
+        try {
+          console.log(`Starting capture for ${department}...`);
+
+          const onPageProgress = (currentPage, totalPages) => {
+            const deptProgress = (currentPage / totalPages) * (80 / totalDepartments);
+            const overallProgress = baseProgress + deptProgress;
+            updatePersistentNotification(
+              progressNotification,
+              `Preparing PDF ${currentDeptIndex}/${totalDepartments}... ${Math.round(overallProgress)}%<br><small>Capturing ${department} pages (${currentPage}/${totalPages}) [${allDepartmentsText}]</small>`
+            );
+          };
+
+          const pageCanvases = await captureAllYearbookPages(yearbookUrl, department, onPageProgress);
+          console.log(`Captured ${pageCanvases.length} pages for ${department}`);
+
+          if (pageCanvases.length === 0) {
+            console.warn(`No pages captured for ${department}, skipping...`);
+            continue;
+          }
+
+          updatePersistentNotification(
+            progressNotification,
+            `Preparing PDF ${currentDeptIndex}/${totalDepartments}... ${Math.round(baseProgress + 80 / totalDepartments)}%<br><small>Adding ${department} to PDF... [${allDepartmentsText}]</small>`
+          );
+
+          for (let i = 0; i < pageCanvases.length; i++) {
+            const pageCanvas = pageCanvases[i];
+            console.log(`Adding page ${i + 1}/${pageCanvases.length} for ${department} to PDF`);
+
+            if (!isFirstPage) {
+              pdf.addPage([1920, 1080], 'landscape');
+            }
+            isFirstPage = false;
+
+            const imgData = pageCanvas.toDataURL('image/jpeg', 0.95);
+            pdf.addImage(imgData, 'JPEG', 0, 0, 1920, 1080, undefined, 'FAST');
+            totalPagesAdded++;
+
+            const addProgress = ((i + 1) / pageCanvases.length) * (100 / totalDepartments) - 80 / totalDepartments;
+            updatePersistentNotification(
+              progressNotification,
+              `Preparing PDF ${currentDeptIndex}/${totalDepartments}... ${Math.round(baseProgress + 80 / totalDepartments + addProgress)}%<br><small>Adding ${department} pages (${i + 1}/${pageCanvases.length}) [${allDepartmentsText}]</small>`
+            );
+          }
+
+          if (totalPagesAdded > 0) {
+            const deptProgress = (currentDeptIndex / totalDepartments) * 100;
+            updatePersistentNotification(
+              progressNotification,
+              `Preparing PDF ${currentDeptIndex}/${totalDepartments}... ${Math.round(deptProgress)}%<br><small>Saving ${department} PDF... [${allDepartmentsText}]</small>`
+            );
+
+            const fileName = `${batchYear.replace(/\s+/g, '_')}_Yearbook_${department}.pdf`;
+            console.log(`Saving PDF for ${department} as:`, fileName);
+            pdf.save(fileName);
+            console.log(`PDF saved successfully for ${department}!`);
+
+            await new Promise(resolve => setTimeout(resolve, 500));
+          }
+        } catch (error) {
+          console.error(`\n=== ERROR capturing pages for ${department} ===`);
+          console.error('Error:', error);
+          throw error;
+        }
+      }
+
+      console.log(`\n=== All PDF Generation Complete ===`);
+
+      updatePersistentNotification(
+        progressNotification,
+        `Complete! 100%<br><small>All PDFs downloaded [${allDepartmentsText}]</small>`
+      );
+    }
+
+    function getYearbookUrl(department, batchYear) {
+      const basePath = '<?php echo BASE_URL; ?>';
+      return `${basePath}Student/Yearbook/index.html?department=${department}&batchYear=${encodeURIComponent(batchYear)}&fullscreen=true`;
+    }
+
+    async function captureAllYearbookPages(yearbookUrl, department, onPageProgress = null) {
+      return new Promise((resolve, reject) => {
+        console.log(`\n>>> Opening yearbook for ${department}:`, yearbookUrl);
+
+        const iframe = document.createElement('iframe');
+        iframe.style.position = 'fixed';
+        iframe.style.top = '-99999px';
+        iframe.style.left = '-99999px';
+        iframe.style.width = '1920px';
+        iframe.style.height = '1080px';
+        iframe.style.border = 'none';
+        iframe.style.zIndex = '-9999';
+
+        console.log('Appending iframe to body...');
+        document.body.appendChild(iframe);
+
+        let timeoutHandle;
+        let capturedPages = [];
+        let iframeLoadFired = false;
+
+        iframe.onload = async () => {
+          iframeLoadFired = true;
+          console.log(`✅ Iframe onload event fired for ${department}`);
+          try {
+            const iframeWindow = iframe.contentWindow;
+            const iframeDoc = iframe.contentDocument || iframeWindow.document;
+
+            if (!iframeDoc) {
+              throw new Error('Cannot access iframe document - possible CORS issue');
+            }
+
+            console.log(`Yearbook loaded for ${department}, waiting for initialization...`);
+
+            if (onPageProgress) {
+              onPageProgress(0, 1);
+            }
+
+            await waitForYearbookInit(iframeWindow, iframeDoc);
+            console.log('Yearbook initialized!');
+
+            await waitForImages(iframeDoc);
+            console.log('Images loaded!');
+
+            const totalPages = await getTotalPagesFromYearbook(iframeWindow);
+            console.log(`Total pages for ${department}:`, totalPages);
+
+            if (totalPages === 0 || !totalPages) {
+              throw new Error(`No pages found for ${department}`);
+            }
+
+            let captureCount = 0;
+            const approxTotalCaptures = Math.ceil(totalPages / 2) + (totalPages % 2 === 0 ? 1 : 0);
+
+            // Capture front cover
+            console.log(`\n>>> Capturing front cover (page 1) for ${department}`);
+            const nav1Success = await navigateToPage(iframeWindow, 1);
+            if (nav1Success) {
+              await new Promise(resolve => setTimeout(resolve, 2000));
+              let canvas = await capturePage(iframeDoc);
+              if (canvas) {
+                console.log(`Front cover captured (${canvas.width}x${canvas.height})`);
+                capturedPages.push(canvas);
+                captureCount++;
+                if (onPageProgress) {
+                  onPageProgress(captureCount, approxTotalCaptures);
+                }
+              }
+            }
+
+            // Capture spreads
+            for (let pageNum = 2; pageNum < totalPages; pageNum += 2) {
+              console.log(`\n>>> Capturing spread at page ${pageNum} for ${department}`);
+
+              const navSuccess = await navigateToPage(iframeWindow, pageNum);
+              if (!navSuccess) {
+                console.warn(`Failed to navigate to page ${pageNum}, skipping...`);
+                continue;
+              }
+
+              await new Promise(resolve => setTimeout(resolve, 2000));
+
+              let canvas = await capturePage(iframeDoc);
+              if (canvas) {
+                console.log(`Spread captured successfully (${canvas.width}x${canvas.height})`);
+                capturedPages.push(canvas);
+                captureCount++;
+                if (onPageProgress) {
+                  onPageProgress(captureCount, approxTotalCaptures);
+                }
+              }
+            }
+
+            // Capture back cover if needed
+            if (totalPages > 1 && totalPages % 2 === 0) {
+              console.log(`\n>>> Capturing back cover (page ${totalPages}) for ${department}`);
+              const navLastSuccess = await navigateToPage(iframeWindow, totalPages);
+              if (navLastSuccess) {
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                let canvas = await capturePage(iframeDoc);
+                if (canvas) {
+                  console.log(`Back cover captured (${canvas.width}x${canvas.height})`);
+                  capturedPages.push(canvas);
+                  captureCount++;
+                  if (onPageProgress) {
+                    onPageProgress(captureCount, approxTotalCaptures);
+                  }
+                }
+              }
+            }
+
+            console.log(`Total spreads captured: ${captureCount}`);
+
+            // Clean up
+            clearTimeout(timeoutHandle);
+            document.body.removeChild(iframe);
+
+            console.log(`\n>>> Successfully captured ${capturedPages.length} pages for ${department}`);
+
+            if (capturedPages.length === 0) {
+              reject(new Error(`No pages were captured for ${department}`));
+            } else {
+              resolve(capturedPages);
+            }
+          } catch (error) {
+            console.error(`\n>>> ERROR in iframe.onload for ${department}`);
+            console.error('Error:', error);
+
+            clearTimeout(timeoutHandle);
+            if (document.body.contains(iframe)) {
+              document.body.removeChild(iframe);
+            }
+            reject(error);
+          }
+        };
+
+        iframe.onerror = (error) => {
+          console.error(`\n❌ Iframe error event fired for ${department}`);
+          console.error('Error:', error);
+
+          clearTimeout(timeoutHandle);
+          if (document.body.contains(iframe)) {
+            document.body.removeChild(iframe);
+          }
+          reject(new Error(`Failed to load yearbook for ${department}`));
+        };
+
+        // Set timeout (5 minutes)
+        timeoutHandle = setTimeout(() => {
+          console.error(`\n❌ Timeout loading yearbook for ${department} after 300s`);
+
+          if (document.body.contains(iframe)) {
+            document.body.removeChild(iframe);
+          }
+          reject(new Error(`Timeout loading yearbook for ${department} (300s)`));
+        }, 300000);
+
+        console.log(`Setting iframe src for ${department}:`, yearbookUrl);
+        iframe.src = yearbookUrl;
+      });
+    }
+
+    async function waitForYearbookInit(iframeWindow, iframeDoc) {
+      return new Promise((resolve, reject) => {
+        let attempts = 0;
+        const maxAttempts = 600; // 2 minutes
+
+        const checkInit = () => {
+          attempts++;
+
+          const magazine = iframeDoc.querySelector('.magazine');
+          const hasjQuery = iframeWindow.$ && typeof iframeWindow.$ === 'function';
+
+          if (!hasjQuery) {
+            if (attempts < maxAttempts) {
+              setTimeout(checkInit, 200);
+            } else {
+              reject(new Error('jQuery failed to load in yearbook'));
+            }
+            return;
+          }
+
+          const hasTurnJs = iframeWindow.$('.magazine').turn;
+
+          if (magazine && hasTurnJs && typeof hasTurnJs === 'function') {
+            try {
+              const isInitialized = iframeWindow.$('.magazine').turn('is');
+              const totalPages = iframeWindow.$('.magazine').turn('pages');
+
+              if (isInitialized && totalPages > 0) {
+                console.log(`✅ Yearbook initialized! Total pages: ${totalPages}`);
+                setTimeout(() => resolve(), 2000);
+                return;
+              }
+            } catch (e) {
+              // Turn.js not ready yet
+            }
+          }
+
+          if (attempts < maxAttempts) {
+            setTimeout(checkInit, 200);
+          } else {
+            reject(new Error('Yearbook initialization timeout'));
+          }
+        };
+
+        checkInit();
+      });
+    }
+
+    async function getTotalPagesFromYearbook(iframeWindow) {
+      try {
+        if (iframeWindow.$ && iframeWindow.$('.magazine').turn) {
+          const totalPages = iframeWindow.$('.magazine').turn('pages');
+          return totalPages || 1;
+        }
+      } catch (e) {
+        console.error('Error getting total pages:', e);
+      }
+      return 1;
+    }
+
+    async function navigateToPage(iframeWindow, pageNum) {
+      try {
+        if (!iframeWindow.$ || !iframeWindow.$('.magazine').turn) {
+          console.error('Turn.js not available for navigation');
+          return false;
+        }
+
+        const totalPages = iframeWindow.$('.magazine').turn('pages');
+        if (pageNum < 1 || pageNum > totalPages) {
+          console.error(`Page ${pageNum} is out of range (1-${totalPages})`);
+          return false;
+        }
+
+        const isInitialized = iframeWindow.$('.magazine').turn('is');
+        if (!isInitialized) {
+          console.error('Turn.js not initialized yet');
+          return false;
+        }
+
+        iframeWindow.$('.magazine').turn('page', pageNum);
+        console.log(`Successfully navigated to page ${pageNum}`);
+
+        await new Promise(resolve => setTimeout(resolve, 1500));
+
+        return true;
+      } catch (e) {
+        console.error(`Error navigating to page ${pageNum}:`, e);
+        return false;
+      }
+    }
+
+    async function capturePage(iframeDoc) {
+      console.log('>>> capturePage called');
+      try {
+        // Hide navigation controls
+        const navControls = iframeDoc.querySelector('.nav-controls');
+        const originalNavDisplay = navControls ? navControls.style.display : null;
+        if (navControls) {
+          navControls.style.display = 'none';
+        }
+
+        if (typeof html2canvas === 'undefined') {
+          console.error('html2canvas is not defined!');
+          return null;
+        }
+
+        // Create canvas
+        const finalCanvas = document.createElement('canvas');
+        finalCanvas.width = 1920;
+        finalCanvas.height = 1080;
+        const ctx = finalCanvas.getContext('2d');
+
+        // Draw background
+        const bgImage = await loadImage('https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png');
+        if (bgImage) {
+          ctx.drawImage(bgImage, 0, 0, 1920, 1080);
+        } else {
+          ctx.fillStyle = '#000042';
+          ctx.fillRect(0, 0, 1920, 1080);
+        }
+
+        // Capture yearbook content
+        const canvas = iframeDoc.querySelector('#canvas');
+        if (canvas) {
+          const yearbookCanvas = await html2canvas(canvas, {
+            backgroundColor: null,
+            scale: 2,
+            useCORS: true,
+            allowTaint: true,
+            logging: false,
+            width: 1920,
+            height: 1080,
+            foreignObjectRendering: false,
+            removeContainer: true
+          });
+          ctx.drawImage(yearbookCanvas, 0, 0, 1920, 1080);
+        } else {
+          const yearbookCanvas = await html2canvas(iframeDoc.body, {
+            backgroundColor: null,
+            scale: 2,
+            useCORS: true,
+            allowTaint: true,
+            logging: false,
+            width: 1920,
+            height: 1080,
+            foreignObjectRendering: false,
+            removeContainer: true
+          });
+          ctx.drawImage(yearbookCanvas, 0, 0, 1920, 1080);
+        }
+
+        // Draw lower curl
+        await drawLowerCurl(ctx, 1920, 1080);
+
+        // Restore navigation controls
+        if (navControls && originalNavDisplay !== null) {
+          navControls.style.display = originalNavDisplay;
+        }
+
+        console.log('Final canvas composition completed!');
+        return finalCanvas;
+      } catch (error) {
+        console.error('>>> ERROR in capturePage:', error);
+        const navControls = iframeDoc.querySelector('.nav-controls');
+        if (navControls) {
+          navControls.style.display = '';
+        }
+        return null;
+      }
+    }
+
+    function loadImage(url) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => {
+          console.log('Image loaded successfully:', url);
+          resolve(img);
+        };
+        img.onerror = (error) => {
+          console.error('Failed to load image:', url, error);
+          resolve(null);
+        };
+        img.src = url;
+      });
+    }
+
+    async function drawLowerCurl(ctx, width, height) {
+      try {
+        const svgString = `
+          <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" width="1920" height="80">
+            <path d="M0,60 Q180,100 360,60 T720,60 T1080,60 T1440,60 L1440,120 L0,120 Z" fill="#1a237e" opacity="0.4" />
+            <path d="M0,80 Q180,40 360,80 T720,80 T1080,80 T1440,80 L1440,120 L0,120 Z" fill="#112d4e" opacity="0.7" />
+            <path d="M0,100 Q180,60 360,100 T720,100 T1080,100 T1440,100 L1440,120 L0,120 Z" fill="#021326" />
+          </svg>
+        `;
+
+        const svgBlob = new Blob([svgString], {
+          type: 'image/svg+xml;charset=utf-8'
+        });
+        const url = URL.createObjectURL(svgBlob);
+        const img = await loadImage(url);
+
+        if (img) {
+          const curlHeight = 80;
+          const curlY = height - curlHeight;
+          ctx.drawImage(img, 0, curlY, width, curlHeight);
+          console.log('Lower curl drawn successfully');
+        }
+
+        URL.revokeObjectURL(url);
+      } catch (error) {
+        console.error('Error drawing lower curl:', error);
+      }
+    }
+
+    function waitForImages(doc) {
+      return new Promise((resolve) => {
+        const images = doc.querySelectorAll('img');
+        const imagePromises = Array.from(images).map((img) => {
+          if (img.complete) return Promise.resolve();
+          return new Promise((resolve) => {
+            img.onload = resolve;
+            img.onerror = resolve;
+          });
+        });
+
+        Promise.all(imagePromises).then(resolve);
+        setTimeout(resolve, 10000); // 10 second timeout
+      });
     }
 
     function showYearbookIframe(departmentCode, departmentName) {
