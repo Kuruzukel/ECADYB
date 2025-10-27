@@ -2236,7 +2236,6 @@ async function generateYearbookPDF(departments, progressNotification) {
     console.log("Yearbook URL:", yearbookUrl);
 
     try {
-      // Open yearbook and capture all pages
       console.log(`Starting capture for ${department}...`);
 
       // Update progress callback for page capture
