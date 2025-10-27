@@ -48,7 +48,11 @@ function setupEventListeners() {
   if (backButton) {
     backButton.addEventListener("click", function(e) {
       e.preventDefault();
-      window.location.href = "ForgotPassword.html";
+      // Auto-detect environment and use appropriate forgot password path
+      const baseUrl = window.location.pathname.includes("/ECADYB/")
+        ? "/ECADYB/"
+        : "/";
+      window.location.href = baseUrl + "ForgotPassword";
     });
   }
 
