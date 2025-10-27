@@ -2203,7 +2203,6 @@ async function generateYearbookPDF(departments, progressNotification) {
   for (const department of departments) {
     currentDeptIndex++;
 
-    // Check for cancellation
     if (window.pdfGenerationCancelled) {
       console.log("PDF generation cancelled by user");
       throw new Error("PDF generation cancelled by user");
