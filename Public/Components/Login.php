@@ -99,6 +99,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $client !== null) {
                                 'student_id' => $studentIdValue,
                                 'name' => trim(($student['first name'] ?? '') . ' ' . ($student['middle name'] ?? '') . ' ' . ($student['last name'] ?? '')),
                                 'department' => $course,
+                                'academic_year' => $student['academic year'] ?? '',
                                 'role' => 'student'
                             ];
                             $jwtToken = generateSessionToken($studentIdValue, 'student', $sessionData);
@@ -109,6 +110,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $client !== null) {
                             $_SESSION['name']       = trim(($student['first name'] ?? '') . ' ' . ($student['middle name'] ?? '') . ' ' . ($student['last name'] ?? ''));
                             $_SESSION['department'] = $course;
                             $_SESSION['section']    = $student['department section'] ?? '';
+                            $_SESSION['academic_year'] = $student['academic year'] ?? '';
                             $_SESSION['batch_template'] = $batchTemplate;
                             $_SESSION['login_success'] = 'student';
                             $_SESSION['redirect_to'] = '../../Student/Components/StudentDashboard.php';

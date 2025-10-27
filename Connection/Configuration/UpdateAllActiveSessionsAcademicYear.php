@@ -159,7 +159,6 @@ try {
                 echo "  ⚠ Update failed (no changes made)\n\n";
                 $errorCount++;
             }
-
         } catch (Exception $e) {
             echo "  ✗ Error: " . $e->getMessage() . "\n\n";
             $errorCount++;
@@ -181,10 +180,8 @@ try {
         echo "REFRESH their browser for changes to take effect.\n";
         echo "=================================================\n";
     }
-
 } catch (Exception $e) {
     echo "\n✗ FATAL ERROR: " . $e->getMessage() . "\n";
     echo $e->getTraceAsString() . "\n";
     exit(1);
 }
-
