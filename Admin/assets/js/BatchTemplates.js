@@ -3266,7 +3266,6 @@ function confirmSelectTemplate() {
     window.pendingSelectSection = null;
     window.pendingSelectBatchName = null;
 
-    // Update download PDF button states after section selection changes
     updateDownloadPdfButtonStates();
   }
   closeSelectTemplateModal();
