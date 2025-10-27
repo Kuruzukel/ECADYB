@@ -2126,7 +2126,7 @@ async function confirmDownloadPDF() {
   const preparingNotification = showPersistentNotification(
     `Preparing PDF... 0%<br><small>Initializing...</small>`,
     "info",
-    true // Allow cancel
+    true
   );
 
   try {
