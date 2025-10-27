@@ -2374,7 +2374,6 @@ function getYearbookUrl(department, batchYear) {
   console.log(`Department mapping: ${department} -> ${yearbookDept}`);
   console.log(`Using batch year: ${batchYear}`);
 
-  // Construct yearbook URL with department, batch year, and fullscreen flag
   return `${basePath}/Student/Yearbook/index.html?department=${yearbookDept}&batchYear=${encodeURIComponent(
     batchYear
   )}&fullscreen=true`;
