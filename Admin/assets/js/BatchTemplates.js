@@ -2123,7 +2123,6 @@ async function confirmDownloadPDF() {
 
   window.pdfGenerationCancelled = false;
 
-  // Show loading notification with cancel button and progress
   const preparingNotification = showPersistentNotification(
     `Preparing PDF... 0%<br><small>Initializing...</small>`,
     "info",
