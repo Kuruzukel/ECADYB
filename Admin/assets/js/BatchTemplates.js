@@ -2276,7 +2276,6 @@ async function generateYearbookPDF(departments, progressNotification) {
       );
 
       for (let i = 0; i < pageCanvases.length; i++) {
-        // Check for cancellation before adding each page
         if (window.pdfGenerationCancelled) {
           console.log("PDF generation cancelled by user");
           throw new Error("PDF generation cancelled by user");
