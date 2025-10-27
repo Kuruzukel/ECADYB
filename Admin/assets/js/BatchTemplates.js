@@ -2292,7 +2292,6 @@ async function generateYearbookPDF(departments, progressNotification) {
         }
         isFirstPage = false;
 
-        // Convert canvas to image and add to PDF
         const imgData = pageCanvas.toDataURL("image/jpeg", 0.95);
         console.log(`Image data generated (length: ${imgData.length} chars)`);
 
