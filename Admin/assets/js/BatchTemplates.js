@@ -2196,7 +2196,6 @@ async function generateYearbookPDF(departments, progressNotification) {
   const totalDepartments = departments.length;
   let currentDeptIndex = 0;
 
-  // Format all departments for display
   const allDepartmentsText = departments.join(", ");
 
   let allPDFsSuccessful = true;
