@@ -2134,7 +2134,6 @@ async function confirmDownloadPDF() {
     await generateYearbookPDF(selectedDepartments, preparingNotification);
     console.log("PDF generation completed successfully");
 
-    // Remove the preparing notification before showing success
     if (preparingNotification) {
       closePersistentNotification(preparingNotification);
     }
