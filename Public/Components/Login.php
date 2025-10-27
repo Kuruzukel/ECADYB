@@ -220,7 +220,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $client !== null) {
                     </div>
                 </div>
                 <div class="forgot-password">
-                    <a href="<?php echo BASE_URL; ?>ForgotPassword">Forgot Password?</a>
+                    <a href="/ForgotPassword">Forgot Password?</a>
                 </div>
             </div>
             <button type="submit">Log In</button>

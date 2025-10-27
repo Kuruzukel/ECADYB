@@ -79,11 +79,7 @@ function setupEventListeners() {
   if (backButton) {
     backButton.addEventListener("click", function (e) {
       e.preventDefault();
-      // Auto-detect environment and use appropriate login path
-      const baseUrl = window.location.pathname.includes("/ECADYB/")
-        ? "/ECADYB/"
-        : "/";
-      window.location.href = baseUrl + "login";
+      window.location.href = "/login";
     });
   }
 }
@@ -117,19 +113,13 @@ function validateEmail() {
 
 async function checkEmailExists(email) {
   try {
-    const basePath = window.location.pathname.includes("/ECADYB/")
-      ? "/ECADYB"
-      : "";
-    const response = await fetch(
-      `${window.location.origin}${basePath}/Connection/Student/CheckEmail.php`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email: email }),
-      }
-    );
+    const response = await fetch("/Connection/Student/CheckEmail.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email: email }),
+    });
 
     const result = await response.json();
     return result.exists;
@@ -195,9 +185,6 @@ function updateGetCodeButton() {
 
 async function handleGetCode() {
   const email = emailInput.value.trim();
-  const basePath = window.location.pathname.includes("/ECADYB/")
-    ? "/ECADYB"
-    : "";
 
   if (!email) {
     showNotification("Please enter your email address first.", "error");
@@ -221,7 +208,7 @@ async function handleGetCode() {
   try {
     // Check if email exists in database
     const emailCheckResponse = await fetch(
-      `${window.location.origin}${basePath}/Connection/Student/CheckEmail.php`,
+      "/Connection/Student/CheckEmail.php",
       {
         method: "POST",
         headers: {
@@ -251,16 +238,13 @@ async function handleGetCode() {
     getCodeText.textContent = "Sending...";
 
     // Generate and send OTP (using SendGrid for Railway compatibility)
-    const otpResponse = await fetch(
-      `${window.location.origin}${basePath}/Connection/Student/SendOTPSendGrid.php`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email: email }),
-      }
-    );
+    const otpResponse = await fetch("/Connection/Student/SendOTPSendGrid.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email: email }),
+    });
 
     if (!otpResponse.ok) {
       const errorText = await otpResponse.text();
@@ -431,11 +415,7 @@ async function handleFormSubmission() {
 
       // Redirect to login after 3 seconds
       setTimeout(() => {
-        // Auto-detect environment and use appropriate login path
-        const baseUrl = window.location.pathname.includes("/ECADYB/")
-          ? "/ECADYB/"
-          : "/";
-        window.location.href = baseUrl + "login";
+        window.location.href = "/login";
       }, 3000);
     } else {
       showNotification(
