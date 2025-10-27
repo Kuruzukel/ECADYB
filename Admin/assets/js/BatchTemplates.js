@@ -2445,8 +2445,6 @@ async function captureAllYearbookPages(
           throw new Error(`No pages found for ${department}`);
         }
 
-        // etc.
-
         let captureCount = 0;
 
         // Calculate approximate total captures (front + spreads + back if even)
