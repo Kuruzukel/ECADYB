@@ -97,105 +97,121 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 const track = document.getElementById("carousel-track");
-let carouselImageElements = Array.from(track.querySelectorAll(".carousel-img"));
-let carouselImages = carouselImageElements.map((img) => img.src);
 
-let currentPosition = 0;
-let imageWidth = 0;
-let animationId = null;
+if (track) {
+  let carouselImageElements = Array.from(
+    track.querySelectorAll(".carousel-img")
+  );
+  let carouselImages = carouselImageElements.map((img) => img.src);
 
-function initCarousel() {
-  carouselImageElements = Array.from(track.querySelectorAll(".carousel-img"));
+  carouselImages = [...new Set(carouselImages)];
 
-  if (carouselImageElements.length === 0) {
-    setTimeout(initCarousel, 100);
-    return;
+  let currentIndex = 0;
+  let isTransitioning = false;
+
+  function renderImages() {
+    const images = [
+      carouselImages[carouselImages.length - 1],
+      ...carouselImages,
+      carouselImages[0],
+    ];
+
+    track.innerHTML = images
+      .map(
+        (src, i) =>
+          `<img src="${src}" class="carousel-img" data-index="${
+            i - 1
+          }" draggable="false" />`
+      )
+      .join("");
+
+    carouselImageElements = Array.from(track.querySelectorAll(".carousel-img"));
+
+    track.style.transition = "none";
+    track.style.transform = `translateX(-100%)`;
+    currentIndex = 0;
   }
 
-  // Get the width of the first image (including margins)
-  const firstImage = carouselImageElements[0];
-  const computedStyle = window.getComputedStyle(firstImage);
-  const marginLeft = parseFloat(computedStyle.marginLeft);
-  const marginRight = parseFloat(computedStyle.marginRight);
-  imageWidth = firstImage.offsetWidth + marginLeft + marginRight;
+  function moveToIndex(index) {
+    if (isTransitioning) return;
 
-  // Disable the CSS animation since we'll control it with JS
-  track.style.animation = "none";
-
-  // Calculate total width of one set of images (15 unique images)
-  const oneSetWidth = imageWidth * 15;
-
-  // Start from the beginning
-  currentPosition = 0;
-  track.style.transition = "none";
-  track.style.transform = `translateX(0px)`;
-
-  // Start the infinite scroll animation
-  startInfiniteScroll(oneSetWidth);
-}
-
-function startInfiniteScroll(oneSetWidth) {
-  let startTime = null;
-  const duration = 1500; // 20 seconds to scroll through one set (faster speed)
-
-  function animate(timestamp) {
-    if (!startTime) startTime = timestamp;
-    const elapsed = timestamp - startTime;
-
-    // Calculate how far we should have moved
-    const progress = (elapsed % duration) / duration;
-    currentPosition = -(progress * oneSetWidth);
-
-    // Apply the transform
-    track.style.transform = `translateX(${currentPosition}px)`;
-
-    // Continue the animation
-    animationId = requestAnimationFrame(animate);
+    currentIndex = index;
+    isTransitioning = true;
+    track.style.transition = "transform 0.6s ease-in-out";
+    track.style.transform = `translateX(-${(index + 1) * 100}%)`;
   }
 
-  animationId = requestAnimationFrame(animate);
-}
+  function handleTransitionEnd() {
+    isTransitioning = false;
 
-function pauseCarousel() {
-  if (animationId) {
-    cancelAnimationFrame(animationId);
-    animationId = null;
+    if (currentIndex >= carouselImages.length) {
+      track.style.transition = "none";
+      track.style.transform = `translateX(-100%)`;
+      currentIndex = 0;
+    } else if (currentIndex < 0) {
+      track.style.transition = "none";
+      track.style.transform = `translateX(-${carouselImages.length * 100}%)`;
+      currentIndex = carouselImages.length - 1;
+    }
   }
-}
 
-function resumeCarousel() {
-  const oneSetWidth = imageWidth * 15;
-  startInfiniteScroll(oneSetWidth);
-}
-
-// Initialize after images load
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initCarousel);
-} else {
-  initCarousel();
-}
-
-// Recalculate on window resize
-window.addEventListener("resize", () => {
-  if (carouselImageElements.length > 0) {
-    const firstImage = carouselImageElements[0];
-    const computedStyle = window.getComputedStyle(firstImage);
-    const marginLeft = parseFloat(computedStyle.marginLeft);
-    const marginRight = parseFloat(computedStyle.marginRight);
-    imageWidth = firstImage.offsetWidth + marginLeft + marginRight;
-
-    // Restart animation with new dimensions
-    pauseCarousel();
-    const oneSetWidth = imageWidth * 15;
-    startInfiniteScroll(oneSetWidth);
+  function nextImage() {
+    moveToIndex(currentIndex + 1);
   }
-});
 
-// Pause on hover for carousel container
-const carouselContainer = document.querySelector(".carousel-container");
-if (carouselContainer) {
-  carouselContainer.addEventListener("mouseenter", pauseCarousel);
-  carouselContainer.addEventListener("mouseleave", resumeCarousel);
+  function prevImage() {
+    moveToIndex(currentIndex - 1);
+  }
+
+  track.addEventListener("transitionend", handleTransitionEnd);
+
+  let startX = 0;
+  let isDragging = false;
+
+  track.addEventListener("touchstart", (e) => {
+    startX = e.touches[0].clientX;
+    isDragging = true;
+  });
+
+  track.addEventListener("touchmove", (e) => {
+    if (!isDragging) return;
+    const diff = e.touches[0].clientX - startX;
+    track.style.transition = "none";
+    track.style.transform = `translateX(calc(-${
+      (currentIndex + 1) * 100
+    }% + ${diff}px))`;
+  });
+
+  track.addEventListener("touchend", (e) => {
+    isDragging = false;
+    const diff = e.changedTouches[0].clientX - startX;
+    if (diff > 50) {
+      prevImage();
+    } else if (diff < -50) {
+      nextImage();
+    } else {
+      moveToIndex(currentIndex);
+    }
+  });
+
+  renderImages();
+
+  let autoSlideInterval = null;
+
+  function startAutoSlide() {
+    autoSlideInterval = setInterval(() => {
+      nextImage();
+    }, 3000);
+  }
+
+  function stopAutoSlide() {
+    clearInterval(autoSlideInterval);
+  }
+
+  track.addEventListener("mouseenter", stopAutoSlide);
+  track.addEventListener("mouseleave", startAutoSlide);
+
+  startAutoSlide();
 }
 
 document.addEventListener("DOMContentLoaded", function () {
