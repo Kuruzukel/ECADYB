@@ -2445,7 +2445,6 @@ async function captureAllYearbookPages(
           throw new Error(`No pages found for ${department}`);
         }
 
-        // We navigate to odd pages only to capture each unique spread
         // Page 1 = Front cover (single)
         // Page 2 = Shows spread of pages 2-3
         // Page 4 = Shows spread of pages 4-5
