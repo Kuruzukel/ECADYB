@@ -286,7 +286,6 @@ function updatePersistentNotification(notification, message) {
   }
 }
 
-// Custom confirm modal
 function customConfirm(
   message,
   title = "Confirmation",
