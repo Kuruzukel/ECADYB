@@ -2121,7 +2121,6 @@ async function confirmDownloadPDF() {
 
   const deptNames = selectedDepartments.join(", ");
 
-  // Reset cancellation flag
   window.pdfGenerationCancelled = false;
 
   // Show loading notification with cancel button and progress
