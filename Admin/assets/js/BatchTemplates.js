@@ -3146,7 +3146,6 @@ function initializeDepartmentSelection() {
     });
   });
 
-  // Handle select all button
   if (selectAllBtn) {
     selectAllBtn.addEventListener("click", function () {
       const allChecked = Array.from(checkboxes).every((cb) => cb.checked);
