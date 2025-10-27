@@ -2224,7 +2224,6 @@ async function generateYearbookPDF(departments, progressNotification) {
     let isFirstPage = true;
     let totalPagesAdded = 0;
 
-    // Update progress: Starting department
     const baseProgress = ((currentDeptIndex - 1) / totalDepartments) * 100;
     updatePersistentNotification(
       progressNotification,
