@@ -6,7 +6,7 @@ if (session_status() === PHP_SESSION_NONE) {
 require_once __DIR__ . '/../../Connection/Configuration/config.php';
 
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'student') {
-    header("Location: " . BASE_URL . "Public/Components/Login.php");
+    header("Location: " . BASE_URL . "Login");
     exit;
 }
 

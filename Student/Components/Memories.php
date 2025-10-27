@@ -6,7 +6,7 @@ require_once __DIR__ . '/../../Connection/Configuration/config.php';
 
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'student') {
   // Redirect to login page if not logged in or not a student
-  header('Location: ' . BASE_URL . 'Public/Components/Login.php');
+  header('Location: ' . BASE_URL . 'Login');
   exit();
 }
 

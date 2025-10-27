@@ -15,7 +15,7 @@ const STATIC_ASSETS = [
   "/LandingPage/LandingPage.css",
   "/LandingPage/LandingPage.js",
   "/Public/Components/Login.html",
-  "/Public/Components/Login.php",
+  "/Login",
   "/Public/Components/Loader.html",
   "/Public/Components/ForgotPassword.html",
   "/Public/assets/css/Login.css",

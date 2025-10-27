@@ -12,5 +12,5 @@ if (isset($_COOKIE[session_name()])) {
 
 session_destroy();
 
-header('Location: ' . BASE_URL . 'Public/Components/Login.php');
+header('Location: ' . BASE_URL . 'Login');
 exit();

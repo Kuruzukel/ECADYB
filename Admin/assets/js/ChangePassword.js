@@ -266,7 +266,7 @@ document.addEventListener("DOMContentLoaded", () => {
           showNotification(data.message, "success");
           form.reset();
           setTimeout(() => {
-            window.location.href = basePath + "/Public/Components/Login.php";
+            window.location.href = basePath + "/Login";
           }, 2000);
         } else {
           showNotification(data.message, "error");

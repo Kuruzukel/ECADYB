@@ -3,7 +3,7 @@ session_start();
 require __DIR__ . '/../Connection/Configuration/config.php';
 
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'student') {
-    header('Location: ' . BASE_URL . 'Public/Components/Login.php');
+    header('Location: ' . BASE_URL . 'Login');
     exit();
 }
 

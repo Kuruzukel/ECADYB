@@ -99,7 +99,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   if (successMessage && successMessage.classList.contains("show")) {
     setTimeout(() => {
-      window.location.href = "../../Public/Components/Login.php";
+      window.location.href = basePath + "/Login";
     }, 3000);
   }
 });
