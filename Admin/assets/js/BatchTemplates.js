@@ -2268,7 +2268,6 @@ async function generateYearbookPDF(departments, progressNotification) {
         continue;
       }
 
-      // Update progress: Adding pages to PDF (no change, still at 80%)
       updatePersistentNotification(
         progressNotification,
         `Preparing PDF ${currentDeptIndex}/${totalDepartments}... ${Math.round(
