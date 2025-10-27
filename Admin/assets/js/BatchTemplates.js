@@ -2216,7 +2216,7 @@ async function generateYearbookPDF(departments, progressNotification) {
     const pdf = new jsPDF({
       orientation: "landscape",
       unit: "px",
-      format: [1920, 1080], // Fullscreen dimensions
+      format: [1920, 1080],
       compress: true,
     });
     console.log(`PDF document created for ${department}`);
