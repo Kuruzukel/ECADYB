@@ -2200,7 +2200,6 @@ async function generateYearbookPDF(departments, progressNotification) {
 
   let allPDFsSuccessful = true;
 
-  // Generate separate PDF for each department
   for (const department of departments) {
     currentDeptIndex++;
 
