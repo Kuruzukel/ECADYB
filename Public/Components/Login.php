@@ -89,10 +89,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $client !== null) {
                         if ($student) {
                             $studentIdValue = $student['student id'] ?? $student['student_id'] ?? $username;
 
+                            // Check if student ID is a placeholder value
+                            if ($studentIdValue === '0000-000000' || empty($studentIdValue)) {
+                                $studentIdValue = $username;
+                                error_log("[Login] WARNING: Student has placeholder ID '0000-000000'. Using login username instead: " . $username);
+                            }
+
                             error_log("[Login] Student found - ID in DB: " . ($student['student id'] ?? 'none') . "/" . ($student['student_id'] ?? 'none') . ", Using: " . $studentIdValue);
 
                             $_SESSION['role']       = 'student';
                             $_SESSION['student_id'] = $studentIdValue;
+
+                            // Create JWT session token and track active session
+                            require_once __DIR__ . '/../../Connection/Configuration/JWTConfig.php';
+                            $sessionData = [
+                                'student_id' => $studentIdValue,
+                                'name' => trim(($student['first name'] ?? '') . ' ' . ($student['middle name'] ?? '') . ' ' . ($student['last name'] ?? '')),
+                                'department' => $course,
+                                'role' => 'student'
+                            ];
+                            $jwtToken = generateSessionToken($studentIdValue, 'student', $sessionData);
+                            $_SESSION['jwt_token'] = $jwtToken;
+
+                            // Store active session in MongoDB
+                            storeActiveSession($client, $sessionData);
                             $_SESSION['name']       = trim(($student['first name'] ?? '') . ' ' . ($student['middle name'] ?? '') . ' ' . ($student['last name'] ?? ''));
                             $_SESSION['department'] = $course;
                             $_SESSION['section']    = $student['department section'] ?? '';
