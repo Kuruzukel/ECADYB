@@ -3210,7 +3210,6 @@ function confirmDeleteBatch() {
     window.pendingDeleteSection = null;
     window.pendingDeleteBatchName = null;
 
-    // Update download PDF button states after batch deletion
     updateDownloadPdfButtonStates();
   }
   closeDeleteBatchModal();
