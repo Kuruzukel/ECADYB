@@ -2331,7 +2331,6 @@ async function generateYearbookPDF(departments, progressNotification) {
         pdf.save(fileName);
         console.log(`PDF saved successfully for ${department}!`);
 
-        // Small delay between downloads to prevent browser blocking
         await new Promise((resolve) => setTimeout(resolve, 500));
       } else {
         console.warn(`No pages added for ${department}, skipping save`);
