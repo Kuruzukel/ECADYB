@@ -1144,7 +1144,6 @@ function initializeSectionUploadBoxes(section, currentXhrs, isUploadCancelled) {
           e.stopPropagation();
           console.log("Download button clicked for:", sectionHeader);
 
-          // Check if button is disabled and show appropriate message
           if (downloadBtn.disabled) {
             const isAvailable = section.classList.contains("available");
             const isSelected = section.classList.contains("selected");
