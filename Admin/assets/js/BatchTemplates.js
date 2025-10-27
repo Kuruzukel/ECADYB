@@ -2387,7 +2387,6 @@ async function captureAllYearbookPages(
   return new Promise((resolve, reject) => {
     console.log(`\n>>> Opening yearbook for ${department}:`, yearbookUrl);
 
-    // Create hidden iframe to load yearbook
     const iframe = document.createElement("iframe");
     iframe.style.position = "fixed";
     iframe.style.top = "-99999px";
