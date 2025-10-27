@@ -2232,7 +2232,6 @@ async function generateYearbookPDF(departments, progressNotification) {
       )}%<br><small>Loading ${department}... [${allDepartmentsText}]</small>`
     );
 
-    // Get yearbook URL for this department
     const yearbookUrl = getYearbookUrl(department, batchYear);
     console.log("Yearbook URL:", yearbookUrl);
 
