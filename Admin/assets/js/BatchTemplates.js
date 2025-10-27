@@ -319,7 +319,6 @@ function customConfirm(
 
     document.body.appendChild(overlay);
 
-    // Show modal with animation
     setTimeout(() => {
       overlay.classList.add("show");
     }, 10);
