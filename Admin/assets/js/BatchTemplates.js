@@ -2426,7 +2426,6 @@ async function captureAllYearbookPages(
 
         console.log("Waiting for yearbook initialization...");
 
-        // Show initialization progress
         if (onPageProgress) {
           onPageProgress(0, 1);
         }
