@@ -52,11 +52,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $client !== null) {
     } else {
         try {
             $admin = $adminCollection->findOne([
-                'username' => $username,
-                'password' => $password
+                'username' => $username
             ]);
 
-            if ($admin) {
+            if ($admin && isset($admin['password']) && password_verify($password, $admin['password'])) {
                 $_SESSION['role']     = 'admin';
                 $_SESSION['username'] = $username;
                 $_SESSION['login_success'] = 'admin';
@@ -75,18 +74,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $client !== null) {
 
                         $student = $collection->findOne([
                             '$or' => [
-                                [
-                                    'student id' => $username,
-                                    'password'   => $password
-                                ],
-                                [
-                                    'student_id' => $username,
-                                    'password'   => $password
-                                ]
+                                ['student id' => $username],
+                                ['student_id' => $username]
                             ]
                         ]);
 
-                        if ($student) {
+                        if ($student && isset($student['password']) && password_verify($password, $student['password'])) {
                             $studentIdValue = $student['student id'] ?? $student['student_id'] ?? $username;
 
                             // Check if student ID is a placeholder value
