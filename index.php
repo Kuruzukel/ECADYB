@@ -84,6 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
                             ($student['last name'] ?? '')
                     ),
                     'department' => $departmentName,
+                    'academic_year' => $student['academic year'] ?? '',
                     'role' => 'student'
                 ];
                 $jwtToken = generateSessionToken($finalStudentId, 'student', $sessionData);
@@ -99,6 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
                 );
                 $_SESSION['department'] = $departmentName;
                 $_SESSION['section']    = $student['department section'] ?? '';
+                $_SESSION['academic_year'] = $student['academic year'] ?? '';
 
                 $foundStudent = true;
 

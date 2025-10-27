@@ -14,6 +14,7 @@ $studentName = $_SESSION['name'] ?? '';
 $studentDepartment = $_SESSION['department'] ?? '';
 $studentSection = $_SESSION['section'] ?? '';
 $studentProfilePhoto = $_SESSION['profile_photo'] ?? '';
+$studentAcademicYear = $_SESSION['academic_year'] ?? '';
 
 $departmentCodes = [
   'BS Marine Engineering' => 'MARITIME',
@@ -30,6 +31,45 @@ $departmentCodes = [
 ];
 
 $departmentCode = $departmentCodes[$studentDepartment] ?? 'BSME';
+
+// Fetch completion date from database
+$completionDateTimestamp = null;
+try {
+  require_once __DIR__ . '/../../Connection/Configuration/MongoConnect.php';
+
+  // Get the yearbook covers collection
+  $coversCollection = $client->ECADYB->Yearbook_Covers;
+
+  // Format batch year - ensure it matches the database format "Batch Year YYYY-YYYY"
+  $batchYear = $studentAcademicYear;
+  if (!empty($batchYear) && strpos($batchYear, 'Batch Year') === false) {
+    $batchYear = 'Batch Year ' . $batchYear; // Add prefix if not present
+  }
+  $template = 1; // Default template, adjust if you have multiple templates
+
+  error_log("Yearbook.php: Querying for batch_year: $batchYear, template: $template");
+
+  // Find any cover document for this batch that has a completion date
+  $coverDoc = $coversCollection->findOne(
+    [
+      'batch_year' => $batchYear,
+      'template' => $template,
+      'completion_date' => ['$exists' => true]
+    ],
+    ['projection' => ['completion_date' => 1]]
+  );
+
+  if ($coverDoc && isset($coverDoc['completion_date'])) {
+    // Convert MongoDB UTCDateTime to JavaScript timestamp (milliseconds)
+    $completionDateTimestamp = $coverDoc['completion_date']->toDateTime()->getTimestamp() * 1000;
+    $readableDate = $coverDoc['completion_date']->toDateTime()->format('Y-m-d H:i:s');
+    error_log("Yearbook.php: Completion date found: $readableDate (timestamp: $completionDateTimestamp)");
+  } else {
+    error_log("Yearbook.php: No completion date found for batch_year: $batchYear");
+  }
+} catch (Exception $e) {
+  error_log("Error fetching completion date: " . $e->getMessage());
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -321,7 +361,7 @@ $departmentCode = $departmentCodes[$studentDepartment] ?? 'BSME';
         <p>Thank you for being part of our journey!</p>
         <div class="completion-date">
           <i class="fas fa-calendar-check"></i>
-          Completed: October 21, 2028
+          <span id="completion-date-display">Access period ended</span>
         </div>
         <p style="font-size: 14px; color: #94a3b8; margin-top: 20px;">
           For access to archived yearbooks, please contact the administration.
@@ -351,19 +391,43 @@ $departmentCode = $departmentCodes[$studentDepartment] ?? 'BSME';
   <script src="<?php echo BASE_URL; ?>Student/assets/js/StudentDashboard.js"></script>
   <script src="<?php echo BASE_URL; ?>Student/assets/js/yearbook-loader.js"></script>
   <script>
-    // Completion date check
-    const COMPLETION_DATE = new Date('2028-10-21T16:04:06.000Z');
+    // Completion date fetched from database
+    let COMPLETION_DATE;
+    <?php if ($completionDateTimestamp): ?>
+      COMPLETION_DATE = new Date(<?php echo $completionDateTimestamp; ?>);
+      console.log('[Yearbook] Completion date loaded from database:', COMPLETION_DATE.toLocaleString());
+      console.log('[Yearbook] Completion timestamp:', <?php echo $completionDateTimestamp; ?>);
+      console.log('[Yearbook] Current time:', new Date().toLocaleString());
+      console.log('[Yearbook] Is completed?', new Date() >= COMPLETION_DATE);
+    <?php else: ?>
+      COMPLETION_DATE = null;
+      console.log('[Yearbook] ⚠ No completion date set - yearbook access is open');
+      console.log('[Yearbook] Student academic year:', '<?php echo $studentAcademicYear; ?>');
+      console.log('[Yearbook] Searched for batch_year:', '<?php echo isset($batchYear) ? $batchYear : "N/A"; ?>');
+    <?php endif; ?>
 
     function isYearbookCompleted() {
+      if (!COMPLETION_DATE) {
+        return false; // No completion date means access is still open
+      }
       const currentDate = new Date();
-      return currentDate >= COMPLETION_DATE;
+      const isCompleted = currentDate >= COMPLETION_DATE;
+      if (isCompleted) {
+        console.log('[Yearbook] Access completed on:', COMPLETION_DATE.toLocaleString());
+      }
+      return isCompleted;
     }
 
     function showCompletionModal() {
       const modal = document.getElementById('yearbook-completion-modal');
       if (modal) {
         modal.classList.add('show');
-        console.log('[Yearbook] Showing completion modal - access period ended');
+        // Update the completion date display
+        const dateDisplay = document.getElementById('completion-date-display');
+        if (dateDisplay && COMPLETION_DATE) {
+          dateDisplay.textContent = 'Completed: ' + COMPLETION_DATE.toLocaleString();
+        }
+        console.log('[Yearbook] Showing completion modal - access period ended at', COMPLETION_DATE ? COMPLETION_DATE.toLocaleString() : 'Unknown');
       }
     }
 
@@ -375,11 +439,20 @@ $departmentCode = $departmentCodes[$studentDepartment] ?? 'BSME';
     }
 
     function showYearbookIframe(departmentCode, departmentName) {
+      console.log('[Yearbook] 🔍 Clicked on yearbook:', departmentCode, departmentName);
+      console.log('[Yearbook] 🔍 COMPLETION_DATE:', COMPLETION_DATE);
+      console.log('[Yearbook] 🔍 Current time:', new Date());
+
       // Check if yearbook access has been completed
-      if (isYearbookCompleted()) {
-        console.log('[Yearbook] Access completed - showing completion modal');
+      const completed = isYearbookCompleted();
+      console.log('[Yearbook] 🔍 isYearbookCompleted():', completed);
+
+      if (completed) {
+        console.log('[Yearbook] ✅ Access completed - showing completion modal');
         showCompletionModal();
         return;
+      } else {
+        console.log('[Yearbook] ✅ Access still open - loading yearbook');
       }
 
       const introContent = document.querySelector('.yearbook-intro-content');
@@ -583,7 +656,8 @@ $departmentCode = $departmentCodes[$studentDepartment] ?? 'BSME';
 
       // Check if yearbook is completed on page load
       if (isYearbookCompleted()) {
-        console.log('[Yearbook] Access period has ended - yearbooks are locked');
+        console.log('[Yearbook] 🔒 Access period has ended - yearbooks are locked');
+
         // Add lock badge to all yearbook items using notification badge styles
         const yearBookItems = document.querySelectorAll('.yearbook-item');
         yearBookItems.forEach((item) => {
@@ -600,6 +674,12 @@ $departmentCode = $departmentCodes[$studentDepartment] ?? 'BSME';
           item.style.position = 'relative';
           item.appendChild(lockBadge);
         });
+
+        // Automatically show completion modal after a short delay
+        setTimeout(function() {
+          console.log('[Yearbook] 🔒 Auto-showing completion modal on page load');
+          showCompletionModal();
+        }, 500); // 500ms delay for smooth page load
       }
     });
   </script>

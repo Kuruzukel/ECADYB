@@ -736,4 +736,17 @@ namespace {
             return '';
         }
     }
+
+    if (!function_exists('random_bytes')) {
+        /**
+         * Generates cryptographically secure pseudo-random bytes
+         * @param int $length The length of the random string that should be returned in bytes
+         * @return string Returns a string containing the requested number of cryptographically secure random bytes
+         * @throws Exception If an appropriate source of randomness cannot be found
+         */
+        function random_bytes(int $length): string
+        {
+            return '';
+        }
+    }
 }
