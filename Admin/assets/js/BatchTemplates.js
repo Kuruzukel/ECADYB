@@ -216,7 +216,6 @@ function showPersistentNotification(
   const container = document.getElementById("notification-container");
   if (!container) return null;
 
-  // Remove existing notifications
   const existingNotifications = container.querySelectorAll(".notification");
   existingNotifications.forEach((notif) => notif.remove());
 
