@@ -13,32 +13,32 @@ const form = document.querySelector("form");
 // Initialize the page
 window.addEventListener("DOMContentLoaded", () => {
   document.body.classList.add("page-transition-in");
-  
+
   // Enable submit button initially
   submitButton.disabled = false;
   submitButton.style.opacity = "1";
   submitButton.style.cursor = "pointer";
-  
+
   setupEventListeners();
   setupPasswordToggles();
-  
+
   checkForServerMessages();
 });
 
 function setupEventListeners() {
   // New password input
-  emailInput.addEventListener("input", function() {
+  emailInput.addEventListener("input", function () {
     limitID();
     updateSubmitButton();
   });
 
   // Confirm password input
-  verificationCodeInput.addEventListener("input", function() {
+  verificationCodeInput.addEventListener("input", function () {
     updateSubmitButton();
   });
 
   // Form submission
-  form.addEventListener("submit", function(e) {
+  form.addEventListener("submit", function (e) {
     e.preventDefault();
     handleFormSubmission();
   });
@@ -46,7 +46,7 @@ function setupEventListeners() {
   // Back button
   const backButton = document.querySelector('button[type="back"]');
   if (backButton) {
-    backButton.addEventListener("click", function(e) {
+    backButton.addEventListener("click", function (e) {
       e.preventDefault();
       // Auto-detect environment and use appropriate forgot password path
       const baseUrl = window.location.pathname.includes("/ECADYB/")
@@ -59,7 +59,7 @@ function setupEventListeners() {
   // Error modal click outside to close
   const errorModal = document.getElementById("errorModal");
   if (errorModal) {
-    errorModal.addEventListener("click", function(e) {
+    errorModal.addEventListener("click", function (e) {
       if (e.target === errorModal) {
         hideErrorModal();
       }
@@ -68,21 +68,21 @@ function setupEventListeners() {
 }
 
 function setupPasswordToggles() {
-  const containers = document.querySelectorAll('.input-container');
+  const containers = document.querySelectorAll(".input-container");
   containers.forEach((container) => {
-    const openIcon = container.querySelector('.eyeIcon.open');
-    const closeIcon = container.querySelector('.eyeIcon.close');
-    const input = container.querySelector('input');
+    const openIcon = container.querySelector(".eyeIcon.open");
+    const closeIcon = container.querySelector(".eyeIcon.close");
+    const input = container.querySelector("input");
     if (!openIcon || !closeIcon || !input) return;
 
     const toggle = () => {
-      const isVisible = container.getAttribute('data-isvisible') === 'true';
-      container.setAttribute('data-isvisible', (!isVisible).toString());
-      input.type = isVisible ? 'password' : 'text';
+      const isVisible = container.getAttribute("data-isvisible") === "true";
+      container.setAttribute("data-isvisible", (!isVisible).toString());
+      input.type = isVisible ? "password" : "text";
     };
 
-    openIcon.addEventListener('click', toggle);
-    closeIcon.addEventListener('click', toggle);
+    openIcon.addEventListener("click", toggle);
+    closeIcon.addEventListener("click", toggle);
   });
 }
 
@@ -158,9 +158,12 @@ function showErrorModal(message, type = "error") {
       "errorModalSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards";
   }, 50);
 
-  setTimeout(() => {
-    hideErrorModal();
-  }, type === "success" ? 5000 : 3500);
+  setTimeout(
+    () => {
+      hideErrorModal();
+    },
+    type === "success" ? 5000 : 3500
+  );
 }
 
 function hideErrorModal() {
