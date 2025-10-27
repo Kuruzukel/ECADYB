@@ -2301,7 +2301,6 @@ async function generateYearbookPDF(departments, progressNotification) {
           `Page added successfully. Total pages in PDF: ${totalPagesAdded}`
         );
 
-        // Update progress for each page being added (complete up to 100% of this department)
         const addProgress =
           ((i + 1) / pageCanvases.length) * (100 / totalDepartments) -
           80 / totalDepartments; // Subtract what we already did (capture phase)
