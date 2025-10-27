@@ -2162,7 +2162,6 @@ async function confirmDownloadPDF() {
     showNotification(`Failed to generate PDF: ${error.message}`, "error");
   }
 
-  // Reset checkboxes for next time
   setTimeout(() => {
     const checkboxes = document.querySelectorAll(".dept-checkbox");
     checkboxes.forEach((cb) => {
