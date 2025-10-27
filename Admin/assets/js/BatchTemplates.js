@@ -2138,7 +2138,6 @@ async function confirmDownloadPDF() {
       closePersistentNotification(preparingNotification);
     }
 
-    // Small delay before showing success notification
     await new Promise((resolve) => setTimeout(resolve, 100));
 
     const pdfCount = selectedDepartments.length;
