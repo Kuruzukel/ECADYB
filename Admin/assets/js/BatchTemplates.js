@@ -2433,7 +2433,6 @@ async function captureAllYearbookPages(
         await waitForYearbookInit(iframeWindow, iframeDoc);
         console.log("Yearbook initialized!");
 
-        // Wait for images to load
         console.log("Waiting for images to load...");
         await waitForImages(iframeDoc);
         console.log("Images loaded!");
