@@ -593,7 +593,6 @@ function closeGenerateModal() {
 function openDownloadPdfModal(batchName) {
   console.log("openDownloadPdfModal called with:", batchName);
 
-  // Store batch name for later use if needed
   window.currentBatchForDownload = batchName;
 
   if (downloadPdfModal) {
