@@ -2447,7 +2447,6 @@ async function captureAllYearbookPages(
 
         let captureCount = 0;
 
-        // Calculate approximate total captures (front + spreads + back if even)
         const approxTotalCaptures =
           Math.ceil(totalPages / 2) + (totalPages % 2 === 0 ? 1 : 0);
 
