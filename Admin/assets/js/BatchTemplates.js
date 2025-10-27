@@ -2445,7 +2445,6 @@ async function captureAllYearbookPages(
           throw new Error(`No pages found for ${department}`);
         }
 
-        // Capture each page - Turn.js shows spreads (2 pages at a time)
         // We navigate to odd pages only to capture each unique spread
         // Page 1 = Front cover (single)
         // Page 2 = Shows spread of pages 2-3
