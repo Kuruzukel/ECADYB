@@ -100,117 +100,103 @@ const track = document.getElementById("carousel-track");
 let carouselImageElements = Array.from(track.querySelectorAll(".carousel-img"));
 let carouselImages = carouselImageElements.map((img) => img.src);
 
-let currentIndex = 0;
-let isTransitioning = false;
+let currentPosition = 0;
+let imageWidth = 0;
+let animationId = null;
 
-function renderImages() {
-  // Create multiple clones for seamless infinite loop
-  const cloneCount = 2; // Clone first and last 2 images for smoother transition
-  const clonedStart = carouselImages.slice(-cloneCount);
-  const clonedEnd = carouselImages.slice(0, cloneCount);
-
-  const images = [...clonedStart, ...carouselImages, ...clonedEnd];
-
-  track.innerHTML = images
-    .map(
-      (src, i) =>
-        `<img src="${src}" class="carousel-img" data-index="${
-          i - cloneCount
-        }" draggable="false" loading="eager" />`
-    )
-    .join("");
-
+function initCarousel() {
   carouselImageElements = Array.from(track.querySelectorAll(".carousel-img"));
 
-  // Start at the first real image (after the clones)
+  if (carouselImageElements.length === 0) {
+    setTimeout(initCarousel, 100);
+    return;
+  }
+
+  // Get the width of the first image (including margins)
+  const firstImage = carouselImageElements[0];
+  const computedStyle = window.getComputedStyle(firstImage);
+  const marginLeft = parseFloat(computedStyle.marginLeft);
+  const marginRight = parseFloat(computedStyle.marginRight);
+  imageWidth = firstImage.offsetWidth + marginLeft + marginRight;
+
+  // Disable the CSS animation since we'll control it with JS
+  track.style.animation = "none";
+
+  // Calculate total width of one set of images (15 unique images)
+  const oneSetWidth = imageWidth * 15;
+
+  // Start from the beginning
+  currentPosition = 0;
   track.style.transition = "none";
-  track.style.transform = `translateX(-${cloneCount * 100}%)`;
-  currentIndex = 0;
+  track.style.transform = `translateX(0px)`;
 
-  // Force reflow to ensure the transition property is properly removed
-  track.offsetHeight;
+  // Start the infinite scroll animation
+  startInfiniteScroll(oneSetWidth);
 }
 
-function moveToIndex(index) {
-  if (isTransitioning) return;
+function startInfiniteScroll(oneSetWidth) {
+  let startTime = null;
+  const duration = 25000; // 25 seconds to scroll through one set (faster speed)
 
-  isTransitioning = true;
-  currentIndex = index;
-  track.style.transition = "transform 0.5s ease";
-  track.style.transform = `translateX(-${(index + 2) * 100}%)`;
-}
+  function animate(timestamp) {
+    if (!startTime) startTime = timestamp;
+    const elapsed = timestamp - startTime;
 
-function handleTransitionEnd() {
-  isTransitioning = false;
+    // Calculate how far we should have moved
+    const progress = (elapsed % duration) / duration;
+    currentPosition = -(progress * oneSetWidth);
 
-  // If we've moved past the last real image, jump to the first real image
-  if (currentIndex >= carouselImages.length) {
-    currentIndex = 0;
-    track.style.transition = "none";
-    track.style.transform = `translateX(-${(currentIndex + 2) * 100}%)`;
-    track.offsetHeight; // Force reflow
+    // Apply the transform
+    track.style.transform = `translateX(${currentPosition}px)`;
+
+    // Continue the animation
+    animationId = requestAnimationFrame(animate);
   }
-  // If we've moved before the first real image, jump to the last real image
-  else if (currentIndex < 0) {
-    currentIndex = carouselImages.length - 1;
-    track.style.transition = "none";
-    track.style.transform = `translateX(-${(currentIndex + 2) * 100}%)`;
-    track.offsetHeight; // Force reflow
+
+  animationId = requestAnimationFrame(animate);
+}
+
+function pauseCarousel() {
+  if (animationId) {
+    cancelAnimationFrame(animationId);
+    animationId = null;
   }
 }
 
-function nextImage() {
-  moveToIndex(currentIndex + 1);
+function resumeCarousel() {
+  const oneSetWidth = imageWidth * 15;
+  startInfiniteScroll(oneSetWidth);
 }
 
-function prevImage() {
-  moveToIndex(currentIndex - 1);
-}
-
-track.addEventListener("transitionend", handleTransitionEnd);
-
-// Ensure images are loaded before rendering
-if (carouselImages.length > 0) {
-  renderImages();
+// Initialize after images load
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initCarousel);
 } else {
-  // Retry if images aren't loaded yet
-  setTimeout(() => {
-    carouselImageElements = Array.from(track.querySelectorAll(".carousel-img"));
-    carouselImages = carouselImageElements.map((img) => img.src);
-    if (carouselImages.length > 0) {
-      renderImages();
-    }
-  }, 100);
+  initCarousel();
 }
 
-let autoSlideInterval = null;
-let timeoutId = null;
+// Recalculate on window resize
+window.addEventListener("resize", () => {
+  if (carouselImageElements.length > 0) {
+    const firstImage = carouselImageElements[0];
+    const computedStyle = window.getComputedStyle(firstImage);
+    const marginLeft = parseFloat(computedStyle.marginLeft);
+    const marginRight = parseFloat(computedStyle.marginRight);
+    imageWidth = firstImage.offsetWidth + marginLeft + marginRight;
 
-function startAutoSlide() {
-  autoSlideInterval = setInterval(() => {
-    nextImage();
-  }, 3000);
+    // Restart animation with new dimensions
+    pauseCarousel();
+    const oneSetWidth = imageWidth * 15;
+    startInfiniteScroll(oneSetWidth);
+  }
+});
+
+// Pause on hover for carousel container
+const carouselContainer = document.querySelector(".carousel-container");
+if (carouselContainer) {
+  carouselContainer.addEventListener("mouseenter", pauseCarousel);
+  carouselContainer.addEventListener("mouseleave", resumeCarousel);
 }
-
-function stopAutoSlide() {
-  clearInterval(autoSlideInterval);
-}
-
-function resetCarouselAfterTimeout() {
-  timeoutId = setTimeout(() => {
-    stopAutoSlide();
-    currentIndex = 0;
-    track.style.transition = "none";
-    track.style.transform = `translateX(-100%)`;
-    setTimeout(() => {
-      startAutoSlide();
-    }, 100);
-    resetCarouselAfterTimeout();
-  }, 60000);
-}
-
-startAutoSlide();
-resetCarouselAfterTimeout();
 
 document.addEventListener("DOMContentLoaded", function () {
   const carousel = document.querySelector(".carousel-3d");
@@ -509,11 +495,8 @@ document.addEventListener("DOMContentLoaded", function () {
     document.body.classList.add("page-transition-out");
 
     setTimeout(() => {
-      // Use relative path that works from LandingPage directory
-      const baseUrl = window.location.pathname.includes("/ECADYB/")
-        ? "/ECADYB/"
-        : "/";
-      window.location.href = baseUrl + "login";
+      // Use relative path directly to login file
+      window.location.href = "../Public/Components/login.php";
     }, 1000);
   }
 
