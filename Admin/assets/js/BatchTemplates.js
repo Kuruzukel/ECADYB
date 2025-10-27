@@ -3133,7 +3133,6 @@ function initializeDepartmentSelection() {
   const checkboxes = document.querySelectorAll(".dept-checkbox");
   const selectAllBtn = document.getElementById("select-all-dept-btn");
 
-  // Handle individual checkbox changes
   checkboxes.forEach((checkbox) => {
     checkbox.addEventListener("change", function () {
       const label = this.closest(".dept-label");
