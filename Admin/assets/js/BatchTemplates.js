@@ -2184,7 +2184,6 @@ async function generateYearbookPDF(departments, progressNotification) {
     throw new Error("html2canvas library not available");
   }
 
-  // Load jsPDF if not already loaded
   console.log("Checking jsPDF:", typeof window.jspdf);
   if (typeof window.jspdf === "undefined") {
     console.error("jsPDF library not loaded!");
