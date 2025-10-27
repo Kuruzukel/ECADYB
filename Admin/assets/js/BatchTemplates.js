@@ -2178,7 +2178,6 @@ async function generateYearbookPDF(departments, progressNotification) {
   console.log("Batch year:", batchYear);
   console.log("Departments to process:", departments);
 
-  // Check if html2canvas is loaded
   console.log("Checking html2canvas:", typeof html2canvas);
   if (typeof html2canvas === "undefined") {
     console.error("html2canvas library not loaded!");
