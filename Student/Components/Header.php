@@ -121,7 +121,7 @@ if (empty($studentFirstName) && empty($studentLastName) && !empty($studentName))
       alt="Profile" class="profile-icon" id="profileIcon" />
     <div class="dropdown-menu" id="profileDropdownMenu">
       <button class="dropdown-item"
-        onclick="window.location.href='/ECADYB/Student/ChangePassword'">
+        onclick="window.location.href='<?php echo BASE_URL; ?>Student/ChangePassword'">
         Change Password
       </button>
       <button class="dropdown-item" onclick="editProfile()">
