@@ -2295,7 +2295,6 @@ async function generateYearbookPDF(departments, progressNotification) {
         const imgData = pageCanvas.toDataURL("image/jpeg", 0.95);
         console.log(`Image data generated (length: ${imgData.length} chars)`);
 
-        // Add full page image
         pdf.addImage(imgData, "JPEG", 0, 0, 1920, 1080, undefined, "FAST");
         totalPagesAdded++;
         console.log(
