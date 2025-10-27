@@ -2450,7 +2450,6 @@ async function captureAllYearbookPages(
         const approxTotalCaptures =
           Math.ceil(totalPages / 2) + (totalPages % 2 === 0 ? 1 : 0);
 
-        // Capture front cover (page 1)
         console.log(`\n>>> Capturing front cover (page 1) for ${department}`);
         const nav1Success = await navigateToPage(iframeWindow, 1);
         if (nav1Success) {
