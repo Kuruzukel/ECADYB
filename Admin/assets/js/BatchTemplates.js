@@ -3584,7 +3584,6 @@ window.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    // Update download PDF button states after sections are updated
     updateDownloadPdfButtonStates();
   }
 
