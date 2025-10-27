@@ -323,7 +323,6 @@ function customConfirm(
       overlay.classList.add("show");
     }, 10);
 
-    // Handle button clicks
     const okBtn = overlay.querySelector(".confirm-ok");
     const cancelBtn = overlay.querySelector(".confirm-cancel");
 
