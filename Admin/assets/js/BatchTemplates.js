@@ -277,7 +277,6 @@ function closePersistentNotification(notification) {
   }
 }
 
-// Update persistent notification with new message
 function updatePersistentNotification(notification, message) {
   if (notification) {
     const messageElement = notification.querySelector(".notification-message");
