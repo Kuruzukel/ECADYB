@@ -2364,7 +2364,6 @@ async function generateYearbookPDF(departments, progressNotification) {
 function getYearbookUrl(department, batchYear) {
   const basePath = getBasePath();
 
-  // Map department codes - Some departments use different codes in the yearbook
   const deptMapping = {
     COE: "BSE", // College of Education → BS Education
     CON: "BSN", // College of Nursing → BS Nursing
