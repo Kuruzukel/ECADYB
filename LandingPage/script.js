@@ -101,45 +101,61 @@ let carouselImageElements = Array.from(track.querySelectorAll(".carousel-img"));
 let carouselImages = carouselImageElements.map((img) => img.src);
 
 let currentIndex = 0;
+let isTransitioning = false;
 
 function renderImages() {
-  const images = [
-    carouselImages[carouselImages.length - 1],
-    ...carouselImages,
-    carouselImages[0],
-  ];
+  // Create multiple clones for seamless infinite loop
+  const cloneCount = 2; // Clone first and last 2 images for smoother transition
+  const clonedStart = carouselImages.slice(-cloneCount);
+  const clonedEnd = carouselImages.slice(0, cloneCount);
+
+  const images = [...clonedStart, ...carouselImages, ...clonedEnd];
 
   track.innerHTML = images
     .map(
       (src, i) =>
         `<img src="${src}" class="carousel-img" data-index="${
-          i - 1
-        }" draggable="false" />`
+          i - cloneCount
+        }" draggable="false" loading="eager" />`
     )
     .join("");
 
   carouselImageElements = Array.from(track.querySelectorAll(".carousel-img"));
 
+  // Start at the first real image (after the clones)
   track.style.transition = "none";
-  track.style.transform = `translateX(-100%)`;
+  track.style.transform = `translateX(-${cloneCount * 100}%)`;
   currentIndex = 0;
+
+  // Force reflow to ensure the transition property is properly removed
+  track.offsetHeight;
 }
 
 function moveToIndex(index) {
+  if (isTransitioning) return;
+
+  isTransitioning = true;
   currentIndex = index;
   track.style.transition = "transform 0.5s ease";
-  track.style.transform = `translateX(-${(index + 1) * 100}%)`;
+  track.style.transform = `translateX(-${(index + 2) * 100}%)`;
 }
 
 function handleTransitionEnd() {
-  if (currentIndex < 0) {
-    currentIndex = carouselImages.length - 1;
-    track.style.transition = "none";
-    track.style.transform = `translateX(-${(currentIndex + 1) * 100}%)`;
-  } else if (currentIndex >= carouselImages.length) {
+  isTransitioning = false;
+
+  // If we've moved past the last real image, jump to the first real image
+  if (currentIndex >= carouselImages.length) {
     currentIndex = 0;
     track.style.transition = "none";
-    track.style.transform = `translateX(-100%)`;
+    track.style.transform = `translateX(-${(currentIndex + 2) * 100}%)`;
+    track.offsetHeight; // Force reflow
+  }
+  // If we've moved before the first real image, jump to the last real image
+  else if (currentIndex < 0) {
+    currentIndex = carouselImages.length - 1;
+    track.style.transition = "none";
+    track.style.transform = `translateX(-${(currentIndex + 2) * 100}%)`;
+    track.offsetHeight; // Force reflow
   }
 }
 
@@ -153,7 +169,19 @@ function prevImage() {
 
 track.addEventListener("transitionend", handleTransitionEnd);
 
-renderImages();
+// Ensure images are loaded before rendering
+if (carouselImages.length > 0) {
+  renderImages();
+} else {
+  // Retry if images aren't loaded yet
+  setTimeout(() => {
+    carouselImageElements = Array.from(track.querySelectorAll(".carousel-img"));
+    carouselImages = carouselImageElements.map((img) => img.src);
+    if (carouselImages.length > 0) {
+      renderImages();
+    }
+  }, 100);
+}
 
 let autoSlideInterval = null;
 let timeoutId = null;
@@ -481,7 +509,11 @@ document.addEventListener("DOMContentLoaded", function () {
     document.body.classList.add("page-transition-out");
 
     setTimeout(() => {
-      window.location.href = "/Public/Components/Login.php";
+      // Use relative path that works from LandingPage directory
+      const baseUrl = window.location.pathname.includes("/ECADYB/")
+        ? "/ECADYB/"
+        : "/";
+      window.location.href = baseUrl + "login";
     }, 1000);
   }
 
@@ -505,7 +537,7 @@ document.addEventListener("DOMContentLoaded", function () {
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("/LandingPage/service-worker.js")
+      .register("service-worker.js")
       .then((reg) => console.log("✅ Service Worker registered:", reg.scope))
       .catch((err) => console.log("❌ Service Worker failed:", err));
   });
