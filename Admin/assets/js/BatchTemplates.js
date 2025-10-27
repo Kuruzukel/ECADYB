@@ -2437,7 +2437,6 @@ async function captureAllYearbookPages(
         await waitForImages(iframeDoc);
         console.log("Images loaded!");
 
-        // Get total pages from the yearbook
         console.log("Getting total pages...");
         const totalPages = await getTotalPagesFromYearbook(iframeWindow);
         console.log(`Total pages for ${department}:`, totalPages);
