@@ -2238,7 +2238,6 @@ async function generateYearbookPDF(departments, progressNotification) {
     try {
       console.log(`Starting capture for ${department}...`);
 
-      // Update progress callback for page capture
       const onPageProgress = (currentPage, totalPages) => {
         const deptProgress =
           (currentPage / totalPages) * (80 / totalDepartments);
