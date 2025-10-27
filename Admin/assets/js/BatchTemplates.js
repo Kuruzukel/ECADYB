@@ -2303,7 +2303,7 @@ async function generateYearbookPDF(departments, progressNotification) {
 
         const addProgress =
           ((i + 1) / pageCanvases.length) * (100 / totalDepartments) -
-          80 / totalDepartments; // Subtract what we already did (capture phase)
+          80 / totalDepartments;
         updatePersistentNotification(
           progressNotification,
           `Preparing PDF ${currentDeptIndex}/${totalDepartments}... ${Math.round(
