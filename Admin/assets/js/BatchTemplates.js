@@ -2355,7 +2355,6 @@ async function generateYearbookPDF(departments, progressNotification) {
     throw new Error("No PDFs were generated. Please try again.");
   }
 
-  // Update to 100%
   updatePersistentNotification(
     progressNotification,
     `Complete! 100%<br><small>All PDFs downloaded [${allDepartmentsText}]</small>`
