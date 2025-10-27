@@ -89,6 +89,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $client !== null) {
                         if ($student) {
                             $studentIdValue = $student['student id'] ?? $student['student_id'] ?? $username;
 
+                            error_log("[Login] Student found - ID in DB: " . ($student['student id'] ?? 'none') . "/" . ($student['student_id'] ?? 'none') . ", Using: " . $studentIdValue);
+
                             $_SESSION['role']       = 'student';
                             $_SESSION['student_id'] = $studentIdValue;
                             $_SESSION['name']       = trim(($student['first name'] ?? '') . ' ' . ($student['middle name'] ?? '') . ' ' . ($student['last name'] ?? ''));

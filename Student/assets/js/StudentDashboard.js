@@ -1000,6 +1000,16 @@ async function submitStudentInfo(event) {
     window.studentData?.studentAcademicYear || formData.get("academic_year");
   const department = window.studentData?.studentDepartment || "";
 
+  // Validate student ID
+  if (!studentId || studentId.trim() === "" || studentId === "0000-000000") {
+    showNotification(
+      "Error: Invalid student ID. Please log out and log in again.",
+      "error"
+    );
+    console.error("Invalid student ID detected:", studentId);
+    return;
+  }
+
   const collectionMap = {
     "BS Marine Engineering": "bsme",
     "BS Marine Transportation": "bsmt",

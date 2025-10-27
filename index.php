@@ -67,9 +67,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
             ]);
 
             if ($student) {
+                $finalStudentId = $student['student id'] ?? $student['student_id'] ?? $studentId;
+                error_log("[index.php Login] Student found - ID in DB: " . ($student['student id'] ?? 'none') . "/" . ($student['student_id'] ?? 'none') . ", Using: " . $finalStudentId);
+
                 $_SESSION['role']       = 'student';
 
-                $_SESSION['student_id'] = $student['student id'] ?? $student['student_id'];
+                $_SESSION['student_id'] = $finalStudentId;
 
                 $_SESSION['name']       = trim(
                     ($student['first name'] ?? '') . ' ' .

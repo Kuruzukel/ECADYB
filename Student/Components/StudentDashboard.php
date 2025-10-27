@@ -205,6 +205,19 @@ try {
   </section>
 
   <?php include __DIR__ . '/Footer.php'; ?>
+  <script>
+    // Initialize student data from PHP session
+    window.studentData = {
+      studentId: <?php echo json_encode($studentId); ?>,
+      studentName: <?php echo json_encode($studentName); ?>,
+      studentDepartment: <?php echo json_encode($studentDepartment); ?>,
+      studentSection: <?php echo json_encode($studentSection); ?>,
+      studentAcademicYear: <?php echo json_encode($studentAcademicYear); ?>,
+      studentProgram: <?php echo json_encode($studentProgram); ?>,
+      studentProfilePhoto: <?php echo json_encode($studentProfilePhoto); ?>
+    };
+    console.log('Student data initialized:', window.studentData);
+  </script>
   <script src="<?php echo BASE_URL; ?>Student/assets/js/StudentDashboard.js"></script>
 </body>
 
