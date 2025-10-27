@@ -586,7 +586,6 @@ label {
   font-size: 1rem;
 }
 
-/* Cancel button for persistent notifications - same styling as notification-close */
 .notification-close-btn {
   width: 20px;
   height: 20px;
