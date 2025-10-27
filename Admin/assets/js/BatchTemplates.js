@@ -208,7 +208,6 @@ function closeNotification(id) {
   }
 }
 
-// Show a persistent notification that doesn't auto-hide
 function showPersistentNotification(
   message,
   type = "info",
