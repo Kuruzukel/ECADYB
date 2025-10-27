@@ -101,7 +101,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         "email" => trim($_POST["email"]),
         "academic year" => trim($_POST["academic_year"]),
         "student id" => trim($_POST["student_id"]),
-        "program" => $programName,
+        "program" => $programKey,
         "section" => $section,
         "department section" => strtoupper($programKey) . ' - ' . strtoupper($section),
         "password" => generateRandomPassword(8),
