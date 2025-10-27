@@ -295,7 +295,6 @@ function customConfirm(
     const overlay = document.createElement("div");
     overlay.className = "confirm-modal-overlay";
 
-    // Create modal HTML
     overlay.innerHTML = `
       <div class="confirm-modal-container">
         <div class="confirm-modal-header">
