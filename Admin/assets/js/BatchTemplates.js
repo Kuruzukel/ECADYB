@@ -2366,7 +2366,7 @@ function getYearbookUrl(department, batchYear) {
 
   const deptMapping = {
     COE: "BSE",
-    CON: "BSN", // College of Nursing → BS Nursing
+    CON: "BSN",
     BSCJE: "BSCJ", // BS Criminal Justice Education → BS Criminal Justice
   };
 
