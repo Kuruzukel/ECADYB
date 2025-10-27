@@ -68,11 +68,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
 
             if ($student) {
                 $finalStudentId = $student['student id'] ?? $student['student_id'] ?? $studentId;
+
+                // Check if student ID is a placeholder value
+                if ($finalStudentId === '0000-000000' || empty($finalStudentId)) {
+                    $finalStudentId = $studentId;
+                    error_log("[index.php Login] WARNING: Student has placeholder ID '0000-000000'. Using login username instead: " . $studentId);
+                }
+
                 error_log("[index.php Login] Student found - ID in DB: " . ($student['student id'] ?? 'none') . "/" . ($student['student_id'] ?? 'none') . ", Using: " . $finalStudentId);
 
                 $_SESSION['role']       = 'student';
-
                 $_SESSION['student_id'] = $finalStudentId;
+
+                // Create JWT session token and track active session
+                require_once __DIR__ . '/Connection/Configuration/JWTConfig.php';
+                $sessionData = [
+                    'student_id' => $finalStudentId,
+                    'name' => trim(
+                        ($student['first name'] ?? '') . ' ' .
+                            ($student['middle name'] ?? '') . ' ' .
+                            ($student['last name'] ?? '')
+                    ),
+                    'department' => $departmentName,
+                    'role' => 'student'
+                ];
+                $jwtToken = generateSessionToken($finalStudentId, 'student', $sessionData);
+                $_SESSION['jwt_token'] = $jwtToken;
+
+                // Store active session in MongoDB
+                storeActiveSession($client, $sessionData);
 
                 $_SESSION['name']       = trim(
                     ($student['first name'] ?? '') . ' ' .

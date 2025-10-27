@@ -4,7 +4,8 @@
     "mongodb/mongodb": "^2.0",
     "phpmailer/phpmailer": "^7.0",
     "vlucas/phpdotenv": "^5.6",
-    "sendgrid/sendgrid": "^8.1"
+    "sendgrid/sendgrid": "^8.1",
+    "firebase/php-jwt": "^6.11"
   },
   "config": {
     "optimize-autoloader": true,

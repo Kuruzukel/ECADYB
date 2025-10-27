@@ -98,6 +98,7 @@ $studentProfilePhoto = $_SESSION['profile_photo'] ?? '';
     };
     console.log('Student data initialized:', window.studentData);
   </script>
+  <script src="<?php echo BASE_URL; ?>Student/assets/js/SessionTracker.js"></script>
   <script src="<?php echo BASE_URL; ?>Student/assets/js/StudentDashboard.js"></script>
 </body>
 
