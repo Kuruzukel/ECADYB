@@ -2257,7 +2257,6 @@ async function generateYearbookPDF(departments, progressNotification) {
       );
       console.log(`Captured ${pageCanvases.length} pages for ${department}`);
 
-      // Check for cancellation after capture
       if (window.pdfGenerationCancelled) {
         console.log("PDF generation cancelled by user");
         throw new Error("PDF generation cancelled by user");
