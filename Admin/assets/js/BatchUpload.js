@@ -236,7 +236,6 @@ async function refreshParentAcademicYearFilter() {
 
       filterToUpdate.innerHTML = "";
 
-      // Re-add the first option
       filterToUpdate.appendChild(firstOption);
 
       // Add updated academic year options
