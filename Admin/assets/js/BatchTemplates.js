@@ -2922,7 +2922,6 @@ async function capturePage(iframeDoc) {
       ctx.drawImage(yearbookCanvas, 0, 0, 1920, 1080);
     }
 
-    // Step 3: Draw the lower curl SVG
     console.log("Drawing lower curl...");
     await drawLowerCurl(ctx, 1920, 1080);
 
