@@ -216,7 +216,6 @@ async function refreshParentAcademicYearFilter() {
     const currentlySelected = filterToUpdate.value;
     console.log("Currently selected academic year:", currentlySelected);
 
-    // Get the base path
     const basePath = window.location.pathname.includes("/ECADYB/")
       ? "/ECADYB"
       : "";
