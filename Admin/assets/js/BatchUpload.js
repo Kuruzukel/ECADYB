@@ -220,7 +220,6 @@ async function refreshParentAcademicYearFilter() {
       ? "/ECADYB"
       : "";
 
-    // Fetch updated academic years from the server
     console.log(
       "Fetching academic years from:",
       `${basePath}/Connection/Student/FetchAcademicYears.php`
