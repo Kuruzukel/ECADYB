@@ -3005,7 +3005,7 @@ function waitForImages(doc) {
       if (img.complete) return Promise.resolve();
       return new Promise((resolve) => {
         img.onload = resolve;
-        img.onerror = resolve; // Resolve even on error to not block
+        img.onerror = resolve;
       });
     });
 
