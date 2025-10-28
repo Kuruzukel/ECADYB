@@ -2857,7 +2857,6 @@ async function navigateToPage(iframeWindow, pageNum) {
 async function capturePage(iframeDoc) {
   console.log(">>> capturePage called");
   try {
-    // Hide navigation controls before capturing
     console.log("Hiding navigation controls...");
     const navControls = iframeDoc.querySelector(".nav-controls");
     const originalNavDisplay = navControls ? navControls.style.display : null;
