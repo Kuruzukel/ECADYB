@@ -2818,7 +2818,7 @@ async function getTotalPagesFromYearbook(iframeWindow) {
   } catch (e) {
     console.error("Error getting total pages:", e);
   }
-  return 1; // Default to 1 page if can't determine
+  return 1;
 }
 
 async function navigateToPage(iframeWindow, pageNum) {
