@@ -2476,7 +2476,6 @@ async function captureAllYearbookPages(
             }) for ${department}`
           );
 
-          // Navigate to page
           console.log(`Navigating to page ${pageNum}...`);
           const navSuccess = await navigateToPage(iframeWindow, pageNum);
 
