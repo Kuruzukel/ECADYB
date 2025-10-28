@@ -2986,7 +2986,6 @@ async function drawLowerCurl(ctx, width, height) {
     const img = await loadImage(url);
 
     if (img) {
-      // Draw the curl at the bottom of the canvas
       const curlHeight = 80;
       const curlY = height - curlHeight;
       ctx.drawImage(img, 0, curlY, width, curlHeight);
