@@ -2572,7 +2572,6 @@ async function captureAllYearbookPages(
       reject(new Error(`Failed to load yearbook for ${department}`));
     };
 
-    // Set timeout (increased to 5 minutes for large departments)
     timeoutHandle = setTimeout(() => {
       console.error(
         `\n❌ Timeout loading yearbook for ${department} after 300s`
