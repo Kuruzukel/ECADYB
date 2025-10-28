@@ -2506,7 +2506,6 @@ async function captureAllYearbookPages(
           }
         }
 
-        // If total pages is even, capture the last page (back cover)
         if (totalPages > 1 && totalPages % 2 === 0) {
           console.log(
             `\n>>> Capturing back cover (page ${totalPages}) for ${department}`
