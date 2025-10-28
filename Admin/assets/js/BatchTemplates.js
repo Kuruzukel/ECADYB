@@ -3049,7 +3049,6 @@ function updateDownloadPdfButtonStates() {
     const downloadPdfBtn = section.querySelector(".download-pdf-btn");
 
     if (downloadPdfBtn) {
-      // AND if it's selected (yellow header when selected)
       const isAvailable = section.classList.contains("available");
       const isSelected = section.classList.contains("selected");
 
