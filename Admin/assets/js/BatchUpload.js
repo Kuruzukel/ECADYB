@@ -276,7 +276,6 @@ async function refreshParentAcademicYearFilter() {
         );
       }
 
-      // Visual feedback - briefly highlight the dropdown
       if (filterToUpdate) {
         filterToUpdate.style.transition = "all 0.3s ease";
         filterToUpdate.style.boxShadow = "0 0 10px rgba(252, 218, 21, 0.5)";
