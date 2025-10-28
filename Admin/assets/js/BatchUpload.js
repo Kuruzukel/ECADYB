@@ -232,7 +232,6 @@ async function refreshParentAcademicYearFilter() {
     if (data.success && data.academicYears) {
       console.log("Fetched academic years:", data.academicYears);
 
-      // Store the first "Select..." option
       const firstOption = filterToUpdate.options[0].cloneNode(true);
 
       // Clear existing options
