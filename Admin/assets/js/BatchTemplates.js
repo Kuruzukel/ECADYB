@@ -2490,7 +2490,6 @@ async function captureAllYearbookPages(
           await new Promise((resolve) => setTimeout(resolve, 2000));
           console.log("Page should be rendered now");
 
-          // Capture the current view
           console.log("Capturing spread...");
           let canvas = await capturePage(iframeDoc);
           if (canvas) {
