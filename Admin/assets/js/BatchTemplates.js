@@ -2885,7 +2885,6 @@ async function capturePage(iframeDoc) {
       console.log("Drawing background image...");
       ctx.drawImage(bgImage, 0, 0, 1920, 1080);
     } else {
-      // Fallback background color
       console.log("Using fallback background color");
       ctx.fillStyle = "#000042";
       ctx.fillRect(0, 0, 1920, 1080);
