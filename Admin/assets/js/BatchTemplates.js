@@ -2761,7 +2761,6 @@ async function waitForYearbookInit(iframeWindow, iframeDoc) {
         }
       } else {
         if (attempts % 25 === 0) {
-          // Log every 5 seconds
           console.log(
             `⏳ Waiting for Turn.js initialization... (${elapsedTime}s elapsed)`
           );
