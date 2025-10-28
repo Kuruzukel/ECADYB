@@ -2794,7 +2794,6 @@ async function waitForYearbookInit(iframeWindow, iframeDoc) {
           });
         }
 
-        // Check if there's student data loaded
         const studentCards = iframeDoc.querySelectorAll(".student-card");
         console.error("  - Student cards found:", studentCards.length);
 
