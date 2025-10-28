@@ -2644,7 +2644,7 @@ async function captureAllYearbookPages(
           console.warn("   - Cannot access iframe:", e.message);
         }
       }
-    }, 30000); // Check after 30 seconds
+    }, 30000);
   });
 }
 
