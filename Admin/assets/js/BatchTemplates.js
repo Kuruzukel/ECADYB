@@ -2917,7 +2917,7 @@ async function capturePage(iframeDoc) {
         width: 1920,
         height: 1080,
         foreignObjectRendering: false,
-        removeContainer: true, // Clean up immediately
+        removeContainer: true,
       });
       ctx.drawImage(yearbookCanvas, 0, 0, 1920, 1080);
     }
