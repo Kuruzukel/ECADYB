@@ -3011,7 +3011,6 @@ function waitForImages(doc) {
 
     Promise.all(imagePromises).then(resolve);
 
-    // Timeout after 10 seconds
     setTimeout(resolve, 10000);
   });
 }
