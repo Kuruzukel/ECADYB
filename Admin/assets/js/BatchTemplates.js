@@ -3042,7 +3042,6 @@ function updateDepartmentCount() {
   }
 }
 
-// Function to update Download PDF button states based on section availability
 function updateDownloadPdfButtonStates() {
   const sections = document.querySelectorAll(".section");
 
