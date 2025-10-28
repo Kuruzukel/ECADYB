@@ -2781,7 +2781,6 @@ async function waitForYearbookInit(iframeWindow, iframeDoc) {
           iframeDoc.body ? iframeDoc.body.className : "N/A"
         );
 
-        // Log any visible error messages in the page
         const errorElements = iframeDoc.querySelectorAll(
           ".error, [class*='error']"
         );
