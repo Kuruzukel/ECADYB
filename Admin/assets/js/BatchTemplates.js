@@ -2691,7 +2691,6 @@ async function waitForYearbookInit(iframeWindow, iframeDoc) {
         iframeWindow.console &&
         iframeWindow.console.error
       ) {
-        // Intercept console errors (if accessible)
         if (attempts === 1) {
           console.log("✓ Iframe window is accessible");
         }
