@@ -2877,7 +2877,6 @@ async function capturePage(iframeDoc) {
 
     console.log("Created canvas:", finalCanvas.width, "x", finalCanvas.height);
 
-    // Step 1: Draw the background image
     console.log("Loading background image...");
     const bgImage = await loadImage(
       "https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png"
