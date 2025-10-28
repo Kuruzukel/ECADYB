@@ -203,7 +203,7 @@ async function refreshParentAcademicYearFilter() {
   try {
     console.log("Refreshing academic year filter with new data...");
 
-    const academicYearFilter = document.getElementById("academic-year-filter"); // StudentList page
+    const academicYearFilter = document.getElementById("academic-year-filter");
     const batchYearSelect = document.getElementById("batch-year-select"); // BatchUpload page
 
     const filterToUpdate = academicYearFilter || batchYearSelect;
