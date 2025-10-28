@@ -3058,7 +3058,6 @@ function updateDownloadPdfButtonStates() {
         downloadPdfBtn.style.cursor = "pointer";
         downloadPdfBtn.title = "Download PDF";
       } else if (!isAvailable) {
-        // Disable if not available (not green)
         downloadPdfBtn.disabled = true;
         downloadPdfBtn.style.opacity = "0.5";
         downloadPdfBtn.style.cursor = "not-allowed";
