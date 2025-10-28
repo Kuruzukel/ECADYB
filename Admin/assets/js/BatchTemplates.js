@@ -2701,7 +2701,6 @@ async function waitForYearbookInit(iframeWindow, iframeDoc) {
 
       if (!hasjQuery) {
         if (attempts % 25 === 0) {
-          // Log every 5 seconds
           console.log(
             `⏳ Waiting for jQuery... (${elapsedTime}s elapsed, attempt ${attempts}/${maxAttempts})`
           );
