@@ -25,7 +25,6 @@ body {
   height: 100%;
   background-color: var(--content-bg);
   border-radius: 10px 10px 0 0;
-
 }
 
 .header-container {
@@ -97,7 +96,6 @@ h1 .chevron i {
 }
 
 .section:hover {
-
   transform: translateY(-2px);
   border-color: rgba(59, 130, 246, 0.3);
 }
@@ -123,13 +121,18 @@ h1 .chevron i {
 }
 
 .section-header::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
   transition: left 0.5s;
 }
 
@@ -267,8 +270,7 @@ select:hover {
   left: 0;
   height: 100vh;
   width: 100vw;
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(2px);
   display: none;
   justify-content: center;
   align-items: center;
@@ -354,7 +356,6 @@ select:hover {
   transform: translateY(-1px);
 }
 
-
 @keyframes fadeOut {
   from {
     opacity: 1;
@@ -383,9 +384,16 @@ select:hover {
 }
 
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  75% { transform: translateX(5px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
 }
 
 .form-content {
@@ -708,7 +716,6 @@ header {
 
 .search-container:hover {
   background: rgba(255, 255, 255, 0.15);
-
 }
 
 .search-container .search-input {
@@ -887,7 +894,6 @@ main {
   width: 40px;
   height: 0;
   border-radius: 40px;
-
 }
 
 .tab.active::after {
@@ -898,7 +904,6 @@ main {
   width: 40px;
   height: 0;
   border-radius: 40px;
-
 }
 
 .submenu {
@@ -1220,7 +1225,6 @@ header h3 {
   height: 100%;
   background-color: var(--content-bg);
   border-radius: 10px 10px 0 0;
-
 }
 
 .header-container {
@@ -1292,7 +1296,6 @@ h1 .chevron i {
 }
 
 .section:hover {
-
   transform: translateY(-2px);
   border-color: rgba(59, 130, 246, 0.3);
 }
@@ -1319,13 +1322,18 @@ h1 .chevron i {
 }
 
 .section-header::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
   transition: left 0.5s;
 }
 
@@ -1837,7 +1845,6 @@ body {
   height: 100%;
   background-color: var(--content-bg);
   border-radius: 10px 10px 0 0;
-
 }
 
 .header-container {
@@ -1939,7 +1946,6 @@ h1 .chevron i {
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   text-align: center;
   overflow: hidden;
-
 }
 
 .file-card::before {
@@ -1981,7 +1987,6 @@ h1 .chevron i {
     rgba(76, 175, 80, 0.1),
     rgba(44, 62, 80, 0.6)
   );
-
 }
 
 .file-card.drag-over {
@@ -2191,12 +2196,10 @@ h1 .chevron i {
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
-
 }
 
 .submit-button:hover {
   transform: translateY(-2px);
-
 }
 
 .upload-overlay {
@@ -2366,7 +2369,6 @@ h1 .chevron i {
   height: 100%;
   background-color: var(--content-bg);
   border-radius: 10px 10px 0 0;
-
 }
 
 .changepass-header {
@@ -2713,7 +2715,6 @@ body {
   height: 100%;
   background-color: var(--content-bg);
   border-radius: 10px 10px 0 0;
-
 }
 
 .header-container {
@@ -2820,7 +2821,6 @@ textarea:focus {
 input:invalid,
 textarea:invalid {
   border-color: var(--input-error);
-
 }
 
 input::placeholder,
@@ -3227,7 +3227,6 @@ body {
   height: 100%;
   background-color: var(--content-bg);
   border-radius: 10px 10px 0 0;
-
 }
 
 .header-container {
@@ -3478,7 +3477,6 @@ h1 .chevron i {
   background: #f8f9fa;
   border-color: #dadce0;
   transform: translateY(-1px);
-
 }
 
 .calendar-day.other-month {
@@ -3713,13 +3711,11 @@ h1 .chevron i {
   background: #f8f9fa;
   border-color: #dadce0;
   transform: translateY(-1px);
-
 }
 
 .calendar-day.other-month {
   opacity: 0.5;
   border-radius: 8px;
-
 }
 
 .calendar-day.today {
@@ -3813,7 +3809,6 @@ h1 .chevron i {
 .event-preview-card .delete-btn:hover {
   background: #c82333;
   transform: scale(1.1);
-
 }
 
 .event-preview-card .delete-btn:active {
@@ -4106,7 +4101,6 @@ h1 .chevron i {
 .event-preview-card .delete-btn:hover {
   background: #c82333;
   transform: scale(1.1);
-
 }
 
 .event-preview-card .delete-btn:active {
@@ -4134,7 +4128,6 @@ h1 .chevron i {
 
 .event-preview-card:hover {
   transform: translateY(-2px);
-
 }
 
 .event-preview-title {
@@ -4678,13 +4671,18 @@ th {
 }
 
 .editStudentModal .section-header::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
   transition: left 0.5s;
 }
 
@@ -5634,13 +5632,11 @@ h1 .chevron i {
   cursor: pointer;
   transition: all 0.3s ease;
   z-index: 3;
-
 }
 
 .upload-box.circle .delete-btn:hover {
   background: #dc2626;
   transform: scale(1.15) translateY(-2px);
-
 }
 
 .upload-box.circle.has-image .delete-btn {
@@ -5655,7 +5651,6 @@ h1 .chevron i {
   border-color: #e2e8f0;
   background: rgba(255, 255, 255, 0.05);
   transform: translateY(-3px) scale(1.02);
-
 }
 
 .upload-box.circle:hover .plus-icon {
@@ -5669,7 +5664,6 @@ h1 .chevron i {
 
 .upload-box.circle.has-image:hover {
   transform: translateY(-3px) scale(1.02);
-
 }
 
 .section-header {
@@ -5719,7 +5713,6 @@ h1 .chevron i {
 
 .color-box.selected {
   border: 3px solid #fcda15;
-
 }
 
 .color-box::after {
