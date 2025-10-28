@@ -2654,7 +2654,6 @@ async function waitForYearbookInit(iframeWindow, iframeDoc) {
     const maxAttempts = 600;
     const startTime = Date.now();
 
-    // Check for errors in the iframe
     let hasLogged404 = false;
     let hasLoggedJSError = false;
 
