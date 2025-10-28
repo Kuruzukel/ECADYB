@@ -2628,7 +2628,6 @@ async function captureAllYearbookPages(
               iframeDoc.body.innerHTML.length > 100
             );
 
-            // If readyState is complete but onload didn't fire, manually trigger it
             if (
               iframeDoc.readyState === "complete" &&
               iframeDoc.body.innerHTML.length > 100
