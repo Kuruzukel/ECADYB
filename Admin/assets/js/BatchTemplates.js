@@ -3064,7 +3064,6 @@ function updateDownloadPdfButtonStates() {
         downloadPdfBtn.title =
           "This batch is not available for download (must have green header)";
       } else if (!isSelected) {
-        // Disable if not selected
         downloadPdfBtn.disabled = true;
         downloadPdfBtn.style.opacity = "0.5";
         downloadPdfBtn.style.cursor = "not-allowed";
