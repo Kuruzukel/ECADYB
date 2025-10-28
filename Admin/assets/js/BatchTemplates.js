@@ -2895,7 +2895,7 @@ async function capturePage(iframeDoc) {
     if (canvas) {
       const yearbookCanvas = await html2canvas(canvas, {
         backgroundColor: null,
-        scale: 2, // Higher scale for better quality and larger size
+        scale: 2,
         useCORS: true,
         allowTaint: true,
         logging: false,
