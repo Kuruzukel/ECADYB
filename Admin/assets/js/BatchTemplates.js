@@ -2843,7 +2843,6 @@ async function navigateToPage(iframeWindow, pageNum) {
     iframeWindow.$(".magazine").turn("page", pageNum);
     console.log(`Successfully navigated to page ${pageNum}`);
 
-    // Wait for page turn animation to complete (increased to 1500ms for slow animations)
     await new Promise((resolve) => setTimeout(resolve, 1500));
 
     return true;
