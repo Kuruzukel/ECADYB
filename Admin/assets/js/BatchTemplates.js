@@ -2902,7 +2902,7 @@ async function capturePage(iframeDoc) {
         width: 1920,
         height: 1080,
         foreignObjectRendering: false,
-        removeContainer: true, // Clean up immediately
+        removeContainer: true,
       });
       console.log("Drawing yearbook content at scale...");
       // Draw the captured content scaled to fit our canvas
