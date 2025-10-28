@@ -2910,7 +2910,7 @@ async function capturePage(iframeDoc) {
       console.warn("Canvas element not found, capturing body instead");
       const yearbookCanvas = await html2canvas(iframeDoc.body, {
         backgroundColor: null,
-        scale: 2, // Higher scale for better quality and larger size
+        scale: 2,
         useCORS: true,
         allowTaint: true,
         logging: false,
