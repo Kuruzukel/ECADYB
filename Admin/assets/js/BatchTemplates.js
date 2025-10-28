@@ -2661,7 +2661,6 @@ async function waitForYearbookInit(iframeWindow, iframeDoc) {
       attempts++;
       const elapsedTime = ((Date.now() - startTime) / 1000).toFixed(1);
 
-      // Check for 404 or error pages (only if there's actual content)
       if (!hasLogged404 && attempts % 20 === 0) {
         const bodyText = iframeDoc.body
           ? iframeDoc.body.textContent.trim()
