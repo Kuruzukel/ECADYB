@@ -2944,7 +2944,6 @@ async function capturePage(iframeDoc) {
     console.error("Error message:", error.message);
     console.error("Error stack:", error.stack);
 
-    // Restore navigation controls even on error
     const navControls = iframeDoc.querySelector(".nav-controls");
     if (navControls) {
       navControls.style.display = "";
