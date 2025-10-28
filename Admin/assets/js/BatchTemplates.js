@@ -2531,7 +2531,6 @@ async function captureAllYearbookPages(
 
         console.log(`Total spreads captured: ${captureCount}`);
 
-        // Clean up
         console.log("Cleaning up iframe...");
         clearTimeout(timeoutHandle);
         document.body.removeChild(iframe);
