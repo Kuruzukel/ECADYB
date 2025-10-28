@@ -266,7 +266,6 @@ async function refreshParentAcademicYearFilter() {
         "💾 Cached academic years in localStorage for cross-page access"
       );
 
-      // If the previously selected year is no longer available, keep the selection on "Select..."
       if (
         currentlySelected &&
         !data.academicYears.includes(currentlySelected)
