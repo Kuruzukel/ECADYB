@@ -234,7 +234,6 @@ async function refreshParentAcademicYearFilter() {
 
       const firstOption = filterToUpdate.options[0].cloneNode(true);
 
-      // Clear existing options
       filterToUpdate.innerHTML = "";
 
       // Re-add the first option
