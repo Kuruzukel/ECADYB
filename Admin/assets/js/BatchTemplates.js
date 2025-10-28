@@ -2665,7 +2665,6 @@ async function waitForYearbookInit(iframeWindow, iframeDoc) {
         const bodyText = iframeDoc.body
           ? iframeDoc.body.textContent.trim()
           : "";
-        // Only log if there's meaningful content with error keywords
         if (
           bodyText.length > 20 &&
           (bodyText.includes("404") || bodyText.includes("Not Found"))
