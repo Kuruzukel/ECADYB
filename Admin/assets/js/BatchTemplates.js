@@ -2834,7 +2834,6 @@ async function navigateToPage(iframeWindow, pageNum) {
       return false;
     }
 
-    // Check if Turn.js is initialized
     const isInitialized = iframeWindow.$(".magazine").turn("is");
     if (!isInitialized) {
       console.error("Turn.js not initialized yet");
