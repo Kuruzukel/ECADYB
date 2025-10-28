@@ -2733,7 +2733,6 @@ async function waitForYearbookInit(iframeWindow, iframeDoc) {
           const totalPages = iframeWindow.$(".magazine").turn("pages");
 
           if (attempts % 25 === 0) {
-            // Log every 5 seconds
             console.log(
               `⏳ Turn.js check - Initialized: ${isInitialized}, Pages: ${totalPages} (${elapsedTime}s elapsed)`
             );
