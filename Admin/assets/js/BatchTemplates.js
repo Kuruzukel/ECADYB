@@ -2583,7 +2583,6 @@ async function captureAllYearbookPages(
         iframe.contentDocument ? iframe.contentDocument.readyState : "N/A"
       );
 
-      // Check if iframe has any content
       try {
         const iframeDoc =
           iframe.contentDocument || iframe.contentWindow.document;
