@@ -2746,7 +2746,6 @@ async function waitForYearbookInit(iframeWindow, iframeDoc) {
             return;
           } else {
             if (attempts % 50 === 0) {
-              // Log every 10 seconds
               console.log(
                 `   Turn.js found but not ready yet (initialized: ${isInitialized}, pages: ${totalPages})`
               );
