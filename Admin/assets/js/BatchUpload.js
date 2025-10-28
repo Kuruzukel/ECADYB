@@ -203,7 +203,6 @@ async function refreshParentAcademicYearFilter() {
   try {
     console.log("Refreshing academic year filter with new data...");
 
-    // Find the academic year filter dropdowns (both StudentList and BatchUpload pages)
     const academicYearFilter = document.getElementById("academic-year-filter"); // StudentList page
     const batchYearSelect = document.getElementById("batch-year-select"); // BatchUpload page
 
