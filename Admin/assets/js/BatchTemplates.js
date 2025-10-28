@@ -2971,7 +2971,6 @@ function loadImage(url) {
 
 async function drawLowerCurl(ctx, width, height) {
   try {
-    // Create SVG for the lower curl
     const svgString = `
       <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" width="1920" height="80">
         <path d="M0,60 Q180,100 360,60 T720,60 T1080,60 T1440,60 L1440,120 L0,120 Z" fill="#1a237e" opacity="0.4" />
