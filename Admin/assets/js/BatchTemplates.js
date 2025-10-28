@@ -2498,7 +2498,6 @@ async function captureAllYearbookPages(
             );
             capturedPages.push(canvas);
             captureCount++;
-            // Report progress
             if (onPageProgress) {
               onPageProgress(captureCount, approxTotalCaptures);
             }
