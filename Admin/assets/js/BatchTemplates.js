@@ -2865,7 +2865,6 @@ async function capturePage(iframeDoc) {
       console.log("Navigation controls hidden");
     }
 
-    // Check if html2canvas is available
     if (typeof html2canvas === "undefined") {
       console.error("html2canvas is not defined!");
       return null;
