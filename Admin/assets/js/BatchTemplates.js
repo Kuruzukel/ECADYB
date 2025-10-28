@@ -2969,7 +2969,6 @@ function loadImage(url) {
   });
 }
 
-// Helper function to draw the lower curl SVG
 async function drawLowerCurl(ctx, width, height) {
   try {
     // Create SVG for the lower curl
