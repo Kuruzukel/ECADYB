@@ -2686,7 +2686,6 @@ async function waitForYearbookInit(iframeWindow, iframeDoc) {
         }
       }
 
-      // Check for JavaScript errors
       if (
         !hasLoggedJSError &&
         iframeWindow.console &&
