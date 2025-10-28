@@ -2828,7 +2828,6 @@ async function navigateToPage(iframeWindow, pageNum) {
       return false;
     }
 
-    // Check if page exists
     const totalPages = iframeWindow.$(".magazine").turn("pages");
     if (pageNum < 1 || pageNum > totalPages) {
       console.error(`Page ${pageNum} is out of range (1-${totalPages})`);
