@@ -2610,7 +2610,6 @@ async function captureAllYearbookPages(
     iframe.src = yearbookUrl;
     console.log("Iframe src set, waiting for load event...");
 
-    // Add a check to see if the page loads but onload doesn't fire
     setTimeout(() => {
       if (!iframeLoadFired) {
         console.warn(
