@@ -2925,7 +2925,6 @@ async function capturePage(iframeDoc) {
     console.log("Drawing lower curl...");
     await drawLowerCurl(ctx, 1920, 1080);
 
-    // Restore navigation controls
     if (navControls && originalNavDisplay !== null) {
       navControls.style.display = originalNavDisplay;
       console.log("Navigation controls restored");
