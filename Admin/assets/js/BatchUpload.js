@@ -257,7 +257,6 @@ async function refreshParentAcademicYearFilter() {
       );
       console.log("📋 Available years:", data.academicYears.join(", "));
 
-      // Store updated years in localStorage for other pages
       localStorage.setItem(
         "cachedAcademicYears",
         JSON.stringify(data.academicYears)
