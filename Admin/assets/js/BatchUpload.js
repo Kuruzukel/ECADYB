@@ -238,7 +238,6 @@ async function refreshParentAcademicYearFilter() {
 
       filterToUpdate.appendChild(firstOption);
 
-      // Add updated academic year options
       data.academicYears.forEach((year) => {
         const option = document.createElement("option");
         option.value = year;
