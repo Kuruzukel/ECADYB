@@ -304,7 +304,6 @@ function closeNotification(id) {
       notificationTimeout = null;
       currentOperation = null;
 
-      // Only refresh if a CSV upload was successful (not photo uploads)
       console.log(
         "🔔 Notification closed. shouldRefreshAfterNotification:",
         shouldRefreshAfterNotification
@@ -838,8 +837,6 @@ window.addEventListener("DOMContentLoaded", () => {
                 "script[data-notification]"
               );
               if (notificationScript) {
-                // Mark that we should refresh after this notification closes
-                // since CSV upload affects academic year data
                 console.log(
                   "📝 CSV upload detected - marking for filter refresh"
                 );
