@@ -95,7 +95,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 
     $plainPassword = generateRandomPassword(8);
-    $hashedPassword = password_hash($plainPassword, PASSWORD_DEFAULT);
 
     $student = [
         "first name" => trim($_POST["first_name"]),
@@ -107,7 +106,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         "program" => $programKey,
         "section" => $section,
         "department section" => strtoupper($programKey) . ' - ' . strtoupper($section),
-        "password" => $hashedPassword,
+        "password" => $plainPassword,
         "status" => "Pending"
     ];
 

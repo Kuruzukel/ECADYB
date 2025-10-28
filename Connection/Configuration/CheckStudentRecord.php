@@ -89,3 +89,4 @@ try {
     echo "\n✗ ERROR: " . $e->getMessage() . "\n";
     exit(1);
 }
+

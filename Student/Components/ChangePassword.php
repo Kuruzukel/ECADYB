@@ -31,13 +31,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'student id' => $_SESSION['student_id']
             ]);
 
-            if ($student && isset($student['password']) && password_verify($currentPassword, $student['password'])) {
-                // Hash the new password
-                $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-
+            if ($student && isset($student['password']) && $student['password'] === $currentPassword) {
                 $collection->updateOne(
                     ['student id' => $_SESSION['student_id']],
-                    ['$set' => ['password' => $hashedPassword]]
+                    ['$set' => ['password' => $newPassword]]
                 );
 
                 $success_message = "Password changed successfully! Redirecting to login...";

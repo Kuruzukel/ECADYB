@@ -1059,6 +1059,11 @@ function submitStudentForm(studentId, event) {
     }
   }
 
+  const programHiddenEl = document.getElementById(`program-hidden${studentId}`);
+  if (programHiddenEl) {
+    fields["program"] = programHiddenEl.value.trim();
+  }
+
   const studentIdEl = document.getElementById(`student_id${studentId}`);
   if (studentIdEl) {
     fields["student id"] = studentIdEl.value.trim();

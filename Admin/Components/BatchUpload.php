@@ -141,7 +141,7 @@ function importCSVToDepartments($tmpName, $departmentsDB, $programMap, $dropColl
                 $record = array_combine($header, $row);
 
                 $plainPassword = generateRandomPassword(8);
-                $record['password'] = password_hash($plainPassword, PASSWORD_DEFAULT);
+                $record['password'] = $plainPassword;
 
                 if (!isset($record['status']) || empty($record['status'])) {
                     $record['status'] = 'Pending';

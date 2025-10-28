@@ -190,13 +190,12 @@ try {
 
         if (empty($studentPassword) && $studentObjectId) {
             $studentPassword = generateRandomPassword(8);
-            $hashedPassword = password_hash($studentPassword, PASSWORD_DEFAULT);
 
             try {
                 $updateCollection = $db->$selectedDepartment;
                 $result = $updateCollection->updateOne(
                     ['_id' => $studentObjectId],
-                    ['$set' => ['password' => $hashedPassword]]
+                    ['$set' => ['password' => $studentPassword]]
                 );
 
                 if ($result->getModifiedCount() > 0) {
@@ -217,7 +216,7 @@ try {
             'last_name' => $student['last name'] ?? '',
             'email' => $student['email'] ?? '',
             'academic_year' => $student['academic year'] ?? '',
-            'program' => $student['program'] ?? '',
+            'program' => $selectedDepartment,
             'section' => $student['section'] ?? '',
             'department_section' => $student['department section'] ?? $collections[$selectedDepartment],
             'motto' => $student['motto'] ?? '',
@@ -514,7 +513,7 @@ if ($isIncludedInDashboard && (strpos($_SERVER['HTTP_HOST'], 'localhost') !== fa
                                                                     <label
                                                                         for="program<?php echo $student['student_id']; ?>">Program:</label>
                                                                     <select id="program<?php echo $student['student_id']; ?>"
-                                                                        name="program" autocomplete="off">
+                                                                        name="program" autocomplete="off" disabled style="background-color: #555; cursor: not-allowed; opacity: 0.7;">
                                                                         <option value="" disabled>Select a program</option>
                                                                         <option value="bsme"
                                                                             <?php if (($student['program'] ?? '') == "bsme") echo "selected"; ?>>
@@ -547,6 +546,7 @@ if ($isIncludedInDashboard && (strpos($_SERVER['HTTP_HOST'], 'localhost') !== fa
                                                                             <?php if (($student['program'] ?? '') == "bse") echo "selected"; ?>>
                                                                             BS Entrepreneurship</option>
                                                                     </select>
+                                                                    <input type="hidden" id="program-hidden<?php echo $student['student_id']; ?>" name="program-hidden" value="<?php echo htmlspecialchars($student['program']); ?>">
 
                                                                     <label
                                                                         for="section<?php echo $student['student_id']; ?>">Section:</label>

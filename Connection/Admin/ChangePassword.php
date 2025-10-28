@@ -97,7 +97,7 @@ try {
         'username' => $username
     ]);
 
-    if (!$admin || !isset($admin['password']) || !password_verify($currentPassword, $admin['password'])) {
+    if (!$admin || !isset($admin['password']) || $admin['password'] !== $currentPassword) {
         ob_clean();
         echo json_encode([
             'success' => false,
@@ -106,13 +106,10 @@ try {
         exit();
     }
 
-    // Hash the new password
-    $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-
     // Update password
     $updateResult = $adminCollection->updateOne(
         ['username' => $username],
-        ['$set' => ['password' => $hashedPassword]]
+        ['$set' => ['password' => $newPassword]]
     );
 
     if ($updateResult->getModifiedCount() > 0) {

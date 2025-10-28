@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
             'username' => $studentId
         ]);
 
-        if ($admin && isset($admin['password']) && password_verify($password, $admin['password'])) {
+        if ($admin && isset($admin['password']) && $admin['password'] === $password) {
             $_SESSION['role']     = 'admin';
             $_SESSION['username'] = $studentId;
 
@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
                 ]
             ]);
 
-            if ($student && isset($student['password']) && password_verify($password, $student['password'])) {
+            if ($student && isset($student['password']) && $student['password'] === $password) {
                 $finalStudentId = $student['student id'] ?? $student['student_id'] ?? $studentId;
 
                 // Check if student ID is a placeholder value

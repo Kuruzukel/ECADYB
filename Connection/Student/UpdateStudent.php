@@ -58,6 +58,9 @@ $academicYear = $data['academic_year'] ?? '';
 unset($data['collection']);
 unset($data['academic_year']);
 
+$data['program'] = $collectionName;
+error_log("Enforcing program field to match collection: " . $collectionName);
+
 $dbName = "ECADYB";
 $db = $client->$dbName;
 
