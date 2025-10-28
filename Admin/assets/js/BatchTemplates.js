@@ -2742,7 +2742,6 @@ async function waitForYearbookInit(iframeWindow, iframeDoc) {
             console.log(
               `✅ Yearbook initialized successfully! Total pages: ${totalPages} (took ${elapsedTime}s)`
             );
-            // Extra wait to ensure all pages are ready
             setTimeout(() => resolve(), 2000); // 2 seconds
             return;
           } else {
