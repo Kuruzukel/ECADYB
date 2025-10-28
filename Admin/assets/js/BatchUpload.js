@@ -243,7 +243,6 @@ async function refreshParentAcademicYearFilter() {
         option.value = year;
         option.textContent = `Batch Year ${year}`;
 
-        // Re-select the previously selected year if it still exists
         if (year === currentlySelected) {
           option.selected = true;
         }
