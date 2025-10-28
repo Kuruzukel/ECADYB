@@ -2651,7 +2651,7 @@ async function captureAllYearbookPages(
 async function waitForYearbookInit(iframeWindow, iframeDoc) {
   return new Promise((resolve, reject) => {
     let attempts = 0;
-    const maxAttempts = 600; // Increased to 2 minutes (200ms * 600) for large departments
+    const maxAttempts = 600;
     const startTime = Date.now();
 
     // Check for errors in the iframe
