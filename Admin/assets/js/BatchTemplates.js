@@ -2905,7 +2905,6 @@ async function capturePage(iframeDoc) {
         removeContainer: true,
       });
       console.log("Drawing yearbook content at scale...");
-      // Draw the captured content scaled to fit our canvas
       ctx.drawImage(yearbookCanvas, 0, 0, 1920, 1080);
     } else {
       console.warn("Canvas element not found, capturing body instead");
