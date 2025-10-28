@@ -2840,7 +2840,6 @@ async function navigateToPage(iframeWindow, pageNum) {
       return false;
     }
 
-    // Navigate to page
     iframeWindow.$(".magazine").turn("page", pageNum);
     console.log(`Successfully navigated to page ${pageNum}`);
 
