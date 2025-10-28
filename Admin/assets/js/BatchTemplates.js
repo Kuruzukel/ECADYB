@@ -2604,7 +2604,7 @@ async function captureAllYearbookPages(
         document.body.removeChild(iframe);
       }
       reject(new Error(`Timeout loading yearbook for ${department} (300s)`));
-    }, 300000); // 5 minutes timeout
+    }, 300000);
 
     console.log(`Setting iframe src for ${department}:`, yearbookUrl);
     iframe.src = yearbookUrl;
