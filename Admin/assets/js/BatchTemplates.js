@@ -2469,7 +2469,6 @@ async function captureAllYearbookPages(
           console.error("Failed to navigate to front cover, skipping...");
         }
 
-        // Capture spreads starting from page 2 (increment by 2 to avoid duplicates)
         for (let pageNum = 2; pageNum < totalPages; pageNum += 2) {
           console.log(
             `\n>>> Capturing spread at page ${pageNum} (pages ${pageNum}-${
