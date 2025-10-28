@@ -2890,7 +2890,6 @@ async function capturePage(iframeDoc) {
       ctx.fillRect(0, 0, 1920, 1080);
     }
 
-    // Step 2: Capture the yearbook content at higher resolution
     console.log("Capturing yearbook content...");
     const canvas = iframeDoc.querySelector("#canvas");
     if (canvas) {
