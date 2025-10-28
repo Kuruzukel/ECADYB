@@ -2870,7 +2870,6 @@ async function capturePage(iframeDoc) {
       return null;
     }
 
-    // Create a canvas with exact fullscreen dimensions
     const finalCanvas = document.createElement("canvas");
     finalCanvas.width = 1920;
     finalCanvas.height = 1080;
