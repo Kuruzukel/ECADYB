@@ -3053,7 +3053,6 @@ function updateDownloadPdfButtonStates() {
       const isSelected = section.classList.contains("selected");
 
       if (isAvailable && isSelected) {
-        // Enable button ONLY for green AND selected batches
         downloadPdfBtn.disabled = false;
         downloadPdfBtn.style.opacity = "1";
         downloadPdfBtn.style.cursor = "pointer";
