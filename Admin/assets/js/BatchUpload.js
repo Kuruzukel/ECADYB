@@ -213,7 +213,6 @@ async function refreshParentAcademicYearFilter() {
       return;
     }
 
-    // Store the currently selected value
     const currentlySelected = filterToUpdate.value;
     console.log("Currently selected academic year:", currentlySelected);
 
