@@ -3029,7 +3029,6 @@ function updateDepartmentCount() {
     countElement.textContent = count;
   }
 
-  // Enable/disable download button based on selection
   if (confirmBtn) {
     if (count === 0) {
       confirmBtn.disabled = true;
