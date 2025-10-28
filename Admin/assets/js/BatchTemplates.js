@@ -2704,7 +2704,6 @@ async function waitForYearbookInit(iframeWindow, iframeDoc) {
           console.log(
             `⏳ Waiting for jQuery... (${elapsedTime}s elapsed, attempt ${attempts}/${maxAttempts})`
           );
-          // Log what scripts are loaded
           const scripts = iframeDoc.querySelectorAll("script[src]");
           console.log(`   - Scripts found in iframe: ${scripts.length}`);
         }
