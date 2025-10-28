@@ -2979,7 +2979,6 @@ async function drawLowerCurl(ctx, width, height) {
       </svg>
     `;
 
-    // Convert SVG to image
     const svgBlob = new Blob([svgString], {
       type: "image/svg+xml;charset=utf-8",
     });
