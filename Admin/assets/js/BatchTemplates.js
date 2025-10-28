@@ -2486,7 +2486,6 @@ async function captureAllYearbookPages(
 
           console.log(`Navigated to page ${pageNum}`);
 
-          // Wait for page to render (increased wait time for better rendering)
           console.log("Waiting for page to render (2000ms)...");
           await new Promise((resolve) => setTimeout(resolve, 2000));
           console.log("Page should be rendered now");
