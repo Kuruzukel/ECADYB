@@ -2953,7 +2953,6 @@ async function capturePage(iframeDoc) {
   }
 }
 
-// Helper function to load an image
 function loadImage(url) {
   return new Promise((resolve) => {
     const img = new Image();
