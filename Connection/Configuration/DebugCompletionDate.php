@@ -30,7 +30,6 @@ try {
 
     $studentAcademicYear = $_SESSION['academic_year'] ?? '';
 
-    // Format batch year
     $batchYear = $studentAcademicYear;
     if (!empty($batchYear) && strpos($batchYear, 'Batch Year') === false) {
         $batchYear = 'Batch Year ' . $batchYear;
