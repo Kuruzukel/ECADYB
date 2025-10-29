@@ -18,20 +18,30 @@ try {
 
     switch ($action) {
         case 'ping':
-            // Update last activity for current user
+            // Update last activity for current user (student or admin)
             if (isset($_SESSION['student_id'])) {
                 updateSessionActivity($client, $_SESSION['student_id']);
                 echo json_encode(['success' => true, 'message' => 'Session updated']);
+            } elseif (isset($_SESSION['username']) && isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
+                // Handle admin session
+                $adminId = 'admin_' . $_SESSION['username'];
+                updateSessionActivity($client, $adminId);
+                echo json_encode(['success' => true, 'message' => 'Admin session updated']);
             } else {
                 echo json_encode(['success' => false, 'message' => 'No active session']);
             }
             break;
 
         case 'logout':
-            // Remove session when user logs out
+            // Remove session when user logs out (student or admin)
             if (isset($_SESSION['student_id'])) {
                 removeActiveSession($client, $_SESSION['student_id']);
                 echo json_encode(['success' => true, 'message' => 'Session removed']);
+            } elseif (isset($_SESSION['username']) && isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
+                // Handle admin session
+                $adminId = 'admin_' . $_SESSION['username'];
+                removeActiveSession($client, $adminId);
+                echo json_encode(['success' => true, 'message' => 'Admin session removed']);
             }
             break;
 

@@ -61,6 +61,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $client !== null) {
                 $_SESSION['login_success'] = 'admin';
                 $_SESSION['redirect_to'] = '../../Admin/Components/AdminDashboard.php';
 
+                // Create JWT session token and track active session for admin
+                require_once __DIR__ . '/../../Connection/Configuration/JWTConfig.php';
+                $sessionData = [
+                    'student_id' => 'admin_' . $username, // Prefix with admin_ to distinguish from students
+                    'name' => $admin['name'] ?? $username,
+                    'department' => 'Administration',
+                    'academic_year' => '',
+                    'role' => 'admin'
+                ];
+                $jwtToken = generateSessionToken('admin_' . $username, 'admin', $sessionData);
+                $_SESSION['jwt_token'] = $jwtToken;
+
+                // Store active session in MongoDB
+                storeActiveSession($client, $sessionData);
+
                 header('Location: ' . BASE_URL . 'Admin');
                 exit();
             } else {

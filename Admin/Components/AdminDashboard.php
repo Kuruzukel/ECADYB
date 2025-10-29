@@ -453,6 +453,7 @@ if (isset($_SESSION['username']) && !empty($_SESSION['username'])) {
             </div>
 
     </main>
+    <script src="<?= $basePath ?>/Admin/assets/js/SessionTracker.js?v=<?php echo microtime(true); ?>"></script>
     <script src="<?= $basePath ?>/Admin/assets/js/AdminDashboard.js?v=<?php echo microtime(true); ?>"></script>
 
     <?php
