@@ -23,7 +23,6 @@ try {
     echo "CHECKING SPECIFIC STUDENT\n";
     echo "=================================================\n\n";
 
-    // Check Ysabelle Villanueva
     $studentId = '2022-667900';
     $collection = $db->bsn;
 
