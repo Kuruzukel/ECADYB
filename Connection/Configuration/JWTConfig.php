@@ -64,9 +64,6 @@ function storeActiveSession($client, $sessionData)
     }
 }
 
-/**
- * Update session activity timestamp
- */
 function updateSessionActivity($client, $studentId)
 {
     try {
