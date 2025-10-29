@@ -27,7 +27,6 @@ try {
 
     echo "Searching for student ID: $studentId\n\n";
 
-    // List all collections in the database
     echo "Available collections in ECADYB database:\n";
     $collections = $db->listCollections();
 
