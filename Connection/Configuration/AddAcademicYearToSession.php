@@ -29,7 +29,6 @@ try {
     echo "Student ID: $studentId\n";
     echo "Academic Year to add: $academicYear\n\n";
 
-    // Get the active_sessions collection (note: case matters!)
     $sessionsCollection = $db->active_sessions;
 
     // Check if session exists
