@@ -149,19 +149,8 @@ try {
     if (function_exists('fastcgi_finish_request')) fastcgi_finish_request();
 
     $sendGridApiKey = getenv('SENDGRID_API_KEY') ?: ($_ENV['SENDGRID_API_KEY'] ?? null);
-
-    if (!$sendGridApiKey) {
-        error_log("✗ SendGrid API key not configured");
-        return;
-    }
-
     $fromEmail = getenv('SMTP_FROM_EMAIL') ?: ($_ENV['SMTP_FROM_EMAIL'] ?? 'admain.ecadyb@gmail.com');
     $fromName = getenv('SMTP_FROM_NAME') ?: ($_ENV['SMTP_FROM_NAME'] ?? 'Graduation Gallery');
-
-    $emailContent = new \SendGrid\Mail\Mail();
-    $emailContent->setFrom($fromEmail, $fromName);
-    $emailContent->setSubject("Password Reset Verification Code - Exact Colleges of Asia");
-    $emailContent->addTo($email);
 
     $htmlContent = "
     <html>
@@ -203,15 +192,59 @@ try {
     </html>
     ";
 
-    $emailContent->addContent("text/html", $htmlContent);
+    // Try SendGrid first (for Railway), fallback to PHPMailer (for localhost)
+    $emailSent = false;
 
-    $sendgrid = new \SendGrid($sendGridApiKey);
+    if ($sendGridApiKey && $sendGridApiKey !== 'your-sendgrid-api-key-here') {
+        try {
+            $emailContent = new \SendGrid\Mail\Mail();
+            $emailContent->setFrom($fromEmail, $fromName);
+            $emailContent->setSubject("Password Reset Verification Code - Exact Colleges of Asia");
+            $emailContent->addTo($email);
+            $emailContent->addContent("text/html", $htmlContent);
 
-    try {
-        $response = $sendgrid->send($emailContent);
-        error_log("✓ SendGrid email sent successfully to: $email (Status: " . $response->statusCode() . ")");
-    } catch (Exception $e) {
-        error_log("✗ SendGrid error: " . $e->getMessage());
+            $sendgrid = new \SendGrid($sendGridApiKey);
+            $response = $sendgrid->send($emailContent);
+            
+            if ($response->statusCode() >= 200 && $response->statusCode() < 300) {
+                error_log("✓ SendGrid email sent successfully to: $email (Status: " . $response->statusCode() . ")");
+                $emailSent = true;
+            }
+        } catch (Exception $e) {
+            error_log("✗ SendGrid error: " . $e->getMessage());
+        }
+    }
+
+    // Fallback to PHPMailer (Gmail SMTP) if SendGrid fails or not configured
+    if (!$emailSent) {
+        try {
+            require_once __DIR__ . '/../Configuration/EmailConfig.php';
+            
+            $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+            $mail->isSMTP();
+            $mail->Host = GMAIL_SMTP_HOST;
+            $mail->SMTPAuth = true;
+            $mail->Username = GMAIL_USERNAME;
+            $mail->Password = GMAIL_APP_PASSWORD;
+            $mail->SMTPSecure = GMAIL_SMTP_ENCRYPTION;
+            $mail->Port = GMAIL_SMTP_PORT;
+            
+            $mail->setFrom($fromEmail, $fromName);
+            $mail->addAddress($email);
+            $mail->isHTML(true);
+            $mail->Subject = "Password Reset Verification Code - Exact Colleges of Asia";
+            $mail->Body = $htmlContent;
+            
+            $mail->send();
+            error_log("✓ PHPMailer (Gmail) email sent successfully to: $email");
+            $emailSent = true;
+        } catch (Exception $e) {
+            error_log("✗ PHPMailer error: " . $e->getMessage());
+        }
+    }
+
+    if (!$emailSent) {
+        error_log("✗ Failed to send email using both SendGrid and PHPMailer");
     }
 } catch (Exception $e) {
     error_log("SendOTP error: " . $e->getMessage());

@@ -120,7 +120,7 @@ function validateEmail() {
 
 async function checkEmailExists(email) {
   try {
-    const response = await fetch("/Connection/Student/CheckEmail.php", {
+    const response = await fetch("Connection/Student/CheckEmail.php", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -215,7 +215,7 @@ async function handleGetCode() {
   try {
     // Check if email exists in database
     const emailCheckResponse = await fetch(
-      "/Connection/Student/CheckEmail.php",
+      "Connection/Student/CheckEmail.php",
       {
         method: "POST",
         headers: {
@@ -245,7 +245,7 @@ async function handleGetCode() {
     getCodeText.textContent = "Sending...";
 
     // Generate and send OTP (using SendGrid for Railway compatibility)
-    const otpResponse = await fetch("/Connection/Student/SendOTPSendGrid.php", {
+    const otpResponse = await fetch("Connection/Student/SendOTPSendGrid.php", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -302,7 +302,7 @@ async function handleGetCode() {
     } else {
       showNotification(
         otpResult.message ||
-          "Failed to send verification code. Please try again.",
+        "Failed to send verification code. Please try again.",
         "error"
       );
       resetGetCodeButton();
@@ -398,7 +398,7 @@ async function handleFormSubmission() {
 
   try {
     // Submit the form with verification
-    const response = await fetch("/Connection/Student/ForgotPassword.php", {
+    const response = await fetch("Connection/Student/ForgotPassword.php", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -489,8 +489,8 @@ function showNotification(message, type) {
   const autoHideDelay = message.includes("verification code is:")
     ? 15000
     : type === "success"
-    ? 5000
-    : 4000;
+      ? 5000
+      : 4000;
   setTimeout(() => {
     closeNotification(`${type}-message`);
   }, autoHideDelay);
