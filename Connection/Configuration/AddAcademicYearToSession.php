@@ -1,9 +1,5 @@
 <?php
 
-/**
- * Add Academic Year to Active Session
- */
-
 require __DIR__ . '/../../vendor/autoload.php';
 
 use MongoDB\Client;
