@@ -45,7 +45,22 @@ BUNNY_ACCESS_KEY=your_access_key_here
 BUNNY_CDN_HOST=https://your-cdn.b-cdn.net
 ```
 
-#### Optional - Email (for password reset feature)
+#### Required - Email (for password reset feature)
+
+**Option A: SendGrid (Recommended for Railway - SMTP ports are blocked)**
+
+```
+SENDGRID_API_KEY=SG.your_sendgrid_api_key_here
+SMTP_FROM_EMAIL=your_email@gmail.com
+SMTP_FROM_NAME=Exact Colleges of Asia - Graduation Gallery
+```
+
+Get your SendGrid API key:
+1. Go to https://app.sendgrid.com/settings/api_keys
+2. Create API Key with "Mail Send" permission
+3. Copy and paste the key as `SENDGRID_API_KEY`
+
+**Option B: Gmail SMTP (Works on localhost only)**
 
 ```
 SMTP_HOST=smtp.gmail.com
@@ -53,9 +68,11 @@ SMTP_PORT=587
 SMTP_USERNAME=your_email@gmail.com
 SMTP_PASSWORD=your_app_specific_password
 SMTP_FROM_EMAIL=your_email@gmail.com
-SMTP_FROM_NAME=Graduation Gallery
+SMTP_FROM_NAME=Exact Colleges of Asia - Graduation Gallery
 SMTP_ENCRYPTION=tls
 ```
+
+Note: Railway blocks SMTP ports, so Gmail SMTP won't work on Railway. Use SendGrid instead.
 
 ### Step 4: Deploy
 
@@ -195,12 +212,16 @@ php -S localhost:8000
 | `BUNNY_STORAGE_ZONE`         | File storage zone   | ✅ Yes (for uploads) |
 | `BUNNY_ACCESS_KEY`           | CDN access key      | ✅ Yes (for uploads) |
 | `BUNNY_CDN_HOST`             | CDN host URL        | ✅ Yes (for uploads) |
-| `SMTP_HOST`                  | Email server        | ⚠️ Optional          |
-| `SMTP_PORT`                  | Email port          | ⚠️ Optional          |
-| `SMTP_USERNAME`              | Email username      | ⚠️ Optional          |
-| `SMTP_PASSWORD`              | Email password      | ⚠️ Optional          |
-| `SMTP_FROM_EMAIL`            | Sender email        | ⚠️ Optional          |
-| `SMTP_FROM_NAME`             | Sender name         | ⚠️ Optional          |
-| `SMTP_ENCRYPTION`            | TLS or SSL          | ⚠️ Optional          |
+| `SENDGRID_API_KEY`           | SendGrid API key    | ✅ Yes (for Railway) |
+| `SMTP_FROM_EMAIL`            | Sender email        | ✅ Yes (for email)   |
+| `SMTP_FROM_NAME`             | Sender name         | ✅ Yes (for email)   |
+| `SMTP_HOST`                  | Email server        | ⚠️ Optional (localhost) |
+| `SMTP_PORT`                  | Email port          | ⚠️ Optional (localhost) |
+| `SMTP_USERNAME`              | Email username      | ⚠️ Optional (localhost) |
+| `SMTP_PASSWORD`              | Email password      | ⚠️ Optional (localhost) |
+| `SMTP_ENCRYPTION`            | TLS or SSL          | ⚠️ Optional (localhost) |
 
-**Note:** Without SMTP variables, password reset won't work, but everything else will function normally.
+**Note:** 
+- On Railway: Use `SENDGRID_API_KEY` (SMTP ports are blocked)
+- On localhost: Can use either SendGrid or Gmail SMTP
+- Without email configuration, password reset won't work, but everything else will function normally.
