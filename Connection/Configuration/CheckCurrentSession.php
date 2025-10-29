@@ -1,9 +1,5 @@
 <?php
 
-/**
- * Check Current Session Data
- */
-
 session_start();
 
 echo "=================================================\n";
