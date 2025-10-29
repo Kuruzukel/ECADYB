@@ -82,9 +82,6 @@ function updateSessionActivity($client, $studentId)
     }
 }
 
-/**
- * Remove active session
- */
 function removeActiveSession($client, $studentId)
 {
     try {
