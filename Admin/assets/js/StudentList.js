@@ -565,7 +565,6 @@ function initializeFilters() {
   const academicYearFilter = document.getElementById("academic-year-filter");
 
   if (academicYearFilter) {
-    // Check if academic years were recently updated (from CSV upload)
     checkAndRefreshAcademicYearFilter();
 
     academicYearFilter.addEventListener("change", function () {
