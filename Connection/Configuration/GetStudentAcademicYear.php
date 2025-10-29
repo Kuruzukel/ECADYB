@@ -124,7 +124,6 @@ try {
 
         echo "\n=================================================\n";
 
-        // Show all fields for debugging
         echo "\nAll fields in student record:\n";
         foreach ($student as $key => $value) {
             if ($key !== '_id' && !is_object($value)) {
