@@ -25,7 +25,6 @@ try {
 
     $studentId = '2024-000000';
 
-    // Check in BSN collection (BS Nursing)
     $collection = $db->bsn;
 
     echo "Looking for student ID: $studentId in BSN collection...\n\n";
