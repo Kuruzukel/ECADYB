@@ -109,7 +109,6 @@ try {
             if (isset($student['password']) && !empty($student['password'])) {
                 $currentPassword = $student['password'];
 
-                // Check if password is already hashed
                 if (strpos($currentPassword, '$2y$') === 0) {
                     $totalSkipped++;
                     continue; // Skip already hashed passwords (don't show message to reduce clutter)
