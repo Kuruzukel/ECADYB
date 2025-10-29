@@ -70,7 +70,6 @@ try {
         ]
     ]);
 
-    // If not found by ID, try by name
     if (!$student) {
         echo "⚠ Student not found by ID, trying by name...\n\n";
 
