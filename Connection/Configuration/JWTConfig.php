@@ -14,7 +14,7 @@ function generateSessionToken($studentId, $role = 'student', $additionalData = [
     $expire = $issuedAt + JWT_SESSION_DURATION;
 
     $payload = [
-        'iss' => 'ECADYB',              // Issuer
+        'iss' => 'ECADYB',
         'iat' => $issuedAt,             // Issued at
         'exp' => $expire,               // Expiration
         'nbf' => $issuedAt,             // Not before
