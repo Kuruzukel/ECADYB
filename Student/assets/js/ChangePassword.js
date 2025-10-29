@@ -99,6 +99,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   if (successMessage && successMessage.classList.contains("show")) {
     setTimeout(() => {
+      const basePath = window.location.pathname.includes("/ECADYB/") ? "/ECADYB" : "";
       window.location.href = basePath + "/Login";
     }, 3000);
   }
