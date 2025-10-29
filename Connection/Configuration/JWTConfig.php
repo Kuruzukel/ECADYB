@@ -52,7 +52,6 @@ function storeActiveSession($client, $sessionData)
             'student_id' => $sessionData['student_id']
         ]);
 
-        // Insert new session
         $sessionData['last_activity'] = new MongoDB\BSON\UTCDateTime();
         $sessionData['created_at'] = new MongoDB\BSON\UTCDateTime();
 
