@@ -55,7 +55,6 @@ try {
 
     $collection = $db->$collectionName;
 
-    // Parse name
     $nameParts = explode(' ', $studentName);
     $firstName = $nameParts[0] ?? '';
     $lastName = end($nameParts);
