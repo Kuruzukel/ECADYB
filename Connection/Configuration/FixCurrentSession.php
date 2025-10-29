@@ -1,9 +1,5 @@
 <?php
 
-/**
- * Fix Current Session - Add academic_year manually
- */
-
 require __DIR__ . '/../../vendor/autoload.php';
 
 use MongoDB\Client;
@@ -78,4 +74,3 @@ try {
     echo "\n✗ ERROR: " . $e->getMessage() . "\n";
     exit(1);
 }
-
