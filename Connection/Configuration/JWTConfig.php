@@ -8,9 +8,6 @@ define('JWT_SECRET_KEY', getenv('JWT_SECRET') ?: 'your-secret-key-change-this-in
 define('JWT_ALGORITHM', 'HS256');
 define('JWT_SESSION_DURATION', 3600); // 1 hour
 
-/**
- * Generate JWT token for active session
- */
 function generateSessionToken($studentId, $role = 'student', $additionalData = [])
 {
     $issuedAt = time();
