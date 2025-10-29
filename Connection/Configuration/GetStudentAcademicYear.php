@@ -108,7 +108,6 @@ try {
         echo "  department section: " . ($student['department section'] ?? 'NOT SET') . "\n";
         echo "\n";
 
-        // ACADEMIC YEAR - The key field
         $academicYear = $student['academic year'] ?? $student['academic_year'] ?? null;
 
         echo "🎓 ACADEMIC YEAR:\n";
