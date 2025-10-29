@@ -1,9 +1,5 @@
 <?php
 
-/**
- * Get Student Academic Year from Department Collection
- */
-
 require __DIR__ . '/../../vendor/autoload.php';
 
 use MongoDB\Client;
