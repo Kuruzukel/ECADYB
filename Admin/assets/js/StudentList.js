@@ -529,7 +529,6 @@ async function checkAndRefreshAcademicYearFilter() {
         const currentlySelected = academicYearFilter.value;
         const years = JSON.parse(cachedYears);
 
-        // Store first option
         const firstOption = academicYearFilter.options[0].cloneNode(true);
 
         // Clear and rebuild
