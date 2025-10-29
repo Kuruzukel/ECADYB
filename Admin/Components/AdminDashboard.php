@@ -30,6 +30,28 @@ if (isset($_SESSION['username']) && !empty($_SESSION['username'])) {
             $adminProfileImage = $adminData['profile'] ?? 'https://ECADYB.b-cdn.net/img/Profile.png';
 
             error_log("Admin profile fetched: " . $adminName . " | Email: " . $adminEmail);
+            
+            // Ensure admin session is tracked in active_sessions
+            require_once __DIR__ . '/../../Connection/Configuration/JWTConfig.php';
+            $adminId = 'admin_' . $_SESSION['username'];
+            
+            // Check if session exists
+            $db = $mongoClient->ECADYB;
+            $sessionsCollection = $db->active_sessions;
+            $existingSession = $sessionsCollection->findOne(['student_id' => $adminId]);
+            
+            if (!$existingSession) {
+                // Create session if it doesn't exist
+                $sessionData = [
+                    'student_id' => $adminId,
+                    'name' => $adminName,
+                    'department' => 'Administration',
+                    'academic_year' => '',
+                    'role' => 'admin'
+                ];
+                storeActiveSession($mongoClient, $sessionData);
+                error_log("✓ Admin session created on dashboard load for: " . $_SESSION['username']);
+            }
         } else {
             error_log("No admin found for username: " . $_SESSION['username']);
         }
@@ -222,6 +244,22 @@ if (isset($_SESSION['username']) && !empty($_SESSION['username'])) {
                 }
             }
         })();
+    </script>
+
+    <script>
+        // Admin session data for debugging
+        window.adminData = {
+            username: <?php echo json_encode($_SESSION['username'] ?? 'Not set'); ?>,
+            role: <?php echo json_encode($_SESSION['role'] ?? 'Not set'); ?>,
+            adminName: <?php echo json_encode($adminName); ?>,
+            adminEmail: <?php echo json_encode($adminEmail); ?>,
+            sessionId: <?php echo json_encode('admin_' . ($_SESSION['username'] ?? 'unknown')); ?>
+        };
+
+        console.log('Admin Data Loaded:', window.adminData);
+        console.log('Session Username:', '<?php echo $_SESSION['username'] ?? "Not set"; ?>');
+        console.log('Session Role:', '<?php echo $_SESSION['role'] ?? "Not set"; ?>');
+        console.log('Admin Found:', <?php echo isset($_SESSION['username']) ? 'true' : 'false'; ?>);
     </script>
 </head>
 

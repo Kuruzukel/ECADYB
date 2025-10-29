@@ -1,6 +1,25 @@
 <?php
+require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../../Connection/Configuration/EnvLoader.php';
+require_once __DIR__ . '/../../Connection/Configuration/JWTConfig.php';
+
+use MongoDB\Client;
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
+}
+
+// Remove active session from database before destroying session
+if (isset($_SESSION['username']) && isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
+    try {
+        $client = new Client(getMongoUrl());
+        $adminId = 'admin_' . $_SESSION['username'];
+        
+        removeActiveSession($client, $adminId);
+        error_log("✓ Admin session removed on logout: " . $adminId);
+    } catch (Exception $e) {
+        error_log("✗ Failed to remove admin session on logout: " . $e->getMessage());
+    }
 }
 
 $_SESSION = array();
