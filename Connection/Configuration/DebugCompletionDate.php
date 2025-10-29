@@ -41,7 +41,6 @@ try {
 
     $coversCollection = $client->ECADYB->Yearbook_Covers;
 
-    // Find documents
     $cursor = $coversCollection->find(
         [
             'batch_year' => $batchYear,
