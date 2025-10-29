@@ -77,7 +77,6 @@ try {
     } else {
         echo "⚠ No changes made. The session might already have this academic year.\n";
 
-        // Show current value
         $currentSession = $sessionsCollection->findOne(['student_id' => $studentId]);
         if (isset($currentSession['academic_year'])) {
             echo "Current academic_year value: " . $currentSession['academic_year'] . "\n";
