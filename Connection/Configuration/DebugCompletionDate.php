@@ -75,7 +75,7 @@ try {
             echo "  ✗ No completion_date field\n";
         }
         echo "\n";
-        break; // Just show first document
+        break;
     }
 
     if (!$found) {
