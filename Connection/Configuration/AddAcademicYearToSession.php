@@ -45,7 +45,6 @@ try {
     echo "  Department: " . ($existingSession['department'] ?? 'NOT SET') . "\n";
     echo "  Current academic_year: " . ($existingSession['academic_year'] ?? '❌ NOT SET') . "\n\n";
 
-    // Update the session with academic year
     $result = $sessionsCollection->updateMany(
         ['student_id' => $studentId],
         ['$set' => ['academic_year' => $academicYear]]
