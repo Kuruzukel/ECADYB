@@ -48,7 +48,6 @@ try {
         die("ERROR: Student record doesn't have academic year!\n");
     }
 
-    // Update active session
     $sessionsCollection = $client->ECADYB->Active_Sessions;
 
     $result = $sessionsCollection->updateMany(
