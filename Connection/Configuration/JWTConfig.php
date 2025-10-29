@@ -48,7 +48,6 @@ function storeActiveSession($client, $sessionData)
         $db = $client->ECADYB;
         $sessionsCollection = $db->active_sessions;
 
-        // Remove old session for this user
         $sessionsCollection->deleteMany([
             'student_id' => $sessionData['student_id']
         ]);
