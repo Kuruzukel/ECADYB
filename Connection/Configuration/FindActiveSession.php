@@ -35,7 +35,6 @@ try {
         $collName = $collection->getName();
         echo "  - $collName\n";
 
-        // Check if it's a session-related collection
         if (stripos($collName, 'session') !== false || stripos($collName, 'active') !== false) {
             $sessionCollections[] = $collName;
         }
