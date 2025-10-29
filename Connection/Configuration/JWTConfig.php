@@ -4,7 +4,6 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
-// JWT Secret Key - In production, store this in .env
 define('JWT_SECRET_KEY', getenv('JWT_SECRET') ?: 'your-secret-key-change-this-in-production-2024');
 define('JWT_ALGORITHM', 'HS256');
 define('JWT_SESSION_DURATION', 3600); // 1 hour
