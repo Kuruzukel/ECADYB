@@ -1,9 +1,5 @@
 <?php
 
-/**
- * Find Active Session - Check all possible collection names
- */
-
 require __DIR__ . '/../../vendor/autoload.php';
 
 use MongoDB\Client;
