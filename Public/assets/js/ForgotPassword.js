@@ -79,7 +79,14 @@ function setupEventListeners() {
   if (backButton) {
     backButton.addEventListener("click", function (e) {
       e.preventDefault();
-      window.location.href = "/login";
+
+      // Auto-detect base URL for Railway vs Localhost
+      const isLocalhost =
+        window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1";
+      const BASE_URL = isLocalhost ? "/ECADYB/" : "/";
+
+      window.location.href = BASE_URL + "login";
     });
   }
 }
@@ -422,9 +429,15 @@ async function handleFormSubmission() {
         "success"
       );
 
+      // Auto-detect base URL for Railway vs Localhost
+      const isLocalhost =
+        window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1";
+      const BASE_URL = isLocalhost ? "/ECADYB/" : "/";
+
       // Redirect to login after 3 seconds
       setTimeout(() => {
-        window.location.href = "/login";
+        window.location.href = BASE_URL + "login";
       }, 3000);
     } else {
       showNotification(

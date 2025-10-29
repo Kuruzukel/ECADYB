@@ -111,17 +111,14 @@ try {
     $otpCollection->deleteOne(['email' => $email]);
     error_log("OTP verified successfully for email: $email");
 
-    require_once __DIR__ . '/../../vendor/autoload.php';
-    require_once __DIR__ . '/../Configuration/EnvLoader.php';
-    $client = new Client(getMongoUrl());
-
+    // Reuse existing MongoDB client
     $user = null;
     $userCollection = null;
     $isAdmin = false;
 
     try {
-        $adminDB = $client->admin;
-        $adminCollection = $adminDB->accounts;
+        $adminDB = $client->selectDatabase('admin');
+        $adminCollection = $adminDB->selectCollection('accounts');
 
         $user = $adminCollection->findOne(['email' => $email]);
 
