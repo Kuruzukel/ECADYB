@@ -96,12 +96,43 @@ try {
         $otp = str_pad(mt_rand(100000, 999999), 6, '0', STR_PAD_LEFT);
     }
 
+    // Store OTP in MongoDB instead of session (for Railway compatibility)
+    try {
+        $mongoClient = $GLOBALS['mongoClient'] ?? null;
+        if (!$mongoClient) {
+            require_once __DIR__ . '/../../vendor/autoload.php';
+            require_once __DIR__ . '/../Configuration/EnvLoader.php';
+            $mongoClient = new \MongoDB\Client(getMongoUrl());
+        }
+
+        $otpDB = $mongoClient->selectDatabase('ECADYB');
+        $otpCollection = $otpDB->selectCollection('otp_codes');
+
+        // Delete any existing OTP for this email
+        $otpCollection->deleteOne(['email' => $email]);
+
+        // Insert new OTP
+        $otpCollection->insertOne([
+            'email' => $email,
+            'code' => $otp,
+            'expires' => time() + 600, // 10 minutes expiry
+            'attempts' => 0,
+            'created_at' => new \MongoDB\BSON\UTCDateTime()
+        ]);
+
+        error_log("OTP stored in MongoDB for email: $email");
+    } catch (Exception $e) {
+        error_log("Failed to store OTP in MongoDB: " . $e->getMessage());
+        // Continue anyway, we'll still send the email
+    }
+
+    // Also store in session as fallback for local development
     if (session_status() == PHP_SESSION_NONE) {
         session_start();
     }
     $_SESSION['otp_' . $email] = [
         'code' => $otp,
-        'expires' => time() + 60,
+        'expires' => time() + 600,
         'attempts' => 0
     ];
 
@@ -157,7 +188,7 @@ try {
                 <div class='otp-code'>$otp</div>
                 <p><strong>Important:</strong></p>
                 <ul>
-                    <li>This code will expire in 60 seconds</li>
+                    <li>This code will expire in 10 minutes</li>
                     <li>Do not share this code with anyone</li>
                     <li>If you didn't request this reset, please ignore this email</li>
                 </ul>

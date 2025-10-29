@@ -1,0 +1,39 @@
+<?php
+/**
+ * Cleanup script to remove expired OTP codes from MongoDB
+ * This can be run manually or as a cron job
+ */
+
+require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../Configuration/EnvLoader.php';
+
+use MongoDB\Client;
+
+try {
+    $client = new Client(getMongoUrl());
+    $otpDB = $client->selectDatabase('ECADYB');
+    $otpCollection = $otpDB->selectCollection('otp_codes');
+    
+    $currentTime = time();
+    
+    // Delete all expired OTPs
+    $result = $otpCollection->deleteMany([
+        'expires' => ['$lt' => $currentTime]
+    ]);
+    
+    $deletedCount = $result->getDeletedCount();
+    echo json_encode([
+        'success' => true,
+        'message' => "Cleanup completed. Deleted $deletedCount expired OTP(s).",
+        'deleted_count' => $deletedCount
+    ]);
+    
+    error_log("OTP Cleanup: Deleted $deletedCount expired OTP codes");
+} catch (Exception $e) {
+    error_log("OTP Cleanup Error: " . $e->getMessage());
+    echo json_encode([
+        'success' => false,
+        'message' => 'Cleanup failed: ' . $e->getMessage()
+    ]);
+}
+

@@ -1,6 +1,8 @@
 <?php
-error_reporting(0);
+// Enable error logging for debugging (logs to Railway)
+error_reporting(E_ALL);
 ini_set('display_errors', 0);
+ini_set('log_errors', 1);
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
@@ -16,14 +18,17 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-require_once '../../vendor/autoload.php';
+try {
+    require_once __DIR__ . '/../../vendor/autoload.php';
+    require_once __DIR__ . '/../Configuration/EnvLoader.php';
+} catch (Exception $e) {
+    error_log("Failed to load dependencies: " . $e->getMessage());
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Server configuration error']);
+    exit;
+}
 
 use MongoDB\Client;
-
-// Start session to access stored OTP
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
 
 try {
     $input = json_decode(file_get_contents('php://input'), true);
@@ -49,44 +54,62 @@ try {
         exit;
     }
 
-    // Verify OTP from session
-    $otpKey = 'otp_' . $email;
-    if (!isset($_SESSION[$otpKey])) {
+    // Connect to MongoDB to verify OTP (instead of using sessions which don't work well on Railway)
+    $client = new Client(getMongoUrl());
+    $otpDB = $client->selectDatabase('ECADYB');
+    $otpCollection = $otpDB->selectCollection('otp_codes');
+
+    // Find the OTP record for this email
+    $otpRecord = $otpCollection->findOne(['email' => $email]);
+
+    if (!$otpRecord) {
+        error_log("No OTP found for email: $email");
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'No verification code found. Please request a new code.']);
         exit;
     }
 
-    $storedOtpData = $_SESSION[$otpKey];
-    
     // Check if OTP has expired
-    if (time() > $storedOtpData['expires']) {
-        unset($_SESSION[$otpKey]);
+    $currentTime = time();
+    if ($currentTime > $otpRecord['expires']) {
+        error_log("OTP expired for email: $email");
+        // Delete expired OTP
+        $otpCollection->deleteOne(['email' => $email]);
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'Verification code has expired. Please request a new code.']);
         exit;
     }
 
     // Verify the OTP matches
-    if ($storedOtpData['code'] !== $verificationCode) {
+    if ($otpRecord['code'] !== $verificationCode) {
+        error_log("Invalid OTP for email: $email. Expected: {$otpRecord['code']}, Got: $verificationCode");
+        
         // Increment attempt counter
-        $_SESSION[$otpKey]['attempts']++;
+        $attempts = ($otpRecord['attempts'] ?? 0) + 1;
         
         // Block after too many attempts
-        if ($_SESSION[$otpKey]['attempts'] >= 3) {
-            unset($_SESSION[$otpKey]);
+        if ($attempts >= 3) {
+            error_log("Too many attempts for email: $email");
+            $otpCollection->deleteOne(['email' => $email]);
             http_response_code(400);
             echo json_encode(['success' => false, 'message' => 'Too many incorrect attempts. Please request a new code.']);
             exit;
         }
+        
+        // Update attempt counter
+        $otpCollection->updateOne(
+            ['email' => $email],
+            ['$set' => ['attempts' => $attempts]]
+        );
         
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'Invalid verification code. Please try again.']);
         exit;
     }
 
-    // OTP is valid, clear it from session
-    unset($_SESSION[$otpKey]);
+    // OTP is valid, delete it from database
+    $otpCollection->deleteOne(['email' => $email]);
+    error_log("OTP verified successfully for email: $email");
 
     require_once __DIR__ . '/../../vendor/autoload.php';
     require_once __DIR__ . '/../Configuration/EnvLoader.php';
