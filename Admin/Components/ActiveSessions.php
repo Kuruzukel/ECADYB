@@ -390,7 +390,6 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
 
         refreshSessions();
 
-        // Auto-refresh every 30 seconds
         setInterval(refreshSessions, 30000);
     </script>
 </body>
