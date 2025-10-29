@@ -23,7 +23,6 @@ try {
     echo "GET STUDENT ACADEMIC YEAR FROM COLLECTION\n";
     echo "=================================================\n\n";
 
-    // Session data
     $studentId = '2024-000000';
     $studentName = 'Kel D. Cruz';
     $department = 'BS Nursing';
