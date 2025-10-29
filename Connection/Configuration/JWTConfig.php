@@ -99,22 +99,17 @@ function removeActiveSession($client, $studentId)
     }
 }
 
-/**
- * Get all active sessions (for admin dashboard)
- */
 function getActiveSessions($client)
 {
     try {
         $db = $client->ECADYB;
         $sessionsCollection = $db->active_sessions;
 
-        // Remove sessions inactive for more than 1 hour
         $oneHourAgo = new MongoDB\BSON\UTCDateTime((time() - JWT_SESSION_DURATION) * 1000);
         $sessionsCollection->deleteMany([
             'last_activity' => ['$lt' => $oneHourAgo]
         ]);
 
-        // Get remaining active sessions
         $sessions = $sessionsCollection->find([], [
             'sort' => ['last_activity' => -1]
         ]);
@@ -126,9 +121,6 @@ function getActiveSessions($client)
     }
 }
 
-/**
- * Clean up expired sessions
- */
 function cleanupExpiredSessions($client)
 {
     try {
