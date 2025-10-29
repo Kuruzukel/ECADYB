@@ -1,9 +1,5 @@
 <?php
 
-/**
- * Check Student Record in Database
- */
-
 require __DIR__ . '/../../vendor/autoload.php';
 
 use MongoDB\Client;
@@ -89,4 +85,3 @@ try {
     echo "\n✗ ERROR: " . $e->getMessage() . "\n";
     exit(1);
 }
-
