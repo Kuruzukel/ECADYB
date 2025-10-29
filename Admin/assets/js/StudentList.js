@@ -531,7 +531,6 @@ async function checkAndRefreshAcademicYearFilter() {
 
         const firstOption = academicYearFilter.options[0].cloneNode(true);
 
-        // Clear and rebuild
         academicYearFilter.innerHTML = "";
         academicYearFilter.appendChild(firstOption);
 
