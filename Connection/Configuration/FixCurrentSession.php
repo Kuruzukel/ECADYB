@@ -24,7 +24,6 @@ try {
 
     $studentId = '2024-000000';
 
-    // Get student's academic year from database
     $db = $client->ECADYB;
     $collection = $db->bsn;
 
