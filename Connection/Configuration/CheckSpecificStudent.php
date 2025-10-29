@@ -47,7 +47,6 @@ try {
         echo "  academic year: " . ($student['academic year'] ?? 'NOT SET') . "\n";
         echo "  status: " . ($student['status'] ?? 'NOT SET') . "\n\n";
 
-        // Check if password is hashed
         $password = $student['password'] ?? '';
         if (strpos($password, '$2y$') === 0) {
             echo "❌ PASSWORD IS STILL HASHED!\n";
