@@ -77,7 +77,6 @@ try {
     echo "\n  Summary: {$adminUpdated} out of {$adminCount} admin passwords hashed\n\n";
 
     // ========================================
-    // ========================================
     echo "2. Processing STUDENT collections...\n";
     echo "-------------------------------------------------\n";
 
