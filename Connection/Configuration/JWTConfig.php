@@ -42,9 +42,6 @@ function verifySessionToken($token)
     }
 }
 
-/**
- * Store active session in MongoDB
- */
 function storeActiveSession($client, $sessionData)
 {
     try {
