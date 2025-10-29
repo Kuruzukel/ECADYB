@@ -57,7 +57,6 @@ try {
     if ($result->getModifiedCount() > 0) {
         echo "✓ SUCCESS! Academic year has been added to the active session.\n\n";
 
-        // Verify the update
         $updatedSession = $sessionsCollection->findOne(['student_id' => $studentId]);
 
         echo "Updated Session Data:\n";
