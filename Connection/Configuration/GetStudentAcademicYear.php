@@ -139,7 +139,6 @@ try {
         echo "  2. The student is in a different department\n";
         echo "  3. The student record hasn't been created yet\n\n";
 
-        // Try searching in all collections
         echo "Searching in all collections...\n\n";
 
         foreach ($departmentMapping as $deptName => $collName) {
