@@ -514,7 +514,6 @@ async function checkAndRefreshAcademicYearFilter() {
     const lastUpdated = localStorage.getItem("academicYearsLastUpdated");
     const cachedYears = localStorage.getItem("cachedAcademicYears");
 
-    // If updated within last 10 seconds, refresh the filter
     if (lastUpdated && cachedYears) {
       const timeSinceUpdate = Date.now() - parseInt(lastUpdated);
       if (timeSinceUpdate < 10000) {
