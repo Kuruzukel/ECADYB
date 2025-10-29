@@ -19,7 +19,7 @@ if (session_status() == PHP_SESSION_NONE) {
 $adminProfile = null;
 $adminName = 'Admin';
 $adminEmail = 'admin@ecadyb.edu.ph';
-$adminProfileImage = 'https://ECADYB.b-cdn.net/img/Profile.png'; // Default profile image
+$adminProfileImage = 'https://ECADYB.b-cdn.net/img/Profile.png';
 
 if (isset($_SESSION['username']) && !empty($_SESSION['username'])) {
     try {
