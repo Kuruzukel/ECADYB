@@ -198,9 +198,8 @@ function generateRandomPassword($length = 8)
 
 function sendPasswordEmail($email, $password)
 {
-    $to = $email;
     $subject = "Your New Password - ECADYB";
-    $message = "
+    $htmlContent = "
     <html>
     <head>
         <title>Password Reset - ECADYB</title>
@@ -246,29 +245,60 @@ function sendPasswordEmail($email, $password)
     </body>
     </html>";
 
-    require_once __DIR__ . '/../Configuration/EmailConfig.php';
+    $sendGridApiKey = getenv('SENDGRID_API_KEY') ?: ($_ENV['SENDGRID_API_KEY'] ?? null);
+    $fromEmail = getenv('SMTP_FROM_EMAIL') ?: ($_ENV['SMTP_FROM_EMAIL'] ?? 'admain.ecadyb@gmail.com');
+    $fromName = getenv('SMTP_FROM_NAME') ?: ($_ENV['SMTP_FROM_NAME'] ?? 'Exact Colleges of Asia - Graduation Gallery');
 
-    $mail = new PHPMailer(true);
+    $emailSent = false;
 
-    try {
-        $mail->isSMTP();
-        $mail->Host       = GMAIL_SMTP_HOST;
-        $mail->SMTPAuth   = true;
-        $mail->Username   = GMAIL_USERNAME;
-        $mail->Password   = GMAIL_APP_PASSWORD;
-        $mail->SMTPSecure = GMAIL_SMTP_ENCRYPTION;
-        $mail->Port       = GMAIL_SMTP_PORT;
+    // Try SendGrid first (for Railway)
+    if ($sendGridApiKey && $sendGridApiKey !== 'your-sendgrid-api-key-here') {
+        try {
+            $emailContent = new \SendGrid\Mail\Mail();
+            $emailContent->setFrom($fromEmail, $fromName);
+            $emailContent->setSubject($subject);
+            $emailContent->addTo($email);
+            $emailContent->addContent("text/html", $htmlContent);
 
-        $mail->setFrom(EMAIL_FROM_ADDRESS, EMAIL_FROM_NAME);
-        $mail->addAddress($to);
-        $mail->isHTML(true);
-        $mail->Subject = $subject;
-        $mail->Body    = $message;
-
-        $mail->send();
-        return true;
-    } catch (Exception $e) {
-        error_log("PHPMailer Error (Password Reset): {$mail->ErrorInfo}");
-        return false;
+            $sendgrid = new \SendGrid($sendGridApiKey);
+            $response = $sendgrid->send($emailContent);
+            
+            if ($response->statusCode() >= 200 && $response->statusCode() < 300) {
+                error_log("✓ SendGrid password reset email sent to: $email");
+                $emailSent = true;
+            }
+        } catch (Exception $e) {
+            error_log("✗ SendGrid error (password reset): " . $e->getMessage());
+        }
     }
+
+    // Fallback to PHPMailer (Gmail SMTP) for localhost
+    if (!$emailSent) {
+        try {
+            require_once __DIR__ . '/../Configuration/EmailConfig.php';
+            
+            $mail = new PHPMailer(true);
+            $mail->isSMTP();
+            $mail->Host = GMAIL_SMTP_HOST;
+            $mail->SMTPAuth = true;
+            $mail->Username = GMAIL_USERNAME;
+            $mail->Password = GMAIL_APP_PASSWORD;
+            $mail->SMTPSecure = GMAIL_SMTP_ENCRYPTION;
+            $mail->Port = GMAIL_SMTP_PORT;
+
+            $mail->setFrom($fromEmail, $fromName);
+            $mail->addAddress($email);
+            $mail->isHTML(true);
+            $mail->Subject = $subject;
+            $mail->Body = $htmlContent;
+
+            $mail->send();
+            error_log("✓ PHPMailer password reset email sent to: $email");
+            $emailSent = true;
+        } catch (Exception $e) {
+            error_log("✗ PHPMailer error (password reset): " . $e->getMessage());
+        }
+    }
+
+    return $emailSent;
 }
