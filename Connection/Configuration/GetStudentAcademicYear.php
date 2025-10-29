@@ -32,7 +32,6 @@ try {
     echo "  Name: $studentName\n";
     echo "  Department: $department\n\n";
 
-    // Map department to collection name
     $departmentMapping = [
         'BS Nursing' => 'bsn',
         'BS Marine Engineering' => 'bsme',
