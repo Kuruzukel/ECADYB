@@ -63,7 +63,6 @@ try {
     echo "  First name: $firstName\n";
     echo "  Last name: $lastName\n\n";
 
-    // Search by student ID first
     $student = $collection->findOne([
         '$or' => [
             ['student id' => $studentId],
