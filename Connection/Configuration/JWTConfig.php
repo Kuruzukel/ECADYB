@@ -31,9 +31,6 @@ function generateSessionToken($studentId, $role = 'student', $additionalData = [
     return JWT::encode($payload, JWT_SECRET_KEY, JWT_ALGORITHM);
 }
 
-/**
- * Verify and decode JWT token
- */
 function verifySessionToken($token)
 {
     try {
