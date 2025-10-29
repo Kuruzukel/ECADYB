@@ -392,7 +392,7 @@ async function handleFormSubmission() {
   try {
     // Submit the form with verification
     const response = await fetch(
-      "../../Connection/Student/ForgotPassword.php",
+      "/Connection/Student/ForgotPassword.php",
       {
         method: "POST",
         headers: {
@@ -405,7 +405,19 @@ async function handleFormSubmission() {
       }
     );
 
-    const result = await response.json();
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Server error response:", errorText);
+      throw new Error(`Server error: ${response.status}`);
+    }
+
+    let result;
+    try {
+      result = await response.json();
+    } catch (jsonError) {
+      console.error("JSON parse error:", jsonError);
+      throw new Error("Invalid server response. Please try again.");
+    }
 
     if (result.success) {
       showNotification(
@@ -427,10 +439,10 @@ async function handleFormSubmission() {
     }
   } catch (error) {
     console.error("Error:", error);
-    showNotification(
-      "Network error. Please check your connection and try again.",
-      "error"
-    );
+    const errorMessage = error.message && error.message.includes("Invalid server response") 
+      ? error.message 
+      : "Network error. Please check your connection and try again.";
+    showNotification(errorMessage, "error");
     submitButton.textContent = "Submit";
     submitButton.disabled = false;
   }

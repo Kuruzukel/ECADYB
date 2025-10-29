@@ -108,7 +108,8 @@ try {
     echo json_encode([
         'success' => true,
         'message' => 'Verification code is being sent to your email',
-        'email_sent' => true
+        'email_sent' => true,
+        'otp' => $otp
     ]);
 
     if (ob_get_level() > 0) ob_end_flush();

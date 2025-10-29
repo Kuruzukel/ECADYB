@@ -20,6 +20,11 @@ require_once '../../vendor/autoload.php';
 
 use MongoDB\Client;
 
+// Start session to access stored OTP
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
 try {
     $input = json_decode(file_get_contents('php://input'), true);
 
@@ -43,6 +48,45 @@ try {
         echo json_encode(['success' => false, 'message' => 'Invalid verification code format']);
         exit;
     }
+
+    // Verify OTP from session
+    $otpKey = 'otp_' . $email;
+    if (!isset($_SESSION[$otpKey])) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'message' => 'No verification code found. Please request a new code.']);
+        exit;
+    }
+
+    $storedOtpData = $_SESSION[$otpKey];
+    
+    // Check if OTP has expired
+    if (time() > $storedOtpData['expires']) {
+        unset($_SESSION[$otpKey]);
+        http_response_code(400);
+        echo json_encode(['success' => false, 'message' => 'Verification code has expired. Please request a new code.']);
+        exit;
+    }
+
+    // Verify the OTP matches
+    if ($storedOtpData['code'] !== $verificationCode) {
+        // Increment attempt counter
+        $_SESSION[$otpKey]['attempts']++;
+        
+        // Block after too many attempts
+        if ($_SESSION[$otpKey]['attempts'] >= 3) {
+            unset($_SESSION[$otpKey]);
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Too many incorrect attempts. Please request a new code.']);
+            exit;
+        }
+        
+        http_response_code(400);
+        echo json_encode(['success' => false, 'message' => 'Invalid verification code. Please try again.']);
+        exit;
+    }
+
+    // OTP is valid, clear it from session
+    unset($_SESSION[$otpKey]);
 
     require_once __DIR__ . '/../../vendor/autoload.php';
     require_once __DIR__ . '/../Configuration/EnvLoader.php';
