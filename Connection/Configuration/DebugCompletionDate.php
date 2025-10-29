@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Debug Completion Date Script
- * Check what's in the database and why the modal isn't showing
- */
-
 session_start();
 require __DIR__ . '/../../vendor/autoload.php';
 
