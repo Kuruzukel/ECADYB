@@ -63,8 +63,8 @@ try {
             require_once __DIR__ . '/../Configuration/EnvLoader.php';
             $mongoClient = new \MongoDB\Client(getMongoUrl());
         }
-        $adminDB = $mongoClient->admin;
-        $adminCollection = $adminDB->accounts;
+        $adminDB = $mongoClient->selectDatabase('admin');
+        $adminCollection = $adminDB->selectCollection('accounts');
         $user = $adminCollection->findOne(['email' => $email], $queryOptions);
     } catch (Exception $e) {
         error_log("Admin check error: " . $e->getMessage());
