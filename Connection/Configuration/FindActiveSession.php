@@ -49,7 +49,6 @@ try {
     echo "SEARCHING FOR STUDENT SESSION...\n";
     echo "=================================================\n\n";
 
-    // Try different possible collection names
     $possibleNames = [
         'Active_Sessions',
         'active_sessions',
