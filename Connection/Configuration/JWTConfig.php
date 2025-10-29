@@ -17,7 +17,7 @@ function generateSessionToken($studentId, $role = 'student', $additionalData = [
         'iss' => 'ECADYB',
         'iat' => $issuedAt,
         'exp' => $expire,
-        'nbf' => $issuedAt,             // Not before
+        'nbf' => $issuedAt,
         'jti' => bin2hex(random_bytes(16)), // Unique token ID
         'data' => array_merge([
             'student_id' => $studentId,
