@@ -517,7 +517,6 @@ async function checkAndRefreshAcademicYearFilter() {
     if (lastUpdated && cachedYears) {
       const timeSinceUpdate = Date.now() - parseInt(lastUpdated);
       if (timeSinceUpdate < 10000) {
-        // 10 seconds
         console.log(
           "🔄 Recent academic year update detected, refreshing filter..."
         );
