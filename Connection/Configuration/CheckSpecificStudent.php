@@ -52,7 +52,6 @@ try {
             echo "❌ PASSWORD IS STILL HASHED!\n";
             echo "   This password needs to be reset.\n\n";
 
-            // Generate new plain password
             $newPassword = bin2hex(random_bytes(4)); // Simple 8-char password
 
             echo "Would you like to reset this password? (This is just a check, no changes made)\n";
