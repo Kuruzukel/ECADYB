@@ -31,7 +31,6 @@ try {
 
     $sessionsCollection = $db->active_sessions;
 
-    // Check if session exists
     $existingSession = $sessionsCollection->findOne(['student_id' => $studentId]);
 
     if (!$existingSession) {
