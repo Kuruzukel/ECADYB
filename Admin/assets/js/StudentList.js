@@ -550,7 +550,6 @@ async function checkAndRefreshAcademicYearFilter() {
           "years"
         );
 
-        // Clear the flag after refreshing
         localStorage.removeItem("academicYearsLastUpdated");
       }
     }
