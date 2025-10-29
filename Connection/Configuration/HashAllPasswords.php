@@ -42,7 +42,6 @@ try {
         if (isset($admin['password']) && !empty($admin['password'])) {
             $currentPassword = $admin['password'];
 
-            // Check if password is already hashed (bcrypt hashes start with $2y$)
             if (strpos($currentPassword, '$2y$') === 0) {
                 echo "  ⊗ Admin '{$admin['username']}' - Password already hashed (skipped)\n";
                 $totalSkipped++;
