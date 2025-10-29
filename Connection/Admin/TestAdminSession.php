@@ -56,9 +56,8 @@ try {
         // Create session data
         $sessionData = [
             'student_id' => $adminId,
+            'username' => $_SESSION['username'],
             'name' => $admin['name'] ?? $_SESSION['username'],
-            'department' => 'Administration',
-            'academic_year' => '',
             'role' => 'admin'
         ];
         

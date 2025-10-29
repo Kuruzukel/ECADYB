@@ -44,9 +44,8 @@ if (isset($_SESSION['username']) && !empty($_SESSION['username'])) {
                 // Create session if it doesn't exist
                 $sessionData = [
                     'student_id' => $adminId,
+                    'username' => $_SESSION['username'],
                     'name' => $adminName,
-                    'department' => 'Administration',
-                    'academic_year' => '',
                     'role' => 'admin'
                 ];
                 storeActiveSession($mongoClient, $sessionData);
