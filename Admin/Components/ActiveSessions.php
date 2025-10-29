@@ -388,7 +388,6 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
       `).join('');
         }
 
-        // Load sessions on page load
         refreshSessions();
 
         // Auto-refresh every 30 seconds
