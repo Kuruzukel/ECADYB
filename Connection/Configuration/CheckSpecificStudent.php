@@ -1,9 +1,5 @@
 <?php
 
-/**
- * Check Specific Student Password
- */
-
 require __DIR__ . '/../../vendor/autoload.php';
 
 use MongoDB\Client;
