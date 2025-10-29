@@ -114,7 +114,6 @@ try {
                     continue;
                 }
 
-                // Hash the password
                 $hashedPassword = password_hash($currentPassword, PASSWORD_DEFAULT);
 
                 try {
