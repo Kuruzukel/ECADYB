@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Hash All Passwords Script
- * This script hashes all plain text passwords in the MongoDB database
- * Run this script ONCE to convert all passwords to hashed versions
- */
-
 require __DIR__ . '/../../vendor/autoload.php';
 
 use MongoDB\Client;
