@@ -21,13 +21,16 @@ try {
             // Update last activity for current user (student or admin)
             if (isset($_SESSION['student_id'])) {
                 updateSessionActivity($client, $_SESSION['student_id']);
+                error_log("✓ Student session ping: " . $_SESSION['student_id']);
                 echo json_encode(['success' => true, 'message' => 'Session updated']);
             } elseif (isset($_SESSION['username']) && isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
                 // Handle admin session
                 $adminId = 'admin_' . $_SESSION['username'];
                 updateSessionActivity($client, $adminId);
+                error_log("✓ Admin session ping: " . $adminId);
                 echo json_encode(['success' => true, 'message' => 'Admin session updated']);
             } else {
+                error_log("✗ Session ping failed - No active session. student_id: " . (isset($_SESSION['student_id']) ? $_SESSION['student_id'] : 'not set') . ", username: " . (isset($_SESSION['username']) ? $_SESSION['username'] : 'not set') . ", role: " . (isset($_SESSION['role']) ? $_SESSION['role'] : 'not set'));
                 echo json_encode(['success' => false, 'message' => 'No active session']);
             }
             break;
