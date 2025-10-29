@@ -23,7 +23,6 @@ try {
     echo "DEBUG COMPLETION DATE\n";
     echo "=================================================\n\n";
 
-    // Get current session info
     echo "SESSION INFO:\n";
     echo "  Student ID: " . ($_SESSION['student_id'] ?? 'NOT SET') . "\n";
     echo "  Academic Year: " . ($_SESSION['academic_year'] ?? 'NOT SET') . "\n";
