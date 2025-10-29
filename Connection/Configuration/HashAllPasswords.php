@@ -111,7 +111,7 @@ try {
 
                 if (strpos($currentPassword, '$2y$') === 0) {
                     $totalSkipped++;
-                    continue; // Skip already hashed passwords (don't show message to reduce clutter)
+                    continue;
                 }
 
                 // Hash the password
