@@ -104,7 +104,6 @@ try {
         echo "  → Collection: $collectionName\n";
 
         try {
-            // Look up student in their department collection
             $studentCollection = $db->$collectionName;
             $studentRecord = $studentCollection->findOne([
                 '$or' => [
