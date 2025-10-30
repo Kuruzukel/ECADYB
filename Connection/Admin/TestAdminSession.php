@@ -54,7 +54,6 @@ try {
             'role' => 'admin'
         ];
 
-        // Store session
         $result = storeActiveSession($client, $sessionData);
 
         if ($result) {
