@@ -80,7 +80,6 @@ try {
 
     $username = $_SESSION['username'];
 
-    // Verify current password
     $admin = $adminCollection->findOne([
         'username' => $username
     ]);
