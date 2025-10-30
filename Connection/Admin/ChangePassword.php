@@ -56,7 +56,6 @@ if ($newPassword !== $confirmPassword) {
     exit();
 }
 
-// Check password length (must be exactly 8 characters)
 if (strlen($newPassword) !== 8) {
     ob_clean();
     echo json_encode([
