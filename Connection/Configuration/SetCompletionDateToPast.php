@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Set Completion Date to Past (For Testing Expired State)
- * This script sets the completion_date to the past so you can test the PDF modal
- */
-
 require __DIR__ . '/../../vendor/autoload.php';
 
 use MongoDB\Client;
