@@ -149,7 +149,6 @@ try {
                         $totalErrors++;
                     }
                 } else {
-                    // Password is already plain text, skip
                     $totalSkipped++;
                 }
             }
