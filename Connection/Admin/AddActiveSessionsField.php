@@ -38,7 +38,6 @@ try {
         echo "<p style='color: green;'>✓ Successfully added active_sessions field to $count admin account(s)!</p>";
     }
 
-    // Verify the update
     $totalAccounts = $accountsCollection->countDocuments([]);
     $accountsWithField = $accountsCollection->countDocuments([
         'active_sessions' => ['$exists' => true]
