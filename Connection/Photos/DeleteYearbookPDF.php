@@ -18,7 +18,6 @@ try {
         throw new Exception('Invalid request method');
     }
 
-    // Get the PDF ID or department/batch_year
     $pdfId = $_POST['pdf_id'] ?? $_GET['pdf_id'] ?? '';
     $department = $_POST['department'] ?? $_GET['department'] ?? '';
     $batchYear = $_POST['batch_year'] ?? $_GET['batch_year'] ?? '';
