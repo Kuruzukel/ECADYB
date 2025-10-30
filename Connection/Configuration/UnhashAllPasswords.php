@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Unhash All Passwords Script
- * This script resets all hashed passwords to plain text passwords
- * Run this script ONCE after removing password hashing functionality
- */
-
 require __DIR__ . '/../../vendor/autoload.php';
 
 use MongoDB\Client;
