@@ -47,7 +47,6 @@ try {
         $adminCollection = $adminDB->selectCollection('accounts');
         $admin = $adminCollection->findOne(['username' => $_SESSION['username']]);
 
-        // Create session data
         $sessionData = [
             'student_id' => $adminId,
             'username' => $_SESSION['username'],
