@@ -78,7 +78,6 @@ try {
     require_once __DIR__ . '/../../vendor/autoload.php';
     require_once __DIR__ . '/../Configuration/MongoConnect.php';
 
-    // Get current admin username from session
     $username = $_SESSION['username'];
 
     // Verify current password
