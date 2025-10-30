@@ -201,31 +201,6 @@ if (track) {
 
   let currentIndex = 0;
   let isTransitioning = false;
-  let imagesLoaded = false;
-
-  function preloadImages() {
-    let loadedCount = 0;
-    const totalImages = carouselImages.length;
-
-    if (totalImages === 0) {
-      imagesLoaded = true;
-      return Promise.resolve();
-    }
-
-    return new Promise((resolve) => {
-      carouselImages.forEach((src) => {
-        const img = new Image();
-        img.onload = img.onerror = () => {
-          loadedCount++;
-          if (loadedCount === totalImages) {
-            imagesLoaded = true;
-            resolve();
-          }
-        };
-        img.src = src;
-      });
-    });
-  }
 
   function renderImages() {
     const images = [
@@ -312,31 +287,24 @@ if (track) {
     }
   });
 
+  renderImages();
+
   let autoSlideInterval = null;
 
   function startAutoSlide() {
-    if (autoSlideInterval) {
-      clearInterval(autoSlideInterval);
-    }
     autoSlideInterval = setInterval(() => {
       nextImage();
     }, 3000);
   }
 
   function stopAutoSlide() {
-    if (autoSlideInterval) {
-      clearInterval(autoSlideInterval);
-    }
+    clearInterval(autoSlideInterval);
   }
 
   track.addEventListener("mouseenter", stopAutoSlide);
   track.addEventListener("mouseleave", startAutoSlide);
 
-  // Initialize carousel after images are loaded
-  preloadImages().then(() => {
-    renderImages();
-    startAutoSlide();
-  });
+  startAutoSlide();
 }
 
 document.addEventListener("DOMContentLoaded", function () {
