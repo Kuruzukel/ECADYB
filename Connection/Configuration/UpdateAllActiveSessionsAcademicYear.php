@@ -81,7 +81,6 @@ try {
         echo "  Department: " . ($department ?? 'NOT SET') . "\n";
         echo "  Current academic_year: " . ($currentAcademicYear ? "✓ $currentAcademicYear" : "❌ NOT SET") . "\n";
 
-        // Skip admin sessions
         if (isset($session['role']) && $session['role'] === 'admin') {
             echo "  ⊝ Skipped (Admin session)\n\n";
             $skippedCount++;
