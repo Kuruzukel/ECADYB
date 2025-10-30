@@ -118,7 +118,6 @@ try {
                 continue;
             }
 
-            // Get academic year from student record
             $academicYear = $studentRecord['academic year'] ?? $studentRecord['academic_year'] ?? null;
 
             if (!$academicYear) {
