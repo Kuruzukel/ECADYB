@@ -63,7 +63,6 @@ try {
         if (isset($admin['password']) && !empty($admin['password'])) {
             $currentPassword = $admin['password'];
 
-            // Check if password is hashed (bcrypt hashes start with $2y$)
             if (strpos($currentPassword, '$2y$') === 0) {
                 // Generate a new plain text password
                 $plainPassword = generateRandomPassword(8);
