@@ -64,7 +64,6 @@ try {
             $currentPassword = $admin['password'];
 
             if (strpos($currentPassword, '$2y$') === 0) {
-                // Generate a new plain text password
                 $plainPassword = generateRandomPassword(8);
 
                 try {
