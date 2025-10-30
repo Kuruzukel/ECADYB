@@ -47,7 +47,6 @@ if (empty($currentPassword) || empty($newPassword) || empty($confirmPassword)) {
     exit();
 }
 
-// Check if new password and confirm password match
 if ($newPassword !== $confirmPassword) {
     ob_clean();
     echo json_encode([
