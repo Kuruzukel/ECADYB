@@ -128,7 +128,6 @@ try {
 
             echo "  → Found academic_year: $academicYear\n";
 
-            // Update the active session
             $updateResult = $sessionsCollection->updateOne(
                 ['_id' => $session['_id']],
                 ['$set' => ['academic_year' => $academicYear]]
