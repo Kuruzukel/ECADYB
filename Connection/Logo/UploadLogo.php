@@ -40,12 +40,22 @@ try {
         respond(false, 'Client disconnected');
     }
 
-    $bunnyStorageZone = getenv('BUNNY_STORAGE_ZONE') ?: (defined('BUNNY_STORAGE_ZONE') ? BUNNY_STORAGE_ZONE : ($GLOBALS['BUNNY_STORAGE_ZONE'] ?? 'ecadyb'));
-    $bunnyAccessKey = getenv('BUNNY_ACCESS_KEY') ?: (defined('BUNNY_ACCESS_KEY') ? BUNNY_ACCESS_KEY : ($GLOBALS['BUNNY_ACCESS_KEY'] ?? null));
-    $bunnyCdnHost = getenv('BUNNY_CDN_HOST') ?: (defined('BUNNY_CDN_HOST') ? BUNNY_CDN_HOST : ($GLOBALS['BUNNY_CDN_HOST'] ?? 'https://ECADYB.b-cdn.net'));
-
-    if (!$bunnyStorageZone || !$bunnyAccessKey || !$bunnyCdnHost) {
-        respond(false, 'Bunny configuration missing. Please check your environment variables.');
+    // Load Bunny config via EnvLoader for consistent behavior
+    require_once __DIR__ . '/../Configuration/EnvLoader.php';
+    try {
+        $bunnyCfg = getBunnyConfig();
+        $bunnyStorageZone = $bunnyCfg['storage_zone'];
+        $bunnyAccessKey = $bunnyCfg['access_key'];
+        $bunnyCdnHost = $bunnyCfg['cdn_host'];
+    } catch (Exception $e) {
+        // Return a structured error so frontend can display it
+        respond(false, 'Bunny CDN configuration incomplete', [
+            'missing' => [
+                'BUNNY_STORAGE_ZONE' => (bool) (getenv('BUNNY_STORAGE_ZONE') ?: ($_ENV['BUNNY_STORAGE_ZONE'] ?? null)),
+                'BUNNY_ACCESS_KEY' => (bool) (getenv('BUNNY_ACCESS_KEY') ?: ($_ENV['BUNNY_ACCESS_KEY'] ?? null)),
+                'BUNNY_CDN_HOST' => (bool) (getenv('BUNNY_CDN_HOST') ?: ($_ENV['BUNNY_CDN_HOST'] ?? null)),
+            ]
+        ]);
     }
 
     $slot = isset($_POST['slot']) ? (int)$_POST['slot'] : null;
