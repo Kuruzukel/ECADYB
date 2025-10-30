@@ -43,7 +43,6 @@ try {
     } else {
         echo "<p style='color: orange;'>⚠ Admin session NOT FOUND in database. Creating now...</p>";
 
-        // Get admin data
         $adminDB = $client->selectDatabase('admin');
         $adminCollection = $adminDB->selectCollection('accounts');
         $admin = $adminCollection->findOne(['username' => $_SESSION['username']]);
