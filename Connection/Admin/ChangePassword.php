@@ -93,7 +93,6 @@ try {
         exit();
     }
 
-    // Update password
     $updateResult = $adminCollection->updateOne(
         ['username' => $username],
         ['$set' => ['password' => $newPassword]]
