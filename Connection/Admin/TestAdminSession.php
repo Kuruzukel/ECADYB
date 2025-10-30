@@ -59,7 +59,6 @@ try {
         if ($result) {
             echo "<p style='color: green;'>✓ Admin session created successfully!</p>";
 
-            // Verify it was created
             $newSession = $sessionsCollection->findOne(['student_id' => $adminId]);
             if ($newSession) {
                 echo "<pre>";
