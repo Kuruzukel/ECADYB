@@ -93,7 +93,6 @@ try {
     echo "\nAdmin Summary: $adminUpdated updated, " . ($adminCount - $adminUpdated) . " skipped\n\n";
 
     // ========================================
-    // ========================================
     echo "2. Processing STUDENT collections...\n";
     echo "-------------------------------------------------\n";
 
