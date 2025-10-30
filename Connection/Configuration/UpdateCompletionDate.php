@@ -5,7 +5,6 @@ require __DIR__ . '/../../vendor/autoload.php';
 use MongoDB\Client;
 use MongoDB\BSON\UTCDateTime;
 
-// Load environment variables
 $dotenvPath = __DIR__ . '/../../';
 if (file_exists($dotenvPath . '.env')) {
     $dotenv = Dotenv\Dotenv::createImmutable($dotenvPath);
