@@ -12,7 +12,6 @@ use MongoDB\Client;
 
 echo "<h2>Admin Session Test</h2>";
 
-// Check current session
 echo "<h3>Current Session Data:</h3>";
 echo "<pre>";
 echo "Username: " . ($_SESSION['username'] ?? 'NOT SET') . "\n";
