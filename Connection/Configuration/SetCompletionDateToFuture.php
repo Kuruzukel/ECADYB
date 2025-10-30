@@ -25,7 +25,6 @@ try {
 
     $coversCollection = $client->ECADYB->Yearbook_Covers;
 
-    // Set completion date to 7 days from now
     $completionDate = new DateTime('now');
     $completionDate->modify('+7 days');
     $completionTimestamp = new UTCDateTime($completionDate->getTimestamp() * 1000);
