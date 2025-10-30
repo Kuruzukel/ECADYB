@@ -102,7 +102,6 @@ try {
         session_unset();
         session_destroy();
 
-        // Clear any buffered output before sending JSON
         ob_clean();
         echo json_encode([
             'success' => true,
