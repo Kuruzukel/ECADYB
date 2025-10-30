@@ -75,7 +75,6 @@ if ($currentPassword === $newPassword) {
 }
 
 try {
-    // Connect to MongoDB
     require_once __DIR__ . '/../../vendor/autoload.php';
     require_once __DIR__ . '/../Configuration/MongoConnect.php';
 
