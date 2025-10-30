@@ -34,7 +34,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
-// Get POST data
 $currentPassword = $_POST['currentPassword'] ?? '';
 $newPassword = $_POST['newPassword'] ?? '';
 $confirmPassword = $_POST['confirmPassword'] ?? '';
