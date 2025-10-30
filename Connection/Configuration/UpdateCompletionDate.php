@@ -11,7 +11,6 @@ if (file_exists($dotenvPath . '.env')) {
     $dotenv->load();
 }
 
-// Get MongoDB URL
 $mongoUrl = getenv('MONGO_URL') ?: $_ENV['MONGO_URL'] ?? getenv('MONGODB_URI') ?? $_ENV['MONGODB_URI'] ?? null;
 if (!$mongoUrl) {
     die("ERROR: MongoDB URL not configured.\n");
