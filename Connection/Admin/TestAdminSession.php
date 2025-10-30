@@ -33,7 +33,6 @@ try {
 
     echo "<h3>Checking Database:</h3>";
 
-    // Check if session exists
     $existingSession = $sessionsCollection->findOne(['student_id' => $adminId]);
 
     if ($existingSession) {
