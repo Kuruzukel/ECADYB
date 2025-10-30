@@ -15,7 +15,6 @@ if (!$mongoUrl) {
     die("ERROR: MongoDB URL not configured.\n");
 }
 
-// Department to collection mapping
 $departmentMapping = [
     'BS Nursing' => 'bsn',
     'BS Marine Engineering' => 'bsme',
