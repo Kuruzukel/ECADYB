@@ -65,7 +65,6 @@ if (strlen($newPassword) !== 8) {
     exit();
 }
 
-// Check if new password is the same as current password
 if ($currentPassword === $newPassword) {
     ob_clean();
     echo json_encode([
