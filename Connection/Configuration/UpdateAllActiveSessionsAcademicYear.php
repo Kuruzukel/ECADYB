@@ -4,7 +4,6 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 use MongoDB\Client;
 
-// Load environment variables
 $dotenvPath = __DIR__ . '/../../';
 if (file_exists($dotenvPath . '.env')) {
     $dotenv = Dotenv\Dotenv::createImmutable($dotenvPath);
