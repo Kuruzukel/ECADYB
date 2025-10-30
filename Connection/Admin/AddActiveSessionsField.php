@@ -15,7 +15,6 @@ try {
     $adminDB = $client->selectDatabase('admin');
     $accountsCollection = $adminDB->selectCollection('accounts');
 
-    // Find all accounts without active_sessions field
     $accountsWithoutField = $accountsCollection->find([
         'active_sessions' => ['$exists' => false]
     ]);
