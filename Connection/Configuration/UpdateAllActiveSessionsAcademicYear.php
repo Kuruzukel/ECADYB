@@ -26,7 +26,6 @@ $departmentMapping = [
     'BS Information System' => 'bsis',
     'BS Management Accounting' => 'bsma',
     'BS Entrepreneurship' => 'bse',
-    // Add variations
     'Nursing' => 'bsn',
     'Marine Engineering' => 'bsme',
     'Marine Transportation' => 'bsmt',
