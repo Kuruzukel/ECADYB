@@ -25,7 +25,6 @@ try {
     $pdfsCollection = $client->ECADYB->Yearbook_PDFs;
 
     if (!empty($pdfId)) {
-        // Delete by ID
         $result = $pdfsCollection->deleteOne([
             '_id' => new MongoDB\BSON\ObjectId($pdfId)
         ]);
