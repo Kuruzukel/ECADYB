@@ -38,7 +38,6 @@ $currentPassword = $_POST['currentPassword'] ?? '';
 $newPassword = $_POST['newPassword'] ?? '';
 $confirmPassword = $_POST['confirmPassword'] ?? '';
 
-// Validate inputs
 if (empty($currentPassword) || empty($newPassword) || empty($confirmPassword)) {
     ob_clean();
     echo json_encode([
