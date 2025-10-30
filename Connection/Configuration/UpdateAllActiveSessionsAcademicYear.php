@@ -49,7 +49,6 @@ try {
     echo "UPDATE ALL ACTIVE SESSIONS WITH ACADEMIC YEAR\n";
     echo "=================================================\n\n";
 
-    // Get all active sessions
     $allSessions = $sessionsCollection->find();
     $sessionCount = 0;
     $updatedCount = 0;
