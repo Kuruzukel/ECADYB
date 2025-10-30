@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Update Completion Date to 3 Minutes from Now
- * This script updates the completion_date for testing purposes
- */
-
 require __DIR__ . '/../../vendor/autoload.php';
 
 use MongoDB\Client;
