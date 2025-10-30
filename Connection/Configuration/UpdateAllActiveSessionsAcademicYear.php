@@ -87,7 +87,6 @@ try {
             continue;
         }
 
-        // Skip if already has academic year
         if (!empty($currentAcademicYear)) {
             echo "  ⊝ Skipped (Already has academic_year)\n\n";
             $skippedCount++;
