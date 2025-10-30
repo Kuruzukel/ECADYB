@@ -29,7 +29,6 @@ try {
             '_id' => new MongoDB\BSON\ObjectId($pdfId)
         ]);
     } elseif (!empty($department) && !empty($batchYear)) {
-        // Ensure batch year has "Batch Year" prefix
         if (strpos($batchYear, 'Batch Year') === false) {
             $batchYear = 'Batch Year ' . $batchYear;
         }
