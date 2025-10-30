@@ -99,7 +99,6 @@ try {
     );
 
     if ($updateResult->getModifiedCount() > 0) {
-        // Password changed successfully
         // Destroy session
         session_unset();
         session_destroy();
