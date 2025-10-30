@@ -125,7 +125,6 @@ try {
             if (isset($student['password']) && !empty($student['password'])) {
                 $currentPassword = $student['password'];
 
-                // Check if password is hashed
                 if (strpos($currentPassword, '$2y$') === 0) {
                     // Generate a new plain text password
                     $plainPassword = generateRandomPassword(8);
