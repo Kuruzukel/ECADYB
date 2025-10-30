@@ -24,7 +24,6 @@ try {
 
     $pdfsCollection = $client->ECADYB->Yearbook_PDFs;
 
-    // Build query
     if (!empty($pdfId)) {
         // Delete by ID
         $result = $pdfsCollection->deleteOne([
