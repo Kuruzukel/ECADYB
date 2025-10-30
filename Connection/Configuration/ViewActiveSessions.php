@@ -42,7 +42,6 @@ try {
         echo "  created_at: " . ($session['created_at'] ?? 'NOT SET') . "\n";
         echo "\n";
 
-        // Show ALL fields
         echo "  ALL FIELDS:\n";
         foreach ($session as $key => $value) {
             if ($key !== '_id') {
