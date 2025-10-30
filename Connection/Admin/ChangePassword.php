@@ -108,7 +108,6 @@ try {
             'message' => 'Password changed successfully. Redirecting to login...'
         ]);
     } else {
-        // Clear any buffered output before sending JSON
         ob_clean();
         echo json_encode([
             'success' => false,
