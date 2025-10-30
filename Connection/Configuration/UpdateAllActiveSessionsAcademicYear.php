@@ -93,7 +93,6 @@ try {
             continue;
         }
 
-        // Get collection name from department
         if (!$department || !isset($departmentMapping[$department])) {
             echo "  ✗ Error: Cannot map department to collection\n";
             echo "    Available mappings: " . implode(', ', array_keys($departmentMapping)) . "\n\n";
