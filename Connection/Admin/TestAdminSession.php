@@ -70,7 +70,6 @@ try {
         }
     }
 
-    // Show all active sessions
     echo "<h3>All Active Sessions:</h3>";
     $allSessions = $sessionsCollection->find([]);
     $count = 0;
