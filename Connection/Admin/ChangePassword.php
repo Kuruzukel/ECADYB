@@ -2,7 +2,6 @@
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
-// Start output buffering to catch any stray output
 ob_start();
 
 session_start();
