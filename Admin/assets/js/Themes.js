@@ -343,7 +343,14 @@ async function uploadLogoToBunny(file, slot, box, input, deleteBtn) {
       throw new Error(`HTTP ${res.status}: ${res.statusText}`);
     }
 
-    const data = await res.json();
+    let data;
+    const contentType = res.headers.get("content-type") || "";
+    if (contentType.includes("application/json")) {
+      data = await res.json();
+    } else {
+      const text = await res.text();
+      throw new Error(text || "Unexpected non-JSON response");
+    }
 
     if (!data?.success) {
       showNotification(data?.message || "Upload failed", "error");
@@ -680,7 +687,15 @@ window.addEventListener("DOMContentLoaded", () => {
         console.error(`HTTP ${res.status}: ${res.statusText}`);
       }
 
-      const data = await res.json();
+      let data;
+      const contentType = res.headers.get("content-type") || "";
+      if (contentType.includes("application/json")) {
+        data = await res.json();
+      } else {
+        const text = await res.text();
+        console.error("Delete non-JSON response:", text);
+        data = { success: false, message: text };
+      }
 
       if (!data?.success) {
         console.error(data?.message || "Delete failed");

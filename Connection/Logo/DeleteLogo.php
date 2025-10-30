@@ -33,10 +33,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 require __DIR__ . '/../../vendor/autoload.php';
 
-if (file_exists(__DIR__ . '/../Configuration/BunnyConfig.php')) {
-    require __DIR__ . '/../Configuration/BunnyConfig.php';
-}
-
 use MongoDB\Client;
 
 try {
@@ -47,10 +43,6 @@ try {
 
     require_once __DIR__ . '/../Configuration/EnvLoader.php';
     $mongoUrl = getMongoUrl();
-
-    if (file_exists(__DIR__ . '/../Configuration/BunnyConfig.php')) {
-        require __DIR__ . '/../Configuration/BunnyConfig.php';
-    }
 
     $bunnyStorageZone = getBunnyStorageZone();
     $bunnyAccessKey = getBunnyAccessKey();
