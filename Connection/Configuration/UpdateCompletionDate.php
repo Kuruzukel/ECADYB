@@ -25,7 +25,6 @@ try {
 
     $coversCollection = $client->ECADYB->Yearbook_Covers;
 
-    // Set specific completion date: October 27, 2025 at 11:26 PM
     $completionDate = new DateTime('2025-10-27 23:26:00');
     $completionTimestamp = new UTCDateTime($completionDate->getTimestamp() * 1000);
 
