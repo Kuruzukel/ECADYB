@@ -33,7 +33,6 @@ try {
             $batchYear = 'Batch Year ' . $batchYear;
         }
 
-        // Delete by department and batch year
         $result = $pdfsCollection->deleteOne([
             'department' => $department,
             'batch_year' => $batchYear
