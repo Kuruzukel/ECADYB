@@ -31,7 +31,6 @@ try {
     echo "Current time: " . (new DateTime())->format('Y-m-d H:i:s') . "\n";
     echo "New completion date: " . $completionDate->format('Y-m-d H:i:s') . "\n\n";
 
-    // Update all documents with batch_year "Batch Year 2024-2025" and template 1
     $result = $coversCollection->updateMany(
         [
             'batch_year' => 'Batch Year 2024-2025',
