@@ -44,12 +44,19 @@ try {
     require_once __DIR__ . '/../Configuration/EnvLoader.php';
     $mongoUrl = getMongoUrl();
 
-    $bunnyStorageZone = getBunnyStorageZone();
-    $bunnyAccessKey = getBunnyAccessKey();
-    $bunnyCdnHost = getBunnyCdnHost();
-
-    if (!$bunnyStorageZone || !$bunnyAccessKey || !$bunnyCdnHost) {
-        respond(false, 'Bunny CDN configuration incomplete');
+    try {
+        $bunnyCfg = getBunnyConfig();
+        $bunnyStorageZone = $bunnyCfg['storage_zone'];
+        $bunnyAccessKey = $bunnyCfg['access_key'];
+        $bunnyCdnHost = $bunnyCfg['cdn_host'];
+    } catch (Exception $e) {
+        respond(false, 'Bunny CDN configuration incomplete', [
+            'missing' => [
+                'BUNNY_STORAGE_ZONE' => (bool) (getenv('BUNNY_STORAGE_ZONE') ?: ($_ENV['BUNNY_STORAGE_ZONE'] ?? null)),
+                'BUNNY_ACCESS_KEY' => (bool) (getenv('BUNNY_ACCESS_KEY') ?: ($_ENV['BUNNY_ACCESS_KEY'] ?? null)),
+                'BUNNY_CDN_HOST' => (bool) (getenv('BUNNY_CDN_HOST') ?: ($_ENV['BUNNY_CDN_HOST'] ?? null)),
+            ]
+        ]);
     }
 
     try {
