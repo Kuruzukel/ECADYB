@@ -47,7 +47,6 @@ try {
     $totalSkipped = 0;
     $totalErrors = 0;
 
-    // ========================================
     echo "1. Processing ADMIN collection...\n";
     echo "-------------------------------------------------\n";
 
