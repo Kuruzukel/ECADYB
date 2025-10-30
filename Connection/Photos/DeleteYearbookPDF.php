@@ -22,7 +22,6 @@ try {
     $department = $_POST['department'] ?? $_GET['department'] ?? '';
     $batchYear = $_POST['batch_year'] ?? $_GET['batch_year'] ?? '';
 
-    // Get the yearbook PDFs collection
     $pdfsCollection = $client->ECADYB->Yearbook_PDFs;
 
     // Build query
