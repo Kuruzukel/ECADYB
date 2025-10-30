@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Set Completion Date to Future (For Normal Operation)
- * This script sets the completion_date to the future for normal yearbook access
- */
-
 require __DIR__ . '/../../vendor/autoload.php';
 
 use MongoDB\Client;
