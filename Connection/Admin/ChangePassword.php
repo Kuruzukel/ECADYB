@@ -25,7 +25,6 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     exit();
 }
 
-// Validate request method
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     ob_clean();
     echo json_encode([
