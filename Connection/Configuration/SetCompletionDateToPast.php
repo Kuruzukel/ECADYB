@@ -25,7 +25,6 @@ try {
 
     $coversCollection = $client->ECADYB->Yearbook_Covers;
 
-    // Set completion date to 1 hour ago
     $completionDate = new DateTime('now');
     $completionDate->modify('-1 hour');
     $completionTimestamp = new UTCDateTime($completionDate->getTimestamp() * 1000);
