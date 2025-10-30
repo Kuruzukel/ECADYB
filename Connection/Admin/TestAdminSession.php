@@ -1,7 +1,4 @@
 <?php
-/**
- * Test script to check and manually create admin session
- */
 
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
@@ -32,14 +29,14 @@ try {
     $client = new Client(getMongoUrl());
     $db = $client->ECADYB;
     $sessionsCollection = $db->active_sessions;
-    
+
     $adminId = 'admin_' . $_SESSION['username'];
-    
+
     echo "<h3>Checking Database:</h3>";
-    
+
     // Check if session exists
     $existingSession = $sessionsCollection->findOne(['student_id' => $adminId]);
-    
+
     if ($existingSession) {
         echo "<p style='color: green;'>✓ Admin session EXISTS in database!</p>";
         echo "<pre>";
@@ -47,12 +44,12 @@ try {
         echo "</pre>";
     } else {
         echo "<p style='color: orange;'>⚠ Admin session NOT FOUND in database. Creating now...</p>";
-        
+
         // Get admin data
         $adminDB = $client->selectDatabase('admin');
         $adminCollection = $adminDB->selectCollection('accounts');
         $admin = $adminCollection->findOne(['username' => $_SESSION['username']]);
-        
+
         // Create session data
         $sessionData = [
             'student_id' => $adminId,
@@ -60,13 +57,13 @@ try {
             'name' => $admin['name'] ?? $_SESSION['username'],
             'role' => 'admin'
         ];
-        
+
         // Store session
         $result = storeActiveSession($client, $sessionData);
-        
+
         if ($result) {
             echo "<p style='color: green;'>✓ Admin session created successfully!</p>";
-            
+
             // Verify it was created
             $newSession = $sessionsCollection->findOne(['student_id' => $adminId]);
             if ($newSession) {
@@ -78,7 +75,7 @@ try {
             echo "<p style='color: red;'>❌ Failed to create admin session!</p>";
         }
     }
-    
+
     // Show all active sessions
     echo "<h3>All Active Sessions:</h3>";
     $allSessions = $sessionsCollection->find([]);
@@ -94,13 +91,11 @@ try {
         echo "Last Activity: " . (isset($session['last_activity']) ? date('Y-m-d H:i:s', $session['last_activity']->toDateTime()->getTimestamp()) : 'N/A') . "<br>";
         echo "</div>";
     }
-    
+
     if ($count === 0) {
         echo "<p>No active sessions found.</p>";
     }
-    
 } catch (Exception $e) {
     echo "<p style='color: red;'>Error: " . $e->getMessage() . "</p>";
     error_log("TestAdminSession error: " . $e->getMessage());
 }
-?>
