@@ -1,14 +1,5 @@
 <?php
 
-/**
- * Update All Active Sessions with Academic Year
- * 
- * This script:
- * 1. Gets all active sessions
- * 2. For each session, looks up the student's academic year from their department collection
- * 3. Updates the active session with the academic_year field
- */
-
 require __DIR__ . '/../../vendor/autoload.php';
 
 use MongoDB\Client;
