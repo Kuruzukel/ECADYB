@@ -75,7 +75,6 @@ foreach ($programCollections as $collectionKey => $fullName) {
             continue;
         }
 
-        // Find all documents where program field doesn't match collection name
         $incorrectPrograms = $collection->find([
             '$or' => [
                 ['program' => ['$ne' => $collectionKey]],
