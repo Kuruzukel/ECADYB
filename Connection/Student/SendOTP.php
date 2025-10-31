@@ -270,7 +270,7 @@ try {
             $mail->isHTML(true);
             $mail->Subject = $subject;
             $mail->Body    = $message;
-            $mail->AltBody = strip_tags(str_replace(['<br>', '<br/>', '<br />'], "\n", $message)); // Plain text version
+            $mail->AltBody = strip_tags(str_replace(['<br>', '<br/>', '<br />'], "\n", $message));
             $mail->CharSet = 'UTF-8';
 
             $emailSent = false;
