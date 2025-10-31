@@ -125,7 +125,6 @@ try {
 
     error_log("DownloadYearbookPDF: Found PDF URL: $pdfUrl");
 
-    // If it's a CDN URL, redirect to it
     if (filter_var($pdfUrl, FILTER_VALIDATE_URL)) {
         // Set headers to force download
         header('Content-Type: application/pdf');
