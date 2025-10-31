@@ -96,7 +96,6 @@ try {
         $otp = str_pad(mt_rand(100000, 999999), 6, '0', STR_PAD_LEFT);
     }
 
-    // Store OTP in MongoDB instead of session (for Railway compatibility)
     try {
         $mongoClient = $GLOBALS['mongoClient'] ?? null;
         if (!$mongoClient) {
@@ -205,7 +204,7 @@ try {
 
             $sendgrid = new \SendGrid($sendGridApiKey);
             $response = $sendgrid->send($emailContent);
-            
+
             if ($response->statusCode() >= 200 && $response->statusCode() < 300) {
                 error_log("✓ SendGrid email sent successfully to: $email (Status: " . $response->statusCode() . ")");
                 $emailSent = true;
@@ -219,7 +218,7 @@ try {
     if (!$emailSent) {
         try {
             require_once __DIR__ . '/../Configuration/EmailConfig.php';
-            
+
             $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
             $mail->isSMTP();
             $mail->Host = GMAIL_SMTP_HOST;
@@ -228,13 +227,13 @@ try {
             $mail->Password = GMAIL_APP_PASSWORD;
             $mail->SMTPSecure = GMAIL_SMTP_ENCRYPTION;
             $mail->Port = GMAIL_SMTP_PORT;
-            
+
             $mail->setFrom($fromEmail, $fromName);
             $mail->addAddress($email);
             $mail->isHTML(true);
             $mail->Subject = "Password Reset Verification Code - Exact Colleges of Asia";
             $mail->Body = $htmlContent;
-            
+
             $mail->send();
             error_log("✓ PHPMailer (Gmail) email sent successfully to: $email");
             $emailSent = true;
