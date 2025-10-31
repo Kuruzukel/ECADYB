@@ -240,7 +240,6 @@ function sendPasswordEmail($email, $password)
 
     $emailSent = false;
 
-    // Try SendGrid first (for Railway)
     if ($sendGridApiKey && $sendGridApiKey !== 'your-sendgrid-api-key-here') {
         try {
             $emailContent = new \SendGrid\Mail\Mail();
