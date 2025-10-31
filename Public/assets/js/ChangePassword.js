@@ -11,7 +11,6 @@ const form = document.querySelector("form");
 window.addEventListener("DOMContentLoaded", () => {
   document.body.classList.add("page-transition-in");
 
-  // Enable submit button initially
   submitButton.disabled = false;
   submitButton.style.opacity = "1";
   submitButton.style.cursor = "pointer";
