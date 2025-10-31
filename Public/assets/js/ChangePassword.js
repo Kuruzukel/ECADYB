@@ -47,7 +47,6 @@ function setupEventListeners() {
     });
   }
 
-  // Error modal click outside to close
   const errorModal = document.getElementById("errorModal");
   if (errorModal) {
     errorModal.addEventListener("click", function (e) {
