@@ -85,7 +85,11 @@ try {
       'student_id' => $studentId
     ]);
 
-    if ($studentPhoto && isset($studentPhoto['uniform_url'])) {
+    $isMaritime = in_array($studentDepartment, ['BS Marine Engineering', 'BS Marine Transportation']);
+
+    if ($isMaritime && $studentPhoto && isset($studentPhoto['dwhite_url'])) {
+      $studentProfilePhoto = $studentPhoto['dwhite_url'];
+    } elseif ($studentPhoto && isset($studentPhoto['uniform_url'])) {
       $studentProfilePhoto = $studentPhoto['uniform_url'];
     } elseif ($studentPhoto && isset($studentPhoto['toga_url'])) {
       $studentProfilePhoto = $studentPhoto['toga_url'];
