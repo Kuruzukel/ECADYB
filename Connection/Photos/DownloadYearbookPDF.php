@@ -117,7 +117,6 @@ try {
         exit();
     }
 
-    // Get the PDF URL
     $pdfUrl = $pdfDoc['pdf_url'] ?? null;
 
     if (empty($pdfUrl)) {
