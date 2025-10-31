@@ -4670,3 +4670,21 @@ header.fading {
 .notification-close i {
   font-size: 1rem;
 }
+
+/* Show only background image for screens 319px and below */
+@media (max-width: 319px) {
+  * {
+    display: none !important;
+  }
+
+  html,
+  body {
+    display: block !important;
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center center/cover no-repeat;
+  }
+}
