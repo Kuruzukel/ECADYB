@@ -80,7 +80,6 @@ try {
 
         $attempts = ($otpRecord['attempts'] ?? 0) + 1;
 
-        // Block after too many attempts
         if ($attempts >= 3) {
             error_log("Too many attempts for email: $email");
             $otpCollection->deleteOne(['email' => $email]);
