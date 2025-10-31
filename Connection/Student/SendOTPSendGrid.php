@@ -112,7 +112,7 @@ try {
         $otpCollection->insertOne([
             'email' => $email,
             'code' => $otp,
-            'expires' => time() + 600, // 10 minutes expiry
+            'expires' => time() + 600,
             'attempts' => 0,
             'created_at' => new \MongoDB\BSON\UTCDateTime()
         ]);
