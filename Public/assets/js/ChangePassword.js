@@ -40,7 +40,6 @@ function setupEventListeners() {
   if (backButton) {
     backButton.addEventListener("click", function (e) {
       e.preventDefault();
-      // Auto-detect environment and use appropriate forgot password path
       const baseUrl = window.location.pathname.includes("/ECADYB/")
         ? "/ECADYB/"
         : "/";
