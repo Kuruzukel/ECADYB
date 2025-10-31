@@ -11,6 +11,9 @@
     magazineReady: false,
     navigationComplete: false,
     coverVisible: false,
+    noteElement: null,
+    noteText:
+      "If you notice any blurred photos in the yearbook, please proceed to the Accounting Office for assistance.",
 
     init: function () {
       console.log("[Loader] Initializing yearbook loader...");
@@ -22,9 +25,129 @@
         return;
       }
 
+      this.ensureLoaderNote();
       this.setupEventListeners();
       this.setMaxTimeout();
       this.startChecking();
+    },
+
+    ensureLoaderNote: function () {
+      if (!this.loaderElement) return;
+
+      const loaderText = this.loaderElement.querySelector(".loader-text");
+      let textWrapper = loaderText ? loaderText.parentElement : null;
+
+      if (loaderText) {
+        if (!textWrapper.classList.contains("loader-text-wrapper")) {
+          const wrapper = document.createElement("div");
+          wrapper.className = "loader-text-wrapper";
+          loaderText.parentNode.insertBefore(wrapper, loaderText);
+          wrapper.appendChild(loaderText);
+          textWrapper = wrapper;
+        }
+
+        let textGroup = textWrapper.querySelector(".loader-text-group");
+        if (!textGroup) {
+          textGroup = document.createElement("div");
+          textGroup.className = "loader-text-group";
+          textWrapper.appendChild(textGroup);
+        }
+
+        if (!textGroup.contains(loaderText)) {
+          textGroup.insertBefore(loaderText, textGroup.firstChild || null);
+        }
+      }
+
+      let note = this.loaderElement.querySelector(".yearbook-loader-note");
+
+      if (!note) {
+        note = document.createElement("div");
+        note.className = "yearbook-loader-note";
+        note.style.marginTop = "8px";
+        note.style.textAlign = "left";
+        note.style.lineHeight = "1.4";
+        note.style.maxWidth = "360px";
+
+        const icon = document.createElement("span");
+        icon.className = "yearbook-loader-note-icon";
+        icon.setAttribute("aria-hidden", "true");
+
+        const noteBody = document.createElement("div");
+        noteBody.className = "yearbook-loader-note-body";
+
+        const paragraph = document.createElement("p");
+        paragraph.className = "yearbook-loader-note-text";
+        paragraph.textContent = this.noteText;
+
+        noteBody.appendChild(paragraph);
+        note.appendChild(icon);
+        note.appendChild(noteBody);
+      } else {
+        note.style.marginTop = "8px";
+        note.style.textAlign = "left";
+        let noteBody = note.querySelector(".yearbook-loader-note-body");
+        if (!noteBody) {
+          noteBody = document.createElement("div");
+          noteBody.className = "yearbook-loader-note-body";
+          const existingText = note.querySelector(".yearbook-loader-note-text");
+          if (existingText) {
+            noteBody.appendChild(existingText);
+          }
+          note.appendChild(noteBody);
+        }
+
+        let icon = note.querySelector(".yearbook-loader-note-icon");
+        if (!icon) {
+          icon = document.createElement("span");
+          icon.className = "yearbook-loader-note-icon";
+          icon.setAttribute("aria-hidden", "true");
+          note.insertBefore(icon, noteBody);
+        }
+
+        let textElement = noteBody.querySelector(".yearbook-loader-note-text");
+        if (!textElement) {
+          textElement = document.createElement("p");
+          textElement.className = "yearbook-loader-note-text";
+          noteBody.appendChild(textElement);
+        } else if (textElement.tagName.toLowerCase() !== "p") {
+          const paragraph = document.createElement("p");
+          paragraph.className = "yearbook-loader-note-text";
+          paragraph.textContent = this.noteText;
+          noteBody.replaceChild(paragraph, textElement);
+          textElement = paragraph;
+        }
+
+        textElement.textContent = this.noteText;
+      }
+
+      const textElement = note.querySelector(".yearbook-loader-note-text");
+      if (loaderText) {
+        const computedStyles = window.getComputedStyle(loaderText);
+        note.style.color = computedStyles.color;
+        if (textElement) {
+          textElement.style.fontSize = computedStyles.fontSize;
+        }
+      } else if (this.loaderElement) {
+        const computedStyles = window.getComputedStyle(this.loaderElement);
+        note.style.color = computedStyles.color;
+      }
+
+      if (loaderText && textWrapper) {
+        const textGroup = textWrapper.querySelector(".loader-text-group");
+        if (textGroup) {
+          if (note.parentElement !== textGroup) {
+            textGroup.appendChild(note);
+          } else if (note.nextSibling) {
+            textGroup.appendChild(note);
+          }
+        } else if (note.parentElement !== textWrapper) {
+          textWrapper.appendChild(note);
+        }
+      } else if (note.parentElement !== this.loaderElement) {
+        this.loaderElement.appendChild(note);
+      }
+
+      this.noteElement = note;
     },
 
     setupEventListeners: function () {
@@ -297,6 +420,7 @@
           LoaderManager.navigationComplete = false;
 
           LoaderManager.loaderElement = loader;
+          LoaderManager.ensureLoaderNote();
           LoaderManager.iframe = iframe;
 
           LoaderManager.setMaxTimeout();

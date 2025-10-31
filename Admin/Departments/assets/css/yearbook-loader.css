@@ -37,11 +37,19 @@
 
 .loader-content {
   display: flex;
-  align-items: center;
-  gap: 20px;
+  align-items: flex-start;
+  gap: 12px;
   cursor: default;
   user-select: none;
   pointer-events: none;
+}
+
+.loader-text-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
 }
 
 .spinner {
@@ -51,6 +59,40 @@
   display: inline-block;
   user-select: none;
   -webkit-user-drag: none;
+  margin-top: 6px;
+}
+
+.yearbook-loader-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-align: left;
+}
+
+.yearbook-loader-note-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.yearbook-loader-note-icon::after {
+  content: "i";
+  font-family: inherit;
+  line-height: 1;
+}
+
+.yearbook-loader-note-text {
+  display: inline-block;
 }
 
 .spinner-dot {

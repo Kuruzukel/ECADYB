@@ -11,6 +11,9 @@
     magazineReady: false,
     navigationComplete: false,
     coverVisible: false,
+    noteElement: null,
+    noteText:
+      "If you notice any blurred photos in the yearbook, please proceed to the Accounting Office for assistance.",
 
     init: function () {
       console.log("[Loader] Initializing yearbook loader...");
@@ -22,9 +25,72 @@
         return;
       }
 
+      this.ensureLoaderNote();
       this.setupEventListeners();
       this.setMaxTimeout();
       this.startChecking();
+    },
+
+    ensureLoaderNote: function () {
+      if (!this.loaderElement) return;
+
+      const existingNote = this.loaderElement.querySelector(
+        ".yearbook-loader-note"
+      );
+
+      if (existingNote) {
+        const textSpan = existingNote.querySelector(
+          ".yearbook-loader-note-text"
+        );
+        if (textSpan) {
+          textSpan.textContent = this.noteText;
+        } else {
+          existingNote.textContent = this.noteText;
+        }
+        this.noteElement = existingNote;
+        return;
+      }
+
+      const note = document.createElement("div");
+      note.className = "yearbook-loader-note";
+      note.style.marginTop = "12px";
+      note.style.textAlign = "center";
+      note.style.lineHeight = "1.4";
+      note.style.maxWidth = "360px";
+
+      const icon = document.createElement("span");
+      icon.className = "yearbook-loader-note-icon";
+      icon.setAttribute("aria-hidden", "true");
+
+      const textSpan = document.createElement("span");
+      textSpan.className = "yearbook-loader-note-text";
+      textSpan.textContent = this.noteText;
+
+      note.appendChild(icon);
+      note.appendChild(textSpan);
+
+      const loaderText = this.loaderElement.querySelector(".loader-text");
+      if (loaderText) {
+        let textWrapper = loaderText.parentElement;
+        if (!textWrapper.classList.contains("loader-text-wrapper")) {
+          const wrapper = document.createElement("div");
+          wrapper.className = "loader-text-wrapper";
+          loaderText.parentNode.insertBefore(wrapper, loaderText);
+          wrapper.appendChild(loaderText);
+          textWrapper = wrapper;
+        }
+
+        const computed = window.getComputedStyle(loaderText);
+        textSpan.style.fontSize = computed.fontSize;
+        textSpan.style.color = computed.color;
+        note.style.color = computed.color;
+
+        textWrapper.appendChild(note);
+      } else {
+        this.loaderElement.appendChild(note);
+      }
+
+      this.noteElement = note;
     },
 
     setupEventListeners: function () {
@@ -288,6 +354,7 @@
           LoaderManager.coverVisible = false;
           LoaderManager.navigationComplete = false;
 
+          LoaderManager.ensureLoaderNote();
           LoaderManager.setMaxTimeout();
           LoaderManager.startChecking();
         } catch (e) {
