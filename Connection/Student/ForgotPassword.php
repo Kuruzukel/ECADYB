@@ -53,7 +53,6 @@ try {
         exit;
     }
 
-    // Connect to MongoDB to verify OTP (instead of using sessions which don't work well on Railway)
     $client = new Client(getMongoUrl());
     $otpDB = $client->selectDatabase('ECADYB');
     $otpCollection = $otpDB->selectCollection('otp_codes');
