@@ -101,7 +101,6 @@ try {
     $otpCollection->deleteOne(['email' => $email]);
     error_log("OTP verified successfully for email: $email");
 
-    // Reuse existing MongoDB client
     $user = null;
     $userCollection = null;
     $isAdmin = false;
