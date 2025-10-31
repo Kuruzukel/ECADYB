@@ -511,7 +511,6 @@ document.addEventListener("DOMContentLoaded", function () {
     document.body.classList.add("page-transition-out");
 
     setTimeout(() => {
-      // Auto-detect environment and use appropriate login path
       const baseUrl = window.location.pathname.includes("/ECADYB/")
         ? "/ECADYB/"
         : "/";
