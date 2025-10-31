@@ -3,7 +3,6 @@ let otpCode = null;
 let emailVerified = false;
 let emailExists = false;
 
-// DOM elements
 const emailInput = document.getElementById("idInput");
 const verificationCodeInput = document.getElementById("verificationCodeInput");
 const submitButton = document.querySelector(".submit-button");
