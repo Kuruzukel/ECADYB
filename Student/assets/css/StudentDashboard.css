@@ -168,7 +168,7 @@ body {
   scrollbar-width: none;
   -ms-overflow-style: none;
   overflow-y: scroll;
-  background-color: #000042;
+  background-color: #021326;
 }
 
 body::-webkit-scrollbar {
@@ -2625,11 +2625,11 @@ header.fading {
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    padding-bottom: 80px;
+    padding-bottom: 85px;
   }
 
   body {
-    padding-bottom: 80px;
+    padding-bottom: 85px;
   }
 
   header {
@@ -2989,19 +2989,21 @@ header.fading {
   /* Bottom Navigation Bar for Tablet */
   .bottom-nav {
     position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    height: 70px;
+    bottom: 0.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 95%;
+    height: 62px;
     background: #000042;
-    border-top: none;
+    border: 1px solid #0c27be;
+    border-radius: 999px;
     display: flex;
     justify-content: space-around;
     align-items: center;
     z-index: 1000;
-    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
-    padding: 0 1rem;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+    padding: 0 0.7rem;
+    transition: all 0.3s ease-in-out;
   }
 
   .bottom-nav a {
@@ -3029,8 +3031,8 @@ header.fading {
   .bottom-nav a.active {
     background: linear-gradient(135deg, #0d39d9 0%, #112d4e 100%);
     color: #fcda15;
-    transform: translateY(-3px);
     box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+    border-radius: 999px;
   }
 
   .bottom-nav .profile-dropdown {
@@ -3040,6 +3042,22 @@ header.fading {
     align-items: center;
     justify-content: center;
     margin: 0;
+    padding: 0.5rem;
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: 60px;
+    gap: 0.25rem;
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  .bottom-nav .profile-dropdown:hover {
+    background: linear-gradient(135deg, #0d39d9 0%, #112d4e 100%);
+    color: #fcda15;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+    border-radius: 999px;
   }
 
   .bottom-nav .profile-icon {
@@ -3051,16 +3069,23 @@ header.fading {
     object-position: center top;
     border: 2px solid #ccc;
     transition: transform 0.2s, box-shadow 0.2s;
+    margin-bottom: 0.15rem;
   }
 
-  .bottom-nav .profile-icon:hover {
-    transform: scale(1.05);
+  .bottom-nav .profile-dropdown:hover .profile-icon {
     border: 2px solid #fcda15;
     box-shadow: 0 4px 12px rgba(252, 218, 21, 0.3);
   }
 
+  .bottom-nav .profile-dropdown::after {
+    content: "Settings";
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: inherit;
+  }
+
   .bottom-nav .dropdown-menu {
-    bottom: 80px;
+    bottom: 75px;
     top: auto;
     right: 1rem;
   }
@@ -3480,19 +3505,21 @@ header.fading {
   /* Bottom Navigation Bar for Mobile */
   .bottom-nav {
     position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    height: 70px;
+    bottom: 0.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 95%;
+    height: 62px;
     background: #000042;
-    border-top: none;
+    border: 1px solid #0c27be;
+    border-radius: 999px;
     display: flex;
     justify-content: space-around;
     align-items: center;
     z-index: 1000;
-    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
-    padding: 0 0.5rem;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+    padding: 0 0.7rem;
+    transition: all 0.3s ease-in-out;
   }
 
   .bottom-nav a {
@@ -3520,8 +3547,8 @@ header.fading {
   .bottom-nav a.active {
     background: linear-gradient(135deg, #0d39d9 0%, #112d4e 100%);
     color: #fcda15;
-    transform: translateY(-3px);
     box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+    border-radius: 999px;
   }
 
   .bottom-nav .profile-dropdown {
@@ -3550,8 +3577,15 @@ header.fading {
     box-shadow: 0 4px 12px rgba(252, 218, 21, 0.3);
   }
 
+  .bottom-nav .profile-dropdown::after {
+    content: "Settings";
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: inherit;
+  }
+
   .bottom-nav .dropdown-menu {
-    bottom: 80px;
+    bottom: 75px;
     top: auto;
     right: 0.5rem;
   }
@@ -3567,11 +3601,11 @@ header.fading {
   }
 
   body {
-    padding-bottom: 80px;
+    padding-bottom: 85px;
   }
 
   .main-hero {
-    padding-bottom: 80px;
+    padding-bottom: 85px;
   }
 
   /* Fix footer centering for mobile */
@@ -3594,11 +3628,11 @@ header.fading {
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    padding-bottom: 75px;
+    padding-bottom: 85px;
   }
 
   body {
-    padding-bottom: 75px;
+    padding-bottom: 85px;
   }
 
   header {
@@ -4015,19 +4049,21 @@ header.fading {
   /* Bottom Navigation Bar for Mobile */
   .bottom-nav {
     position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    height: 65px;
+    bottom: 0.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 95%;
+    height: 62px;
     background: #000042;
-    border-top: none;
+    border: 1px solid #0c27be;
+    border-radius: 999px;
     display: flex;
     justify-content: space-around;
     align-items: center;
     z-index: 1000;
-    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
-    padding: 0 0.3rem;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+    padding: 0 0.7rem;
+    transition: all 0.3s ease-in-out;
   }
 
   .bottom-nav a {
@@ -4055,8 +4091,8 @@ header.fading {
   .bottom-nav a.active {
     background: linear-gradient(135deg, #0d39d9 0%, #112d4e 100%);
     color: #fcda15;
-    transform: translateY(-3px);
     box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+    border-radius: 999px;
   }
 
   .bottom-nav .profile-dropdown {
@@ -4085,6 +4121,13 @@ header.fading {
     box-shadow: 0 4px 12px rgba(252, 218, 21, 0.3);
   }
 
+  .bottom-nav .profile-dropdown::after {
+    content: "Settings";
+    font-size: 0.65rem;
+    font-weight: 500;
+    color: inherit;
+  }
+
   .bottom-nav .dropdown-menu {
     bottom: 75px;
     top: auto;
@@ -4102,11 +4145,11 @@ header.fading {
   }
 
   body {
-    padding-bottom: 75px;
+    padding-bottom: 85px;
   }
 
   .main-hero {
-    padding-bottom: 75px;
+    padding-bottom: 85px;
   }
 
   /* Fix footer centering for mobile */
