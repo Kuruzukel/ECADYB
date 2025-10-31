@@ -122,7 +122,6 @@ try {
         error_log("Failed to store OTP in MongoDB: " . $e->getMessage());
     }
 
-    // Also store in session as fallback for local development
     if (session_status() == PHP_SESSION_NONE) {
         session_start();
     }
