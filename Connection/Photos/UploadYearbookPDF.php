@@ -42,7 +42,6 @@ try {
 
     $pdfsCollection = $client->ECADYB->Yearbook_PDFs;
 
-    // Check if PDF already exists
     $existingPdf = $pdfsCollection->findOne([
         'department' => $department,
         'batch_year' => $batchYear
