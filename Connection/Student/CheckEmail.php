@@ -1,5 +1,4 @@
 <?php
-// Enable error logging for debugging
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
@@ -52,7 +51,7 @@ try {
         $adminDB = $client->selectDatabase('admin');
         $adminCollection = $adminDB->selectCollection('accounts');
         $user = $adminCollection->findOne(['email' => $email]);
-        
+
         if ($user) {
             $userExists = true;
         }
@@ -80,7 +79,6 @@ try {
         'success' => true,
         'exists' => $userExists
     ]);
-
 } catch (Exception $e) {
     error_log("CheckEmail error: " . $e->getMessage());
     http_response_code(500);
