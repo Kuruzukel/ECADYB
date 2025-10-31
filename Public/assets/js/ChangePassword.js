@@ -22,7 +22,6 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 function setupEventListeners() {
-  // New password input
   emailInput.addEventListener("input", function () {
     limitID();
     updateSubmitButton();
