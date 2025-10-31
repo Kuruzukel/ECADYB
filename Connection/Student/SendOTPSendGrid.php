@@ -209,7 +209,6 @@ try {
         }
     }
 
-    // Fallback to PHPMailer (Gmail SMTP) if SendGrid fails or not configured
     if (!$emailSent) {
         try {
             require_once __DIR__ . '/../Configuration/EmailConfig.php';
