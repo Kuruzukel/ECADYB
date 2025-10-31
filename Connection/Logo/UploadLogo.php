@@ -47,7 +47,6 @@ try {
         $bunnyAccessKey = $bunnyCfg['access_key'];
         $bunnyCdnHost = $bunnyCfg['cdn_host'];
     } catch (Exception $e) {
-        // Return a structured error so frontend can display it
         respond(false, 'Bunny CDN configuration incomplete', [
             'missing' => [
                 'BUNNY_STORAGE_ZONE' => (bool) (getenv('BUNNY_STORAGE_ZONE') ?: ($_ENV['BUNNY_STORAGE_ZONE'] ?? null)),
