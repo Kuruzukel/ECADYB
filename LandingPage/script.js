@@ -735,7 +735,7 @@ let currentYearbookIndex = 0;
 
 function navigateYearbook(direction) {
   try {
-    if (window.innerWidth > 480) {
+    if (window.innerWidth > 768) {
       return;
     }
 
@@ -783,7 +783,7 @@ function handleMobileYearbookClick(e) {
 
 function initMobileYearbookSlider() {
   try {
-    if (window.innerWidth <= 480) {
+    if (window.innerWidth <= 768) {
       const items = document.querySelectorAll(".yearbook-item");
       items.forEach((item, index) => {
         item.classList.remove("mobile-active", "mobile-prev", "mobile-next");
@@ -805,6 +805,11 @@ function initMobileYearbookSlider() {
           item.addEventListener("click", handleMobileYearbookClick);
         });
       }
+    } else {
+      const items = document.querySelectorAll(".yearbook-item");
+      items.forEach((item) => {
+        item.classList.remove("mobile-active", "mobile-prev", "mobile-next");
+      });
     }
   } catch (error) {
     console.error("Error initializing mobile yearbook slider:", error);

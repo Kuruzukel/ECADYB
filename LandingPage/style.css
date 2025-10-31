@@ -100,12 +100,14 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(90deg,
-      transparent 0%,
-      rgba(255, 255, 255, 0.03) 25%,
-      rgba(99, 102, 241, 0.1) 50%,
-      rgba(255, 255, 255, 0.03) 75%,
-      transparent 100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.03) 25%,
+    rgba(99, 102, 241, 0.1) 50%,
+    rgba(255, 255, 255, 0.03) 75%,
+    transparent 100%
+  );
   background-size: 400% 100%;
   animation: shimmerEffect 1s ease-out;
   z-index: 9998;
@@ -119,10 +121,12 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: radial-gradient(circle at center,
-      rgba(99, 102, 241, 0.1) 0%,
-      rgba(112, 44, 180, 0.05) 30%,
-      transparent 70%);
+  background: radial-gradient(
+    circle at center,
+    rgba(99, 102, 241, 0.1) 0%,
+    rgba(112, 44, 180, 0.05) 30%,
+    transparent 70%
+  );
   z-index: 9999;
   pointer-events: none;
   animation: particleFloat 1s ease-out;
@@ -272,7 +276,6 @@ header.fading {
 }
 
 @keyframes pulse {
-
   0%,
   100% {
     opacity: 1;
@@ -348,7 +351,8 @@ header.fading {
   left: 0;
   width: 100%;
   height: 100%;
-  background: url("https://ECADYB.b-cdn.net/img/ECABG.jpg") center center/cover no-repeat;
+  background: url("https://ECADYB.b-cdn.net/img/ECABG.jpg") center center/cover
+    no-repeat;
   pointer-events: none;
   filter: blur(6px);
   transform: scale(1.1);
@@ -556,7 +560,8 @@ header.fading {
   left: 0;
   width: 100%;
   height: 100%;
-  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center center/cover no-repeat;
+  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center
+    center/cover no-repeat;
   pointer-events: none;
   filter: blur(6px);
 }
@@ -566,7 +571,7 @@ header.fading {
   z-index: 2;
 }
 
-.yearbooks-section>*:not(.yearbooks-background) {
+.yearbooks-section > *:not(.yearbooks-background) {
   position: relative;
   z-index: 2;
 }
@@ -1093,9 +1098,11 @@ header.fading {
   pointer-events: none;
   z-index: 2;
   opacity: 0.25;
-  background-image: linear-gradient(to right,
+  background-image: linear-gradient(
+      to right,
       rgba(255, 255, 255, 0.179) 1px,
-      transparent 1px),
+      transparent 1px
+    ),
     linear-gradient(to bottom, rgba(255, 255, 255, 0.25) 1px, transparent 1px);
   background-size: 35px 33px;
 }
@@ -1216,10 +1223,12 @@ header.fading {
   height: 100%;
   pointer-events: none;
   z-index: 2;
-  background: radial-gradient(ellipse at center,
-      rgba(0, 0, 0, 0) 60%,
-      rgba(0, 0, 0, 0.18) 80%,
-      rgba(0, 0, 0, 0.32) 100%);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0) 60%,
+    rgba(0, 0, 0, 0.18) 80%,
+    rgba(0, 0, 0, 0.32) 100%
+  );
   filter: blur(24px);
   opacity: 0.7;
 }
@@ -1526,7 +1535,6 @@ header.fading {
 }
 
 @media (min-width: 1440px) {
-
   #mobileLoginDropdownBtn,
   #mobileLoginDropdownMenu {
     display: none !important;
@@ -1534,7 +1542,6 @@ header.fading {
 }
 
 @media (max-width: 1439px) and (min-width: 1200px) {
-
   #mobileLoginDropdownBtn,
   #mobileLoginDropdownMenu {
     display: none !important;
@@ -1701,7 +1708,6 @@ header.fading {
 }
 
 @media (max-width: 1199px) and (min-width: 1120px) {
-
   #mobileLoginDropdownBtn,
   #mobileLoginDropdownMenu {
     display: none !important;
@@ -1874,7 +1880,6 @@ header.fading {
 }
 
 @media (max-width: 1120px) and (min-width: 991px) {
-
   #mobileLoginDropdownBtn,
   #mobileLoginDropdownMenu {
     display: none !important;
@@ -2076,7 +2081,6 @@ header.fading {
 }
 
 @media (max-width: 991px) and (min-width: 768px) {
-
   #mobileLoginDropdownBtn,
   #mobileLoginDropdownMenu {
     display: none !important;
@@ -2339,7 +2343,7 @@ header.fading {
     -webkit-tap-highlight-color: transparent;
   }
 
-  .hamburger-menu.active+.center-nav,
+  .hamburger-menu.active + .center-nav,
   .center-nav.mobile-active {
     display: flex;
     position: absolute;
@@ -2380,10 +2384,12 @@ header.fading {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg,
-        transparent,
-        rgba(255, 255, 255, 0.1),
-        transparent);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.1),
+      transparent
+    );
     transition: left 0.5s ease;
   }
 
@@ -2591,23 +2597,97 @@ header.fading {
   }
 
   .yearbook-items-container {
-    padding: 1rem 1rem;
+    padding: 1rem;
     gap: 10px;
     bottom: 2rem;
+    top: 43%;
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    overflow: visible;
+    display: block;
+    z-index: 10;
+    pointer-events: auto;
+  }
+
+  .yearbook-slider {
+    overflow: visible;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 320px;
   }
 
   .yearbook-item {
-    width: 65px;
-    height: 95px;
-    position: static;
+    width: 220px;
+    height: 300px;
+    position: absolute;
     background-position: center;
     background-size: cover;
-    transition: transform 0.3s ease-out;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
     list-style-type: none;
     transform-origin: center center;
-    will-change: transform;
+    will-change: transform, opacity;
     backface-visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    border-radius: 8px;
+    left: 50%;
+    transform: translateX(-50%) scale(0.7);
+  }
+
+  .yearbook-item.mobile-active {
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 50;
+    transform: translateX(-50%) scale(1);
+  }
+
+  .yearbook-item.mobile-prev {
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 1;
+    transform: translateX(-180%) scale(0.75);
+  }
+
+  .yearbook-item.mobile-next {
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 1;
+    transform: translateX(80%) scale(0.75);
+  }
+
+  .yearbook-slider-nav {
+    display: flex !important;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.45);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: auto;
+    touch-action: manipulation;
+  }
+
+  .yearbook-slider-nav.prev {
+    left: 10px;
+  }
+
+  .yearbook-slider-nav.next {
+    right: 10px;
   }
 
   .carousel-subtitle {
@@ -2840,7 +2920,7 @@ header.fading {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   }
 
-  .hamburger-menu.active+.center-nav,
+  .hamburger-menu.active + .center-nav,
   .center-nav.mobile-active {
     display: flex;
     position: absolute;
@@ -2881,10 +2961,12 @@ header.fading {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg,
-        transparent,
-        rgba(255, 255, 255, 0.1),
-        transparent);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.1),
+      transparent
+    );
     transition: left 0.5s ease;
   }
 
@@ -3086,23 +3168,97 @@ header.fading {
   }
 
   .yearbook-items-container {
-    padding: 1rem 1rem;
+    padding: 1rem;
     gap: 10px;
     bottom: 2rem;
+    top: 43%;
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    overflow: visible;
+    display: block;
+    z-index: 10;
+    pointer-events: auto;
+  }
+
+  .yearbook-slider {
+    overflow: visible;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 300px;
   }
 
   .yearbook-item {
-    width: 50px;
-    height: 75px;
-    position: static;
+    width: 210px;
+    height: 280px;
+    position: absolute;
     background-position: center;
     background-size: cover;
-    transition: transform 0.3s ease-out;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
     list-style-type: none;
     transform-origin: center center;
-    will-change: transform;
+    will-change: transform, opacity;
     backface-visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    border-radius: 8px;
+    left: 50%;
+    transform: translateX(-50%) scale(0.7);
+  }
+
+  .yearbook-item.mobile-active {
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 50;
+    transform: translateX(-50%) scale(1);
+  }
+
+  .yearbook-item.mobile-prev {
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 1;
+    transform: translateX(-180%) scale(0.75);
+  }
+
+  .yearbook-item.mobile-next {
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 1;
+    transform: translateX(80%) scale(0.75);
+  }
+
+  .yearbook-slider-nav {
+    display: flex !important;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.45);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: auto;
+    touch-action: manipulation;
+  }
+
+  .yearbook-slider-nav.prev {
+    left: 10px;
+  }
+
+  .yearbook-slider-nav.next {
+    right: 10px;
   }
 
   .carousel-subtitle {
@@ -3375,7 +3531,7 @@ header.fading {
     -webkit-tap-highlight-color: transparent;
   }
 
-  .hamburger-menu.active+.center-nav,
+  .hamburger-menu.active + .center-nav,
   .center-nav.mobile-active {
     display: flex;
     position: absolute;
@@ -3416,10 +3572,12 @@ header.fading {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg,
-        transparent,
-        rgba(255, 255, 255, 0.1),
-        transparent);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.1),
+      transparent
+    );
     transition: left 0.5s ease;
   }
 
@@ -3697,7 +3855,7 @@ header.fading {
     cursor: pointer;
   }
 
-  .yearbook-item.mobile-active+.yearbook-item {
+  .yearbook-item.mobile-active + .yearbook-item {
     opacity: 0.6;
     pointer-events: none;
     z-index: 1;
@@ -3994,10 +4152,14 @@ header.fading {
   }
 }
 
-@media only screen and (min-width: 768px) and (max-width: 1280px) and (orientation: landscape) {}
+@media only screen and (min-width: 768px) and (max-width: 1280px) and (orientation: landscape) {
+}
 
-@media only screen and (min-width: 600px) and (max-width: 767px) and (orientation: landscape) {}
+@media only screen and (min-width: 600px) and (max-width: 767px) and (orientation: landscape) {
+}
 
-@media only screen and (min-width: 480px) and (max-width: 599px) and (orientation: landscape) {}
+@media only screen and (min-width: 480px) and (max-width: 599px) and (orientation: landscape) {
+}
 
-@media only screen and (min-width: 320px) and (max-width: 479px) and (orientation: landscape) {}
+@media only screen and (min-width: 320px) and (max-width: 479px) and (orientation: landscape) {
+}
