@@ -624,6 +624,7 @@ function showYearbookBackground(clickedItem, imageUrl) {
 
     sliderMain.style.backgroundImage = `url('${imageUrl}')`;
     sliderMain.classList.add("show-yearbook-bg");
+    sliderMain.classList.add("detail-open");
 
     if (introContent) {
       introContent.style.display = "none";
@@ -710,6 +711,7 @@ function closeYearbookView() {
 
     sliderMain.style.backgroundImage = "";
     sliderMain.classList.remove("show-yearbook-bg", "background-loaded");
+    sliderMain.classList.remove("detail-open");
 
     allItems.forEach((item) => {
       if (item && item.classList) {

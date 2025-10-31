@@ -2312,6 +2312,11 @@ header.fading {
     overflow: hidden;
   }
 
+  .yearbook-slider-main.detail-open .yearbook-items-container,
+  .yearbook-slider-main.detail-open .yearbook-slider-nav {
+    display: none !important;
+  }
+
   header {
     width: 80%;
     height: 50px;
@@ -2886,6 +2891,11 @@ header.fading {
     align-items: center;
     justify-content: center;
     overflow: hidden;
+  }
+
+  .yearbook-slider-main.detail-open .yearbook-items-container,
+  .yearbook-slider-main.detail-open .yearbook-slider-nav {
+    display: none !important;
   }
 
   header {
