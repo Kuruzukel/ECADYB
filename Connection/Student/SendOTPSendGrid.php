@@ -109,7 +109,6 @@ try {
 
         $otpCollection->deleteOne(['email' => $email]);
 
-        // Insert new OTP
         $otpCollection->insertOne([
             'email' => $email,
             'code' => $otp,
