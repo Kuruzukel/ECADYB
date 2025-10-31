@@ -1,14 +1,5 @@
 <?php
 
-/**
- * Migration Script: Fix Program Field in Student Collections
- * 
- * This script ensures that the 'program' field in each student document
- * matches the collection they are stored in.
- * 
- * Example: Students in 'bsn' collection should have program: 'bsn'
- */
-
 require __DIR__ . '/../../vendor/autoload.php';
 
 use MongoDB\Client;
