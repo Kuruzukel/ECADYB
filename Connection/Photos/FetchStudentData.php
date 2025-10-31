@@ -124,7 +124,7 @@ try {
         'BSBA' => ['bsma', 'bse'],
         'BSCJ' => ['bscje'],
         'COE' => ['btvted', 'beced'],
-        'EDUCATION' => ['btvted', 'beced'],  // Alternative code for Education
+        'EDUCATION' => ['btvted', 'beced'],
         'BSIS' => ['bsis'],
         'BSME' => ['bsme', 'bsmt'],
         'MARITIME' => ['bsme', 'bsmt'],
