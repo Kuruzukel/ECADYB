@@ -126,7 +126,6 @@ try {
     error_log("DownloadYearbookPDF: Found PDF URL: $pdfUrl");
 
     if (filter_var($pdfUrl, FILTER_VALIDATE_URL)) {
-        // Set headers to force download
         header('Content-Type: application/pdf');
         header('Content-Disposition: attachment; filename="Yearbook_' . $department . '_' . str_replace(' ', '_', $batchYear) . '.pdf"');
         header('Location: ' . $pdfUrl);
