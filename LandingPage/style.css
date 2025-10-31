@@ -955,6 +955,10 @@ header.fading {
   backface-visibility: hidden;
 }
 
+.yearbook-item:hover {
+  transform: scale(1.08) translateY(-8px);
+}
+
 .yearbook-content {
   width: 100%;
   height: 100%;
@@ -2216,14 +2220,14 @@ header.fading {
     width: 90%;
     margin: 0 auto;
     color: white;
-    top: 24%;
+    top: 40%;
     transform: translate(-50%, -50%);
     padding: 1.5rem 1rem;
   }
 
   .yearbook-items-container {
     padding: 1rem 1rem;
-    bottom: 2rem;
+    bottom: 4rem;
   }
 
   .yearbook-item {
@@ -2238,6 +2242,10 @@ header.fading {
     transform-origin: center center;
     will-change: transform;
     backface-visibility: hidden;
+  }
+
+  .yearbook-item:hover {
+    transform: scale(1.08) translateY(-6px);
   }
 
   .carousel-subtitle {
