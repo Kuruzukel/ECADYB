@@ -1,4 +1,3 @@
-// Global variables
 let otpSent = false;
 let otpCode = null;
 let emailVerified = false;
@@ -302,7 +301,7 @@ async function handleGetCode() {
     } else {
       showNotification(
         otpResult.message ||
-        "Failed to send verification code. Please try again.",
+          "Failed to send verification code. Please try again.",
         "error"
       );
       resetGetCodeButton();
@@ -489,8 +488,8 @@ function showNotification(message, type) {
   const autoHideDelay = message.includes("verification code is:")
     ? 15000
     : type === "success"
-      ? 5000
-      : 4000;
+    ? 5000
+    : 4000;
   setTimeout(() => {
     closeNotification(`${type}-message`);
   }, autoHideDelay);
