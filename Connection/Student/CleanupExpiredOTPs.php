@@ -12,7 +12,6 @@ try {
 
     $currentTime = time();
 
-    // Delete all expired OTPs
     $result = $otpCollection->deleteMany([
         'expires' => ['$lt' => $currentTime]
     ]);
