@@ -1,5 +1,4 @@
 <?php
-// Enable error logging for debugging (logs to Railway)
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
@@ -83,10 +82,10 @@ try {
     // Verify the OTP matches
     if ($otpRecord['code'] !== $verificationCode) {
         error_log("Invalid OTP for email: $email. Expected: {$otpRecord['code']}, Got: $verificationCode");
-        
+
         // Increment attempt counter
         $attempts = ($otpRecord['attempts'] ?? 0) + 1;
-        
+
         // Block after too many attempts
         if ($attempts >= 3) {
             error_log("Too many attempts for email: $email");
@@ -95,13 +94,13 @@ try {
             echo json_encode(['success' => false, 'message' => 'Too many incorrect attempts. Please request a new code.']);
             exit;
         }
-        
+
         // Update attempt counter
         $otpCollection->updateOne(
             ['email' => $email],
             ['$set' => ['attempts' => $attempts]]
         );
-        
+
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'Invalid verification code. Please try again.']);
         exit;
@@ -262,7 +261,7 @@ function sendPasswordEmail($email, $password)
 
             $sendgrid = new \SendGrid($sendGridApiKey);
             $response = $sendgrid->send($emailContent);
-            
+
             if ($response->statusCode() >= 200 && $response->statusCode() < 300) {
                 error_log("✓ SendGrid password reset email sent to: $email");
                 $emailSent = true;
@@ -276,7 +275,7 @@ function sendPasswordEmail($email, $password)
     if (!$emailSent) {
         try {
             require_once __DIR__ . '/../Configuration/EmailConfig.php';
-            
+
             $mail = new PHPMailer(true);
             $mail->isSMTP();
             $mail->Host = GMAIL_SMTP_HOST;
