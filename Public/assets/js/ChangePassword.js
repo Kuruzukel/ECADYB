@@ -36,7 +36,6 @@ function setupEventListeners() {
     handleFormSubmission();
   });
 
-  // Back button
   const backButton = document.querySelector('button[type="back"]');
   if (backButton) {
     backButton.addEventListener("click", function (e) {
