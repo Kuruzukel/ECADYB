@@ -20,7 +20,6 @@ try {
 
     $query = [];
     if (!empty($batchYear)) {
-        // Ensure batch year has "Batch Year" prefix
         if (strpos($batchYear, 'Batch Year') === false) {
             $batchYear = 'Batch Year ' . $batchYear;
         }
