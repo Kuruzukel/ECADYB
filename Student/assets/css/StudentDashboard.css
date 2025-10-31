@@ -2974,6 +2974,7 @@ header.fading {
     align-items: center;
     width: 100%;
     justify-content: center;
+    gap: 0;
   }
 
   .footer-logo-img {
@@ -3423,6 +3424,7 @@ header.fading {
     align-items: center;
     width: 100%;
     justify-content: center;
+    gap: 0;
   }
 
   .footer-contact-info {
@@ -3570,6 +3572,16 @@ header.fading {
 
   .main-hero {
     padding-bottom: 80px;
+  }
+
+  /* Fix footer centering for mobile */
+  .footer-inner-container {
+    justify-content: center !important;
+    text-align: center;
+  }
+
+  .footer-content {
+    text-align: center !important;
   }
 }
 
@@ -3935,6 +3947,8 @@ header.fading {
     flex-direction: column;
     align-items: center;
     width: 100%;
+    gap: 0;
+    text-align: center;
   }
 
   .footer-inner-container {
@@ -3949,6 +3963,7 @@ header.fading {
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
     width: 100%;
     box-sizing: border-box;
+    text-align: center;
   }
 
   .footer-contact-info {
@@ -4092,6 +4107,16 @@ header.fading {
 
   .main-hero {
     padding-bottom: 75px;
+  }
+
+  /* Fix footer centering for mobile */
+  .footer-inner-container {
+    justify-content: center !important;
+    text-align: center;
+  }
+
+  .footer-content {
+    text-align: center !important;
   }
 }
 
