@@ -78,7 +78,6 @@ try {
     if ($otpRecord['code'] !== $verificationCode) {
         error_log("Invalid OTP for email: $email. Expected: {$otpRecord['code']}, Got: $verificationCode");
 
-        // Increment attempt counter
         $attempts = ($otpRecord['attempts'] ?? 0) + 1;
 
         // Block after too many attempts
