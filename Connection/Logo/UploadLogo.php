@@ -40,7 +40,6 @@ try {
         respond(false, 'Client disconnected');
     }
 
-    // Load Bunny config via EnvLoader for consistent behavior
     require_once __DIR__ . '/../Configuration/EnvLoader.php';
     try {
         $bunnyCfg = getBunnyConfig();
