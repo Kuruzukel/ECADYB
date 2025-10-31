@@ -88,7 +88,6 @@ try {
             exit;
         }
 
-        // Update attempt counter
         $otpCollection->updateOne(
             ['email' => $email],
             ['$set' => ['attempts' => $attempts]]
