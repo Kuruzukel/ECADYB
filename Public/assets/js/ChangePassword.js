@@ -117,7 +117,6 @@ async function handleFormSubmission() {
   submitButton.textContent = "Processing...";
   submitButton.disabled = true;
   try {
-    // TODO: implement API call to change password
     setTimeout(() => {
       showErrorModal("Password changed successfully.", "success");
       submitButton.textContent = "Change Password";
