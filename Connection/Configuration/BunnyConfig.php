@@ -16,6 +16,9 @@ if (!defined('BUNNY_ACCESS_KEY')) {
 if (!defined('BUNNY_CDN_HOST')) {
     define('BUNNY_CDN_HOST', getenv('BUNNY_CDN_HOST') ?: $_ENV['BUNNY_CDN_HOST'] ?? null);
 }
+if (!defined('BUNNY_API_KEY')) {
+    define('BUNNY_API_KEY', getenv('BUNNY_API_KEY') ?: $_ENV['BUNNY_API_KEY'] ?? null);
+}
 
 if (!BUNNY_STORAGE_ZONE || !BUNNY_ACCESS_KEY || !BUNNY_CDN_HOST) {
     die('Bunny CDN configuration incomplete. Please set BUNNY_STORAGE_ZONE, BUNNY_ACCESS_KEY, and BUNNY_CDN_HOST in .env file');
@@ -24,3 +27,4 @@ if (!BUNNY_STORAGE_ZONE || !BUNNY_ACCESS_KEY || !BUNNY_CDN_HOST) {
 $GLOBALS['BUNNY_STORAGE_ZONE'] = BUNNY_STORAGE_ZONE;
 $GLOBALS['BUNNY_ACCESS_KEY'] = BUNNY_ACCESS_KEY;
 $GLOBALS['BUNNY_CDN_HOST'] = BUNNY_CDN_HOST;
+$GLOBALS['BUNNY_API_KEY'] = BUNNY_API_KEY;

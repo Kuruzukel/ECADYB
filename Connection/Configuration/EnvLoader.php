@@ -86,3 +86,29 @@ function getBunnyCdnHost()
     return getenv('BUNNY_CDN_HOST') ?: $_ENV['BUNNY_CDN_HOST'] ??
         (defined('BUNNY_CDN_HOST') ? BUNNY_CDN_HOST : ($GLOBALS['BUNNY_CDN_HOST'] ?? null));
 }
+
+/**
+ * Get Bunny CDN API key (optional, used for cache purging)
+ * @return string|null API key
+ */
+function getBunnyApiKey()
+{
+    $envValue = getenv('BUNNY_API_KEY');
+    if ($envValue !== false && $envValue !== '') {
+        return $envValue;
+    }
+
+    if (!empty($_ENV['BUNNY_API_KEY'])) {
+        return $_ENV['BUNNY_API_KEY'];
+    }
+
+    if (defined('BUNNY_API_KEY') && BUNNY_API_KEY !== null && BUNNY_API_KEY !== '') {
+        return BUNNY_API_KEY;
+    }
+
+    if (!empty($GLOBALS['BUNNY_API_KEY'])) {
+        return $GLOBALS['BUNNY_API_KEY'];
+    }
+
+    return null;
+}

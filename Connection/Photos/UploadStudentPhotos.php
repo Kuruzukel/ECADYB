@@ -27,6 +27,40 @@ if (session_status() == PHP_SESSION_NONE) {
 
 $uploadCancelled = false;
 
+function purgeBunnyCache($publicUrl, $apiKey)
+{
+    if (!$publicUrl || !$apiKey) {
+        return;
+    }
+
+    $purgeEndpoint = 'https://bunnycdn.com/api/purge';
+    $payload = json_encode(['url' => $publicUrl]);
+
+    $ch = curl_init($purgeEndpoint);
+    curl_setopt_array($ch, [
+        CURLOPT_CUSTOMREQUEST  => 'POST',
+        CURLOPT_HTTPHEADER     => [
+            'Content-Type: application/json',
+            'AccessKey: ' . $apiKey,
+        ],
+        CURLOPT_POSTFIELDS     => $payload,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT        => 10,
+        CURLOPT_CONNECTTIMEOUT => 5,
+    ]);
+
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $curlErr = curl_error($ch);
+    curl_close($ch);
+
+    if ($response === false || $httpCode < 200 || $httpCode >= 300) {
+        error_log('Bunny CDN purge failed for URL ' . $publicUrl . ': ' . ($curlErr ?: ('HTTP ' . $httpCode . ' Response: ' . $response)));
+    } else {
+        error_log('Bunny CDN cache purged for URL: ' . $publicUrl);
+    }
+}
+
 function respond($success, $message = '', $data = [])
 {
     global $uploadCancelled;
@@ -130,6 +164,8 @@ try {
         ?: (defined('BUNNY_ACCESS_KEY') ? BUNNY_ACCESS_KEY : ($GLOBALS['BUNNY_ACCESS_KEY'] ?? null));
     $bunnyCdnHost = getenv('BUNNY_CDN_HOST')
         ?: (defined('BUNNY_CDN_HOST') ? BUNNY_CDN_HOST : ($GLOBALS['BUNNY_CDN_HOST'] ?? 'https://ECADYB.b-cdn.net'));
+    $bunnyApiKey = getenv('BUNNY_API_KEY')
+        ?: (defined('BUNNY_API_KEY') ? BUNNY_API_KEY : ($GLOBALS['BUNNY_API_KEY'] ?? null));
 
     if (!$bunnyStorageZone || !$bunnyAccessKey || !$bunnyCdnHost) {
         respond(false, 'Bunny configuration missing. Please check environment variables.');
@@ -239,7 +275,7 @@ try {
         error_log("Processing file: $fileName, extracted student ID: $studentId");
 
         $baseStudentId = $studentId;
-        if (preg_match('/^(\d{4}-\d{6})(?:-(?:FILIPINIANA|TOGA|UNIFORM))?$/', $studentId, $matches)) {
+        if (preg_match('/^(\d{4}-\d{6})(?:-(?:FILIPINIANA|TOGA|UNIFORM|COVERALL|KHAKI|DWHITE))?$/', $studentId, $matches)) {
             $studentId = $matches[1];
             $baseStudentId = $studentId;
             error_log("Matched regex for $fileName, student ID: $studentId");
@@ -316,15 +352,55 @@ try {
         } elseif (strpos($originalNameWithoutExt, '-UNIFORM') !== false) {
             $photoTypeFolder = 'UNIFORM';
             error_log("Detected UNIFORM photo for $fileName");
+        } elseif (strpos($originalNameWithoutExt, '-COVERALL') !== false) {
+            $photoTypeFolder = 'COVERALL';
+            error_log("Detected COVERALL photo for $fileName");
+        } elseif (strpos($originalNameWithoutExt, '-KHAKI') !== false) {
+            $photoTypeFolder = 'KHAKI';
+            error_log("Detected KHAKI photo for $fileName");
+        } elseif (strpos($originalNameWithoutExt, '-DWHITE') !== false) {
+            $photoTypeFolder = 'DWHITE';
+            error_log("Detected DWHITE photo for $fileName");
         } else {
             $photoTypeFolder = 'UNIFORM';
             error_log("No photo type detected for $fileName, defaulting to UNIFORM");
         }
 
+        $filter = ['student_id' => $studentId];
+        if ($academicYear) {
+            $filter['academic year'] = $academicYear;
+        }
+
+        $photoTypeKey = match ($photoTypeFolder) {
+            'FILIPINIANA' => 'filipiniana',
+            'TOGA' => 'toga',
+            'UNIFORM' => 'uniform',
+            'COVERALL' => 'coverall',
+            'KHAKI' => 'khaki',
+            'DWHITE' => 'dwhite',
+            default => null
+        };
+
+        $existingDocument = $collection->findOne($filter);
+        $existingFileToDelete = null;
+        if ($existingDocument && $photoTypeKey) {
+            $existingFilenameField = $photoTypeKey . '_filename';
+            if (!empty($existingDocument[$existingFilenameField])) {
+                $existingYear = $existingDocument['academic year'] ?? $academicYear;
+                $existingFolder = 'Student Photos';
+                if ($existingYear) {
+                    $existingFolder .= '/' . $existingYear;
+                }
+                $existingFolder .= '/' . $photoTypeFolder;
+                $existingFileToDelete = $existingFolder . '/' . $existingDocument[$existingFilenameField];
+            }
+        }
+
         $safeFolder = $baseFolder . '/' . $photoTypeFolder;
         error_log("UploadStudentPhotos: Using full folder path: $safeFolder");
 
-        $filename = sprintf('%s.%s', $safeFileName, $safeExt);
+        $timestampSuffix = (string) round(microtime(true) * 1000);
+        $filename = sprintf('%s_%s.%s', $safeFileName, $timestampSuffix, $safeExt);
         $path = $safeFolder . '/' . $filename;
         $storageUrl = "https://storage.bunnycdn.com/{$bunnyStorageZone}/" . str_replace(' ', '%20', $path);
 
@@ -388,6 +464,8 @@ try {
         ];
 
         $publicUrl = rtrim($bunnyCdnHost, '/') . '/' . str_replace(' ', '%20', $path);
+        $versionSuffix = '?v=' . round(microtime(true) * 1000);
+        $versionedUrl = $publicUrl . $versionSuffix;
 
         if (connection_aborted()) {
             $uploadCancelled = true;
@@ -409,7 +487,7 @@ try {
             'student_id' => $studentId,
             'filename' => $filename,
             'original_name' => $fileName,
-            'url' => $publicUrl,
+            'url' => $versionedUrl,
             'upload_time' => new \MongoDB\BSON\UTCDateTime(),
             'photo_type' => $photoTypeFolder,
             'folder_path' => $safeFolder
@@ -462,22 +540,37 @@ try {
 
                 if (strpos($originalNameWithoutExt, '-FILIPINIANA') !== false) {
                     error_log("Detected FILIPINIANA photo for $fileName");
-                    $updateData['$set']['filipiniana_url'] = $publicUrl;
+                    $updateData['$set']['filipiniana_url'] = $versionedUrl;
                     $updateData['$set']['filipiniana_filename'] = $filename;
                     $updateData['$set']['filipiniana_original_name'] = $fileName;
                 } elseif (strpos($originalNameWithoutExt, '-TOGA') !== false) {
                     error_log("Detected TOGA photo for $fileName");
-                    $updateData['$set']['toga_url'] = $publicUrl;
+                    $updateData['$set']['toga_url'] = $versionedUrl;
                     $updateData['$set']['toga_filename'] = $filename;
                     $updateData['$set']['toga_original_name'] = $fileName;
                 } elseif (strpos($originalNameWithoutExt, '-UNIFORM') !== false) {
                     error_log("Detected UNIFORM photo for $fileName");
-                    $updateData['$set']['uniform_url'] = $publicUrl;
+                    $updateData['$set']['uniform_url'] = $versionedUrl;
                     $updateData['$set']['uniform_filename'] = $filename;
                     $updateData['$set']['uniform_original_name'] = $fileName;
+                } elseif (strpos($originalNameWithoutExt, '-COVERALL') !== false) {
+                    error_log("Detected COVERALL photo for $fileName");
+                    $updateData['$set']['coverall_url'] = $versionedUrl;
+                    $updateData['$set']['coverall_filename'] = $filename;
+                    $updateData['$set']['coverall_original_name'] = $fileName;
+                } elseif (strpos($originalNameWithoutExt, '-KHAKI') !== false) {
+                    error_log("Detected KHAKI photo for $fileName");
+                    $updateData['$set']['khaki_url'] = $versionedUrl;
+                    $updateData['$set']['khaki_filename'] = $filename;
+                    $updateData['$set']['khaki_original_name'] = $fileName;
+                } elseif (strpos($originalNameWithoutExt, '-DWHITE') !== false) {
+                    error_log("Detected DWHITE photo for $fileName");
+                    $updateData['$set']['dwhite_url'] = $versionedUrl;
+                    $updateData['$set']['dwhite_filename'] = $filename;
+                    $updateData['$set']['dwhite_original_name'] = $fileName;
                 } else {
                     error_log("No photo type detected for $fileName, using default fields");
-                    $updateData['$set']['url'] = $publicUrl;
+                    $updateData['$set']['url'] = $versionedUrl;
                     $updateData['$set']['filename'] = $filename;
                     $updateData['$set']['original_name'] = $fileName;
                 }
@@ -504,19 +597,31 @@ try {
 
                 $originalNameWithoutExt = pathinfo($fileName, PATHINFO_FILENAME);
                 if (strpos($originalNameWithoutExt, '-FILIPINIANA') !== false) {
-                    $newDocument['filipiniana_url'] = $publicUrl;
+                    $newDocument['filipiniana_url'] = $versionedUrl;
                     $newDocument['filipiniana_filename'] = $filename;
                     $newDocument['filipiniana_original_name'] = $fileName;
                 } elseif (strpos($originalNameWithoutExt, '-TOGA') !== false) {
-                    $newDocument['toga_url'] = $publicUrl;
+                    $newDocument['toga_url'] = $versionedUrl;
                     $newDocument['toga_filename'] = $filename;
                     $newDocument['toga_original_name'] = $fileName;
                 } elseif (strpos($originalNameWithoutExt, '-UNIFORM') !== false) {
-                    $newDocument['uniform_url'] = $publicUrl;
+                    $newDocument['uniform_url'] = $versionedUrl;
                     $newDocument['uniform_filename'] = $filename;
                     $newDocument['uniform_original_name'] = $fileName;
+                } elseif (strpos($originalNameWithoutExt, '-COVERALL') !== false) {
+                    $newDocument['coverall_url'] = $versionedUrl;
+                    $newDocument['coverall_filename'] = $filename;
+                    $newDocument['coverall_original_name'] = $fileName;
+                } elseif (strpos($originalNameWithoutExt, '-KHAKI') !== false) {
+                    $newDocument['khaki_url'] = $versionedUrl;
+                    $newDocument['khaki_filename'] = $filename;
+                    $newDocument['khaki_original_name'] = $fileName;
+                } elseif (strpos($originalNameWithoutExt, '-DWHITE') !== false) {
+                    $newDocument['dwhite_url'] = $versionedUrl;
+                    $newDocument['dwhite_filename'] = $filename;
+                    $newDocument['dwhite_original_name'] = $fileName;
                 } else {
-                    $newDocument['url'] = $publicUrl;
+                    $newDocument['url'] = $versionedUrl;
                     $newDocument['filename'] = $filename;
                     $newDocument['original_name'] = $fileName;
                 }
@@ -549,6 +654,28 @@ try {
             continue;
         }
 
+        purgeBunnyCache($publicUrl, $bunnyApiKey);
+
+        if ($existingFileToDelete && $existingFileToDelete !== $path) {
+            $existingStorageUrl = "https://storage.bunnycdn.com/{$bunnyStorageZone}/" . str_replace(' ', '%20', $existingFileToDelete);
+            error_log("Deleting previous photo from BunnyCDN storage: " . $existingStorageUrl);
+            $deleteCh = curl_init($existingStorageUrl);
+            curl_setopt_array($deleteCh, [
+                CURLOPT_CUSTOMREQUEST  => 'DELETE',
+                CURLOPT_HTTPHEADER     => ['AccessKey: ' . $bunnyAccessKey],
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_TIMEOUT        => 10,
+                CURLOPT_CONNECTTIMEOUT => 3
+            ]);
+            curl_exec($deleteCh);
+            curl_close($deleteCh);
+
+            if ($bunnyApiKey) {
+                $existingPublicUrl = rtrim($bunnyCdnHost, '/') . '/' . str_replace(' ', '%20', $existingFileToDelete);
+                purgeBunnyCache($existingPublicUrl, $bunnyApiKey);
+            }
+        }
+
         if (connection_aborted()) {
             $uploadCancelled = true;
             error_log("UploadStudentPhotos.php deleting file from BunnyCDN and MongoDB entry due to cancellation after insert: $storageUrl");
@@ -573,7 +700,7 @@ try {
             'filename' => $fileName,
             'success' => true,
             'message' => 'Upload successful',
-            'url' => $publicUrl,
+            'url' => $versionedUrl,
             'student_id' => $studentId,
             'department' => $department
         ];

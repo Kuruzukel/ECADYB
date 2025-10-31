@@ -749,4 +749,19 @@ namespace {
             return '';
         }
     }
+
+    if (!defined('BUNNY_API_KEY')) {
+        define('BUNNY_API_KEY', null);
+    }
+
+    if (!function_exists('getBunnyApiKey')) {
+        /**
+         * Stub for environment loader helper
+         * @return string|null
+         */
+        function getBunnyApiKey(): ?string
+        {
+            return null;
+        }
+    }
 }

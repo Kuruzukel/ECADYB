@@ -242,6 +242,8 @@
           departmentCode = departmentCode.toUpperCase();
         }
 
+        window.currentYearbookDepartment = departmentCode;
+
         // Clear ALL department caches and in-memory caches to prevent cross-contamination
         try {
           // Clear all student data from localStorage for all departments
@@ -463,6 +465,8 @@
         if (departmentCode) {
           departmentCode = departmentCode.toUpperCase();
         }
+
+        window.currentYearbookDepartment = departmentCode;
 
         var yearbookMap = {
           BSME: "Maritime Education",
@@ -1858,69 +1862,55 @@
           } else {
             modal.find(".student-images").show();
 
-            // Get batch year from localStorage
-            var batchYear = localStorage.getItem("selectedBatchYear");
+            fetchStudentPhotos(
+              clickedStudent.student_id,
+              {
+                program: clickedStudent.program,
+                department: clickedStudent.section,
+              },
+              function (photoResult) {
+                console.log("Student photos result:", photoResult);
 
-            // Build request data
-            var requestData = {
-              student_id: clickedStudent.student_id,
-              template:
-                localStorage.getItem("selectedBatchTemplateNumber") || 1,
-            };
-            if (batchYear) {
-              requestData.batch_year = batchYear;
-            }
+                var orderedPhotos =
+                  photoResult && Array.isArray(photoResult.photos)
+                    ? photoResult.photos
+                    : [];
+                var photoUrls = orderedPhotos
+                  .filter(function (photo) {
+                    return photo && photo.url;
+                  })
+                  .map(function (photo) {
+                    return photo.url;
+                  });
+                var photoTypes = orderedPhotos.map(function (photo) {
+                  return photo.type;
+                });
 
-            // Fetch student photos
-            $.ajax({
-              url: "/ECADYB/Connection/Photos/FetchStudentPhotos.php",
-              method: "GET",
-              data: requestData,
-              dataType: "json",
-              success: function (response) {
-                console.log("Student photos response:", response);
+                console.log("Available photo URLs:", photoUrls);
 
-                if (
-                  response.success &&
-                  response.data &&
-                  response.data.length > 0
-                ) {
-                  var photos = response.data[0].photos;
-                  var photoUrls = [];
-
-                  // Collect all available photo URLs
-                  if (photos.student_photo_1 && photos.student_photo_1.url) {
-                    photoUrls.push(photos.student_photo_1.url);
-                  }
-                  if (photos.student_photo_2 && photos.student_photo_2.url) {
-                    photoUrls.push(photos.student_photo_2.url);
-                  }
-                  if (photos.student_photo_3 && photos.student_photo_3.url) {
-                    photoUrls.push(photos.student_photo_3.url);
-                  }
-
-                  console.log("Available photo URLs:", photoUrls);
-
-                  // Set the first available photo
-                  if (photoUrls.length > 0) {
-                    modal
-                      .find(".student-image-large img")
-                      .attr("src", photoUrls[0]);
-                    modal.data("student-photos", photoUrls);
-                    modal.data("current-photo-index", 0);
-                    console.log("Set student photo:", photoUrls[0]);
-                  } else {
-                    console.log("No photos available for student");
-                  }
+                if (photoUrls.length > 0) {
+                  modal
+                    .find(".student-image-large img")
+                    .attr("src", photoUrls[0]);
+                  modal.data("student-photos", photoUrls);
+                  modal.data("student-photo-types", photoTypes);
+                  modal.data("current-photo-index", 0);
+                  console.log(
+                    "Set student photo:",
+                    photoUrls[0],
+                    "types:",
+                    photoTypes
+                  );
                 } else {
-                  console.log("No photos found for student");
+                  console.log(
+                    "No photos available for student",
+                    photoResult && photoResult.message
+                      ? photoResult.message
+                      : ""
+                  );
                 }
-              },
-              error: function (xhr, status, error) {
-                console.error("Error fetching student photos:", error);
-                console.error("Response:", xhr.responseText);
-              },
-            });
+              }
+            );
           }
 
           // Show modal with a small delay

@@ -121,6 +121,24 @@ try {
                     'url' => $photo['filipiniana_url'] ?? '',
                     'filename' => $photo['filipiniana_filename'] ?? '',
                     'original_name' => $photo['filipiniana_original_name'] ?? ''
+                ],
+                'dwhite_photo' => [
+                    'type' => 'dwhite',
+                    'url' => $photo['dwhite_url'] ?? '',
+                    'filename' => $photo['dwhite_filename'] ?? '',
+                    'original_name' => $photo['dwhite_original_name'] ?? ''
+                ],
+                'khaki_photo' => [
+                    'type' => 'khaki',
+                    'url' => $photo['khaki_url'] ?? '',
+                    'filename' => $photo['khaki_filename'] ?? '',
+                    'original_name' => $photo['khaki_original_name'] ?? ''
+                ],
+                'coverall_photo' => [
+                    'type' => 'coverall',
+                    'url' => $photo['coverall_url'] ?? '',
+                    'filename' => $photo['coverall_filename'] ?? '',
+                    'original_name' => $photo['coverall_original_name'] ?? ''
                 ]
             ]
         ];

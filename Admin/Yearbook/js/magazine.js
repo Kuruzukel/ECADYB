@@ -13,6 +13,108 @@ window.studentPhotosCache = window.studentPhotosCache || {};
 window.topManagementCache = window.topManagementCache || {};
 window.topManagementPendingRequests = window.topManagementPendingRequests || {};
 
+window.currentYearbookDepartment = window.currentYearbookDepartment || null;
+
+function isMaritimeContext(program, department) {
+  var maritimeKeywords = [
+    "BSME",
+    "BSMT",
+    "MARITIME",
+    "MARINE TRANSPORTATION",
+    "MARINE ENGINEERING",
+  ];
+
+  var programValue = (program || "").toString().toUpperCase();
+  var departmentValue = (department || window.currentYearbookDepartment || "")
+    .toString()
+    .toUpperCase();
+
+  return maritimeKeywords.some(function (keyword) {
+    return (
+      programValue.indexOf(keyword) !== -1 ||
+      departmentValue.indexOf(keyword) !== -1
+    );
+  });
+}
+
+function getPreferredPhotoOrder(program, department) {
+  if (isMaritimeContext(program, department)) {
+    return ["dwhite", "khaki", "coverall", "toga", "uniform", "filipiniana"];
+  }
+
+  return ["toga", "uniform", "filipiniana", "dwhite", "khaki", "coverall"];
+}
+
+function buildOrderedPhotoList(rawPhotos, preferredOrder) {
+  var DEFAULT_ORDER = [
+    "toga",
+    "uniform",
+    "filipiniana",
+    "dwhite",
+    "khaki",
+    "coverall",
+  ];
+
+  var order = (
+    preferredOrder && preferredOrder.length ? preferredOrder : DEFAULT_ORDER
+  ).map(function (type) {
+    return type.toLowerCase();
+  });
+
+  DEFAULT_ORDER.forEach(function (type) {
+    if (order.indexOf(type) === -1) {
+      order.push(type);
+    }
+  });
+
+  var photoMap = new Map();
+
+  if (Array.isArray(rawPhotos)) {
+    rawPhotos.forEach(function (record) {
+      if (record && record.photos) {
+        Object.keys(record.photos).forEach(function (key) {
+          var photo = record.photos[key];
+          if (photo && photo.url) {
+            var photoType = (photo.type || "").toString().toLowerCase();
+            if (!photoType) return;
+
+            if (!photoMap.has(photoType)) {
+              photoMap.set(photoType, {
+                type: photoType,
+                url: photo.url,
+                filename: photo.filename || "",
+                originalName: photo.original_name || "",
+              });
+            }
+          }
+        });
+      }
+    });
+  }
+
+  var ordered = [];
+  var seen = new Set();
+
+  order.forEach(function (type) {
+    if (photoMap.has(type)) {
+      var photo = photoMap.get(type);
+      if (!seen.has(photo.url)) {
+        ordered.push(photo);
+        seen.add(photo.url);
+      }
+    }
+  });
+
+  photoMap.forEach(function (photo) {
+    if (!seen.has(photo.url)) {
+      ordered.push(photo);
+      seen.add(photo.url);
+    }
+  });
+
+  return ordered;
+}
+
 function clearTopManagementCache() {
   console.log("Clearing top management cache due to batch year change");
   window.topManagementCache = {};
@@ -738,16 +840,42 @@ function fetchTopManagementCached(template, callback) {
   });
 }
 
-function fetchStudentPhotos(studentId, callback) {
+function fetchStudentPhotos(studentId, options, callback) {
+  if (typeof options === "function") {
+    callback = options;
+    options = {};
+  }
+
+  options = options || {};
+
+  var department = options.department || window.currentYearbookDepartment;
+  var preferredOrder = options.preferredOrder;
+
+  if (!preferredOrder || !preferredOrder.length) {
+    preferredOrder = getPreferredPhotoOrder(options.program || "", department);
+  }
+
+  function respond(rawPhotos, success, message) {
+    var ordered = buildOrderedPhotoList(rawPhotos, preferredOrder);
+    if (typeof callback === "function") {
+      callback({
+        success: success,
+        photos: ordered,
+        raw: rawPhotos,
+        message: message || "",
+      });
+    }
+  }
+
   if (!studentId) {
     console.log("No student ID provided for photo fetch");
-    callback([]);
+    respond([], false, "Missing student ID");
     return;
   }
 
   if (window.studentPhotosCache[studentId]) {
     console.log("Using cached photos for student:", studentId);
-    callback(window.studentPhotosCache[studentId]);
+    respond(window.studentPhotosCache[studentId], true);
     return;
   }
 
@@ -788,33 +916,28 @@ function fetchStudentPhotos(studentId, callback) {
       console.log("Requested ID:", studentId);
       console.log("Response:", response);
 
-      if (!response) {
-        console.error("Empty response received from FetchStudentPhotos.php");
-        callback([]);
-        return;
-      } else if (typeof response !== "object") {
+      if (!response || typeof response !== "object") {
         console.error(
-          "Invalid response format received from FetchStudentPhotos.php:",
-          typeof response
+          "Invalid or empty response received from FetchStudentPhotos.php"
         );
-        callback([]);
-        return;
-      } else if (!response.hasOwnProperty("success")) {
-        console.error("Response missing 'success' property");
-        callback([]);
+        respond([], false, "Invalid response");
         return;
       }
 
-      if (
-        response.success &&
-        response.data &&
-        Array.isArray(response.data) &&
-        response.data.length > 0
-      ) {
+      if (!response.hasOwnProperty("success")) {
+        console.error("Response missing 'success' property");
+        respond([], false, "Malformed response");
+        return;
+      }
+
+      var rawPhotos =
+        response.data && Array.isArray(response.data) ? response.data : [];
+
+      if (response.success && rawPhotos.length > 0) {
         console.log("Found photos for student ID", studentId);
-        console.log("Photo data:", response.data[0]);
-        window.studentPhotosCache[studentId] = response.data;
-        callback(response.data);
+        console.log("Photo data:", rawPhotos[0]);
+        window.studentPhotosCache[studentId] = rawPhotos;
+        respond(rawPhotos, true, response.message);
       } else {
         console.log(
           "No photos found for student ID:",
@@ -822,7 +945,8 @@ function fetchStudentPhotos(studentId, callback) {
           "Response message:",
           response.message || "No message"
         );
-        callback([]);
+        window.studentPhotosCache[studentId] = rawPhotos;
+        respond(rawPhotos, false, response.message);
       }
     },
     error: function (xhr, status, error) {
@@ -832,7 +956,7 @@ function fetchStudentPhotos(studentId, callback) {
       console.log("Status:", status);
       console.log("XHR:", xhr);
       console.log("XHR Response Text:", xhr.responseText);
-      callback([]);
+      respond([], false, error || status || "Network error");
     },
   });
 }
@@ -1787,48 +1911,56 @@ function loadPage(page, pageElement) {
                     currentStudentName,
                     currentStatus
                   ) {
-                    fetchStudentPhotos(currentStudentId, function (photos) {
-                      if (
-                        photos &&
-                        photos.length > 0 &&
-                        photos[0] &&
-                        photos[0].photos &&
-                        photos[0].photos.student_photo_1
-                      ) {
-                        var togaUrl = photos[0].photos.student_photo_1.url;
-                        if (togaUrl) {
-                          console.log(
-                            "Setting TOGA photo for",
-                            currentStudentName,
-                            ":",
-                            togaUrl,
-                            "Status:",
-                            currentStatus
-                          );
-                          currentPhotoElement.attr("src", togaUrl);
-
-                          if (currentStatus === "pending") {
-                            currentPhotoElement.css({
-                              filter: "blur(8px)",
-                              "-webkit-filter": "blur(8px)",
-                            });
-                            currentPhotoElement.parent().css({
-                              position: "relative",
-                            });
-
+                    fetchStudentPhotos(
+                      currentStudentId,
+                      {
+                        program: currentStudent.program,
+                        department: currentStudent.collection,
+                      },
+                      function (result) {
+                        if (
+                          result &&
+                          result.photos &&
+                          result.photos.length > 0
+                        ) {
+                          var primaryPhoto = result.photos[0];
+                          if (primaryPhoto && primaryPhoto.url) {
                             console.log(
-                              "Applied blur filter to pending student photo:",
-                              currentStudentName
+                              "Setting primary photo (",
+                              primaryPhoto.type,
+                              ") for",
+                              currentStudentName,
+                              ":",
+                              primaryPhoto.url,
+                              "Status:",
+                              currentStatus
                             );
+                            currentPhotoElement.attr("src", primaryPhoto.url);
+
+                            if (currentStatus === "pending") {
+                              currentPhotoElement.css({
+                                filter: "blur(8px)",
+                                "-webkit-filter": "blur(8px)",
+                              });
+                              currentPhotoElement.parent().css({
+                                position: "relative",
+                              });
+
+                              console.log(
+                                "Applied blur filter to pending student photo:",
+                                currentStudentName
+                              );
+                            }
                           }
+                        } else {
+                          console.log(
+                            "No valid photo data found for student",
+                            currentStudentName,
+                            result && result.message ? result.message : ""
+                          );
                         }
-                      } else {
-                        console.log(
-                          "No valid photo data found for student",
-                          currentStudentName
-                        );
                       }
-                    });
+                    );
                   })(
                     student,
                     studentPhoto,

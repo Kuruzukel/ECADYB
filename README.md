@@ -18,8 +18,9 @@ This application provides a comprehensive platform for educational institutions 
 **CDN Storage**
 
 - `BUNNY_STORAGE_ZONE` - Storage zone name
-- `BUNNY_ACCESS_KEY` - API access key
+- `BUNNY_ACCESS_KEY` - Storage zone password/key
 - `BUNNY_CDN_HOST` - CDN host URL
+- `BUNNY_API_KEY` *(optional)* - Bunny account API key (enables automatic cache purging)
 
 **Email Service**
 
@@ -46,7 +47,7 @@ This application provides a comprehensive platform for educational institutions 
 1. Connect your GitHub repository to Railway
 2. Configure environment variables in the Railway dashboard:
    - `MONGO_URL` - MongoDB connection string
-   - `BUNNY_STORAGE_ZONE`, `BUNNY_ACCESS_KEY`, `BUNNY_CDN_HOST` - CDN configuration
+   - `BUNNY_STORAGE_ZONE`, `BUNNY_ACCESS_KEY`, `BUNNY_CDN_HOST` (+ `BUNNY_API_KEY` if you want automatic cache purging) - CDN configuration
    - `SENDGRID_API_KEY` - SendGrid API key (required for email)
    - `SMTP_FROM_EMAIL`, `SMTP_FROM_NAME` - Email sender details
 3. Deploy automatically with included configuration files
