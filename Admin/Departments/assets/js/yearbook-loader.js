@@ -34,63 +34,51 @@
     ensureLoaderNote: function () {
       if (!this.loaderElement) return;
 
-      const existingNote = this.loaderElement.querySelector(
-        ".yearbook-loader-note"
-      );
+      const loaderContent = this.loaderElement.querySelector(".loader-content");
+      if (!loaderContent) return;
 
-      if (existingNote) {
-        const textSpan = existingNote.querySelector(
-          ".yearbook-loader-note-text"
-        );
-        if (textSpan) {
-          textSpan.textContent = this.noteText;
-        } else {
-          existingNote.textContent = this.noteText;
+      // Check if note wrapper already exists
+      let noteWrapper = loaderContent.querySelector(".loader-note-wrapper");
+      if (noteWrapper) {
+        const textPara = noteWrapper.querySelector(".yearbook-loader-note-text");
+        if (textPara) {
+          textPara.textContent = this.noteText;
         }
-        this.noteElement = existingNote;
         return;
       }
 
-      const note = document.createElement("div");
-      note.className = "yearbook-loader-note";
-      note.style.marginTop = "12px";
-      note.style.textAlign = "center";
-      note.style.lineHeight = "1.4";
-      note.style.maxWidth = "360px";
+      // Ensure spinner and text are in their own wrapper
+      const spinner = loaderContent.querySelector(".spinner");
+      const loaderText = loaderContent.querySelector(".loader-text");
 
-      const icon = document.createElement("span");
-      icon.className = "yearbook-loader-note-icon";
-      icon.setAttribute("aria-hidden", "true");
-
-      const textSpan = document.createElement("span");
-      textSpan.className = "yearbook-loader-note-text";
-      textSpan.textContent = this.noteText;
-
-      note.appendChild(icon);
-      note.appendChild(textSpan);
-
-      const loaderText = this.loaderElement.querySelector(".loader-text");
-      if (loaderText) {
-        let textWrapper = loaderText.parentElement;
-        if (!textWrapper.classList.contains("loader-text-wrapper")) {
-          const wrapper = document.createElement("div");
-          wrapper.className = "loader-text-wrapper";
-          loaderText.parentNode.insertBefore(wrapper, loaderText);
-          wrapper.appendChild(loaderText);
-          textWrapper = wrapper;
+      if (spinner && loaderText) {
+        let textWrapper = loaderContent.querySelector(".loader-text-wrapper");
+        if (!textWrapper) {
+          textWrapper = document.createElement("div");
+          textWrapper.className = "loader-text-wrapper";
+          loaderContent.insertBefore(textWrapper, loaderContent.firstChild);
+          textWrapper.appendChild(spinner);
+          textWrapper.appendChild(loaderText);
         }
-
-        const computed = window.getComputedStyle(loaderText);
-        textSpan.style.fontSize = computed.fontSize;
-        textSpan.style.color = computed.color;
-        note.style.color = computed.color;
-
-        textWrapper.appendChild(note);
-      } else {
-        this.loaderElement.appendChild(note);
       }
 
-      this.noteElement = note;
+      // Create note wrapper with icon and paragraph
+      noteWrapper = document.createElement("div");
+      noteWrapper.className = "loader-note-wrapper";
+
+      const noteIcon = document.createElement("div");
+      noteIcon.className = "yearbook-loader-note";
+      noteIcon.setAttribute("aria-hidden", "true");
+
+      const noteParagraph = document.createElement("p");
+      noteParagraph.className = "yearbook-loader-note-text";
+      noteParagraph.textContent = this.noteText;
+
+      noteWrapper.appendChild(noteIcon);
+      noteWrapper.appendChild(noteParagraph);
+
+      loaderContent.appendChild(noteWrapper);
+      this.noteElement = noteWrapper;
     },
 
     setupEventListeners: function () {

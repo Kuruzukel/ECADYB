@@ -37,8 +37,9 @@
 
 .loader-content {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: 20px;
   cursor: default;
   user-select: none;
   pointer-events: none;
@@ -46,17 +47,16 @@
 
 .loader-text-wrapper {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  text-align: center;
-  gap: 6px;
+  gap: 12px;
 }
 
-.loader-text-group {
+.loader-note-wrapper {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 4px;
+  justify-content: center;
+  gap: 12px;
+  max-width: 600px;
 }
 
 .spinner {
@@ -66,21 +66,15 @@
   display: inline-block;
   user-select: none;
   -webkit-user-drag: none;
+  flex-shrink: 0;
 }
 
 .yearbook-loader-note {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 6px;
-  text-align: left;
-}
-
-.yearbook-loader-note-icon {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  border: 2px solid currentColor;
+  border: 2px solid #b0b0b0;
+  color: #b0b0b0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -91,22 +85,22 @@
   position: relative;
 }
 
-.yearbook-loader-note-body {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 4px;
-}
-
-.yearbook-loader-note-icon::after {
+.yearbook-loader-note::after {
   content: "i";
   font-family: inherit;
   line-height: 1;
 }
 
 .yearbook-loader-note-text {
-  display: inline-block;
+  color: #b0b0b0;
+  font-size: 16px;
+  font-weight: 400;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.5;
+  text-align: left;
   margin: 0;
+  white-space: nowrap;
 }
 
 .spinner-dot {
@@ -171,6 +165,7 @@
 }
 
 @keyframes spinner-fade {
+
   0%,
   39%,
   100% {
