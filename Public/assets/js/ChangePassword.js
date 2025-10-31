@@ -31,7 +31,6 @@ function setupEventListeners() {
     updateSubmitButton();
   });
 
-  // Form submission
   form.addEventListener("submit", function (e) {
     e.preventDefault();
     handleFormSubmission();
