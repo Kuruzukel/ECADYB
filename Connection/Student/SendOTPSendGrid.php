@@ -107,7 +107,6 @@ try {
         $otpDB = $mongoClient->selectDatabase('ECADYB');
         $otpCollection = $otpDB->selectCollection('otp_codes');
 
-        // Delete any existing OTP for this email
         $otpCollection->deleteOne(['email' => $email]);
 
         // Insert new OTP
