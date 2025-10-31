@@ -1,4 +1,3 @@
-// Global variables
 let otpSent = false;
 let otpCode = null;
 let emailVerified = false;
