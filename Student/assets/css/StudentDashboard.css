@@ -1867,6 +1867,11 @@ header.fading {
   transform: scale(0.95);
 }
 
+/* Hide bottom navigation on desktop and larger screens */
+.bottom-nav {
+  display: none;
+}
+
 .hamburger-icon {
   width: 24px;
   height: 24px;
