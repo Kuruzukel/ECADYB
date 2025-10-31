@@ -18,7 +18,6 @@ try {
 
     $pdfsCollection = $client->ECADYB->Yearbook_PDFs;
 
-    // Build query
     $query = [];
     if (!empty($batchYear)) {
         // Ensure batch year has "Batch Year" prefix
