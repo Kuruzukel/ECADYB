@@ -3019,7 +3019,7 @@ header.fading {
     border-radius: 12px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     min-width: 60px;
-    gap: 0.25rem;
+    gap: 0.40rem;
     height: 62px;
   }
 
@@ -3030,9 +3030,7 @@ header.fading {
 
   .bottom-nav a:hover,
   .bottom-nav a.active {
-    background: linear-gradient(135deg, #0d39d9 0%, #112d4e 100%);
     color: #fcda15;
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
     border-radius: 999px;
   }
 
@@ -3047,7 +3045,7 @@ header.fading {
     border-radius: 12px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     min-width: 60px;
-    gap: 0.25rem;
+    gap: 0.40rem;
     text-decoration: none;
     color: #ffffff;
     font-size: 0.75rem;
@@ -3056,26 +3054,23 @@ header.fading {
   }
 
   .bottom-nav .profile-dropdown:hover {
-    background: linear-gradient(135deg, #0d39d9 0%, #112d4e 100%);
     color: #fcda15;
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
     border-radius: 999px;
   }
 
   .bottom-nav .profile-icon {
-    width: 32px;
-    height: 32px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     cursor: pointer;
     object-fit: cover;
     object-position: center top;
-    border: 2px solid #ccc;
+    border: none;
     transition: transform 0.2s, box-shadow 0.2s;
     margin-bottom: 0.15rem;
   }
 
   .bottom-nav .profile-dropdown:hover .profile-icon {
-    border: 2px solid #fcda15;
     box-shadow: 0 4px 12px rgba(252, 218, 21, 0.3);
   }
 
@@ -3537,7 +3532,7 @@ header.fading {
     border-radius: 12px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     min-width: 55px;
-    gap: 0.2rem;
+    gap: 0.40rem;
     height: 62px;
   }
 
@@ -3548,9 +3543,7 @@ header.fading {
 
   .bottom-nav a:hover,
   .bottom-nav a.active {
-    background: linear-gradient(135deg, #0d39d9 0%, #112d4e 100%);
     color: #fcda15;
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
     border-radius: 999px;
   }
 
@@ -3564,20 +3557,19 @@ header.fading {
   }
 
   .bottom-nav .profile-icon {
-    width: 28px;
-    height: 28px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     cursor: pointer;
     object-fit: cover;
     object-position: center top;
-    border: 2px solid #ccc;
+    border: none;
     transition: transform 0.2s, box-shadow 0.2s;
     margin-bottom: 0.1rem;
   }
 
   .bottom-nav .profile-icon:hover {
     transform: scale(1.05);
-    border: 2px solid #fcda15;
     box-shadow: 0 4px 12px rgba(252, 218, 21, 0.3);
   }
 
@@ -4083,7 +4075,7 @@ header.fading {
     border-radius: 10px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     min-width: 50px;
-    gap: 0.15rem;
+    gap: 0.40rem;
     height: 62px;
   }
 
@@ -4094,9 +4086,7 @@ header.fading {
 
   .bottom-nav a:hover,
   .bottom-nav a.active {
-    background: linear-gradient(135deg, #0d39d9 0%, #112d4e 100%);
     color: #fcda15;
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
     border-radius: 999px;
   }
 
@@ -4110,20 +4100,19 @@ header.fading {
   }
 
   .bottom-nav .profile-icon {
-    width: 26px;
-    height: 26px;
+    width: 34px;
+    height: 34px;
     border-radius: 50%;
     cursor: pointer;
     object-fit: cover;
     object-position: center top;
-    border: 2px solid #ccc;
+    border: none;
     transition: transform 0.2s, box-shadow 0.2s;
     margin-bottom: 0.1rem;
   }
 
   .bottom-nav .profile-icon:hover {
     transform: scale(1.05);
-    border: 2px solid #fcda15;
     box-shadow: 0 4px 12px rgba(252, 218, 21, 0.3);
   }
 
