@@ -22,7 +22,6 @@ if (empty($department) || empty($batchYear)) {
 error_log("DownloadYearbookPDF: Fetching PDF for department: $department, batch_year: $batchYear");
 
 try {
-    // Get the yearbook PDFs collection (you'll need to create this collection)
     $pdfsCollection = $client->ECADYB->Yearbook_PDFs;
 
     // Find the PDF document
