@@ -50,7 +50,6 @@ try {
     $uploadTime = new MongoDB\BSON\UTCDateTime();
 
     if ($existingPdf) {
-        // Update existing PDF
         $result = $pdfsCollection->updateOne(
             [
                 'department' => $department,
