@@ -16,7 +16,6 @@ header('Content-Type: application/json');
 try {
     $batchYear = $_GET['batch_year'] ?? '';
 
-    // Get the yearbook PDFs collection
     $pdfsCollection = $client->ECADYB->Yearbook_PDFs;
 
     // Build query
