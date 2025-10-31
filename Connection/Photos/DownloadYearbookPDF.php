@@ -6,7 +6,6 @@ if (session_status() === PHP_SESSION_NONE) {
 require_once __DIR__ . '/../Configuration/config.php';
 require_once __DIR__ . '/../Configuration/MongoConnect.php';
 
-// Check if user is logged in
 if (!isset($_SESSION['role']) || ($_SESSION['role'] !== 'student' && $_SESSION['role'] !== 'admin')) {
     http_response_code(403);
     die(json_encode(['success' => false, 'error' => 'Unauthorized access']));
@@ -108,7 +107,8 @@ try {
             <div class="error-container">
                 <i class="fas fa-file-excel error-icon"></i>
                 <h1>PDF Not Available</h1>
-                <p>The yearbook PDF for <strong><?php echo htmlspecialchars($department); ?></strong> (<?php echo htmlspecialchars($batchYear); ?>) is not yet available.</p>
+                <p>The yearbook PDF for <strong><?php echo htmlspecialchars($department); ?></strong>
+                    (<?php echo htmlspecialchars($batchYear); ?>) is not yet available.</p>
                 <p>Please contact the administration or check back later.</p>
                 <a href="javascript:window.close()" class="back-btn">
                     <i class="fas fa-arrow-left"></i> Close Window
