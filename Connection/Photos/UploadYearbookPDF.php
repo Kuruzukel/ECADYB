@@ -22,7 +22,6 @@ try {
     $batchYear = $_POST['batch_year'] ?? '';
     $pdfUrl = $_POST['pdf_url'] ?? '';
 
-    // Validate inputs
     if (empty($department)) {
         throw new Exception('Department is required');
     }
