@@ -34,7 +34,6 @@ try {
         throw new Exception('PDF URL is required');
     }
 
-    // Ensure batch year has "Batch Year" prefix
     if (strpos($batchYear, 'Batch Year') === false) {
         $batchYear = 'Batch Year ' . $batchYear;
     }
