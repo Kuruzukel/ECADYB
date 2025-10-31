@@ -57,7 +57,6 @@ try {
     $otpDB = $client->selectDatabase('ECADYB');
     $otpCollection = $otpDB->selectCollection('otp_codes');
 
-    // Find the OTP record for this email
     $otpRecord = $otpCollection->findOne(['email' => $email]);
 
     if (!$otpRecord) {
