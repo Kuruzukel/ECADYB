@@ -959,25 +959,8 @@ header.fading {
   display: none;
 }
 
-.yearbook-item:hover {
-  transform: translateY(-10px) scale(1.05);
-  z-index: 100;
-}
-
-.yearbook-slider-main.show-yearbook-bg .yearbook-item:hover {
-  transform: translateY(-10px) scale(0.8);
-}
-
 .yearbook-item {
   transform: translateZ(0);
-}
-
-.yearbook-item:not(.active):hover {
-  transform: translateY(-10px) scale(1.05) translateZ(0);
-}
-
-.yearbook-item.active:hover {
-  transform: scale(0.9) translateZ(0);
 }
 
 .yearbook-item.active {
@@ -3874,16 +3857,6 @@ header.fading {
     pointer-events: none;
     z-index: 1;
     transform: translateX(80%) scale(0.75);
-  }
-
-  .yearbook-item:hover,
-  .yearbook-item:not(.active):hover,
-  .yearbook-item.active:hover {
-    transform: none !important;
-  }
-
-  .yearbook-slider-main.show-yearbook-bg .yearbook-item:hover {
-    transform: none !important;
   }
 
   .yearbook-slider-main.show-yearbook-bg .yearbook-items-container {
