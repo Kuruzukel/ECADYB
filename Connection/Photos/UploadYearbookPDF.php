@@ -18,7 +18,6 @@ try {
         throw new Exception('Invalid request method');
     }
 
-    // Get form data
     $department = $_POST['department'] ?? '';
     $batchYear = $_POST['batch_year'] ?? '';
     $pdfUrl = $_POST['pdf_url'] ?? '';
