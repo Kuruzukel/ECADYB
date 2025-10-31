@@ -40,7 +40,6 @@ try {
 
     error_log("UploadYearbookPDF: Uploading PDF for department: $department, batch_year: $batchYear, url: $pdfUrl");
 
-    // Get the yearbook PDFs collection
     $pdfsCollection = $client->ECADYB->Yearbook_PDFs;
 
     // Check if PDF already exists
