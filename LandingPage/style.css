@@ -794,9 +794,16 @@ header.fading {
 
 @media (max-width: 899px) {
   .yearbook-detail-container {
-    flex-direction: column;
-    text-align: center;
-    gap: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
+    padding: 0.8rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    position: relative;
   }
 
   .yearbook-detail-close-btn {
@@ -812,20 +819,20 @@ header.fading {
   }
 
   .yearbook-cover-image {
-    width: 200px;
-    height: 260px;
+    width: 240px;
+    height: 360px;
   }
 
   .yearbook-detail-title {
-    font-size: 2rem;
+    font-size: 2.4rem !important;
   }
 
   .yearbook-detail-subtitle {
-    font-size: 1.3rem;
+    font-size: 1.3rem !important;
   }
 
   .yearbook-detail-description {
-    font-size: 1rem;
+    font-size: 1.1rem !important;
   }
 }
 
