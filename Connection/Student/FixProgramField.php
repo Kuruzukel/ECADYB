@@ -89,7 +89,6 @@ foreach ($programCollections as $collectionKey => $fullName) {
             $oldProgram = $doc['program'] ?? 'NOT SET';
             $studentId = $doc['student id'] ?? $doc['student_id'] ?? 'NO ID';
 
-            // Update the program field to match the collection
             $result = $collection->updateOne(
                 ['_id' => $doc['_id']],
                 ['$set' => ['program' => $collectionKey]]
