@@ -2788,6 +2788,7 @@ header.fading {
     flex-direction: column;
     align-items: center;
     padding: 1rem;
+    gap: 1rem !important;
     width: 100%;
     max-width: 100%;
     position: relative;
@@ -2797,8 +2798,11 @@ header.fading {
       inset 0 1px 0 rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(10px);
     height: 80vh;
-    max-height: 76vh;
     overflow: hidden;
+  }
+
+  .yearbook-detail-display {
+    top: 50%;
   }
 
   .yearbook-detail-close-btn {
@@ -2896,6 +2900,10 @@ header.fading {
   .yearbook-slider-main.detail-open .yearbook-items-container,
   .yearbook-slider-main.detail-open .yearbook-slider-nav {
     display: none !important;
+  }
+
+  .yearbook-detail-display {
+    top: 50%;
   }
 
   header {
@@ -3407,6 +3415,7 @@ header.fading {
     flex-direction: column;
     align-items: center;
     padding: 1rem;
+    gap: 1rem !important;
     width: 100%;
     max-width: 100%;
     position: relative;
@@ -3416,7 +3425,6 @@ header.fading {
       inset 0 1px 0 rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(10px);
     height: 80vh;
-    max-height: 76vh;
     overflow: hidden;
   }
 
@@ -3469,7 +3477,7 @@ header.fading {
   }
 
   .yearbook-detail-title {
-    font-size: 1.4rem;
+    font-size: 1.7rem !important;
     font-weight: bold;
     margin-bottom: 8px !important;
     text-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
@@ -4063,6 +4071,7 @@ header.fading {
     flex-direction: column;
     align-items: center;
     padding: 1rem;
+    gap: 1rem !important;
     width: 100%;
     max-width: 100%;
     position: relative;
@@ -4137,7 +4146,7 @@ header.fading {
   }
 
   .yearbook-detail-title {
-    font-size: 1.4rem;
+    font-size: 1.2rem !important;
     font-weight: bold;
     margin-bottom: 8px !important;
     text-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
@@ -4149,7 +4158,7 @@ header.fading {
   }
 
   .yearbook-detail-subtitle {
-    font-size: 1.3rem;
+    font-size: 1rem !important;
     font-weight: 600;
     margin-bottom: 8px !important;
     text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
@@ -4159,7 +4168,7 @@ header.fading {
   }
 
   .yearbook-detail-description {
-    font-size: 1rem;
+    font-size: 0.89rem !important;
     line-height: 1.6;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     color: #e0e7ff;
