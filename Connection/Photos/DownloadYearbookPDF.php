@@ -11,7 +11,6 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] !== 'student' && $_SESSION['
     die(json_encode(['success' => false, 'error' => 'Unauthorized access']));
 }
 
-// Get parameters
 $department = $_GET['department'] ?? '';
 $batchYear = $_GET['batch_year'] ?? '';
 
