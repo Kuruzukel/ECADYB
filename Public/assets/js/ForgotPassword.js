@@ -9,7 +9,6 @@ const submitButton = document.querySelector(".submit-button");
 const getCodeText = document.querySelector(".get-code-text");
 const form = document.querySelector("form");
 
-// Initialize the page
 window.addEventListener("DOMContentLoaded", () => {
   document.body.classList.add("page-transition-in");
 
