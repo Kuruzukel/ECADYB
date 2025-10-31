@@ -24,7 +24,6 @@ error_log("DownloadYearbookPDF: Fetching PDF for department: $department, batch_
 try {
     $pdfsCollection = $client->ECADYB->Yearbook_PDFs;
 
-    // Find the PDF document
     $pdfDoc = $pdfsCollection->findOne([
         'department' => $department,
         'batch_year' => $batchYear
