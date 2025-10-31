@@ -260,7 +260,6 @@ function sendPasswordEmail($email, $password)
         }
     }
 
-    // Fallback to PHPMailer (Gmail SMTP) for localhost
     if (!$emailSent) {
         try {
             require_once __DIR__ . '/../Configuration/EmailConfig.php';
