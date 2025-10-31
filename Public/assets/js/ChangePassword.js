@@ -114,7 +114,6 @@ async function handleFormSubmission() {
     return;
   }
 
-  // Placeholder for submission logic; integrate with backend as needed
   submitButton.textContent = "Processing...";
   submitButton.disabled = true;
   try {
