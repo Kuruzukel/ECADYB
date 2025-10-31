@@ -34,7 +34,6 @@ try {
             break;
 
         case 'logout':
-            // Remove session when user logs out (student or admin)
             if (isset($_SESSION['student_id'])) {
                 removeActiveSession($client, $_SESSION['student_id']);
                 echo json_encode(['success' => true, 'message' => 'Session removed']);
