@@ -27,7 +27,6 @@ function setupEventListeners() {
     updateSubmitButton();
   });
 
-  // Confirm password input
   verificationCodeInput.addEventListener("input", function () {
     updateSubmitButton();
   });
