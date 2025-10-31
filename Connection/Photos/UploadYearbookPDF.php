@@ -72,7 +72,6 @@ try {
             'action' => 'updated'
         ]);
     } else {
-        // Insert new PDF
         $result = $pdfsCollection->insertOne([
             'department' => $department,
             'batch_year' => $batchYear,
