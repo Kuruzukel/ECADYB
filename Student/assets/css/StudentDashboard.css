@@ -3015,11 +3015,12 @@ header.fading {
     color: #ffffff;
     font-size: 0.75rem;
     font-weight: 500;
-    padding: 0 0 8px 0;
+    padding: 0 0 6px 0;
     border-radius: 12px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     min-width: 60px;
     gap: 0.25rem;
+    height: 62px;
   }
 
   .bottom-nav a i {
@@ -3033,8 +3034,6 @@ header.fading {
     color: #fcda15;
     box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
     border-radius: 999px;
-    height: 62px;
-    width: 80px;
   }
 
   .bottom-nav .profile-dropdown {
@@ -3044,7 +3043,7 @@ header.fading {
     align-items: center;
     justify-content: flex-end;
     margin: 0;
-    padding: 0 0 8px 0;
+    padding: 0 0 6px 0;
     border-radius: 12px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     min-width: 60px;
@@ -3053,6 +3052,7 @@ header.fading {
     color: #ffffff;
     font-size: 0.75rem;
     font-weight: 500;
+    height: 62px;
   }
 
   .bottom-nav .profile-dropdown:hover {
@@ -3060,8 +3060,6 @@ header.fading {
     color: #fcda15;
     box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
     border-radius: 999px;
-    height: 62px;
-    width: 80px;
   }
 
   .bottom-nav .profile-icon {
@@ -3535,11 +3533,12 @@ header.fading {
     color: #ffffff;
     font-size: 0.7rem;
     font-weight: 500;
-    padding: 0 0 8px 0;
+    padding: 0 0 6px 0;
     border-radius: 12px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     min-width: 55px;
     gap: 0.2rem;
+    height: 62px;
   }
 
   .bottom-nav a i {
@@ -3553,8 +3552,6 @@ header.fading {
     color: #fcda15;
     box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
     border-radius: 999px;
-    height: 62px;
-    width: 75px;
   }
 
   .bottom-nav .profile-dropdown {
@@ -4082,11 +4079,12 @@ header.fading {
     color: #ffffff;
     font-size: 0.65rem;
     font-weight: 500;
-    padding: 0 0 8px 0;
+    padding: 0 0 6px 0;
     border-radius: 10px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     min-width: 50px;
     gap: 0.15rem;
+    height: 62px;
   }
 
   .bottom-nav a i {
@@ -4100,8 +4098,6 @@ header.fading {
     color: #fcda15;
     box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
     border-radius: 999px;
-    height: 62px;
-    width: 70px;
   }
 
   .bottom-nav .profile-dropdown {
