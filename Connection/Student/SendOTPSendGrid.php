@@ -120,7 +120,6 @@ try {
         error_log("OTP stored in MongoDB for email: $email");
     } catch (Exception $e) {
         error_log("Failed to store OTP in MongoDB: " . $e->getMessage());
-        // Continue anyway, we'll still send the email
     }
 
     // Also store in session as fallback for local development
