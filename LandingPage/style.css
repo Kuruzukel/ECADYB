@@ -3701,7 +3701,7 @@ header.fading {
     opacity: 0.6;
     pointer-events: none;
     z-index: 1;
-    transform: translateX(-180%) scale(0.75);
+    transform: translateX(80%) scale(0.75);
   }
 
   .yearbook-item.mobile-prev {
