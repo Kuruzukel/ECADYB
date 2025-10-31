@@ -66,7 +66,6 @@ try {
         exit;
     }
 
-    // Check if OTP has expired
     $currentTime = time();
     if ($currentTime > $otpRecord['expires']) {
         error_log("OTP expired for email: $email");
