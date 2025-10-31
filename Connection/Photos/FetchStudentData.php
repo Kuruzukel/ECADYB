@@ -123,7 +123,7 @@ try {
     $departmentCollections = [
         'BSBA' => ['bsma', 'bse'],
         'BSCJ' => ['bscje'],
-        'COE' => ['btvted', 'beced'],  // College of Education
+        'COE' => ['btvted', 'beced'],
         'EDUCATION' => ['btvted', 'beced'],  // Alternative code for Education
         'BSIS' => ['bsis'],
         'BSME' => ['bsme', 'bsmt'],
