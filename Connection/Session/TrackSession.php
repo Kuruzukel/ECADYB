@@ -18,7 +18,6 @@ try {
 
     switch ($action) {
         case 'ping':
-            // Update last activity for current user (student or admin)
             if (isset($_SESSION['student_id'])) {
                 updateSessionActivity($client, $_SESSION['student_id']);
                 error_log("✓ Student session ping: " . $_SESSION['student_id']);
