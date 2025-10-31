@@ -69,7 +69,6 @@ try {
     $currentTime = time();
     if ($currentTime > $otpRecord['expires']) {
         error_log("OTP expired for email: $email");
-        // Delete expired OTP
         $otpCollection->deleteOne(['email' => $email]);
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'Verification code has expired. Please request a new code.']);
