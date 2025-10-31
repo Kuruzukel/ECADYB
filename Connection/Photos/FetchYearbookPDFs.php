@@ -30,7 +30,6 @@ try {
         'sort' => ['created_at' => -1]
     ])->toArray();
 
-    // Convert MongoDB objects to arrays
     $result = [];
     foreach ($pdfs as $pdf) {
         $result[] = [
