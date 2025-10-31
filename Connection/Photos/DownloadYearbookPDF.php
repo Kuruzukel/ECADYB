@@ -32,7 +32,6 @@ try {
     if (!$pdfDoc) {
         error_log("DownloadYearbookPDF: No PDF found for department: $department, batch_year: $batchYear");
 
-        // Return a helpful error page
         http_response_code(404);
 ?>
         <!DOCTYPE html>
