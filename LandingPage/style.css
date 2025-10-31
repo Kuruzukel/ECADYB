@@ -2187,6 +2187,9 @@ header.fading {
     width: 90%;
     margin: 0 auto;
     color: white;
+    top: 24%;
+    transform: translate(-50%, -50%);
+    padding: 1.5rem 1rem;
   }
 
   .yearbook-items-container {
@@ -2577,13 +2580,14 @@ header.fading {
     width: 90%;
     margin: 0 auto;
     color: white;
+    top: 30%;
   }
 
   .yearbook-items-container {
     padding: 1rem;
     gap: 10px;
     bottom: 2rem;
-    top: 43%;
+    top: 45%;
     position: relative;
     width: 100%;
     max-width: 100%;
@@ -2603,7 +2607,7 @@ header.fading {
   }
 
   .yearbook-item {
-    width: 220px;
+    width: 200px;
     height: 300px;
     position: absolute;
     background-position: center;
@@ -3148,13 +3152,14 @@ header.fading {
     width: 90%;
     margin: 0 auto;
     color: white;
+    top: 28%;
   }
 
   .yearbook-items-container {
     padding: 1rem;
     gap: 10px;
     bottom: 2rem;
-    top: 43%;
+    top: 45%;
     position: relative;
     width: 100%;
     max-width: 100%;
@@ -3174,7 +3179,7 @@ header.fading {
   }
 
   .yearbook-item {
-    width: 210px;
+    width: 200px;
     height: 280px;
     position: absolute;
     background-position: center;
