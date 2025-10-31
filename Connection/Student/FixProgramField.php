@@ -67,7 +67,6 @@ foreach ($programCollections as $collectionKey => $fullName) {
     try {
         $collection = $db->$collectionKey;
 
-        // Count total documents
         $totalDocs = $collection->countDocuments();
         $totalScanned += $totalDocs;
 
