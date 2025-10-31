@@ -187,7 +187,6 @@ try {
     </html>
     ";
 
-    // Try SendGrid first (for Railway), fallback to PHPMailer (for localhost)
     $emailSent = false;
 
     if ($sendGridApiKey && $sendGridApiKey !== 'your-sendgrid-api-key-here') {
