@@ -6,7 +6,6 @@ if (session_status() === PHP_SESSION_NONE) {
 require_once __DIR__ . '/../Configuration/config.php';
 require_once __DIR__ . '/../Configuration/MongoConnect.php';
 
-// Only allow admin access
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     http_response_code(403);
     die(json_encode(['success' => false, 'error' => 'Unauthorized access']));
