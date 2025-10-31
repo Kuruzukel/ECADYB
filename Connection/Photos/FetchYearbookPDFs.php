@@ -26,7 +26,6 @@ try {
         $query['batch_year'] = $batchYear;
     }
 
-    // Fetch PDFs
     $pdfs = $pdfsCollection->find($query, [
         'sort' => ['created_at' => -1]
     ])->toArray();
