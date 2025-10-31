@@ -195,6 +195,24 @@ function removeSpaces(input) {
 function validateForm() {
   let isValid = true;
 
+  function markInputError(element) {
+    if (!element) return;
+
+    element.classList.add("input-error");
+
+    const existingTimeout = element.dataset.errorTimeoutId;
+    if (existingTimeout) {
+      clearTimeout(Number(existingTimeout));
+    }
+
+    const timeoutId = setTimeout(() => {
+      element.classList.remove("input-error");
+      delete element.dataset.errorTimeoutId;
+    }, 5000);
+
+    element.dataset.errorTimeoutId = String(timeoutId);
+  }
+
   const requiredInputs = document.querySelectorAll(
     "#addStudentForm input:not(#motto):not(#honors):not(#milestone)"
   );
@@ -203,7 +221,7 @@ function validateForm() {
 
   requiredInputs.forEach((input) => {
     if (!input.value.trim()) {
-      input.classList.add("input-error");
+      markInputError(input);
       isValid = false;
     }
   });
@@ -211,7 +229,7 @@ function validateForm() {
   const programSelect = document.getElementById("program");
   programSelect.classList.remove("input-error");
   if (!programSelect.value) {
-    programSelect.classList.add("input-error");
+    markInputError(programSelect);
     isValid = false;
   }
 
@@ -221,18 +239,18 @@ function validateForm() {
 
   const academicYearPattern = /^\d{4}-\d{4}$/;
   if (!academicYearPattern.test(academicYearInput.value)) {
-    academicYearInput.classList.add("input-error");
+    markInputError(academicYearInput);
     isValid = false;
   }
 
   const studentIDPattern = /^\d{4}-\d{6}$/;
   if (!studentIDPattern.test(studentIDInput.value)) {
-    studentIDInput.classList.add("input-error");
+    markInputError(studentIDInput);
     isValid = false;
   }
 
   if (!emailInput.value.includes("@")) {
-    emailInput.classList.add("input-error");
+    markInputError(emailInput);
     isValid = false;
   }
 
@@ -244,6 +262,18 @@ const confirmBtn = document.getElementById("confirm-btn");
 const cancelBtn = document.getElementById("cancel-btn");
 const addStudentBtn = document.getElementById("add-student-btn");
 const form = document.getElementById("addStudentForm");
+const existingStudentOverlay = document.getElementById(
+  "existing-student-overlay"
+);
+const existingStudentCloseBtn = document.getElementById(
+  "existing-student-close-btn"
+);
+const existingStudentDetails = document.getElementById(
+  "existing-student-details"
+);
+const existingStudentMessage = document.getElementById(
+  "existing-student-message"
+);
 
 let notificationTimeout = null;
 
@@ -253,6 +283,32 @@ addStudentBtn.addEventListener("click", () => {
 
 cancelBtn.addEventListener("click", () => {
   modalOverlay.style.display = "none";
+});
+
+if (existingStudentCloseBtn) {
+  existingStudentCloseBtn.addEventListener("click", () => {
+    if (existingStudentOverlay) {
+      existingStudentOverlay.style.display = "none";
+    }
+  });
+}
+
+if (existingStudentOverlay) {
+  existingStudentOverlay.addEventListener("click", (event) => {
+    if (event.target === existingStudentOverlay) {
+      existingStudentOverlay.style.display = "none";
+    }
+  });
+}
+
+document.addEventListener("keydown", (event) => {
+  if (
+    event.key === "Escape" &&
+    existingStudentOverlay &&
+    existingStudentOverlay.style.display === "flex"
+  ) {
+    existingStudentOverlay.style.display = "none";
+  }
 });
 
 function showNotification(message, type = "success") {
@@ -298,6 +354,58 @@ function closeNotification(id) {
       notificationTimeout = null;
     }, 500);
   }
+}
+
+function showExistingStudentModal(student = {}, message = "") {
+  if (!existingStudentOverlay || !existingStudentDetails) return;
+
+  existingStudentDetails.innerHTML = "";
+
+  if (existingStudentMessage) {
+    existingStudentMessage.textContent =
+      message || "This student is already in the student list.";
+  }
+
+  const fullName = [
+    student.first_name,
+    student.middle_name,
+    student.last_name,
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  const detailItems = [
+    { label: "Full Name", value: fullName },
+    { label: "Email", value: student.email },
+    { label: "Academic Year", value: student.academic_year },
+    { label: "Student ID", value: student.student_id },
+    { label: "Program", value: student.program_name || student.program },
+    { label: "Section", value: student.section },
+    { label: "Department Section", value: student.department_section },
+    { label: "Status", value: student.status },
+  ];
+
+  detailItems.forEach((item) => {
+    if (!item.value) return;
+
+    const row = document.createElement("div");
+    row.className = "student-detail-row";
+
+    const label = document.createElement("span");
+    label.className = "label";
+    label.textContent = item.label;
+
+    const value = document.createElement("span");
+    value.className = "value";
+    value.textContent = item.value;
+
+    row.appendChild(label);
+    row.appendChild(value);
+
+    existingStudentDetails.appendChild(row);
+  });
+
+  existingStudentOverlay.style.display = "flex";
 }
 
 confirmBtn.addEventListener("click", () => {
@@ -369,6 +477,11 @@ confirmBtn.addEventListener("click", () => {
         form.reset();
       } else {
         showNotification(data.message || "Failed to add student.", "error");
+
+        if (data.existingStudent) {
+          form.reset();
+          showExistingStudentModal(data.existingStudent, data.message);
+        }
       }
     })
     .catch((error) => {

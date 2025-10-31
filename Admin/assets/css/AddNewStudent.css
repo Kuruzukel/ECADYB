@@ -274,6 +274,7 @@ select:hover {
   left: 0;
   height: 100vh;
   width: 100vw;
+  background: transparent;
   backdrop-filter: blur(2px);
   display: none;
   justify-content: center;
@@ -361,6 +362,46 @@ select:hover {
   transform: translateY(-1px);
 }
 
+#existing-student-overlay .modal {
+  max-width: 520px;
+}
+
+.existing-student-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+#existing-student-details {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.student-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.35);
+  border: 1px solid rgba(59, 130, 246, 0.15);
+}
+
+.student-detail-row .label {
+  font-weight: 600;
+  color: #e2e8f0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.75rem;
+}
+
+.student-detail-row .value {
+  color: #f8fafc;
+  font-weight: 500;
+  text-align: right;
+}
+
 @keyframes fadeOut {
   from {
     opacity: 1;
@@ -385,7 +426,7 @@ select:hover {
 .input-error {
   border: 2px solid #ef4444 !important;
   background-color: rgba(239, 68, 68, 0.1) !important;
-  animation: shake 0.3s ease-in-out;
+  animation: shake 0.3s ease-in-out, errorFadeOut 5s ease-in-out forwards;
 }
 
 @keyframes shake {
@@ -398,6 +439,18 @@ select:hover {
   }
   75% {
     transform: translateX(5px);
+  }
+}
+
+@keyframes errorFadeOut {
+  0% {
+    border-color: #ef4444;
+    background-color: rgba(239, 68, 68, 0.1);
+  }
+
+  100% {
+    border-color: transparent;
+    background-color: #1e293b;
   }
 }
 

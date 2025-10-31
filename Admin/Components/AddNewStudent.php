@@ -123,6 +123,34 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     try {
         $collection = $db->$programKey;
 
+        $existingStudent = $collection->findOne(
+            ["student id" => $student["student id"]],
+            ["typeMap" => ["root" => "array", "document" => "array"]]
+        );
+
+        if ($existingStudent) {
+            $existingStudentResponse = [
+                "first_name" => $existingStudent["first name"] ?? '',
+                "middle_name" => $existingStudent["middle name"] ?? '',
+                "last_name" => $existingStudent["last name"] ?? '',
+                "email" => $existingStudent["email"] ?? '',
+                "academic_year" => $existingStudent["academic year"] ?? '',
+                "student_id" => $existingStudent["student id"] ?? '',
+                "program" => $existingStudent["program"] ?? $programKey,
+                "program_name" => $programMap[$existingStudent["program"] ?? $programKey] ?? $programName,
+                "section" => $existingStudent["section"] ?? '',
+                "department_section" => $existingStudent["department section"] ?? '',
+                "status" => $existingStudent["status"] ?? ''
+            ];
+
+            ob_end_clean();
+            die(json_encode([
+                "success" => false,
+                "message" => "Student already exists in the student list.",
+                "existingStudent" => $existingStudentResponse
+            ]));
+        }
+
         $student["id"] = $collection->countDocuments() + 1;
 
         $insertResult = $collection->insertOne($student);
@@ -300,6 +328,23 @@ if ($outputFullHtml):
                     </button>
                     <button class="modal-btn cancel" id="cancel-btn">
                         <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="modal-overlay" id="existing-student-overlay" style="display: none;">
+            <div class="modal existing-student-modal" style="font-family: Arial, sans-serif;">
+                <div class="modal-header">
+                    <i class="fas fa-user-check modal-icon"></i>
+                    <h2>Student Already Exists</h2>
+                </div>
+                <div class="modal-content existing-student-content">
+                    <p id="existing-student-message">This student is already in the student list.</p>
+                    <div id="existing-student-details"></div>
+                </div>
+                <div class="modal-buttons">
+                    <button class="modal-btn cancel" id="existing-student-close-btn">
+                        <i class="fas fa-times"></i> Close
                     </button>
                 </div>
             </div>
