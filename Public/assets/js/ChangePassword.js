@@ -100,7 +100,6 @@ function validatePasswords() {
 }
 
 function updateSubmitButton() {
-  // Always keep submit button enabled
   submitButton.disabled = false;
   submitButton.style.opacity = "1";
   submitButton.style.cursor = "pointer";
