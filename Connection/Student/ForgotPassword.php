@@ -75,7 +75,6 @@ try {
         exit;
     }
 
-    // Verify the OTP matches
     if ($otpRecord['code'] !== $verificationCode) {
         error_log("Invalid OTP for email: $email. Expected: {$otpRecord['code']}, Got: $verificationCode");
 
