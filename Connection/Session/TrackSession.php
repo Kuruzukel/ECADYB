@@ -45,7 +45,6 @@ try {
             break;
 
         case 'get_active':
-            // Get all active sessions (admin only)
             if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
                 $sessions = getActiveSessions($client);
                 $formattedSessions = [];
