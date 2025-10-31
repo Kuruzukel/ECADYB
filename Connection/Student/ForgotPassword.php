@@ -98,7 +98,6 @@ try {
         exit;
     }
 
-    // OTP is valid, delete it from database
     $otpCollection->deleteOne(['email' => $email]);
     error_log("OTP verified successfully for email: $email");
 
