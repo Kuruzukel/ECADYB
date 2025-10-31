@@ -23,7 +23,6 @@ try {
                 error_log("✓ Student session ping: " . $_SESSION['student_id']);
                 echo json_encode(['success' => true, 'message' => 'Session updated']);
             } elseif (isset($_SESSION['username']) && isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
-                // Handle admin session
                 $adminId = 'admin_' . $_SESSION['username'];
                 updateSessionActivity($client, $adminId);
                 error_log("✓ Admin session ping: " . $adminId);
