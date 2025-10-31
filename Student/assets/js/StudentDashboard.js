@@ -212,8 +212,7 @@ if (track) {
     track.innerHTML = images
       .map(
         (src, i) =>
-          `<img src="${src}" class="carousel-img" data-index="${
-            i - 1
+          `<img src="${src}" class="carousel-img" data-index="${i - 1
           }" draggable="false" />`
       )
       .join("");
@@ -270,9 +269,8 @@ if (track) {
     if (!isDragging) return;
     const diff = e.touches[0].clientX - startX;
     track.style.transition = "none";
-    track.style.transform = `translateX(calc(-${
-      (currentIndex + 1) * 100
-    }% + ${diff}px))`;
+    track.style.transform = `translateX(calc(-${(currentIndex + 1) * 100
+      }% + ${diff}px))`;
   });
 
   track.addEventListener("touchend", (e) => {
@@ -1187,4 +1185,49 @@ document.addEventListener("DOMContentLoaded", function () {
   setTimeout(() => {
     loadAnnouncements();
   }, 100);
+});
+
+// Bottom Navigation Profile Dropdown Handler for Tablet
+document.addEventListener("DOMContentLoaded", function () {
+  const bottomProfileIcon = document.getElementById("bottomProfileIcon");
+  const bottomDropdownMenu = document.getElementById("bottomProfileDropdownMenu");
+  const notificationIcon = document.getElementById("notificationIcon");
+  const notificationDropdown = document.getElementById("notificationDropdown");
+
+  if (bottomProfileIcon && bottomDropdownMenu) {
+    bottomProfileIcon.addEventListener("click", function (e) {
+      e.stopPropagation();
+      this.classList.toggle("clicked");
+      bottomDropdownMenu.classList.toggle("show");
+
+      // Close notification dropdown if open
+      if (notificationIcon && notificationDropdown) {
+        notificationIcon.classList.remove("clicked");
+        notificationDropdown.classList.remove("show");
+      }
+    });
+
+    document.addEventListener("click", function (event) {
+      if (
+        !bottomProfileIcon.contains(event.target) &&
+        !bottomDropdownMenu.contains(event.target)
+      ) {
+        bottomProfileIcon.classList.remove("clicked");
+        bottomDropdownMenu.classList.remove("show");
+      }
+    });
+  }
+});
+
+// Active link highlighting for bottom navigation
+document.addEventListener("DOMContentLoaded", function () {
+  const bottomNavLinks = document.querySelectorAll(".bottom-nav a");
+  const currentPath = window.location.pathname;
+
+  bottomNavLinks.forEach((link) => {
+    const linkPath = link.getAttribute("href");
+    if (currentPath.includes(linkPath)) {
+      link.classList.add("active");
+    }
+  });
 });

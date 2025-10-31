@@ -147,6 +147,40 @@ if (empty($studentFirstName) && empty($studentLastName) && !empty($studentName))
   </button>
 </header>
 
+<!-- Bottom Navigation Bar for Tablet (600px-768px) -->
+<nav class="bottom-nav">
+  <a href="/ECADYB/Student/Components/StudentDashboard.php">
+    <i class="fa-solid fa-house"></i>
+    <span>Home</span>
+  </a>
+  <a href="/ECADYB/Student/Components/About.php">
+    <i class="fa-solid fa-circle-info"></i>
+    <span>About</span>
+  </a>
+  <a href="/ECADYB/Student/Components/Yearbook.php">
+    <i class="fa-solid fa-book"></i>
+    <span>Yearbooks</span>
+  </a>
+  <a href="/ECADYB/Student/Components/Memories.php">
+    <i class="fa-solid fa-images"></i>
+    <span>Memories</span>
+  </a>
+  <div class="profile-dropdown">
+    <img src="<?php echo htmlspecialchars($studentProfilePhoto ?: 'https://ECADYB.b-cdn.net/img/Profile.png'); ?>"
+      alt="Profile" class="profile-icon" id="bottomProfileIcon" />
+    <div class="dropdown-menu" id="bottomProfileDropdownMenu">
+      <button class="dropdown-item"
+        onclick="window.location.href='<?php echo BASE_URL; ?>Student/ChangePassword'">
+        Change Password
+      </button>
+      <button class="dropdown-item" onclick="editProfile()">
+        Edit Profile
+      </button>
+      <button class="dropdown-item" onclick="logout()">Log Out</button>
+    </div>
+  </div>
+</nav>
+
 <div id="notification-container"></div>
 
 <div id="editStudentModal" class="editStudentModal">
