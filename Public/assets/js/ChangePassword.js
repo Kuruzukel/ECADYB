@@ -8,7 +8,6 @@ const verificationCodeInput = document.getElementById("Confirm Password");
 const submitButton = document.querySelector(".submit-button");
 const form = document.querySelector("form");
 
-// Initialize the page
 window.addEventListener("DOMContentLoaded", () => {
   document.body.classList.add("page-transition-in");
 
