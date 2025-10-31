@@ -58,7 +58,6 @@ try {
         error_log("Admin check error: " . $e->getMessage());
     }
 
-    // Check student databases if not found in admin
     if (!$userExists) {
         $database = $client->selectDatabase('ECADYB');
         $departmentCollections = ['bsn', 'bsme', 'bscje', 'bstm', 'bse', 'bsis', 'beced', 'bsma', 'bsmt', 'btvted'];
