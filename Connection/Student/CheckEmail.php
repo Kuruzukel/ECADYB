@@ -46,7 +46,6 @@ try {
     $client = new Client(getMongoUrl());
     $userExists = false;
 
-    // Check admin database
     try {
         $adminDB = $client->selectDatabase('admin');
         $adminCollection = $adminDB->selectCollection('accounts');
