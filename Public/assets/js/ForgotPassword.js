@@ -41,7 +41,6 @@ function setupEventListeners() {
     verificationCodeInput.style.cursor = "not-allowed";
   });
 
-  // Verification code input validation & sanitize to digits only, max 6
   verificationCodeInput.addEventListener("input", function () {
     const sanitized = verificationCodeInput.value
       .replace(/\D+/g, "")
