@@ -305,7 +305,6 @@ async function handleFormSubmission() {
     return;
   }
 
-  // Check if only verification code is filled
   if (!email && verificationCode) {
     showNotification(
       "Please enter your email address first before entering the verification code.",
