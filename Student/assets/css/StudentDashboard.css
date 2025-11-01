@@ -3013,19 +3013,19 @@ header.fading {
     justify-content: flex-end;
     text-decoration: none;
     color: #ffffff;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 500;
     padding: 0 0 6px 0;
     border-radius: 12px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    min-width: 60px;
+    min-width: 55px;
     gap: 0.40rem;
     height: 62px;
   }
 
   .bottom-nav a i {
-    font-size: 1.3rem;
-    margin-bottom: 0.15rem;
+    font-size: 1.2rem;
+    margin-bottom: 0.1rem;
   }
 
   .bottom-nav a:hover,
@@ -3039,44 +3039,30 @@ header.fading {
     display: flex !important;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: center;
     margin: 0;
-    padding: 0 0 6px 0;
-    border-radius: 12px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    min-width: 60px;
-    gap: 0.40rem;
-    text-decoration: none;
-    color: #ffffff;
-    font-size: 0.75rem;
-    font-weight: 500;
-    height: 62px;
-  }
-
-  .bottom-nav .profile-dropdown:hover {
-    color: #fcda15;
-    border-radius: 999px;
   }
 
   .bottom-nav .profile-icon {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     cursor: pointer;
     object-fit: cover;
     object-position: center top;
     border: none;
     transition: transform 0.2s, box-shadow 0.2s;
-    margin-bottom: 0.15rem;
+    margin-bottom: 0.1rem;
   }
 
-  .bottom-nav .profile-dropdown:hover .profile-icon {
+  .bottom-nav .profile-icon:hover {
+    transform: scale(1.05);
     box-shadow: 0 4px 12px rgba(252, 218, 21, 0.3);
   }
 
   .bottom-nav .profile-dropdown::after {
     content: "Settings";
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 500;
     color: inherit;
   }
@@ -3084,7 +3070,7 @@ header.fading {
   .bottom-nav .dropdown-menu {
     bottom: 75px;
     top: auto;
-    right: 1rem;
+    right: 0.5rem;
   }
 }
 
