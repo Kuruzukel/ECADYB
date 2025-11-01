@@ -391,7 +391,6 @@ async function handleFormSubmission() {
         "success"
       );
 
-      // Auto-detect base URL for Railway vs Localhost
       const isLocalhost =
         window.location.hostname === "localhost" ||
         window.location.hostname === "127.0.0.1";
