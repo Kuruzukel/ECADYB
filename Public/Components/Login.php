@@ -63,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $client !== null) {
 
                 require_once __DIR__ . '/../../Connection/Configuration/JWTConfig.php';
                 $sessionData = [
-                    'student_id' => 'admin_' . $username, // Prefix with admin_ to distinguish from students
+                    'student_id' => 'admin_' . $username,
                     'username' => $username,
                     'name' => $admin['name'] ?? $username,
                     'role' => 'admin'
