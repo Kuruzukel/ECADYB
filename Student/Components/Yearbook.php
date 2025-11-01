@@ -812,10 +812,8 @@ try {
 
   <?php include __DIR__ . '/Footer.php'; ?>
 
-  <!-- Notification Container -->
   <div id="notification-container"></div>
 
-  <!-- Yearbook Completion Modal -->
   <div class="yearbook-completion-modal-overlay" id="yearbook-completion-modal">
     <div class="completion-modal-container">
       <div class="completion-modal-header">
@@ -823,10 +821,8 @@ try {
         <h3>Yearbook PDFs Available</h3>
       </div>
       <div class="completion-modal-body">
-        <!-- PDF Selection Container -->
         <div class="pdf-selection-container">
           <div class="dept-grid">
-            <!-- Maritime Education -->
             <label class="dept-label">
               <input type="checkbox" class="dept-checkbox" value="MARITIME">
               <div class="dept-info">
@@ -834,7 +830,6 @@ try {
               </div>
             </label>
 
-            <!-- Tourism Management -->
             <label class="dept-label">
               <input type="checkbox" class="dept-checkbox" value="BSTM">
               <div class="dept-info">
@@ -842,7 +837,6 @@ try {
               </div>
             </label>
 
-            <!-- Criminal Justice -->
             <label class="dept-label">
               <input type="checkbox" class="dept-checkbox" value="BSCJ">
               <div class="dept-info">
@@ -850,7 +844,6 @@ try {
               </div>
             </label>
 
-            <!-- Information System -->
             <label class="dept-label">
               <input type="checkbox" class="dept-checkbox" value="BSIS">
               <div class="dept-info">
@@ -858,7 +851,6 @@ try {
               </div>
             </label>
 
-            <!-- Education -->
             <label class="dept-label">
               <input type="checkbox" class="dept-checkbox" value="COE">
               <div class="dept-info">
@@ -866,7 +858,6 @@ try {
               </div>
             </label>
 
-            <!-- Business Administration -->
             <label class="dept-label">
               <input type="checkbox" class="dept-checkbox" value="BSBA">
               <div class="dept-info">
@@ -874,7 +865,6 @@ try {
               </div>
             </label>
 
-            <!-- Nursing -->
             <label class="dept-label">
               <input type="checkbox" class="dept-checkbox" value="BSN">
               <div class="dept-info">
@@ -908,7 +898,6 @@ try {
   </div>
 
   <script>
-    // Initialize student data from PHP session
     window.studentData = {
       studentId: <?php echo json_encode($studentId); ?>,
       studentName: <?php echo json_encode($studentName); ?>,
@@ -923,7 +912,6 @@ try {
   <script src="<?php echo BASE_URL; ?>Student/assets/js/StudentDashboard.js"></script>
   <script src="<?php echo BASE_URL; ?>Student/assets/js/yearbook-loader.js"></script>
   <script>
-    // Completion date fetched from database
     let COMPLETION_DATE;
     <?php if ($completionDateTimestamp): ?>
       COMPLETION_DATE = new Date(<?php echo $completionDateTimestamp; ?>);
@@ -950,7 +938,7 @@ try {
 
     function isYearbookCompleted() {
       if (!COMPLETION_DATE) {
-        return false; // No completion date means access is still open
+        return false;
       }
       const currentDate = new Date();
       const isCompleted = currentDate >= COMPLETION_DATE;
@@ -975,13 +963,11 @@ try {
       }
     }
 
-    // Notification System (from BatchTemplates)
     let notificationTimeout = null;
 
     function showNotification(message, type = 'success') {
       const container = document.getElementById('notification-container');
       if (!container) {
-        // Create container if it doesn't exist
         const newContainer = document.createElement('div');
         newContainer.id = 'notification-container';
         document.body.appendChild(newContainer);
@@ -1094,7 +1080,6 @@ try {
         countElement.textContent = count;
       }
 
-      // Enable/disable download button based on selection
       if (downloadBtn) {
         if (count === 0) {
           downloadBtn.disabled = true;
@@ -1172,7 +1157,6 @@ try {
         return;
       }
 
-      // Get student's academic year
       const studentAcademicYear = window.studentData?.studentAcademicYear || '';
       const batchYear = studentAcademicYear.includes('Batch Year') ? studentAcademicYear : 'Batch Year ' +
         studentAcademicYear;
@@ -1181,12 +1165,10 @@ try {
       console.log('Selected departments:', selectedDepartments);
       console.log('Batch year:', batchYear);
 
-      // Close modal first
       closeCompletionModal();
 
       const deptNames = selectedDepartments.join(', ');
 
-      // Show progress notification
       const progressNotification = showPersistentNotification(
         `Preparing PDF... 0%<br><small>Initializing...</small>`,
         'info',
@@ -1222,7 +1204,6 @@ try {
         showNotification(`Failed to generate PDF: ${error.message}`, 'error');
       }
 
-      // Reset selections
       setTimeout(() => {
         const checkboxes = document.querySelectorAll('.dept-checkbox');
         checkboxes.forEach(cb => {
@@ -1233,7 +1214,6 @@ try {
       }, 300);
     }
 
-    // PDF Generation Functions (from BatchTemplates.js)
     async function generateYearbookPDF(departments, batchYear, progressNotification) {
       console.log('=== generateYearbookPDF STARTED ===');
       console.log('Batch year:', batchYear);
@@ -1418,7 +1398,6 @@ try {
             const approxTotalCaptures = Math.ceil(totalPages / 2) + (totalPages % 2 === 0 ?
               1 : 0);
 
-            // Capture front cover
             console.log(`\n>>> Capturing front cover (page 1) for ${department}`);
             const nav1Success = await navigateToPage(iframeWindow, 1);
             if (nav1Success) {
@@ -1434,7 +1413,6 @@ try {
               }
             }
 
-            // Capture spreads
             for (let pageNum = 2; pageNum < totalPages; pageNum += 2) {
               console.log(`\n>>> Capturing spread at page ${pageNum} for ${department}`);
 
@@ -1459,7 +1437,6 @@ try {
               }
             }
 
-            // Capture back cover if needed
             if (totalPages > 1 && totalPages % 2 === 0) {
               console.log(
                 `\n>>> Capturing back cover (page ${totalPages}) for ${department}`);
@@ -1481,7 +1458,6 @@ try {
 
             console.log(`Total spreads captured: ${captureCount}`);
 
-            // Clean up
             clearTimeout(timeoutHandle);
             document.body.removeChild(iframe);
 
@@ -1517,7 +1493,6 @@ try {
           reject(new Error(`Failed to load yearbook for ${department}`));
         };
 
-        // Set timeout (5 minutes)
         timeoutHandle = setTimeout(() => {
           console.error(`\n❌ Timeout loading yearbook for ${department} after 300s`);
 
@@ -1535,7 +1510,7 @@ try {
     async function waitForYearbookInit(iframeWindow, iframeDoc) {
       return new Promise((resolve, reject) => {
         let attempts = 0;
-        const maxAttempts = 600; // 2 minutes
+        const maxAttempts = 600;
 
         const checkInit = () => {
           attempts++;
@@ -1564,9 +1539,7 @@ try {
                 setTimeout(() => resolve(), 2000);
                 return;
               }
-            } catch (e) {
-              // Turn.js not ready yet
-            }
+            } catch (e) {}
           }
 
           if (attempts < maxAttempts) {
@@ -1626,7 +1599,6 @@ try {
     async function capturePage(iframeDoc) {
       console.log('>>> capturePage called');
       try {
-        // Hide navigation controls
         const navControls = iframeDoc.querySelector('.nav-controls');
         const originalNavDisplay = navControls ? navControls.style.display : null;
         if (navControls) {
@@ -1638,13 +1610,11 @@ try {
           return null;
         }
 
-        // Create canvas
         const finalCanvas = document.createElement('canvas');
         finalCanvas.width = 1920;
         finalCanvas.height = 1080;
         const ctx = finalCanvas.getContext('2d');
 
-        // Draw background
         const bgImage = await loadImage('https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png');
         if (bgImage) {
           ctx.drawImage(bgImage, 0, 0, 1920, 1080);
@@ -1653,7 +1623,6 @@ try {
           ctx.fillRect(0, 0, 1920, 1080);
         }
 
-        // Capture yearbook content
         const canvas = iframeDoc.querySelector('#canvas');
         if (canvas) {
           const yearbookCanvas = await html2canvas(canvas, {
@@ -1683,10 +1652,8 @@ try {
           ctx.drawImage(yearbookCanvas, 0, 0, 1920, 1080);
         }
 
-        // Draw lower curl
         await drawLowerCurl(ctx, 1920, 1080);
 
-        // Restore navigation controls
         if (navControls && originalNavDisplay !== null) {
           navControls.style.display = originalNavDisplay;
         }
@@ -1760,7 +1727,7 @@ try {
         });
 
         Promise.all(imagePromises).then(resolve);
-        setTimeout(resolve, 10000); // 10 second timeout
+        setTimeout(resolve, 10000);
       });
     }
 
@@ -1769,14 +1736,13 @@ try {
       console.log('[Yearbook] 🔍 COMPLETION_DATE:', COMPLETION_DATE);
       console.log('[Yearbook] 🔍 Current time:', new Date());
 
-      // Check if yearbook access has been completed
       const completed = isYearbookCompleted();
       console.log('[Yearbook] 🔍 isYearbookCompleted():', completed);
 
       if (completed) {
         console.log('[Yearbook] 🚫 Access expired - ONLY showing completion modal (no loading/iframe)');
         showCompletionModal();
-        return; // Exit immediately - no loading, no iframe
+        return;
       } else {
         console.log('[Yearbook] ✅ Access still open - loading yearbook');
       }
@@ -1928,14 +1894,12 @@ try {
 
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') {
-        // Check if completion modal is open
         const completionModal = document.getElementById('yearbook-completion-modal');
         if (completionModal && completionModal.classList.contains('show')) {
           closeCompletionModal();
           return;
         }
 
-        // Otherwise check if yearbook iframe is open
         const iframeContainer = document.querySelector('.yearbook-iframe-container');
         if (iframeContainer && iframeContainer.style.display === 'block') {
           closeYearbookIframe();
@@ -1971,10 +1935,8 @@ try {
         }
       });
 
-      // Initialize department selection
       initializeDepartmentSelection();
 
-      // Close completion modal when clicking outside
       const completionModal = document.getElementById('yearbook-completion-modal');
       if (completionModal) {
         completionModal.addEventListener('click', function(e) {
@@ -1984,19 +1946,15 @@ try {
         });
       }
 
-      // Check if yearbook is completed on page load
-      // Only show PDF mode if completion date exists AND is expired
       if (COMPLETION_DATE && isYearbookCompleted()) {
         console.log('[Yearbook] 📄 Access period has ended - PDF downloads available');
 
-        // Update description text for expired yearbooks
         const descriptionText = document.getElementById('yearbook-description-text');
         if (descriptionText) {
           descriptionText.innerHTML =
             'The digital yearbook viewing period has ended. Click on any yearbook below to download the PDF.';
         }
 
-        // Add modern PDF badge to all yearbook items
         const yearBookItems = document.querySelectorAll('.yearbook-item');
         yearBookItems.forEach((item) => {
           const pdfBadge = document.createElement('div');
