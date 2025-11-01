@@ -36,7 +36,6 @@ $completionDateTimestamp = null;
 try {
   require_once __DIR__ . '/../../Connection/Configuration/MongoConnect.php';
 
-  // Get the yearbook covers collection
   $coversCollection = $client->ECADYB->Yearbook_Covers;
 
   // Format batch year - ensure it matches the database format "Batch Year YYYY-YYYY"
