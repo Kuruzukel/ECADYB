@@ -343,7 +343,6 @@ async function handleFormSubmission() {
     return;
   }
 
-  // Validate verification code format
   if (!validateVerificationCode()) {
     return; // Error message already shown by validateVerificationCode
   }
