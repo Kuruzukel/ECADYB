@@ -102,7 +102,6 @@ try {
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <style>
-    /* Modern PDF Badge for Yearbook Items */
     .yearbook-pdf-badge {
       position: absolute;
       top: 15px;
