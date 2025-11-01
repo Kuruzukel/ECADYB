@@ -1220,7 +1220,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-// Active link highlighting for bottom navigation
 document.addEventListener("DOMContentLoaded", function () {
   const bottomNavLinks = document.querySelectorAll(".bottom-nav a");
   const currentPath = window.location.pathname;
