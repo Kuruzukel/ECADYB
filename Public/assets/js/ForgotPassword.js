@@ -420,7 +420,6 @@ async function handleFormSubmission() {
 }
 
 function showNotification(message, type) {
-  // Remove any existing notification
   const existingNotification = document.querySelector(".notification");
   if (existingNotification) {
     existingNotification.remove();
