@@ -192,7 +192,6 @@ async function handleGetCode() {
   getCodeText.style.pointerEvents = "none";
 
   try {
-    // Check if email exists in database
     const emailCheckResponse = await fetch(
       "/Connection/Student/CheckEmail.php",
       {
