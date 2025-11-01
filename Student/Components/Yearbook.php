@@ -40,7 +40,7 @@ try {
 
   $batchYear = $studentAcademicYear;
   if (!empty($batchYear) && strpos($batchYear, 'Batch Year') === false) {
-    $batchYear = 'Batch Year ' . $batchYear; // Add prefix if not present
+    $batchYear = 'Batch Year ' . $batchYear;
   }
   $template = 1;
 
