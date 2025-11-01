@@ -48,7 +48,6 @@
         return;
       }
 
-      // Ensure spinner and text are in their own wrapper
       const spinner = loaderContent.querySelector(".spinner");
       const loaderText = loaderContent.querySelector(".loader-text");
 
