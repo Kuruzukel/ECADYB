@@ -42,7 +42,7 @@ try {
   if (!empty($batchYear) && strpos($batchYear, 'Batch Year') === false) {
     $batchYear = 'Batch Year ' . $batchYear; // Add prefix if not present
   }
-  $template = 1; // Default template, adjust if you have multiple templates
+  $template = 1;
 
   error_log("Yearbook.php: Querying for batch_year: $batchYear, template: $template");
 
