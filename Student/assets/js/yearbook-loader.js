@@ -37,10 +37,11 @@
       const loaderContent = this.loaderElement.querySelector(".loader-content");
       if (!loaderContent) return;
 
-      // Check if note wrapper already exists
       let noteWrapper = loaderContent.querySelector(".loader-note-wrapper");
       if (noteWrapper) {
-        const textPara = noteWrapper.querySelector(".yearbook-loader-note-text");
+        const textPara = noteWrapper.querySelector(
+          ".yearbook-loader-note-text"
+        );
         if (textPara) {
           textPara.textContent = this.noteText;
         }
