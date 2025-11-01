@@ -66,7 +66,6 @@ function setupEventListeners() {
     backButton.addEventListener("click", function (e) {
       e.preventDefault();
 
-      // Auto-detect base URL for Railway vs Localhost
       const isLocalhost =
         window.location.hostname === "localhost" ||
         window.location.hostname === "127.0.0.1";
