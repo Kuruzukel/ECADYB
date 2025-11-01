@@ -1,4 +1,3 @@
-// Session tracker - Sends heartbeat to server every 60 seconds
 (function () {
   const BASE_URL =
     window.location.hostname === "localhost" ||
