@@ -99,7 +99,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $client !== null) {
                         if ($student && isset($student['password']) && $student['password'] === $password) {
                             $studentIdValue = $student['student id'] ?? $student['student_id'] ?? $username;
 
-                            // Check if student ID is a placeholder value
                             if ($studentIdValue === '0000-000000' || empty($studentIdValue)) {
                                 $studentIdValue = $username;
                                 error_log("[Login] WARNING: Student has placeholder ID '0000-000000'. Using login username instead: " . $username);
