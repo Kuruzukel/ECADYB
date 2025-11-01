@@ -16,31 +16,30 @@ function limitID() {
 }
 
 function showNotification(message, type) {
-  // Remove any existing notification
-  const existingNotification = document.querySelector('.notification');
+  const existingNotification = document.querySelector(".notification");
   if (existingNotification) {
     existingNotification.remove();
   }
 
   // Create notification element
-  const notification = document.createElement('div');
+  const notification = document.createElement("div");
   notification.className = `notification ${type}-message`;
   notification.id = `${type}-message`;
-  
+
   notification.innerHTML = `
     <span class="notification-message">${message}</span>
     <button class="notification-close" onclick="closeNotification('${type}-message')">
       <i class="fas fa-times"></i>
     </button>
   `;
-  
+
   document.body.appendChild(notification);
-  
+
   // Trigger animation
   setTimeout(() => {
-    notification.classList.add('show');
+    notification.classList.add("show");
   }, 10);
-  
+
   // Auto-hide after 4 seconds
   setTimeout(() => {
     closeNotification(`${type}-message`);
@@ -50,7 +49,7 @@ function showNotification(message, type) {
 function closeNotification(id) {
   const notification = document.getElementById(id);
   if (notification) {
-    notification.classList.remove('show');
+    notification.classList.remove("show");
     setTimeout(() => {
       notification.remove();
     }, 500);
@@ -135,7 +134,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const errorMessage = document.getElementById("error-message");
   if (errorMessage && errorMessage.classList.contains("show")) {
     setTimeout(() => {
-      closeNotification('error-message');
+      closeNotification("error-message");
     }, 4000);
   }
 
@@ -158,8 +157,10 @@ window.addEventListener("DOMContentLoaded", () => {
       document.body.classList.add("page-transition-out");
 
       // Auto-detect base URL for Railway vs Localhost
-      const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-      const BASE_URL = isLocalhost ? '/ECADYB/' : '/';
+      const isLocalhost =
+        window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1";
+      const BASE_URL = isLocalhost ? "/ECADYB/" : "/";
 
       setTimeout(() => {
         window.location.href = BASE_URL + "LandingPage/";
