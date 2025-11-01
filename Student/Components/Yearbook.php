@@ -2012,7 +2012,6 @@ try {
           }, 6000);
         });
 
-        // Modal will only show when user clicks on a yearbook item
         console.log('[Yearbook] 📄 PDF badges added. Modal will show when yearbook is clicked.');
       }
     });
