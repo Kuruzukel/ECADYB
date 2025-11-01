@@ -71,7 +71,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $client !== null) {
                 $jwtToken = generateSessionToken('admin_' . $username, 'admin', $sessionData);
                 $_SESSION['jwt_token'] = $jwtToken;
 
-                // Store active session in MongoDB
                 $sessionStored = storeActiveSession($client, $sessionData);
                 if ($sessionStored) {
                     error_log("✓ Admin session stored successfully for: " . $username);
