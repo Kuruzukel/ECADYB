@@ -4,7 +4,6 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 require_once __DIR__ . '/../../Connection/Configuration/config.php';
 
-// Remove active session from MongoDB before destroying
 if (isset($_SESSION['student_id'])) {
     try {
         require_once __DIR__ . '/../../vendor/autoload.php';
