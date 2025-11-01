@@ -32,7 +32,6 @@ $departmentCodes = [
 
 $departmentCode = $departmentCodes[$studentDepartment] ?? 'BSME';
 
-// Fetch completion date from database
 $completionDateTimestamp = null;
 try {
   require_once __DIR__ . '/../../Connection/Configuration/MongoConnect.php';
@@ -905,7 +904,9 @@ try {
         <button class="completion-modal-btn" id="download-pdf-btn" onclick="downloadSelectedYearbooks()">
           <i class="fas fa-download"></i> Download PDF
         </button>
-        <button class="completion-modal-btn" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);" onclick="closeCompletionModal()">
+        <button class="completion-modal-btn"
+          style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);"
+          onclick="closeCompletionModal()">
           <i class="fas fa-times"></i> Cancel
         </button>
       </div>
@@ -937,7 +938,8 @@ try {
       console.log('[Yearbook] ============ YEARBOOK ACCESS STATUS ============');
       console.log('[Yearbook] Completion date:', COMPLETION_DATE.toLocaleString());
       console.log('[Yearbook] Current time:', currentTime.toLocaleString());
-      console.log('[Yearbook] Status:', isExpired ? '🔒 EXPIRED - Only completion modal will show' : '✅ ACTIVE - Yearbook loading enabled');
+      console.log('[Yearbook] Status:', isExpired ? '🔒 EXPIRED - Only completion modal will show' :
+        '✅ ACTIVE - Yearbook loading enabled');
       if (!isExpired) {
         const timeLeft = COMPLETION_DATE - currentTime;
         const hoursLeft = Math.floor(timeLeft / (1000 * 60 * 60));
@@ -1178,7 +1180,8 @@ try {
 
       // Get student's academic year
       const studentAcademicYear = window.studentData?.studentAcademicYear || '';
-      const batchYear = studentAcademicYear.includes('Batch Year') ? studentAcademicYear : 'Batch Year ' + studentAcademicYear;
+      const batchYear = studentAcademicYear.includes('Batch Year') ? studentAcademicYear : 'Batch Year ' +
+        studentAcademicYear;
 
       console.log('=== PDF DOWNLOAD STARTED ===');
       console.log('Selected departments:', selectedDepartments);
@@ -1325,7 +1328,8 @@ try {
             pdf.addImage(imgData, 'JPEG', 0, 0, 1920, 1080, undefined, 'FAST');
             totalPagesAdded++;
 
-            const addProgress = ((i + 1) / pageCanvases.length) * (100 / totalDepartments) - 80 / totalDepartments;
+            const addProgress = ((i + 1) / pageCanvases.length) * (100 / totalDepartments) - 80 /
+              totalDepartments;
             updatePersistentNotification(
               progressNotification,
               `Preparing PDF ${currentDeptIndex}/${totalDepartments}... ${Math.round(baseProgress + 80 / totalDepartments + addProgress)}%<br><small>Adding ${department} pages (${i + 1}/${pageCanvases.length}) [${allDepartmentsText}]</small>`
@@ -1417,7 +1421,8 @@ try {
             }
 
             let captureCount = 0;
-            const approxTotalCaptures = Math.ceil(totalPages / 2) + (totalPages % 2 === 0 ? 1 : 0);
+            const approxTotalCaptures = Math.ceil(totalPages / 2) + (totalPages % 2 === 0 ?
+              1 : 0);
 
             // Capture front cover
             console.log(`\n>>> Capturing front cover (page 1) for ${department}`);
@@ -1449,7 +1454,9 @@ try {
 
               let canvas = await capturePage(iframeDoc);
               if (canvas) {
-                console.log(`Spread captured successfully (${canvas.width}x${canvas.height})`);
+                console.log(
+                  `Spread captured successfully (${canvas.width}x${canvas.height})`
+                );
                 capturedPages.push(canvas);
                 captureCount++;
                 if (onPageProgress) {
@@ -1460,13 +1467,15 @@ try {
 
             // Capture back cover if needed
             if (totalPages > 1 && totalPages % 2 === 0) {
-              console.log(`\n>>> Capturing back cover (page ${totalPages}) for ${department}`);
+              console.log(
+                `\n>>> Capturing back cover (page ${totalPages}) for ${department}`);
               const navLastSuccess = await navigateToPage(iframeWindow, totalPages);
               if (navLastSuccess) {
                 await new Promise(resolve => setTimeout(resolve, 2000));
                 let canvas = await capturePage(iframeDoc);
                 if (canvas) {
-                  console.log(`Back cover captured (${canvas.width}x${canvas.height})`);
+                  console.log(
+                    `Back cover captured (${canvas.width}x${canvas.height})`);
                   capturedPages.push(canvas);
                   captureCount++;
                   if (onPageProgress) {
@@ -1482,7 +1491,9 @@ try {
             clearTimeout(timeoutHandle);
             document.body.removeChild(iframe);
 
-            console.log(`\n>>> Successfully captured ${capturedPages.length} pages for ${department}`);
+            console.log(
+              `\n>>> Successfully captured ${capturedPages.length} pages for ${department}`
+            );
 
             if (capturedPages.length === 0) {
               reject(new Error(`No pages were captured for ${department}`));
@@ -1840,7 +1851,8 @@ try {
       setTimeout(() => {
         if (iframe && iframeContainer) {
           const basePath = '<?php echo BASE_URL; ?>';
-          iframe.src = `${basePath}Student/Yearbook/index.html?department=${departmentCode}&fullscreen=true`;
+          iframe.src =
+            `${basePath}Student/Yearbook/index.html?department=${departmentCode}&fullscreen=true`;
           iframe.title = `Digital Yearbook - ${departmentName}`;
           iframeContainer.style.display = 'block';
 
@@ -1986,7 +1998,8 @@ try {
         // Update description text for expired yearbooks
         const descriptionText = document.getElementById('yearbook-description-text');
         if (descriptionText) {
-          descriptionText.innerHTML = 'The digital yearbook viewing period has ended. Click on any yearbook below to download the PDF.';
+          descriptionText.innerHTML =
+            'The digital yearbook viewing period has ended. Click on any yearbook below to download the PDF.';
         }
 
         // Add modern PDF badge to all yearbook items
