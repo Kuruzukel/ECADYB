@@ -153,7 +153,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
       document.body.classList.add("page-transition-out");
 
-      // Auto-detect base URL for Railway vs Localhost
       const isLocalhost =
         window.location.hostname === "localhost" ||
         window.location.hostname === "127.0.0.1";
