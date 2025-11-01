@@ -24,7 +24,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
   setupEventListeners();
 
-  // Check for error messages from server
   checkForServerMessages();
 });
 
