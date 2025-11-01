@@ -243,7 +243,6 @@ async function handleGetCode() {
       emailVerified = true;
       emailExists = true;
 
-      // Email was sent successfully
       showNotification(
         "Verification code sent successfully! Please check your email inbox.",
         "success"
