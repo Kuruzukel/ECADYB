@@ -47,6 +47,6 @@
       if (!redirectInProgress) {
         startTransition();
       }
-    }, 3000); // Changed from 10000ms (10 seconds) to 3000ms (3 seconds)
+    }, 3000);
   });
 })();
