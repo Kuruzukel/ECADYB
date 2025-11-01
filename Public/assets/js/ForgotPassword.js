@@ -396,7 +396,6 @@ async function handleFormSubmission() {
         window.location.hostname === "127.0.0.1";
       const BASE_URL = isLocalhost ? "/ECADYB/" : "/";
 
-      // Redirect to login after 3 seconds
       setTimeout(() => {
         window.location.href = BASE_URL + "login";
       }, 3000);
