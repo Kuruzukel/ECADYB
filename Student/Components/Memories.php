@@ -224,7 +224,6 @@ $studentProfilePhoto = $_SESSION['profile_photo'] ?? '';
 
   <?php include __DIR__ . '/Footer.php'; ?>
   <script>
-    // Initialize student data from PHP session
     window.studentData = {
       studentId: <?php echo json_encode($studentId); ?>,
       studentName: <?php echo json_encode($studentName); ?>,
