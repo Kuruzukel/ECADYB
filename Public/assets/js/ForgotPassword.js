@@ -52,7 +52,6 @@ function setupEventListeners() {
     updateSubmitButton();
   });
 
-  // Get Code button click
   getCodeText.addEventListener("click", function () {
     handleGetCode();
   });
