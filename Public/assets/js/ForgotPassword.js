@@ -129,7 +129,6 @@ function validateVerificationCode() {
   }
 
   if (code.length !== 6) {
-    // Only show error if there's content but it's not 6 digits
     highlightField(
       "verificationCodeInput",
       "Verification code must be 6 digits."
