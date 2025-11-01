@@ -347,7 +347,6 @@ async function handleFormSubmission() {
     return;
   }
 
-  // Verify OTP if available
   if (otpCode && verificationCode !== otpCode) {
     showNotification(
       "Invalid verification code. Please check and try again.",
