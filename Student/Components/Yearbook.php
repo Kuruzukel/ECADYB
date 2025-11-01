@@ -2006,7 +2006,6 @@ try {
           item.style.position = 'relative';
           item.appendChild(pdfBadge);
 
-          // Remove pulse animation after 6 seconds
           setTimeout(() => {
             pdfBadge.classList.remove('pulse');
           }, 6000);
