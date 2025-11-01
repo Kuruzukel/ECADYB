@@ -425,7 +425,6 @@ function showNotification(message, type) {
     existingNotification.remove();
   }
 
-  // Create notification element
   const notification = document.createElement("div");
   notification.className = `notification ${type}-message`;
   notification.id = `${type}-message`;
