@@ -334,7 +334,6 @@ async function handleFormSubmission() {
     return;
   }
 
-  // Validate email format
   if (!validateEmail()) {
     showNotification(
       "Please enter a valid email address format (e.g., user@example.com).",
