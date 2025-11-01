@@ -328,7 +328,6 @@ async function handleFormSubmission() {
     return;
   }
 
-  // Check if verification code is empty
   if (!verificationCode) {
     showNotification("Please enter the verification code.", "error");
     highlightField("verificationCodeInput");
