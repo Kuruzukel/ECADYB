@@ -124,7 +124,6 @@ function validateVerificationCode() {
   const code = verificationCodeInput.value.trim();
 
   if (!code) {
-    // Don't show error for empty field initially
     clearFieldHighlight("verificationCodeInput");
     return false;
   }
