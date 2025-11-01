@@ -62,7 +62,6 @@
         }
       }
 
-      // Create note wrapper with icon and paragraph
       noteWrapper = document.createElement("div");
       noteWrapper.className = "loader-note-wrapper";
 
