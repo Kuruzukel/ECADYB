@@ -61,7 +61,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $client !== null) {
                 $_SESSION['login_success'] = 'admin';
                 $_SESSION['redirect_to'] = '../../Admin/Components/AdminDashboard.php';
 
-                // Create JWT session token and track active session for admin
                 require_once __DIR__ . '/../../Connection/Configuration/JWTConfig.php';
                 $sessionData = [
                     'student_id' => 'admin_' . $username, // Prefix with admin_ to distinguish from students
