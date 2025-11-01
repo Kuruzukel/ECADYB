@@ -212,7 +212,8 @@ if (track) {
     track.innerHTML = images
       .map(
         (src, i) =>
-          `<img src="${src}" class="carousel-img" data-index="${i - 1
+          `<img src="${src}" class="carousel-img" data-index="${
+            i - 1
           }" draggable="false" />`
       )
       .join("");
@@ -269,8 +270,9 @@ if (track) {
     if (!isDragging) return;
     const diff = e.touches[0].clientX - startX;
     track.style.transition = "none";
-    track.style.transform = `translateX(calc(-${(currentIndex + 1) * 100
-      }% + ${diff}px))`;
+    track.style.transform = `translateX(calc(-${
+      (currentIndex + 1) * 100
+    }% + ${diff}px))`;
   });
 
   track.addEventListener("touchend", (e) => {
@@ -966,7 +968,6 @@ async function submitStudentInfo(event) {
     window.studentData?.studentAcademicYear || formData.get("academic_year");
   const department = window.studentData?.studentDepartment || "";
 
-  // Validate student ID
   if (!studentId || studentId.trim() === "" || studentId === "0000-000000") {
     showNotification(
       "Error: Invalid student ID. Please log out and log in again.",
@@ -1190,7 +1191,9 @@ document.addEventListener("DOMContentLoaded", function () {
 // Bottom Navigation Profile Dropdown Handler for Tablet
 document.addEventListener("DOMContentLoaded", function () {
   const bottomProfileIcon = document.getElementById("bottomProfileIcon");
-  const bottomDropdownMenu = document.getElementById("bottomProfileDropdownMenu");
+  const bottomDropdownMenu = document.getElementById(
+    "bottomProfileDropdownMenu"
+  );
   const notificationIcon = document.getElementById("notificationIcon");
   const notificationDropdown = document.getElementById("notificationDropdown");
 
