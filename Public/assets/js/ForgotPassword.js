@@ -16,7 +16,6 @@ window.addEventListener("DOMContentLoaded", () => {
   submitButton.style.opacity = "1";
   submitButton.style.cursor = "pointer";
 
-  // Disable verification code input initially
   verificationCodeInput.disabled = true;
   verificationCodeInput.style.opacity = "0.5";
   verificationCodeInput.style.cursor = "not-allowed";
