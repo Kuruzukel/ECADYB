@@ -120,7 +120,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $client !== null) {
                             $jwtToken = generateSessionToken($studentIdValue, 'student', $sessionData);
                             $_SESSION['jwt_token'] = $jwtToken;
 
-                            // Store active session in MongoDB
                             storeActiveSession($client, $sessionData);
                             $_SESSION['name']       = trim(($student['first name'] ?? '') . ' ' . ($student['middle name'] ?? '') . ' ' . ($student['last name'] ?? ''));
                             $_SESSION['department'] = $course;
