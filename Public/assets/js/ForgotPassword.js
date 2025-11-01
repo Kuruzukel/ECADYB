@@ -219,7 +219,6 @@ async function handleGetCode() {
       return;
     }
 
-    // Update loading text
     getCodeText.textContent = "Sending...";
 
     // Generate and send OTP (using SendGrid for Railway compatibility)
