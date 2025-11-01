@@ -1023,6 +1023,15 @@ header.fading {
   letter-spacing: 2px;
 }
 
+/* Default Student Info Styling - Show inline for larger screens */
+.student-info-inline {
+  display: block;
+}
+
+.student-info-mobile {
+  display: none;
+}
+
 .grid-overlay {
   position: absolute;
   top: 0;
@@ -4141,6 +4150,34 @@ header.fading {
 
   .footer-content {
     text-align: center !important;
+  }
+
+  /* Student Info Styling for Mobile - Hide inline, show mobile version */
+  .student-info-inline {
+    display: none !important;
+  }
+
+  .student-info-mobile {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    gap: 0.3rem !important;
+  }
+
+  .student-info-item {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 0.85rem !important;
+    opacity: 0.9 !important;
+    text-align: center !important;
+    gap: 0.3rem !important;
+  }
+
+  .student-info-item i {
+    font-size: 0.9rem !important;
+    margin-right: 0.2rem !important;
   }
 }
 

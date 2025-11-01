@@ -182,10 +182,25 @@ try {
         <div>
           Welcome, <strong><?php echo htmlspecialchars($studentName ?: 'Student'); ?></strong>!
         </div>
-        <div style="font-size: 0.9em; margin-top: 0.5em; opacity: 0.9;">
-          <i class="fas fa-id-card"></i> Student ID: <?php echo htmlspecialchars($studentId ?: 'N/A'); ?> |
-          <i class="fas fa-graduation-cap"></i> <?php echo htmlspecialchars($studentDepartment ?: 'N/A'); ?> |
-          <i class="fas fa-calendar"></i> <?php echo htmlspecialchars($studentAcademicYear ?: 'N/A'); ?>
+        <div class="student-info-container" style="font-size: 0.9em; margin-top: 0.5em; opacity: 0.9;">
+          <!-- Default inline format for larger screens -->
+          <div class="student-info-inline">
+            <i class="fas fa-id-card"></i> Student ID: <?php echo htmlspecialchars($studentId ?: 'N/A'); ?> |
+            <i class="fas fa-graduation-cap"></i> <?php echo htmlspecialchars($studentDepartment ?: 'N/A'); ?> |
+            <i class="fas fa-calendar"></i> <?php echo htmlspecialchars($studentAcademicYear ?: 'N/A'); ?>
+          </div>
+          <!-- Separate divs for mobile screens only -->
+          <div class="student-info-mobile">
+            <div class="student-info-item">
+              <i class="fas fa-id-card"></i> Student ID: <?php echo htmlspecialchars($studentId ?: 'N/A'); ?>
+            </div>
+            <div class="student-info-item">
+              <i class="fas fa-graduation-cap"></i> <?php echo htmlspecialchars($studentDepartment ?: 'N/A'); ?>
+            </div>
+            <div class="student-info-item">
+              <i class="fas fa-calendar"></i> <?php echo htmlspecialchars($studentAcademicYear ?: 'N/A'); ?>
+            </div>
+          </div>
         </div>
         <div style="margin-top: 1em;">
           Step into your digital yearbook. Every achievement and memory comes
