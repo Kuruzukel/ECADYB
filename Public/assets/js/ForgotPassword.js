@@ -360,7 +360,6 @@ async function handleFormSubmission() {
   submitButton.disabled = true;
 
   try {
-    // Submit the form with verification
     const response = await fetch("/Connection/Student/ForgotPassword.php", {
       method: "POST",
       headers: {
