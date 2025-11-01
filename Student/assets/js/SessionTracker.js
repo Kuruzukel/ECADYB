@@ -5,7 +5,6 @@
       ? "/ECADYB/"
       : "/";
 
-  // Send heartbeat ping every 60 seconds
   function sendSessionPing() {
     fetch(BASE_URL + "Connection/Session/TrackSession.php?action=ping", {
       method: "POST",
