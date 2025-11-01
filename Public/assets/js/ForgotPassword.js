@@ -344,7 +344,7 @@ async function handleFormSubmission() {
   }
 
   if (!validateVerificationCode()) {
-    return; // Error message already shown by validateVerificationCode
+    return;
   }
 
   // Verify OTP if available
