@@ -438,7 +438,6 @@ function showNotification(message, type) {
 
   document.body.appendChild(notification);
 
-  // Trigger animation
   setTimeout(() => {
     notification.classList.add("show");
   }, 10);
