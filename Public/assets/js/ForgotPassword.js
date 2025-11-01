@@ -188,7 +188,6 @@ async function handleGetCode() {
     return;
   }
 
-  // Show loading state
   getCodeText.textContent = "Checking...";
   getCodeText.style.pointerEvents = "none";
 
