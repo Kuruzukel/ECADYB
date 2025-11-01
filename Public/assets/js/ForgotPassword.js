@@ -48,7 +48,6 @@ function setupEventListeners() {
     if (verificationCodeInput.value !== sanitized) {
       verificationCodeInput.value = sanitized;
     }
-    // Don't validate on input - only validate on submit
     clearFieldHighlight("verificationCodeInput");
     updateSubmitButton();
   });
