@@ -22,7 +22,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
   updateGetCodeButton();
 
-  // Add event listeners
   setupEventListeners();
 
   // Check for error messages from server
