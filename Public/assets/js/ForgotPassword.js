@@ -28,7 +28,6 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 function setupEventListeners() {
-  // Email input validation
   emailInput.addEventListener("input", function () {
     limitID();
     validateEmail();
