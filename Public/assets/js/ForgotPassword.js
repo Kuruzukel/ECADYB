@@ -248,7 +248,6 @@ async function handleGetCode() {
         "success"
       );
 
-      // Start 60-second countdown
       let countdown = 60;
       getCodeText.textContent = `Resend (${countdown}s)`;
       getCodeText.style.color = "#28a745";
