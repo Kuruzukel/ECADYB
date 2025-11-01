@@ -33,7 +33,6 @@ function setupEventListeners() {
     validateEmail();
     updateSubmitButton();
     updateGetCodeButton();
-    // Disable verification input when email changes
     otpSent = false;
     emailVerified = false;
     verificationCodeInput.value = "";
