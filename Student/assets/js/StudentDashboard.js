@@ -1202,7 +1202,6 @@ document.addEventListener("DOMContentLoaded", function () {
       this.classList.toggle("clicked");
       bottomDropdownMenu.classList.toggle("show");
 
-      // Close notification dropdown if open
       if (notificationIcon && notificationDropdown) {
         notificationIcon.classList.remove("clicked");
         notificationDropdown.classList.remove("show");
