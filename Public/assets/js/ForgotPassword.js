@@ -300,7 +300,6 @@ async function handleFormSubmission() {
   const email = emailInput.value.trim();
   const verificationCode = verificationCodeInput.value.trim();
 
-  // Check if all fields are empty
   if (!email && !verificationCode) {
     showNotification("Please fill in all required fields.", "error");
     return;
