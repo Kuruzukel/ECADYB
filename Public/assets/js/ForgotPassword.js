@@ -442,7 +442,6 @@ function showNotification(message, type) {
     notification.classList.add("show");
   }, 10);
 
-  // Auto-hide after 4 seconds (or 15 seconds for success messages with OTP code)
   const autoHideDelay = message.includes("verification code is:")
     ? 15000
     : type === "success"
