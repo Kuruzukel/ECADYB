@@ -94,7 +94,6 @@ function validateEmail() {
   }
 
   if (!emailRegex.test(email)) {
-    // keep validation silent during typing; show errors on action (Get Code)
     emailExists = false;
     return false;
   }
