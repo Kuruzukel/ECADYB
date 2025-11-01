@@ -56,7 +56,6 @@ function setupEventListeners() {
     handleGetCode();
   });
 
-  // Form submission
   form.addEventListener("submit", function (e) {
     e.preventDefault();
     handleFormSubmission();
