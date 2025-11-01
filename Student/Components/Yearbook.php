@@ -46,7 +46,6 @@ try {
 
   error_log("Yearbook.php: Querying for batch_year: $batchYear, template: $template");
 
-  // Find any cover document for this batch that has a completion date
   $coverDoc = $coversCollection->findOne(
     [
       'batch_year' => $batchYear,
