@@ -38,7 +38,6 @@ function showNotification(message, type) {
     notification.classList.add("show");
   }, 10);
 
-  // Auto-hide after 4 seconds
   setTimeout(() => {
     closeNotification(`${type}-message`);
   }, 4000);
