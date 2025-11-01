@@ -137,7 +137,6 @@ function validateVerificationCode() {
   }
 
   if (!/^\d{6}$/.test(code)) {
-    // Only show error if there's content but it contains non-digits
     highlightField(
       "verificationCodeInput",
       "Verification code must contain only numbers."
