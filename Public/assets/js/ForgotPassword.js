@@ -320,7 +320,6 @@ async function handleFormSubmission() {
     return;
   }
 
-  // Check if verification code input is disabled (OTP not sent)
   if (verificationCodeInput.disabled) {
     showNotification(
       "Please click 'Get Code' to receive your verification code first.",
