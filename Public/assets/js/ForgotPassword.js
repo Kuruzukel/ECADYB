@@ -266,7 +266,6 @@ async function handleGetCode() {
         }
       }, 1000);
 
-      // Enable verification code input only after OTP is sent
       verificationCodeInput.disabled = false;
       verificationCodeInput.style.opacity = "1";
       verificationCodeInput.style.cursor = "text";
