@@ -270,7 +270,6 @@ async function handleGetCode() {
       verificationCodeInput.style.opacity = "1";
       verificationCodeInput.style.cursor = "text";
 
-      // Focus on verification code input
       verificationCodeInput.focus();
     } else {
       showNotification(
