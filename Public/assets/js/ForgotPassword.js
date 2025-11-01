@@ -314,7 +314,6 @@ async function handleFormSubmission() {
     return;
   }
 
-  // Check if email is empty
   if (!email) {
     showNotification("Please enter your email address.", "error");
     highlightField("idInput");
