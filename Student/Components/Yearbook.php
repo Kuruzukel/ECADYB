@@ -56,7 +56,6 @@ try {
   );
 
   if ($coverDoc && isset($coverDoc['completion_date'])) {
-    // Convert MongoDB UTCDateTime to JavaScript timestamp (milliseconds)
     $completionDateTimestamp = $coverDoc['completion_date']->toDateTime()->getTimestamp() * 1000;
     $readableDate = $coverDoc['completion_date']->toDateTime()->format('Y-m-d H:i:s');
     error_log("Yearbook.php: Completion date found: $readableDate (timestamp: $completionDateTimestamp)");
