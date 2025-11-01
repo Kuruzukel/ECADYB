@@ -262,7 +262,7 @@ async function handleGetCode() {
           getCodeText.textContent = "Get Code";
           getCodeText.style.color = "#6366f1";
           getCodeText.style.pointerEvents = "auto";
-          otpSent = false; // Allow resending after countdown
+          otpSent = false;
         }
       }, 1000);
 
