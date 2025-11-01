@@ -356,7 +356,6 @@ async function handleFormSubmission() {
     return;
   }
 
-  // Show loading state
   submitButton.textContent = "Processing...";
   submitButton.disabled = true;
 
