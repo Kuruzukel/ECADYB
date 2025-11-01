@@ -1188,7 +1188,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }, 100);
 });
 
-// Bottom Navigation Profile Dropdown Handler for Tablet
 document.addEventListener("DOMContentLoaded", function () {
   const bottomProfileIcon = document.getElementById("bottomProfileIcon");
   const bottomDropdownMenu = document.getElementById(
