@@ -23,13 +23,10 @@
       });
   }
 
-  // Send initial ping
   sendSessionPing();
 
-  // Send heartbeat every 60 seconds
   setInterval(sendSessionPing, 60000);
 
-  // Send logout ping when user leaves
   window.addEventListener("beforeunload", function () {
     navigator.sendBeacon(
       BASE_URL + "Connection/Session/TrackSession.php?action=logout"
