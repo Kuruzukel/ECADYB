@@ -38,7 +38,6 @@ try {
 
   $coversCollection = $client->ECADYB->Yearbook_Covers;
 
-  // Format batch year - ensure it matches the database format "Batch Year YYYY-YYYY"
   $batchYear = $studentAcademicYear;
   if (!empty($batchYear) && strpos($batchYear, 'Batch Year') === false) {
     $batchYear = 'Batch Year ' . $batchYear; // Add prefix if not present
