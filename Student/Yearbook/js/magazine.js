@@ -2750,7 +2750,6 @@ function findAndNavigateToStudent(
                   return;
                 }
 
-                // Find the card by student ID instead of using card index
                 var $targetCard = null;
                 var targetCardIndex = -1;
                 $studentCards.each(function (index) {
