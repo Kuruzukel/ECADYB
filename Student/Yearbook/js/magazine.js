@@ -2089,7 +2089,6 @@ function generateAllThumbnails() {
 
   console.log("Starting optimized thumbnail generation...");
 
-  // Use requestAnimationFrame for better performance
   requestAnimationFrame(function () {
     var pages = $(".magazine .page").toArray();
     var currentIndex = 0;
