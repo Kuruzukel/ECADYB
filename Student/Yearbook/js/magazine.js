@@ -1687,7 +1687,6 @@ function resizeViewport() {
     .zoom("resize");
 
   if ($(".magazine").turn("zoom") == 1) {
-    // Check if we're in fullscreen mode (either actual fullscreen or via URL parameter)
     var isActualFullscreen =
       document.fullscreenElement ||
       document.webkitFullscreenElement ||
