@@ -2308,8 +2308,8 @@ header.fading {
   .carousel-track img {
     width: 100%;
     max-width: 380px;
-    height: 250px;
-    object-fit: cover;
+    height: 100%;
+    object-fit: contain;
     border-radius: 12px;
     margin: 0 1rem;
     flex-shrink: 0;
@@ -4188,7 +4188,7 @@ header.fading {
     }
 
     100% {
-      transform: translateX(-200%);
+      transform: translateX(-1000%);
     }
   }
 
@@ -4732,7 +4732,7 @@ header.fading {
     }
 
     100% {
-      transform: translateX(-200%);
+      transform: translateX(-1000%);
     }
   }
 
