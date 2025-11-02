@@ -421,6 +421,7 @@ header.fading {
 }
 
 /* Media Queries for Welcome Text Responsiveness */
+/* Notification Dropdown Centering for All Responsive Breakpoints */
 @media (max-width: 768px) and (min-width: 600px) {
   .hero-welcome-text {
     font-size: 1.1rem;
@@ -434,6 +435,51 @@ header.fading {
     opacity: 0.9 !important;
     text-align: center !important;
     gap: 0.3rem !important;
+  }
+
+  .notification-icon-container .notification-dropdown,
+  .notification-dropdown {
+    position: fixed !important;
+    top: 36vh !important;
+    left: 40vw !important;
+    transform: translate(-50%, -50%) scale(0.98) !important;
+    right: auto !important;
+    bottom: auto !important;
+    width: 100% !important;
+    max-width: 500px !important;
+    min-width: 320px !important;
+    z-index: 10001 !important;
+    animation: none !important;
+    margin: 0 !important;
+  }
+
+  .notification-dropdown.show {
+    transform: translate(-50%, -50%) scale(1) !important;
+    animation: centerSlideIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+  }
+
+  .notification-dropdown.show::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(3px);
+    z-index: -1;
+  }
+
+  @keyframes centerSlideIn {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.9);
+    }
+
+    to {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
   }
 }
 
@@ -451,11 +497,77 @@ header.fading {
     text-align: center !important;
     gap: 0.3rem !important;
   }
+
+  .notification-icon-container .notification-dropdown,
+  .notification-dropdown {
+    position: fixed !important;
+    top: 36vh !important;
+    left: 40vw !important;
+    transform: translate(-50%, -50%) scale(0.98) !important;
+    right: auto !important;
+    bottom: auto !important;
+    width: 100% !important;
+    max-width: 450px !important;
+    min-width: 300px !important;
+    z-index: 10001 !important;
+    animation: none !important;
+    margin: 0 !important;
+  }
+
+  .notification-dropdown.show {
+    transform: translate(-50%, -50%) scale(1) !important;
+    animation: centerSlideIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+  }
+
+  .notification-dropdown.show::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(3px);
+    z-index: -1;
+  }
 }
 
 @media (max-width: 480px) and (min-width: 320px) {
   .hero-welcome-text {
     font-size: 0.9rem;
+  }
+
+  .notification-icon-container .notification-dropdown,
+  .notification-dropdown {
+    position: fixed !important;
+    top: 36vh !important;
+    left: 40vw !important;
+    transform: translate(-50%, -50%) scale(0.98) !important;
+    right: auto !important;
+    bottom: auto !important;
+    width: 100% !important;
+    max-width: 400px !important;
+    min-width: 280px !important;
+    z-index: 10001 !important;
+    animation: none !important;
+    margin: 0 !important;
+  }
+
+  .notification-dropdown.show {
+    transform: translate(-50%, -50%) scale(1) !important;
+    animation: centerSlideIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+  }
+
+  .notification-dropdown.show::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(3px);
+    z-index: -1;
   }
 }
 
