@@ -867,7 +867,6 @@ function loadPage(page, pageElement) {
       typeof coverData !== "undefined" &&
       coverData !== null
     ) {
-      // Determine if this should be a management page or student page
       var template = 1;
       if (coverData.template) {
         template = coverData.template;
