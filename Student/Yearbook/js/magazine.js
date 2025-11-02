@@ -668,7 +668,6 @@ function fetchStudentDataCached(department, template, apiPage, callback) {
 
   var batchYear = localStorage.getItem("selectedBatchYear");
 
-  // Build request data
   var requestData = {
     department: department,
     template: template,
