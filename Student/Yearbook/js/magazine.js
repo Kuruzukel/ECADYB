@@ -2899,7 +2899,6 @@ function findAndNavigateToStudent(
             }, 2000);
           });
 
-          // Now actually turn the page
           $magazine.turn("page", yearbookPage);
           console.log("✓ Page turn initiated to:", yearbookPage);
         } else {
