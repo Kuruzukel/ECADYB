@@ -150,7 +150,6 @@
           urlParams.get("batchYear") ||
           localStorage.getItem("selectedBatchYear");
 
-        // If batch year came from URL, update localStorage
         if (urlParams.get("batchYear")) {
           localStorage.setItem("selectedBatchYear", batchYear);
           console.log(
