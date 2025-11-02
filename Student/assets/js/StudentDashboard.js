@@ -483,8 +483,7 @@ function initializeCarousel() {
       track.innerHTML = images
         .map(
           (src, i) =>
-            `<img src="${src}" class="carousel-img" data-index="${
-              i - 1
+            `<img src="${src}" class="carousel-img" data-index="${i - 1
             }" draggable="false" />`
         )
         .join("");
@@ -549,9 +548,8 @@ function initializeCarousel() {
         if (!isDragging) return;
         const diff = e.touches[0].clientX - startX;
         track.style.transition = "none";
-        track.style.transform = `translateX(calc(-${
-          (currentIndex + 1) * 100
-        }% + ${diff}px))`;
+        track.style.transform = `translateX(calc(-${(currentIndex + 1) * 100
+          }% + ${diff}px))`;
       },
       { passive: true }
     );
@@ -648,39 +646,7 @@ function forceCleanupAllIntervals() {
   }
 }
 
-// Handle bfcache (back-forward cache) restoration
-window.addEventListener("pageshow", function (event) {
-  if (event.persisted) {
-    // Page was restored from bfcache - force cleanup and reinit
-    forceCleanupAllIntervals();
 
-    const track = document.getElementById("carousel-track");
-    if (track) {
-      setTimeout(() => {
-        initializeCarousel();
-      }, 200);
-    }
-  }
-});
-
-// Handle page hide - cleanup before page goes into bfcache
-window.addEventListener("pagehide", function (event) {
-  if (window.carouselState && window.carouselState.cleanup) {
-    window.carouselState.cleanup();
-  }
-  // Clear carousel interval
-  if (window.carouselState && window.carouselState.autoSlideInterval) {
-    clearInterval(window.carouselState.autoSlideInterval);
-    window.carouselState.autoSlideInterval = null;
-  }
-});
-
-// Additional iOS Safari specific cleanup on beforeunload
-window.addEventListener("beforeunload", function () {
-  if (window.carouselState && window.carouselState.cleanup) {
-    window.carouselState.cleanup();
-  }
-});
 
 // Initialize carousel on page load if carousel track exists
 if (document.readyState === "loading") {
