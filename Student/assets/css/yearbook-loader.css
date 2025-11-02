@@ -18,6 +18,8 @@
   -ms-user-select: none;
   -webkit-user-drag: none;
   pointer-events: auto;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .yearbook-loader-overlay * {
@@ -43,6 +45,9 @@
   cursor: default;
   user-select: none;
   pointer-events: none;
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .loader-text-wrapper {
@@ -57,6 +62,8 @@
   justify-content: center;
   gap: 12px;
   max-width: 600px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .spinner {
@@ -188,9 +195,27 @@
   -webkit-user-drag: none;
 }
 
+/* For screens 769px and up - keep text as one line */
+@media (min-width: 769px) {
+  .yearbook-loader-note-text {
+    white-space: nowrap;
+    text-align: left;
+    word-wrap: normal;
+    overflow-wrap: normal;
+  }
+
+  .loader-note-wrapper {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    max-width: 600px;
+  }
+}
+
 @media (max-width: 768px) {
   .loader-text {
     font-size: 18px;
+    text-align: center;
   }
 
   .spinner {
@@ -201,5 +226,164 @@
   .spinner-dot {
     width: 5px;
     height: 5px;
+  }
+
+  .yearbook-loader-note-text {
+    font-size: 14px;
+    text-align: center;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .loader-content {
+    gap: 16px;
+  }
+
+  .loader-note-wrapper {
+    flex-direction: column;
+    gap: 10px;
+    max-width: 95%;
+  }
+}
+
+@media (max-width: 600px) {
+  .loader-text {
+    font-size: 16px;
+    text-align: center;
+  }
+
+  .spinner {
+    width: 28px;
+    height: 28px;
+  }
+
+  .spinner-dot {
+    width: 4px;
+    height: 4px;
+  }
+
+  .yearbook-loader-note-text {
+    font-size: 13px;
+    white-space: normal;
+    text-align: center;
+    line-height: 1.4;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+  }
+
+  .yearbook-loader-note {
+    width: 18px;
+    height: 18px;
+    font-size: 11px;
+  }
+
+  .loader-content {
+    gap: 14px;
+    padding: 0 20px;
+  }
+
+  .loader-note-wrapper {
+    flex-direction: column;
+    gap: 8px;
+    max-width: 90%;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .loader-text {
+    font-size: 15px;
+    text-align: center;
+  }
+
+  .spinner {
+    width: 26px;
+    height: 26px;
+  }
+
+  .spinner-dot {
+    width: 4px;
+    height: 4px;
+  }
+
+  .yearbook-loader-note-text {
+    font-size: 12px;
+    text-align: center;
+    line-height: 1.3;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+  }
+
+  .yearbook-loader-note {
+    width: 16px;
+    height: 16px;
+    font-size: 10px;
+  }
+
+  .loader-content {
+    gap: 12px;
+    padding: 0 16px;
+  }
+
+  .loader-note-wrapper {
+    flex-direction: column;
+    gap: 6px;
+    max-width: 95%;
+    width: 100%;
+  }
+}
+
+@media (max-width: 320px) {
+  .loader-text {
+    font-size: 14px;
+    text-align: center;
+    letter-spacing: 0.3px;
+  }
+
+  .spinner {
+    width: 24px;
+    height: 24px;
+  }
+
+  .spinner-dot {
+    width: 3px;
+    height: 3px;
+  }
+
+  .yearbook-loader-note-text {
+    font-size: 11px;
+    text-align: center;
+    line-height: 1.2;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+  }
+
+  .yearbook-loader-note {
+    width: 14px;
+    height: 14px;
+    font-size: 9px;
+    border-width: 1px;
+  }
+
+  .loader-content {
+    gap: 10px;
+    padding: 0 12px;
+  }
+
+  .loader-note-wrapper {
+    flex-direction: column;
+    gap: 4px;
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .loader-text-wrapper {
+    gap: 8px;
   }
 }
