@@ -107,7 +107,6 @@ try {
         error_log("No cover found for template: " . $template . ", slot: " . $slot);
     }
 
-    // Return empty/default data if no cover found instead of throwing error
     if (!$cover) {
         $response = [
             '_id' => '',
