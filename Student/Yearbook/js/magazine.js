@@ -2,7 +2,6 @@ window.basePath = window.location.pathname.includes("/ECADYB/")
   ? "/ECADYB"
   : "";
 
-// Read batch year from URL parameters if provided (for iframe/PDF generation)
 (function () {
   var urlParams = new URLSearchParams(window.location.search);
   var batchYearFromUrl = urlParams.get("batchYear");
