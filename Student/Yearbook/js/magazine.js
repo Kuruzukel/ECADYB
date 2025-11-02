@@ -2715,7 +2715,6 @@ function findAndNavigateToStudent(
               function highlightStudent(retryCount) {
                 retryCount = retryCount || 0;
 
-                // Refresh visible pages on each retry
                 $visiblePages = $magazine.find(".page").filter(function () {
                   return $(this).is(":visible");
                 });
