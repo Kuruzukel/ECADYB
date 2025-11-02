@@ -79,6 +79,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const unreadCount = document.querySelectorAll(
       ".notification-item.unread"
     ).length;
+    const notificationBadge = document.getElementById("notificationBadge");
+
     if (notificationBadge) {
       if (unreadCount > 0) {
         notificationBadge.textContent = unreadCount;
@@ -179,11 +181,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
           }, 1000);
         }
-      } else {
-        this.classList.add("clicked");
-        setTimeout(() => {
-          this.classList.remove("clicked");
-        }, 300);
       }
     });
   });
@@ -211,10 +208,8 @@ if (track) {
 
     track.innerHTML = images
       .map(
-        (src, i) =>
-          `<img src="${src}" class="carousel-img" data-index="${
-            i - 1
-          }" draggable="false" />`
+        (src, index) =>
+          `<img src="${src}" alt="Carousel Image ${index}" class="carousel-img" draggable="false">`
       )
       .join("");
 
@@ -230,7 +225,7 @@ if (track) {
 
     currentIndex = index;
     isTransitioning = true;
-    track.style.transition = "transform 0.6s ease-in-out";
+    track.style.transition = "transform 0.5s ease-in-out";
     track.style.transform = `translateX(-${(index + 1) * 100}%)`;
   }
 
@@ -268,358 +263,138 @@ if (track) {
 
   track.addEventListener("touchmove", (e) => {
     if (!isDragging) return;
-    const diff = e.touches[0].clientX - startX;
-    track.style.transition = "none";
-    track.style.transform = `translateX(calc(-${
-      (currentIndex + 1) * 100
-    }% + ${diff}px))`;
+    const currentX = e.touches[0].clientX;
+    const diff = startX - currentX;
+    track.style.transform = `translateX(-${(currentIndex + 1) * 100
+      }% + ${diff}px))`;
   });
 
   track.addEventListener("touchend", (e) => {
-    isDragging = false;
-    const diff = e.changedTouches[0].clientX - startX;
-    if (diff > 50) {
-      prevImage();
-    } else if (diff < -50) {
-      nextImage();
+    if (!isDragging) return;
+    const endX = e.changedTouches[0].clientX;
+    const diff = startX - endX;
+
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) {
+        nextImage();
+      } else {
+        prevImage();
+      }
     } else {
-      moveToIndex(currentIndex);
+      track.style.transform = `translateX(-${(currentIndex + 1) * 100}%)`;
+    }
+
+    isDragging = false;
+  });
+
+  let startPos = 0;
+  let isDraggingMouse = false;
+
+  track.addEventListener("mousedown", (e) => {
+    e.preventDefault();
+    startPos = e.clientX;
+    isDraggingMouse = true;
+  });
+
+  track.addEventListener("mousemove", (e) => {
+    if (!isDraggingMouse) return;
+    const currentPos = e.clientX;
+    const diff = startPos - currentPos;
+    track.style.transform = `translateX(-${(currentIndex + 1) * 100
+      }% + ${diff}px))`;
+  });
+
+  track.addEventListener("mouseup", (e) => {
+    if (!isDraggingMouse) return;
+    const endPos = e.clientX;
+    const diff = startPos - endPos;
+
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) {
+        nextImage();
+      } else {
+        prevImage();
+      }
+    } else {
+      track.style.transform = `translateX(-${(currentIndex + 1) * 100}%)`;
+    }
+
+    isDraggingMouse = false;
+  });
+
+  track.addEventListener("mouseleave", () => {
+    if (isDraggingMouse) {
+      track.style.transform = `translateX(-${(currentIndex + 1) * 100}%)`;
+      isDraggingMouse = false;
     }
   });
 
   renderImages();
 
-  let autoSlideInterval = null;
+  setInterval(nextImage, 5000);
 
-  function startAutoSlide() {
-    autoSlideInterval = setInterval(() => {
-      nextImage();
-    }, 3000);
+  try {
+    const images = document.querySelectorAll(".carousel-img");
+    images.forEach((img) => {
+      img.addEventListener("dragstart", (e) => e.preventDefault());
+    });
+  } catch (error) {
+    console.log("Error setting up image drag prevention:", error);
   }
-
-  function stopAutoSlide() {
-    clearInterval(autoSlideInterval);
-  }
-
-  track.addEventListener("mouseenter", stopAutoSlide);
-  track.addEventListener("mouseleave", startAutoSlide);
-
-  startAutoSlide();
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-  const carousel = document.querySelector(".carousel-3d");
-  const items = document.querySelectorAll(".carousel-3d-item");
-  const prevBtn = document.querySelector(".carousel-3d-prev");
-  const nextBtn = document.querySelector(".carousel-3d-next");
-  const pagination = document.querySelector(".carousel-3d-pagination");
+let startPos = 0;
+let isDragging = false;
 
-  if (!carousel || !items.length || !pagination) {
-    return;
-  }
-
-  let currentIndex = 0;
-  const totalItems = items.length;
-  const angle = 360 / totalItems;
-  let isDragging = false;
-  let startPos = 0;
-  let currentTranslate = 0;
-  let prevTranslate = 0;
-  let animationID = 0;
-
-  function initCarousel() {
-    try {
-      items.forEach((item, index) => {
-        const rotation = angle * index;
-        item.style.transform = `rotateY(${rotation}deg) translateZ(500px)`;
-
-        item.setAttribute("data-index", index);
-      });
-
-      createPagination();
-      updatePagination();
-
-      setupEventListeners();
-    } catch (error) {
-      console.error("Error initializing 3D carousel:", error);
-    }
-  }
-
-  function createPagination() {
-    if (!pagination) return;
-
-    try {
-      for (let i = 0; i < totalItems; i++) {
-        const dot = document.createElement("button");
-        dot.addEventListener("click", () => goToSlide(i));
-        pagination.appendChild(dot);
-      }
-    } catch (error) {
-      console.error("Error creating pagination:", error);
-    }
-  }
-
-  function updatePagination() {
-    if (!pagination) return;
-
-    try {
-      const dots = pagination.querySelectorAll("button");
-      dots.forEach((dot, index) => {
-        dot.classList.toggle("active", index === currentIndex);
-      });
-    } catch (error) {
-      console.error("Error updating pagination:", error);
-    }
-  }
-
-  function goToSlide(index) {
-    try {
-      currentIndex = (index + totalItems) % totalItems;
-      rotateCarousel();
-      updatePagination();
-    } catch (error) {
-      console.error("Error going to slide:", error);
-    }
-  }
-
-  function rotateCarousel() {
-    if (!carousel) {
-      console.warn("Carousel element not found");
-      return;
-    }
-
-    try {
-      const rotation = -angle * currentIndex;
-      carousel.style.transition = "transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)";
-      carousel.style.transform = `translateZ(-500px) rotateY(${rotation}deg)`;
-    } catch (error) {
-      console.error("Error rotating carousel:", error);
-    }
-  }
-
-  function nextSlide() {
-    try {
-      currentIndex = (currentIndex + 1) % totalItems;
-      rotateCarousel();
-      updatePagination();
-    } catch (error) {
-      console.error("Error moving to next slide:", error);
-    }
-  }
-
-  function prevSlide() {
-    try {
-      currentIndex = (currentIndex - 1 + totalItems) % totalItems;
-      rotateCarousel();
-      updatePagination();
-    } catch (error) {
-      console.error("Error moving to previous slide:", error);
-    }
-  }
-
-  function setupEventListeners() {
-    try {
-      if (prevBtn) {
-        prevBtn.addEventListener("click", prevSlide);
-      }
-      if (nextBtn) {
-        nextBtn.addEventListener("click", nextSlide);
-      }
-
-      if (carousel) {
-        carousel.addEventListener("touchstart", touchStart);
-        carousel.addEventListener("touchend", touchEnd);
-        carousel.addEventListener("touchmove", touchMove);
-
-        carousel.addEventListener("mousedown", dragStart);
-        carousel.addEventListener("mouseup", dragEnd);
-        carousel.addEventListener("mouseleave", dragEnd);
-        carousel.addEventListener("mousemove", drag);
-      }
-
-      const images = document.querySelectorAll(".carousel-3d-item img");
-      images.forEach((img) => {
-        img.addEventListener("dragstart", (e) => e.preventDefault());
-      });
-    } catch (error) {
-      console.error("Error setting up event listeners:", error);
-    }
-  }
-
-  function touchStart(e) {
-    if (!carousel) return;
-
-    try {
-      startPos = e.touches[0].clientX;
-      isDragging = true;
-      carousel.style.transition = "none";
-      cancelAnimationFrame(animationID);
-    } catch (error) {
-      console.error("Error in touchStart:", error);
-    }
-  }
-
-  function touchMove(e) {
-    if (!isDragging || !carousel) return;
-
-    try {
-      const currentPosition = e.touches[0].clientX;
-      const diff = currentPosition - startPos;
-      const rotation = -angle * currentIndex + diff * 0.5;
-      carousel.style.transform = `translateZ(-500px) rotateY(${rotation}deg)`;
-    } catch (error) {
-      console.error("Error in touchMove:", error);
-    }
-  }
-
-  function touchEnd() {
-    if (!isDragging) return;
-
-    try {
-      isDragging = false;
-      const threshold = 50;
-      const touchEndX = event.changedTouches[0].clientX;
-      const diff = touchEndX - startPos;
-
-      if (Math.abs(diff) > threshold) {
-        if (diff > 0) {
-          prevSlide();
-        } else {
-          nextSlide();
-        }
-      } else {
-        rotateCarousel();
-      }
-    } catch (error) {
-      console.error("Error in touchEnd:", error);
-    }
-  }
-
-  function dragStart(e) {
-    if (!carousel) return;
-
-    try {
-      e.preventDefault();
-      startPos = e.clientX;
-      isDragging = true;
-      carousel.style.transition = "none";
-      cancelAnimationFrame(animationID);
-    } catch (error) {
-      console.error("Error in dragStart:", error);
-    }
-  }
-
-  function drag(e) {
-    if (!isDragging || !carousel) return;
-
-    try {
-      const currentPosition = e.clientX;
-      const diff = currentPosition - startPos;
-      const rotation = -angle * currentIndex + diff * 0.5;
-      carousel.style.transform = `translateZ(-500px) rotateY(${rotation}deg)`;
-    } catch (error) {
-      console.error("Error in drag:", error);
-    }
-  }
-
-  function dragEnd() {
-    if (!isDragging) return;
-
-    try {
-      isDragging = false;
-      const threshold = 50;
-      const diff = currentTranslate - prevTranslate;
-
-      if (Math.abs(diff) > threshold) {
-        if (diff > 0) {
-          prevSlide();
-        } else {
-          nextSlide();
-        }
-      } else {
-        rotateCarousel();
-      }
-    } catch (error) {
-      console.error("Error in dragEnd:", error);
-    }
-  }
-
-  let autoRotate = null;
-  if (carousel) {
-    autoRotate = setInterval(nextSlide, 5000);
-
-    carousel.addEventListener("mouseenter", () => {
-      if (autoRotate) {
-        clearInterval(autoRotate);
-      }
-    });
-
-    carousel.addEventListener("mouseleave", () => {
-      if (autoRotate) {
-        clearInterval(autoRotate);
-      }
-      autoRotate = setInterval(nextSlide, 5000);
-    });
-  }
-
-  initCarousel();
-});
-
-window.addEventListener("scroll", () => {
-  const sections = document.querySelectorAll("section, footer");
-  const navLinks = document.querySelectorAll(".center-nav a");
-
-  let current = "";
-
-  sections.forEach((section) => {
-    const sectionTop = section.offsetTop - 100;
-    const sectionHeight = section.offsetHeight;
-    if (
-      window.scrollY >= sectionTop &&
-      window.scrollY < sectionTop + sectionHeight
-    ) {
-      current = section.getAttribute("id");
-    }
-  });
-
-  navLinks.forEach((link) => {
-    link.classList.remove("active");
-    if (link.getAttribute("href") === `#${current}`) {
-      link.classList.add("active");
-    }
-  });
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-  const loginBtn = document.getElementById("loginDropdownBtn");
-  const mobileLoginBtn = document.getElementById("mobileLoginDropdownBtn");
-
-  function handleLoginClick(e) {
+document.addEventListener("mousedown", (e) => {
+  if (e.target.closest(".carousel-img")) {
     e.preventDefault();
-    e.stopPropagation();
-
-    document.body.classList.add("page-transition-out");
-
-    setTimeout(() => {
-      window.location.href = basePath + "Login";
-    }, 1000);
+    startPos = e.clientX;
+    isDragging = true;
   }
+});
 
-  if (loginBtn) {
-    loginBtn.replaceWith(loginBtn.cloneNode(true));
-    const newLoginBtn = document.getElementById("loginDropdownBtn");
-    newLoginBtn.addEventListener("click", handleLoginClick);
-
-    newLoginBtn.onclick = handleLoginClick;
+document.addEventListener("mousemove", (e) => {
+  if (isDragging && track) {
+    const currentPos = e.clientX;
+    const diff = startPos - currentPos;
+    track.style.transform = `translateX(-${(currentIndex + 1) * 100
+      }% + ${diff}px))`;
   }
+});
 
-  if (mobileLoginBtn) {
-    mobileLoginBtn.replaceWith(mobileLoginBtn.cloneNode(true));
-    const newMobileBtn = document.getElementById("mobileLoginDropdownBtn");
-    newMobileBtn.addEventListener("click", handleLoginClick);
+document.addEventListener("mouseup", (e) => {
+  if (isDragging && track) {
+    const endPos = e.clientX;
+    const diff = startPos - endPos;
 
-    newMobileBtn.onclick = handleLoginClick;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) {
+        nextImage();
+      } else {
+        prevImage();
+      }
+    } else {
+      track.style.transform = `translateX(-${(currentIndex + 1) * 100}%)`;
+    }
+
+    isDragging = false;
   }
+});
+
+function handleLoginClick(e) {
+  e.preventDefault();
+  e.stopPropagation();
+
+  const basePath = window.location.hostname === "localhost" ? "/ECADYB/" : "/";
+  window.location.href = basePath + "Login";
+}
+
+const loginButtons = document.querySelectorAll(
+  '.hero-btn[href="#login"], .hero-btn-secondary[href="#login"]'
+);
+loginButtons.forEach((button) => {
+  button.addEventListener("click", handleLoginClick);
 });
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -640,8 +415,7 @@ function initializeYearbookItems() {
     return;
   }
 
-  const existingListener = itemsContainer.getAttribute("data-listener");
-  if (existingListener) {
+  if (itemsContainer.getAttribute("data-listener") === "true") {
     return;
   }
 
@@ -651,9 +425,7 @@ function initializeYearbookItems() {
   yearBookItems.forEach((item) => {
     if (item) {
       item.style.transform = "";
-
-      item.style.willChange = "transform";
-      item.style.backfaceVisibility = "hidden";
+      item.style.transition = "";
     }
   });
 
@@ -684,29 +456,20 @@ function showYearbookBackground(clickedItem, imageUrl) {
       ".yearbook-detail-description"
     );
 
-    allItems.forEach((item) => {
-      if (item && item.classList) {
-        item.classList.remove("active");
-      }
-    });
+    const filename = imageUrl.split("/").pop();
+    const departmentInfo = getDepartmentInfo(filename);
 
-    if (clickedItem.classList) {
-      clickedItem.classList.add("active");
-    }
-
-    const clickedItemStyle = clickedItem.getAttribute("style");
-    const coverImageMatch = clickedItemStyle.match(
-      /background-image:\s*url\(['\"]?([^'\"\)]+)['\"]?\)/
+    const coverImageUrl = imageUrl.replace(
+      "https://ECADYB.b-cdn.net/img/YB%20COVER/",
+      "https://ECADYB.b-cdn.net/img/YB%20COVER/"
     );
-    const coverImageUrl = coverImageMatch ? coverImageMatch[1] : "";
-
-    const departmentInfo = getDepartmentInfo(coverImageUrl);
 
     sliderMain.style.backgroundImage = `url('${imageUrl}')`;
     sliderMain.classList.add("show-yearbook-bg");
 
     if (introContent) {
-      introContent.style.display = "none";
+      introContent.style.opacity = "0";
+      introContent.style.pointerEvents = "none";
     }
 
     if (detailDisplay && coverImage && detailTitle && detailDescription) {
@@ -717,56 +480,55 @@ function showYearbookBackground(clickedItem, imageUrl) {
       detailDescription.textContent = departmentInfo.description;
 
       detailDisplay.style.display = "flex";
+      detailDisplay.style.opacity = "1";
+      detailDisplay.style.pointerEvents = "auto";
     }
 
-    console.log("Background set successfully:", imageUrl);
     console.log("Department info:", departmentInfo);
   } catch (error) {
     console.error("Error in showYearbookBackground:", error);
   }
 }
 
-function getDepartmentInfo(coverImageUrl) {
-  const departmentMap = {
-    "MaritimeEducation.png": {
-      title: "College of Maritime Education",
-      description:
-        "Dedicated to the seafarers who embraced discipline, courage, and determination. This yearbook captures the proud tradition of alumni who are now prepared to navigate not only the seas but also the challenges of life with strength and honor.",
-    },
-    "TourismManagement.png": {
-      title: "College of Tourism Management",
-      description:
-        "This section honors the dreamers and storytellers of culture and travel. Alumni from this department will forever be remembered for their passion for hospitality, their creativity in connecting people, and their ability to make the world feel closer.",
-    },
-    "CriminalJusticeEducation.png": {
-      title: "College of Criminal Justice and Education",
-      description:
-        "A tribute to the men and women who stood for justice, discipline, and service. Their journey reflects resilience and integrity, and as alumni, they carry forward the values of fairness, leadership, and lifelong learning.",
-    },
-    "InformationSystem.png": {
-      title: "College of Information System",
-      description:
-        "This yearbook celebrates the innovators and problem-solvers who turned codes into solutions and ideas into systems. Alumni of this department leave behind a legacy of creativity and technological advancement, ready to shape the digital future.",
-    },
-    "Education.png": {
-      title: "College of Education",
-      description:
-        "A heartfelt tribute to those who chose the noble path of teaching. Alumni of this college carry with them the memories of inspiration and hard work, ready to ignite curiosity and shape the minds of future generations.",
-    },
-    "BusinessAdministration.png": {
-      title: "College of Business Administration",
-      description:
-        "A celebration of leaders, thinkers, and trailblazers in the making. Alumni of this college leave behind a legacy of ambition and innovation, ready to build businesses, inspire change, and create opportunities for the future.",
-    },
-    "Nursing.png": {
-      title: "College of Nursing",
-      description:
-        "This yearbook honors the compassionate hearts and steady hands of those who trained to serve. Alumni from this department will always be remembered for their dedication to care, their selflessness, and their unwavering commitment to saving lives.",
-    },
-  };
+const departmentMap = {
+  "MaritimeEducation.png": {
+    title: "College of Maritime Education",
+    description:
+      "Dedicated to the seafarers who embraced discipline, courage, and determination. This yearbook captures the proud tradition of alumni who are now prepared to navigate not only the seas but also the challenges of life with strength and honor.",
+  },
+  "TourismManagement.png": {
+    title: "College of Tourism Management",
+    description:
+      "This yearbook celebrates the hospitality professionals who turned passion into purpose. Alumni from this department carry forward the spirit of service excellence, cultural appreciation, and global connectivity that defines the tourism industry.",
+  },
+  "CriminalJusticeEducation.png": {
+    title: "College of Criminal Justice Education",
+    description:
+      "This yearbook honors the guardians of justice who chose to serve and protect. Alumni from this department embody integrity, courage, and unwavering commitment to upholding the law and ensuring community safety.",
+  },
+  "InformationSystem.png": {
+    title: "College of Information System",
+    description:
+      "This yearbook celebrates the innovators and problem-solvers who turned codes into solutions and ideas into systems. Alumni of this department leave behind a legacy of creativity and technological advancement, ready to shape the digital future.",
+  },
+  "Education.png": {
+    title: "College of Education",
+    description:
+      "This yearbook honors the future educators who chose to inspire and nurture minds. Alumni from this department carry forward the noble mission of shaping generations, fostering learning, and building a brighter tomorrow through education.",
+  },
+  "BusinessAdministration.png": {
+    title: "College of Business Administration",
+    description:
+      "This yearbook celebrates the future leaders and entrepreneurs who turned vision into reality. Alumni from this department are equipped with strategic thinking, leadership skills, and business acumen to drive innovation and economic growth.",
+  },
+  "Nursing.png": {
+    title: "College of Nursing",
+    description:
+      "This yearbook honors the compassionate hearts and steady hands of those who trained to serve. Alumni from this department will always be remembered for their dedication to care, their selflessness, and their unwavering commitment to saving lives.",
+  },
+};
 
-  const filename = coverImageUrl.split("/").pop();
-
+function getDepartmentInfo(filename) {
   return (
     departmentMap[filename] || {
       title: "Department Yearbook",
@@ -792,17 +554,18 @@ function closeYearbookView() {
     sliderMain.classList.remove("show-yearbook-bg", "background-loaded");
 
     allItems.forEach((item) => {
-      if (item && item.classList) {
-        item.classList.remove("active");
-      }
+      item.classList.remove("active");
     });
 
     if (introContent) {
-      introContent.style.display = "block";
+      introContent.style.opacity = "1";
+      introContent.style.pointerEvents = "auto";
     }
 
     if (detailDisplay) {
       detailDisplay.style.display = "none";
+      detailDisplay.style.opacity = "0";
+      detailDisplay.style.pointerEvents = "none";
     }
 
     console.log("Yearbook view closed successfully");
@@ -824,7 +587,7 @@ document.addEventListener("keydown", function (e) {
       }
     }
   } catch (error) {
-    console.error("Error in keyboard handler:", error);
+    console.error("Error in escape key handler:", error);
   }
 });
 
@@ -856,7 +619,7 @@ document.addEventListener("click", function (e) {
       closeYearbookView();
     }
   } catch (error) {
-    console.error("Error in click outside handler:", error);
+    console.error("Error in click handler:", error);
   }
 });
 
@@ -878,124 +641,65 @@ function markAllAsRead() {
 let originalFormValues = {};
 
 function editProfile() {
-  console.log("Edit Profile clicked");
   const modal = document.getElementById("editStudentModal");
-  if (modal) {
-    modal.classList.add("active");
-    document.body.style.overflow = "hidden";
+  const form = document.getElementById("editStudentForm");
 
-    const form = document.getElementById("edit-student-form");
-    if (form) {
-      originalFormValues = {
-        email: form.querySelector("#email")?.value || "",
-        motto: form.querySelector("#motto")?.value || "",
-        milestone: form.querySelector("#milestone")?.value || "",
-      };
-    }
+  if (!modal || !form) {
+    console.error("Modal or form not found");
+    return;
   }
+
+  const formData = new FormData(form);
+  originalFormValues = {};
+  for (let [key, value] of formData.entries()) {
+    originalFormValues[key] = value;
+  }
+
+  modal.style.display = "flex";
+  setTimeout(() => {
+    modal.classList.add("show");
+  }, 10);
+
+  console.log("Edit profile modal opened");
 }
 
 function closeEditModal() {
   const modal = document.getElementById("editStudentModal");
-  if (modal) {
-    modal.classList.remove("active");
-    document.body.style.overflow = "";
+  if (!modal) return;
 
-    const form = document.getElementById("edit-student-form");
-    if (form) {
-      form.reset();
+  modal.classList.remove("show");
+  setTimeout(() => {
+    modal.style.display = "none";
+  }, 300);
+
+  console.log("Edit profile modal closed");
+}
+
+function cancelEdit() {
+  const form = document.getElementById("editStudentForm");
+  if (!form) return;
+
+  for (let [key, value] of Object.entries(originalFormValues)) {
+    const input = form.querySelector(`[name="${key}"]`);
+    if (input) {
+      input.value = value;
     }
   }
+
+  closeEditModal();
+  console.log("Edit cancelled, form reset to original values");
 }
 
-document.addEventListener("click", function (event) {
-  const modal = document.getElementById("editStudentModal");
-  if (modal && event.target === modal && modal.classList.contains("active")) {
-    closeEditModal();
+async function saveStudentChanges() {
+  const form = document.getElementById("editStudentForm");
+  if (!form) {
+    console.error("Form not found");
+    return;
   }
-});
 
-document.addEventListener("keydown", function (event) {
-  const modal = document.getElementById("editStudentModal");
-  if (event.key === "Escape" && modal && modal.classList.contains("active")) {
-    closeEditModal();
-  }
-});
-
-function allowOnlyLetters(input) {
-  input.value = input.value.replace(/[^a-zA-Z\s]/g, "");
-}
-
-function removeSpaces(input) {
-  input.value = input.value.replace(/\s/g, "");
-}
-
-function formatAcademicYear(input) {
-  let value = input.value.replace(/[^0-9]/g, "");
-  if (value.length > 4) {
-    value = value.substring(0, 4) + "-" + value.substring(4, 8);
-  }
-  input.value = value;
-}
-
-async function submitStudentInfo(event) {
-  event.preventDefault();
-
-  const form = document.getElementById("edit-student-form");
   const formData = new FormData(form);
 
-  const currentValues = {
-    email: formData.get("email") || "",
-    motto: formData.get("motto") || "",
-    milestone: formData.get("milestone") || "",
-  };
-
-  const hasChanges =
-    currentValues.email !== originalFormValues.email ||
-    currentValues.motto !== originalFormValues.motto ||
-    currentValues.milestone !== originalFormValues.milestone;
-
-  if (!hasChanges) {
-    showNotification(
-      "No changes detected. Please modify at least one field before saving.",
-      "info"
-    );
-    return;
-  }
-
-  const studentId = window.studentData?.studentId || formData.get("student_id");
-  const academicYear =
-    window.studentData?.studentAcademicYear || formData.get("academic_year");
-  const department = window.studentData?.studentDepartment || "";
-
-  if (!studentId || studentId.trim() === "" || studentId === "0000-000000") {
-    showNotification(
-      "Error: Invalid student ID. Please log out and log in again.",
-      "error"
-    );
-    console.error("Invalid student ID detected:", studentId);
-    return;
-  }
-
-  const collectionMap = {
-    "BS Marine Engineering": "bsme",
-    "BS Marine Transportation": "bsmt",
-    "BS Criminal Justice Education": "bscje",
-    "BS Tourism Management": "bstm",
-    "BS Technical-Vocational Teacher Education": "btvted",
-    "BS Early Childhood Education": "beced",
-    "BS Nursing": "bsn",
-    "BS Information System": "bsis",
-    "BS Management Accounting": "bsma",
-    "BS Entrepreneurship": "bse",
-  };
-
-  const collection = collectionMap[department] || "bsme";
-
   const data = {
-    original_student_id: studentId,
-    collection: collection,
-    academic_year: academicYear,
     "first name": formData.get("first_name"),
     "middle name": formData.get("middle_name"),
     "last name": formData.get("last_name"),
@@ -1231,3 +935,5 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
+
+// Note: Yearbook navigation functionality is handled in Yearbook.php to avoid conflicts

@@ -1268,26 +1268,17 @@ header.fading {
   display: none;
 }
 
-.yearbook-item:hover {
-  transform: translateY(-10px) scale(1.05);
-  z-index: 100;
-}
+/* Removed hover effect for yearbook items */
 
-.yearbook-slider-main.show-yearbook-bg .yearbook-item:hover {
-  transform: translateY(-10px) scale(0.8);
-}
+/* Removed hover effect for yearbook items when background is shown */
 
 .yearbook-item {
   transform: translateZ(0);
 }
 
-.yearbook-item:not(.active):hover {
-  transform: translateY(-10px) scale(1.05) translateZ(0);
-}
+/* Removed hover effect for non-active yearbook items */
 
-.yearbook-item.active:hover {
-  transform: scale(0.9) translateZ(0);
-}
+/* Removed hover effect for active yearbook items */
 
 .yearbook-item.active {
   transform: scale(0.9);
@@ -5685,6 +5676,33 @@ h2.section-title {
   .yearbook-slider-nav.next {
     right: 10px;
   }
+
+  .yearbook-slider-nav:hover,
+  .yearbook-slider-nav:focus-visible {
+    background: linear-gradient(135deg, rgba(17, 45, 78, 0.95) 0%, #0d39d9 100%);
+    border: 1px solid #fcda15;
+    box-shadow: 0 10px 30px rgba(12, 39, 190, 0.35),
+      0 0 0 2px rgba(252, 218, 21, 0.35);
+    color: #ffffff;
+  }
+
+  .yearbook-slider-nav:focus-visible {
+    outline: none;
+    box-shadow: 0 10px 30px rgba(12, 39, 190, 0.35),
+      0 0 0 2px rgba(252, 218, 21, 0.65);
+  }
+
+  .yearbook-slider-nav:active {
+    transform: translateY(-50%) scale(0.95) !important;
+  }
+
+  /* Fix for translateY not working - force positioning */
+  .yearbook-slider-nav.prev,
+  .yearbook-slider-nav.next {
+    position: absolute !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+  }
 }
 
 @media (max-width: 600px) and (min-width: 480px) {
@@ -5817,6 +5835,33 @@ h2.section-title {
   .yearbook-slider-nav.next {
     right: 10px;
   }
+
+  .yearbook-slider-nav:hover,
+  .yearbook-slider-nav:focus-visible {
+    background: linear-gradient(135deg, rgba(17, 45, 78, 0.95) 0%, #0d39d9 100%);
+    border: 1px solid #fcda15;
+    box-shadow: 0 10px 30px rgba(12, 39, 190, 0.35),
+      0 0 0 2px rgba(252, 218, 21, 0.35);
+    color: #ffffff;
+  }
+
+  .yearbook-slider-nav:focus-visible {
+    outline: none;
+    box-shadow: 0 10px 30px rgba(12, 39, 190, 0.35),
+      0 0 0 2px rgba(252, 218, 21, 0.65);
+  }
+
+  .yearbook-slider-nav:active {
+    transform: translateY(-50%) scale(0.95) !important;
+  }
+
+  /* Fix for translateY not working - force positioning */
+  .yearbook-slider-nav.prev,
+  .yearbook-slider-nav.next {
+    position: absolute !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+  }
 }
 
 @media (max-width: 480px) and (min-width: 320px) {
@@ -5948,6 +5993,33 @@ h2.section-title {
 
   .yearbook-slider-nav.next {
     right: 10px;
+  }
+
+  .yearbook-slider-nav:hover,
+  .yearbook-slider-nav:focus-visible {
+    background: linear-gradient(135deg, rgba(17, 45, 78, 0.95) 0%, #0d39d9 100%);
+    border: 1px solid #fcda15;
+    box-shadow: 0 10px 30px rgba(12, 39, 190, 0.35),
+      0 0 0 2px rgba(252, 218, 21, 0.35);
+    color: #ffffff;
+  }
+
+  .yearbook-slider-nav:focus-visible {
+    outline: none;
+    box-shadow: 0 10px 30px rgba(12, 39, 190, 0.35),
+      0 0 0 2px rgba(252, 218, 21, 0.65);
+  }
+
+  .yearbook-slider-nav:active {
+    transform: translateY(-50%) scale(0.95) !important;
+  }
+
+  /* Fix for translateY not working - force positioning */
+  .yearbook-slider-nav.prev,
+  .yearbook-slider-nav.next {
+    position: absolute !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
   }
 }
 
