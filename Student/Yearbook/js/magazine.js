@@ -2693,7 +2693,6 @@ function findAndNavigateToStudent(
               }
               window.borderRemovalTimeouts = [];
 
-              // Remove all existing borders
               var bordersCleared = 0;
               $(".student-image").each(function () {
                 if ($(this).attr("style")) {
