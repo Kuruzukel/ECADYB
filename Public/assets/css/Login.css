@@ -799,8 +799,14 @@ button[type="back"]:hover {
     font-size: 2.8rem;
   }
 
+  .field,
+  .passwordField,
+  input {
+    width: 19rem;
+  }
+
   button[type="submit"] {
-    width: 58%;
+    width: 19rem;
   }
 }
 
@@ -813,9 +819,33 @@ button[type="back"]:hover {
     font-size: 2.5rem;
   }
 
+  .field,
+  .passwordField,
+  input {
+    width: 18rem;
+  }
+
   button[type="submit"] {
-    width: 58%;
+    width: 18rem;
   }
 }
 
-@media (max-width: 480px) and (min-width: 320px) {}
+@media (max-width: 480px) and (min-width: 320px) {
+  .loginCard {
+    width: 95%;
+  }
+
+  .title {
+    font-size: 2.2rem;
+  }
+
+  .field,
+  .passwordField,
+  input {
+    width: 16rem;
+  }
+
+  button[type="submit"] {
+    width: 16rem;
+  }
+}
