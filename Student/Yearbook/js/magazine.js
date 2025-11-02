@@ -1608,7 +1608,6 @@ function loadSmallPage(page, pageElement) {
     return;
   }
 
-  // Add page number to bottom of page (excluding front and back covers)
   if (page > 1 && page < totalPages) {
     pageElement.find(".page-number").remove();
     var pageNumberDiv = $("<div/>", {
