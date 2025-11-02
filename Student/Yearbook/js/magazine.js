@@ -1439,7 +1439,6 @@ function loadPage(page, pageElement) {
 
 function zoomTo(event) {
   setTimeout(function () {
-    //   } else {
     // }
   }, 1);
 }
