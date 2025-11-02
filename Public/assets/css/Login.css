@@ -472,6 +472,7 @@ body {
   background-image: url("https://ECADYB.b-cdn.net/img/ECABG.jpg");
   background-repeat: no-repeat;
   background-size: cover;
+  background-color: #021326;
   background-position: center;
   position: relative;
   height: 100dvh;
@@ -822,7 +823,7 @@ button[type="back"]:hover {
   }
 
   .title {
-    font-size: 2.5rem;
+    font-size: 2rem;
   }
 
   .field,
@@ -838,11 +839,11 @@ button[type="back"]:hover {
 
 @media (max-width: 480px) and (min-width: 320px) {
   .loginCard {
-    width: 95%;
+    width: 90%;
   }
 
   .title {
-    font-size: 2.2rem;
+    font-size: 1.5rem;
   }
 
   .field,
