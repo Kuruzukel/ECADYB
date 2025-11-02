@@ -1373,7 +1373,6 @@ function loadPage(page, pageElement) {
                   text: student.name || "Unknown Student",
                 });
 
-                // Store student data in data attributes for event delegation
                 card.attr("data-student-id", student.student_id || "");
                 card.attr(
                   "data-student-name",
