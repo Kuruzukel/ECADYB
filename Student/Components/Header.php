@@ -185,6 +185,9 @@ if (empty($studentFirstName) && empty($studentLastName) && !empty($studentName))
 
 <div id="editStudentModal" class="editStudentModal">
   <div class="modal-content">
+    <button class="modal-close-btn" onclick="closeEditModal()">
+      <i class="fas fa-times"></i>
+    </button>
     <div class="modal-header">
       <i class="fas fa-user-edit modal-icon"></i>
       <h3>Edit Profile</h3>

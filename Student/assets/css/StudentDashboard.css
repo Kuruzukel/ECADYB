@@ -4418,21 +4418,46 @@ header.fading {
   height: 100%;
   width: 32%;
   min-width: 250px;
-  background-color: #2d2f3a;
+  background: linear-gradient(145deg, #2d2f3a 0%, #252730 100%);
   padding: 20px;
   border-radius: 12px;
   box-sizing: border-box;
   min-height: 570px;
   display: flex;
   flex-direction: column;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border: 1px solid rgba(6, 182, 212, 0.2);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
 }
 
 .editStudentModal .section:hover {
-  transform: translateY(-2px);
-  border-color: rgba(6, 182, 212, 0.4);
-  box-shadow: 0 8px 24px rgba(6, 182, 212, 0.15);
+  transform: translateY(-3px);
+  border-color: rgba(6, 182, 212, 0.5);
+  box-shadow: 0 12px 32px rgba(6, 182, 212, 0.2),
+    0 0 20px rgba(6, 182, 212, 0.1);
+}
+
+.editStudentModal .section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(145deg,
+      rgba(6, 182, 212, 0.02) 0%,
+      rgba(14, 165, 233, 0.01) 50%,
+      rgba(6, 182, 212, 0.02) 100%);
+  border-radius: 12px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.editStudentModal .section:hover::before {
+  opacity: 1;
 }
 
 .editStudentModal .section-header {
@@ -4442,7 +4467,7 @@ header.fading {
   color: #ffffff;
   padding: 16px;
   margin: -20px -20px 25px -20px;
-  border-radius: 8px 8px 0 0;
+  border-radius: 12px 12px 0 0;
   text-align: center;
   font-size: 1.15em;
   font-weight: 600;
@@ -4454,6 +4479,7 @@ header.fading {
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
 }
 
 .editStudentModal .section-header::before {
@@ -4583,19 +4609,46 @@ header.fading {
   transform: translateY(-1px);
 }
 
-.editStudentModal .close-btn {
+.editStudentModal .modal-close-btn {
   position: absolute;
-  top: 12px;
+  top: 15px;
   right: 15px;
-  font-size: 22px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
   color: #ffffff;
   cursor: pointer;
-  transition: transform 0.2s ease, color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 1001;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.1);
 }
 
-.editStudentModal .close-btn:hover {
-  transform: scale(1.15);
-  color: #f87171;
+.editStudentModal .modal-close-btn:hover {
+  transform: scale(1.1) rotate(90deg);
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4),
+    0 0 20px rgba(239, 68, 68, 0.2);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.editStudentModal .modal-close-btn:active {
+  transform: scale(0.95) rotate(90deg);
+}
+
+.editStudentModal .modal-close-btn i {
+  transition: transform 0.3s ease;
+}
+
+.editStudentModal .modal-close-btn:hover i {
+  transform: scale(1.1);
 }
 
 @media (max-width: 1200px) {
@@ -4609,10 +4662,182 @@ header.fading {
   }
 }
 
-@media (max-width: 768px) {
+/* Modern scroll container for modal body */
+.editStudentModal .modal-body {
+  padding: 1rem;
+  box-sizing: border-box;
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex: 1;
+  max-height: calc(100vh - 120px);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(6, 182, 212, 0.6) rgba(255, 255, 255, 0.1);
+}
+
+/* Modern webkit scrollbar styling */
+.editStudentModal .modal-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.editStudentModal .modal-body::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  margin: 5px 0;
+}
+
+.editStudentModal .modal-body::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 100%);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.editStudentModal .modal-body::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #0891b2 0%, #0284c7 100%);
+  box-shadow: 0 4px 8px rgba(6, 182, 212, 0.3);
+}
+
+.editStudentModal .modal-body::-webkit-scrollbar-thumb:active {
+  background: linear-gradient(135deg, #0e7490 0%, #0369a1 100%);
+}
+
+@media (max-width: 991px) and (min-width: 768px) {
+  .editStudentModal .modal-content {
+    width: 95%;
+    height: 90%;
+    padding: 1rem;
+  }
+
+  .editStudentModal .form-group {
+    flex-direction: column;
+  }
+
+  .editStudentModal .section {
+    width: 100%;
+    min-height: auto;
+    margin-bottom: 1rem;
+  }
+
+  .editStudentModal .modal-body {
+    max-height: calc(90vh - 120px);
+  }
+}
+
+@media (max-width: 768px) and (min-width: 600px) {
+  .editStudentModal .modal-content {
+    width: 95%;
+    height: 85%;
+    padding: 0.8rem;
+  }
+
+  .editStudentModal h3 {
+    font-size: 1.4rem;
+  }
+
+  .editStudentModal .modal-icon {
+    font-size: 1.4rem;
+  }
+
+  .editStudentModal .form-group {
+    flex-direction: column;
+  }
+
+  .editStudentModal .section {
+    width: 100%;
+    padding: 15px;
+    min-width: auto;
+    margin-bottom: 1rem;
+  }
+
+  .editStudentModal .section-header {
+    width: calc(100% + 30px);
+    margin: -15px -15px 20px -15px;
+  }
+
+  .editStudentModal .modal-body {
+    max-height: calc(85vh - 120px);
+    padding: 0.8rem;
+  }
+
+  .editStudentModal .modal-buttons {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .editStudentModal .modal-btn {
+    width: auto;
+    min-width: 120px;
+  }
+
+  .editStudentModal .modal-close-btn {
+    top: 13px;
+    right: 13px;
+    width: 30px;
+    height: 30px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 600px) and (min-width: 480px) {
+  .editStudentModal .modal-content {
+    width: 95%;
+    height: 80%;
+    padding: 0.6rem;
+  }
+
+  .editStudentModal h3 {
+    font-size: 1.3rem;
+  }
+
+  .editStudentModal .modal-icon {
+    font-size: 1.3rem;
+  }
+
+  .editStudentModal .form-group {
+    flex-direction: column;
+  }
+
+  .editStudentModal .section {
+    width: 100%;
+    padding: 12px;
+    min-width: auto;
+    margin-bottom: 0.8rem;
+  }
+
+  .editStudentModal .modal-body {
+    max-height: calc(80vh - 100px);
+    padding: 0.6rem;
+  }
+
+  .editStudentModal .section-header {
+    font-size: 1rem;
+    height: 50px;
+    width: calc(100% + 24px);
+    margin: -12px -12px 20px -12px;
+  }
+
+  .editStudentModal .modal-close-btn {
+    top: 11px;
+    right: 11px;
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+
+  .editStudentModal .modal-buttons {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .editStudentModal .modal-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) and (min-width: 320px) {
   .editStudentModal .modal-content {
     width: 98%;
-    height: 98%;
+    height: 85%;
     padding: 0.5rem;
   }
 
@@ -4624,17 +4849,60 @@ header.fading {
     font-size: 1.2rem;
   }
 
+  .editStudentModal .form-group {
+    flex-direction: column;
+  }
+
   .editStudentModal .section {
-    padding: 15px;
-    min-width: 200px;
+    width: 100%;
+    padding: 10px;
+    min-width: auto;
+    margin-bottom: 0.6rem;
+  }
+
+  .editStudentModal .modal-body {
+    max-height: calc(85vh - 80px);
+    padding: 0.5rem;
+  }
+
+  .editStudentModal .section-header {
+    font-size: 0.9rem;
+    height: 45px;
+    padding: 12px;
+    width: calc(100% + 20px);
+    margin: -10px -10px 15px -10px;
+  }
+
+  .editStudentModal .modal-close-btn {
+    top: 10px;
+    right: 10px;
+    width: 26px;
+    height: 26px;
+    font-size: 11px;
+  }
+
+  .editStudentModal label {
+    font-size: 0.8rem;
+    margin: 12px 0 6px;
+  }
+
+  .editStudentModal .section input,
+  .editStudentModal .section select,
+  .editStudentModal .section textarea {
+    padding: 10px 12px;
+    font-size: 14px;
+    margin-bottom: 12px;
   }
 
   .editStudentModal .modal-buttons {
     flex-direction: column;
+    gap: 0.4rem;
   }
 
   .editStudentModal .modal-btn {
     width: 100%;
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
   }
 }
 
