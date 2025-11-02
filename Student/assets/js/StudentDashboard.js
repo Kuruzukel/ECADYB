@@ -188,7 +188,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 const track = document.getElementById("carousel-track");
 
-if (track) {
+if (track && !track.hasAttribute('data-carousel-initialized')) {
+  track.setAttribute('data-carousel-initialized', 'true');
   let carouselImageElements = Array.from(
     track.querySelectorAll(".carousel-img")
   );
@@ -260,7 +261,7 @@ if (track) {
   track.addEventListener("touchstart", (e) => {
     startX = e.touches[0].clientX;
     isDragging = true;
-  });
+  }, { passive: true });
 
   track.addEventListener("touchmove", (e) => {
     if (!isDragging) return;
@@ -268,7 +269,7 @@ if (track) {
     track.style.transition = "none";
     track.style.transform = `translateX(calc(-${(currentIndex + 1) * 100
       }% + ${diff}px))`;
-  });
+  }, { passive: true });
 
   track.addEventListener("touchend", (e) => {
     isDragging = false;
@@ -287,19 +288,48 @@ if (track) {
   let autoSlideInterval = null;
 
   function startAutoSlide() {
+    // Clear any existing interval first
+    if (autoSlideInterval) {
+      clearInterval(autoSlideInterval);
+    }
     autoSlideInterval = setInterval(() => {
       nextImage();
     }, 3000);
   }
 
   function stopAutoSlide() {
-    clearInterval(autoSlideInterval);
+    if (autoSlideInterval) {
+      clearInterval(autoSlideInterval);
+      autoSlideInterval = null;
+    }
   }
+
+  // Clean up any existing event listeners
+  track.removeEventListener("mouseenter", stopAutoSlide);
+  track.removeEventListener("mouseleave", startAutoSlide);
 
   track.addEventListener("mouseenter", stopAutoSlide);
   track.addEventListener("mouseleave", startAutoSlide);
 
   startAutoSlide();
+
+  // Handle page visibility changes to prevent multiple intervals
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      stopAutoSlide();
+    } else {
+      startAutoSlide();
+    }
+  });
+
+  // Handle page focus/blur events for mobile
+  window.addEventListener('focus', () => {
+    startAutoSlide();
+  });
+
+  window.addEventListener('blur', () => {
+    stopAutoSlide();
+  });
 }
 
 

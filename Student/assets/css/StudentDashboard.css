@@ -2135,6 +2135,8 @@ header.fading {
   animation: carousel-scroll 145s linear infinite;
   z-index: 3;
   width: max-content;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 }
 
 .carousel-track img {
@@ -2190,6 +2192,20 @@ header.fading {
 
 .carousel-container:hover .carousel-track {
   animation-play-state: paused;
+}
+
+/* Mobile-specific carousel fixes */
+@media (max-width: 768px) {
+  .carousel-track {
+    animation-duration: 145s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-fill-mode: forwards;
+  }
+
+  .carousel-container:hover .carousel-track {
+    animation-play-state: running;
+  }
 }
 
 .footer-section {
