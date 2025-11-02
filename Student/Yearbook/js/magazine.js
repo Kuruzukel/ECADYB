@@ -1476,7 +1476,6 @@ function addRegion(region, pageElement) {
 }
 
 function regionClick(event) {
-  //   var region = $(event.target);
   //   if (region.hasClass("region")) {
   //     $(".magazine-viewport").data().regionClicked = true;
   //     setTimeout(function () {
