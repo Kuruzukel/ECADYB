@@ -9,7 +9,6 @@ window.basePath = window.location.pathname.includes("/ECADYB/")
   if (batchYearFromUrl) {
     console.log("Setting batch year from URL parameter:", batchYearFromUrl);
     localStorage.setItem("selectedBatchYear", batchYearFromUrl);
-    // Clear caches when batch year is set from URL
     window.topManagementCache = {};
     window.topManagementPendingRequests = {};
     window.studentDataCache = {};
