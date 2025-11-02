@@ -5692,16 +5692,28 @@ h2.section-title {
       0 0 0 2px rgba(252, 218, 21, 0.65);
   }
 
-  .yearbook-slider-nav:active {
-    transform: translateY(-50%) scale(0.95) !important;
-  }
-
   /* Fix for translateY not working - force positioning */
   .yearbook-slider-nav.prev,
   .yearbook-slider-nav.next {
     position: absolute !important;
     top: 50% !important;
     transform: translateY(-50%) !important;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+
+  /* Active state with higher specificity - more visible scale */
+  .yearbook-slider-nav.prev:active,
+  .yearbook-slider-nav.next:active {
+    transform: translateY(-50%) scale(0.85) !important;
+    transition: none !important;
+    background: rgba(13, 57, 217, 0.8) !important;
+  }
+
+  /* Mouse down effect */
+  .yearbook-slider-nav.prev:hover:active,
+  .yearbook-slider-nav.next:hover:active {
+    transform: translateY(-50%) scale(0.85) !important;
+    background: rgba(13, 57, 217, 0.9) !important;
   }
 }
 
@@ -5851,16 +5863,28 @@ h2.section-title {
       0 0 0 2px rgba(252, 218, 21, 0.65);
   }
 
-  .yearbook-slider-nav:active {
-    transform: translateY(-50%) scale(0.95) !important;
-  }
-
   /* Fix for translateY not working - force positioning */
   .yearbook-slider-nav.prev,
   .yearbook-slider-nav.next {
     position: absolute !important;
     top: 50% !important;
     transform: translateY(-50%) !important;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+
+  /* Active state with higher specificity - more visible scale */
+  .yearbook-slider-nav.prev:active,
+  .yearbook-slider-nav.next:active {
+    transform: translateY(-50%) scale(0.85) !important;
+    transition: none !important;
+    background: rgba(13, 57, 217, 0.8) !important;
+  }
+
+  /* Mouse down effect */
+  .yearbook-slider-nav.prev:hover:active,
+  .yearbook-slider-nav.next:hover:active {
+    transform: translateY(-50%) scale(0.85) !important;
+    background: rgba(13, 57, 217, 0.9) !important;
   }
 }
 
@@ -6020,6 +6044,22 @@ h2.section-title {
     position: absolute !important;
     top: 50% !important;
     transform: translateY(-50%) !important;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+
+  /* Active state with higher specificity - more visible scale */
+  .yearbook-slider-nav.prev:active,
+  .yearbook-slider-nav.next:active {
+    transform: translateY(-50%) scale(0.85) !important;
+    transition: none !important;
+    background: rgba(13, 57, 217, 0.8) !important;
+  }
+
+  /* Mouse down effect */
+  .yearbook-slider-nav.prev:hover:active,
+  .yearbook-slider-nav.next:hover:active {
+    transform: translateY(-50%) scale(0.85) !important;
+    background: rgba(13, 57, 217, 0.9) !important;
   }
 }
 
