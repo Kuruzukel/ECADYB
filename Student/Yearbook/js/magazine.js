@@ -2757,7 +2757,7 @@ function findAndNavigateToStudent(
                   if (cardStudentId === studentData.student_id) {
                     $targetCard = $(this);
                     targetCardIndex = index;
-                    return false; // break the loop
+                    return false;
                   }
                 });
 
