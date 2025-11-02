@@ -420,6 +420,45 @@ header.fading {
   font-family: "Segoe UI", sans-serif;
 }
 
+/* Media Queries for Welcome Text Responsiveness */
+@media (max-width: 768px) and (min-width: 600px) {
+  .hero-welcome-text {
+    font-size: 1.1rem;
+  }
+
+  .student-info-item {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 1rem !important;
+    opacity: 0.9 !important;
+    text-align: center !important;
+    gap: 0.3rem !important;
+  }
+}
+
+@media (max-width: 600px) and (min-width: 480px) {
+  .hero-welcome-text {
+    font-size: 1rem;
+  }
+
+  .student-info-item {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 1rem !important;
+    opacity: 0.9 !important;
+    text-align: center !important;
+    gap: 0.3rem !important;
+  }
+}
+
+@media (max-width: 480px) and (min-width: 320px) {
+  .hero-welcome-text {
+    font-size: 0.9rem;
+  }
+}
+
 .content-sections {
   position: relative;
   z-index: 4;
@@ -3826,7 +3865,7 @@ header.fading {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    margin-top: -3rem;
+    margin-top: -2rem;
   }
 
   .main-hero-text {
@@ -4169,7 +4208,7 @@ header.fading {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    font-size: 0.85rem !important;
+    font-size: 1rem !important;
     opacity: 0.9 !important;
     text-align: center !important;
     gap: 0.3rem !important;
