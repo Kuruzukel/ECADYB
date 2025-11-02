@@ -136,7 +136,6 @@ function buildOrderedPhotoList(rawPhotos, preferredOrder) {
   return ordered;
 }
 
-// Function to clear top management cache when batch year changes
 function clearTopManagementCache() {
   console.log("Clearing top management cache due to batch year change");
   window.topManagementCache = {};
