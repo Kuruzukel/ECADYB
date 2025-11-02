@@ -1475,9 +1475,7 @@ function addRegion(region, pageElement) {
   reg.appendTo(pageElement);
 }
 
-function regionClick(event) {
-  //   }
-}
+function regionClick(event) {}
 
 function processRegion(region, regionType) {
   data = decodeParams(region.attr("region-data"));
