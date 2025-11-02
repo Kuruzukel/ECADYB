@@ -2053,6 +2053,48 @@ header.fading {
   min-height: 100vh;
 }
 
+@media (max-width: 1200px) and (min-width: 600px) {
+  .carousel-section {
+    background: #021326;
+    color: white;
+    padding: 8rem 0 4rem 0;
+    text-align: center;
+    position: relative;
+    margin: 0;
+    background-repeat: no-repeat;
+    background-position: top center;
+    min-height: auto !important;
+  }
+}
+
+@media (max-width: 600px) and (min-width: 480px) {
+  .carousel-section {
+    background: #021326;
+    color: white;
+    padding: 8rem 0 4rem 0;
+    text-align: center;
+    position: relative;
+    margin: 0;
+    background-repeat: no-repeat;
+    background-position: top center;
+    min-height: auto !important;
+  }
+}
+
+@media (max-width: 480px) and (min-width: 320px) {
+  .carousel-section {
+    background: #021326;
+    color: white;
+    padding: 8rem 0 4rem 0;
+    text-align: center;
+    position: relative;
+    margin: 0;
+    background-repeat: no-repeat;
+    background-position: top center;
+    min-height: auto !important;
+  }
+}
+
 .carousel-background {
   position: absolute;
   top: 0;
