@@ -697,7 +697,6 @@ function fetchStudentDataCached(department, template, apiPage, callback) {
       console.log("Batch Year:", batchYear);
       console.log("Response:", response);
 
-      // Validate response structure
       if (!response) {
         console.error("Empty response received from FetchStudentData.php");
         response = {
