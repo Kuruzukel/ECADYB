@@ -5579,6 +5579,107 @@ h2.section-title {
     font-family: "Segoe UI", sans-serif !important;
     text-align: center !important;
   }
+
+  .yearbook-intro-content {
+    font-size: 1rem;
+    width: 90%;
+    margin: 0 auto;
+    color: white;
+    top: 30%;
+  }
+
+  .yearbook-items-container {
+    padding: 1rem;
+    gap: 10px;
+    bottom: 2rem;
+    top: 45%;
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    overflow: visible;
+    display: block;
+    z-index: 10;
+    pointer-events: auto;
+  }
+
+  .yearbook-slider {
+    overflow: visible;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 320px;
+  }
+
+  .yearbook-item {
+    width: 200px;
+    height: 300px;
+    position: absolute;
+    background-position: center;
+    background-size: cover;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    list-style-type: none;
+    transform-origin: center center;
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    border-radius: 8px;
+    left: 50%;
+    transform: translateX(-50%) scale(0.7);
+  }
+
+  .yearbook-item.mobile-active {
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 50;
+    transform: translateX(-50%) scale(1);
+  }
+
+  .yearbook-item.mobile-prev {
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 1;
+    transform: translateX(-180%) scale(0.75);
+  }
+
+  .yearbook-item.mobile-next {
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 1;
+    transform: translateX(80%) scale(0.75);
+  }
+
+  .yearbook-slider-nav {
+    display: flex !important;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.45);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: auto;
+    touch-action: manipulation;
+  }
+
+  .yearbook-slider-nav.prev {
+    left: 10px;
+  }
+
+  .yearbook-slider-nav.next {
+    right: 10px;
+  }
 }
 
 @media (max-width: 600px) and (min-width: 480px) {
@@ -5609,7 +5710,107 @@ h2.section-title {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5) !important;
     font-family: "Segoe UI", sans-serif !important;
     text-align: center !important;
+  }
 
+  .yearbook-intro-content {
+    font-size: 1rem;
+    width: 90%;
+    margin: 0 auto;
+    color: white;
+    top: 30%;
+  }
+
+  .yearbook-items-container {
+    padding: 1rem;
+    gap: 10px;
+    bottom: 2rem;
+    top: 45%;
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    overflow: visible;
+    display: block;
+    z-index: 10;
+    pointer-events: auto;
+  }
+
+  .yearbook-slider {
+    overflow: visible;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 320px;
+  }
+
+  .yearbook-item {
+    width: 200px;
+    height: 300px;
+    position: absolute;
+    background-position: center;
+    background-size: cover;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    list-style-type: none;
+    transform-origin: center center;
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    border-radius: 8px;
+    left: 50%;
+    transform: translateX(-50%) scale(0.7);
+  }
+
+  .yearbook-item.mobile-active {
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 50;
+    transform: translateX(-50%) scale(1);
+  }
+
+  .yearbook-item.mobile-prev {
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 1;
+    transform: translateX(-180%) scale(0.75);
+  }
+
+  .yearbook-item.mobile-next {
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 1;
+    transform: translateX(80%) scale(0.75);
+  }
+
+  .yearbook-slider-nav {
+    display: flex !important;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.45);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: auto;
+    touch-action: manipulation;
+  }
+
+  .yearbook-slider-nav.prev {
+    left: 10px;
+  }
+
+  .yearbook-slider-nav.next {
+    right: 10px;
   }
 }
 
@@ -5641,6 +5842,107 @@ h2.section-title {
     font-family: "Segoe UI", sans-serif !important;
     text-align: center !important;
     width: 100%;
+  }
+
+  .yearbook-intro-content {
+    font-size: 1rem;
+    width: 90%;
+    margin: 0 auto;
+    color: white;
+    top: 30%;
+  }
+
+  .yearbook-items-container {
+    padding: 1rem;
+    gap: 10px;
+    bottom: 2rem;
+    top: 45%;
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    overflow: visible;
+    display: block;
+    z-index: 10;
+    pointer-events: auto;
+  }
+
+  .yearbook-slider {
+    overflow: visible;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 320px;
+  }
+
+  .yearbook-item {
+    width: 200px;
+    height: 300px;
+    position: absolute;
+    background-position: center;
+    background-size: cover;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    list-style-type: none;
+    transform-origin: center center;
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    border-radius: 8px;
+    left: 50%;
+    transform: translateX(-50%) scale(0.7);
+  }
+
+  .yearbook-item.mobile-active {
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 50;
+    transform: translateX(-50%) scale(1);
+  }
+
+  .yearbook-item.mobile-prev {
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 1;
+    transform: translateX(-180%) scale(0.75);
+  }
+
+  .yearbook-item.mobile-next {
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 1;
+    transform: translateX(80%) scale(0.75);
+  }
+
+  .yearbook-slider-nav {
+    display: flex !important;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.45);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: auto;
+    touch-action: manipulation;
+  }
+
+  .yearbook-slider-nav.prev {
+    left: 10px;
+  }
+
+  .yearbook-slider-nav.next {
+    right: 10px;
   }
 }
 

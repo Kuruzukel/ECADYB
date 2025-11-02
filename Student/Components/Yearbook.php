@@ -765,6 +765,12 @@ try {
       </div>
 
       <div class="yearbook-items-container">
+        <button class="yearbook-slider-nav prev" onclick="navigateYearbook('prev')">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <button class="yearbook-slider-nav next" onclick="navigateYearbook('next')">
+          <i class="fas fa-chevron-right"></i>
+        </button>
         <ul class="yearbook-slider">
           <li class="yearbook-item"
             style="background-image: url('https://ECADYB.b-cdn.net/img/YB%20COVER/MaritimeEducation.png');"
@@ -911,6 +917,94 @@ try {
   <script src="<?php echo BASE_URL; ?>Student/assets/js/SessionTracker.js"></script>
   <script src="<?php echo BASE_URL; ?>Student/assets/js/StudentDashboard.js"></script>
   <script src="<?php echo BASE_URL; ?>Student/assets/js/yearbook-loader.js"></script>
+  
+  <script>
+    // Yearbook navigation functionality
+    let currentYearbookIndex = 0;
+    
+    function navigateYearbook(direction) {
+      try {
+        if (window.innerWidth > 768) {
+          return; // Desktop navigation not needed for this implementation
+        }
+        
+        const yearbooks = document.querySelectorAll('.yearbook-item');
+        if (yearbooks.length === 0) return;
+        
+        // Remove current active classes
+        yearbooks.forEach(item => {
+          item.classList.remove('mobile-active', 'mobile-prev', 'mobile-next');
+        });
+        
+        // Update index
+        if (direction === 'next') {
+          currentYearbookIndex = (currentYearbookIndex + 1) % yearbooks.length;
+        } else {
+          currentYearbookIndex = (currentYearbookIndex - 1 + yearbooks.length) % yearbooks.length;
+        }
+        
+        // Apply new classes
+        yearbooks.forEach((item, index) => {
+          if (index === currentYearbookIndex) {
+            item.classList.add('mobile-active');
+          } else if (index === (currentYearbookIndex - 1 + yearbooks.length) % yearbooks.length) {
+            item.classList.add('mobile-prev');
+          } else if (index === (currentYearbookIndex + 1) % yearbooks.length) {
+            item.classList.add('mobile-next');
+          }
+        });
+        
+        console.log("Navigated to yearbook item:", currentYearbookIndex);
+      } catch (error) {
+        console.error("Error in navigateYearbook:", error);
+      }
+    }
+    
+    // Initialize mobile classes on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      if (window.innerWidth <= 768) {
+        const yearbooks = document.querySelectorAll('.yearbook-item');
+        if (yearbooks.length > 0) {
+          // Set first item as active
+          yearbooks[0].classList.add('mobile-active');
+          
+          // Set adjacent items
+          if (yearbooks.length > 1) {
+            yearbooks[yearbooks.length - 1].classList.add('mobile-prev');
+          }
+          if (yearbooks.length > 2) {
+            yearbooks[1].classList.add('mobile-next');
+          }
+        }
+      }
+    });
+    
+    // Handle window resize
+    window.addEventListener('resize', function() {
+      const yearbooks = document.querySelectorAll('.yearbook-item');
+      if (window.innerWidth > 768) {
+        // Remove mobile classes on desktop
+        yearbooks.forEach(item => {
+          item.classList.remove('mobile-active', 'mobile-prev', 'mobile-next');
+        });
+      } else {
+        // Re-initialize mobile classes
+        yearbooks.forEach(item => {
+          item.classList.remove('mobile-active', 'mobile-prev', 'mobile-next');
+        });
+        
+        if (yearbooks.length > 0) {
+          yearbooks[currentYearbookIndex].classList.add('mobile-active');
+          
+          const prevIndex = (currentYearbookIndex - 1 + yearbooks.length) % yearbooks.length;
+          const nextIndex = (currentYearbookIndex + 1) % yearbooks.length;
+          
+          if (yearbooks[prevIndex]) yearbooks[prevIndex].classList.add('mobile-prev');
+          if (yearbooks[nextIndex]) yearbooks[nextIndex].classList.add('mobile-next');
+        }
+      }
+    });
+  </script>
   <script>
     let COMPLETION_DATE;
     <?php if ($completionDateTimestamp): ?>
