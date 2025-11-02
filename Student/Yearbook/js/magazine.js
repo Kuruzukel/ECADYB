@@ -2680,7 +2680,6 @@ function findAndNavigateToStudent(
                 "🧹 Clearing any existing yellow borders and timeouts..."
               );
 
-              // Clear any existing border removal timeouts
               if (window.borderRemovalTimeouts) {
                 console.log(
                   "Clearing " +
