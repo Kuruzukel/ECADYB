@@ -145,7 +145,6 @@
         }
         slot = slot || 1;
 
-        // Get batch year from URL parameter first (for iframe/PDF), fallback to localStorage
         var urlParams = new URLSearchParams(window.location.search);
         var batchYear =
           urlParams.get("batchYear") ||
