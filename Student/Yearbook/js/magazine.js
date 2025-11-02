@@ -2185,7 +2185,6 @@ function forceRegenerateThumbnails() {
           processBatch(endIndex);
         });
       } else {
-        // All pages processed, refresh thumbnails
         setTimeout(function () {
           if (typeof refreshThumbnails === "function") {
             refreshThumbnails();
