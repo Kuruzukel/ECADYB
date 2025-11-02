@@ -1,4 +1,3 @@
-// Determine base path for API calls
 window.basePath = window.location.pathname.includes("/ECADYB/")
   ? "/ECADYB"
   : "";
@@ -45,7 +44,7 @@ function isMaritimeContext(program, department) {
     "BSMT",
     "MARITIME",
     "MARINE TRANSPORTATION",
-    "MARINE ENGINEERING"
+    "MARINE ENGINEERING",
   ];
 
   var programValue = (program || "").toString().toUpperCase();
@@ -63,24 +62,10 @@ function isMaritimeContext(program, department) {
 
 function getPreferredPhotoOrder(program, department) {
   if (isMaritimeContext(program, department)) {
-    return [
-      "dwhite",
-      "khaki",
-      "coverall",
-      "toga",
-      "uniform",
-      "filipiniana"
-    ];
+    return ["dwhite", "khaki", "coverall", "toga", "uniform", "filipiniana"];
   }
 
-  return [
-    "toga",
-    "uniform",
-    "filipiniana",
-    "dwhite",
-    "khaki",
-    "coverall"
-  ];
+  return ["toga", "uniform", "filipiniana", "dwhite", "khaki", "coverall"];
 }
 
 function buildOrderedPhotoList(rawPhotos, preferredOrder) {
@@ -90,12 +75,11 @@ function buildOrderedPhotoList(rawPhotos, preferredOrder) {
     "filipiniana",
     "dwhite",
     "khaki",
-    "coverall"
+    "coverall",
   ];
 
-  var order = (preferredOrder && preferredOrder.length
-    ? preferredOrder
-    : DEFAULT_ORDER
+  var order = (
+    preferredOrder && preferredOrder.length ? preferredOrder : DEFAULT_ORDER
   ).map(function (type) {
     return type.toLowerCase();
   });
@@ -122,7 +106,7 @@ function buildOrderedPhotoList(rawPhotos, preferredOrder) {
                 type: photoType,
                 url: photo.url,
                 filename: photo.filename || "",
-                originalName: photo.original_name || ""
+                originalName: photo.original_name || "",
               });
             }
           }
@@ -280,7 +264,7 @@ function fetchStudentPhotos(studentId, options, callback) {
         success: success,
         photos: ordered,
         raw: rawPhotos,
-        message: message || ""
+        message: message || "",
       });
     }
   }
