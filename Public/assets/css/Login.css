@@ -785,8 +785,14 @@ button[type="back"]:hover {
     font-size: 3rem;
   }
 
+  .field,
+  .passwordField,
+  input {
+    width: 20rem;
+  }
+
   button[type="submit"] {
-    width: 58%;
+    width: 20rem;
   }
 }
 
