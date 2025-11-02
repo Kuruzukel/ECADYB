@@ -1334,7 +1334,6 @@ function loadPage(page, pageElement) {
                             );
                             currentPhotoElement.attr("src", primaryPhoto.url);
 
-                            // Apply blur effect if status is pending
                             if (currentStatus === "pending") {
                               currentPhotoElement.css({
                                 filter: "blur(8px)",
