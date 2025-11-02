@@ -1440,7 +1440,6 @@ function loadPage(page, pageElement) {
 function zoomTo(event) {
   setTimeout(function () {
     //   } else {
-    //     $(".magazine-viewport").zoom("zoomOut");
     //   }
     // }
   }, 1);
