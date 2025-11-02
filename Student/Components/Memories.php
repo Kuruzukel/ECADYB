@@ -60,156 +60,156 @@ $studentProfilePhoto = $_SESSION['profile_photo'] ?? '';
     </p>
     <div class="carousel-container">
       <div class="carousel-track" id="carousel-track">
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample1.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample2.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample3.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample4.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample5.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample6.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample7.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample8.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample9.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample10.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample11.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample12.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample13.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample14.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample15.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample1.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample2.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample3.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample4.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample5.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample6.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample7.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample8.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample9.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample10.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample11.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample12.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample13.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample14.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample15.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample1.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample2.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample3.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample4.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample5.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample6.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample7.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample8.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample9.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample10.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample11.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample12.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample13.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample14.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample15.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample1.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample2.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample3.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample4.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample5.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample6.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample7.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample8.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample9.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample10.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample11.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample12.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample13.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample14.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample15.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample1.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample2.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample3.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample4.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample5.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample6.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample7.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample8.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample9.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample10.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample11.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample12.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample13.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample14.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample15.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample1.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample2.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample3.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample4.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample5.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample6.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample7.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample8.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample9.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample10.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample11.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample12.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample13.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample14.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample15.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample1.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample2.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample3.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample4.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample5.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample6.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample7.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample8.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample9.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample10.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample11.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample12.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample13.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample14.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample15.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample1.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample2.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample3.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample4.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample5.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample6.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample7.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample8.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample9.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample10.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample11.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample12.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample13.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample14.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample15.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample1.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample2.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample3.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample4.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample5.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample6.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample7.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample8.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample9.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample10.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample11.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample12.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample13.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample14.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample15.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample1.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample2.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample3.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample4.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample5.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample6.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample7.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample8.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample9.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample10.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample11.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample12.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample13.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample14.jpg" class="carousel-img" />
-        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample15.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample1.jpg" class="carousel-img" loading="eager" fetchpriority="high" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample2.jpg" class="carousel-img" loading="eager" fetchpriority="high" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample3.jpg" class="carousel-img" loading="eager" fetchpriority="high" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample4.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample5.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample6.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample7.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample8.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample9.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample10.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample11.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample12.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample13.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample14.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample15.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample1.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample2.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample3.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample4.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample5.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample6.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample7.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample8.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample9.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample10.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample11.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample12.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample13.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample14.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample15.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample1.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample2.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample3.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample4.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample5.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample6.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample7.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample8.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample9.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample10.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample11.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample12.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample13.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample14.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample15.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample1.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample2.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample3.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample4.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample5.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample6.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample7.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample8.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample9.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample10.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample11.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample12.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample13.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample14.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample15.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample1.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample2.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample3.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample4.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample5.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample6.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample7.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample8.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample9.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample10.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample11.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample12.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample13.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample14.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample15.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample1.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample2.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample3.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample4.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample5.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample6.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample7.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample8.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample9.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample10.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample11.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample12.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample13.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample14.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample15.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample1.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample2.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample3.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample4.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample5.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample6.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample7.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample8.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample9.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample10.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample11.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample12.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample13.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample14.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample15.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample1.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample2.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample3.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample4.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample5.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample6.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample7.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample8.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample9.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample10.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample11.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample12.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample13.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample14.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample15.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample1.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample2.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample3.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample4.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample5.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample6.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample7.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample8.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample9.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample10.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample11.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample12.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample13.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample14.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample15.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample1.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample2.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample3.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample4.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample5.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample6.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample7.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample8.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample9.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample10.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample11.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample12.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample13.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample14.jpg" class="carousel-img" loading="lazy" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample15.jpg" class="carousel-img" loading="lazy" />
       </div>
     </div>
     <div class="main-hero-lower-curl">

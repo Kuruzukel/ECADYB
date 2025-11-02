@@ -2306,6 +2306,14 @@ header.fading {
   }
 
   .carousel-track img {
+    width: 100%;
+    max-width: 380px;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin: 0 1rem;
+    flex-shrink: 0;
+    background: #021326;
     pointer-events: auto !important;
     -webkit-tap-highlight-color: transparent;
   }
@@ -2464,6 +2472,14 @@ header.fading {
   animation-play-state: paused;
 }
 
+.carousel-track:hover {
+  animation-play-state: paused !important;
+}
+
+.carousel-track img:hover {
+  cursor: pointer;
+}
+
 /* Mobile-specific carousel fixes */
 @media (max-width: 768px) {
   .carousel-track {
@@ -2474,7 +2490,7 @@ header.fading {
   }
 
   .carousel-container:hover .carousel-track {
-    animation-play-state: running;
+    animation-play-state: paused;
   }
 }
 
@@ -4172,7 +4188,7 @@ header.fading {
     }
 
     100% {
-      transform: translateX(-1000%);
+      transform: translateX(-200%);
     }
   }
 
@@ -4716,7 +4732,7 @@ header.fading {
     }
 
     100% {
-      transform: translateX(-1000%);
+      transform: translateX(-200%);
     }
   }
 
