@@ -1476,7 +1476,6 @@ function addRegion(region, pageElement) {
 }
 
 function regionClick(event) {
-  //     var regionType = $.trim(region.attr("class").replace("region", ""));
   //     return processRegion(region, regionType);
   //   }
 }
