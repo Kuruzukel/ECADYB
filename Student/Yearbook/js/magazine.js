@@ -1698,7 +1698,6 @@ function resizeViewport() {
 
     var isFullscreen = isActualFullscreen || isFullscreenParam;
 
-    // Use different base dimensions for fullscreen vs normal mode
     var baseWidth = isFullscreen ? 1200 : options.width;
     var baseHeight = isFullscreen ? 750 : options.height;
 
