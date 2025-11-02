@@ -2666,7 +2666,6 @@ function findAndNavigateToStudent(
         if ($magazine.length > 0 && $magazine.turn) {
           console.log("Turning to page:", yearbookPage);
 
-          // Listen for the page turn completion
           $magazine.one("turned", function (event, page, view) {
             console.log("✓ Page turn completed to page:", page);
 
