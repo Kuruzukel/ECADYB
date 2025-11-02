@@ -607,10 +607,7 @@ function editProfile() {
     originalFormValues[key] = value;
   }
 
-  modal.style.display = "flex";
-  setTimeout(() => {
-    modal.classList.add("show");
-  }, 10);
+  modal.classList.add("active");
 
   console.log("Edit profile modal opened");
 }
@@ -619,10 +616,7 @@ function closeEditModal() {
   const modal = document.getElementById("editStudentModal");
   if (!modal) return;
 
-  modal.classList.remove("show");
-  setTimeout(() => {
-    modal.style.display = "none";
-  }, 300);
+  modal.classList.remove("active");
 
   console.log("Edit profile modal closed");
 }

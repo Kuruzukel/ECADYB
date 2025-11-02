@@ -194,7 +194,7 @@ if (empty($studentFirstName) && empty($studentLastName) && !empty($studentName))
     </div>
 
     <div class="modal-body">
-      <form id="edit-student-form" onsubmit="return false;">
+      <form id="editStudentForm" onsubmit="return false;">
         <input type="hidden" id="student-id-hidden" name="student_id"
           value="<?php echo htmlspecialchars($studentId); ?>">
 
