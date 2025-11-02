@@ -2164,7 +2164,7 @@ function forceRegenerateThumbnails() {
 
   requestAnimationFrame(function () {
     var pages = $(".magazine .page").toArray();
-    var batchSize = 4; // Process 4 pages at a time
+    var batchSize = 4;
 
     function processBatch(startIndex) {
       var endIndex = Math.min(startIndex + batchSize, pages.length);
