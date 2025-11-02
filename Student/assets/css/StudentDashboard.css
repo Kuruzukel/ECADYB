@@ -1884,6 +1884,35 @@ header.fading {
   }
 }
 
+@media (min-width: 1121px) {
+  .about-hero-section .section-title {
+    margin-top: 3rem !important;
+  }
+
+  .about-hero-content {
+    padding-top: 2rem !important;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1120px) {
+  .about-image {
+    display: none;
+  }
+
+  .about-description,
+  .about-hero-section .about-description {
+    font-size: 1.4rem !important;
+  }
+
+  .about-hero-section .section-title {
+    margin-top: 4rem !important;
+  }
+
+  .about-hero-content {
+    padding-top: 3rem !important;
+  }
+}
+
 @media (max-width: 768px) {
   .about-hero-content {
     padding: 2rem 1rem;
@@ -5510,7 +5539,7 @@ h2.section-title {
 
 .about-description,
 .about-hero-section .about-description {
-  font-size: 1.6rem !important;
+  font-size: 1.3rem !important;
   line-height: 1.7 !important;
   color: #e0e7ff !important;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5) !important;
