@@ -2,7 +2,6 @@
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
-// Increase limits for large datasets
 ini_set('memory_limit', '256M');
 ini_set('max_execution_time', '60');
 set_time_limit(60);
