@@ -1693,7 +1693,6 @@ function resizeViewport() {
       document.mozFullScreenElement ||
       document.msFullscreenElement;
 
-    // Check URL parameter for fullscreen mode (for iframe usage)
     var urlParams = new URLSearchParams(window.location.search);
     var isFullscreenParam = urlParams.get("fullscreen") === "true";
 
