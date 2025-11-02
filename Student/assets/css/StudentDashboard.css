@@ -5549,6 +5549,11 @@ h2.section-title {
   margin: -1rem auto 0 auto !important;
 }
 
+/* Hide yearbook navigation buttons on larger screens */
+.yearbook-slider-nav {
+  display: none !important;
+}
+
 /* Ensure consistent sizing across all breakpoints */
 @media (max-width: 768px) and (min-width: 600px) {
 
