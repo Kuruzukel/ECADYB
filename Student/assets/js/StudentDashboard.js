@@ -683,7 +683,27 @@ async function saveStudentChanges() {
 
   const formData = new FormData(form);
 
+  // Get collection name based on department
+  const departmentCollectionMap = {
+    "BS Marine Engineering": "bsme",
+    "BS Marine Transportation": "bsmt",
+    "BS Criminal Justice Education": "bscje",
+    "BS Tourism Management": "bstm",
+    "BS Technical-Vocational Teacher Education": "btvted",
+    "BS Early Childhood Education": "beced",
+    "BS Nursing": "bsn",
+    "BS Information System": "bsis",
+    "BS Management Accounting": "bsma",
+    "BS Entrepreneurship": "bse"
+  };
+
+  const studentDepartment = window.studentData?.studentDepartment || "";
+  const collectionName = departmentCollectionMap[studentDepartment] || "bsme";
+
   const data = {
+    original_student_id: formData.get("student_id"),
+    collection: collectionName,
+    academic_year: window.studentData?.studentAcademicYear || "",
     "first name": formData.get("first_name"),
     "middle name": formData.get("middle_name"),
     "last name": formData.get("last_name"),
@@ -692,6 +712,32 @@ async function saveStudentChanges() {
     honors: formData.get("honors"),
     milestone: formData.get("milestone"),
   };
+
+  // Remove empty or null values to avoid unnecessary updates
+  Object.keys(data).forEach(key => {
+    if (data[key] === null || data[key] === undefined || data[key] === '') {
+      if (key !== 'original_student_id' && key !== 'collection') {
+        delete data[key];
+      }
+    }
+  });
+
+  // Debug logging
+  console.log("Form data being sent:", data);
+  console.log("Student department:", studentDepartment);
+  console.log("Collection name:", collectionName);
+  console.log("Student data:", window.studentData);
+
+  // Log individual form field values
+  console.log("Individual form fields:");
+  console.log("- student_id:", formData.get("student_id"));
+  console.log("- email:", formData.get("email"));
+  console.log("- motto:", formData.get("motto"));
+  console.log("- milestone:", formData.get("milestone"));
+  console.log("- first_name:", formData.get("first_name"));
+  console.log("- middle_name:", formData.get("middle_name"));
+  console.log("- last_name:", formData.get("last_name"));
+  console.log("- honors:", formData.get("honors"));
 
   try {
     const response = await fetch(
@@ -707,16 +753,29 @@ async function saveStudentChanges() {
 
     const result = await response.json();
 
+    // Debug logging
+    console.log("Response status:", response.status);
+    console.log("Response result:", result);
+
     if (result.success) {
-      showNotification("Success! Student information updated.", "success");
+      // Check if no changes were detected
+      if (result.message && result.message.includes("No changes detected")) {
+        showNotification("No changes detected, student record remains the same.", "info");
 
-      setTimeout(() => {
-        closeEditModal();
-      }, 1000);
+        setTimeout(() => {
+          closeEditModal();
+        }, 1500);
+      } else {
+        showNotification("Success! Student information updated.", "success");
 
-      setTimeout(() => {
-        location.reload();
-      }, 2000);
+        setTimeout(() => {
+          closeEditModal();
+        }, 1000);
+
+        setTimeout(() => {
+          location.reload();
+        }, 2000);
+      }
     } else {
       showNotification(
         "Error: " + (result.message || "Failed to update student information."),
@@ -728,6 +787,84 @@ async function saveStudentChanges() {
     showNotification("Error: Failed to update student information.", "error");
   }
 }
+
+function submitStudentInfo(event) {
+  if (event) {
+    event.preventDefault();
+  }
+  saveStudentChanges();
+}
+
+function removeSpaces(input) {
+  input.value = input.value.replace(/\s/g, '');
+}
+
+function formatAcademicYear(input) {
+  let value = input.value.replace(/\D/g, ''); // Remove non-digits
+  if (value.length >= 4) {
+    value = value.substring(0, 4) + '-' + value.substring(4, 8);
+  }
+  input.value = value;
+}
+
+// Debug function to check if student exists in database
+async function checkStudentExists() {
+  const studentId = window.studentData?.studentId || "";
+  const department = window.studentData?.studentDepartment || "";
+
+  console.log("Checking student existence:");
+  console.log("- Student ID:", studentId);
+  console.log("- Department:", department);
+
+  const departmentCollectionMap = {
+    "BS Marine Engineering": "bsme",
+    "BS Marine Transportation": "bsmt",
+    "BS Criminal Justice Education": "bscje",
+    "BS Tourism Management": "bstm",
+    "BS Technical-Vocational Teacher Education": "btvted",
+    "BS Early Childhood Education": "beced",
+    "BS Nursing": "bsn",
+    "BS Information System": "bsis",
+    "BS Management Accounting": "bsma",
+    "BS Entrepreneurship": "bse"
+  };
+
+  const collectionName = departmentCollectionMap[department] || "bsme";
+  console.log("- Collection name:", collectionName);
+
+  try {
+    const response = await fetch("/ECADYB/Connection/Student/CheckStudent.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        student_id: studentId,
+        collection: collectionName,
+        academic_year: window.studentData?.studentAcademicYear || ""
+      }),
+    });
+
+    const result = await response.json();
+    console.log("Student check result:", result);
+
+    if (result.exists) {
+      console.log("✅ Student found in database");
+      console.log("Student data:", result.student);
+    } else {
+      console.log("❌ Student NOT found in database");
+      console.log("Error:", result.message);
+    }
+
+    return result;
+  } catch (error) {
+    console.error("Error checking student:", error);
+    return { exists: false, error: error.message };
+  }
+}
+
+// Call this function to test
+// checkStudentExists();
 
 function showNotification(message, type = "info") {
   const existingNotification = document.querySelector(".notification");
