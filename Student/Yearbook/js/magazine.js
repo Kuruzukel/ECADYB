@@ -2490,8 +2490,6 @@ function initializeCornerHover() {
   });
 }
 
-// ========== STUDENT SEARCH NAVIGATION AND HIGHLIGHTING ==========
-
 function navigateToSearchedStudent() {
   try {
     var urlParams = new URLSearchParams(window.location.search);
