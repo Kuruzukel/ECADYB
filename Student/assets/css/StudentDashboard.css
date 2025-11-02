@@ -5285,9 +5285,14 @@ header.fading {
 }
 
 @media (max-width: 768px) and (min-width: 600px) {
+  .editStudentModal {
+    align-items: flex-start;
+    padding-top: 4rem;
+  }
+
   .editStudentModal .modal-content {
     width: 90%;
-    height: 95%;
+    height: 80%;
     padding: 0.8rem;
   }
 
@@ -5316,7 +5321,7 @@ header.fading {
   }
 
   .editStudentModal .modal-body {
-    max-height: calc(95vh - 120px);
+    max-height: calc(80vh - 120px);
     padding: 0.8rem;
   }
 
@@ -5340,9 +5345,14 @@ header.fading {
 }
 
 @media (max-width: 600px) and (min-width: 480px) {
+  .editStudentModal {
+    align-items: flex-start;
+    padding-top: 4rem;
+  }
+
   .editStudentModal .modal-content {
     width: 90%;
-    height: 95%;
+    height: 80%;
     padding: 0.6rem;
   }
 
@@ -5366,7 +5376,7 @@ header.fading {
   }
 
   .editStudentModal .modal-body {
-    max-height: calc(95vh - 100px);
+    max-height: calc(80vh - 100px);
     padding: 0.6rem;
   }
 
@@ -5396,9 +5406,14 @@ header.fading {
 }
 
 @media (max-width: 480px) and (min-width: 320px) {
+  .editStudentModal {
+    align-items: flex-start;
+    padding-top: 4rem;
+  }
+
   .editStudentModal .modal-content {
     width: 90%;
-    height: 95%;
+    height: 80%;
     padding: 0.5rem;
   }
 
@@ -5422,7 +5437,7 @@ header.fading {
   }
 
   .editStudentModal .modal-body {
-    max-height: calc(95vh - 80px);
+    max-height: calc(80vh - 80px);
     padding: 0.5rem;
   }
 

@@ -608,8 +608,6 @@ function editProfile() {
   }
 
   modal.classList.add("active");
-
-  console.log("Edit profile modal opened");
 }
 
 function closeEditModal() {
@@ -617,8 +615,6 @@ function closeEditModal() {
   if (!modal) return;
 
   modal.classList.remove("active");
-
-  console.log("Edit profile modal closed");
 }
 
 function cancelEdit() {
@@ -633,7 +629,6 @@ function cancelEdit() {
   }
 
   closeEditModal();
-  console.log("Edit cancelled, form reset to original values");
 }
 
 async function saveStudentChanges() {
@@ -654,8 +649,6 @@ async function saveStudentChanges() {
     honors: formData.get("honors"),
     milestone: formData.get("milestone"),
   };
-
-  console.log("Submitting student data:", data);
 
   try {
     const response = await fetch(
