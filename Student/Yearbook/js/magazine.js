@@ -2669,7 +2669,6 @@ function findAndNavigateToStudent(
           $magazine.one("turned", function (event, page, view) {
             console.log("✓ Page turn completed to page:", page);
 
-            // Wait a bit more for content to render
             setTimeout(function () {
               console.log("=== FINDING STUDENT IN VISIBLE CARDS ===");
               console.log("Student Index (global):", studentIndex);
