@@ -100,14 +100,12 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.03) 25%,
-    rgba(99, 102, 241, 0.1) 50%,
-    rgba(255, 255, 255, 0.03) 75%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.03) 25%,
+      rgba(99, 102, 241, 0.1) 50%,
+      rgba(255, 255, 255, 0.03) 75%,
+      transparent 100%);
   background-size: 400% 100%;
   animation: shimmerEffect 1s ease-out;
   z-index: 9998;
@@ -121,12 +119,10 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: radial-gradient(
-    circle at center,
-    rgba(99, 102, 241, 0.1) 0%,
-    rgba(112, 44, 180, 0.05) 30%,
-    transparent 70%
-  );
+  background: radial-gradient(circle at center,
+      rgba(99, 102, 241, 0.1) 0%,
+      rgba(112, 44, 180, 0.05) 30%,
+      transparent 70%);
   z-index: 9999;
   pointer-events: none;
   animation: particleFloat 1s ease-out;
@@ -295,6 +291,7 @@ header.fading {
 }
 
 @keyframes pulse {
+
   0%,
   100% {
     opacity: 1;
@@ -362,8 +359,7 @@ header.fading {
   left: 0;
   width: 100%;
   height: 100%;
-  background: url("https://ECADYB.b-cdn.net/img/ECABG.jpg") center center/cover
-    no-repeat;
+  background: url("https://ECADYB.b-cdn.net/img/ECABG.jpg") center center/cover no-repeat;
   pointer-events: none;
   filter: blur(6px);
   transform: scale(1.1);
@@ -849,8 +845,7 @@ header.fading {
   left: 0;
   width: 100%;
   height: 100%;
-  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center
-    center/cover no-repeat;
+  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center center/cover no-repeat;
   pointer-events: none;
   filter: blur(6px);
 }
@@ -860,7 +855,7 @@ header.fading {
   z-index: 2;
 }
 
-.yearbooks-section > *:not(.yearbooks-background) {
+.yearbooks-section>*:not(.yearbooks-background) {
   position: relative;
   z-index: 2;
 }
@@ -1413,11 +1408,9 @@ header.fading {
   pointer-events: none;
   z-index: 2;
   opacity: 0.25;
-  background-image: linear-gradient(
-      to right,
+  background-image: linear-gradient(to right,
       rgba(255, 255, 255, 0.179) 1px,
-      transparent 1px
-    ),
+      transparent 1px),
     linear-gradient(to bottom, rgba(255, 255, 255, 0.25) 1px, transparent 1px);
   background-size: 35px 33px;
 }
@@ -1834,8 +1827,7 @@ header.fading {
   left: 0;
   width: 100%;
   height: 100%;
-  background: url("https://ECADYB.b-cdn.net/img/ECABG.jpg") center center/cover
-    no-repeat;
+  background: url("https://ECADYB.b-cdn.net/img/ECABG.jpg") center center/cover no-repeat;
   pointer-events: none;
   filter: blur(6px);
   transform: scale(1.1);
@@ -2018,12 +2010,10 @@ header.fading {
   height: 100%;
   pointer-events: none;
   z-index: 2;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(0, 0, 0, 0) 60%,
-    rgba(0, 0, 0, 0.18) 80%,
-    rgba(0, 0, 0, 0.32) 100%
-  );
+  background: radial-gradient(ellipse at center,
+      rgba(0, 0, 0, 0) 60%,
+      rgba(0, 0, 0, 0.18) 80%,
+      rgba(0, 0, 0, 0.32) 100%);
   filter: blur(24px);
   opacity: 0.7;
 }
@@ -2064,24 +2054,17 @@ header.fading {
   min-height: 100vh;
 }
 
-/* Carousel Lightbox Styles */
-.carousel-lightbox {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 10000;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: opacity 0.3s ease;
+.memories-section {
+  background: #021326 url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center center/cover no-repeat;
+  color: white;
+  padding: 8rem 0 4rem 0;
+  text-align: center;
+  position: relative;
+  margin: 0;
+  min-height: 100vh;
 }
 
-.carousel-lightbox.active {
-  opacity: 1;
-}
+
 
 .lightbox-overlay {
   position: absolute;
@@ -2089,8 +2072,7 @@ header.fading {
   left: 0;
   width: 100%;
   height: 100%;
-  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center
-    center/cover no-repeat;
+  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center center/cover no-repeat;
   backdrop-filter: blur(20px) brightness(0.4);
   -webkit-backdrop-filter: blur(20px) brightness(0.4);
 }
@@ -2131,6 +2113,7 @@ header.fading {
     transform: scale(0.8);
     opacity: 0;
   }
+
   to {
     transform: scale(1);
     opacity: 1;
@@ -2292,44 +2275,10 @@ header.fading {
     min-height: auto !important;
   }
 
-  /* Disable all hover effects on touch devices for carousel */
-  .carousel-track img:hover {
-    transform: none !important;
-    opacity: 1 !important;
-  }
 
-  /* Ensure pointer events work correctly on touch */
-  .carousel-track {
-    touch-action: pan-x !important;
-    -webkit-user-select: none;
-    user-select: none;
-  }
-
-  .carousel-track img {
-    width: 100%;
-    max-width: 380px;
-    height: 100%;
-    object-fit: contain;
-    border-radius: 12px;
-    margin: 0 1rem;
-    flex-shrink: 0;
-    background: #021326;
-    pointer-events: auto !important;
-    -webkit-tap-highlight-color: transparent;
-  }
 }
 
-.carousel-background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center
-    center/cover no-repeat;
-  pointer-events: none;
-  z-index: 1;
-}
+
 
 .about-blur-vignette {
   position: absolute;
@@ -2339,12 +2288,10 @@ header.fading {
   height: 100%;
   pointer-events: none;
   z-index: 2;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(0, 0, 0, 0) 60%,
-    rgba(0, 0, 0, 0.18) 80%,
-    rgba(0, 0, 0, 0.32) 100%
-  );
+  background: radial-gradient(ellipse at center,
+      rgba(0, 0, 0, 0) 60%,
+      rgba(0, 0, 0, 0.18) 80%,
+      rgba(0, 0, 0, 0.32) 100%);
   filter: blur(24px);
   opacity: 0.7;
 }
@@ -2360,19 +2307,14 @@ header.fading {
   pointer-events: none;
   z-index: 2;
   opacity: 0.25;
-  background-image: linear-gradient(
-      to right,
+  background-image: linear-gradient(to right,
       rgba(255, 255, 255, 0.179) 1px,
-      transparent 1px
-    ),
+      transparent 1px),
     linear-gradient(to bottom, rgba(255, 255, 255, 0.25) 1px, transparent 1px);
   background-size: 35px 33px;
 }
 
-.carousel-section > *:not(.carousel-background) {
-  position: relative;
-  z-index: 2;
-}
+
 
 .carousel-section .main-hero-lower-curl {
   position: absolute;
@@ -2386,50 +2328,26 @@ header.fading {
   overflow: visible;
 }
 
-.carousel-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  width: 100vw;
-  max-width: 100vw;
-  margin: 0;
-  overflow: hidden;
-  padding: 0;
-}
 
-.carousel-track {
-  display: flex;
-  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: transform;
-  width: 100%;
-  animation: carousel-scroll 145s linear infinite;
-  z-index: 3;
-  width: max-content;
-  backface-visibility: hidden;
-  transform: translateZ(0);
-}
 
-.carousel-track img {
-  width: 100%;
-  height: 400px;
-  object-fit: cover;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
-  border-radius: 1rem;
-  margin: 0 1rem;
-  background: #021326;
-  z-index: 4;
-  width: max-content;
-}
 
-.carousel-track img:hover {
-  transform: scale(1.02);
-  opacity: 0.95;
-  flex-shrink: 0;
-}
+
+
+
 
 .carousel-subtitle {
+  color: #fcda15;
+  font-size: 1.3rem;
+  margin-bottom: 2.5rem;
+  margin-top: 0.5rem;
+  letter-spacing: 1px;
+  font-family: "Segoe UI", sans-serif;
+  font-weight: 600;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+  text-align: center;
+}
+
+.memories-subtitle {
   color: #fcda15;
   font-size: 1.3rem;
   margin-bottom: 2.5rem;
@@ -2458,41 +2376,11 @@ header.fading {
   width: 100%;
 }
 
-@keyframes carousel-scroll {
-  0% {
-    transform: translateX(0);
-  }
 
-  100% {
-    transform: translateX(-50%);
-  }
-}
 
-.carousel-container:hover .carousel-track {
-  animation-play-state: paused;
-}
 
-.carousel-track:hover {
-  animation-play-state: paused !important;
-}
 
-.carousel-track img:hover {
-  cursor: pointer;
-}
 
-/* Mobile-specific carousel fixes */
-@media (max-width: 768px) {
-  .carousel-track {
-    animation-duration: 145s;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-    animation-fill-mode: forwards;
-  }
-
-  .carousel-container:hover .carousel-track {
-    animation-play-state: paused;
-  }
-}
 
 .footer-section {
   background: #021326;
@@ -2686,6 +2574,7 @@ header.fading {
 }
 
 @media (min-width: 1440px) {
+
   #mobileLoginDropdownBtn,
   #mobileLoginDropdownMenu {
     display: none !important;
@@ -2693,6 +2582,7 @@ header.fading {
 }
 
 @media (max-width: 1439px) and (min-width: 1200px) {
+
   #mobileLoginDropdownBtn,
   #mobileLoginDropdownMenu {
     display: none !important;
@@ -2867,6 +2757,7 @@ header.fading {
 }
 
 @media (max-width: 1199px) and (min-width: 1120px) {
+
   #mobileLoginDropdownBtn,
   #mobileLoginDropdownMenu {
     display: none !important;
@@ -3049,6 +2940,7 @@ header.fading {
 }
 
 @media (max-width: 1120px) and (min-width: 991px) {
+
   #mobileLoginDropdownBtn,
   #mobileLoginDropdownMenu {
     display: none !important;
@@ -3221,6 +3113,7 @@ header.fading {
 }
 
 @media (max-width: 991px) and (min-width: 768px) {
+
   #mobileLoginDropdownBtn,
   #mobileLoginDropdownMenu {
     display: none !important;
@@ -3458,7 +3351,7 @@ header.fading {
     margin-left: auto;
   }
 
-  .hamburger-menu.active + .center-nav,
+  .hamburger-menu.active+.center-nav,
   .center-nav.mobile-active {
     display: flex;
     position: absolute;
@@ -3498,12 +3391,10 @@ header.fading {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.1),
-      transparent
-    );
+    background: linear-gradient(90deg,
+        transparent,
+        rgba(255, 255, 255, 0.1),
+        transparent);
     transition: left 0.5s ease;
   }
 
@@ -3920,7 +3811,7 @@ header.fading {
     margin-left: auto;
   }
 
-  .hamburger-menu.active + .center-nav,
+  .hamburger-menu.active+.center-nav,
   .center-nav.mobile-active {
     display: flex;
     position: absolute;
@@ -3960,12 +3851,10 @@ header.fading {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.1),
-      transparent
-    );
+    background: linear-gradient(90deg,
+        transparent,
+        rgba(255, 255, 255, 0.1),
+        transparent);
     transition: left 0.5s ease;
   }
 
@@ -4451,7 +4340,7 @@ header.fading {
     margin-left: auto;
   }
 
-  .hamburger-menu.active + .center-nav,
+  .hamburger-menu.active+.center-nav,
   .center-nav.mobile-active {
     display: flex;
     position: absolute;
@@ -4491,12 +4380,10 @@ header.fading {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.1),
-      transparent
-    );
+    background: linear-gradient(90deg,
+        transparent,
+        rgba(255, 255, 255, 0.1),
+        transparent);
     transition: left 0.5s ease;
   }
 
@@ -4965,17 +4852,13 @@ header.fading {
   }
 }
 
-@media only screen and (min-width: 768px) and (max-width: 1280px) and (orientation: landscape) {
-}
+@media only screen and (min-width: 768px) and (max-width: 1280px) and (orientation: landscape) {}
 
-@media only screen and (min-width: 600px) and (max-width: 767px) and (orientation: landscape) {
-}
+@media only screen and (min-width: 600px) and (max-width: 767px) and (orientation: landscape) {}
 
-@media only screen and (min-width: 480px) and (max-width: 599px) and (orientation: landscape) {
-}
+@media only screen and (min-width: 480px) and (max-width: 599px) and (orientation: landscape) {}
 
-@media only screen and (min-width: 320px) and (max-width: 479px) and (orientation: landscape) {
-}
+@media only screen and (min-width: 320px) and (max-width: 479px) and (orientation: landscape) {}
 
 .yearbook-close-btn {
   position: absolute;
@@ -5045,8 +4928,7 @@ header.fading {
   width: 100vw;
   height: 100vh;
   margin: 0;
-  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center
-    center/cover no-repeat;
+  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center center/cover no-repeat;
   z-index: 9999;
 }
 
@@ -5057,8 +4939,7 @@ header.fading {
   width: 100vw;
   height: 100vh;
   margin: 0;
-  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center
-    center/cover no-repeat;
+  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center center/cover no-repeat;
   z-index: 9999;
 }
 
@@ -5069,8 +4950,7 @@ header.fading {
   width: 100vw;
   height: 100vh;
   margin: 0;
-  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center
-    center/cover no-repeat;
+  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center center/cover no-repeat;
   z-index: 9999;
 }
 
@@ -5081,8 +4961,7 @@ header.fading {
   width: 100vw;
   height: 100vh;
   margin: 0;
-  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center
-    center/cover no-repeat;
+  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center center/cover no-repeat;
   z-index: 9999;
 }
 
@@ -5239,12 +5118,10 @@ header.fading {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(
-    145deg,
-    rgba(6, 182, 212, 0.02) 0%,
-    rgba(14, 165, 233, 0.01) 50%,
-    rgba(6, 182, 212, 0.02) 100%
-  );
+  background: linear-gradient(145deg,
+      rgba(6, 182, 212, 0.02) 0%,
+      rgba(14, 165, 233, 0.01) 50%,
+      rgba(6, 182, 212, 0.02) 100%);
   border-radius: 12px;
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -5284,12 +5161,10 @@ header.fading {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.2),
-    transparent
-  );
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.2),
+      transparent);
   transition: left 0.5s;
 }
 
@@ -5859,8 +5734,7 @@ header.fading {
     width: 100vw !important;
     height: 100vh !important;
     overflow: hidden !important;
-    background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center
-      center/cover no-repeat !important;
+    background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center center/cover no-repeat !important;
     background-color: #000042 !important;
     border: none !important;
     outline: none !important;
@@ -5916,6 +5790,7 @@ h2.section-title {
 
 /* Ensure consistent sizing across all breakpoints */
 @media (max-width: 768px) and (min-width: 600px) {
+
   .about-section .section-title,
   .about-hero-section .section-title,
   .about-hero-content .section-title,
@@ -6048,11 +5923,9 @@ h2.section-title {
 
   .yearbook-slider-nav:hover,
   .yearbook-slider-nav:focus-visible {
-    background: linear-gradient(
-      135deg,
-      rgba(17, 45, 78, 0.95) 0%,
-      #0d39d9 100%
-    );
+    background: linear-gradient(135deg,
+        rgba(17, 45, 78, 0.95) 0%,
+        #0d39d9 100%);
     border: 1px solid #fcda15;
     box-shadow: 0 10px 30px rgba(12, 39, 190, 0.35),
       0 0 0 2px rgba(252, 218, 21, 0.35);
@@ -6091,6 +5964,7 @@ h2.section-title {
 }
 
 @media (max-width: 600px) and (min-width: 480px) {
+
   .about-section .section-title,
   .about-hero-section .section-title,
   .about-hero-content .section-title,
@@ -6223,11 +6097,9 @@ h2.section-title {
 
   .yearbook-slider-nav:hover,
   .yearbook-slider-nav:focus-visible {
-    background: linear-gradient(
-      135deg,
-      rgba(17, 45, 78, 0.95) 0%,
-      #0d39d9 100%
-    );
+    background: linear-gradient(135deg,
+        rgba(17, 45, 78, 0.95) 0%,
+        #0d39d9 100%);
     border: 1px solid #fcda15;
     box-shadow: 0 10px 30px rgba(12, 39, 190, 0.35),
       0 0 0 2px rgba(252, 218, 21, 0.35);
@@ -6266,6 +6138,7 @@ h2.section-title {
 }
 
 @media (max-width: 480px) and (min-width: 320px) {
+
   .about-section .section-title,
   .about-hero-section .section-title,
   .about-hero-content .section-title,
@@ -6398,11 +6271,9 @@ h2.section-title {
 
   .yearbook-slider-nav:hover,
   .yearbook-slider-nav:focus-visible {
-    background: linear-gradient(
-      135deg,
-      rgba(17, 45, 78, 0.95) 0%,
-      #0d39d9 100%
-    );
+    background: linear-gradient(135deg,
+        rgba(17, 45, 78, 0.95) 0%,
+        #0d39d9 100%);
     border: 1px solid #fcda15;
     box-shadow: 0 10px 30px rgba(12, 39, 190, 0.35),
       0 0 0 2px rgba(252, 218, 21, 0.35);
@@ -6458,6 +6329,7 @@ body .about-hero-content .section-title {
 
 /* Force center alignment for mobile */
 @media (max-width: 768px) {
+
   body .about-hero-section .about-hero-content .section-title,
   body .about-section .section-title,
   body .about-hero-content .section-title {
