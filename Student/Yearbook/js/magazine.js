@@ -2815,7 +2815,6 @@ function findAndNavigateToStudent(
                     );
                     console.log("🎨 Applied BOLD yellow border");
 
-                    // Use requestAnimationFrame for smoother animations
                     if (!window.borderRemovalTimeouts) {
                       window.borderRemovalTimeouts = [];
                     }
