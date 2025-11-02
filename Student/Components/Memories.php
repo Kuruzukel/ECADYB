@@ -52,6 +52,8 @@ $studentProfilePhoto = $_SESSION['profile_photo'] ?? '';
 
   <section class="carousel-section" id="captured-moments">
     <div class="carousel-background"></div>
+    <div class="about-blur-vignette"></div>
+    <div class="grid-overlay"></div>
     <h2 class="section-title">Captured Moments</h2>
     <p class="carousel-subtitle">
       A collection of unforgettable memories from our journey together.

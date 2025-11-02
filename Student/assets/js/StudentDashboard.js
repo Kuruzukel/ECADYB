@@ -208,8 +208,9 @@ if (track) {
 
     track.innerHTML = images
       .map(
-        (src, index) =>
-          `<img src="${src}" alt="Carousel Image ${index}" class="carousel-img" draggable="false">`
+        (src, i) =>
+          `<img src="${src}" class="carousel-img" data-index="${i - 1
+          }" draggable="false" />`
       )
       .join("");
 
@@ -225,7 +226,7 @@ if (track) {
 
     currentIndex = index;
     isTransitioning = true;
-    track.style.transition = "transform 0.5s ease-in-out";
+    track.style.transition = "transform 0.6s ease-in-out";
     track.style.transform = `translateX(-${(index + 1) * 100}%)`;
   }
 
@@ -263,124 +264,45 @@ if (track) {
 
   track.addEventListener("touchmove", (e) => {
     if (!isDragging) return;
-    const currentX = e.touches[0].clientX;
-    const diff = startX - currentX;
-    track.style.transform = `translateX(-${(currentIndex + 1) * 100
+    const diff = e.touches[0].clientX - startX;
+    track.style.transition = "none";
+    track.style.transform = `translateX(calc(-${(currentIndex + 1) * 100
       }% + ${diff}px))`;
   });
 
   track.addEventListener("touchend", (e) => {
-    if (!isDragging) return;
-    const endX = e.changedTouches[0].clientX;
-    const diff = startX - endX;
-
-    if (Math.abs(diff) > 50) {
-      if (diff > 0) {
-        nextImage();
-      } else {
-        prevImage();
-      }
-    } else {
-      track.style.transform = `translateX(-${(currentIndex + 1) * 100}%)`;
-    }
-
     isDragging = false;
-  });
-
-  let startPos = 0;
-  let isDraggingMouse = false;
-
-  track.addEventListener("mousedown", (e) => {
-    e.preventDefault();
-    startPos = e.clientX;
-    isDraggingMouse = true;
-  });
-
-  track.addEventListener("mousemove", (e) => {
-    if (!isDraggingMouse) return;
-    const currentPos = e.clientX;
-    const diff = startPos - currentPos;
-    track.style.transform = `translateX(-${(currentIndex + 1) * 100
-      }% + ${diff}px))`;
-  });
-
-  track.addEventListener("mouseup", (e) => {
-    if (!isDraggingMouse) return;
-    const endPos = e.clientX;
-    const diff = startPos - endPos;
-
-    if (Math.abs(diff) > 50) {
-      if (diff > 0) {
-        nextImage();
-      } else {
-        prevImage();
-      }
+    const diff = e.changedTouches[0].clientX - startX;
+    if (diff > 50) {
+      prevImage();
+    } else if (diff < -50) {
+      nextImage();
     } else {
-      track.style.transform = `translateX(-${(currentIndex + 1) * 100}%)`;
-    }
-
-    isDraggingMouse = false;
-  });
-
-  track.addEventListener("mouseleave", () => {
-    if (isDraggingMouse) {
-      track.style.transform = `translateX(-${(currentIndex + 1) * 100}%)`;
-      isDraggingMouse = false;
+      moveToIndex(currentIndex);
     }
   });
 
   renderImages();
 
-  setInterval(nextImage, 5000);
+  let autoSlideInterval = null;
 
-  try {
-    const images = document.querySelectorAll(".carousel-img");
-    images.forEach((img) => {
-      img.addEventListener("dragstart", (e) => e.preventDefault());
-    });
-  } catch (error) {
-    console.log("Error setting up image drag prevention:", error);
+  function startAutoSlide() {
+    autoSlideInterval = setInterval(() => {
+      nextImage();
+    }, 3000);
   }
+
+  function stopAutoSlide() {
+    clearInterval(autoSlideInterval);
+  }
+
+  track.addEventListener("mouseenter", stopAutoSlide);
+  track.addEventListener("mouseleave", startAutoSlide);
+
+  startAutoSlide();
 }
 
-let startPos = 0;
-let isDragging = false;
 
-document.addEventListener("mousedown", (e) => {
-  if (e.target.closest(".carousel-img")) {
-    e.preventDefault();
-    startPos = e.clientX;
-    isDragging = true;
-  }
-});
-
-document.addEventListener("mousemove", (e) => {
-  if (isDragging && track) {
-    const currentPos = e.clientX;
-    const diff = startPos - currentPos;
-    track.style.transform = `translateX(-${(currentIndex + 1) * 100
-      }% + ${diff}px))`;
-  }
-});
-
-document.addEventListener("mouseup", (e) => {
-  if (isDragging && track) {
-    const endPos = e.clientX;
-    const diff = startPos - endPos;
-
-    if (Math.abs(diff) > 50) {
-      if (diff > 0) {
-        nextImage();
-      } else {
-        prevImage();
-      }
-    } else {
-      track.style.transform = `translateX(-${(currentIndex + 1) * 100}%)`;
-    }
-
-    isDragging = false;
-  }
-});
 
 function handleLoginClick(e) {
   e.preventDefault();
