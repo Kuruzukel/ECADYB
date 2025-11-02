@@ -2121,7 +2121,6 @@ function generateAllThumbnails() {
 
       currentIndex = endIndex;
 
-      // Continue processing if there are more pages
       if (currentIndex < pages.length) {
         requestAnimationFrame(processBatch);
       }
