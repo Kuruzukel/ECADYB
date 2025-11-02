@@ -1439,7 +1439,6 @@ function loadPage(page, pageElement) {
 
 function zoomTo(event) {
   setTimeout(function () {
-    // if ($(".magazine-viewport").data().regionClicked) {
     //   $(".magazine-viewport").data().regionClicked = false;
     // } else {
     //   if ($(".magazine-viewport").zoom("value") == 1) {
