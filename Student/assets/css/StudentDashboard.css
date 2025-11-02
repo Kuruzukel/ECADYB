@@ -280,7 +280,8 @@ header.fading {
   }
 }
 
-.center-nav a:hover {
+.center-nav a:hover,
+.center-nav a.active {
   background: linear-gradient(135deg, #0d39d9 0%, #112d4e 100%);
   color: #ffffff !important;
   border-radius: 2rem;
@@ -2063,6 +2064,193 @@ header.fading {
   min-height: 100vh;
 }
 
+/* Carousel Lightbox Styles */
+.carousel-lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.carousel-lightbox.active {
+  opacity: 1;
+}
+
+.lightbox-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center
+    center/cover no-repeat;
+  backdrop-filter: blur(20px) brightness(0.4);
+  -webkit-backdrop-filter: blur(20px) brightness(0.4);
+}
+
+.lightbox-overlay::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(2, 19, 38, 0.85);
+  z-index: 0;
+}
+
+.lightbox-content {
+  position: relative;
+  z-index: 10001;
+  max-width: 95vw;
+  max-height: 95vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+}
+
+.lightbox-content .lightbox-image {
+  animation: lightboxZoomIn 0.3s ease;
+}
+
+.lightbox-content .lightbox-close {
+  position: fixed !important;
+}
+
+@keyframes lightboxZoomIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.lightbox-image {
+  max-width: 100%;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
+}
+
+.lightbox-close {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  color: #ffffff;
+  font-size: 2rem;
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 10002;
+  line-height: 1;
+  font-weight: 300;
+}
+
+.lightbox-close:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: #fcda15;
+  color: #fcda15;
+  transform: rotate(90deg) scale(1.1);
+}
+
+/* Tablet screens */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .lightbox-close {
+    top: 15px;
+    right: 15px;
+    width: 50px;
+    height: 50px;
+    font-size: 1.8rem;
+  }
+}
+
+/* Mobile landscape and small tablets */
+@media (max-width: 768px) and (min-width: 481px) {
+  .lightbox-close {
+    top: 15px;
+    right: 15px;
+    width: 45px;
+    height: 45px;
+    font-size: 1.6rem;
+  }
+
+  .lightbox-image {
+    max-height: 80vh;
+  }
+
+  .lightbox-content {
+    padding: 0;
+  }
+}
+
+/* Mobile portrait */
+@media (max-width: 480px) {
+  .lightbox-close {
+    top: 10px;
+    right: 10px;
+    width: 42px;
+    height: 42px;
+    font-size: 1.5rem;
+    border-width: 2px;
+  }
+
+  .lightbox-image {
+    max-height: 75vh;
+  }
+
+  .lightbox-content {
+    padding: 0;
+  }
+}
+
+/* Very small mobile screens */
+@media (max-width: 375px) {
+  .lightbox-close {
+    top: 8px;
+    right: 8px;
+    width: 38px;
+    height: 38px;
+    font-size: 1.3rem;
+  }
+}
+
+/* Landscape orientation adjustments */
+@media (max-height: 600px) and (orientation: landscape) {
+  .lightbox-close {
+    top: 8px;
+    right: 8px;
+    width: 40px;
+    height: 40px;
+    font-size: 1.4rem;
+  }
+
+  .lightbox-image {
+    max-height: 85vh;
+  }
+}
+
 @media (max-width: 1200px) and (min-width: 600px) {
   .carousel-section {
     background: #021326;
@@ -2102,6 +2290,24 @@ header.fading {
     background-repeat: no-repeat;
     background-position: top center;
     min-height: auto !important;
+  }
+
+  /* Disable all hover effects on touch devices for carousel */
+  .carousel-track img:hover {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  /* Ensure pointer events work correctly on touch */
+  .carousel-track {
+    touch-action: pan-x !important;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .carousel-track img {
+    pointer-events: auto !important;
+    -webkit-tap-highlight-color: transparent;
   }
 }
 
@@ -2200,11 +2406,18 @@ header.fading {
   width: 100%;
   height: 400px;
   object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
   border-radius: 1rem;
   margin: 0 1rem;
   background: #021326;
   z-index: 4;
   width: max-content;
+}
+
+.carousel-track img:hover {
+  transform: scale(1.02);
+  opacity: 0.95;
   flex-shrink: 0;
 }
 
@@ -3282,10 +3495,12 @@ header.fading {
     left: 100%;
   }
 
-  .center-nav.mobile-active a:hover {
+  .center-nav.mobile-active a:hover,
+  .center-nav.mobile-active a.active {
     background-color: rgba(255, 255, 255, 0.15);
     transform: translateX(8px) scale(1.02);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    color: #fcda15;
   }
 
   .mobile-login-dropdown {
@@ -3742,10 +3957,12 @@ header.fading {
     left: 100%;
   }
 
-  .center-nav.mobile-active a:hover {
+  .center-nav.mobile-active a:hover,
+  .center-nav.mobile-active a.active {
     background-color: rgba(255, 255, 255, 0.15);
     transform: translateX(8px) scale(1.02);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    color: #fcda15;
   }
 
   .mobile-login-dropdown {
@@ -4271,10 +4488,12 @@ header.fading {
     left: 100%;
   }
 
-  .center-nav.mobile-active a:hover {
+  .center-nav.mobile-active a:hover,
+  .center-nav.mobile-active a.active {
     background-color: rgba(255, 255, 255, 0.15);
     transform: translateX(8px) scale(1.02);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    color: #fcda15;
   }
 
   .mobile-login-dropdown {

@@ -96,6 +96,63 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
+// Lightbox functionality for carousel images
+function showImageLightbox(imageSrc) {
+  // Check if lightbox already exists
+  let lightbox = document.getElementById('carousel-lightbox');
+  
+  if (!lightbox) {
+    // Create lightbox
+    lightbox = document.createElement('div');
+    lightbox.id = 'carousel-lightbox';
+    lightbox.className = 'carousel-lightbox';
+    lightbox.innerHTML = `
+      <div class="lightbox-overlay"></div>
+      <div class="lightbox-content">
+        <button class="lightbox-close" aria-label="Close">&times;</button>
+        <img src="" alt="Full size image" class="lightbox-image">
+      </div>
+    `;
+    document.body.appendChild(lightbox);
+    
+    // Add close handlers
+    const closeBtn = lightbox.querySelector('.lightbox-close');
+    const overlay = lightbox.querySelector('.lightbox-overlay');
+    
+    const closeLightbox = () => {
+      lightbox.classList.remove('active');
+      setTimeout(() => {
+        lightbox.style.display = 'none';
+      }, 300);
+      
+      // Resume auto-slide after closing
+      setTimeout(() => {
+        startAutoSlide();
+      }, 500);
+    };
+    
+    closeBtn.addEventListener('click', closeLightbox);
+    overlay.addEventListener('click', closeLightbox);
+    
+    // Close on escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+        closeLightbox();
+      }
+    });
+  }
+  
+  // Show the lightbox with the image
+  const lightboxImage = lightbox.querySelector('.lightbox-image');
+  lightboxImage.src = imageSrc;
+  lightbox.style.display = 'flex';
+  
+  // Trigger animation
+  setTimeout(() => {
+    lightbox.classList.add('active');
+  }, 10);
+}
+
 const track = document.getElementById("carousel-track");
 
 if (track) {
@@ -194,22 +251,46 @@ if (track) {
     }
   });
 
+  // Add click handler to pause carousel and show image in lightbox
+  track.addEventListener("click", (e) => {
+    if (e.target.classList.contains("carousel-img")) {
+      // Stop auto-slide
+      stopAutoSlide();
+      
+      // Show lightbox with the image
+      showImageLightbox(e.target.src);
+    }
+  });
+
   renderImages();
 
   let autoSlideInterval = null;
 
   function startAutoSlide() {
+    // Clear any existing interval first
+    if (autoSlideInterval) {
+      clearInterval(autoSlideInterval);
+    }
     autoSlideInterval = setInterval(() => {
       nextImage();
     }, 3000);
   }
 
   function stopAutoSlide() {
-    clearInterval(autoSlideInterval);
+    if (autoSlideInterval) {
+      clearInterval(autoSlideInterval);
+      autoSlideInterval = null;
+    }
   }
 
-  track.addEventListener("mouseenter", stopAutoSlide);
-  track.addEventListener("mouseleave", startAutoSlide);
+  // Detect if device supports touch
+  const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+  
+  // Only add mouse hover events on non-touch devices to prevent conflicts
+  if (!isTouchDevice) {
+    track.addEventListener("mouseenter", stopAutoSlide);
+    track.addEventListener("mouseleave", startAutoSlide);
+  }
 
   startAutoSlide();
 }

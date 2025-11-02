@@ -1,3 +1,192 @@
+// Dynamic Page Navigation System
+(function() {
+  let currentPage = 'home';
+  let isLoading = false;
+  const basePath = '/ECADYB/Student/Components/';
+
+  // Get current page from URL
+  function getCurrentPageFromURL() {
+    const path = window.location.pathname;
+    if (path.includes('StudentDashboard.php')) return 'home';
+    if (path.includes('About.php')) return 'about';
+    if (path.includes('Yearbook.php')) return 'yearbook';
+    if (path.includes('Memories.php')) return 'memories';
+    return 'home';
+  }
+
+  currentPage = getCurrentPageFromURL();
+
+  // Update active navigation state
+  function updateActiveNav(page) {
+    document.querySelectorAll('.nav-link').forEach(link => {
+      const linkPage = link.getAttribute('data-page');
+      if (linkPage === page) {
+        link.classList.add('active');
+      } else {
+        link.classList.remove('active');
+      }
+    });
+  }
+
+  // Load page content dynamically
+  function loadPage(page, updateHistory = true) {
+    if (isLoading || page === currentPage) return;
+    
+    isLoading = true;
+    
+    // Clean up carousel if switching away from memories page
+    if (currentPage === 'memories' && window.carouselState && window.carouselState.cleanup) {
+      window.carouselState.cleanup();
+      window.carouselState.initialized = false;
+    }
+
+    // Show loading indicator (optional)
+    const mainContent = document.querySelector('main') || document.querySelector('body');
+    if (mainContent) {
+      mainContent.style.opacity = '0.6';
+      mainContent.style.pointerEvents = 'none';
+    }
+
+    fetch(basePath + `PageLoader.php?page=${page}`, {
+      method: 'GET',
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest'
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Find the content container
+        let contentContainer = document.querySelector('main');
+        if (!contentContainer) {
+          // If no main tag, find the section after header
+          const header = document.querySelector('header');
+          if (header && header.nextElementSibling) {
+            contentContainer = header.nextElementSibling;
+            // Find all sections until footer
+            let sections = [];
+            let current = header.nextElementSibling;
+            const footer = document.querySelector('footer');
+            while (current && current !== footer) {
+              if (current.tagName === 'SECTION' || current.tagName === 'MAIN') {
+                sections.push(current);
+              }
+              current = current.nextElementSibling;
+            }
+            
+            // Remove old sections
+            sections.forEach(section => section.remove());
+            
+            // Insert new content before footer
+            const bottomNav = document.querySelector('.bottom-nav');
+            const insertBefore = footer || bottomNav || document.body.lastChild;
+            
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = data.content;
+            
+            while (tempDiv.firstChild) {
+              document.body.insertBefore(tempDiv.firstChild, insertBefore);
+            }
+          }
+        } else {
+          contentContainer.innerHTML = data.content;
+        }
+
+        // Update page title
+        document.title = data.title;
+
+        // Update active navigation
+        updateActiveNav(page);
+
+        // Update history
+        if (updateHistory) {
+          const pageURLs = {
+            'home': basePath + 'StudentDashboard.php',
+            'about': basePath + 'About.php',
+            'yearbook': basePath + 'Yearbook.php',
+            'memories': basePath + 'Memories.php'
+          };
+          window.history.pushState({ page: page }, data.title, pageURLs[page]);
+        }
+
+        currentPage = page;
+
+        // Reinitialize carousel if loading memories page
+        if (page === 'memories') {
+          setTimeout(() => {
+            initializeCarousel();
+          }, 100);
+        }
+
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // Restore opacity
+        if (mainContent) {
+          mainContent.style.opacity = '1';
+          mainContent.style.pointerEvents = 'auto';
+        }
+      } else {
+        console.error('Failed to load page:', data.error);
+        // Fallback to regular navigation
+        window.location.href = basePath + pageURLs[page];
+      }
+    })
+    .catch(error => {
+      console.error('Error loading page:', error);
+      // Fallback to regular navigation on error
+      const pageURLs = {
+        'home': 'StudentDashboard.php',
+        'about': 'About.php',
+        'yearbook': 'Yearbook.php',
+        'memories': 'Memories.php'
+      };
+      window.location.href = basePath + pageURLs[page];
+    })
+    .finally(() => {
+      isLoading = false;
+    });
+  }
+
+  // Handle browser back/forward buttons
+  window.addEventListener('popstate', (event) => {
+    if (event.state && event.state.page) {
+      loadPage(event.state.page, false);
+    } else {
+      const page = getCurrentPageFromURL();
+      loadPage(page, false);
+    }
+  });
+
+  // Initialize navigation on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    // Set initial active state
+    updateActiveNav(currentPage);
+
+    // Attach click handlers to all navigation links
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const page = this.getAttribute('data-page');
+        if (page) {
+          loadPage(page);
+        }
+        
+        // Close mobile menu if open
+        const hamburgerMenu = document.getElementById('hamburgerMenu');
+        const centerNav = document.querySelector('.center-nav');
+        if (hamburgerMenu && centerNav) {
+          hamburgerMenu.classList.remove('active');
+          centerNav.classList.remove('mobile-active');
+        }
+      });
+    });
+  });
+
+  // Make loadPage available globally for potential external use
+  window.navigateToPage = loadPage;
+})();
+
 document.addEventListener("DOMContentLoaded", function () {
   if (window.location.hash) {
     setTimeout(() => {
@@ -16,14 +205,6 @@ document.addEventListener("DOMContentLoaded", function () {
     e.stopPropagation();
     this.classList.toggle("active");
     centerNav.classList.toggle("mobile-active");
-  });
-
-  const navLinks = centerNav.querySelectorAll("a");
-  navLinks.forEach((link) => {
-    link.addEventListener("click", function () {
-      hamburgerMenu.classList.remove("active");
-      centerNav.classList.remove("mobile-active");
-    });
   });
 
   document.addEventListener("click", function (event) {
@@ -186,9 +367,95 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-const track = document.getElementById("carousel-track");
+// Lightbox functionality for carousel images
+function showImageLightbox(imageSrc) {
+  // Check if lightbox already exists
+  let lightbox = document.getElementById('carousel-lightbox');
+  
+  if (!lightbox) {
+    // Create lightbox
+    lightbox = document.createElement('div');
+    lightbox.id = 'carousel-lightbox';
+    lightbox.className = 'carousel-lightbox';
+    lightbox.innerHTML = `
+      <div class="lightbox-overlay"></div>
+      <div class="lightbox-content">
+        <button class="lightbox-close" aria-label="Close">&times;</button>
+        <img src="" alt="Full size image" class="lightbox-image">
+      </div>
+    `;
+    document.body.appendChild(lightbox);
+    
+    // Add close handlers
+    const closeBtn = lightbox.querySelector('.lightbox-close');
+    const overlay = lightbox.querySelector('.lightbox-overlay');
+    
+    const closeLightbox = () => {
+      lightbox.classList.remove('active');
+      setTimeout(() => {
+        lightbox.style.display = 'none';
+      }, 300);
+      
+      // Resume auto-slide after closing
+      const track = document.getElementById("carousel-track");
+      if (track && window.carouselState && !window.carouselState.intervals.autoSlide) {
+        // Wait a bit before resuming
+        setTimeout(() => {
+          if (window.carouselState.initialized) {
+            // Trigger the startAutoSlide through mouseenter/mouseleave simulation
+            const track = document.getElementById("carousel-track");
+            if (track) {
+              track.dispatchEvent(new Event('mouseleave'));
+            }
+          }
+        }, 500);
+      }
+    };
+    
+    closeBtn.addEventListener('click', closeLightbox);
+    overlay.addEventListener('click', closeLightbox);
+    
+    // Close on escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+        closeLightbox();
+      }
+    });
+  }
+  
+  // Show the lightbox with the image
+  const lightboxImage = lightbox.querySelector('.lightbox-image');
+  lightboxImage.src = imageSrc;
+  lightbox.style.display = 'flex';
+  
+  // Trigger animation
+  setTimeout(() => {
+    lightbox.classList.add('active');
+  }, 10);
+}
 
-if (track && !track.hasAttribute('data-carousel-initialized')) {
+// Wrap carousel initialization in a function
+function initializeCarousel() {
+  // Global carousel state manager to prevent multiple initializations
+  if (!window.carouselState) {
+    window.carouselState = {
+      initialized: false,
+      cleanup: null
+    };
+  }
+
+  const track = document.getElementById("carousel-track");
+
+  // If carousel was previously initialized, clean it up first
+  if (track && window.carouselState.initialized && window.carouselState.cleanup) {
+    console.log('Cleaning up previous carousel initialization');
+    window.carouselState.cleanup();
+    window.carouselState.initialized = false;
+    window.carouselState.cleanup = null;
+  }
+
+  if (track && !window.carouselState.initialized) {
+  window.carouselState.initialized = true;
   track.setAttribute('data-carousel-initialized', 'true');
   let carouselImageElements = Array.from(
     track.querySelectorAll(".carousel-img")
@@ -283,56 +550,344 @@ if (track && !track.hasAttribute('data-carousel-initialized')) {
     }
   });
 
+  // Add click handler to pause carousel and show image in lightbox
+  track.addEventListener("click", (e) => {
+    if (e.target.classList.contains("carousel-img")) {
+      // Stop auto-slide
+      stopAutoSlide();
+      
+      // Show lightbox with the image
+      showImageLightbox(e.target.src);
+    }
+  });
+
   renderImages();
 
-  let autoSlideInterval = null;
+  // Store interval references globally to prevent duplicates
+  if (!window.carouselState.intervals) {
+    window.carouselState.intervals = {
+      autoSlide: null,
+      startTimeout: null,
+      isTransitioning: false,
+      lastAction: null,
+      lastActionTime: 0
+    };
+  }
 
   function startAutoSlide() {
-    // Clear any existing interval first
-    if (autoSlideInterval) {
-      clearInterval(autoSlideInterval);
+    const now = Date.now();
+    
+    // Prevent rapid toggling - ignore if called within 500ms of last action
+    if (window.carouselState.intervals.lastAction === 'start' && 
+        now - window.carouselState.intervals.lastActionTime < 500) {
+      console.log('Carousel start throttled - too soon');
+      return;
     }
-    autoSlideInterval = setInterval(() => {
-      nextImage();
-    }, 3000);
+    
+    // If already running, don't start again
+    if (window.carouselState.intervals.autoSlide) {
+      console.log('Carousel already running - skipping start');
+      return;
+    }
+    
+    // Clear any pending start timeout
+    if (window.carouselState.intervals.startTimeout) {
+      clearTimeout(window.carouselState.intervals.startTimeout);
+      window.carouselState.intervals.startTimeout = null;
+    }
+    
+    // Debounce: wait a bit before starting to prevent rapid-fire calls
+    window.carouselState.intervals.startTimeout = setTimeout(() => {
+      // Double-check we don't already have an interval running
+      if (!window.carouselState.intervals.autoSlide) {
+        window.carouselState.intervals.autoSlide = setInterval(() => {
+          if (track && track.offsetParent !== null) {
+            nextImage();
+          }
+        }, 3000);
+        window.carouselState.intervals.lastAction = 'start';
+        window.carouselState.intervals.lastActionTime = Date.now();
+        console.log('Carousel auto-slide started');
+      }
+      window.carouselState.intervals.startTimeout = null;
+    }, 150);
   }
 
   function stopAutoSlide() {
-    if (autoSlideInterval) {
-      clearInterval(autoSlideInterval);
-      autoSlideInterval = null;
+    const now = Date.now();
+    
+    // Prevent rapid toggling - ignore if called within 500ms of last stop
+    if (window.carouselState.intervals.lastAction === 'stop' && 
+        now - window.carouselState.intervals.lastActionTime < 500) {
+      console.log('Carousel stop throttled - too soon');
+      return;
+    }
+    
+    // Clear any pending start timeout
+    if (window.carouselState.intervals.startTimeout) {
+      clearTimeout(window.carouselState.intervals.startTimeout);
+      window.carouselState.intervals.startTimeout = null;
+    }
+    
+    if (window.carouselState.intervals.autoSlide) {
+      clearInterval(window.carouselState.intervals.autoSlide);
+      window.carouselState.intervals.autoSlide = null;
+      window.carouselState.intervals.lastAction = 'stop';
+      window.carouselState.intervals.lastActionTime = Date.now();
+      console.log('Carousel auto-slide stopped');
     }
   }
 
+  // Detect if device supports touch
+  const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+  
   // Clean up any existing event listeners
   track.removeEventListener("mouseenter", stopAutoSlide);
   track.removeEventListener("mouseleave", startAutoSlide);
 
-  track.addEventListener("mouseenter", stopAutoSlide);
-  track.addEventListener("mouseleave", startAutoSlide);
+  // Only add mouse hover events on non-touch devices to prevent conflicts
+  if (!isTouchDevice) {
+    track.addEventListener("mouseenter", stopAutoSlide);
+    track.addEventListener("mouseleave", startAutoSlide);
+  }
 
   startAutoSlide();
 
+  // Throttle mechanism for visibility handlers
+  let visibilityTimeout = null;
+  
   // Handle page visibility changes to prevent multiple intervals
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-      stopAutoSlide();
-    } else {
-      startAutoSlide();
+  const handleVisibilityChange = () => {
+    // Clear any pending visibility timeout
+    if (visibilityTimeout) {
+      clearTimeout(visibilityTimeout);
     }
-  });
+    
+    // Throttle the visibility change handler
+    visibilityTimeout = setTimeout(() => {
+      if (document.hidden) {
+        stopAutoSlide();
+      } else {
+        // Only start if the carousel track is still visible
+        if (track && track.offsetParent !== null) {
+          startAutoSlide();
+        }
+      }
+      visibilityTimeout = null;
+    }, 200);
+  };
 
-  // Handle page focus/blur events for mobile
-  window.addEventListener('focus', () => {
-    startAutoSlide();
-  });
+  const handleWindowFocus = () => {
+    // Throttle focus events
+    setTimeout(() => {
+      // Only start if the carousel track is still visible
+      if (track && track.offsetParent !== null && !document.hidden) {
+        startAutoSlide();
+      }
+    }, 300);
+  };
 
-  window.addEventListener('blur', () => {
+  const handleWindowBlur = () => {
+    // Throttle blur events
+    setTimeout(() => {
+      stopAutoSlide();
+    }, 100);
+  };
+
+  // Remove any existing listeners first to prevent duplicates
+  document.removeEventListener('visibilitychange', handleVisibilityChange);
+  window.removeEventListener('focus', handleWindowFocus);
+  window.removeEventListener('blur', handleWindowBlur);
+
+  // Add event listeners
+  document.addEventListener('visibilitychange', handleVisibilityChange);
+  window.addEventListener('focus', handleWindowFocus);
+  window.addEventListener('blur', handleWindowBlur);
+
+  // Store cleanup function in global state for later use
+  window.carouselState.cleanup = () => {
     stopAutoSlide();
-  });
+    
+    // Clear visibility timeout
+    if (visibilityTimeout) {
+      clearTimeout(visibilityTimeout);
+      visibilityTimeout = null;
+    }
+    
+    // Clear any remaining intervals
+    if (window.carouselState.intervals) {
+      if (window.carouselState.intervals.startTimeout) {
+        clearTimeout(window.carouselState.intervals.startTimeout);
+        window.carouselState.intervals.startTimeout = null;
+      }
+      if (window.carouselState.intervals.autoSlide) {
+        clearInterval(window.carouselState.intervals.autoSlide);
+        window.carouselState.intervals.autoSlide = null;
+      }
+      // Reset throttle states
+      window.carouselState.intervals.lastAction = null;
+      window.carouselState.intervals.lastActionTime = 0;
+    }
+    
+    document.removeEventListener('visibilitychange', handleVisibilityChange);
+    window.removeEventListener('focus', handleWindowFocus);
+    window.removeEventListener('blur', handleWindowBlur);
+    
+    if (track) {
+      track.removeEventListener("transitionend", handleTransitionEnd);
+      track.removeEventListener("mouseenter", stopAutoSlide);
+      track.removeEventListener("mouseleave", startAutoSlide);
+    }
+    
+    console.log('Carousel cleanup completed');
+  };
+  }
 }
 
+// Detect iOS Safari
+function isIOSSafari() {
+  const ua = navigator.userAgent;
+  const iOS = /iPad|iPhone|iPod/.test(ua);
+  const webkit = /WebKit/.test(ua);
+  const iOSSafari = iOS && webkit && !/CriOS|FxiOS|OPiOS|mercury/.test(ua);
+  return iOSSafari;
+}
 
+// Force cleanup of ALL intervals on page load (iOS Safari bfcache fix)
+function forceCleanupAllIntervals() {
+  // First try proper cleanup
+  if (window.carouselState && window.carouselState.cleanup) {
+    try {
+      window.carouselState.cleanup();
+    } catch (e) {
+      console.error('Error during carousel cleanup:', e);
+    }
+  }
+  
+  // Clear tracked intervals
+  if (window.carouselState && window.carouselState.intervals) {
+    if (window.carouselState.intervals.startTimeout) {
+      clearTimeout(window.carouselState.intervals.startTimeout);
+      window.carouselState.intervals.startTimeout = null;
+    }
+    if (window.carouselState.intervals.autoSlide) {
+      clearInterval(window.carouselState.intervals.autoSlide);
+      window.carouselState.intervals.autoSlide = null;
+    }
+  }
+  
+  // Nuclear option: Clear all intervals (brute force for iOS Safari bfcache)
+  // This is safe because we're reinitializing everything after
+  const highestIntervalId = setInterval(() => {}, 0);
+  for (let i = 0; i < highestIntervalId; i++) {
+    clearInterval(i);
+  }
+  clearInterval(highestIntervalId);
+  
+  const highestTimeoutId = setTimeout(() => {}, 0);
+  for (let i = 0; i < highestTimeoutId; i++) {
+    clearTimeout(i);
+  }
+  clearTimeout(highestTimeoutId);
+  
+  // Reset carousel state
+  if (window.carouselState) {
+    window.carouselState.initialized = false;
+    window.carouselState.cleanup = null;
+    if (window.carouselState.intervals) {
+      window.carouselState.intervals.autoSlide = null;
+      window.carouselState.intervals.startTimeout = null;
+    }
+  }
+  
+  console.log('Force cleanup completed - all intervals and timeouts cleared');
+}
+
+// Handle iOS Safari bfcache (back-forward cache) restoration
+window.addEventListener('pageshow', function(event) {
+  if (event.persisted) {
+    // Page was restored from bfcache - force cleanup and reinit
+    console.log('Page restored from bfcache - forcing cleanup');
+    forceCleanupAllIntervals();
+    
+    const track = document.getElementById("carousel-track");
+    if (track) {
+      // Longer delay for iOS Safari to ensure cleanup is complete
+      const delay = isIOSSafari() ? 400 : 200;
+      setTimeout(() => {
+        initializeCarousel();
+      }, delay);
+    }
+  }
+});
+
+// Handle page hide - cleanup before page goes into bfcache
+window.addEventListener('pagehide', function(event) {
+  console.log('Page hiding - cleaning up carousel');
+  if (window.carouselState && window.carouselState.cleanup) {
+    window.carouselState.cleanup();
+  }
+  // Force cleanup all intervals
+  if (window.carouselState && window.carouselState.intervals) {
+    if (window.carouselState.intervals.startTimeout) {
+      clearTimeout(window.carouselState.intervals.startTimeout);
+    }
+    if (window.carouselState.intervals.autoSlide) {
+      clearInterval(window.carouselState.intervals.autoSlide);
+    }
+  }
+});
+
+// Additional iOS Safari specific cleanup on beforeunload
+window.addEventListener('beforeunload', function() {
+  if (window.carouselState && window.carouselState.cleanup) {
+    window.carouselState.cleanup();
+  }
+});
+
+// Initialize carousel on page load if carousel track exists
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', function() {
+    const track = document.getElementById("carousel-track");
+    if (track) {
+      // On iOS Safari, ALWAYS force cleanup on page load due to bfcache
+      if (isIOSSafari()) {
+        console.log('iOS Safari detected - forcing cleanup on page load');
+        forceCleanupAllIntervals();
+        // Longer delay for iOS Safari
+        setTimeout(() => {
+          initializeCarousel();
+        }, 300);
+      } else {
+        // Clean up any lingering intervals first on other browsers
+        if (window.carouselState && window.carouselState.initialized) {
+          forceCleanupAllIntervals();
+        }
+        initializeCarousel();
+      }
+    }
+  });
+} else {
+  // DOM already loaded
+  const track = document.getElementById("carousel-track");
+  if (track) {
+    // On iOS Safari, ALWAYS force cleanup on page load due to bfcache
+    if (isIOSSafari()) {
+      console.log('iOS Safari detected - forcing cleanup on page load');
+      forceCleanupAllIntervals();
+      // Longer delay for iOS Safari
+      setTimeout(() => {
+        initializeCarousel();
+      }, 300);
+    } else {
+      // Clean up any lingering intervals first on other browsers
+      if (window.carouselState && window.carouselState.initialized) {
+        forceCleanupAllIntervals();
+      }
+      initializeCarousel();
+    }
+  }
+}
 
 function handleLoginClick(e) {
   e.preventDefault();

@@ -87,10 +87,10 @@ if (empty($studentFirstName) && empty($studentLastName) && !empty($studentName))
     <span>GRADUATION GALLERY</span>
   </div>
   <nav class="center-nav">
-    <a href="/ECADYB/Student/Components/StudentDashboard.php">Home</a>
-    <a href="/ECADYB/Student/Components/About.php">About</a>
-    <a href="/ECADYB/Student/Components/Yearbook.php">Yearbooks</a>
-    <a href="/ECADYB/Student/Components/Memories.php">Memories</a>
+    <a href="/ECADYB/Student/Components/StudentDashboard.php" data-page="home" class="nav-link">Home</a>
+    <a href="/ECADYB/Student/Components/About.php" data-page="about" class="nav-link">About</a>
+    <a href="/ECADYB/Student/Components/Yearbook.php" data-page="yearbook" class="nav-link">Yearbooks</a>
+    <a href="/ECADYB/Student/Components/Memories.php" data-page="memories" class="nav-link">Memories</a>
     <div class="mobile-login-dropdown">
       <button class="mobile-login-btn" id="mobileLoginDropdownBtn" onclick="window.location.href='<?php echo BASE_URL; ?>Login'">
         Log In
@@ -149,19 +149,19 @@ if (empty($studentFirstName) && empty($studentLastName) && !empty($studentName))
 
 <!-- Bottom Navigation Bar for Tablet (600px-768px) -->
 <nav class="bottom-nav">
-  <a href="/ECADYB/Student/Components/StudentDashboard.php">
+  <a href="/ECADYB/Student/Components/StudentDashboard.php" data-page="home" class="nav-link">
     <i class="fa-solid fa-house"></i>
     <span>Home</span>
   </a>
-  <a href="/ECADYB/Student/Components/About.php">
+  <a href="/ECADYB/Student/Components/About.php" data-page="about" class="nav-link">
     <i class="fa-solid fa-circle-info"></i>
     <span>About</span>
   </a>
-  <a href="/ECADYB/Student/Components/Yearbook.php">
+  <a href="/ECADYB/Student/Components/Yearbook.php" data-page="yearbook" class="nav-link">
     <i class="fa-solid fa-book"></i>
     <span>Yearbooks</span>
   </a>
-  <a href="/ECADYB/Student/Components/Memories.php">
+  <a href="/ECADYB/Student/Components/Memories.php" data-page="memories" class="nav-link">
     <i class="fa-solid fa-images"></i>
     <span>Memories</span>
   </a>
