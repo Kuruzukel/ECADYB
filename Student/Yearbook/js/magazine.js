@@ -178,7 +178,6 @@ function fetchTopManagementCached(template, callback) {
     batchYear
   );
 
-  // Build request data
   var requestData = {
     template: template,
   };
