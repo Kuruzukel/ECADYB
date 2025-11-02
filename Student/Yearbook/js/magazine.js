@@ -1477,7 +1477,6 @@ function addRegion(region, pageElement) {
 
 function regionClick(event) {
   //   if (region.hasClass("region")) {
-  //     $(".magazine-viewport").data().regionClicked = true;
   //     setTimeout(function () {
   //       $(".magazine-viewport").data().regionClicked = false;
   //     }, 100);
