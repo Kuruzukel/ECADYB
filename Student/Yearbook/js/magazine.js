@@ -2725,7 +2725,6 @@ function findAndNavigateToStudent(
                   $studentCards.length
                 );
 
-                // Log all student names in visible cards for debugging
                 $studentCards.each(function (idx) {
                   var name = $(this).find("h3").text();
                   console.log("  Card " + idx + ":", name);
