@@ -2162,7 +2162,6 @@ function waitForImagesAndGenerateThumbnail(page, pageElement) {
 function forceRegenerateThumbnails() {
   console.log("Force regenerating all thumbnails...");
 
-  // Use requestAnimationFrame and batch processing for better performance
   requestAnimationFrame(function () {
     var pages = $(".magazine .page").toArray();
     var batchSize = 4; // Process 4 pages at a time
