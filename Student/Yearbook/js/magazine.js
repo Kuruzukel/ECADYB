@@ -580,7 +580,6 @@ function loadStudentsForPage(
           template,
           nextApiPage,
           function (nextResponse) {
-            // Enhanced error handling for next page
             if (
               nextResponse &&
               nextResponse.success &&
