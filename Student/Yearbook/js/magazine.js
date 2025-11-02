@@ -1439,7 +1439,6 @@ function loadPage(page, pageElement) {
 
 function zoomTo(event) {
   setTimeout(function () {
-    //     $(".magazine-viewport").zoom("zoomIn", event);
     //   } else {
     //     $(".magazine-viewport").zoom("zoomOut");
     //   }
