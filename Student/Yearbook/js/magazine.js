@@ -2094,7 +2094,7 @@ function generateAllThumbnails() {
     var currentIndex = 0;
 
     function processBatch() {
-      var batchSize = 3; // Process 3 pages at a time
+      var batchSize = 3;
       var endIndex = Math.min(currentIndex + batchSize, pages.length);
 
       for (var i = currentIndex; i < endIndex; i++) {
