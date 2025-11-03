@@ -2177,1773 +2177,232 @@
    FULLSCREEN MODE MEDIA QUERIES
    ======================================== */
 
-/* Large Desktop Fullscreen (1200px - 1439px) */
-@media (max-width: 1439px) and (min-width: 1200px) {
-  /* Top Management Page */
-  html:fullscreen .top-management-page {
-    /* Add your CSS here */
+/* Medium Desktop Fullscreen (1121px - 1285px) */
+@media (max-width: 1285px) and (min-width: 1121px) {
+  /* Magazine Container - Fullscreen Size */
+  html:fullscreen .magazine-viewport .container {
+    width: 1100px;
+    height: 700px;
   }
-  html:-webkit-full-screen .top-management-page {
-    /* Add your CSS here */
+  html:-webkit-full-screen .magazine-viewport .container {
+    width: 1100px;
+    height: 700px;
   }
-  html:-moz-full-screen .top-management-page {
-    /* Add your CSS here */
+  html:-moz-full-screen .magazine-viewport .container {
+    width: 1100px;
+    height: 700px;
   }
-  html:-ms-fullscreen .top-management-page {
-    /* Add your CSS here */
+  html:-ms-fullscreen .magazine-viewport .container {
+    width: 1100px;
+    height: 700px;
   }
-
-  /* Management Name */
-  html:fullscreen .management-name {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .management-name {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .management-name {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .management-name {
-    /* Add your CSS here */
+  .iframe-fullscreen-mode .magazine-viewport .container {
+    width: 1100px;
+    height: 700px;
   }
 
-  /* Management Position */
-  html:fullscreen .management-position {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .management-position {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .management-position {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .management-position {
-    /* Add your CSS here */
+  /* Management Elements - Fullscreen Styles */
+  :fullscreen .management-name,
+  .iframe-fullscreen-mode .management-name {
+    font-size: 25px;
   }
 
-  /* Management Message */
-  html:fullscreen .management-message {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .management-message {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .management-message {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .management-message {
-    /* Add your CSS here */
+  :fullscreen .management-position,
+  .iframe-fullscreen-mode .management-position {
+    font-size: 16px;
   }
 
-  /* Cards Container */
-  html:fullscreen .cards-container {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .cards-container {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .cards-container {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .cards-container {
-    /* Add your CSS here */
+  :fullscreen .management-message,
+  .iframe-fullscreen-mode .management-message {
+    font-size: 16px;
+    line-height: 1.6;
   }
 
-  /* Student Card */
-  html:fullscreen .student-card {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-card {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-card {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-card {
-    /* Add your CSS here */
-  }
-
-  /* Navigation Controls */
-  html:fullscreen .nav-controls {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .nav-controls {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .nav-controls {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .nav-controls {
-    /* Add your CSS here */
-  }
-
-  /* Modal Active */
-  html:fullscreen .student-modal.active {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-modal.active {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-modal.active {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-modal.active {
-    /* Add your CSS here */
-  }
-
-  /* Magazine Viewport */
-  html:fullscreen .magazine-viewport {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .magazine-viewport {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .magazine-viewport {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .magazine-viewport {
-    /* Add your CSS here */
-  }
-
-  /* Student Info */
-  html:fullscreen .student-info {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-info {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-info {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-info {
-    /* Add your CSS here */
-  }
-
-  /* Student Details */
-  html:fullscreen .student-details {
-    /* Add your CSS here - max-height, min-height, align-items: flex-end */
-  }
-  html:-webkit-full-screen .student-details {
-    /* Add your CSS here - max-height, min-height, align-items: flex-end */
-  }
-  html:-moz-full-screen .student-details {
-    /* Add your CSS here - max-height, min-height, align-items: flex-end */
-  }
-  html:-ms-fullscreen .student-details {
-    /* Add your CSS here - max-height, min-height, align-items: flex-end */
-  }
-
-  /* Student Image Navigation */
-  html:fullscreen .student-image-navigation {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-image-navigation {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-image-navigation {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-image-navigation {
-    /* Add your CSS here */
-  }
-
-  /* Student Images */
-  html:fullscreen .student-images {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-images {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-images {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-images {
-    /* Add your CSS here */
-  }
-
-  /* Student Modal */
-  html:fullscreen .student-modal {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-modal {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-modal {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-modal {
-    /* Add your CSS here */
-  }
-
-  /* Modal Content */
-  html:fullscreen .modal-content {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .modal-content {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .modal-content {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .modal-content {
-    /* Add your CSS here */
-  }
-
-  /* Thumbnails Modal */
-  html:fullscreen .thumbnails {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .thumbnails {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .thumbnails {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .thumbnails {
-    /* Add your CSS here */
-  }
-
-  /* Thumbnail Item */
-  html:fullscreen .thumbnail-item {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .thumbnail-item {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .thumbnail-item {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .thumbnail-item {
-    /* Add your CSS here */
-  }
-}
-
-/* Medium Desktop Fullscreen (1120px - 1199px) */
-@media (max-width: 1199px) and (min-width: 1120px) {
-  /* Top Management Page */
-  html:fullscreen .top-management-page {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .top-management-page {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .top-management-page {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .top-management-page {
-    /* Add your CSS here */
-  }
-
-  /* Management Name */
-  html:fullscreen .management-name {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .management-name {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .management-name {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .management-name {
-    /* Add your CSS here */
-  }
-
-  /* Management Position */
-  html:fullscreen .management-position {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .management-position {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .management-position {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .management-position {
-    /* Add your CSS here */
-  }
-
-  /* Management Message */
-  html:fullscreen .management-message {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .management-message {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .management-message {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .management-message {
-    /* Add your CSS here */
-  }
-
-  /* Cards Container */
-  html:fullscreen .cards-container {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .cards-container {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .cards-container {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .cards-container {
-    /* Add your CSS here */
-  }
-
-  /* Student Card */
-  html:fullscreen .student-card {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-card {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-card {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-card {
-    /* Add your CSS here */
-  }
-
-  /* Navigation Controls */
-  html:fullscreen .nav-controls {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .nav-controls {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .nav-controls {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .nav-controls {
-    /* Add your CSS here */
-  }
-
-  /* Modal Active */
-  html:fullscreen .student-modal.active {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-modal.active {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-modal.active {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-modal.active {
-    /* Add your CSS here */
-  }
-
-  /* Magazine Viewport */
-  html:fullscreen .magazine-viewport {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .magazine-viewport {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .magazine-viewport {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .magazine-viewport {
-    /* Add your CSS here */
-  }
-
-  /* Student Info */
-  html:fullscreen .student-info {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-info {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-info {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-info {
-    /* Add your CSS here */
-  }
-
-  /* Student Details */
-  html:fullscreen .student-details {
-    /* Add your CSS here - max-height, min-height, align-items: flex-end */
-  }
-  html:-webkit-full-screen .student-details {
-    /* Add your CSS here - max-height, min-height, align-items: flex-end */
-  }
-  html:-moz-full-screen .student-details {
-    /* Add your CSS here - max-height, min-height, align-items: flex-end */
-  }
-  html:-ms-fullscreen .student-details {
-    /* Add your CSS here - max-height, min-height, align-items: flex-end */
-  }
-
-  /* Student Image Navigation */
-  html:fullscreen .student-image-navigation {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-image-navigation {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-image-navigation {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-image-navigation {
-    /* Add your CSS here */
-  }
-
-  /* Student Images */
-  html:fullscreen .student-images {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-images {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-images {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-images {
-    /* Add your CSS here */
-  }
-
-  /* Student Modal */
-  html:fullscreen .student-modal {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-modal {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-modal {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-modal {
-    /* Add your CSS here */
-  }
-
-  /* Modal Content */
-  html:fullscreen .modal-content {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .modal-content {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .modal-content {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .modal-content {
-    /* Add your CSS here */
-  }
-
-  /* Thumbnails Modal */
-  html:fullscreen .thumbnails {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .thumbnails {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .thumbnails {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .thumbnails {
-    /* Add your CSS here */
-  }
-
-  /* Thumbnail Item */
-  html:fullscreen .thumbnail-item {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .thumbnail-item {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .thumbnail-item {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .thumbnail-item {
-    /* Add your CSS here */
+  :fullscreen .management-photo,
+  .iframe-fullscreen-mode .management-photo {
+    width: 260px;
+    height: 260px;
   }
 }
 
 /* Small Desktop Fullscreen (991px - 1120px) */
 @media (max-width: 1120px) and (min-width: 991px) {
-  /* Top Management Page */
-  html:fullscreen .top-management-page {
-    /* Add your CSS here */
+  /* Magazine Container - Fullscreen Size */
+  html:fullscreen .magazine-viewport .container {
+    width: 1000px;
+    height: 650px;
   }
-  html:-webkit-full-screen .top-management-page {
-    /* Add your CSS here */
+  html:-webkit-full-screen .magazine-viewport .container {
+    width: 1000px;
+    height: 650px;
   }
-  html:-moz-full-screen .top-management-page {
-    /* Add your CSS here */
+  html:-moz-full-screen .magazine-viewport .container {
+    width: 1000px;
+    height: 650px;
   }
-  html:-ms-fullscreen .top-management-page {
-    /* Add your CSS here */
+  html:-ms-fullscreen .magazine-viewport .container {
+    width: 1000px;
+    height: 650px;
   }
-
-  /* Management Name */
-  html:fullscreen .management-name {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .management-name {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .management-name {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .management-name {
-    /* Add your CSS here */
+  .iframe-fullscreen-mode .magazine-viewport .container {
+    width: 1000px;
+    height: 650px;
   }
 
-  /* Management Position */
-  html:fullscreen .management-position {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .management-position {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .management-position {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .management-position {
-    /* Add your CSS here */
+  /* Management Elements - Fullscreen Styles */
+  :fullscreen .management-name,
+  .iframe-fullscreen-mode .management-name {
+    font-size: 22px;
   }
 
-  /* Management Message */
-  html:fullscreen .management-message {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .management-message {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .management-message {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .management-message {
-    /* Add your CSS here */
+  :fullscreen .management-position,
+  .iframe-fullscreen-mode .management-position {
+    font-size: 14px;
   }
 
-  /* Cards Container */
-  html:fullscreen .cards-container {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .cards-container {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .cards-container {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .cards-container {
-    /* Add your CSS here */
+  :fullscreen .management-message,
+  .iframe-fullscreen-mode .management-message {
+    font-size: 14px;
+    line-height: 1.6;
   }
 
-  /* Student Card */
-  html:fullscreen .student-card {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-card {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-card {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-card {
-    /* Add your CSS here */
-  }
-
-  /* Navigation Controls */
-  html:fullscreen .nav-controls {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .nav-controls {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .nav-controls {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .nav-controls {
-    /* Add your CSS here */
-  }
-
-  /* Modal Active */
-  html:fullscreen .student-modal.active {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-modal.active {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-modal.active {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-modal.active {
-    /* Add your CSS here */
-  }
-
-  /* Magazine Viewport */
-  html:fullscreen .magazine-viewport {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .magazine-viewport {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .magazine-viewport {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .magazine-viewport {
-    /* Add your CSS here */
-  }
-
-  /* Magazine */
-  html:fullscreen .magazine {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .magazine {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .magazine {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .magazine {
-    /* Add your CSS here */
-  }
-
-  /* Student Info */
-  html:fullscreen .student-info {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-info {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-info {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-info {
-    /* Add your CSS here */
-  }
-
-  /* Student Details */
-  html:fullscreen .student-details {
-    /* Add your CSS here - max-height, min-height, align-items: flex-end */
-  }
-  html:-webkit-full-screen .student-details {
-    /* Add your CSS here - max-height, min-height, align-items: flex-end */
-  }
-  html:-moz-full-screen .student-details {
-    /* Add your CSS here - max-height, min-height, align-items: flex-end */
-  }
-  html:-ms-fullscreen .student-details {
-    /* Add your CSS here - max-height, min-height, align-items: flex-end */
-  }
-
-  /* Student Image Navigation */
-  html:fullscreen .student-image-navigation {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-image-navigation {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-image-navigation {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-image-navigation {
-    /* Add your CSS here */
-  }
-
-  /* Student Images */
-  html:fullscreen .student-images {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-images {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-images {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-images {
-    /* Add your CSS here */
-  }
-
-  /* Student Modal */
-  html:fullscreen .student-modal {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-modal {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-modal {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-modal {
-    /* Add your CSS here */
-  }
-
-  /* Modal Content */
-  html:fullscreen .modal-content {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .modal-content {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .modal-content {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .modal-content {
-    /* Add your CSS here */
-  }
-
-  /* Thumbnails Modal */
-  html:fullscreen .thumbnails {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .thumbnails {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .thumbnails {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .thumbnails {
-    /* Add your CSS here */
-  }
-
-  /* Thumbnail Item */
-  html:fullscreen .thumbnail-item {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .thumbnail-item {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .thumbnail-item {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .thumbnail-item {
-    /* Add your CSS here */
+  :fullscreen .management-photo,
+  .iframe-fullscreen-mode .management-photo {
+    width: 210px;
+    height: 210px;
   }
 }
 
 /* Tablet Fullscreen (768px - 991px) */
-@media (max-width: 991px) and (min-width: 768px) {
-  /* Top Management Page */
-  html:fullscreen .top-management-page {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .top-management-page {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .top-management-page {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .top-management-page {
-    /* Add your CSS here */
+@media (max-width: 991px) and (min-width: 769px) {
+  /* Remove padding from top management page */
+  :fullscreen .top-management-page,
+  .iframe-fullscreen-mode .top-management-page {
+    padding: 20px 20px;
   }
 
-  /* Management Name */
-  html:fullscreen .management-name {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .management-name {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .management-name {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .management-name {
-    /* Add your CSS here */
+  /* Management Elements - Fullscreen Styles */
+  :fullscreen .management-name,
+  .iframe-fullscreen-mode .management-name {
+    font-size: 17px;
   }
 
-  /* Management Position */
-  html:fullscreen .management-position {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .management-position {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .management-position {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .management-position {
-    /* Add your CSS here */
+  :fullscreen .management-position,
+  .iframe-fullscreen-mode .management-position {
+    font-size: 14px;
   }
 
-  /* Management Message */
-  html:fullscreen .management-message {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .management-message {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .management-message {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .management-message {
-    /* Add your CSS here */
+  :fullscreen .management-message,
+  .iframe-fullscreen-mode .management-message {
+    font-size: 12px;
+    line-height: 1.6;
   }
 
-  /* Cards Container */
-  html:fullscreen .cards-container {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .cards-container {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .cards-container {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .cards-container {
-    /* Add your CSS here */
+  :fullscreen .management-photo,
+  .iframe-fullscreen-mode .management-photo {
+    width: 160px;
+    height: 160px;
+    margin-bottom: 10px !important;
   }
 
-  /* Student Card */
-  html:fullscreen .student-card {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-card {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-card {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-card {
-    /* Add your CSS here */
-  }
-
-  /* Navigation Controls */
-  html:fullscreen .nav-controls {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .nav-controls {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .nav-controls {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .nav-controls {
-    /* Add your CSS here */
-  }
-
-  /* Modal Active */
-  html:fullscreen .student-modal.active {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-modal.active {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-modal.active {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-modal.active {
-    /* Add your CSS here */
-  }
-
-  /* Magazine Viewport */
-  html:fullscreen .magazine-viewport {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .magazine-viewport {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .magazine-viewport {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .magazine-viewport {
-    /* Add your CSS here */
-  }
-
-  /* Magazine */
-  html:fullscreen .magazine {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .magazine {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .magazine {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .magazine {
-    /* Add your CSS here */
-  }
-
-  /* Student Info */
-  html:fullscreen .student-info {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-info {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-info {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-info {
-    /* Add your CSS here */
-  }
-
-  /* Student Details */
-  html:fullscreen .student-details {
-    /* Add your CSS here - max-height, min-height, align-items: flex-end */
-  }
-  html:-webkit-full-screen .student-details {
-    /* Add your CSS here - max-height, min-height, align-items: flex-end */
-  }
-  html:-moz-full-screen .student-details {
-    /* Add your CSS here - max-height, min-height, align-items: flex-end */
-  }
-  html:-ms-fullscreen .student-details {
-    /* Add your CSS here - max-height, min-height, align-items: flex-end */
-  }
-
-  /* Student Image Navigation */
-  html:fullscreen .student-image-navigation {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-image-navigation {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-image-navigation {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-image-navigation {
-    /* Add your CSS here */
-  }
-
-  /* Student Images */
-  html:fullscreen .student-images {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-images {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-images {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-images {
-    /* Add your CSS here */
-  }
-
-  /* Student Modal */
-  html:fullscreen .student-modal {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-modal {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-modal {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-modal {
-    /* Add your CSS here */
-  }
-
-  /* Modal Content */
-  html:fullscreen .modal-content {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .modal-content {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .modal-content {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .modal-content {
-    /* Add your CSS here */
-  }
-
-  /* Thumbnails Modal */
-  html:fullscreen .thumbnails {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .thumbnails {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .thumbnails {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .thumbnails {
-    /* Add your CSS here */
-  }
-
-  /* Thumbnail Item */
-  html:fullscreen .thumbnail-item {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .thumbnail-item {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .thumbnail-item {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .thumbnail-item {
-    /* Add your CSS here */
+  :fullscreen .management-info,
+  .iframe-fullscreen-mode .management-info {
+    margin-bottom: 10px;
   }
 }
 
 /* Small Tablet Fullscreen (600px - 768px) */
 @media (max-width: 768px) and (min-width: 600px) {
-  /* Top Management Page */
-  html:fullscreen .top-management-page {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .top-management-page {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .top-management-page {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .top-management-page {
-    /* Add your CSS here */
+  /* Remove padding from top management page */
+  :fullscreen .top-management-page,
+  .iframe-fullscreen-mode .top-management-page {
+    padding: 0;
   }
 
-  /* Management Name */
-  html:fullscreen .management-name {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .management-name {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .management-name {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .management-name {
-    /* Add your CSS here */
+  /* Management Elements - Fullscreen Styles */
+  :fullscreen .management-name,
+  .iframe-fullscreen-mode .management-name {
+    font-size: 18px;
   }
 
-  /* Management Position */
-  html:fullscreen .management-position {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .management-position {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .management-position {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .management-position {
-    /* Add your CSS here */
+  :fullscreen .management-position,
+  .iframe-fullscreen-mode .management-position {
+    font-size: 12px;
   }
 
-  /* Management Message */
-  html:fullscreen .management-message {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .management-message {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .management-message {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .management-message {
-    /* Add your CSS here */
+  :fullscreen .management-message,
+  .iframe-fullscreen-mode .management-message {
+    font-size: 11px;
+    line-height: 1.6;
   }
 
-  /* Cards Container */
-  html:fullscreen .cards-container {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .cards-container {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .cards-container {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .cards-container {
-    /* Add your CSS here */
-  }
-
-  /* Student Card */
-  html:fullscreen .student-card {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-card {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-card {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-card {
-    /* Add your CSS here */
-  }
-
-  /* Navigation Controls */
-  html:fullscreen .nav-controls {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .nav-controls {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .nav-controls {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .nav-controls {
-    /* Add your CSS here */
-  }
-
-  /* Modal Active */
-  html:fullscreen .student-modal.active {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-modal.active {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-modal.active {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-modal.active {
-    /* Add your CSS here */
-  }
-
-  /* Magazine Viewport */
-  html:fullscreen .magazine-viewport {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .magazine-viewport {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .magazine-viewport {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .magazine-viewport {
-    /* Add your CSS here */
-  }
-
-  /* Magazine */
-  html:fullscreen .magazine {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .magazine {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .magazine {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .magazine {
-    /* Add your CSS here */
-  }
-
-  /* Student Info */
-  html:fullscreen .student-info {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-info {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-info {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-info {
-    /* Add your CSS here */
-  }
-
-  /* Student Details */
-  html:fullscreen .student-details {
-    /* Add your CSS here - max-height, min-height, align-items: flex-end */
-  }
-  html:-webkit-full-screen .student-details {
-    /* Add your CSS here - max-height, min-height, align-items: flex-end */
-  }
-  html:-moz-full-screen .student-details {
-    /* Add your CSS here - max-height, min-height, align-items: flex-end */
-  }
-  html:-ms-fullscreen .student-details {
-    /* Add your CSS here - max-height, min-height, align-items: flex-end */
-  }
-
-  /* Student Image Navigation */
-  html:fullscreen .student-image-navigation {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-image-navigation {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-image-navigation {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-image-navigation {
-    /* Add your CSS here */
-  }
-
-  /* Student Images */
-  html:fullscreen .student-images {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-images {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-images {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-images {
-    /* Add your CSS here */
-  }
-
-  /* Student Modal */
-  html:fullscreen .student-modal {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-modal {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-modal {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-modal {
-    /* Add your CSS here */
-  }
-
-  /* Modal Content */
-  html:fullscreen .modal-content {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .modal-content {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .modal-content {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .modal-content {
-    /* Add your CSS here */
-  }
-
-  /* Thumbnails Modal */
-  html:fullscreen .thumbnails {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .thumbnails {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .thumbnails {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .thumbnails {
-    /* Add your CSS here */
-  }
-
-  /* Thumbnail Item */
-  html:fullscreen .thumbnail-item {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .thumbnail-item {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .thumbnail-item {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .thumbnail-item {
-    /* Add your CSS here */
+  :fullscreen .management-photo,
+  .iframe-fullscreen-mode .management-photo {
+    width: 200px;
+    height: 200px;
   }
 }
 
 /* Large Mobile Fullscreen (480px - 600px) */
 @media (max-width: 600px) and (min-width: 480px) {
-  /* Top Management Page */
-  html:fullscreen .top-management-page {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .top-management-page {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .top-management-page {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .top-management-page {
-    /* Add your CSS here */
+  /* Remove padding from top management page */
+  :fullscreen .top-management-page,
+  .iframe-fullscreen-mode .top-management-page {
+    padding: 0;
   }
 
-  /* Management Name */
-  html:fullscreen .management-name {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .management-name {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .management-name {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .management-name {
-    /* Add your CSS here */
+  /* Management Elements - Fullscreen Styles */
+  :fullscreen .management-name,
+  .iframe-fullscreen-mode .management-name {
+    font-size: 16px;
   }
 
-  /* Management Position */
-  html:fullscreen .management-position {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .management-position {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .management-position {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .management-position {
-    /* Add your CSS here */
+  :fullscreen .management-position,
+  .iframe-fullscreen-mode .management-position {
+    font-size: 11px;
   }
 
-  /* Management Message */
-  html:fullscreen .management-message {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .management-message {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .management-message {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .management-message {
-    /* Add your CSS here */
+  :fullscreen .management-message,
+  .iframe-fullscreen-mode .management-message {
+    font-size: 10px;
+    line-height: 1.6;
   }
 
-  /* Cards Container */
-  html:fullscreen .cards-container {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .cards-container {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .cards-container {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .cards-container {
-    /* Add your CSS here */
-  }
-
-  /* Student Card */
-  html:fullscreen .student-card {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-card {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-card {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-card {
-    /* Add your CSS here */
-  }
-
-  /* Navigation Controls */
-  html:fullscreen .nav-controls {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .nav-controls {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .nav-controls {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .nav-controls {
-    /* Add your CSS here */
-  }
-
-  /* Modal Active */
-  html:fullscreen .student-modal.active {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-modal.active {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-modal.active {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-modal.active {
-    /* Add your CSS here */
-  }
-
-  /* Magazine Viewport */
-  html:fullscreen .magazine-viewport {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .magazine-viewport {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .magazine-viewport {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .magazine-viewport {
-    /* Add your CSS here */
-  }
-
-  /* Magazine */
-  html:fullscreen .magazine {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .magazine {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .magazine {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .magazine {
-    /* Add your CSS here */
-  }
-
-  /* Student Info */
-  html:fullscreen .student-info {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-info {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-info {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-info {
-    /* Add your CSS here */
-  }
-
-  /* Student Details */
-  html:fullscreen .student-details {
-    /* Add your CSS here - max-height, min-height, align-items: flex-end */
-  }
-  html:-webkit-full-screen .student-details {
-    /* Add your CSS here - max-height, min-height, align-items: flex-end */
-  }
-  html:-moz-full-screen .student-details {
-    /* Add your CSS here - max-height, min-height, align-items: flex-end */
-  }
-  html:-ms-fullscreen .student-details {
-    /* Add your CSS here - max-height, min-height, align-items: flex-end */
-  }
-
-  /* Student Image Navigation */
-  html:fullscreen .student-image-navigation {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-image-navigation {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-image-navigation {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-image-navigation {
-    /* Add your CSS here */
-  }
-
-  /* Student Images */
-  html:fullscreen .student-images {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-images {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-images {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-images {
-    /* Add your CSS here */
-  }
-
-  /* Student Modal */
-  html:fullscreen .student-modal {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-modal {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-modal {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-modal {
-    /* Add your CSS here */
-  }
-
-  /* Modal Content */
-  html:fullscreen .modal-content {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .modal-content {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .modal-content {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .modal-content {
-    /* Add your CSS here */
-  }
-
-  /* Thumbnails Modal */
-  html:fullscreen .thumbnails {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .thumbnails {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .thumbnails {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .thumbnails {
-    /* Add your CSS here */
-  }
-
-  /* Thumbnail Item */
-  html:fullscreen .thumbnail-item {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .thumbnail-item {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .thumbnail-item {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .thumbnail-item {
-    /* Add your CSS here */
+  :fullscreen .management-photo,
+  .iframe-fullscreen-mode .management-photo {
+    width: 180px;
+    height: 180px;
   }
 }
 
 /* Small Mobile Fullscreen (320px - 480px) */
 @media (max-width: 480px) and (min-width: 320px) {
-  /* Top Management Page */
-  html:fullscreen .top-management-page {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .top-management-page {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .top-management-page {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .top-management-page {
-    /* Add your CSS here */
+  /* Remove padding from top management page */
+  :fullscreen .top-management-page,
+  .iframe-fullscreen-mode .top-management-page {
+    padding: 0;
   }
 
-  /* Management Name */
-  html:fullscreen .management-name {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .management-name {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .management-name {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .management-name {
-    /* Add your CSS here */
+  /* Management Elements - Fullscreen Styles */
+  :fullscreen .management-name,
+  .iframe-fullscreen-mode .management-name {
+    font-size: 14px;
   }
 
-  /* Management Position */
-  html:fullscreen .management-position {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .management-position {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .management-position {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .management-position {
-    /* Add your CSS here */
+  :fullscreen .management-position,
+  .iframe-fullscreen-mode .management-position {
+    font-size: 10px;
   }
 
-  /* Management Message */
-  html:fullscreen .management-message {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .management-message {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .management-message {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .management-message {
-    /* Add your CSS here */
+  :fullscreen .management-message,
+  .iframe-fullscreen-mode .management-message {
+    font-size: 9px;
+    line-height: 1.6;
   }
 
-  /* Cards Container */
-  html:fullscreen .cards-container {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .cards-container {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .cards-container {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .cards-container {
-    /* Add your CSS here */
-  }
-
-  /* Student Card */
-  html:fullscreen .student-card {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-card {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-card {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-card {
-    /* Add your CSS here */
-  }
-
-  /* Navigation Controls */
-  html:fullscreen .nav-controls {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .nav-controls {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .nav-controls {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .nav-controls {
-    /* Add your CSS here */
-  }
-
-  /* Modal Active */
-  html:fullscreen .student-modal.active {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-modal.active {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-modal.active {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-modal.active {
-    /* Add your CSS here */
-  }
-
-  /* Magazine Viewport */
-  html:fullscreen .magazine-viewport {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .magazine-viewport {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .magazine-viewport {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .magazine-viewport {
-    /* Add your CSS here */
-  }
-
-  /* Magazine */
-  html:fullscreen .magazine {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .magazine {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .magazine {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .magazine {
-    /* Add your CSS here */
-  }
-
-  /* Student Info */
-  html:fullscreen .student-info {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-info {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-info {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-info {
-    /* Add your CSS here */
-  }
-
-  /* Student Details */
-  html:fullscreen .student-details {
-    /* Add your CSS here - max-height, min-height, align-items: flex-end */
-  }
-  html:-webkit-full-screen .student-details {
-    /* Add your CSS here - max-height, min-height, align-items: flex-end */
-  }
-  html:-moz-full-screen .student-details {
-    /* Add your CSS here - max-height, min-height, align-items: flex-end */
-  }
-  html:-ms-fullscreen .student-details {
-    /* Add your CSS here - max-height, min-height, align-items: flex-end */
-  }
-
-  /* Student Image Navigation */
-  html:fullscreen .student-image-navigation {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-image-navigation {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-image-navigation {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-image-navigation {
-    /* Add your CSS here */
-  }
-
-  /* Student Images */
-  html:fullscreen .student-images {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-images {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-images {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-images {
-    /* Add your CSS here */
-  }
-
-  /* Student Modal */
-  html:fullscreen .student-modal {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .student-modal {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .student-modal {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .student-modal {
-    /* Add your CSS here */
-  }
-
-  /* Modal Content */
-  html:fullscreen .modal-content {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .modal-content {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .modal-content {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .modal-content {
-    /* Add your CSS here */
-  }
-
-  /* Thumbnails Modal */
-  html:fullscreen .thumbnails {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .thumbnails {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .thumbnails {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .thumbnails {
-    /* Add your CSS here */
-  }
-
-  /* Thumbnail Item */
-  html:fullscreen .thumbnail-item {
-    /* Add your CSS here */
-  }
-  html:-webkit-full-screen .thumbnail-item {
-    /* Add your CSS here */
-  }
-  html:-moz-full-screen .thumbnail-item {
-    /* Add your CSS here */
-  }
-  html:-ms-fullscreen .thumbnail-item {
-    /* Add your CSS here */
-  }
-
-  /* Student Photos */
-  html:fullscreen .student-modal .student-image-large img {
-    /* Add your CSS here for student photos */
-  }
-  html:-webkit-full-screen .student-modal .student-image-large img {
-    /* Add your CSS here for student photos */
-  }
-  html:-moz-full-screen .student-modal .student-image-large img {
-    /* Add your CSS here for student photos */
-  }
-  html:-ms-fullscreen .student-modal .student-image-large img {
-    /* Add your CSS here for student photos */
+  :fullscreen .management-photo,
+  .iframe-fullscreen-mode .management-photo {
+    width: 160px;
+    height: 160px;
   }
 }
