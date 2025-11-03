@@ -40,8 +40,6 @@
   content: "";
   position: absolute;
   top: 0;
-  left: 50%;
-  transform: translateX(-50%);
   width: 6px;
   height: 100%;
   background: linear-gradient(
@@ -2400,6 +2398,7 @@
   .iframe-fullscreen-mode .magazine-viewport .container {
     width: 900px;
     height: 570px;
+    top: 23%;
   }
 
   :-webkit-full-screen .magazine-viewport .container {
