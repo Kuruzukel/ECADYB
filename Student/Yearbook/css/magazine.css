@@ -2518,7 +2518,7 @@
   .magazine-viewport .container {
     width: 750px;
     height: 450px;
-    top: 50%;
+    top: 33%;
   }
 
   /* Fullscreen adjustments for landscape */
@@ -2549,7 +2549,7 @@
   .magazine-viewport .container {
     width: 650px;
     height: 380px;
-    top: 50%;
+    top: 33%;
   }
 
   :fullscreen .magazine-viewport .container,
@@ -2608,7 +2608,7 @@
   .magazine-viewport .container {
     width: 550px;
     height: 320px;
-    top: 50%;
+    top: 33%;
   }
 
   :fullscreen .magazine-viewport .container,
@@ -2687,7 +2687,7 @@
   .magazine-viewport .container {
     width: 480px;
     height: 280px;
-    top: 50%;
+    top: 33%;
   }
 
   :fullscreen .magazine-viewport .container,
