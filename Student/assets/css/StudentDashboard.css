@@ -5177,28 +5177,6 @@ header.fading {
   background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center
     center/cover no-repeat;
   z-index: 9999;
-  overflow: auto;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(6, 182, 212, 0.6) rgba(255, 255, 255, 0.1);
-}
-
-.yearbook-iframe-container:fullscreen::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-.yearbook-iframe-container:fullscreen::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-}
-
-.yearbook-iframe-container:fullscreen::-webkit-scrollbar-thumb {
-  background: rgba(6, 182, 212, 0.6);
-  border-radius: 10px;
-}
-
-.yearbook-iframe-container:fullscreen::-webkit-scrollbar-thumb:hover {
-  background: rgba(6, 182, 212, 0.8);
 }
 
 .yearbook-iframe-container:-webkit-full-screen {
@@ -5211,28 +5189,6 @@ header.fading {
   background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center
     center/cover no-repeat;
   z-index: 9999;
-  overflow: auto;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(6, 182, 212, 0.6) rgba(255, 255, 255, 0.1);
-}
-
-.yearbook-iframe-container:-webkit-full-screen::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-.yearbook-iframe-container:-webkit-full-screen::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-}
-
-.yearbook-iframe-container:-webkit-full-screen::-webkit-scrollbar-thumb {
-  background: rgba(6, 182, 212, 0.6);
-  border-radius: 10px;
-}
-
-.yearbook-iframe-container:-webkit-full-screen::-webkit-scrollbar-thumb:hover {
-  background: rgba(6, 182, 212, 0.8);
 }
 
 .yearbook-iframe-container:-moz-full-screen {

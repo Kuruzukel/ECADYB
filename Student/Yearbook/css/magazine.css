@@ -1,54 +1,3 @@
-/* Scrollbar styles for fullscreen mode */
-:fullscreen,
-.iframe-fullscreen-mode,
-:fullscreen body,
-.iframe-fullscreen-mode body,
-:fullscreen html,
-.iframe-fullscreen-mode html {
-  overflow: auto;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(6, 182, 212, 0.6) rgba(255, 255, 255, 0.1);
-}
-
-:fullscreen::-webkit-scrollbar,
-.iframe-fullscreen-mode::-webkit-scrollbar,
-:fullscreen body::-webkit-scrollbar,
-.iframe-fullscreen-mode body::-webkit-scrollbar,
-:fullscreen html::-webkit-scrollbar,
-.iframe-fullscreen-mode html::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-:fullscreen::-webkit-scrollbar-track,
-.iframe-fullscreen-mode::-webkit-scrollbar-track,
-:fullscreen body::-webkit-scrollbar-track,
-.iframe-fullscreen-mode body::-webkit-scrollbar-track,
-:fullscreen html::-webkit-scrollbar-track,
-.iframe-fullscreen-mode html::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-}
-
-:fullscreen::-webkit-scrollbar-thumb,
-.iframe-fullscreen-mode::-webkit-scrollbar-thumb,
-:fullscreen body::-webkit-scrollbar-thumb,
-.iframe-fullscreen-mode body::-webkit-scrollbar-thumb,
-:fullscreen html::-webkit-scrollbar-thumb,
-.iframe-fullscreen-mode html::-webkit-scrollbar-thumb {
-  background: rgba(6, 182, 212, 0.6);
-  border-radius: 10px;
-}
-
-:fullscreen::-webkit-scrollbar-thumb:hover,
-.iframe-fullscreen-mode::-webkit-scrollbar-thumb:hover,
-:fullscreen body::-webkit-scrollbar-thumb:hover,
-.iframe-fullscreen-mode body::-webkit-scrollbar-thumb:hover,
-:fullscreen html::-webkit-scrollbar-thumb:hover,
-.iframe-fullscreen-mode html::-webkit-scrollbar-thumb:hover {
-  background: rgba(6, 182, 212, 0.8);
-}
-
 .magazine-viewport .container {
   position: absolute;
   top: 46%;
@@ -69,65 +18,14 @@
   height: 650px;
 }
 
-:-webkit-full-screen,
-:-webkit-full-screen body,
-:-webkit-full-screen html {
-  overflow: auto;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(6, 182, 212, 0.6) rgba(255, 255, 255, 0.1);
-}
-
-:-webkit-full-screen::-webkit-scrollbar,
-:-webkit-full-screen body::-webkit-scrollbar,
-:-webkit-full-screen html::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-:-webkit-full-screen::-webkit-scrollbar-track,
-:-webkit-full-screen body::-webkit-scrollbar-track,
-:-webkit-full-screen html::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-}
-
-:-webkit-full-screen::-webkit-scrollbar-thumb,
-:-webkit-full-screen body::-webkit-scrollbar-thumb,
-:-webkit-full-screen html::-webkit-scrollbar-thumb {
-  background: rgba(6, 182, 212, 0.6);
-  border-radius: 10px;
-}
-
-:-webkit-full-screen::-webkit-scrollbar-thumb:hover,
-:-webkit-full-screen body::-webkit-scrollbar-thumb:hover,
-:-webkit-full-screen html::-webkit-scrollbar-thumb:hover {
-  background: rgba(6, 182, 212, 0.8);
-}
-
 :-moz-full-screen .magazine-viewport .container {
   width: 1200px;
   height: 650px;
 }
 
-:-moz-full-screen,
-:-moz-full-screen body,
-:-moz-full-screen html {
-  overflow: auto;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(6, 182, 212, 0.6) rgba(255, 255, 255, 0.1);
-}
-
 :-ms-fullscreen .magazine-viewport .container {
   width: 1200px;
   height: 650px;
-}
-
-:-ms-fullscreen,
-:-ms-fullscreen body,
-:-ms-fullscreen html {
-  overflow: auto;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(6, 182, 212, 0.6) rgba(255, 255, 255, 0.1);
 }
 
 .magazine-viewport .magazine {
@@ -2479,6 +2377,28 @@
 
 /* Small Mobile Fullscreen (320px - 480px) */
 @media (max-width: 480px) and (min-width: 320px) {
+  /* Fullscreen magazine viewport */
+  :fullscreen .magazine-viewport .container,
+  .iframe-fullscreen-mode .magazine-viewport .container {
+    width: 1200px;
+    height: 650px;
+  }
+
+  :-webkit-full-screen .magazine-viewport .container {
+    width: 1200px;
+    height: 650px;
+  }
+
+  :-moz-full-screen .magazine-viewport .container {
+    width: 1200px;
+    height: 650px;
+  }
+
+  :-ms-fullscreen .magazine-viewport .container {
+    width: 1200px;
+    height: 650px;
+  }
+
   /* Remove padding from top management page */
   :fullscreen .top-management-page,
   .iframe-fullscreen-mode .top-management-page {
