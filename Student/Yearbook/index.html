@@ -832,7 +832,6 @@
 
         var studentStartPage = 6;
         if (pageNumber >= studentStartPage && pageNumber < totalPages) {
-          // Build map once if not already built
           var mapCacheKey = departmentCode + "_" + totalPages;
           if (!window.sectionPageNumberMap[mapCacheKey]) {
             window.sectionPageNumberMap[mapCacheKey] =
