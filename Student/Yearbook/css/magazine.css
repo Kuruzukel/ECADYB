@@ -403,7 +403,6 @@
   height: auto !important;
 }
 
-/* Custom scrollbar matching thumbnails-modal colors */
 #thumbnail-list::-webkit-scrollbar {
   width: 12px;
 }
