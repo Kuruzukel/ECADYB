@@ -1797,6 +1797,10 @@ try {
       const itemsContainer = document.querySelector('.yearbook-items-container');
       const allItems = document.querySelectorAll('.yearbook-item');
       const loader = document.querySelector('.yearbook-loader-overlay');
+      const header = document.querySelector('header');
+      const footer = document.querySelector('footer');
+      const bottomNav = document.querySelector('.bottom-nav');
+      const lowerCurlElements = document.querySelectorAll('.yearbook-lower-curl');
 
       console.log('[Yearbook] Opening yearbook:', departmentCode, departmentName);
 
@@ -1813,6 +1817,37 @@ try {
 
       if (itemsContainer) {
         itemsContainer.style.display = 'none';
+      }
+
+      // Hide all lower curl elements except the one inside iframe container
+      lowerCurlElements.forEach(curl => {
+        if (!curl.closest('.yearbook-iframe-container')) {
+          curl.style.display = 'none';
+        }
+      });
+
+      // Check if device is in landscape mode
+      const isLandscape = window.innerWidth > window.innerHeight;
+      const isMobile = window.innerWidth <= 768;
+
+      // Hide header, footer, and bottom navigation only in landscape mode
+      if (isLandscape || !isMobile) {
+        if (header) {
+          header.style.display = 'none';
+          console.log('[Yearbook] Header hidden (landscape mode)');
+        }
+
+        if (footer) {
+          footer.style.display = 'none';
+          console.log('[Yearbook] Footer hidden (landscape mode)');
+        }
+
+        if (bottomNav) {
+          bottomNav.style.display = 'none';
+          console.log('[Yearbook] Bottom navigation hidden (landscape mode)');
+        }
+      } else {
+        console.log('[Yearbook] Portrait mode detected - keeping navigation visible');
       }
 
       if (loader) {
@@ -1852,6 +1887,36 @@ try {
         iframe.src = '';
       }
 
+      // Add orientation change listener
+      const handleOrientationChange = () => {
+        const isLandscape = window.innerWidth > window.innerHeight;
+        const isMobile = window.innerWidth <= 768;
+        const header = document.querySelector('header');
+        const footer = document.querySelector('footer');
+        const bottomNav = document.querySelector('.bottom-nav');
+        
+        if (isLandscape || !isMobile) {
+          // Landscape mode - hide navigation
+          if (header) header.style.display = 'none';
+          if (footer) footer.style.display = 'none';
+          if (bottomNav) bottomNav.style.display = 'none';
+          console.log('[Yearbook] Rotated to landscape - navigation hidden');
+        } else {
+          // Portrait mode - show navigation
+          if (header) header.style.display = '';
+          if (footer) footer.style.display = '';
+          if (bottomNav) bottomNav.style.display = '';
+          console.log('[Yearbook] Rotated to portrait - navigation shown');
+        }
+      };
+
+      // Store the handler for cleanup
+      window.yearbookOrientationHandler = handleOrientationChange;
+      
+      // Listen for orientation changes
+      window.addEventListener('orientationchange', handleOrientationChange);
+      window.addEventListener('resize', handleOrientationChange);
+
       setTimeout(() => {
         if (iframe && iframeContainer) {
           const basePath = '<?php echo BASE_URL; ?>';
@@ -1882,6 +1947,10 @@ try {
       const itemsContainer = document.querySelector('.yearbook-items-container');
       const allItems = document.querySelectorAll('.yearbook-item');
       const loader = document.querySelector('.yearbook-loader-overlay');
+      const header = document.querySelector('header');
+      const footer = document.querySelector('footer');
+      const bottomNav = document.querySelector('.bottom-nav');
+      const lowerCurlElements = document.querySelectorAll('.yearbook-lower-curl');
 
       console.log('[Yearbook] Closing yearbook iframe');
 
@@ -1903,6 +1972,37 @@ try {
 
       if (itemsContainer) {
         itemsContainer.style.display = 'flex';
+      }
+
+      // Restore all lower curl elements
+      lowerCurlElements.forEach(curl => {
+        if (!curl.closest('.yearbook-iframe-container')) {
+          curl.style.display = '';
+        }
+      });
+
+      // Remove orientation change listeners
+      if (window.yearbookOrientationHandler) {
+        window.removeEventListener('orientationchange', window.yearbookOrientationHandler);
+        window.removeEventListener('resize', window.yearbookOrientationHandler);
+        window.yearbookOrientationHandler = null;
+        console.log('[Yearbook] Orientation listeners removed');
+      }
+
+      // Restore header, footer, and bottom navigation when closing yearbook iframe
+      if (header) {
+        header.style.display = '';
+        console.log('[Yearbook] Header restored');
+      }
+
+      if (footer) {
+        footer.style.display = '';
+        console.log('[Yearbook] Footer restored');
+      }
+
+      if (bottomNav) {
+        bottomNav.style.display = '';
+        console.log('[Yearbook] Bottom navigation restored');
       }
 
       if (window.YearbookLoader) {
@@ -1952,7 +2052,29 @@ try {
     });
 
     document.addEventListener('fullscreenchange', function() {
-      if (!document.fullscreenElement) {
+      const header = document.querySelector('header');
+      const footer = document.querySelector('footer');
+      const bottomNav = document.querySelector('.bottom-nav');
+      const isLandscape = window.innerWidth > window.innerHeight;
+      const isMobile = window.innerWidth <= 768;
+      
+      if (document.fullscreenElement) {
+        // Entering fullscreen - hide navigation only in landscape mode
+        if (isLandscape || !isMobile) {
+          if (header) header.style.display = 'none';
+          if (footer) footer.style.display = 'none';
+          if (bottomNav) bottomNav.style.display = 'none';
+          console.log('[Yearbook] Fullscreen entered (landscape) - navigation hidden');
+        } else {
+          console.log('[Yearbook] Fullscreen entered (portrait) - navigation kept visible');
+        }
+      } else {
+        // Exiting fullscreen - show header, footer, and bottom nav
+        if (header) header.style.display = '';
+        if (footer) footer.style.display = '';
+        if (bottomNav) bottomNav.style.display = '';
+        console.log('[Yearbook] Fullscreen exited - navigation shown');
+        
         const iframeContainer = document.querySelector('.yearbook-iframe-container');
         if (iframeContainer && iframeContainer.style.display === 'block') {
           closeYearbookIframe();
@@ -1961,7 +2083,87 @@ try {
     });
 
     document.addEventListener('webkitfullscreenchange', function() {
-      if (!document.webkitFullscreenElement) {
+      const header = document.querySelector('header');
+      const footer = document.querySelector('footer');
+      const bottomNav = document.querySelector('.bottom-nav');
+      const isLandscape = window.innerWidth > window.innerHeight;
+      const isMobile = window.innerWidth <= 768;
+      
+      if (document.webkitFullscreenElement) {
+        // Entering fullscreen - hide navigation only in landscape mode
+        if (isLandscape || !isMobile) {
+          if (header) header.style.display = 'none';
+          if (footer) footer.style.display = 'none';
+          if (bottomNav) bottomNav.style.display = 'none';
+          console.log('[Yearbook] Webkit fullscreen entered (landscape) - navigation hidden');
+        } else {
+          console.log('[Yearbook] Webkit fullscreen entered (portrait) - navigation kept visible');
+        }
+      } else {
+        // Exiting fullscreen - show header, footer, and bottom nav
+        if (header) header.style.display = '';
+        if (footer) footer.style.display = '';
+        if (bottomNav) bottomNav.style.display = '';
+        console.log('[Yearbook] Webkit fullscreen exited - navigation shown');
+        
+        const iframeContainer = document.querySelector('.yearbook-iframe-container');
+        if (iframeContainer && iframeContainer.style.display === 'block') {
+          closeYearbookIframe();
+        }
+      }
+    });
+
+    document.addEventListener('mozfullscreenchange', function() {
+      const header = document.querySelector('header');
+      const footer = document.querySelector('footer');
+      const bottomNav = document.querySelector('.bottom-nav');
+      const isLandscape = window.innerWidth > window.innerHeight;
+      const isMobile = window.innerWidth <= 768;
+      
+      if (document.mozFullScreenElement) {
+        if (isLandscape || !isMobile) {
+          if (header) header.style.display = 'none';
+          if (footer) footer.style.display = 'none';
+          if (bottomNav) bottomNav.style.display = 'none';
+          console.log('[Yearbook] Mozilla fullscreen entered (landscape) - navigation hidden');
+        } else {
+          console.log('[Yearbook] Mozilla fullscreen entered (portrait) - navigation kept visible');
+        }
+      } else {
+        if (header) header.style.display = '';
+        if (footer) footer.style.display = '';
+        if (bottomNav) bottomNav.style.display = '';
+        console.log('[Yearbook] Mozilla fullscreen exited - navigation shown');
+        
+        const iframeContainer = document.querySelector('.yearbook-iframe-container');
+        if (iframeContainer && iframeContainer.style.display === 'block') {
+          closeYearbookIframe();
+        }
+      }
+    });
+
+    document.addEventListener('msfullscreenchange', function() {
+      const header = document.querySelector('header');
+      const footer = document.querySelector('footer');
+      const bottomNav = document.querySelector('.bottom-nav');
+      const isLandscape = window.innerWidth > window.innerHeight;
+      const isMobile = window.innerWidth <= 768;
+      
+      if (document.msFullscreenElement) {
+        if (isLandscape || !isMobile) {
+          if (header) header.style.display = 'none';
+          if (footer) footer.style.display = 'none';
+          if (bottomNav) bottomNav.style.display = 'none';
+          console.log('[Yearbook] MS fullscreen entered (landscape) - navigation hidden');
+        } else {
+          console.log('[Yearbook] MS fullscreen entered (portrait) - navigation kept visible');
+        }
+      } else {
+        if (header) header.style.display = '';
+        if (footer) footer.style.display = '';
+        if (bottomNav) bottomNav.style.display = '';
+        console.log('[Yearbook] MS fullscreen exited - navigation shown');
+        
         const iframeContainer = document.querySelector('.yearbook-iframe-container');
         if (iframeContainer && iframeContainer.style.display === 'block') {
           closeYearbookIframe();
