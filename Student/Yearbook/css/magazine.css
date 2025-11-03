@@ -2413,33 +2413,29 @@
   /* Fullscreen magazine viewport */
   :fullscreen .magazine-viewport .container,
   .iframe-fullscreen-mode .magazine-viewport .container {
-    width: 900px;
-    height: 100vh;
-    max-height: 100px;
+    width: 500px;
+    height: 280px;
     position: relative;
     margin: 0 auto;
   }
 
   :-webkit-full-screen .magazine-viewport .container {
-    width: 900px;
-    height: 100vh;
-    max-height: 100px;
+    width: 500px;
+    height: 280px;
     position: relative;
     margin: 0 auto;
   }
 
   :-moz-full-screen .magazine-viewport .container {
-    width: 900px;
-    height: 100vh;
-    max-height: 100px;
+    width: 500px;
+    height: 280px;
     position: relative;
     margin: 0 auto;
   }
 
   :-ms-fullscreen .magazine-viewport .container {
-    width: 900px;
-    height: 100vh;
-    max-height: 100px;
+    width: 500px;
+    height: 280px;
     position: relative;
     margin: 0 auto;
   }
