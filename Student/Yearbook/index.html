@@ -309,7 +309,6 @@
             if (response.success) {
               studentData = response.data;
 
-              // Filter out students with mismatched program codes
               if (studentData && studentData.students) {
                 var originalCount = studentData.students.length;
                 studentData.students = studentData.students.filter(function (
