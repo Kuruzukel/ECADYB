@@ -562,7 +562,6 @@
           var yearbook = getCurrentYearbook();
           var cacheKey = yearbook.code + "_" + pageNumber;
 
-          // Check if we already have this section cached
           if (window.pageSectionCache[cacheKey]) {
             return window.pageSectionCache[cacheKey];
           }
