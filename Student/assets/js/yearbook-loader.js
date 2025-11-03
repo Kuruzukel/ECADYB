@@ -27,6 +27,7 @@
 
       this.ensureLoaderNote();
       this.setupEventListeners();
+      this.setupOrientationListener();
       this.setMaxTimeout();
       this.startChecking();
     },
@@ -78,6 +79,59 @@
 
       loaderContent.appendChild(noteWrapper);
       this.noteElement = noteWrapper;
+
+      // Add orientation message for mobile devices
+      let orientationMsg = loaderContent.querySelector(".orientation-message");
+      if (!orientationMsg) {
+        orientationMsg = document.createElement("div");
+        orientationMsg.className = "orientation-message";
+        orientationMsg.innerHTML =
+          '<div class="icon-group"><i class="fas fa-mobile-screen-button"></i><i class="fas fa-arrow-right rotate-icon"></i><i class="fas fa-mobile-screen"></i></div>Please rotate your phone to landscape mode for the best viewing experience';
+        loaderContent.appendChild(orientationMsg);
+      }
+    },
+
+    setupOrientationListener: function () {
+      const self = this;
+
+      function checkOrientation() {
+        const isMobile = window.innerWidth <= 768;
+        const isPortrait = window.innerHeight > window.innerWidth;
+
+        if (isMobile && isPortrait) {
+          console.log(
+            "[Loader] Mobile portrait mode detected - keeping loader visible"
+          );
+          if (self.loaderElement) {
+            self.loaderElement.classList.remove("hidden");
+            self.loaderElement.style.display = "flex";
+            self.loaderElement.style.opacity = "1";
+            self.loaderElement.style.visibility = "visible";
+            self.loaderElement.style.pointerEvents = "auto";
+          }
+          // Reset isLoaded so we can show the loader again if needed
+          self.isLoaded = false;
+        } else if (isMobile && !isPortrait) {
+          console.log(
+            "[Loader] Mobile landscape mode detected - checking if ready to hide"
+          );
+          // In landscape, check readiness to potentially hide the loader
+          self.checkReadiness();
+        }
+      }
+
+      // Check on load
+      checkOrientation();
+
+      // Listen for orientation changes
+      window.addEventListener("orientationchange", function () {
+        setTimeout(checkOrientation, 100);
+      });
+
+      // Also listen for resize as a fallback
+      window.addEventListener("resize", function () {
+        checkOrientation();
+      });
     },
 
     setupEventListeners: function () {
@@ -180,12 +234,24 @@
       const hasStudent =
         urlParams.has("student_id") && urlParams.has("student_name");
 
+      // Check if in mobile portrait mode
+      const isMobile = window.innerWidth <= 768;
+      const isPortrait = window.innerHeight > window.innerWidth;
+
       console.log("[Loader] Checking readiness:", {
         magazineReady: this.magazineReady,
         coverVisible: this.coverVisible,
         navigationComplete: this.navigationComplete,
         hasStudent: hasStudent,
+        isMobile: isMobile,
+        isPortrait: isPortrait,
       });
+
+      // Don't hide loader if mobile device is in portrait mode
+      if (isMobile && isPortrait) {
+        console.log("[Loader] Mobile portrait mode - keeping loader visible");
+        return;
+      }
 
       if (hasStudent) {
         if (
@@ -210,6 +276,17 @@
       const self = this;
       this.timeout = setTimeout(function () {
         if (!self.isLoaded) {
+          // Check if in mobile portrait mode before forcing hide
+          const isMobile = window.innerWidth <= 768;
+          const isPortrait = window.innerHeight > window.innerWidth;
+
+          if (isMobile && isPortrait) {
+            console.log(
+              "[Loader] Max wait time reached but in portrait mode - keeping loader visible"
+            );
+            return;
+          }
+
           console.log("[Loader] Max wait time reached, forcing hide");
           self.hideLoader();
         }
@@ -218,6 +295,15 @@
 
     hideLoader: function () {
       if (this.isLoaded) return;
+
+      // Final check: don't hide if in mobile portrait mode
+      const isMobile = window.innerWidth <= 768;
+      const isPortrait = window.innerHeight > window.innerWidth;
+
+      if (isMobile && isPortrait) {
+        console.log("[Loader] Cannot hide loader - device in portrait mode");
+        return;
+      }
 
       console.log("[Loader] Hiding loader...");
       this.isLoaded = true;
@@ -310,6 +396,19 @@
         loader.style.visibility = "visible";
         loader.style.pointerEvents = "auto";
         console.log("[Loader] Loader shown for student navigation");
+
+        // Ensure orientation message exists when showing loader again
+        const loaderContent = loader.querySelector(".loader-content");
+        if (
+          loaderContent &&
+          !loaderContent.querySelector(".orientation-message")
+        ) {
+          const orientationMsg = document.createElement("div");
+          orientationMsg.className = "orientation-message";
+          orientationMsg.innerHTML =
+            '<div class="icon-group"><i class="fas fa-mobile-screen-button"></i><i class="fas fa-arrow-right rotate-icon"></i><i class="fas fa-mobile-screen"></i></div>Please rotate your phone to landscape mode for the best viewing experience';
+          loaderContent.appendChild(orientationMsg);
+        }
       }
 
       const iframe = document.getElementById("yearbookIframe");
