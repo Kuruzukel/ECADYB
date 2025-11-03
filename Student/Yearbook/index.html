@@ -1914,7 +1914,6 @@
               }
             } catch (e) {
               console.log("Could not exit parent fullscreen:", e);
-              // Fallback to exiting our own fullscreen
               if (document.exitFullscreen) {
                 document.exitFullscreen();
               } else if (document.webkitExitFullscreen) {
