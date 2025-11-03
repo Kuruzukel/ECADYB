@@ -2508,3 +2508,263 @@
     height: 160px;
   }
 }
+
+/* ========================================
+   LANDSCAPE MODE FOR MOBILE DEVICES
+   ======================================== */
+
+/* Large Mobile Landscape (up to 768px height) */
+@media (orientation: landscape) and (max-height: 768px) {
+  .magazine-viewport .container {
+    width: 750px;
+    height: 450px;
+    top: 50%;
+  }
+
+  /* Fullscreen adjustments for landscape */
+  :fullscreen .magazine-viewport .container,
+  .iframe-fullscreen-mode .magazine-viewport .container {
+    width: 95vw;
+    height: 85vh;
+  }
+
+  :-webkit-full-screen .magazine-viewport .container {
+    width: 95vw;
+    height: 85vh;
+  }
+
+  :-moz-full-screen .magazine-viewport .container {
+    width: 95vw;
+    height: 85vh;
+  }
+
+  :-ms-fullscreen .magazine-viewport .container {
+    width: 95vw;
+    height: 85vh;
+  }
+}
+
+/* Medium Mobile Landscape (up to 640px height) */
+@media (orientation: landscape) and (max-height: 640px) {
+  .magazine-viewport .container {
+    width: 650px;
+    height: 380px;
+    top: 50%;
+  }
+
+  :fullscreen .magazine-viewport .container,
+  .iframe-fullscreen-mode .magazine-viewport .container {
+    width: 93vw;
+    height: 82vh;
+  }
+
+  :-webkit-full-screen .magazine-viewport .container {
+    width: 93vw;
+    height: 82vh;
+  }
+
+  :-moz-full-screen .magazine-viewport .container {
+    width: 93vw;
+    height: 82vh;
+  }
+
+  :-ms-fullscreen .magazine-viewport .container {
+    width: 93vw;
+    height: 82vh;
+  }
+
+  /* Adjust management elements for landscape */
+  :fullscreen .management-photo,
+  .iframe-fullscreen-mode .management-photo {
+    width: 140px;
+    height: 140px;
+    margin-bottom: 10px;
+  }
+
+  :fullscreen .management-name,
+  .iframe-fullscreen-mode .management-name {
+    font-size: 16px;
+  }
+
+  :fullscreen .management-position,
+  .iframe-fullscreen-mode .management-position {
+    font-size: 11px;
+  }
+
+  :fullscreen .management-message,
+  .iframe-fullscreen-mode .management-message {
+    font-size: 10px;
+    line-height: 1.5;
+  }
+
+  :fullscreen .top-management-page,
+  .iframe-fullscreen-mode .top-management-page {
+    padding: 15px 20px;
+  }
+}
+
+/* Small Mobile Landscape (up to 480px height) */
+@media (orientation: landscape) and (max-height: 480px) {
+  .magazine-viewport .container {
+    width: 550px;
+    height: 320px;
+    top: 50%;
+  }
+
+  :fullscreen .magazine-viewport .container,
+  .iframe-fullscreen-mode .magazine-viewport .container {
+    width: 90vw;
+    height: 78vh;
+  }
+
+  :-webkit-full-screen .magazine-viewport .container {
+    width: 90vw;
+    height: 78vh;
+  }
+
+  :-moz-full-screen .magazine-viewport .container {
+    width: 90vw;
+    height: 78vh;
+  }
+
+  :-ms-fullscreen .magazine-viewport .container {
+    width: 90vw;
+    height: 78vh;
+  }
+
+  /* Further adjust management elements */
+  :fullscreen .management-photo,
+  .iframe-fullscreen-mode .management-photo {
+    width: 110px;
+    height: 110px;
+    margin-bottom: 8px;
+  }
+
+  :fullscreen .management-name,
+  .iframe-fullscreen-mode .management-name {
+    font-size: 14px;
+  }
+
+  :fullscreen .management-position,
+  .iframe-fullscreen-mode .management-position {
+    font-size: 10px;
+  }
+
+  :fullscreen .management-message,
+  .iframe-fullscreen-mode .management-message {
+    font-size: 9px;
+    line-height: 1.4;
+  }
+
+  :fullscreen .top-management-page,
+  .iframe-fullscreen-mode .top-management-page {
+    padding: 10px 15px;
+  }
+
+  /* Adjust navigation controls for landscape */
+  :fullscreen .nav-controls,
+  .iframe-fullscreen-mode .nav-controls {
+    bottom: 0.5rem;
+    padding: 4px 8px;
+    gap: 3px;
+  }
+
+  :fullscreen .nav-btn,
+  .iframe-fullscreen-mode .nav-btn {
+    width: 30px;
+    height: 30px;
+  }
+
+  :fullscreen .nav-btn svg,
+  .iframe-fullscreen-mode .nav-btn svg {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+/* Extra Small Mobile Landscape (up to 400px height) */
+@media (orientation: landscape) and (max-height: 400px) {
+  .magazine-viewport .container {
+    width: 480px;
+    height: 280px;
+    top: 50%;
+  }
+
+  :fullscreen .magazine-viewport .container,
+  .iframe-fullscreen-mode .magazine-viewport .container {
+    width: 88vw;
+    height: 75vh;
+  }
+
+  :-webkit-full-screen .magazine-viewport .container {
+    width: 88vw;
+    height: 75vh;
+  }
+
+  :-moz-full-screen .magazine-viewport .container {
+    width: 88vw;
+    height: 75vh;
+  }
+
+  :-ms-fullscreen .magazine-viewport .container {
+    width: 88vw;
+    height: 75vh;
+  }
+
+  /* Minimal management elements for very small landscape */
+  :fullscreen .management-photo,
+  .iframe-fullscreen-mode .management-photo {
+    width: 90px;
+    height: 90px;
+    margin-bottom: 5px;
+  }
+
+  :fullscreen .management-name,
+  .iframe-fullscreen-mode .management-name {
+    font-size: 12px;
+  }
+
+  :fullscreen .management-position,
+  .iframe-fullscreen-mode .management-position {
+    font-size: 9px;
+  }
+
+  :fullscreen .management-message,
+  .iframe-fullscreen-mode .management-message {
+    font-size: 8px;
+    line-height: 1.3;
+  }
+
+  :fullscreen .top-management-page,
+  .iframe-fullscreen-mode .top-management-page {
+    padding: 8px 12px;
+  }
+
+  :fullscreen .management-info,
+  .iframe-fullscreen-mode .management-info {
+    gap: 15px;
+  }
+
+  /* Student cards in landscape */
+  :fullscreen .cards-container,
+  .iframe-fullscreen-mode .cards-container {
+    grid-gap: 15px;
+    padding: 8px;
+    top: 10px;
+  }
+
+  :fullscreen .student-image,
+  .iframe-fullscreen-mode .student-image {
+    height: 180px;
+  }
+
+  :fullscreen .student-card h3,
+  .iframe-fullscreen-mode .student-card h3 {
+    font-size: 10px;
+  }
+
+  :fullscreen .student-card p,
+  .iframe-fullscreen-mode .student-card p {
+    font-size: 9px;
+  }
+}
