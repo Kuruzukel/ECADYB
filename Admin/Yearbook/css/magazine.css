@@ -1399,12 +1399,92 @@
   height: 560px;
 }
 
+:fullscreen .student-name {
+  font-size: 28px;
+}
+
+:fullscreen .academic-year {
+  font-size: 20px;
+}
+
+:fullscreen .motto h3 {
+  font-size: 25px;
+}
+
+:fullscreen .motto p {
+  font-size: 18px;
+}
+
+:fullscreen .latin-awards {
+  font-size: 16px;
+}
+
+:fullscreen .latin-awards h3 {
+  font-size: 25px;
+}
+
+:fullscreen .latin-awards p {
+  font-size: 18px;
+}
+
+:fullscreen .milestones {
+  font-size: 16px;
+}
+
+:fullscreen .milestones h3 {
+  font-size: 25px;
+}
+
+:fullscreen .milestones p {
+  font-size: 18px;
+}
+
 :-webkit-full-screen .modal-content {
   width: 65% !important;
 }
 
 :-webkit-full-screen .student-image-large {
   height: 560px;
+}
+
+:-webkit-full-screen .student-name {
+  font-size: 40px;
+}
+
+:-webkit-full-screen .academic-year {
+  font-size: 20px;
+}
+
+:-webkit-full-screen .motto h3 {
+  font-size: 25px;
+}
+
+:-webkit-full-screen .motto p {
+  font-size: 18px;
+}
+
+:-webkit-full-screen .latin-awards {
+  font-size: 16px;
+}
+
+:-webkit-full-screen .latin-awards h3 {
+  font-size: 25px;
+}
+
+:-webkit-full-screen .latin-awards p {
+  font-size: 18px;
+}
+
+:-webkit-full-screen .milestones {
+  font-size: 18px;
+}
+
+:-webkit-full-screen .milestones h3 {
+  font-size: 25px;
+}
+
+:-webkit-full-screen .milestones p {
+  font-size: 18px;
 }
 
 :-moz-full-screen .modal-content {
@@ -1415,12 +1495,92 @@
   height: 560px;
 }
 
+:-moz-full-screen .student-name {
+  font-size: 40px;
+}
+
+:-moz-full-screen .academic-year {
+  font-size: 20px;
+}
+
+:-moz-full-screen .motto h3 {
+  font-size: 25px;
+}
+
+:-moz-full-screen .motto p {
+  font-size: 18px;
+}
+
+:-moz-full-screen .latin-awards {
+  font-size: 18px;
+}
+
+:-moz-full-screen .latin-awards h3 {
+  font-size: 25px;
+}
+
+:-moz-full-screen .latin-awards p {
+  font-size: 18px;
+}
+
+:-moz-full-screen .milestones {
+  font-size: 18px;
+}
+
+:-moz-full-screen .milestones h3 {
+  font-size: 25px;
+}
+
+:-moz-full-screen .milestones p {
+  font-size: 18px;
+}
+
 :-ms-fullscreen .modal-content {
   width: 65% !important;
 }
 
 :-ms-fullscreen .student-image-large {
   height: 560px;
+}
+
+:-ms-fullscreen .student-name {
+  font-size: 40px;
+}
+
+:-ms-fullscreen .academic-year {
+  font-size: 20px;
+}
+
+:-ms-fullscreen .motto h3 {
+  font-size: 25px;
+}
+
+:-ms-fullscreen .motto p {
+  font-size: 18px;
+}
+
+:-ms-fullscreen .latin-awards {
+  font-size: 18px;
+}
+
+:-ms-fullscreen .latin-awards h3 {
+  font-size: 25px;
+}
+
+:-ms-fullscreen .latin-awards p {
+  font-size: 18px;
+}
+
+:-ms-fullscreen .milestones {
+  font-size: 18px;
+}
+
+:-ms-fullscreen .milestones h3 {
+  font-size: 25px;
+}
+
+:-ms-fullscreen .milestones p {
+  font-size: 18px;
 }
 
 .top-management-page {
