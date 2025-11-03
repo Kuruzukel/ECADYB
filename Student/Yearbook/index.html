@@ -588,7 +588,6 @@
 
           var cacheKey = yearbook.code + "_" + template + "_" + apiPage;
 
-          // Try window.studentDataCache first
           if (window.studentDataCache && window.studentDataCache[cacheKey]) {
             var studentData = window.studentDataCache[cacheKey];
             if (
