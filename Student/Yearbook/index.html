@@ -1904,7 +1904,6 @@
 
         function exitFullscreen() {
           if (window.parent !== window) {
-            // We're in an iframe, tell the parent to exit fullscreen
             try {
               if (window.parent.document.exitFullscreen) {
                 window.parent.document.exitFullscreen();
