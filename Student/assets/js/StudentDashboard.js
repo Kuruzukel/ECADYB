@@ -1122,3 +1122,214 @@ function initializeYearbookMobileView() {
 // Make navigateYearbook available globally
 window.navigateYearbook = navigateYearbook;
 window.initializeYearbookMobileView = initializeYearbookMobileView;
+
+// Carousel functionality for Memories page
+function initMemoriesCarousel() {
+  // Lightbox functionality for carousel images
+  function showImageLightbox(imageSrc) {
+    // Check if lightbox already exists
+    let lightbox = document.getElementById("carousel-lightbox");
+
+    if (!lightbox) {
+      // Create lightbox
+      lightbox = document.createElement("div");
+      lightbox.id = "carousel-lightbox";
+      lightbox.className = "carousel-lightbox";
+      lightbox.innerHTML = `
+        <div class="lightbox-overlay"></div>
+        <div class="lightbox-content">
+          <button class="lightbox-close" aria-label="Close">&times;</button>
+          <img src="" alt="Full size image" class="lightbox-image">
+        </div>
+      `;
+      document.body.appendChild(lightbox);
+
+      // Add close handlers
+      const closeBtn = lightbox.querySelector(".lightbox-close");
+      const overlay = lightbox.querySelector(".lightbox-overlay");
+
+      const closeLightbox = () => {
+        lightbox.classList.remove("active");
+        setTimeout(() => {
+          lightbox.style.display = "none";
+        }, 300);
+
+        // Resume auto-slide after closing
+        setTimeout(() => {
+          startAutoSlide();
+        }, 500);
+      };
+
+      closeBtn.addEventListener("click", closeLightbox);
+      overlay.addEventListener("click", closeLightbox);
+
+      // Close on escape key
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && lightbox.classList.contains("active")) {
+          closeLightbox();
+        }
+      });
+    }
+
+    // Show the lightbox with the image
+    const lightboxImage = lightbox.querySelector(".lightbox-image");
+    lightboxImage.src = imageSrc;
+    lightbox.style.display = "flex";
+
+    // Trigger animation
+    setTimeout(() => {
+      lightbox.classList.add("active");
+    }, 10);
+  }
+
+  const track = document.getElementById("carousel-track");
+
+  if (!track) return;
+
+  let carouselImageElements = Array.from(
+    track.querySelectorAll(".carousel-img")
+  );
+  let carouselImages = carouselImageElements.map((img) => img.src);
+
+  carouselImages = [...new Set(carouselImages)];
+
+  let currentIndex = 0;
+  let isTransitioning = false;
+
+  function renderImages() {
+    const images = [
+      carouselImages[carouselImages.length - 1],
+      ...carouselImages,
+      carouselImages[0],
+    ];
+
+    track.innerHTML = images
+      .map(
+        (src, i) =>
+          `<img src="${src}" class="carousel-img" data-index="${
+            i - 1
+          }" draggable="false" />`
+      )
+      .join("");
+
+    carouselImageElements = Array.from(track.querySelectorAll(".carousel-img"));
+
+    track.style.transition = "none";
+    track.style.transform = `translateX(-100%)`;
+    currentIndex = 0;
+  }
+
+  function moveToIndex(index) {
+    if (isTransitioning) return;
+
+    currentIndex = index;
+    isTransitioning = true;
+    track.style.transition = "transform 0.6s ease-in-out";
+    track.style.transform = `translateX(-${(index + 1) * 100}%)`;
+  }
+
+  function handleTransitionEnd() {
+    isTransitioning = false;
+
+    if (currentIndex >= carouselImages.length) {
+      track.style.transition = "none";
+      track.style.transform = `translateX(-100%)`;
+      currentIndex = 0;
+    } else if (currentIndex < 0) {
+      track.style.transition = "none";
+      track.style.transform = `translateX(-${carouselImages.length * 100}%)`;
+      currentIndex = carouselImages.length - 1;
+    }
+  }
+
+  function nextImage() {
+    moveToIndex(currentIndex + 1);
+  }
+
+  function prevImage() {
+    moveToIndex(currentIndex - 1);
+  }
+
+  track.addEventListener("transitionend", handleTransitionEnd);
+
+  let startX = 0;
+  let isDragging = false;
+
+  track.addEventListener("touchstart", (e) => {
+    startX = e.touches[0].clientX;
+    isDragging = true;
+  });
+
+  track.addEventListener("touchmove", (e) => {
+    if (!isDragging) return;
+    const diff = e.touches[0].clientX - startX;
+    track.style.transition = "none";
+    track.style.transform = `translateX(calc(-${
+      (currentIndex + 1) * 100
+    }% + ${diff}px))`;
+  });
+
+  track.addEventListener("touchend", (e) => {
+    isDragging = false;
+    const diff = e.changedTouches[0].clientX - startX;
+    if (diff > 50) {
+      prevImage();
+    } else if (diff < -50) {
+      nextImage();
+    } else {
+      moveToIndex(currentIndex);
+    }
+  });
+
+  // Add click handler to pause carousel and show image in lightbox
+  track.addEventListener("click", (e) => {
+    if (e.target.classList.contains("carousel-img")) {
+      // Stop auto-slide
+      stopAutoSlide();
+
+      // Show lightbox with the image
+      showImageLightbox(e.target.src);
+    }
+  });
+
+  renderImages();
+
+  let autoSlideInterval = null;
+
+  function startAutoSlide() {
+    // Clear any existing interval first
+    if (autoSlideInterval) {
+      clearInterval(autoSlideInterval);
+    }
+    autoSlideInterval = setInterval(() => {
+      nextImage();
+    }, 3000);
+  }
+
+  function stopAutoSlide() {
+    if (autoSlideInterval) {
+      clearInterval(autoSlideInterval);
+      autoSlideInterval = null;
+    }
+  }
+
+  // Detect if device supports touch
+  const isTouchDevice =
+    "ontouchstart" in window || navigator.maxTouchPoints > 0;
+
+  // Only add mouse hover events on non-touch devices to prevent conflicts
+  if (!isTouchDevice) {
+    track.addEventListener("mouseenter", stopAutoSlide);
+    track.addEventListener("mouseleave", startAutoSlide);
+  }
+
+  startAutoSlide();
+}
+
+// Initialize carousel when DOM is loaded
+document.addEventListener("DOMContentLoaded", function () {
+  // Small delay to ensure page is fully loaded
+  setTimeout(() => {
+    initMemoriesCarousel();
+  }, 100);
+});

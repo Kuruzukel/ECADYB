@@ -2081,6 +2081,80 @@ header.fading {
   min-height: 100vh;
 }
 
+.carousel-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100vw;
+  max-width: 100vw;
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+  width: 100%;
+  animation: carousel-scroll 145s linear infinite;
+  z-index: 3;
+  width: max-content;
+}
+
+.carousel-track img {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  border-radius: 1rem;
+  margin: 0 1rem;
+  background: #021326;
+  z-index: 4;
+  width: max-content;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.carousel-track img:hover {
+  transform: scale(1.02);
+  opacity: 0.95;
+}
+
+@keyframes carousel-scroll {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.carousel-container:hover .carousel-track {
+  animation-play-state: paused;
+}
+
+/* Carousel Lightbox Styles */
+.carousel-lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.carousel-lightbox.active {
+  opacity: 1;
+}
+
 .lightbox-overlay {
   position: absolute;
   top: 0;
@@ -2262,6 +2336,17 @@ header.fading {
     background-position: top center;
     min-height: auto !important;
   }
+
+  .carousel-track img {
+    width: 100%;
+    max-width: 550px;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 12px;
+    margin: 0 1rem;
+    flex-shrink: 0;
+    background: #021326;
+  }
 }
 
 @media (max-width: 600px) and (min-width: 480px) {
@@ -2276,6 +2361,27 @@ header.fading {
     background-position: top center;
     min-height: auto !important;
   }
+
+  .carousel-track img {
+    width: 100%;
+    max-width: 430px;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 12px;
+    margin: 0 1rem;
+    flex-shrink: 0;
+    background: #021326;
+  }
+
+  /* Disable hover effects on touch devices for carousel */
+  .carousel-track img:hover {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  .carousel-track {
+    touch-action: pan-x !important;
+  }
 }
 
 @media (max-width: 480px) and (min-width: 320px) {
@@ -2289,6 +2395,35 @@ header.fading {
     background-repeat: no-repeat;
     background-position: top center;
     min-height: auto !important;
+  }
+
+  .carousel-track img {
+    width: 100%;
+    max-width: 380px;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 12px;
+    margin: 0 1rem;
+    flex-shrink: 0;
+    background: #021326;
+  }
+
+  /* Disable all hover effects on touch devices for carousel */
+  .carousel-track img:hover {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  /* Ensure pointer events work correctly on touch */
+  .carousel-track {
+    touch-action: pan-x !important;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .carousel-track img {
+    pointer-events: auto !important;
+    -webkit-tap-highlight-color: transparent;
   }
 }
 
@@ -3305,6 +3440,11 @@ header.fading {
 }
 
 @media (max-width: 768px) and (min-width: 600px) {
+  .carousel-section,
+  .memories-section {
+    min-height: auto !important;
+  }
+
   .main-hero {
     position: relative;
     width: 100%;
@@ -3767,6 +3907,11 @@ header.fading {
 }
 
 @media (max-width: 600px) and (min-width: 480px) {
+  .carousel-section,
+  .memories-section {
+    min-height: auto !important;
+  }
+
   .main-hero {
     position: relative;
     width: 100%;
@@ -4298,6 +4443,11 @@ header.fading {
 }
 
 @media (max-width: 480px) and (min-width: 320px) {
+  .carousel-section,
+  .memories-section {
+    min-height: auto !important;
+  }
+
   .main-hero {
     position: relative;
     width: 100%;

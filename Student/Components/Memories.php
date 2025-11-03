@@ -56,6 +56,85 @@ $studentProfilePhoto = $_SESSION['profile_photo'] ?? '';
     <p class="memories-subtitle">
       A collection of unforgettable memories from our journey together.
     </p>
+    <div class="carousel-container">
+      <div class="carousel-track" id="carousel-track">
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample1.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample2.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample3.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample4.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample5.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample6.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample7.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample8.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample9.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample10.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample11.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample12.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample13.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample14.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample15.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample1.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample2.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample3.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample4.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample5.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample6.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample7.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample8.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample9.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample10.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample11.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample12.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample13.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample14.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample15.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample1.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample2.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample3.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample4.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample5.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample6.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample7.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample8.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample9.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample10.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample11.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample12.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample13.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample14.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample15.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample1.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample2.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample3.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample4.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample5.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample6.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample7.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample8.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample9.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample10.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample11.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample12.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample13.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample14.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample15.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample1.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample2.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample3.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample4.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample5.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample6.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample7.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample8.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample9.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample10.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample11.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample12.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample13.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample14.jpg" class="carousel-img" />
+        <img src="https://ECADYB.b-cdn.net/img/CAROUSEL/sample15.jpg" class="carousel-img" />
+      </div>
+    </div>
     <div class="main-hero-lower-curl">
       <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"
         style="display: block; width: 100%; height: 60px">
