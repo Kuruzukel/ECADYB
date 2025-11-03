@@ -1257,7 +1257,6 @@
           localStorage.getItem("selectedBatchTemplateNumber") || 1;
         selectedTemplate = parseInt(selectedTemplate);
 
-        // Get batch year from URL parameter first (for iframe/PDF), fallback to localStorage
         var batchYear =
           urlParams.get("batchYear") ||
           localStorage.getItem("selectedBatchYear");
