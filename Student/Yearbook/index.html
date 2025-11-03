@@ -1749,7 +1749,6 @@
               typeof clickedStudent.honors === "string" &&
               clickedStudent.honors.trim() !== ""
             ) {
-              // If honors is a string, split by common separators and add each as a paragraph
               var honorsArray = clickedStudent.honors
                 .split(/[,;|\n]/)
                 .map(function (honor) {
