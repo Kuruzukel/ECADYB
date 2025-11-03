@@ -7,7 +7,6 @@
   margin: auto;
 }
 
-/* Fullscreen mode - larger container for magazine */
 :fullscreen .magazine-viewport .container,
 .iframe-fullscreen-mode .magazine-viewport .container {
   width: 1200px;
@@ -215,7 +214,7 @@
   bottom: 15px;
   left: 50%;
   transform: translateX(-50%);
-  font-family: 'Georgia', 'Times New Roman', serif;
+  font-family: "Georgia", "Times New Roman", serif;
   font-size: 14px;
   font-weight: 500;
   color: #333;
@@ -530,7 +529,6 @@
   max-width: 76px;
   position: relative;
 }
-
 
 .thumbnails .thumb-hover {
   -webkit-transform: scale3d(1.3, 1.3, 1);
@@ -1104,8 +1102,6 @@
   font-family: "Times New Roman", serif;
 }
 
-
-
 .motto h3,
 .milestones h3,
 .latin-awards h3 {
@@ -1533,13 +1529,13 @@
 /* Fullscreen mode specific styles for student cards */
 :fullscreen .cards-container,
 .iframe-fullscreen-mode .cards-container {
-  grid-gap: 35px;  /* Larger spacing in fullscreen */
-  padding: 20px;   /* More padding in fullscreen */
+  grid-gap: 35px; /* Larger spacing in fullscreen */
+  padding: 20px; /* More padding in fullscreen */
 }
 
 :fullscreen .student-image,
 .iframe-fullscreen-mode .student-image {
-  height: 290px;   /* Taller images in fullscreen */
+  height: 290px; /* Taller images in fullscreen */
 }
 
 :fullscreen .student-card h3,
@@ -1592,35 +1588,35 @@
 /* Fullscreen mode specific styles for top management pages */
 :fullscreen .top-management-page,
 .iframe-fullscreen-mode .top-management-page {
-  padding: 30px 60px;  /* More padding in fullscreen */
+  padding: 30px 60px; /* More padding in fullscreen */
 }
 
 :fullscreen .management-photo,
 .iframe-fullscreen-mode .management-photo {
-  width: 280px;   /* Larger photo in fullscreen */
-  height: 280px;  /* Larger photo in fullscreen */
-  margin-bottom: 30px;  /* More spacing */
+  width: 280px; /* Larger photo in fullscreen */
+  height: 280px; /* Larger photo in fullscreen */
+  margin-bottom: 30px; /* More spacing */
 }
 
 :fullscreen .management-name,
 .iframe-fullscreen-mode .management-name {
-  font-size: 30px;  /* Larger name text in fullscreen */
+  font-size: 30px; /* Larger name text in fullscreen */
 }
 
 :fullscreen .management-position,
 .iframe-fullscreen-mode .management-position {
-  font-size: 18px;  /* Larger position text in fullscreen */
+  font-size: 18px; /* Larger position text in fullscreen */
 }
 
 :fullscreen .management-message,
 .iframe-fullscreen-mode .management-message {
-  font-size: 17px;  /* Larger message text in fullscreen */
-  line-height: 1.6;  /* Better line spacing */
+  font-size: 17px; /* Larger message text in fullscreen */
+  line-height: 1.6; /* Better line spacing */
 }
 
 :fullscreen .management-info,
 .iframe-fullscreen-mode .management-info {
-  gap: 40px;  /* More spacing between photo and info */
+  gap: 40px; /* More spacing between photo and info */
 }
 
 /* Webkit fullscreen support for top management */
@@ -1710,21 +1706,21 @@
 /* Fullscreen mode specific styles for navigation controls */
 :fullscreen .nav-controls,
 .iframe-fullscreen-mode .nav-controls {
-  padding: 8px 16px;  /* Larger padding in fullscreen */
-  gap: 6px;           /* More spacing between buttons */
-  bottom: 1.5rem;    /* Move up from bottom */
+  padding: 8px 16px; /* Larger padding in fullscreen */
+  gap: 6px; /* More spacing between buttons */
+  bottom: 1.5rem; /* Move up from bottom */
 }
 
 :fullscreen .nav-btn,
 .iframe-fullscreen-mode .nav-btn {
-  width: 38px;        /* Larger buttons in fullscreen */
-  height: 38px;       /* Larger buttons in fullscreen */
+  width: 38px; /* Larger buttons in fullscreen */
+  height: 38px; /* Larger buttons in fullscreen */
 }
 
 :fullscreen .nav-btn svg,
 .iframe-fullscreen-mode .nav-btn svg {
-  width: 15px;        /* Larger icons in fullscreen */
-  height: 15px;       /* Larger icons in fullscreen */
+  width: 15px; /* Larger icons in fullscreen */
+  height: 15px; /* Larger icons in fullscreen */
 }
 
 /* Webkit fullscreen support for navigation controls */
