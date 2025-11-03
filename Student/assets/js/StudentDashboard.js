@@ -34,8 +34,6 @@
 
     isLoading = true;
 
-
-
     // Show loading indicator (optional)
     const mainContent =
       document.querySelector("main") || document.querySelector("body");
@@ -115,8 +113,6 @@
           }
 
           currentPage = page;
-
-
 
           // Scroll to top
           window.scrollTo({ top: 0, behavior: "smooth" });
@@ -366,16 +362,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 });
-
-
-
-
-
-
-
-
-
-
 
 function handleLoginClick(e) {
   e.preventDefault();
@@ -694,7 +680,7 @@ async function saveStudentChanges() {
     "BS Nursing": "bsn",
     "BS Information System": "bsis",
     "BS Management Accounting": "bsma",
-    "BS Entrepreneurship": "bse"
+    "BS Entrepreneurship": "bse",
   };
 
   const studentDepartment = window.studentData?.studentDepartment || "";
@@ -714,9 +700,9 @@ async function saveStudentChanges() {
   };
 
   // Remove empty or null values to avoid unnecessary updates
-  Object.keys(data).forEach(key => {
-    if (data[key] === null || data[key] === undefined || data[key] === '') {
-      if (key !== 'original_student_id' && key !== 'collection') {
+  Object.keys(data).forEach((key) => {
+    if (data[key] === null || data[key] === undefined || data[key] === "") {
+      if (key !== "original_student_id" && key !== "collection") {
         delete data[key];
       }
     }
@@ -760,7 +746,10 @@ async function saveStudentChanges() {
     if (result.success) {
       // Check if no changes were detected
       if (result.message && result.message.includes("No changes detected")) {
-        showNotification("No changes detected, student record remains the same.", "info");
+        showNotification(
+          "No changes detected, student record remains the same.",
+          "info"
+        );
 
         setTimeout(() => {
           closeEditModal();
@@ -796,13 +785,13 @@ function submitStudentInfo(event) {
 }
 
 function removeSpaces(input) {
-  input.value = input.value.replace(/\s/g, '');
+  input.value = input.value.replace(/\s/g, "");
 }
 
 function formatAcademicYear(input) {
-  let value = input.value.replace(/\D/g, ''); // Remove non-digits
+  let value = input.value.replace(/\D/g, ""); // Remove non-digits
   if (value.length >= 4) {
-    value = value.substring(0, 4) + '-' + value.substring(4, 8);
+    value = value.substring(0, 4) + "-" + value.substring(4, 8);
   }
   input.value = value;
 }
@@ -826,24 +815,27 @@ async function checkStudentExists() {
     "BS Nursing": "bsn",
     "BS Information System": "bsis",
     "BS Management Accounting": "bsma",
-    "BS Entrepreneurship": "bse"
+    "BS Entrepreneurship": "bse",
   };
 
   const collectionName = departmentCollectionMap[department] || "bsme";
   console.log("- Collection name:", collectionName);
 
   try {
-    const response = await fetch("/ECADYB/Connection/Student/CheckStudent.php", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        student_id: studentId,
-        collection: collectionName,
-        academic_year: window.studentData?.studentAcademicYear || ""
-      }),
-    });
+    const response = await fetch(
+      "/ECADYB/Connection/Student/CheckStudent.php",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          student_id: studentId,
+          collection: collectionName,
+          academic_year: window.studentData?.studentAcademicYear || "",
+        }),
+      }
+    );
 
     const result = await response.json();
     console.log("Student check result:", result);
@@ -1055,4 +1047,78 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-// Note: Yearbook navigation functionality is handled in Yearbook.php to avoid conflicts
+// Yearbook navigation functionality (also available in Yearbook.php)
+// Use window property to avoid redeclaration errors
+window.currentYearbookIndex = window.currentYearbookIndex || 0;
+
+function navigateYearbook(direction) {
+  try {
+    if (window.innerWidth > 768) {
+      return; // Desktop navigation not needed for this implementation
+    }
+
+    const yearbooks = document.querySelectorAll(".yearbook-item");
+    if (yearbooks.length === 0) return;
+
+    // Remove current active classes
+    yearbooks.forEach((item) => {
+      item.classList.remove("mobile-active", "mobile-prev", "mobile-next");
+    });
+
+    // Update index
+    if (direction === "next") {
+      window.currentYearbookIndex =
+        (window.currentYearbookIndex + 1) % yearbooks.length;
+    } else {
+      window.currentYearbookIndex =
+        (window.currentYearbookIndex - 1 + yearbooks.length) % yearbooks.length;
+    }
+
+    // Apply new classes
+    yearbooks.forEach((item, index) => {
+      if (index === window.currentYearbookIndex) {
+        item.classList.add("mobile-active");
+      } else if (
+        index ===
+        (window.currentYearbookIndex - 1 + yearbooks.length) % yearbooks.length
+      ) {
+        item.classList.add("mobile-prev");
+      } else if (
+        index ===
+        (window.currentYearbookIndex + 1) % yearbooks.length
+      ) {
+        item.classList.add("mobile-next");
+      }
+    });
+
+    console.log("Navigated to yearbook item:", window.currentYearbookIndex);
+  } catch (error) {
+    console.error("Error in navigateYearbook:", error);
+  }
+}
+
+// Initialize mobile yearbook classes when yearbooks are loaded
+function initializeYearbookMobileView() {
+  if (window.innerWidth <= 768) {
+    const yearbooks = document.querySelectorAll(".yearbook-item");
+    if (yearbooks.length > 0) {
+      // Reset to first item
+      window.currentYearbookIndex = 0;
+
+      // Set first item as active
+      yearbooks[0].classList.add("mobile-active");
+
+      // Set adjacent items
+      if (yearbooks.length > 1) {
+        yearbooks[yearbooks.length - 1].classList.add("mobile-prev");
+      }
+      if (yearbooks.length > 2) {
+        yearbooks[1].classList.add("mobile-next");
+      }
+    }
+  }
+}
+
+// Make navigateYearbook available globally
+window.navigateYearbook = navigateYearbook;
+window.initializeYearbookMobileView = initializeYearbookMobileView;
