@@ -513,3 +513,116 @@
     display: block !important;
   }
 }
+
+/* Scrollbar styles for mobile landscape mode */
+/* Small Tablet Landscape (600px - 768px portrait becomes 800px - 1023px landscape) */
+@media only screen and (min-width: 800px) and (max-width: 1023px) and (orientation: landscape) {
+  .yearbook-loader-overlay {
+    overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(6, 182, 212, 0.6) rgba(255, 255, 255, 0.1);
+  }
+
+  .yearbook-loader-overlay::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .yearbook-loader-overlay::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+  }
+
+  .yearbook-loader-overlay::-webkit-scrollbar-thumb {
+    background: rgba(6, 182, 212, 0.6);
+    border-radius: 10px;
+  }
+
+  .yearbook-loader-overlay::-webkit-scrollbar-thumb:hover {
+    background: rgba(6, 182, 212, 0.8);
+  }
+}
+
+/* Large Mobile Landscape (480px - 600px portrait becomes 640px - 799px landscape) */
+@media only screen and (min-width: 640px) and (max-width: 799px) and (orientation: landscape) {
+  .yearbook-loader-overlay {
+    overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(6, 182, 212, 0.6) rgba(255, 255, 255, 0.1);
+  }
+
+  .yearbook-loader-overlay::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .yearbook-loader-overlay::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+  }
+
+  .yearbook-loader-overlay::-webkit-scrollbar-thumb {
+    background: rgba(6, 182, 212, 0.6);
+    border-radius: 10px;
+  }
+
+  .yearbook-loader-overlay::-webkit-scrollbar-thumb:hover {
+    background: rgba(6, 182, 212, 0.8);
+  }
+}
+
+/* Small Mobile Landscape (320px - 480px portrait becomes 568px - 639px landscape) */
+@media only screen and (min-width: 568px) and (max-width: 639px) and (orientation: landscape) {
+  .yearbook-loader-overlay {
+    overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(6, 182, 212, 0.6) rgba(255, 255, 255, 0.1);
+  }
+
+  .yearbook-loader-overlay::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .yearbook-loader-overlay::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+  }
+
+  .yearbook-loader-overlay::-webkit-scrollbar-thumb {
+    background: rgba(6, 182, 212, 0.6);
+    border-radius: 10px;
+  }
+
+  .yearbook-loader-overlay::-webkit-scrollbar-thumb:hover {
+    background: rgba(6, 182, 212, 0.8);
+  }
+}
+
+/* Extra Small Mobile Landscape (below 568px landscape) */
+@media only screen and (max-width: 567px) and (orientation: landscape) {
+  .yearbook-loader-overlay {
+    overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(6, 182, 212, 0.6) rgba(255, 255, 255, 0.1);
+  }
+
+  .yearbook-loader-overlay::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .yearbook-loader-overlay::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+  }
+
+  .yearbook-loader-overlay::-webkit-scrollbar-thumb {
+    background: rgba(6, 182, 212, 0.6);
+    border-radius: 10px;
+  }
+
+  .yearbook-loader-overlay::-webkit-scrollbar-thumb:hover {
+    background: rgba(6, 182, 212, 0.8);
+  }
+}

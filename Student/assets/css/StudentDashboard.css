@@ -5022,7 +5022,8 @@ header.fading {
   }
 }
 
-@media only screen and (min-width: 768px) and (max-width: 1280px) and (orientation: landscape) {
+/* Tablet Landscape (768px - 991px portrait becomes 1024px - 1366px landscape) */
+@media only screen and (min-width: 1024px) and (max-width: 1366px) and (orientation: landscape) {
   .yearbook-iframe-container:fullscreen,
   .yearbook-iframe-container:-webkit-full-screen,
   .yearbook-iframe-container:-moz-full-screen,
@@ -5042,7 +5043,8 @@ header.fading {
   }
 }
 
-@media only screen and (min-width: 600px) and (max-width: 767px) and (orientation: landscape) {
+/* Small Tablet Landscape (600px - 768px portrait becomes 800px - 1023px landscape) */
+@media only screen and (min-width: 800px) and (max-width: 1023px) and (orientation: landscape) {
   .yearbook-iframe-container:fullscreen,
   .yearbook-iframe-container:-webkit-full-screen,
   .yearbook-iframe-container:-moz-full-screen,
@@ -5062,7 +5064,8 @@ header.fading {
   }
 }
 
-@media only screen and (min-width: 480px) and (max-width: 599px) and (orientation: landscape) {
+/* Large Mobile Landscape (480px - 600px portrait becomes 640px - 799px landscape) */
+@media only screen and (min-width: 640px) and (max-width: 799px) and (orientation: landscape) {
   .yearbook-iframe-container:fullscreen,
   .yearbook-iframe-container:-webkit-full-screen,
   .yearbook-iframe-container:-moz-full-screen,
@@ -5082,7 +5085,8 @@ header.fading {
   }
 }
 
-@media only screen and (min-width: 320px) and (max-width: 479px) and (orientation: landscape) {
+/* Small Mobile Landscape (320px - 480px portrait becomes 568px - 639px landscape) */
+@media only screen and (min-width: 568px) and (max-width: 639px) and (orientation: landscape) {
   .yearbook-iframe-container:fullscreen,
   .yearbook-iframe-container:-webkit-full-screen,
   .yearbook-iframe-container:-moz-full-screen,
