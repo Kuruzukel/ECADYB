@@ -1698,8 +1698,37 @@ function resizeViewport() {
 
     var isFullscreen = isActualFullscreen || isFullscreenParam;
 
+    // Default size for desktop/large screens
     var baseWidth = isFullscreen ? 1200 : options.width;
     var baseHeight = isFullscreen ? 750 : options.height;
+
+    // Adjust dimensions for tablets and phones in landscape mode
+    if (isFullscreen) {
+      var screenWidth =
+        window.innerWidth || document.documentElement.clientWidth;
+      var screenHeight =
+        window.innerHeight || document.documentElement.clientHeight;
+      var isLandscape = screenWidth > screenHeight;
+
+      // Only apply custom dimensions for screens 767px and below in landscape
+      if (isLandscape && screenWidth <= 767) {
+        // Large Phones (668px - 767px) - Landscape
+        if (screenWidth >= 668 && screenWidth <= 767) {
+          baseWidth = 900;
+          baseHeight = 570;
+        }
+        // Medium Phones (568px - 667px) - Landscape
+        else if (screenWidth >= 568 && screenWidth <= 667) {
+          baseWidth = 900;
+          baseHeight = 600;
+        }
+        // Small Phones (320px - 567px) - Landscape
+        else if (screenWidth >= 320 && screenWidth <= 567) {
+          baseWidth = 900;
+          baseHeight = 550;
+        }
+      }
+    }
 
     console.log(
       "ResizeViewport - isFullscreen:",

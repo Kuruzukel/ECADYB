@@ -2273,8 +2273,90 @@
   }
 }
 
-/* Tablet Fullscreen (768px - 991px) */
-@media (max-width: 991px) and (min-width: 769px) {
+/* Large Tablets - Landscape */
+@media (min-width: 1024px) and (max-width: 1366px) and (orientation: landscape) {
+  /* Fullscreen magazine viewport */
+  :fullscreen .magazine-viewport .container,
+  .iframe-fullscreen-mode .magazine-viewport .container {
+    width: 900px;
+    height: 700px;
+  }
+
+  :-webkit-full-screen .magazine-viewport .container {
+    width: 900px;
+    height: 700px;
+  }
+
+  :-moz-full-screen .magazine-viewport .container {
+    width: 900px;
+    height: 700px;
+  }
+
+  :-ms-fullscreen .magazine-viewport .container {
+    width: 900px;
+    height: 700px;
+  }
+
+  /* Remove padding from top management page */
+  :fullscreen .top-management-page,
+  .iframe-fullscreen-mode .top-management-page {
+    padding: 20px 40px;
+  }
+
+  /* Management Elements - Fullscreen Styles */
+  :fullscreen .management-name,
+  .iframe-fullscreen-mode .management-name {
+    font-size: 20px;
+  }
+
+  :fullscreen .management-position,
+  .iframe-fullscreen-mode .management-position {
+    font-size: 15px;
+  }
+
+  :fullscreen .management-message,
+  .iframe-fullscreen-mode .management-message {
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  :fullscreen .management-photo,
+  .iframe-fullscreen-mode .management-photo {
+    width: 180px;
+    height: 180px;
+    margin-bottom: 10px !important;
+  }
+
+  :fullscreen .management-info,
+  .iframe-fullscreen-mode .management-info {
+    margin-bottom: 10px;
+  }
+}
+
+/* Regular Tablets - Landscape */
+@media (min-width: 768px) and (max-width: 1023px) and (orientation: landscape) {
+  /* Fullscreen magazine viewport */
+  :fullscreen .magazine-viewport .container,
+  .iframe-fullscreen-mode .magazine-viewport .container {
+    width: 900px;
+    height: 600px;
+  }
+
+  :-webkit-full-screen .magazine-viewport .container {
+    width: 900px;
+    height: 600px;
+  }
+
+  :-moz-full-screen .magazine-viewport .container {
+    width: 900px;
+    height: 600px;
+  }
+
+  :-ms-fullscreen .magazine-viewport .container {
+    width: 900px;
+    height: 600px;
+  }
+
   /* Remove padding from top management page */
   :fullscreen .top-management-page,
   .iframe-fullscreen-mode .top-management-page {
@@ -2284,7 +2366,7 @@
   /* Management Elements - Fullscreen Styles */
   :fullscreen .management-name,
   .iframe-fullscreen-mode .management-name {
-    font-size: 17px;
+    font-size: 18px;
   }
 
   :fullscreen .management-position,
@@ -2300,8 +2382,8 @@
 
   :fullscreen .management-photo,
   .iframe-fullscreen-mode .management-photo {
-    width: 160px;
-    height: 160px;
+    width: 170px;
+    height: 170px;
     margin-bottom: 10px !important;
   }
 
@@ -2311,18 +2393,40 @@
   }
 }
 
-/* Small Tablet Fullscreen (600px - 768px) */
-@media (max-width: 768px) and (min-width: 600px) {
+/* Large Phones - Landscape */
+@media (min-width: 668px) and (max-width: 767px) and (orientation: landscape) {
+  /* Fullscreen magazine viewport */
+  :fullscreen .magazine-viewport .container,
+  .iframe-fullscreen-mode .magazine-viewport .container {
+    width: 900px;
+    height: 570px;
+  }
+
+  :-webkit-full-screen .magazine-viewport .container {
+    width: 900px;
+    height: 570px;
+  }
+
+  :-moz-full-screen .magazine-viewport .container {
+    width: 900px;
+    height: 570px;
+  }
+
+  :-ms-fullscreen .magazine-viewport .container {
+    width: 900px;
+    height: 570px;
+  }
+
   /* Remove padding from top management page */
   :fullscreen .top-management-page,
   .iframe-fullscreen-mode .top-management-page {
-    padding: 0;
+    padding: 10px 15px;
   }
 
   /* Management Elements - Fullscreen Styles */
   :fullscreen .management-name,
   .iframe-fullscreen-mode .management-name {
-    font-size: 18px;
+    font-size: 16px;
   }
 
   :fullscreen .management-position,
@@ -2338,23 +2442,45 @@
 
   :fullscreen .management-photo,
   .iframe-fullscreen-mode .management-photo {
-    width: 200px;
-    height: 200px;
+    width: 150px;
+    height: 150px;
   }
 }
 
-/* Large Mobile Fullscreen (480px - 600px) */
-@media (max-width: 600px) and (min-width: 480px) {
+/* Medium Phones - Landscape */
+@media (min-width: 568px) and (max-width: 667px) and (orientation: landscape) {
+  /* Fullscreen magazine viewport */
+  :fullscreen .magazine-viewport .container,
+  .iframe-fullscreen-mode .magazine-viewport .container {
+    width: 900px;
+    height: 600px;
+  }
+
+  :-webkit-full-screen .magazine-viewport .container {
+    width: 900px;
+    height: 600px;
+  }
+
+  :-moz-full-screen .magazine-viewport .container {
+    width: 900px;
+    height: 600px;
+  }
+
+  :-ms-fullscreen .magazine-viewport .container {
+    width: 900px;
+    height: 600px;
+  }
+
   /* Remove padding from top management page */
   :fullscreen .top-management-page,
   .iframe-fullscreen-mode .top-management-page {
-    padding: 0;
+    padding: 10px;
   }
 
   /* Management Elements - Fullscreen Styles */
   :fullscreen .management-name,
   .iframe-fullscreen-mode .management-name {
-    font-size: 16px;
+    font-size: 15px;
   }
 
   :fullscreen .management-position,
@@ -2370,39 +2496,39 @@
 
   :fullscreen .management-photo,
   .iframe-fullscreen-mode .management-photo {
-    width: 180px;
-    height: 180px;
+    width: 140px;
+    height: 140px;
   }
 }
 
-/* Small Mobile Fullscreen (320px - 480px) */
-@media (max-width: 480px) and (min-width: 320px) {
+/* Small Phones - Landscape */
+@media (min-width: 320px) and (max-width: 567px) and (orientation: landscape) {
   /* Fullscreen magazine viewport */
   :fullscreen .magazine-viewport .container,
   .iframe-fullscreen-mode .magazine-viewport .container {
-    width: 1200px;
-    height: 650px;
+    width: 900px;
+    height: 550px;
   }
 
   :-webkit-full-screen .magazine-viewport .container {
-    width: 1200px;
-    height: 650px;
+    width: 900px;
+    height: 550px;
   }
 
   :-moz-full-screen .magazine-viewport .container {
-    width: 1200px;
-    height: 650px;
+    width: 900px;
+    height: 550px;
   }
 
   :-ms-fullscreen .magazine-viewport .container {
-    width: 1200px;
-    height: 650px;
+    width: 900px;
+    height: 550px;
   }
 
   /* Remove padding from top management page */
   :fullscreen .top-management-page,
   .iframe-fullscreen-mode .top-management-page {
-    padding: 0;
+    padding: 5px;
   }
 
   /* Management Elements - Fullscreen Styles */
@@ -2424,7 +2550,7 @@
 
   :fullscreen .management-photo,
   .iframe-fullscreen-mode .management-photo {
-    width: 160px;
-    height: 160px;
+    width: 130px;
+    height: 130px;
   }
 }
