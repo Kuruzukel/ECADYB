@@ -2265,7 +2265,6 @@
 
 /* Large Tablets - Landscape */
 @media (min-width: 1024px) and (max-width: 1366px) and (orientation: landscape) {
-  /* Fullscreen magazine viewport */
   :fullscreen .magazine-viewport .container,
   .iframe-fullscreen-mode .magazine-viewport .container {
     width: 900px;
