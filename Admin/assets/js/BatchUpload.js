@@ -586,14 +586,21 @@ window.addEventListener("DOMContentLoaded", () => {
           const MAX_FILES = 20;
           const fileCount = input.files.length;
 
+          console.log(`Photo upload validation: ${fileCount} files selected (max: ${MAX_FILES})`);
+
           if (fileCount > MAX_FILES) {
+            const photoType = input.id === "student-photos" ? "student photos" : "management photos";
+            console.log(`❌ Upload cancelled: Too many files (${fileCount} > ${MAX_FILES})`);
             showNotification(
-              `You can only upload a maximum of ${MAX_FILES} images at a time. You selected ${fileCount} images. Please reduce the number of files.`,
+              `Upload cancelled! Maximum ${MAX_FILES} ${photoType} allowed per upload. You selected ${fileCount} images. Please reduce the number of files and try again.`,
               "error"
             );
             forceResetFileUI(input.id);
             return;
           }
+
+          console.log(`✅ Photo count validation passed: ${fileCount} files`);
+          
 
           let totalSize = 0;
           for (let i = 0; i < input.files.length; i++) {
