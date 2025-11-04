@@ -2481,7 +2481,6 @@
 
 /* Small Phones - Landscape */
 @media (min-width: 320px) and (max-width: 567px) and (orientation: landscape) {
-  /* Fullscreen magazine viewport */
   :fullscreen .magazine-viewport .container,
   .iframe-fullscreen-mode .magazine-viewport .container {
     width: 900px;
