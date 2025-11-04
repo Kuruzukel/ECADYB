@@ -81,7 +81,6 @@
             contentContainer.innerHTML = data.content;
           }
 
-          // Update page title
           document.title = data.title;
 
           // Update active navigation
