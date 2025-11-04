@@ -1952,7 +1952,6 @@
   gap: 40px;
 }
 
-/* Mozilla fullscreen support for top management */
 :-moz-full-screen .top-management-page {
   padding: 30px 60px;
 }
