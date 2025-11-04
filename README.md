@@ -175,7 +175,7 @@ php -S localhost:8000
 </td>
 <td align="center" width="25%">
 <a href="https://bunny.net" target="_blank">
-<img src="https://www.vectorlogo.zone/logos/bunny/bunny-icon.svg" width="48" height="48" alt="Bunny CDN"/>
+<img src="https://raw.githubusercontent.com/gilbarbara/logos/main/logos/bunny.svg" width="48" height="48" alt="Bunny CDN"/>
 </a>
 <br><b><a href="https://bunny.net" target="_blank">Bunny CDN</a></b>
 </td>
