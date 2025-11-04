@@ -28,7 +28,7 @@ if (isset($_SESSION['username']) && !empty($_SESSION['username'])) {
         if ($adminData) {
             $adminName = $adminData['name'] ?? 'Admin';
             $adminEmail = $adminData['email'] ?? 'admin@ecadyb.edu.ph';
-            
+
             // Fetch profile image from database
             if (isset($adminData['profile']) && !empty($adminData['profile'])) {
                 $adminProfileImage = $adminData['profile'];
@@ -38,16 +38,16 @@ if (isset($_SESSION['username']) && !empty($_SESSION['username'])) {
             }
 
             error_log("✓ Admin profile fetched: " . $adminName . " | Email: " . $adminEmail . " | Profile: " . $adminProfileImage);
-            
+
             // Ensure admin session is tracked in active_sessions
             require_once __DIR__ . '/../../Connection/Configuration/JWTConfig.php';
             $adminId = 'admin_' . $_SESSION['username'];
-            
+
             // Check if session exists
             $db = $mongoClient->ECADYB;
             $sessionsCollection = $db->active_sessions;
             $existingSession = $sessionsCollection->findOne(['student_id' => $adminId]);
-            
+
             if (!$existingSession) {
                 // Create session if it doesn't exist
                 $sessionData = [
