@@ -1892,7 +1892,6 @@
   font-size: 18px;
 }
 
-/* Fullscreen mode specific styles for top management pages */
 :fullscreen .top-management-page,
 .iframe-fullscreen-mode .top-management-page {
   padding: 30px 60px;
