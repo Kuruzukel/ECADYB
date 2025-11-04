@@ -2017,7 +2017,6 @@
 .iframe-fullscreen-mode .nav-btn {
   width: 38px;
   height: 38px;
-  /* Larger buttons in fullscreen */
 }
 
 :fullscreen .nav-btn svg,
