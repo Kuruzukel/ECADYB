@@ -1320,7 +1320,6 @@ function initMemoriesCarousel() {
   startAutoSlide();
 }
 
-// Initialize carousel when DOM is loaded
 document.addEventListener("DOMContentLoaded", function () {
   // Small delay to ensure page is fully loaded
   setTimeout(() => {
