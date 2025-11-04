@@ -586,11 +586,18 @@ window.addEventListener("DOMContentLoaded", () => {
           const MAX_FILES = 20;
           const fileCount = input.files.length;
 
-          console.log(`Photo upload validation: ${fileCount} files selected (max: ${MAX_FILES})`);
+          console.log(
+            `Photo upload validation: ${fileCount} files selected (max: ${MAX_FILES})`
+          );
 
           if (fileCount > MAX_FILES) {
-            const photoType = input.id === "student-photos" ? "student photos" : "management photos";
-            console.log(`❌ Upload cancelled: Too many files (${fileCount} > ${MAX_FILES})`);
+            const photoType =
+              input.id === "student-photos"
+                ? "student photos"
+                : "management photos";
+            console.log(
+              `❌ Upload cancelled: Too many files (${fileCount} > ${MAX_FILES})`
+            );
             showNotification(
               `Upload cancelled! Maximum ${MAX_FILES} ${photoType} allowed per upload. You selected ${fileCount} images. Please reduce the number of files and try again.`,
               "error"
@@ -600,7 +607,6 @@ window.addEventListener("DOMContentLoaded", () => {
           }
 
           console.log(`✅ Photo count validation passed: ${fileCount} files`);
-          
 
           let totalSize = 0;
           for (let i = 0; i < input.files.length; i++) {
@@ -693,7 +699,11 @@ window.addEventListener("DOMContentLoaded", () => {
           let allResults = [];
 
           try {
-            for (let batchStart = 0; batchStart < totalFiles; batchStart += BATCH_SIZE) {
+            for (
+              let batchStart = 0;
+              batchStart < totalFiles;
+              batchStart += BATCH_SIZE
+            ) {
               if (isCancelling) {
                 console.log("Upload cancelled during batch processing");
                 throw { name: "AbortError", message: "Upload cancelled" };
@@ -705,7 +715,11 @@ window.addEventListener("DOMContentLoaded", () => {
               const totalBatches = Math.ceil(totalFiles / BATCH_SIZE);
 
               console.log(`\n=== BATCH ${batchNum}/${totalBatches} ===`);
-              console.log(`Processing files ${batchStart + 1} to ${batchEnd} of ${totalFiles}`);
+              console.log(
+                `Processing files ${
+                  batchStart + 1
+                } to ${batchEnd} of ${totalFiles}`
+              );
 
               if (uploadText) {
                 const uploadType =
@@ -716,10 +730,13 @@ window.addEventListener("DOMContentLoaded", () => {
               }
 
               const batchFormData = new FormData();
-              
+
               // Add files for this batch
               for (let i = batchStart; i < batchEnd; i++) {
-                console.log(`Adding file ${i + 1} to batch:`, input.files[i].name);
+                console.log(
+                  `Adding file ${i + 1} to batch:`,
+                  input.files[i].name
+                );
                 batchFormData.append(`files[]`, input.files[i]);
               }
 
@@ -732,8 +749,12 @@ window.addEventListener("DOMContentLoaded", () => {
 
               xhr.upload.addEventListener("progress", (e) => {
                 if (e.lengthComputable) {
-                  const percentComplete = Math.round((e.loaded / e.total) * 100);
-                  console.log(`Batch ${batchNum} upload progress: ${percentComplete}%`);
+                  const percentComplete = Math.round(
+                    (e.loaded / e.total) * 100
+                  );
+                  console.log(
+                    `Batch ${batchNum} upload progress: ${percentComplete}%`
+                  );
                 }
               });
 
@@ -755,7 +776,9 @@ window.addEventListener("DOMContentLoaded", () => {
                     }
                   } else {
                     console.error("HTTP error status:", xhr.status);
-                    reject(new Error(`Upload failed with status ${xhr.status}`));
+                    reject(
+                      new Error(`Upload failed with status ${xhr.status}`)
+                    );
                   }
                 };
 
@@ -764,7 +787,7 @@ window.addEventListener("DOMContentLoaded", () => {
                   console.error("Network error occurred");
                   reject(new Error("Network error"));
                 };
-                
+
                 xhr.onabort = () => {
                   const abortError = new Error("Upload cancelled");
                   abortError.name = "AbortError";
@@ -800,7 +823,7 @@ window.addEventListener("DOMContentLoaded", () => {
               // Small delay between batches to prevent server overload
               if (batchEnd < totalFiles) {
                 console.log("Waiting 500ms before next batch...");
-                await new Promise(resolve => setTimeout(resolve, 500));
+                await new Promise((resolve) => setTimeout(resolve, 500));
               }
             }
 
