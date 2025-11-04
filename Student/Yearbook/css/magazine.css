@@ -1923,7 +1923,6 @@
 :fullscreen .management-info,
 .iframe-fullscreen-mode .management-info {
   gap: 40px;
-  /* More spacing between photo and info */
 }
 
 /* Webkit fullscreen support for top management */
