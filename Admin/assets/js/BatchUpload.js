@@ -758,9 +758,14 @@ window.addEventListener("DOMContentLoaded", () => {
                 }
               });
 
+              let uploadStartTime;
               const uploadPromise = new Promise((resolve, reject) => {
                 xhr.onload = () => {
+                  const uploadDuration = uploadStartTime
+                    ? ((Date.now() - uploadStartTime) / 1000).toFixed(2)
+                    : "unknown";
                   console.log("=== BATCH UPLOAD RESPONSE ===");
+                  console.log("⏱️ Upload duration:", uploadDuration, "seconds");
                   console.log("Response status:", xhr.status);
                   console.log("Response text:", xhr.responseText);
 
@@ -811,13 +816,29 @@ window.addEventListener("DOMContentLoaded", () => {
 
                 xhr.ontimeout = () => {
                   console.error("=== UPLOAD TIMEOUT ===");
-                  reject(new Error("Upload timeout"));
+                  console.error("Upload exceeded the 5-minute timeout limit");
+                  console.error("Batch size:", currentBatch, "files");
+                  console.error("Timeout was set to:", xhr.timeout, "ms");
+                  reject(
+                    new Error(
+                      "Upload timeout - The upload took longer than 5 minutes. Try uploading fewer files at once (reduce batch size)."
+                    )
+                  );
                 };
 
                 console.log("Sending batch request...");
+                console.log("⏱️ Timeout set to: 300 seconds (5 minutes)");
+                console.log("📦 Batch size:", currentBatch, "files");
+                console.log("📤 Upload endpoint:", uploadEndpoint);
                 xhr.open("POST", uploadEndpoint);
                 xhr.timeout = 300000; // 300 second (5 minute) timeout per batch
+
+                uploadStartTime = Date.now();
                 xhr.send(batchFormData);
+                console.log(
+                  "⏳ Upload started at:",
+                  new Date().toLocaleTimeString()
+                );
               });
 
               const batchResult = await uploadPromise;
