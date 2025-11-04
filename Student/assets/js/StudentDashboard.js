@@ -25,7 +25,6 @@
     });
   }
 
-  // Load page content dynamically
   function loadPage(page, updateHistory = true) {
     if (isLoading || page === currentPage) return;
 
