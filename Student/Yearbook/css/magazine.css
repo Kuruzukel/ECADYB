@@ -2379,7 +2379,6 @@
 
 /* Large Phones - Landscape */
 @media (min-width: 668px) and (max-width: 767px) and (orientation: landscape) {
-  /* Fullscreen magazine viewport */
   :fullscreen .magazine-viewport .container,
   .iframe-fullscreen-mode .magazine-viewport .container {
     width: 500px;
