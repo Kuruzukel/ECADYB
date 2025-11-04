@@ -83,7 +83,6 @@
 
           document.title = data.title;
 
-          // Update active navigation
           updateActiveNav(page);
 
           // Update history
