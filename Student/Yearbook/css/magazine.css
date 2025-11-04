@@ -2022,7 +2022,6 @@
 :fullscreen .nav-btn svg,
 .iframe-fullscreen-mode .nav-btn svg {
   width: 15px;
-  /* Larger icons in fullscreen */
   height: 15px;
   /* Larger icons in fullscreen */
 }
