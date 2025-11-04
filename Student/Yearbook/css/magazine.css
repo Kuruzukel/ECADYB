@@ -2025,7 +2025,6 @@
   height: 15px;
 }
 
-/* Webkit fullscreen support for navigation controls */
 :-webkit-full-screen .nav-controls {
   padding: 8px 16px;
   gap: 6px;
