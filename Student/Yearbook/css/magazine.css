@@ -1912,7 +1912,6 @@
 :fullscreen .management-position,
 .iframe-fullscreen-mode .management-position {
   font-size: 18px;
-  /* Larger position text in fullscreen */
 }
 
 :fullscreen .management-message,
