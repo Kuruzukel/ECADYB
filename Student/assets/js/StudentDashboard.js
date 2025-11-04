@@ -1321,7 +1321,6 @@ function initMemoriesCarousel() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  // Small delay to ensure page is fully loaded
   setTimeout(() => {
     initMemoriesCarousel();
   }, 100);
