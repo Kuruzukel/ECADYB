@@ -1567,7 +1567,6 @@
   font-size: 16px;
 }
 
-/* MS fullscreen support */
 :-ms-fullscreen .cards-container {
   grid-gap: 35px;
   padding: 20px;
