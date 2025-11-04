@@ -2240,7 +2240,6 @@
     height: 550px;
   }
 
-  /* Management Elements - Fullscreen Styles */
   :fullscreen .management-name,
   .iframe-fullscreen-mode .management-name {
     font-size: 22px;
