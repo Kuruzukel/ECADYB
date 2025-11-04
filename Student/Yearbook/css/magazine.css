@@ -1554,7 +1554,6 @@
   font-size: 16px;
 }
 
-/* Mozilla fullscreen support */
 :-moz-full-screen .cards-container {
   grid-gap: 35px;
   padding: 20px;
