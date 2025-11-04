@@ -1529,7 +1529,6 @@
 .iframe-fullscreen-mode .cards-container {
   grid-gap: 35px;
   padding: 20px;
-  /* More padding in fullscreen */
 }
 
 :fullscreen .student-image,
