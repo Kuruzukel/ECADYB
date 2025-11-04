@@ -24,12 +24,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-// Send initial response headers early to prevent 502 gateway timeout
-if (ob_get_level()) {
-    ob_flush();
-}
-flush();
-
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
