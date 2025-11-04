@@ -1715,9 +1715,7 @@ function resizeViewport() {
         } else if (screenWidth >= 568 && screenWidth <= 667) {
           baseWidth = 900;
           baseHeight = 600;
-        }
-        // Small Phones (320px - 567px) - Landscape
-        else if (screenWidth >= 320 && screenWidth <= 567) {
+        } else if (screenWidth >= 320 && screenWidth <= 567) {
           baseWidth = 900;
           baseHeight = 550;
         }
