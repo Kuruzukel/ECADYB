@@ -46,7 +46,6 @@
       .then((response) => response.json())
       .then((data) => {
         if (data.success) {
-          // Find the content container
           let contentContainer = document.querySelector("main");
           if (!contentContainer) {
             // If no main tag, find the section after header
