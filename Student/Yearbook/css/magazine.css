@@ -1917,7 +1917,6 @@
 :fullscreen .management-message,
 .iframe-fullscreen-mode .management-message {
   font-size: 17px;
-  /* Larger message text in fullscreen */
   line-height: 1.6;
   /* Better line spacing */
 }
