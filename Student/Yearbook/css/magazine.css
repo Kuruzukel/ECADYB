@@ -1907,7 +1907,6 @@
 :fullscreen .management-name,
 .iframe-fullscreen-mode .management-name {
   font-size: 30px;
-  /* Larger name text in fullscreen */
 }
 
 :fullscreen .management-position,
