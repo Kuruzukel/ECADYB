@@ -1285,7 +1285,6 @@ function initMemoriesCarousel() {
     if (e.target.classList.contains("carousel-img")) {
       stopAutoSlide();
 
-      // Show lightbox with the image
       showImageLightbox(e.target.src);
     }
   });
