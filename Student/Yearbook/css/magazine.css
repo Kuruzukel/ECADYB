@@ -1541,7 +1541,6 @@
   font-size: 16px;
 }
 
-/* Webkit fullscreen support */
 :-webkit-full-screen .cards-container {
   grid-gap: 35px;
   padding: 20px;
