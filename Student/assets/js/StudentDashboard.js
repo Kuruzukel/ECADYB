@@ -1,4 +1,3 @@
-// Dynamic Page Navigation System
 (function () {
   let currentPage = "home";
   let isLoading = false;
