@@ -2011,7 +2011,6 @@
   padding: 8px 16px;
   gap: 6px;
   bottom: 1.5rem;
-  /* Move up from bottom */
 }
 
 :fullscreen .nav-btn,
