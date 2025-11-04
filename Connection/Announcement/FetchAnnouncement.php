@@ -15,6 +15,7 @@ error_reporting(E_ALL);
 date_default_timezone_set('Asia/Manila');
 
 require __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../Configuration/DateTimeHelper.php';
 
 use MongoDB\Client;
 
@@ -42,7 +43,7 @@ try {
             'message' => $document['message'],
             'date' => $document['date'],
             'time' => $document['time'] ?? '',
-            'created_at' => $document['created_at']->toDateTime()->format('Y-m-d H:i:s'),
+            'created_at' => isset($document['created_at']) ? convertToPhilippineTimeCustom($document['created_at']) : null,
             'type' => $document['type'] ?? 'announcement'
         ];
     }

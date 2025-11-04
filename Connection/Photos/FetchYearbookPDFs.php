@@ -5,6 +5,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 require_once __DIR__ . '/../Configuration/config.php';
 require_once __DIR__ . '/../Configuration/MongoConnect.php';
+require_once __DIR__ . '/../Configuration/DateTimeHelper.php';
 
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     http_response_code(403);
@@ -37,9 +38,9 @@ try {
             'department' => $pdf['department'] ?? '',
             'batch_year' => $pdf['batch_year'] ?? '',
             'pdf_url' => $pdf['pdf_url'] ?? '',
-            'created_at' => isset($pdf['created_at']) ? $pdf['created_at']->toDateTime()->format('Y-m-d H:i:s') : null,
+            'created_at' => isset($pdf['created_at']) ? convertToPhilippineTimeCustom($pdf['created_at']) : null,
             'created_by' => $pdf['created_by'] ?? null,
-            'updated_at' => isset($pdf['updated_at']) ? $pdf['updated_at']->toDateTime()->format('Y-m-d H:i:s') : null,
+            'updated_at' => isset($pdf['updated_at']) ? convertToPhilippineTimeCustom($pdf['updated_at']) : null,
             'updated_by' => $pdf['updated_by'] ?? null
         ];
     }

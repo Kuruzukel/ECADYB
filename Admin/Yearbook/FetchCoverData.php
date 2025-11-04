@@ -19,6 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 require __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../../Connection/Configuration/DateTimeHelper.php';
 
 use MongoDB\Client;
 
@@ -164,8 +165,8 @@ try {
         'back_thumb_url' => isset($cover['back_thumb_url']) ? (string)$cover['back_thumb_url'] : '',
         'background_url' => $background && isset($background['background_url']) ? (string)$background['background_url'] : '',
         'background_thumb_url' => $background && isset($background['background_thumb_url']) ? (string)$background['background_thumb_url'] : '',
-        'created_at' => isset($cover['created_at']) ? $cover['created_at']->toDateTime()->format('c') : null,
-        'updated_at' => isset($cover['updated_at']) ? $cover['updated_at']->toDateTime()->format('c') : null
+        'created_at' => isset($cover['created_at']) ? convertToPhilippineTimeCustom($cover['created_at']) : null,
+        'updated_at' => isset($cover['updated_at']) ? convertToPhilippineTimeCustom($cover['updated_at']) : null
     ];
 
     $departmentMap = [

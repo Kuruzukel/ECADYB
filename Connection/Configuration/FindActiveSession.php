@@ -1,6 +1,7 @@
 <?php
 
 require __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/DateTimeHelper.php';
 
 use MongoDB\Client;
 
@@ -90,8 +91,12 @@ try {
         echo "department: " . ($foundSession['department'] ?? 'NOT SET') . "\n";
         echo "academic_year: " . ($foundSession['academic_year'] ?? '❌ NOT SET') . "\n";
         echo "role: " . ($foundSession['role'] ?? 'NOT SET') . "\n";
-        echo "created_at: " . ($foundSession['created_at'] ?? 'NOT SET') . "\n";
-        echo "last_activity: " . ($foundSession['last_activity'] ?? 'NOT SET') . "\n";
+        
+        $createdAt = isset($foundSession['created_at']) ? convertToPhilippineTimeCustom($foundSession['created_at']) : 'NOT SET';
+        $lastActivity = isset($foundSession['last_activity']) ? convertToPhilippineTimeCustom($foundSession['last_activity']) : 'NOT SET';
+        
+        echo "created_at (Philippine Time): " . $createdAt . "\n";
+        echo "last_activity (Philippine Time): " . $lastActivity . "\n";
 
         echo "\n=================================================\n";
         echo "All fields:\n";

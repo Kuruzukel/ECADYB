@@ -2,6 +2,7 @@
 
 session_start();
 require __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/DateTimeHelper.php';
 
 use MongoDB\Client;
 
@@ -58,15 +59,20 @@ try {
 
         if (isset($doc['completion_date'])) {
             $completionDateTime = $doc['completion_date']->toDateTime();
-            $now = new DateTime();
+            $completionPhilippine = new DateTime();
+            $completionPhilippine->setTimestamp($completionDateTime->getTimestamp());
+            $completionPhilippine->setTimezone(new DateTimeZone('Asia/Manila'));
 
-            echo "  ✓ Completion Date: " . $completionDateTime->format('Y-m-d H:i:s') . "\n";
-            echo "  Current Time: " . $now->format('Y-m-d H:i:s') . "\n";
-            echo "  Is Completed? " . ($now >= $completionDateTime ? 'YES ✓' : 'NO ✗') . "\n";
+            $now = new DateTime('now', new DateTimeZone('Asia/Manila'));
+
+            echo "  ✓ Completion Date (UTC): " . $completionDateTime->format('Y-m-d H:i:s') . "\n";
+            echo "  ✓ Completion Date (Philippine Time): " . convertToPhilippineTimeCustom($doc['completion_date']) . "\n";
+            echo "  Current Time (Philippine Time): " . $now->format('Y-m-d\Th:i:s A') . "\n";
+            echo "  Is Completed? " . ($now >= $completionPhilippine ? 'YES ✓' : 'NO ✗') . "\n";
             echo "  Time Until/Since: ";
 
-            $diff = $now->diff($completionDateTime);
-            if ($now < $completionDateTime) {
+            $diff = $now->diff($completionPhilippine);
+            if ($now < $completionPhilippine) {
                 echo "Will complete in " . $diff->format('%h hours, %i minutes') . "\n";
             } else {
                 echo "Completed " . $diff->format('%h hours, %i minutes') . " ago\n";

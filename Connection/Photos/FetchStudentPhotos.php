@@ -17,6 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 try {
     require __DIR__ . '/../../vendor/autoload.php';
     require_once __DIR__ . '/../Configuration/MongoConnect.php';
+    require_once __DIR__ . '/../Configuration/DateTimeHelper.php';
 } catch (Exception $e) {
     header('Content-Type: application/json');
     echo json_encode(['success' => false, 'message' => 'Failed to load dependencies: ' . $e->getMessage()]);
@@ -98,11 +99,13 @@ try {
         $processedCount++;
         error_log("Processing photo record #" . $processedCount . " for student_id: " . ($studentId ?: 'null'));
 
+        $uploadTime = isset($photo['upload_time']) ? convertToPhilippineTimeCustom($photo['upload_time']) : '';
+        
         $studentData = [
             'id' => (string)$photo['_id'],
             'student_id' => $photo['student_id'] ?? '',
             'template' => $photo['template'] ?? 1,
-            'upload_time' => $photo['upload_time'] ?? '',
+            'upload_time' => $uploadTime,
             'photos' => [
                 'student_photo_1' => [
                     'type' => 'toga',

@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/DateTimeHelper.php';
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
@@ -114,7 +115,19 @@ function getActiveSessions($client)
             'sort' => ['last_activity' => -1]
         ]);
 
-        return iterator_to_array($sessions);
+        $sessionsArray = iterator_to_array($sessions);
+
+        // Convert timestamps to Philippine time
+        foreach ($sessionsArray as &$session) {
+            if (isset($session['created_at'])) {
+                $session['created_at_phil'] = convertToPhilippineTimeCustom($session['created_at']);
+            }
+            if (isset($session['last_activity'])) {
+                $session['last_activity_phil'] = convertToPhilippineTimeCustom($session['last_activity']);
+            }
+        }
+
+        return $sessionsArray;
     } catch (Exception $e) {
         error_log("Error getting active sessions: " . $e->getMessage());
         return [];

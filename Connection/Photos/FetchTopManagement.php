@@ -24,6 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 try {
     require __DIR__ . '/../../vendor/autoload.php';
     require_once __DIR__ . '/../Configuration/MongoConnect.php';
+    require_once __DIR__ . '/../Configuration/DateTimeHelper.php';
 } catch (Exception $e) {
     header('Content-Type: application/json');
     echo json_encode(['success' => false, 'message' => 'Failed to load dependencies: ' . $e->getMessage()]);
@@ -146,11 +147,13 @@ try {
 
         error_log("Photo - Name: '$name', Academic Year: '$academicYear'");
 
+        $uploadTime = isset($photo['upload_time']) ? convertToPhilippineTimeCustom($photo['upload_time']) : '';
+        
         $photoMap[$name] = [
             'photo_url' => $photo['url'] ?? '',
             'filename' => $photo['filename'] ?? '',
             'original_name' => $photo['original_name'] ?? '',
-            'upload_time' => $photo['upload_time'] ?? '',
+            'upload_time' => $uploadTime,
             'academic_year' => $academicYear
         ];
     }

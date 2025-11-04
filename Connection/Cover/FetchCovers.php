@@ -31,6 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 }
 
 require __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../Configuration/DateTimeHelper.php';
 
 use MongoDB\Client;
 
@@ -92,7 +93,6 @@ try {
     $items = [];
 
     foreach ($cursor as $doc) {
-        error_log("FetchCovers.php found document: " . json_encode($doc));
         $slot = (int)($doc['slot'] ?? 0);
 
         $version = '';
@@ -108,12 +108,14 @@ try {
         $batchYear = isset($doc['batch_year']) ? (string)$doc['batch_year'] : '';
         $template = isset($doc['template']) ? (int)$doc['template'] : 1;
         $completionDate = null;
+        $uploadTime = null;
+
         if (isset($doc['completion_date'])) {
-            try {
-                $completionDate = $doc['completion_date']->toDateTime()->format('Y-m-d H:i:s');
-            } catch (Exception $e) {
-                $completionDate = null;
-            }
+            $completionDate = convertToPhilippineTimeCustom($doc['completion_date']);
+        }
+
+        if (isset($doc['upload_time'])) {
+            $uploadTime = convertToPhilippineTimeCustom($doc['upload_time']);
         }
 
         if ($slot >= 1 && $slot <= 7) {
@@ -140,7 +142,8 @@ try {
                 'back_side' => $backSide,
                 'batch_year' => $batchYear,
                 'template' => $template,
-                'completion_date' => $completionDate
+                'completion_date' => $completionDate,
+                'upload_time' => $uploadTime
             ];
         } elseif ($slot === 8) {
             $backgroundUrl = isset($doc['background_url']) ? (string)$doc['background_url'] : '';
@@ -159,12 +162,13 @@ try {
                 'background_side' => $backgroundSide,
                 'batch_year' => $batchYear,
                 'template' => $template,
-                'completion_date' => $completionDate
+                'completion_date' => $completionDate,
+                'upload_time' => $uploadTime
             ];
         }
     }
 
-    error_log("FetchCovers.php found " . count($items) . " items");
+    error_log("FetchCovers.php found " . count($items) . " items with Philippine time converted");
 
     respond(true, 'Covers fetched', ['items' => array_values($items)]);
 } catch (Exception $e) {
