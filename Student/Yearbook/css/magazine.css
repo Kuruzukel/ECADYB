@@ -2291,7 +2291,6 @@
     padding: 20px 40px;
   }
 
-  /* Management Elements - Fullscreen Styles */
   :fullscreen .management-name,
   .iframe-fullscreen-mode .management-name {
     font-size: 20px;
