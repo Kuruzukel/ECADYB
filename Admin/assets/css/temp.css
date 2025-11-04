@@ -3781,9 +3781,11 @@ h1 .chevron i {
   border-radius: 8px;
   padding: 1.5rem;
   border-left: 4px solid #0c27be;
-
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease;
   position: relative;
+  overflow: hidden;
+  word-wrap: break-word;
 }
 
 .event-preview-card .delete-btn {
@@ -4073,9 +4075,11 @@ h1 .chevron i {
   border-radius: 8px;
   padding: 1.5rem;
   border-left: 4px solid #0c27be;
-
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease;
   position: relative;
+  overflow: hidden;
+  word-wrap: break-word;
 }
 
 .event-preview-card .delete-btn {
@@ -4135,12 +4139,22 @@ h1 .chevron i {
   font-weight: 600;
   color: #1a202c;
   margin-bottom: 0.5rem;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  max-width: 100%;
 }
 
 .event-preview-message {
   color: #4a5568;
   line-height: 1.5;
   margin-bottom: 0.75rem;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  max-width: 100%;
 }
 
 .event-preview-meta {
