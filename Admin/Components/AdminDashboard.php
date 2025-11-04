@@ -23,13 +23,21 @@ $adminProfileImage = 'https://ECADYB.b-cdn.net/img/Profile.png';
 
 if (isset($_SESSION['username']) && !empty($_SESSION['username'])) {
     try {
+        error_log("📌 AdminDashboard: Attempting to fetch admin profile for username: " . $_SESSION['username']);
         $adminData = $adminCollection->findOne(['username' => $_SESSION['username']]);
         if ($adminData) {
             $adminName = $adminData['name'] ?? 'Admin';
             $adminEmail = $adminData['email'] ?? 'admin@ecadyb.edu.ph';
-            $adminProfileImage = $adminData['profile'] ?? 'https://ECADYB.b-cdn.net/img/Profile.png';
+            
+            // Fetch profile image from database
+            if (isset($adminData['profile']) && !empty($adminData['profile'])) {
+                $adminProfileImage = $adminData['profile'];
+                error_log("✓ Admin profile image loaded from DB: " . $adminProfileImage);
+            } else {
+                error_log("⚠ No profile image in DB, using default");
+            }
 
-            error_log("Admin profile fetched: " . $adminName . " | Email: " . $adminEmail);
+            error_log("✓ Admin profile fetched: " . $adminName . " | Email: " . $adminEmail . " | Profile: " . $adminProfileImage);
             
             // Ensure admin session is tracked in active_sessions
             require_once __DIR__ . '/../../Connection/Configuration/JWTConfig.php';
@@ -52,13 +60,13 @@ if (isset($_SESSION['username']) && !empty($_SESSION['username'])) {
                 error_log("✓ Admin session created on dashboard load for: " . $_SESSION['username']);
             }
         } else {
-            error_log("No admin found for username: " . $_SESSION['username']);
+            error_log("✗ No admin found for username: " . $_SESSION['username']);
         }
     } catch (Exception $e) {
-        error_log("Failed to fetch admin profile: " . $e->getMessage());
+        error_log("✗ Failed to fetch admin profile: " . $e->getMessage());
     }
 } else {
-    error_log("No session username found");
+    error_log("✗ No session username found - Admin not logged in");
 }
 ?>
 
@@ -405,7 +413,14 @@ if (isset($_SESSION['username']) && !empty($_SESSION['username'])) {
                         </div>
 
                         <div class="admin-profile-container">
-                            <img src="<?= htmlspecialchars($adminProfileImage) ?>" alt="Admin Profile"
+                            <?php
+                            // Add cache-busting parameter to prevent browser caching
+                            $cacheBuster = time();
+                            $profileImageUrl = $adminProfileImage;
+                            $separator = (strpos($profileImageUrl, '?') !== false) ? '&' : '?';
+                            $profileImageUrl .= $separator . 'v=' . $cacheBuster;
+                            ?>
+                            <img src="<?= htmlspecialchars($profileImageUrl) ?>" alt="Admin Profile"
                                 class="admin-profile-img">
                             <div class="admin-dropdown">
                                 <div class="admin-dropdown-header">
