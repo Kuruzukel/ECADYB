@@ -44,3 +44,15 @@ function convertToPhilippineTimeCustom($mongoDate)
 {
     return convertToPhilippineTime($mongoDate, 'Y-m-d\Th:i:s A');
 }
+
+/**
+ * Convert MongoDB UTCDateTime to JavaScript-parseable Philippine Time
+ * Format: 2025-11-04T21:20:42 (24-hour format for JavaScript compatibility)
+ * 
+ * @param MongoDB\BSON\UTCDateTime|null $mongoDate The MongoDB date object
+ * @return string|null ISO-like formatted date in Philippine time or null if input is invalid
+ */
+function convertToPhilippineTimeJS($mongoDate)
+{
+    return convertToPhilippineTime($mongoDate, 'Y-m-d\TH:i:s');
+}

@@ -109,11 +109,13 @@ try {
         $template = isset($doc['template']) ? (int)$doc['template'] : 1;
         $completionDate = null;
         $uploadTime = null;
-
+        
+        // Use JS-parseable format for completion_date (JavaScript needs to parse this)
         if (isset($doc['completion_date'])) {
-            $completionDate = convertToPhilippineTimeCustom($doc['completion_date']);
+            $completionDate = convertToPhilippineTimeJS($doc['completion_date']);
         }
-
+        
+        // Use custom format for upload_time (display only)
         if (isset($doc['upload_time'])) {
             $uploadTime = convertToPhilippineTimeCustom($doc['upload_time']);
         }

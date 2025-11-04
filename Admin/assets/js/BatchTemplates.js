@@ -3509,16 +3509,26 @@ window.addEventListener("DOMContentLoaded", () => {
 
           if (sectionData && sectionData.completion_date) {
             const completionDate = new Date(sectionData.completion_date);
+            console.log(`[BatchTemplates] ${headerText}:`, {
+              completion_date_string: sectionData.completion_date,
+              parsed_date: completionDate,
+              is_valid: !isNaN(completionDate.getTime()),
+              current_date: currentDate
+            });
+            
             const yearsSinceCompletion =
               (currentDate - completionDate) / (1000 * 60 * 60 * 24 * 365);
 
             if (yearsSinceCompletion <= 3) {
               section.classList.add("available");
+              console.log(`[BatchTemplates] ✅ ${headerText} marked as AVAILABLE (green header)`);
             } else {
               section.classList.remove("available");
+              console.log(`[BatchTemplates] ❌ ${headerText} expired (${yearsSinceCompletion.toFixed(1)} years ago)`);
             }
           } else {
             section.classList.remove("available");
+            console.log(`[BatchTemplates] ⚠️ ${headerText} no completion date`);
           }
         });
       }
