@@ -174,10 +174,10 @@ php -S localhost:8000
 <br><b>Composer</b>
 </td>
 <td align="center" width="25%">
-<a href="https://bunny.net" target="_blank">
+<a href="https://bunny.net/cdn/" target="_blank">
 <img src="https://raw.githubusercontent.com/gilbarbara/logos/main/logos/bunny.svg" width="48" height="48" alt="Bunny CDN"/>
 </a>
-<br><b><a href="https://bunny.net" target="_blank">Bunny CDN</a></b>
+<br><b><a href="https://bunny.net/cdn/" target="_blank">Bunny CDN</a></b>
 </td>
 </tr>
 <tr>
