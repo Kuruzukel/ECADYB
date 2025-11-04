@@ -1708,7 +1708,6 @@ function resizeViewport() {
         window.innerHeight || document.documentElement.clientHeight;
       var isLandscape = screenWidth > screenHeight;
 
-      // Only apply custom dimensions for screens 767px and below in landscape
       if (isLandscape && screenWidth <= 767) {
         // Large Phones (668px - 767px) - Landscape
         if (screenWidth >= 668 && screenWidth <= 767) {
