@@ -48,7 +48,6 @@
         if (data.success) {
           let contentContainer = document.querySelector("main");
           if (!contentContainer) {
-            // If no main tag, find the section after header
             const header = document.querySelector("header");
             if (header && header.nextElementSibling) {
               contentContainer = header.nextElementSibling;
