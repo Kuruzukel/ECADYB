@@ -2343,7 +2343,6 @@
     height: 600px;
   }
 
-  /* Remove padding from top management page */
   :fullscreen .top-management-page,
   .iframe-fullscreen-mode .top-management-page {
     padding: 20px 20px;
