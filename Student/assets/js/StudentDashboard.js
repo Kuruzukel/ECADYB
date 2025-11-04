@@ -1309,7 +1309,6 @@ function initMemoriesCarousel() {
     }
   }
 
-  // Detect if device supports touch
   const isTouchDevice =
     "ontouchstart" in window || navigator.maxTouchPoints > 0;
 
