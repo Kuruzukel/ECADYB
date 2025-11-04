@@ -64,7 +64,6 @@
                 current = current.nextElementSibling;
               }
 
-              // Remove old sections
               sections.forEach((section) => section.remove());
 
               // Insert new content before footer
