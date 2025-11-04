@@ -1528,7 +1528,6 @@
 :fullscreen .cards-container,
 .iframe-fullscreen-mode .cards-container {
   grid-gap: 35px;
-  /* Larger spacing in fullscreen */
   padding: 20px;
   /* More padding in fullscreen */
 }
