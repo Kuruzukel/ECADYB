@@ -2,12 +2,15 @@
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
-ini_set('memory_limit', '512M');
+ini_set('memory_limit', '1024M');
 ini_set('upload_max_filesize', '100M');
 ini_set('post_max_size', '100M');
-ini_set('max_execution_time', '120');
-ini_set('max_input_time', '120');
-set_time_limit(120);
+ini_set('max_execution_time', '300');
+ini_set('max_input_time', '300');
+set_time_limit(300);
+
+// Prevent script from stopping if client disconnects
+ignore_user_abort(true);
 
 ob_start();
 
@@ -20,6 +23,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit();
 }
+
+// Send initial response headers early to prevent 502 gateway timeout
+if (ob_get_level()) {
+    ob_flush();
+}
+flush();
 
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
@@ -134,12 +143,11 @@ try {
         respond(false, 'Upload cancelled');
     }
 
-    error_log("UploadStudentPhotos: POST data received: " . json_encode($_POST));
-    error_log("UploadStudentPhotos: FILES data received: " . json_encode($_FILES));
+    error_log("UploadStudentPhotos: POST data keys: " . implode(', ', array_keys($_POST)));
+    error_log("UploadStudentPhotos: FILES count: " . count($_FILES));
     error_log("UploadStudentPhotos: REQUEST_METHOD: " . $_SERVER['REQUEST_METHOD']);
     error_log("UploadStudentPhotos: CONTENT_TYPE: " . ($_SERVER['CONTENT_TYPE'] ?? 'not set'));
     error_log("UploadStudentPhotos: CONTENT_LENGTH: " . ($_SERVER['CONTENT_LENGTH'] ?? 'not set'));
-    error_log("UploadStudentPhotos: All SERVER vars: " . json_encode($_SERVER));
 
     $batchYear = isset($_POST['batch_year']) ? trim($_POST['batch_year']) : null;
     $academicYear = null;
@@ -187,12 +195,10 @@ try {
 
     error_log("UploadStudentPhotos.php - Files received:");
     error_log("  - Total files in _FILES: " . count($_FILES));
-    error_log("  - Files array structure: " . print_r($_FILES, true));
-    error_log("  - uploadedFiles array structure: " . print_r($uploadedFiles, true));
     error_log("  - uploadedFiles['name'] is array: " . (is_array($uploadedFiles['name']) ? 'YES' : 'NO'));
     if (is_array($uploadedFiles['name'])) {
         error_log("  - Number of files: " . count($uploadedFiles['name']));
-        error_log("  - File names: " . implode(', ', $uploadedFiles['name']));
+        error_log("  - File names: " . implode(', ', array_slice($uploadedFiles['name'], 0, 5)) . (count($uploadedFiles['name']) > 5 ? '...' : ''));
     } else {
         error_log("  - Single file name: " . $uploadedFiles['name']);
     }
@@ -416,8 +422,8 @@ try {
             CURLOPT_POSTFIELDS     => $fileContents,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_HEADER         => false,
-            CURLOPT_TIMEOUT        => 30,
-            CURLOPT_CONNECTTIMEOUT => 5,
+            CURLOPT_TIMEOUT        => 60,
+            CURLOPT_CONNECTTIMEOUT => 10,
             CURLOPT_SSL_VERIFYPEER => true,
             CURLOPT_TCP_NODELAY    => true,
             CURLOPT_FRESH_CONNECT  => false,

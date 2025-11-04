@@ -776,9 +776,24 @@ window.addEventListener("DOMContentLoaded", () => {
                     }
                   } else {
                     console.error("HTTP error status:", xhr.status);
-                    reject(
-                      new Error(`Upload failed with status ${xhr.status}`)
-                    );
+                    let errorMessage = `Upload failed with status ${xhr.status}`;
+
+                    // Provide specific error messages for common issues
+                    if (xhr.status === 502) {
+                      errorMessage =
+                        "Server gateway error (502). The upload may have timed out or the server is overloaded. Try uploading fewer files at once or wait a moment and try again.";
+                    } else if (xhr.status === 504) {
+                      errorMessage =
+                        "Server timeout (504). The upload took too long. Try uploading fewer files at once.";
+                    } else if (xhr.status === 413) {
+                      errorMessage =
+                        "Upload too large (413). Try uploading fewer or smaller files.";
+                    } else if (xhr.status === 500) {
+                      errorMessage =
+                        "Server error (500). Check the error logs for details.";
+                    }
+
+                    reject(new Error(errorMessage));
                   }
                 };
 
@@ -801,7 +816,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
                 console.log("Sending batch request...");
                 xhr.open("POST", uploadEndpoint);
-                xhr.timeout = 60000; // 60 second timeout per batch
+                xhr.timeout = 300000; // 300 second (5 minute) timeout per batch
                 xhr.send(batchFormData);
               });
 
