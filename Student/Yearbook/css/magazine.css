@@ -1539,7 +1539,6 @@
 :fullscreen .student-card h3,
 .iframe-fullscreen-mode .student-card h3 {
   font-size: 16px;
-  /* Larger text in fullscreen */
 }
 
 /* Webkit fullscreen support */
