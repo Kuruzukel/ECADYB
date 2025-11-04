@@ -1701,7 +1701,6 @@ function resizeViewport() {
     var baseWidth = isFullscreen ? 1200 : options.width;
     var baseHeight = isFullscreen ? 750 : options.height;
 
-    // Adjust dimensions for tablets and phones in landscape mode
     if (isFullscreen) {
       var screenWidth =
         window.innerWidth || document.documentElement.clientWidth;
