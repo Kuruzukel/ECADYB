@@ -1709,7 +1709,6 @@ function resizeViewport() {
       var isLandscape = screenWidth > screenHeight;
 
       if (isLandscape && screenWidth <= 767) {
-        // Large Phones (668px - 767px) - Landscape
         if (screenWidth >= 668 && screenWidth <= 767) {
           baseWidth = 500;
           baseHeight = 280;
