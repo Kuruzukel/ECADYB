@@ -2,12 +2,12 @@
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
-ini_set('memory_limit', '1024M');
-ini_set('upload_max_filesize', '500M');
-ini_set('post_max_size', '500M');
-ini_set('max_execution_time', '300');
-ini_set('max_input_time', '300');
-set_time_limit(300);
+ini_set('memory_limit', '512M');
+ini_set('upload_max_filesize', '100M');
+ini_set('post_max_size', '100M');
+ini_set('max_execution_time', '120');
+ini_set('max_input_time', '120');
+set_time_limit(120);
 
 ob_start();
 
@@ -197,7 +197,7 @@ try {
         error_log("  - Single file name: " . $uploadedFiles['name']);
     }
 
-    $MAX_FILES = 20;
+    $MAX_FILES = 10;
     $fileCount = is_array($uploadedFiles['name']) ? count($uploadedFiles['name']) : 1;
 
     if ($fileCount > $MAX_FILES) {
@@ -416,8 +416,8 @@ try {
             CURLOPT_POSTFIELDS     => $fileContents,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_HEADER         => false,
-            CURLOPT_TIMEOUT        => 60,
-            CURLOPT_CONNECTTIMEOUT => 10,
+            CURLOPT_TIMEOUT        => 30,
+            CURLOPT_CONNECTTIMEOUT => 5,
             CURLOPT_SSL_VERIFYPEER => true,
             CURLOPT_TCP_NODELAY    => true,
             CURLOPT_FRESH_CONNECT  => false,

@@ -517,7 +517,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     academic year when uploading CSV files.
                                     <br><br>
                                     <i class="fas fa-images"></i>
-                                    Note: You can only upload a maximum of 20 images at a time for student photos.
+                                    Note: You can upload up to 20 images at a time. Large batches will be uploaded in smaller groups to ensure reliability.
                                 </p>
 
                                 <div class="form-group">

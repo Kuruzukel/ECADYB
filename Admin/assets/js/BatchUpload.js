@@ -643,7 +643,7 @@ window.addEventListener("DOMContentLoaded", () => {
             }
           }
 
-          console.log("🚀 Starting instant photo upload");
+          console.log("🚀 Starting batched photo upload");
           let uploadCancelled = false;
 
           if (isCancelling) {
@@ -659,28 +659,6 @@ window.addEventListener("DOMContentLoaded", () => {
                 ? "Student photos"
                 : "Management photos";
             uploadText.textContent = `Uploading ${uploadType}...`;
-          }
-
-          for (let i = 0; i < input.files.length; i++) {
-            console.log(`Appending file ${i + 1}:`, input.files[i].name);
-            formData.append(`files[]`, input.files[i]);
-          }
-
-          console.log("=== BATCH YEAR DEBUG ===");
-          console.log(
-            "selectedBatchYear from localStorage:",
-            selectedBatchYear
-          );
-          formData.append("batch_year", selectedBatchYear);
-          console.log("Added batch year to FormData:", selectedBatchYear);
-
-          console.log("FormData entries:");
-          for (let [key, value] of formData.entries()) {
-            if (value instanceof File) {
-              console.log(`  ${key}: [File] ${value.name}`);
-            } else {
-              console.log(`  ${key}: ${value}`);
-            }
           }
 
           const basePath = window.location.pathname.includes("/ECADYB/")
@@ -700,106 +678,166 @@ window.addEventListener("DOMContentLoaded", () => {
           console.log("Base path:", basePath);
           console.log("Window location origin:", window.location.origin);
 
+          // Upload in batches of 5 to avoid server timeout
+          const BATCH_SIZE = 5;
+          const totalFiles = input.files.length;
+          let totalUploaded = 0;
+          let totalFailed = 0;
+          let allResults = [];
+
           try {
-            const xhr = new XMLHttpRequest();
-            currentUploadController = { abort: () => xhr.abort() };
-
-            xhr.upload.addEventListener("progress", (e) => {
-              if (e.lengthComputable) {
-                const percentComplete = Math.round((e.loaded / e.total) * 100);
-                console.log(`Upload progress: ${percentComplete}%`);
+            for (let batchStart = 0; batchStart < totalFiles; batchStart += BATCH_SIZE) {
+              if (isCancelling) {
+                console.log("Upload cancelled during batch processing");
+                throw { name: "AbortError", message: "Upload cancelled" };
               }
-            });
 
-            const uploadPromise = new Promise((resolve, reject) => {
-              xhr.onload = () => {
-                console.log("=== UPLOAD RESPONSE DEBUG ===");
-                console.log("Response status:", xhr.status);
-                console.log("Response headers:", xhr.getAllResponseHeaders());
-                console.log("Response text:", xhr.responseText);
+              const batchEnd = Math.min(batchStart + BATCH_SIZE, totalFiles);
+              const currentBatch = batchEnd - batchStart;
+              const batchNum = Math.floor(batchStart / BATCH_SIZE) + 1;
+              const totalBatches = Math.ceil(totalFiles / BATCH_SIZE);
 
-                if (xhr.status >= 200 && xhr.status < 300) {
-                  try {
-                    const result = JSON.parse(xhr.responseText);
-                    console.log("Parsed JSON result:", result);
-                    resolve(result);
-                  } catch (e) {
-                    console.error("JSON parse error:", e);
-                    console.error("Raw response:", xhr.responseText);
-                    reject(new Error("Invalid JSON response"));
-                  }
-                } else {
-                  console.error("HTTP error status:", xhr.status);
-                  reject(new Error(`Upload failed with status ${xhr.status}`));
+              console.log(`\n=== BATCH ${batchNum}/${totalBatches} ===`);
+              console.log(`Processing files ${batchStart + 1} to ${batchEnd} of ${totalFiles}`);
+
+              if (uploadText) {
+                const uploadType =
+                  input.id === "student-photos"
+                    ? "Student photos"
+                    : "Management photos";
+                uploadText.textContent = `Uploading ${uploadType}... (${batchNum}/${totalBatches} batches)`;
+              }
+
+              const batchFormData = new FormData();
+              
+              // Add files for this batch
+              for (let i = batchStart; i < batchEnd; i++) {
+                console.log(`Adding file ${i + 1} to batch:`, input.files[i].name);
+                batchFormData.append(`files[]`, input.files[i]);
+              }
+
+              // Add batch year
+              batchFormData.append("batch_year", selectedBatchYear);
+              console.log("Added batch year to FormData:", selectedBatchYear);
+
+              const xhr = new XMLHttpRequest();
+              currentUploadController = { abort: () => xhr.abort() };
+
+              xhr.upload.addEventListener("progress", (e) => {
+                if (e.lengthComputable) {
+                  const percentComplete = Math.round((e.loaded / e.total) * 100);
+                  console.log(`Batch ${batchNum} upload progress: ${percentComplete}%`);
                 }
-              };
+              });
 
-              xhr.onerror = () => {
-                console.error("=== UPLOAD ERROR ===");
-                console.error("Network error occurred");
-                reject(new Error("Network error"));
-              };
-              xhr.onabort = () => {
-                const abortError = new Error("Upload cancelled");
-                abortError.name = "AbortError";
-                reject(abortError);
-              };
+              const uploadPromise = new Promise((resolve, reject) => {
+                xhr.onload = () => {
+                  console.log("=== BATCH UPLOAD RESPONSE ===");
+                  console.log("Response status:", xhr.status);
+                  console.log("Response text:", xhr.responseText);
 
-              console.log("=== SENDING REQUEST ===");
-              console.log("Opening POST request to:", uploadEndpoint);
-              xhr.open("POST", uploadEndpoint);
-              console.log(
-                "Sending FormData with",
-                formData.getAll("files[]").length,
-                "files"
-              );
-              xhr.send(formData);
-            });
+                  if (xhr.status >= 200 && xhr.status < 300) {
+                    try {
+                      const result = JSON.parse(xhr.responseText);
+                      console.log("Parsed JSON result:", result);
+                      resolve(result);
+                    } catch (e) {
+                      console.error("JSON parse error:", e);
+                      console.error("Raw response:", xhr.responseText);
+                      reject(new Error("Invalid JSON response"));
+                    }
+                  } else {
+                    console.error("HTTP error status:", xhr.status);
+                    reject(new Error(`Upload failed with status ${xhr.status}`));
+                  }
+                };
 
-            const result = await uploadPromise;
+                xhr.onerror = () => {
+                  console.error("=== UPLOAD ERROR ===");
+                  console.error("Network error occurred");
+                  reject(new Error("Network error"));
+                };
+                
+                xhr.onabort = () => {
+                  const abortError = new Error("Upload cancelled");
+                  abortError.name = "AbortError";
+                  reject(abortError);
+                };
 
-            if (result.success) {
-              const uploadType =
-                input.id === "student-photos" ? "Student" : "Top Management";
+                xhr.ontimeout = () => {
+                  console.error("=== UPLOAD TIMEOUT ===");
+                  reject(new Error("Upload timeout"));
+                };
+
+                console.log("Sending batch request...");
+                xhr.open("POST", uploadEndpoint);
+                xhr.timeout = 60000; // 60 second timeout per batch
+                xhr.send(batchFormData);
+              });
+
+              const batchResult = await uploadPromise;
+              console.log(`Batch ${batchNum} completed:`, batchResult);
+
+              if (batchResult.success) {
+                totalUploaded += batchResult.uploaded || 0;
+                totalFailed += batchResult.failed || 0;
+                if (batchResult.results) {
+                  allResults = allResults.concat(batchResult.results);
+                }
+              } else {
+                // Batch failed, count all files in this batch as failed
+                totalFailed += currentBatch;
+                console.error(`Batch ${batchNum} failed:`, batchResult.message);
+              }
+
+              // Small delay between batches to prevent server overload
+              if (batchEnd < totalFiles) {
+                console.log("Waiting 500ms before next batch...");
+                await new Promise(resolve => setTimeout(resolve, 500));
+              }
+            }
+
+            // All batches completed
+            console.log("\n=== UPLOAD COMPLETE ===");
+            console.log(`Total uploaded: ${totalUploaded}`);
+            console.log(`Total failed: ${totalFailed}`);
+            console.log(`Total files: ${totalFiles}`);
+
+            if (totalUploaded > 0) {
+              const imageText = totalUploaded === 1 ? "image" : "images";
               showNotification(
-                `${uploadType} photos uploaded successfully!`,
+                `Successfully uploaded ${totalUploaded} ${imageText}.`,
                 "success"
               );
+            }
 
-              if (result.uploaded > 0) {
-                const imageText = result.uploaded === 1 ? "image" : "images";
-                showNotification(
-                  `Successfully uploaded ${result.uploaded} ${imageText}.`,
-                  "success"
-                );
-              }
-
-              if (result.failed > 0) {
-                const imageText = result.failed === 1 ? "image" : "images";
-                showNotification(
-                  `Failed to upload ${result.failed} ${imageText}. Check file names and try again.`,
-                  "error"
-                );
-              }
-
-              forceResetFileUI(input.id);
-            } else {
+            if (totalFailed > 0) {
+              const imageText = totalFailed === 1 ? "image" : "images";
               showNotification(
-                result.message || "Upload failed. Please try again.",
+                `Failed to upload ${totalFailed} ${imageText}. Check file names and try again.`,
                 "error"
               );
             }
 
+            if (totalUploaded === 0 && totalFailed === 0) {
+              showNotification("No files were uploaded.", "error");
+            }
+
+            forceResetFileUI(input.id);
             hideUploadOverlay();
           } catch (error) {
             if (error.name === "AbortError") {
               console.log("Upload cancelled");
               forceResetFileUI(input.id);
               showNotification("Upload cancelled", "error");
+              hideUploadOverlay();
               return;
             }
             console.error("Upload error:", error);
-            showNotification("Upload failed. Please try again.", "error");
+            showNotification(
+              error.message || "Upload failed. Please try again.",
+              "error"
+            );
             hideUploadOverlay();
           } finally {
             currentUploadController = null;
