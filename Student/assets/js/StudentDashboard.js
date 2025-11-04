@@ -3,7 +3,6 @@
   let isLoading = false;
   const basePath = "/ECADYB/Student/Components/";
 
-  // Get current page from URL
   function getCurrentPageFromURL() {
     const path = window.location.pathname;
     if (path.includes("StudentDashboard.php")) return "home";
