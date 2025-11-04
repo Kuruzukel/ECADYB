@@ -1534,7 +1534,6 @@
 :fullscreen .student-image,
 .iframe-fullscreen-mode .student-image {
   height: 290px;
-  /* Taller images in fullscreen */
 }
 
 :fullscreen .student-card h3,
