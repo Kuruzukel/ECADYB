@@ -1,31 +1,79 @@
-# Railway Deployment Guide
+<div align="center">
 
-This guide provides multiple deployment options for the ECADYB application on Railway.
+# 🚂 Railway Deployment Guide
 
-## Option 1: Nixpacks (Recommended)
+### *Complete deployment instructions for ECADYB on Railway*
 
-Railway will automatically detect your PHP application and install the MongoDB extension.
+![Railway](https://img.shields.io/badge/Railway-0B0D0E?style=for-the-badge&logo=railway&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Nixpacks](https://img.shields.io/badge/Nixpacks-79FFE1?style=for-the-badge)
 
-### Steps:
+</div>
 
-1. Push your code to GitHub
-2. Connect your repository to Railway
-3. Set the `MONGO_URL` environment variable in Railway dashboard
-4. Deploy
+---
 
-### Configuration Files:
+## 📋 Table of Contents
 
-- `railway.json` - Uses Nixpacks builder
-- `nixpacks.toml` - Simplified PHP configuration
-- `composer.json` - Dependencies with platform-check disabled
+- [Deployment Options](#-deployment-options)
+- [Environment Variables](#-environment-variables)
+- [Troubleshooting](#-troubleshooting)
+- [Local Testing](#-local-testing)
 
-## Option 2: Docker
+---
 
-If Nixpacks fails, you can use the Docker deployment.
+## 🚀 Deployment Options
 
-### Steps:
+### ⚡ Option 1: Nixpacks (Recommended)
 
-1. Update `railway.json` to use Docker:
+Railway will **automatically detect** your PHP application and install the MongoDB extension.
+
+<table>
+<tr><td>
+
+#### 📝 Steps:
+
+1. 📤 **Push your code to GitHub**
+   ```bash
+   git push origin main
+   ```
+
+2. 🔗 **Connect your repository to Railway**
+   - Go to [Railway Dashboard](https://railway.app/dashboard)
+   - Click "New Project" → "Deploy from GitHub repo"
+   - Select your repository
+
+3. ⚙️ **Set environment variables**
+   - Navigate to "Variables" tab
+   - Add `MONGO_URL` and other required variables
+   - See [Environment Variables](#-environment-variables) section below
+
+4. 🎉 **Deploy**
+   - Railway will automatically build and deploy
+   - Wait for deployment to complete
+
+</td></tr>
+</table>
+
+#### 📂 Configuration Files:
+
+| File | Purpose |
+|------|---------|
+| `railway.json` | Specifies Nixpacks builder |
+| `nixpacks.toml` | Simplified PHP configuration |
+| `composer.json` | Dependencies (platform-check disabled) |
+
+---
+
+### 🐳 Option 2: Docker
+
+If Nixpacks fails, use the Docker deployment method.
+
+<table>
+<tr><td>
+
+#### 📝 Steps:
+
+1. 🔧 **Update `railway.json`** to use Docker:
 
 ```json
 {
@@ -36,114 +84,300 @@ If Nixpacks fails, you can use the Docker deployment.
 }
 ```
 
-2. Deploy
+2. 🚀 **Deploy**
+   - Push changes to GitHub
+   - Railway will rebuild using Docker
 
-### Configuration Files:
+</td></tr>
+</table>
 
-- `Dockerfile` - Complete PHP + MongoDB setup
-- `docker/apache.conf` - Apache configuration
+#### 📂 Configuration Files:
 
-## Environment Variables
+| File | Purpose |
+|------|---------|
+| `Dockerfile` | Complete PHP + MongoDB setup |
+| `docker/apache.conf` | Apache web server configuration |
 
-### Required Environment Variables
+---
 
-**CRITICAL:** Make sure to set these in Railway dashboard before deploying:
+## 🔐 Environment Variables
 
-#### MongoDB Configuration (REQUIRED)
+> **⚠️ CRITICAL:** Set all required variables in Railway dashboard **before** deploying!
 
-- `MONGO_URL` or `MONGODB_URI`: Your MongoDB connection string
-  - Get from MongoDB Atlas dashboard (connection string) or Railway MongoDB plugin
-  - The connection string format is: `mongodb+srv://[user]:[pass]@[host]/[db]`
-  - If you're using Railway's MongoDB plugin, it will automatically set `MONGODB_URI`
-  - The application checks both `MONGO_URL` and `MONGODB_URI`
-  - **Never commit this value to Git - set it only in Railway dashboard**
+### 🗄️ MongoDB Configuration (REQUIRED)
 
-#### Bunny CDN Configuration (Required for file uploads)
+<table>
+<tr>
+<td width="30%"><b>Variable</b></td>
+<td width="70%"><b>Description</b></td>
+</tr>
+<tr>
+<td><code>MONGO_URL</code><br>or<br><code>MONGODB_URI</code></td>
+<td>
 
-- `BUNNY_STORAGE_ZONE`: Your Bunny.net storage zone name
-- `BUNNY_ACCESS_KEY`: Your Bunny.net access key
-- `BUNNY_CDN_HOST`: Your CDN host URL (e.g., `https://your-cdn.b-cdn.net`)
+**Your MongoDB connection string**
 
-#### Email Configuration (Required for password reset)
+- 📍 Get from [MongoDB Atlas](https://cloud.mongodb.com) or Railway MongoDB plugin
+- 📝 Format: `mongodb+srv://[user]:[pass]@[host]/[db]`
+- 🔌 Railway's MongoDB plugin automatically sets `MONGODB_URI`
+- ✅ Application checks both variable names
+- 🚫 **Never commit to Git** - set only in Railway dashboard
 
-- `SMTP_HOST`: SMTP server hostname (e.g., `smtp.gmail.com`)
-- `SMTP_PORT`: SMTP port (e.g., `587` for TLS, `465` for SSL)
-- `SMTP_USERNAME`: Your email address
-- `SMTP_PASSWORD`: Your email password or app-specific password
-- `SMTP_FROM_EMAIL`: Email address to send from
-- `SMTP_FROM_NAME`: Display name for emails (e.g., `"Graduation Gallery"`)
-- `SMTP_ENCRYPTION`: Encryption method (`tls` or `ssl`)
+</td>
+</tr>
+</table>
 
-### Setting Environment Variables in Railway
+---
 
-1. Go to your Railway dashboard: https://railway.app/dashboard
-2. Select your project (grad-gallery)
-3. Go to the "Variables" tab
-4. Add each environment variable listed above
-5. Click "Deploy" or wait for auto-redeploy
+### 🌐 Bunny CDN Configuration (Required for uploads)
 
-## Troubleshooting
+<table>
+<tr>
+<td width="30%"><b>Variable</b></td>
+<td width="70%"><b>Description</b></td>
+</tr>
+<tr>
+<td><code>BUNNY_STORAGE_ZONE</code></td>
+<td>Your Bunny.net storage zone name</td>
+</tr>
+<tr>
+<td><code>BUNNY_ACCESS_KEY</code></td>
+<td>Your Bunny.net storage zone password/key</td>
+</tr>
+<tr>
+<td><code>BUNNY_CDN_HOST</code></td>
+<td>Your CDN host URL<br>Example: <code>https://your-cdn.b-cdn.net</code></td>
+</tr>
+<tr>
+<td><code>BUNNY_API_KEY</code><br><i>(optional)</i></td>
+<td>Bunny account API key - enables automatic cache purging</td>
+</tr>
+</table>
 
-### "Database connection error" on Login Page
+---
 
-**Symptoms:** Red error message saying "Database connection error. Please contact the administrator or try again later."
+### 📧 Email Configuration (Required for notifications)
+
+<details open>
+<summary><b>🚂 For Railway (Production)</b></summary>
+
+<table>
+<tr>
+<td width="30%"><b>Variable</b></td>
+<td width="70%"><b>Description</b></td>
+</tr>
+<tr>
+<td><code>SENDGRID_API_KEY</code></td>
+<td>SendGrid API key for email delivery</td>
+</tr>
+<tr>
+<td><code>SMTP_FROM_EMAIL</code></td>
+<td>Sender email address</td>
+</tr>
+<tr>
+<td><code>SMTP_FROM_NAME</code></td>
+<td>Display name (e.g., <code>"Graduation Gallery"</code>)</td>
+</tr>
+</table>
+
+> **⚠️ Note:** Railway blocks SMTP ports, so SendGrid is **required** for production.
+
+</details>
+
+<details>
+<summary><b>💻 For Localhost (Development)</b></summary>
+
+<table>
+<tr>
+<td width="30%"><b>Variable</b></td>
+<td width="70%"><b>Description</b></td>
+</tr>
+<tr>
+<td><code>SMTP_HOST</code></td>
+<td>SMTP server hostname (e.g., <code>smtp.gmail.com</code>)</td>
+</tr>
+<tr>
+<td><code>SMTP_PORT</code></td>
+<td>SMTP port (<code>587</code> for TLS, <code>465</code> for SSL)</td>
+</tr>
+<tr>
+<td><code>SMTP_USERNAME</code></td>
+<td>Your email address</td>
+</tr>
+<tr>
+<td><code>SMTP_PASSWORD</code></td>
+<td>Your email password or app-specific password</td>
+</tr>
+<tr>
+<td><code>SMTP_FROM_EMAIL</code></td>
+<td>Email address to send from</td>
+</tr>
+<tr>
+<td><code>SMTP_FROM_NAME</code></td>
+<td>Display name for emails</td>
+</tr>
+<tr>
+<td><code>SMTP_ENCRYPTION</code></td>
+<td>Encryption method (<code>tls</code> or <code>ssl</code>)</td>
+</tr>
+</table>
+
+</details>
+
+---
+
+### 🛠️ How to Set Variables in Railway
+
+<table>
+<tr><td>
+
+**Step 1:** 🌐 Go to [Railway Dashboard](https://railway.app/dashboard)
+
+**Step 2:** 📂 Select your project
+
+**Step 3:** ⚙️ Navigate to the **"Variables"** tab
+
+**Step 4:** ➕ Add each environment variable
+
+**Step 5:** 🚀 Click **"Deploy"** or wait for auto-redeploy
+
+</td></tr>
+</table>
+
+---
+
+## 🔧 Troubleshooting
+
+### ❌ "Database connection error" on Login Page
+
+<details>
+<summary><b>Click to expand solution</b></summary>
+
+**Symptoms:**
+> 🔴 Red error message: *"Database connection error. Please contact the administrator or try again later."*
+
+**✅ Solution Steps:**
+
+1. ✔️ Check if `MONGO_URL` or `MONGODB_URI` is set in Railway dashboard
+2. 🔍 Verify the MongoDB connection string is correct
+3. 🧪 Test the connection string using MongoDB Compass or similar tool
+4. 📋 Check Railway logs: `railway logs`
+5. 🔌 If using Railway's MongoDB plugin, ensure it's linked to your service
+
+**🔍 Common Causes:**
+
+- ❌ Environment variable not set
+- ❌ Incorrect connection string format
+- ❌ MongoDB server is not accessible
+- ❌ Network/firewall issues
+- ❌ IP address not whitelisted in MongoDB Atlas
+
+</details>
+
+---
+
+### 📦 Composer Install Fails
+
+<details>
+<summary><b>Click to expand solution</b></summary>
 
 **Solution:**
 
-1. Check if `MONGO_URL` or `MONGODB_URI` is set in Railway dashboard
-2. Verify the MongoDB connection string is correct
-3. Test the connection string using MongoDB Compass or similar tool
-4. Check Railway logs for detailed error messages: `railway logs`
-5. If using Railway's MongoDB plugin, ensure it's linked to your service
+- ✅ The `--ignore-platform-reqs` flag bypasses extension checks during installation
+- ✅ Railway automatically installs the MongoDB extension
+- ✅ No action needed - this is expected behavior
 
-**Common causes:**
+</details>
 
-- Environment variable not set
-- Incorrect connection string format
-- MongoDB server is not accessible
-- Network/firewall issues
+---
 
-### Composer Install Fails
+### 🗄️ MongoDB Connection Issues
 
-- The `--ignore-platform-reqs` flag is used to bypass extension checks during installation
-- Railway will install the MongoDB extension automatically
+<details>
+<summary><b>Click to expand solution</b></summary>
 
-### MongoDB Connection Issues
+**Checklist:**
 
-- Verify `MONGO_URL` or `MONGODB_URI` is set correctly in Railway environment variables
-- Check that all connection files use `getenv('MONGO_URL')` instead of hardcoded localhost
-- Ensure your MongoDB cluster allows connections from Railway's IP addresses
-- Check if the database name in your connection string matches your actual database
+- ✔️ Verify `MONGO_URL` or `MONGODB_URI` is set correctly in Railway
+- ✔️ Ensure connection files use `getenv('MONGO_URL')` (not hardcoded localhost)
+- ✔️ Verify MongoDB cluster allows connections from Railway's IP addresses
+- ✔️ Check if database name in connection string matches your actual database
+- ✔️ Test connection string format: `mongodb+srv://[user]:[pass]@[host]/[db]`
 
-### Build Failures
+</details>
 
-- Try switching between Nixpacks and Docker builders
-- Check Railway logs for specific error messages
-- Verify all dependencies in `composer.json` are compatible
+---
 
-## Local Testing
+### 🏗️ Build Failures
 
-Test your deployment locally:
+<details>
+<summary><b>Click to expand solution</b></summary>
+
+**Troubleshooting Steps:**
+
+1. 🔄 Try switching between Nixpacks and Docker builders
+2. 📋 Check Railway logs for specific error messages
+3. ✅ Verify all dependencies in `composer.json` are compatible
+4. 🧹 Clear build cache in Railway settings
+5. 🔍 Review recent commits for configuration changes
+
+</details>
+
+---
+
+## 🧪 Local Testing
+
+Test your deployment configuration locally before pushing to Railway:
 
 ```bash
-# Test MongoDB connection
+# 🔍 Test MongoDB connection
 php test-mongodb.php
 
-# Run development server
+# 🚀 Run development server
 php -S localhost:8000 -t .
 ```
 
-## Files Updated for Deployment
+> **💡 Tip:** Use `.env` file for local environment variables instead of hardcoding.
+
+---
+
+## 📝 Files Updated for Deployment
 
 All MongoDB connection files have been updated to use environment variables:
 
-- `Connection/Configuration/MongoFetch.php`
-- `Connection/FetchAnnouncement.php`
-- `Connection/DeleteAnnouncement.php`
-- `Connection/TestAnnouncement.php`
-- `Connection/SubmitAnnouncement.php`
-- `Connection/DeleteStudent.php`
-- `Admin/Components/AddNewStudent.php`
-- `Admin/Components/BatchUpload.php`
-- `Admin/Components/StudentList.php`
-- `Admin/Components/EditStudentInformation.php`
+<table>
+<tr>
+<td width="50%">
+
+**Configuration Files:**
+- ✅ `Connection/Configuration/MongoFetch.php`
+- ✅ `Connection/FetchAnnouncement.php`
+- ✅ `Connection/DeleteAnnouncement.php`
+- ✅ `Connection/TestAnnouncement.php`
+- ✅ `Connection/SubmitAnnouncement.php`
+
+</td>
+<td width="50%">
+
+**Admin Components:**
+- ✅ `Connection/DeleteStudent.php`
+- ✅ `Admin/Components/AddNewStudent.php`
+- ✅ `Admin/Components/BatchUpload.php`
+- ✅ `Admin/Components/StudentList.php`
+- ✅ `Admin/Components/EditStudentInformation.php`
+
+</td>
+</tr>
+</table>
+
+---
+
+<div align="center">
+
+### 🎉 Happy Deploying!
+
+**Need more help?** Check out the [Railway Documentation](https://docs.railway.app)
+
+[⬆️ Back to Top](#-railway-deployment-guide)
+
+</div>
