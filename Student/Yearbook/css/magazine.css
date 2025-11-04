@@ -2165,7 +2165,6 @@
 
 /* Medium Desktop Fullscreen (1121px - 1285px) */
 @media (max-width: 1285px) and (min-width: 1121px) {
-  /* Magazine Container - Fullscreen Size */
   html:fullscreen .magazine-viewport .container {
     width: 1100px;
     height: 600px;
