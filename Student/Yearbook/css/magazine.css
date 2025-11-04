@@ -1979,7 +1979,6 @@
   gap: 40px;
 }
 
-/* MS fullscreen support for top management */
 :-ms-fullscreen .top-management-page {
   padding: 30px 60px;
 }
