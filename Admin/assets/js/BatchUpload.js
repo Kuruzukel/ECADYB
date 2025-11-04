@@ -705,7 +705,7 @@ window.addEventListener("DOMContentLoaded", () => {
                   input.id === "student-photos"
                     ? "Student photos"
                     : "Management photos";
-                uploadText.textContent = `Uploading ${uploadType}... (${batchNum}/${totalBatches} batches)`;
+                uploadText.textContent = `Uploading ${uploadType}...`;
               }
 
               const batchFormData = new FormData();
