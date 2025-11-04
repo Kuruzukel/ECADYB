@@ -30,7 +30,6 @@
 
     isLoading = true;
 
-    // Show loading indicator (optional)
     const mainContent =
       document.querySelector("main") || document.querySelector("body");
     if (mainContent) {
