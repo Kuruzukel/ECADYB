@@ -17,11 +17,15 @@
             .then((response) => response.json())
             .then((data) => {
                 if (!data.success) {
-                    console.warn("[SessionTracker] Admin heartbeat failed:", data.message);
+                    // Only log to console in debug mode - suppress "No active session" warnings
+                    if (data.message !== 'No active session') {
+                        console.warn("[SessionTracker] Admin heartbeat failed:", data.message);
+                    }
                 }
             })
             .catch((error) => {
-                console.error("[SessionTracker] Error sending admin heartbeat:", error);
+                // Suppress network errors during session tracking
+                // These are non-critical and shouldn't pollute the console
             });
     }
 
