@@ -51,12 +51,22 @@ try {
 
     $departmentSlots = [
         'BSME' => 1,
+        'MARITIME' => 1,
+        'BSMT' => 1,
         'BSCJ' => 2,
+        'BSCJE' => 2,
         'BSTM' => 3,
+        'TOURISM' => 3,
         'BSE' => 4,
+        'COE' => 4,
+        'EDUCATION' => 4,
+        'BTVTED' => 4,
+        'BECED' => 4,
         'BSN' => 5,
+        'NURSING' => 5,
         'BSIS' => 6,
-        'BSBA' => 7
+        'BSBA' => 7,
+        'BSMA' => 7
     ];
 
     $departmentCode = isset($_GET['department']) ? strtoupper($_GET['department']) : null;
