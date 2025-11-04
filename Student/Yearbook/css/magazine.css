@@ -2010,7 +2010,6 @@
 .iframe-fullscreen-mode .nav-controls {
   padding: 8px 16px;
   gap: 6px;
-  /* More spacing between buttons */
   bottom: 1.5rem;
   /* Move up from bottom */
 }
