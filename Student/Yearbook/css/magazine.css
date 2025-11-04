@@ -1900,7 +1900,6 @@
 :fullscreen .management-photo,
 .iframe-fullscreen-mode .management-photo {
   width: 280px;
-  /* Larger photo in fullscreen */
   height: 280px;
   /* Larger photo in fullscreen */
   margin-bottom: 30px;
