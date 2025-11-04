@@ -66,7 +66,6 @@
 
               sections.forEach((section) => section.remove());
 
-              // Insert new content before footer
               const bottomNav = document.querySelector(".bottom-nav");
               const insertBefore =
                 footer || bottomNav || document.body.lastChild;
