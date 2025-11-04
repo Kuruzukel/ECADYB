@@ -51,7 +51,6 @@
             const header = document.querySelector("header");
             if (header && header.nextElementSibling) {
               contentContainer = header.nextElementSibling;
-              // Find all sections until footer
               let sections = [];
               let current = header.nextElementSibling;
               const footer = document.querySelector("footer");
