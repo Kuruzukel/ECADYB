@@ -14,7 +14,6 @@
 
   currentPage = getCurrentPageFromURL();
 
-  // Update active navigation state
   function updateActiveNav(page) {
     document.querySelectorAll(".nav-link").forEach((link) => {
       const linkPage = link.getAttribute("data-page");
