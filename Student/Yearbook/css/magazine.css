@@ -1895,7 +1895,6 @@
 :fullscreen .top-management-page,
 .iframe-fullscreen-mode .top-management-page {
   padding: 30px 60px;
-  /* More padding in fullscreen */
 }
 
 :fullscreen .management-photo,
