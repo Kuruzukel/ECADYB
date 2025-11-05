@@ -15,7 +15,6 @@
       .then((response) => response.json())
       .then((data) => {
         if (!data.success) {
-          // Only log to console in debug mode - suppress "No active session" warnings
           if (data.message !== "No active session") {
             console.warn(
               "[SessionTracker] Admin heartbeat failed:",
