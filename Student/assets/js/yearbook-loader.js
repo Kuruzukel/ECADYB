@@ -119,7 +119,6 @@
 
       checkOrientation();
 
-      // Listen for orientation changes
       window.addEventListener("orientationchange", function () {
         setTimeout(checkOrientation, 100);
       });
