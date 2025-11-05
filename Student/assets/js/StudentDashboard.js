@@ -139,7 +139,6 @@
   document.addEventListener("DOMContentLoaded", function () {
     updateActiveNav(currentPage);
 
-    // Attach click handlers to all navigation links
     document.querySelectorAll(".nav-link").forEach((link) => {
       link.addEventListener("click", function (e) {
         e.preventDefault();
