@@ -24,7 +24,6 @@
         }
       })
       .catch((error) => {
-        // Suppress network errors during session tracking
         // These are non-critical and shouldn't pollute the console
       });
   }
