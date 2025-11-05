@@ -80,7 +80,6 @@
       loaderContent.appendChild(noteWrapper);
       this.noteElement = noteWrapper;
 
-      // Add orientation message for mobile devices
       let orientationMsg = loaderContent.querySelector(".orientation-message");
       if (!orientationMsg) {
         orientationMsg = document.createElement("div");
