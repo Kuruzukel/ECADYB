@@ -127,7 +127,6 @@
       });
   }
 
-  // Handle browser back/forward buttons
   window.addEventListener("popstate", (event) => {
     if (event.state && event.state.page) {
       loadPage(event.state.page, false);
