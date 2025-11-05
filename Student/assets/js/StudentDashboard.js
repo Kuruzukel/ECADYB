@@ -1059,7 +1059,6 @@ function navigateYearbook(direction) {
   }
 }
 
-// Initialize mobile yearbook classes when yearbooks are loaded
 function initializeYearbookMobileView() {
   if (window.innerWidth <= 768) {
     const yearbooks = document.querySelectorAll(".yearbook-item");
