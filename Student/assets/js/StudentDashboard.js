@@ -825,7 +825,6 @@ async function checkStudentExists() {
   }
 }
 
-// Call this function to test
 // checkStudentExists();
 
 function showNotification(message, type = "info") {
