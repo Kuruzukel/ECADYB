@@ -1037,7 +1037,6 @@ function navigateYearbook(direction) {
         (window.currentYearbookIndex - 1 + yearbooks.length) % yearbooks.length;
     }
 
-    // Apply new classes
     yearbooks.forEach((item, index) => {
       if (index === window.currentYearbookIndex) {
         item.classList.add("mobile-active");
