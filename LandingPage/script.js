@@ -274,7 +274,6 @@ if (track) {
   const isTouchDevice =
     "ontouchstart" in window || navigator.maxTouchPoints > 0;
 
-  // Only add mouse hover events on non-touch devices to prevent conflicts
   if (!isTouchDevice) {
     track.addEventListener("mouseenter", stopAutoSlide);
     track.addEventListener("mouseleave", startAutoSlide);
