@@ -103,7 +103,6 @@
 
           window.scrollTo({ top: 0, behavior: "smooth" });
 
-          // Restore opacity
           if (mainContent) {
             mainContent.style.opacity = "1";
             mainContent.style.pointerEvents = "auto";
