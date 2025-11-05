@@ -847,7 +847,6 @@ window.addEventListener("DOMContentLoaded", () => {
                   allResults = allResults.concat(batchResult.results);
                 }
               } else {
-                // Batch failed, count all files in this batch as failed
                 totalFailed += currentBatch;
                 console.error(`Batch ${batchNum} failed:`, batchResult.message);
               }
