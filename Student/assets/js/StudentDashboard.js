@@ -767,7 +767,6 @@ function formatAcademicYear(input) {
   input.value = value;
 }
 
-// Debug function to check if student exists in database
 async function checkStudentExists() {
   const studentId = window.studentData?.studentId || "";
   const department = window.studentData?.studentDepartment || "";
