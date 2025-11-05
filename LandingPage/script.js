@@ -245,7 +245,6 @@ if (track) {
 
   track.addEventListener("click", (e) => {
     if (e.target.classList.contains("carousel-img")) {
-      // Stop auto-slide
       stopAutoSlide();
 
       // Show lightbox with the image
