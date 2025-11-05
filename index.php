@@ -74,7 +74,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['studentId'], $_POST['
                 $_SESSION['role']       = 'student';
                 $_SESSION['student_id'] = $finalStudentId;
 
-                // Create JWT session token and track active session
                 require_once __DIR__ . '/Connection/Configuration/JWTConfig.php';
                 $sessionData = [
                     'student_id' => $finalStudentId,
