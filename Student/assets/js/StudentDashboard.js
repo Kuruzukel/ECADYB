@@ -1080,7 +1080,6 @@ function initializeYearbookMobileView() {
 window.navigateYearbook = navigateYearbook;
 window.initializeYearbookMobileView = initializeYearbookMobileView;
 
-// Carousel functionality for Memories page
 function initMemoriesCarousel() {
   // Lightbox functionality for carousel images
   function showImageLightbox(imageSrc) {
