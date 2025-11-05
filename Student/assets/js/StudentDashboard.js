@@ -147,7 +147,6 @@
           loadPage(page);
         }
 
-        // Close mobile menu if open
         const hamburgerMenu = document.getElementById("hamburgerMenu");
         const centerNav = document.querySelector(".center-nav");
         if (hamburgerMenu && centerNav) {
