@@ -114,7 +114,6 @@
       })
       .catch((error) => {
         console.error("Error loading page:", error);
-        // Fallback to regular navigation on error
         const pageURLs = {
           home: "StudentDashboard.php",
           about: "About.php",
