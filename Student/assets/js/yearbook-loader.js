@@ -240,7 +240,6 @@
         isPortrait: isPortrait,
       });
 
-      // Don't hide loader if mobile device is in portrait mode
       if (isMobile && isPortrait) {
         console.log("[Loader] Mobile portrait mode - keeping loader visible");
         return;
