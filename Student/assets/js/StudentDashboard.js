@@ -1106,7 +1106,6 @@ function initMemoriesCarousel() {
           lightbox.style.display = "none";
         }, 300);
 
-        // Resume auto-slide after closing
         setTimeout(() => {
           startAutoSlide();
         }, 500);
