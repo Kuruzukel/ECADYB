@@ -136,7 +136,6 @@
     }
   });
 
-  // Initialize navigation on page load
   document.addEventListener("DOMContentLoaded", function () {
     // Set initial active state
     updateActiveNav(currentPage);
