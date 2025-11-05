@@ -228,7 +228,6 @@
       const hasStudent =
         urlParams.has("student_id") && urlParams.has("student_name");
 
-      // Check if in mobile portrait mode
       const isMobile = window.innerWidth <= 768;
       const isPortrait = window.innerHeight > window.innerWidth;
 
