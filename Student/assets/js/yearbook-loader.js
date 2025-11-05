@@ -108,7 +108,6 @@
             self.loaderElement.style.visibility = "visible";
             self.loaderElement.style.pointerEvents = "auto";
           }
-          // Reset isLoaded so we can show the loader again if needed
           self.isLoaded = false;
         } else if (isMobile && !isPortrait) {
           console.log(
