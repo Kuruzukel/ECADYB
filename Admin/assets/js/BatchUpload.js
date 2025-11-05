@@ -827,7 +827,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 console.log("📦 Batch size:", currentBatch, "files");
                 console.log("📤 Upload endpoint:", uploadEndpoint);
                 xhr.open("POST", uploadEndpoint);
-                xhr.timeout = 300000; // 300 second (5 minute) timeout per batch
+                xhr.timeout = 300000;
 
                 uploadStartTime = Date.now();
                 xhr.send(batchFormData);
