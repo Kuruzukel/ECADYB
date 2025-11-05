@@ -851,7 +851,6 @@ window.addEventListener("DOMContentLoaded", () => {
                 console.error(`Batch ${batchNum} failed:`, batchResult.message);
               }
 
-              // Small delay between batches to prevent server overload
               if (batchEnd < totalFiles) {
                 console.log("Waiting 500ms before next batch...");
                 await new Promise((resolve) => setTimeout(resolve, 500));
