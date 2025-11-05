@@ -1081,7 +1081,6 @@ window.navigateYearbook = navigateYearbook;
 window.initializeYearbookMobileView = initializeYearbookMobileView;
 
 function initMemoriesCarousel() {
-  // Lightbox functionality for carousel images
   function showImageLightbox(imageSrc) {
     // Check if lightbox already exists
     let lightbox = document.getElementById("carousel-lightbox");
