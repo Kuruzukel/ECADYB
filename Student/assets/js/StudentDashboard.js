@@ -1029,7 +1029,6 @@ function navigateYearbook(direction) {
       item.classList.remove("mobile-active", "mobile-prev", "mobile-next");
     });
 
-    // Update index
     if (direction === "next") {
       window.currentYearbookIndex =
         (window.currentYearbookIndex + 1) % yearbooks.length;
