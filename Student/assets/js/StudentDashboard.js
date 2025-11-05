@@ -716,7 +716,6 @@ async function saveStudentChanges() {
     console.log("Response result:", result);
 
     if (result.success) {
-      // Check if no changes were detected
       if (result.message && result.message.includes("No changes detected")) {
         showNotification(
           "No changes detected, student record remains the same.",
