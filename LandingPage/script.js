@@ -140,7 +140,6 @@ function showImageLightbox(imageSrc) {
   lightboxImage.src = imageSrc;
   lightbox.style.display = "flex";
 
-  // Trigger animation
   setTimeout(() => {
     lightbox.classList.add("active");
   }, 10);
