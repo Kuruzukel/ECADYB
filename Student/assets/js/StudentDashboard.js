@@ -646,7 +646,6 @@ async function saveStudentChanges() {
 
   const formData = new FormData(form);
 
-  // Get collection name based on department
   const departmentCollectionMap = {
     "BS Marine Engineering": "bsme",
     "BS Marine Transportation": "bsmt",
