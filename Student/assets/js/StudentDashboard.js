@@ -85,7 +85,6 @@
 
           updateActiveNav(page);
 
-          // Update history
           if (updateHistory) {
             const pageURLs = {
               home: basePath + "StudentDashboard.php",
