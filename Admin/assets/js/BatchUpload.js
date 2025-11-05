@@ -738,7 +738,6 @@ window.addEventListener("DOMContentLoaded", () => {
                 batchFormData.append(`files[]`, input.files[i]);
               }
 
-              // Add batch year
               batchFormData.append("batch_year", selectedBatchYear);
               console.log("Added batch year to FormData:", selectedBatchYear);
 
