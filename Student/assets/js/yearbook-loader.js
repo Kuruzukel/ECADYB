@@ -387,7 +387,6 @@
         loader.style.pointerEvents = "auto";
         console.log("[Loader] Loader shown for student navigation");
 
-        // Ensure orientation message exists when showing loader again
         const loaderContent = loader.querySelector(".loader-content");
         if (
           loaderContent &&
