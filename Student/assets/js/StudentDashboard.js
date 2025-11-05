@@ -1063,7 +1063,6 @@ function initializeYearbookMobileView() {
   if (window.innerWidth <= 768) {
     const yearbooks = document.querySelectorAll(".yearbook-item");
     if (yearbooks.length > 0) {
-      // Reset to first item
       window.currentYearbookIndex = 0;
 
       // Set first item as active
