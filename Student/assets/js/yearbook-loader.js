@@ -123,7 +123,6 @@
         setTimeout(checkOrientation, 100);
       });
 
-      // Also listen for resize as a fallback
       window.addEventListener("resize", function () {
         checkOrientation();
       });
