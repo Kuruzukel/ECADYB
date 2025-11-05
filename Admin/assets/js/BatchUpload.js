@@ -730,7 +730,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
               const batchFormData = new FormData();
 
-              // Add files for this batch
               for (let i = batchStart; i < batchEnd; i++) {
                 console.log(
                   `Adding file ${i + 1} to batch:`,
