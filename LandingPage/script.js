@@ -136,7 +136,6 @@ function showImageLightbox(imageSrc) {
     });
   }
 
-  // Show the lightbox with the image
   const lightboxImage = lightbox.querySelector(".lightbox-image");
   lightboxImage.src = imageSrc;
   lightbox.style.display = "flex";
