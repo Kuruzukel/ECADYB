@@ -287,7 +287,6 @@
     hideLoader: function () {
       if (this.isLoaded) return;
 
-      // Final check: don't hide if in mobile portrait mode
       const isMobile = window.innerWidth <= 768;
       const isPortrait = window.innerHeight > window.innerWidth;
 
