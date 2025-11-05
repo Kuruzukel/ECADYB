@@ -1077,7 +1077,6 @@ function initializeYearbookMobileView() {
   }
 }
 
-// Make navigateYearbook available globally
 window.navigateYearbook = navigateYearbook;
 window.initializeYearbookMobileView = initializeYearbookMobileView;
 
