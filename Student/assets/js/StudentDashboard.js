@@ -825,8 +825,6 @@ async function checkStudentExists() {
   }
 }
 
-// checkStudentExists();
-
 function showNotification(message, type = "info") {
   const existingNotification = document.querySelector(".notification");
   if (existingNotification) {
