@@ -157,7 +157,6 @@
     });
   });
 
-  // Make loadPage available globally for potential external use
   window.navigateToPage = loadPage;
 })();
 
