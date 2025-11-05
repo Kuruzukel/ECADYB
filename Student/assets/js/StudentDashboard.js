@@ -1014,7 +1014,6 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-// Yearbook navigation functionality (also available in Yearbook.php)
 // Use window property to avoid redeclaration errors
 window.currentYearbookIndex = window.currentYearbookIndex || 0;
 
