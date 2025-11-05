@@ -268,7 +268,6 @@
       const self = this;
       this.timeout = setTimeout(function () {
         if (!self.isLoaded) {
-          // Check if in mobile portrait mode before forcing hide
           const isMobile = window.innerWidth <= 768;
           const isPortrait = window.innerHeight > window.innerWidth;
 
