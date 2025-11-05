@@ -1025,7 +1025,6 @@ function navigateYearbook(direction) {
     const yearbooks = document.querySelectorAll(".yearbook-item");
     if (yearbooks.length === 0) return;
 
-    // Remove current active classes
     yearbooks.forEach((item) => {
       item.classList.remove("mobile-active", "mobile-prev", "mobile-next");
     });
