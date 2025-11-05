@@ -26,7 +26,6 @@
       .catch((error) => {});
   }
 
-  // Send initial ping
   sendSessionPing();
 
   // Send heartbeat every 60 seconds
