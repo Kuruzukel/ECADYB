@@ -100,7 +100,6 @@ function showImageLightbox(imageSrc) {
   let lightbox = document.getElementById("carousel-lightbox");
 
   if (!lightbox) {
-    // Create lightbox
     lightbox = document.createElement("div");
     lightbox.id = "carousel-lightbox";
     lightbox.className = "carousel-lightbox";
