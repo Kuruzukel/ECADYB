@@ -857,7 +857,6 @@ window.addEventListener("DOMContentLoaded", () => {
               }
             }
 
-            // All batches completed
             console.log("\n=== UPLOAD COMPLETE ===");
             console.log(`Total uploaded: ${totalUploaded}`);
             console.log(`Total failed: ${totalFailed}`);
