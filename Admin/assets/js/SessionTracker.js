@@ -23,9 +23,7 @@
           }
         }
       })
-      .catch((error) => {
-        // These are non-critical and shouldn't pollute the console
-      });
+      .catch((error) => {});
   }
 
   // Send initial ping
