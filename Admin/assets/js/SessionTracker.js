@@ -28,7 +28,6 @@
 
   sendSessionPing();
 
-  // Send heartbeat every 60 seconds
   setInterval(sendSessionPing, 60000);
 
   // Send logout ping when user leaves
