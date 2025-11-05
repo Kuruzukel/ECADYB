@@ -780,7 +780,6 @@ window.addEventListener("DOMContentLoaded", () => {
                     console.error("HTTP error status:", xhr.status);
                     let errorMessage = `Upload failed with status ${xhr.status}`;
 
-                    // Provide specific error messages for common issues
                     if (xhr.status === 502) {
                       errorMessage =
                         "Server gateway error (502). The upload may have timed out or the server is overloaded. Try uploading fewer files at once or wait a moment and try again.";
