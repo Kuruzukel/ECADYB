@@ -1014,7 +1014,6 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-// Use window property to avoid redeclaration errors
 window.currentYearbookIndex = window.currentYearbookIndex || 0;
 
 function navigateYearbook(direction) {
