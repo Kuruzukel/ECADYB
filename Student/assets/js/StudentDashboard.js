@@ -109,7 +109,6 @@
           }
         } else {
           console.error("Failed to load page:", data.error);
-          // Fallback to regular navigation
           window.location.href = basePath + pageURLs[page];
         }
       })
