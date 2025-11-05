@@ -256,7 +256,6 @@ if (track) {
   let autoSlideInterval = null;
 
   function startAutoSlide() {
-    // Clear any existing interval first
     if (autoSlideInterval) {
       clearInterval(autoSlideInterval);
     }
