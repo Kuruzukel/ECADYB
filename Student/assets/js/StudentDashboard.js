@@ -760,7 +760,7 @@ function removeSpaces(input) {
 }
 
 function formatAcademicYear(input) {
-  let value = input.value.replace(/\D/g, ""); // Remove non-digits
+  let value = input.value.replace(/\D/g, "");
   if (value.length >= 4) {
     value = value.substring(0, 4) + "-" + value.substring(4, 8);
   }
