@@ -137,7 +137,6 @@
   });
 
   document.addEventListener("DOMContentLoaded", function () {
-    // Set initial active state
     updateActiveNav(currentPage);
 
     // Attach click handlers to all navigation links
