@@ -691,7 +691,6 @@ window.addEventListener("DOMContentLoaded", () => {
           console.log("Base path:", basePath);
           console.log("Window location origin:", window.location.origin);
 
-          // Upload in batches of 5 to avoid server timeout
           const BATCH_SIZE = 5;
           const totalFiles = input.files.length;
           let totalUploaded = 0;
