@@ -1019,7 +1019,7 @@ window.currentYearbookIndex = window.currentYearbookIndex || 0;
 function navigateYearbook(direction) {
   try {
     if (window.innerWidth > 768) {
-      return; // Desktop navigation not needed for this implementation
+      return;
     }
 
     const yearbooks = document.querySelectorAll(".yearbook-item");
