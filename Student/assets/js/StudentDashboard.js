@@ -688,7 +688,6 @@ async function saveStudentChanges() {
   console.log("Collection name:", collectionName);
   console.log("Student data:", window.studentData);
 
-  // Log individual form field values
   console.log("Individual form fields:");
   console.log("- student_id:", formData.get("student_id"));
   console.log("- email:", formData.get("email"));
