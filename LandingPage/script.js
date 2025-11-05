@@ -112,7 +112,6 @@ function showImageLightbox(imageSrc) {
     `;
     document.body.appendChild(lightbox);
 
-    // Add close handlers
     const closeBtn = lightbox.querySelector(".lightbox-close");
     const overlay = lightbox.querySelector(".lightbox-overlay");
 
