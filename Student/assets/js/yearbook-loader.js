@@ -117,7 +117,6 @@
         }
       }
 
-      // Check on load
       checkOrientation();
 
       // Listen for orientation changes
