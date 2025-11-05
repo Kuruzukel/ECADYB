@@ -129,7 +129,6 @@ function showImageLightbox(imageSrc) {
     closeBtn.addEventListener("click", closeLightbox);
     overlay.addEventListener("click", closeLightbox);
 
-    // Close on escape key
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && lightbox.classList.contains("active")) {
         closeLightbox();
