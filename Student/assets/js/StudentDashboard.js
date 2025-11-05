@@ -1067,7 +1067,6 @@ function initializeYearbookMobileView() {
 
       yearbooks[0].classList.add("mobile-active");
 
-      // Set adjacent items
       if (yearbooks.length > 1) {
         yearbooks[yearbooks.length - 1].classList.add("mobile-prev");
       }
