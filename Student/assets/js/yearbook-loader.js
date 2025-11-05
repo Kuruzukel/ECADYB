@@ -113,7 +113,6 @@
           console.log(
             "[Loader] Mobile landscape mode detected - checking if ready to hide"
           );
-          // In landscape, check readiness to potentially hide the loader
           self.checkReadiness();
         }
       }
