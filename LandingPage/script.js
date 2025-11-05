@@ -243,7 +243,6 @@ if (track) {
     }
   });
 
-  // Add click handler to pause carousel and show image in lightbox
   track.addEventListener("click", (e) => {
     if (e.target.classList.contains("carousel-img")) {
       // Stop auto-slide
