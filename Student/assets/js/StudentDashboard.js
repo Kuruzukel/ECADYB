@@ -683,7 +683,6 @@ async function saveStudentChanges() {
     }
   });
 
-  // Debug logging
   console.log("Form data being sent:", data);
   console.log("Student department:", studentDepartment);
   console.log("Collection name:", collectionName);
