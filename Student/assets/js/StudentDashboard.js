@@ -675,7 +675,6 @@ async function saveStudentChanges() {
     milestone: formData.get("milestone"),
   };
 
-  // Remove empty or null values to avoid unnecessary updates
   Object.keys(data).forEach((key) => {
     if (data[key] === null || data[key] === undefined || data[key] === "") {
       if (key !== "original_student_id" && key !== "collection") {
