@@ -96,16 +96,15 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-// Lightbox functionality for carousel images
 function showImageLightbox(imageSrc) {
   // Check if lightbox already exists
-  let lightbox = document.getElementById('carousel-lightbox');
-  
+  let lightbox = document.getElementById("carousel-lightbox");
+
   if (!lightbox) {
     // Create lightbox
-    lightbox = document.createElement('div');
-    lightbox.id = 'carousel-lightbox';
-    lightbox.className = 'carousel-lightbox';
+    lightbox = document.createElement("div");
+    lightbox.id = "carousel-lightbox";
+    lightbox.className = "carousel-lightbox";
     lightbox.innerHTML = `
       <div class="lightbox-overlay"></div>
       <div class="lightbox-content">
@@ -114,42 +113,42 @@ function showImageLightbox(imageSrc) {
       </div>
     `;
     document.body.appendChild(lightbox);
-    
+
     // Add close handlers
-    const closeBtn = lightbox.querySelector('.lightbox-close');
-    const overlay = lightbox.querySelector('.lightbox-overlay');
-    
+    const closeBtn = lightbox.querySelector(".lightbox-close");
+    const overlay = lightbox.querySelector(".lightbox-overlay");
+
     const closeLightbox = () => {
-      lightbox.classList.remove('active');
+      lightbox.classList.remove("active");
       setTimeout(() => {
-        lightbox.style.display = 'none';
+        lightbox.style.display = "none";
       }, 300);
-      
+
       // Resume auto-slide after closing
       setTimeout(() => {
         startAutoSlide();
       }, 500);
     };
-    
-    closeBtn.addEventListener('click', closeLightbox);
-    overlay.addEventListener('click', closeLightbox);
-    
+
+    closeBtn.addEventListener("click", closeLightbox);
+    overlay.addEventListener("click", closeLightbox);
+
     // Close on escape key
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && lightbox.classList.contains("active")) {
         closeLightbox();
       }
     });
   }
-  
+
   // Show the lightbox with the image
-  const lightboxImage = lightbox.querySelector('.lightbox-image');
+  const lightboxImage = lightbox.querySelector(".lightbox-image");
   lightboxImage.src = imageSrc;
-  lightbox.style.display = 'flex';
-  
+  lightbox.style.display = "flex";
+
   // Trigger animation
   setTimeout(() => {
-    lightbox.classList.add('active');
+    lightbox.classList.add("active");
   }, 10);
 }
 
@@ -256,7 +255,7 @@ if (track) {
     if (e.target.classList.contains("carousel-img")) {
       // Stop auto-slide
       stopAutoSlide();
-      
+
       // Show lightbox with the image
       showImageLightbox(e.target.src);
     }
@@ -284,8 +283,9 @@ if (track) {
   }
 
   // Detect if device supports touch
-  const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-  
+  const isTouchDevice =
+    "ontouchstart" in window || navigator.maxTouchPoints > 0;
+
   // Only add mouse hover events on non-touch devices to prevent conflicts
   if (!isTouchDevice) {
     track.addEventListener("mouseenter", stopAutoSlide);
