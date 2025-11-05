@@ -712,7 +712,6 @@ async function saveStudentChanges() {
 
     const result = await response.json();
 
-    // Debug logging
     console.log("Response status:", response.status);
     console.log("Response result:", result);
 
