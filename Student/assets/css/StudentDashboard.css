@@ -2395,7 +2395,6 @@ header.fading {
     opacity: 1 !important;
   }
 
-  /* Ensure pointer events work correctly on touch */
   .carousel-track {
     touch-action: pan-x !important;
     -webkit-user-select: none;
