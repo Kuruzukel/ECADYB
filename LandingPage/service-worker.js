@@ -1,11 +1,12 @@
 // service-worker.js
 
 /*
-const CACHE_VERSION = "v7";
+const CACHE_VERSION = "v8";
 const CACHE_PREFIX = "ecadyb";
 const STATIC_CACHE = `${CACHE_PREFIX}-static-${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `${CACHE_PREFIX}-dynamic-${CACHE_VERSION}`;
-const CACHE_WHITELIST = [STATIC_CACHE, DYNAMIC_CACHE];
+const IMAGE_CACHE = `${CACHE_PREFIX}-images-${CACHE_VERSION}`;
+const CACHE_WHITELIST = [STATIC_CACHE, DYNAMIC_CACHE, IMAGE_CACHE];
 
 // Critical files to cache for offline functionality
 const STATIC_ASSETS = [
@@ -27,15 +28,20 @@ const STATIC_ASSETS = [
   "/Public/assets/css/Loader.css",
 ];
 
-// CDN assets that should be cached
-const CDN_ASSETS = [
-  // Core logos
-  "https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png",
+// High-priority images that should be cached immediately on install
+const PRIORITY_IMAGES = [
+  // Core logos - loaded first for branding
   "https://ECADYB.b-cdn.net/img/ECALOGO.png",
+  "https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png",
   "https://ECADYB.b-cdn.net/img/GRALLERYLOGO4.0.png",
+  "https://ecadyb.b-cdn.net/img/ECABG1.jpg",
   "https://ECADYB.b-cdn.net/img/ABOUTIMG.png",
+  "https://ECADYB.b-cdn.net/img/ADMINGRALLERYLOGO.png",
+];
 
-  // Yearbook covers
+// Secondary images that should be cached but with lower priority
+const SECONDARY_IMAGES = [
+  // Yearbook covers - loaded after priority images
   "https://ECADYB.b-cdn.net/img/YB COVER/MaritimeEducation.png",
   "https://ECADYB.b-cdn.net/img/YB COVER/TourismManagement.png",
   "https://ECADYB.b-cdn.net/img/YB COVER/CriminalJusticeEducation.png",
@@ -43,22 +49,36 @@ const CDN_ASSETS = [
   "https://ECADYB.b-cdn.net/img/YB COVER/BusinessAdministration.png",
   "https://ECADYB.b-cdn.net/img/YB COVER/Education.png",
   "https://ECADYB.b-cdn.net/img/YB COVER/Nursing.png",
-  "https://ecadyb.b-cdn.net/img/ECABG1.jpg",
-  "https://ECADYB.b-cdn.net/img/ADMINGRALLERYLOGO.png",
+  
+  // Additional carousel images
+  "https://ECADYB.b-cdn.net/img/CAROUSEL/carousel1.jpg",
+  "https://ECADYB.b-cdn.net/img/CAROUSEL/carousel2.jpg",
+  "https://ECADYB.b-cdn.net/img/CAROUSEL/carousel3.jpg",
+  "https://ECADYB.b-cdn.net/img/CAROUSEL/carousel4.jpg",
+  "https://ECADYB.b-cdn.net/img/CAROUSEL/carousel5.jpg",
+  
+  // Department logos
+  "https://ECADYB.b-cdn.net/img/SampleLogos/BSBALOGO.png",
+  "https://ECADYB.b-cdn.net/img/SampleLogos/BSCJELOGO.png",
+  "https://ECADYB.b-cdn.net/img/SampleLogos/BSELOGO.png",
+  "https://ECADYB.b-cdn.net/img/SampleLogos/BSISLOGO.png",
+  "https://ECADYB.b-cdn.net/img/SampleLogos/BSMELOGO.png",
+  "https://ECADYB.b-cdn.net/img/SampleLogos/BSNLOGO.png",
+  "https://ECADYB.b-cdn.net/img/SampleLogos/BSTMLOGO.png",
 ];
 
-// Install event - cache critical resources
+// Install event - cache critical resources with optimized image loading
 self.addEventListener("install", (event) => {
   console.log(`[ServiceWorker] Installing version ${CACHE_VERSION}...`);
 
   // Skip waiting to activate the new service worker immediately
   self.skipWaiting();
 
-  // Cache static assets
+  // Cache all critical resources in parallel for faster initial load
   event.waitUntil(
-    caches
-      .open(STATIC_CACHE)
-      .then((cache) => {
+    Promise.all([
+      // Cache static assets
+      caches.open(STATIC_CACHE).then((cache) => {
         console.log("[ServiceWorker] Caching static assets");
         return Promise.allSettled(
           STATIC_ASSETS.map((asset) =>
@@ -80,32 +100,77 @@ self.addEventListener("install", (event) => {
             );
           }
         });
-      })
-      .then(() => {
-        // Cache CDN assets in the background
-        caches.open(DYNAMIC_CACHE).then((cache) => {
-          console.log("[ServiceWorker] Caching CDN assets");
+      }),
+
+      // Cache priority images immediately for instant display
+      caches.open(IMAGE_CACHE).then((cache) => {
+        console.log("[ServiceWorker] Caching priority images");
+        return Promise.allSettled(
+          PRIORITY_IMAGES.map((url) =>
+            fetch(url, { 
+              credentials: "omit",
+              mode: "cors",
+              cache: "force-cache" // Use browser cache if available
+            })
+              .then((response) => {
+                if (response.ok) {
+                  console.log(`[ServiceWorker] Cached priority image: ${url}`);
+                  return cache.put(url, response);
+                }
+                console.warn(
+                  `[ServiceWorker] Failed to cache priority image (${response.status}): ${url}`
+                );
+              })
+              .catch((err) => {
+                console.warn(
+                  `[ServiceWorker] Failed to fetch priority image: ${url}`,
+                  err
+                );
+              })
+          )
+        ).then((results) => {
+          const succeeded = results.filter((r) => r.status === "fulfilled").length;
+          console.log(
+            `[ServiceWorker] Cached ${succeeded}/${PRIORITY_IMAGES.length} priority images`
+          );
+        });
+      }),
+
+      // Cache secondary images with slight delay to prioritize critical assets
+      new Promise((resolve) => setTimeout(resolve, 500)).then(() => {
+        return caches.open(IMAGE_CACHE).then((cache) => {
+          console.log("[ServiceWorker] Caching secondary images");
           return Promise.allSettled(
-            CDN_ASSETS.map((url) =>
-              fetch(url, { credentials: "omit" })
+            SECONDARY_IMAGES.map((url) =>
+              fetch(url, { 
+                credentials: "omit",
+                mode: "cors",
+                cache: "force-cache"
+              })
                 .then((response) => {
                   if (response.ok) {
                     return cache.put(url, response);
                   }
                   console.warn(
-                    `[ServiceWorker] Failed to cache CDN asset (${response.status}): ${url}`
+                    `[ServiceWorker] Failed to cache secondary image (${response.status}): ${url}`
                   );
                 })
                 .catch((err) => {
                   console.warn(
-                    `[ServiceWorker] Failed to fetch CDN asset: ${url}`,
+                    `[ServiceWorker] Failed to fetch secondary image: ${url}`,
                     err
                   );
                 })
             )
-          );
+          ).then((results) => {
+            const succeeded = results.filter((r) => r.status === "fulfilled").length;
+            console.log(
+              `[ServiceWorker] Cached ${succeeded}/${SECONDARY_IMAGES.length} secondary images`
+            );
+          });
         });
       })
+    ])
   );
 });
 
@@ -173,22 +238,81 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Strategy 2: Cache-first for static assets and images
+  // Strategy 2: Cache-first for images with dedicated image cache
   if (
     request.destination === "image" ||
+    url.hostname === "ecadyb.b-cdn.net" ||
+    url.pathname.includes("/img/") ||
+    /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(url.pathname)
+  ) {
+    event.respondWith(cacheFirstImage(request));
+    return;
+  }
+
+  // Strategy 3: Cache-first for static assets (CSS, JS)
+  if (
     request.destination === "style" ||
-    request.destination === "script" ||
-    url.hostname === "ecadyb.b-cdn.net"
+    request.destination === "script"
   ) {
     event.respondWith(cacheFirst(request));
     return;
   }
 
-  // Strategy 3: Stale-while-revalidate for HTML and other content
+  // Strategy 4: Stale-while-revalidate for HTML and other content
   event.respondWith(staleWhileRevalidate(request));
 });
 
-// Cache-first strategy
+// Cache-first strategy specifically optimized for images
+async function cacheFirstImage(request) {
+  try {
+    // Try to get from cache first - images should load instantly if cached
+    const cachedResponse = await caches.match(request);
+    if (cachedResponse) {
+      console.log(`[ServiceWorker] Serving cached image: ${request.url}`);
+      return cachedResponse;
+    }
+
+    // If not in cache, fetch from network
+    console.log(`[ServiceWorker] Fetching image from network: ${request.url}`);
+    const networkResponse = await fetch(request, {
+      credentials: "omit",
+      mode: "cors"
+    });
+    
+    if (networkResponse.ok) {
+      // Clone the response because it can only be consumed once
+      const responseToCache = networkResponse.clone();
+      caches
+        .open(IMAGE_CACHE)
+        .then((cache) => {
+          cache.put(request, responseToCache);
+          console.log(`[ServiceWorker] Cached new image: ${request.url}`);
+        })
+        .catch((err) =>
+          console.warn(`[ServiceWorker] Failed to cache image: ${request.url}`, err)
+        );
+    }
+    return networkResponse;
+  } catch (error) {
+    console.warn(
+      `[ServiceWorker] Cache-first image failed for: ${request.url}`,
+      error
+    );
+
+    // Try to return a fallback response if available
+    const fallbackResponse =
+      (await caches.match("/img/placeholder.png")) ||
+      new Response("Image unavailable", {
+        status: 503,
+        statusText: "Service Unavailable",
+        headers: { "Content-Type": "text/plain" },
+      });
+
+    return fallbackResponse;
+  }
+}
+
+// Cache-first strategy for static assets
 async function cacheFirst(request) {
   try {
     // Try to get from cache first
