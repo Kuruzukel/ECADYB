@@ -5988,7 +5988,6 @@ header.fading {
   font-size: 1rem;
 }
 
-/* Show only background image for screens 319px and below */
 @media (max-width: 319px) {
   * {
     display: none !important;
