@@ -4870,7 +4870,6 @@ header.fading {
     padding: 0 0.3rem;
   }
 
-  /* Hide header profile dropdown on mobile */
   header .profile-dropdown {
     display: none !important;
   }
