@@ -3792,7 +3792,6 @@ header.fading {
     display: none;
   }
 
-  /* Hide header profile dropdown on tablet */
   header .profile-dropdown {
     display: none !important;
   }
