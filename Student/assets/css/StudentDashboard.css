@@ -2293,7 +2293,6 @@ header.fading {
   }
 }
 
-/* Landscape orientation adjustments */
 @media (max-height: 600px) and (orientation: landscape) {
   .lightbox-close {
     top: 8px;
