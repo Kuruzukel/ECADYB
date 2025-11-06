@@ -4325,7 +4325,6 @@ header.fading {
     display: none !important;
   }
 
-  /* Bottom Navigation Bar for Mobile */
   .bottom-nav {
     position: fixed;
     bottom: 0.5rem;
