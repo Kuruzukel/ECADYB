@@ -351,8 +351,8 @@ header.fading {
   left: 0;
   width: 100%;
   height: 100%;
-  background: url("https://ECADYB.b-cdn.net/img/ECABG.jpg") center center/cover
-    no-repeat;
+  background: url("https://ECADYB.b-cdn.net/img/ECADYB1.jpg") center
+    center/cover no-repeat;
   pointer-events: none;
   filter: blur(6px);
   transform: scale(1.1);
