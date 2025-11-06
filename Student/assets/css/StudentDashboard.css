@@ -6554,7 +6554,6 @@ h2.section-title {
     transform: translateY(-50%) scale(0.95) !important;
   }
 
-  /* Fix for translateY not working - force positioning */
   .yearbook-slider-nav.prev,
   .yearbook-slider-nav.next {
     position: absolute !important;
