@@ -4987,7 +4987,6 @@ header.fading {
     text-align: center !important;
   }
 
-  /* Student Info Styling for Mobile - Hide inline, show mobile version */
   .student-info-inline {
     display: none !important;
   }
