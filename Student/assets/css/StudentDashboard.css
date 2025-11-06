@@ -6576,7 +6576,6 @@ h2.section-title {
   }
 }
 
-/* Force center alignment for about title - highest specificity */
 body .about-hero-section .about-hero-content .section-title,
 body .about-section .section-title,
 body .about-hero-content .section-title {
