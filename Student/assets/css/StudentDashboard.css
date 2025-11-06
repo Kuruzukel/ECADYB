@@ -6590,7 +6590,6 @@ body .about-hero-content .section-title {
   html:fullscreen .management-name {
   }
   html:-webkit-full-screen .management-name {
-    /* Add your CSS here */
   }
   html:-moz-full-screen .management-name {
     /* Add your CSS here */
