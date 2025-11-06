@@ -6206,7 +6206,6 @@ h2.section-title {
       0 0 0 2px rgba(252, 218, 21, 0.65);
   }
 
-  /* Fix for translateY not working - force positioning */
   .yearbook-slider-nav.prev,
   .yearbook-slider-nav.next {
     position: absolute !important;
