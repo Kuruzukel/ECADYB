@@ -6615,7 +6615,6 @@ body .about-hero-content .section-title {
   }
 
   html:fullscreen .cards-container {
-    /* Add your CSS here */
   }
   html:-webkit-full-screen .cards-container {
     /* Add your CSS here */
