@@ -6393,7 +6393,6 @@ h2.section-title {
     background: rgba(13, 57, 217, 0.8) !important;
   }
 
-  /* Mouse down effect */
   .yearbook-slider-nav.prev:hover:active,
   .yearbook-slider-nav.next:hover:active {
     transform: translateY(-50%) scale(0.85) !important;
