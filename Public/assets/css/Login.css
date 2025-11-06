@@ -74,10 +74,12 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg,
-      transparent,
-      rgba(255, 255, 255, 0.4),
-      transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
   transition: left 0.6s;
 }
 
@@ -124,7 +126,6 @@
 }
 
 @keyframes pulseError {
-
   0%,
   100% {
     transform: scale(1);
@@ -175,8 +176,6 @@
   animation: errorModalSlideOut 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-
-
 .success-modal .error-modal-content {
   border: 1px solid rgba(40, 167, 69, 0.2);
   box-shadow: 0 20px 40px rgba(40, 167, 69, 0.15), 0 8px 16px rgba(0, 0, 0, 0.1),
@@ -189,7 +188,6 @@
 }
 
 @keyframes pulseSuccess {
-
   0%,
   100% {
     transform: scale(1);
@@ -435,12 +433,14 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(90deg,
-      transparent 0%,
-      rgba(255, 255, 255, 0.03) 25%,
-      rgba(99, 102, 241, 0.1) 50%,
-      rgba(255, 255, 255, 0.03) 75%,
-      transparent 100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.03) 25%,
+    rgba(99, 102, 241, 0.1) 50%,
+    rgba(255, 255, 255, 0.03) 75%,
+    transparent 100%
+  );
   background-size: 400% 100%;
   animation: shimmerEffect 1s ease-out;
   z-index: 9998;
@@ -454,10 +454,12 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: radial-gradient(circle at center,
-      rgba(99, 102, 241, 0.1) 0%,
-      rgba(112, 44, 180, 0.05) 30%,
-      transparent 70%);
+  background: radial-gradient(
+    circle at center,
+    rgba(99, 102, 241, 0.1) 0%,
+    rgba(112, 44, 180, 0.05) 30%,
+    transparent 70%
+  );
   z-index: 9999;
   pointer-events: none;
   animation: particleFloat 1s ease-out;
@@ -469,7 +471,7 @@
 }
 
 body {
-  background-image: url("https://ECADYB.b-cdn.net/img/ECADYB1.jpg");
+  background-image: url("https://ecadyb.b-cdn.net/img/ECABG1.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   background-color: #021326;
@@ -675,10 +677,12 @@ button[type="submit"]::before {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg,
-      transparent,
-      rgba(255, 255, 255, 0.2),
-      transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
   transition: left 0.5s;
 }
 

@@ -146,7 +146,7 @@ body {
   align-items: center;
   justify-content: center;
   margin: 0;
-  background-image: url("https://ECADYB.b-cdn.net/img/ECADYB1.jpg");
+  background-image: url("https://ecadyb.b-cdn.net/img/ECABG1.jpg");
   background-color: #021326;
   background-size: cover;
   background-position: center;
@@ -208,8 +208,8 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: url("https://ECADYB.b-cdn.net/img/ECADYB1.jpg") center
-    center/cover no-repeat;
+  background: url("https://ecadyb.b-cdn.net/img/ECABG1.jpg") center center/cover
+    no-repeat;
   pointer-events: none;
   filter: blur(6px);
   transform: scale(1.1);

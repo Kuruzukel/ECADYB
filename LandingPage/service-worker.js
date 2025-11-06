@@ -43,7 +43,7 @@ const CDN_ASSETS = [
   "https://ECADYB.b-cdn.net/img/YB COVER/BusinessAdministration.png",
   "https://ECADYB.b-cdn.net/img/YB COVER/Education.png",
   "https://ECADYB.b-cdn.net/img/YB COVER/Nursing.png",
-  "https://ECADYB.b-cdn.net/img/ECADYB1.jpg",
+  "https://ecadyb.b-cdn.net/img/ECABG1.jpg",
   "https://ECADYB.b-cdn.net/img/ADMINGRALLERYLOGO.png",
 ];
 
