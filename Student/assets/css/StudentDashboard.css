@@ -2283,7 +2283,6 @@ header.fading {
   }
 }
 
-/* Very small mobile screens */
 @media (max-width: 375px) {
   .lightbox-close {
     top: 8px;
