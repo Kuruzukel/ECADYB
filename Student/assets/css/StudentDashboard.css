@@ -4978,7 +4978,6 @@ header.fading {
     padding-bottom: 85px;
   }
 
-  /* Fix footer centering for mobile */
   .footer-inner-container {
     justify-content: center !important;
     text-align: center;
