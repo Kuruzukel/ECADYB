@@ -2264,7 +2264,6 @@ header.fading {
   }
 }
 
-/* Mobile portrait */
 @media (max-width: 480px) {
   .lightbox-close {
     top: 10px;
