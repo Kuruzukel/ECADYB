@@ -6056,7 +6056,6 @@ h2.section-title {
   display: none !important;
 }
 
-/* Ensure consistent sizing across all breakpoints */
 @media (max-width: 768px) and (min-width: 600px) {
   .about-section .section-title,
   .about-hero-section .section-title,
