@@ -6626,7 +6626,6 @@ body .about-hero-content .section-title {
   html:fullscreen .student-card {
   }
   html:-webkit-full-screen .student-card {
-    /* Add your CSS here */
   }
   html:-moz-full-screen .student-card {
     /* Add your CSS here */
