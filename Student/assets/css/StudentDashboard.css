@@ -6587,7 +6587,6 @@ body .about-hero-content .section-title {
   font-size: 2rem !important;
 }
 
-/* Force center alignment for mobile */
 @media (max-width: 768px) {
   body .about-hero-section .about-hero-content .section-title,
   body .about-section .section-title,
