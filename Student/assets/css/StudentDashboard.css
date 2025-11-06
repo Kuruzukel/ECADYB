@@ -1282,8 +1282,6 @@ header.fading {
   transform: translateZ(0);
 }
 
-/* Removed hover effect for active yearbook items */
-
 .yearbook-item.active {
   transform: scale(0.9);
   opacity: 0.8;
