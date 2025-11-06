@@ -18,12 +18,12 @@ A comprehensive web platform designed for educational institutions to create, ma
 
 ### ✨ Key Features
 
-- 📚 **Digital Yearbook Management** - Create beautiful, interactive yearbooks
-- 👥 **Student Profile System** - Comprehensive student information management
-- 🖼️ **Gallery Management** - Organize and display graduation photos
-- 🔐 **Secure Authentication** - Role-based access control
-- ☁️ **Cloud Storage** - Powered by Bunny CDN
-- 📧 **Email Notifications** - Automated email delivery system
+- 📚 **Digital Yearbook Management** - Full-featured platform for creating, customizing, and publishing interactive digital yearbooks with intuitive content management workflows
+- 👤 **Student Profile System** - Centralized database for managing student records, biographical information, and academic achievements with secure data handling
+- 🖼️ **Media Gallery Management** - Enterprise-grade photo organization system with batch upload capabilities, categorization, and high-resolution image display
+- 🔐 **Authentication & Authorization** - Multi-tier role-based access control (RBAC) system with secure session management and granular permission settings
+- ☁️ **Cloud-Native Storage Integration** - Scalable CDN-backed storage infrastructure powered by Bunny.net for optimized global content delivery
+- 📧 **Automated Email Service** - Configurable email notification system supporting both SMTP and API-based delivery (SendGrid) for reliable communication
 
 ---
 

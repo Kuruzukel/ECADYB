@@ -1,33 +1,97 @@
-# Composer
+# ============================================
+# 📦 Dependencies
+# ============================================
+/vendor/
 composer.lock
+composer.phar
+node_modules/
+package-lock.json
 
-# Environment files
+# ============================================
+# 🔐 Environment & Credentials
+# ============================================
 .env
 .env.local
 .env.production
+.env.*.local
+.env.backup
 
 # Configuration files with sensitive credentials
 Connection/Configuration/EmailConfig.php
 Connection/Configuration/BunnyConfig.php
+Connection/Configuration/DatabaseConfig.php
+*Config.local.php
 
-# Documentation files (optional)
-DEPLOYMENT.md
-DISMISS_ALERTS.md
-RAILWAY_SETUP.md
-SECURITY.md
-SENDGRID_SETUP.md
-
-# IDE files
+# ============================================
+# 💻 IDE & Editor Files
+# ============================================
 .vscode/
 .idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+.project
+.settings/
+.buildpath
+*.code-workspace
 
-# OS files
+# ============================================
+# 🖥️ Operating System Files
+# ============================================
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+.AppleDouble
+.LSOverride
 Thumbs.db
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
 
-# Logs
+# ============================================
+# 📊 Logs & Debug Files
+# ============================================
 *.log
+*.log.*
+logs/
+error_log
+debug.log
+php_errors.log
+access.log
 
-# Temporary files
+# ============================================
+# 🗂️ Temporary & Cache Files
+# ============================================
 *.tmp
-*.temp 
+*.temp
+*.cache
+*.bak
+*.backup
+*.old
+*.orig
+cache/
+temp/
+tmp/
+
+# ============================================
+# 🔧 Build & Distribution Files
+# ============================================
+dist/
+build/
+*.zip
+*.tar.gz
+*.rar
+
+# ============================================
+# 🧪 Testing & Coverage
+# ============================================
+.phpunit.result.cache
+coverage/
+.coverage
+phpunit.xml
+phpunit.xml.dist
