@@ -425,7 +425,6 @@ header.fading {
   font-family: "Segoe UI", sans-serif;
 }
 
-/* Media Queries for Welcome Text Responsiveness */
 /* Notification Dropdown Centering for All Responsive Breakpoints */
 @media (max-width: 768px) and (min-width: 600px) {
   .hero-welcome-text {
