@@ -6579,7 +6579,6 @@ body .about-hero-content .section-title {
 /* Large Desktop Fullscreen (1200px - 1439px) */
 @media (max-width: 1439px) and (min-width: 1200px) {
   html:fullscreen .top-management-page {
-    /* Add your CSS here */
   }
   html:-webkit-full-screen .top-management-page {
     /* Add your CSS here */
