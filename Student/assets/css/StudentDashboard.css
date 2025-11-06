@@ -2390,7 +2390,6 @@ header.fading {
     background: #021326;
   }
 
-  /* Disable all hover effects on touch devices for carousel */
   .carousel-track img:hover {
     transform: none !important;
     opacity: 1 !important;
