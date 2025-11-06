@@ -6581,7 +6581,6 @@ body .about-hero-content .section-title {
   html:fullscreen .top-management-page {
   }
   html:-webkit-full-screen .top-management-page {
-    /* Add your CSS here */
   }
   html:-moz-full-screen .top-management-page {
     /* Add your CSS here */
