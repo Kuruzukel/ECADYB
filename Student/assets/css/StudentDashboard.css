@@ -5035,7 +5035,6 @@ header.fading {
   }
 }
 
-/* Small Tablet Landscape (600px - 768px portrait becomes 800px - 1023px landscape) */
 @media only screen and (min-width: 800px) and (max-width: 1023px) and (orientation: landscape) {
   .yearbook-iframe-container:fullscreen,
   .yearbook-iframe-container:-webkit-full-screen,
