@@ -1278,8 +1278,6 @@ header.fading {
   display: none;
 }
 
-/* Removed hover effect for yearbook items when background is shown */
-
 .yearbook-item {
   transform: translateZ(0);
 }
