@@ -6606,7 +6606,6 @@ body .about-hero-content .section-title {
   }
 
   html:fullscreen .management-message {
-    /* Add your CSS here */
   }
   html:-webkit-full-screen .management-message {
     /* Add your CSS here */
