@@ -2236,7 +2236,6 @@ header.fading {
   transform: rotate(90deg) scale(1.1);
 }
 
-/* Tablet screens */
 @media (max-width: 1024px) and (min-width: 769px) {
   .lightbox-close {
     top: 15px;
