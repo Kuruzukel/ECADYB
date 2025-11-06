@@ -6214,7 +6214,6 @@ h2.section-title {
     transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
   }
 
-  /* Active state with higher specificity - more visible scale */
   .yearbook-slider-nav.prev:active,
   .yearbook-slider-nav.next:active {
     transform: translateY(-50%) scale(0.85) !important;
