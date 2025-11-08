@@ -26,6 +26,13 @@
   }
 
   function loadPage(page, updateHistory = true) {
+    const yearbookPath = basePath + "Yearbook.php";
+
+    if (page === "yearbook") {
+      window.location.href = yearbookPath;
+      return;
+    }
+
     if (isLoading || page === currentPage) return;
 
     isLoading = true;
@@ -89,7 +96,7 @@
             const pageURLs = {
               home: basePath + "StudentDashboard.php",
               about: basePath + "About.php",
-              yearbook: basePath + "Yearbook.php",
+              yearbook: yearbookPath,
               memories: basePath + "Memories.php",
             };
             window.history.pushState(
