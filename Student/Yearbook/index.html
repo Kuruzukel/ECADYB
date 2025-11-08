@@ -1694,16 +1694,18 @@
         // Add fullscreen activation on first user interaction
         var hasUserInteracted = false;
         var fullscreenActivated = false;
-        
+
         function activateFullscreenOnInteraction() {
           if (!hasUserInteracted && !fullscreenActivated) {
             hasUserInteracted = true;
-            console.log("🔍 User interaction detected - entering fullscreen mode");
-            
+            console.log(
+              "🔍 User interaction detected - entering fullscreen mode"
+            );
+
             // Small delay to ensure the interaction event completes
-            setTimeout(function() {
+            setTimeout(function () {
               if (!document.fullscreenElement) {
-                toggleFullscreen().catch(function(err) {
+                toggleFullscreen().catch(function (err) {
                   console.log("Fullscreen activation failed:", err);
                   // Fullscreen failed, but styles are already applied
                 });
@@ -1712,18 +1714,29 @@
             }, 100);
           }
         }
-        
+
         // Add event listeners for user interaction
-        document.addEventListener('click', activateFullscreenOnInteraction, { once: true });
-        document.addEventListener('keydown', activateFullscreenOnInteraction, { once: true });
-        document.addEventListener('touchstart', activateFullscreenOnInteraction, { once: true });
-        
-        console.log("🎯 Fullscreen will activate on first user interaction (click, key, or touch)");
-        
+        document.addEventListener("click", activateFullscreenOnInteraction, {
+          once: true,
+        });
+        document.addEventListener("keydown", activateFullscreenOnInteraction, {
+          once: true,
+        });
+        document.addEventListener(
+          "touchstart",
+          activateFullscreenOnInteraction,
+          { once: true }
+        );
+
+        console.log(
+          "🎯 Fullscreen will activate on first user interaction (click, key, or touch)"
+        );
+
         // Add a subtle fullscreen prompt
-        var fullscreenPrompt = document.createElement('div');
-        fullscreenPrompt.id = 'fullscreen-prompt';
-        fullscreenPrompt.innerHTML = '🔍 Click anywhere to enter fullscreen mode';
+        var fullscreenPrompt = document.createElement("div");
+        fullscreenPrompt.id = "fullscreen-prompt";
+        fullscreenPrompt.innerHTML =
+          "🔍 Click anywhere to enter fullscreen mode";
         fullscreenPrompt.style.cssText = `
           position: fixed;
           top: 20px;
@@ -1738,30 +1751,33 @@
           transition: opacity 0.3s ease;
           font-family: Arial, sans-serif;
         `;
-        
+
         document.body.appendChild(fullscreenPrompt);
-        
+
         // Remove prompt after user interaction
         function removePrompt() {
           if (fullscreenPrompt && fullscreenPrompt.parentNode) {
-            fullscreenPrompt.style.opacity = '0';
-            setTimeout(function() {
+            fullscreenPrompt.style.opacity = "0";
+            setTimeout(function () {
               if (fullscreenPrompt.parentNode) {
                 fullscreenPrompt.parentNode.removeChild(fullscreenPrompt);
               }
             }, 300);
           }
         }
-        
+
         // Update the interaction handler to remove prompt
         var originalActivateFullscreen = activateFullscreenOnInteraction;
-        activateFullscreenOnInteraction = function() {
+        activateFullscreenOnInteraction = function () {
           removePrompt();
           originalActivateFullscreen();
         };
-        
+
         // Also remove prompt if clicked directly
-        fullscreenPrompt.addEventListener('click', activateFullscreenOnInteraction);
+        fullscreenPrompt.addEventListener(
+          "click",
+          activateFullscreenOnInteraction
+        );
 
         // Notify parent window that magazine is initialized
         console.log("📢 Sending yearbook-magazine-initialized signal");
