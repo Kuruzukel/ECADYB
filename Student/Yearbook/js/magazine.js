@@ -1013,9 +1013,10 @@ function loadPage(page, pageElement) {
                 .append(photoAndInfoContainer)
                 .append(messageContainer);
 
-              setTimeout(function () {
+              // Use requestAnimationFrame for better performance instead of setTimeout
+              requestAnimationFrame(function () {
                 waitForImagesAndGenerateThumbnail(page, pageElement);
-              }, 500);
+              });
             } else {
               var placeholderContainer = $("<div/>", {
                 class: "top-management-page",
@@ -1094,9 +1095,10 @@ function loadPage(page, pageElement) {
 
               managementPage.append(placeholderContainer);
 
-              setTimeout(function () {
+              // Use requestAnimationFrame for better performance instead of setTimeout
+              requestAnimationFrame(function () {
                 waitForImagesAndGenerateThumbnail(page, pageElement);
-              }, 500);
+              });
             }
           } else {
             console.log("No top management data available");
@@ -1402,9 +1404,10 @@ function loadPage(page, pageElement) {
 
               pageElement.append(cardsContainer);
 
-              setTimeout(function () {
+              // Use requestAnimationFrame for better performance instead of setTimeout
+              requestAnimationFrame(function () {
                 waitForImagesAndGenerateThumbnail(page, pageElement);
-              }, 500);
+              });
             }
           );
         });
@@ -1687,44 +1690,12 @@ function resizeViewport() {
     .zoom("resize");
 
   if ($(".magazine").turn("zoom") == 1) {
-    var isActualFullscreen =
-      document.fullscreenElement ||
-      document.webkitFullscreenElement ||
-      document.mozFullScreenElement ||
-      document.msFullscreenElement;
-
-    var urlParams = new URLSearchParams(window.location.search);
-    var isFullscreenParam = urlParams.get("fullscreen") === "true";
-
-    var isFullscreen = isActualFullscreen || isFullscreenParam;
-
-    var baseWidth = isFullscreen ? 1200 : options.width;
-    var baseHeight = isFullscreen ? 750 : options.height;
-
-    if (isFullscreen) {
-      var screenWidth =
-        window.innerWidth || document.documentElement.clientWidth;
-      var screenHeight =
-        window.innerHeight || document.documentElement.clientHeight;
-      var isLandscape = screenWidth > screenHeight;
-
-      if (isLandscape && screenWidth <= 767) {
-        if (screenWidth >= 668 && screenWidth <= 767) {
-          baseWidth = 500;
-          baseHeight = 280;
-        } else if (screenWidth >= 568 && screenWidth <= 667) {
-          baseWidth = 900;
-          baseHeight = 600;
-        } else if (screenWidth >= 320 && screenWidth <= 567) {
-          baseWidth = 900;
-          baseHeight = 550;
-        }
-      }
-    }
+    // Use default magazine size only - no different sizes for fullscreen or mobile
+    var baseWidth = options.width;
+    var baseHeight = options.height;
 
     console.log(
-      "ResizeViewport - isFullscreen:",
-      isFullscreen,
+      "ResizeViewport - using default size:",
       "baseWidth:",
       baseWidth,
       "baseHeight:",
@@ -1819,7 +1790,7 @@ function setPreview(view) {
 }
 
 function largeMagazineWidth() {
-  return 2214;
+  return $(".magazine").turn("options").width;
 }
 
 function decodeParams(data) {
@@ -1860,23 +1831,27 @@ function generatePageThumbnail(page, pageElement) {
   try {
     console.log("Generating thumbnail for page", page);
 
+    // Check if thumbnail already exists to avoid regeneration
+    if (window.pageThumbnails && window.pageThumbnails[page]) {
+      return window.pageThumbnails[page];
+    }
+
     var canvas = document.createElement("canvas");
     var ctx = canvas.getContext("2d");
 
-    canvas.width = 76;
-    canvas.height = 100;
+    // Use smaller canvas for better performance
+    canvas.width = 60;
+    canvas.height = 80;
 
     var pageImg = pageElement.find("img").first();
     var managementContent = pageElement.find(".top-management-page").first();
     var studentContent = pageElement.find(".cards-container").first();
 
-    console.log("Page content found:", {
-      page: page,
-      hasImage: pageImg.length > 0,
-      hasManagement: managementContent.length > 0,
-      hasStudent: studentContent.length > 0,
-      managementText: managementContent.text().substring(0, 50),
-      studentCards: studentContent.find(".student-card").length,
+    // Simplified logging for better performance
+    console.log("Generating thumbnail for page", page, "- content types:", {
+      image: pageImg.length > 0,
+      management: managementContent.length > 0,
+      student: studentContent.length > 0,
     });
 
     if (pageImg.length && pageImg[0].complete) {
@@ -2075,18 +2050,22 @@ function generatePageThumbnail(page, pageElement) {
     ctx.textAlign = "center";
     ctx.fillText(page.toString(), canvas.width - 7, canvas.height - 4);
 
-    var thumbnailDataUrl = canvas.toDataURL("image/png");
+    // Use JPEG with lower quality for better performance
+    var thumbnailDataUrl = canvas.toDataURL("image/jpeg", 0.7);
 
     if (!window.pageThumbnails) {
       window.pageThumbnails = {};
     }
     window.pageThumbnails[page] = thumbnailDataUrl;
 
-    var existingThumbnail = $(".thumbnails .page-" + page);
-    if (existingThumbnail.length) {
-      existingThumbnail.attr("src", thumbnailDataUrl);
-      console.log("Updated thumbnail for page", page);
-    }
+    // Use requestAnimationFrame for DOM updates to prevent blocking
+    requestAnimationFrame(function () {
+      var existingThumbnail = $(".thumbnails .page-" + page);
+      if (existingThumbnail.length) {
+        existingThumbnail.attr("src", thumbnailDataUrl);
+        console.log("Updated thumbnail for page", page);
+      }
+    });
 
     console.log(
       "Generated detailed thumbnail for page",
@@ -2129,10 +2108,13 @@ function generateAllThumbnails() {
 
         if (hasContent) {
           (function (pNum, pElem) {
-            var delay = pNum <= 3 ? (pNum - 1) * 150 : (pNum - 1) * 400;
+            // Use shorter delays and requestAnimationFrame for better performance
+            var delay = pNum <= 3 ? (pNum - 1) * 50 : (pNum - 1) * 100;
             setTimeout(function () {
-              console.log("Generating thumbnail for page", pNum);
-              generatePageThumbnail(pNum, pElem);
+              requestAnimationFrame(function () {
+                console.log("Generating thumbnail for page", pNum);
+                generatePageThumbnail(pNum, pElem);
+              });
             }, delay);
           })(pageNumber, pageElement);
         } else {
@@ -2152,12 +2134,30 @@ function generateAllThumbnails() {
 }
 
 function waitForImagesAndGenerateThumbnail(page, pageElement) {
+  // Debounce thumbnail generation to prevent excessive calls
+  if (
+    window.thumbnailGenerationInProgress &&
+    window.thumbnailGenerationInProgress[page]
+  ) {
+    return;
+  }
+
+  if (!window.thumbnailGenerationInProgress) {
+    window.thumbnailGenerationInProgress = {};
+  }
+  window.thumbnailGenerationInProgress[page] = true;
+
   var images = pageElement.find("img");
   var loadedImages = 0;
   var totalImages = images.length;
 
-  if (totalImages === 0) {
+  function completeThumbnailGeneration() {
     generatePageThumbnail(page, pageElement);
+    delete window.thumbnailGenerationInProgress[page];
+  }
+
+  if (totalImages === 0) {
+    completeThumbnailGeneration();
     return;
   }
 
@@ -2169,14 +2169,14 @@ function waitForImagesAndGenerateThumbnail(page, pageElement) {
       $(img).on("load", function () {
         loadedImages++;
         if (loadedImages === totalImages) {
-          generatePageThumbnail(page, pageElement);
+          completeThumbnailGeneration();
         }
       });
     }
   });
 
   if (loadedImages === totalImages) {
-    generatePageThumbnail(page, pageElement);
+    completeThumbnailGeneration();
   }
 }
 
@@ -2195,9 +2195,12 @@ function forceRegenerateThumbnails() {
         var pageNumber = i + 1;
 
         (function (pNum, pElem) {
+          // Reduce delay and use requestAnimationFrame for better performance
           setTimeout(function () {
-            waitForImagesAndGenerateThumbnail(pNum, pElem);
-          }, (pNum - 1) * 200);
+            requestAnimationFrame(function () {
+              waitForImagesAndGenerateThumbnail(pNum, pElem);
+            });
+          }, (pNum - 1) * 50);
         })(pageNumber, pageElement);
       }
 

@@ -6,7 +6,7 @@
     iframe: null,
     isLoaded: false,
     timeout: null,
-    maxWaitTime: 15000,
+    maxWaitTime: 15000, // 15 seconds for all devices
     checkInterval: null,
     magazineReady: false,
     navigationComplete: false,
@@ -27,7 +27,6 @@
 
       this.ensureLoaderNote();
       this.setupEventListeners();
-      this.setupOrientationListener();
       this.setMaxTimeout();
       this.startChecking();
     },
@@ -79,53 +78,6 @@
 
       loaderContent.appendChild(noteWrapper);
       this.noteElement = noteWrapper;
-
-      let orientationMsg = loaderContent.querySelector(".orientation-message");
-      if (!orientationMsg) {
-        orientationMsg = document.createElement("div");
-        orientationMsg.className = "orientation-message";
-        orientationMsg.innerHTML =
-          '<div class="icon-group"><i class="fas fa-mobile-screen-button"></i><i class="fas fa-arrow-right rotate-icon"></i><i class="fas fa-mobile-screen"></i></div>Please rotate your phone to landscape mode for the best viewing experience';
-        loaderContent.appendChild(orientationMsg);
-      }
-    },
-
-    setupOrientationListener: function () {
-      const self = this;
-
-      function checkOrientation() {
-        const isMobile = window.innerWidth <= 768;
-        const isPortrait = window.innerHeight > window.innerWidth;
-
-        if (isMobile && isPortrait) {
-          console.log(
-            "[Loader] Mobile portrait mode detected - keeping loader visible"
-          );
-          if (self.loaderElement) {
-            self.loaderElement.classList.remove("hidden");
-            self.loaderElement.style.display = "flex";
-            self.loaderElement.style.opacity = "1";
-            self.loaderElement.style.visibility = "visible";
-            self.loaderElement.style.pointerEvents = "auto";
-          }
-          self.isLoaded = false;
-        } else if (isMobile && !isPortrait) {
-          console.log(
-            "[Loader] Mobile landscape mode detected - checking if ready to hide"
-          );
-          self.checkReadiness();
-        }
-      }
-
-      checkOrientation();
-
-      window.addEventListener("orientationchange", function () {
-        setTimeout(checkOrientation, 100);
-      });
-
-      window.addEventListener("resize", function () {
-        checkOrientation();
-      });
     },
 
     setupEventListeners: function () {
@@ -228,24 +180,15 @@
       const hasStudent =
         urlParams.has("student_id") && urlParams.has("student_name");
 
-      const isMobile = window.innerWidth <= 768;
-      const isPortrait = window.innerHeight > window.innerWidth;
-
       console.log("[Loader] Checking readiness:", {
         magazineReady: this.magazineReady,
         coverVisible: this.coverVisible,
         navigationComplete: this.navigationComplete,
         hasStudent: hasStudent,
-        isMobile: isMobile,
-        isPortrait: isPortrait,
       });
 
-      if (isMobile && isPortrait) {
-        console.log("[Loader] Mobile portrait mode - keeping loader visible");
-        return;
-      }
-
       if (hasStudent) {
+        // With student navigation, wait for navigation complete
         if (
           this.magazineReady &&
           this.coverVisible &&
@@ -255,6 +198,7 @@
           this.hideLoader();
         }
       } else {
+        // Without student navigation, just wait for magazine and cover
         if (this.magazineReady && this.coverVisible) {
           console.log(
             "[Loader] All conditions met (without student navigation)"
@@ -268,16 +212,6 @@
       const self = this;
       this.timeout = setTimeout(function () {
         if (!self.isLoaded) {
-          const isMobile = window.innerWidth <= 768;
-          const isPortrait = window.innerHeight > window.innerWidth;
-
-          if (isMobile && isPortrait) {
-            console.log(
-              "[Loader] Max wait time reached but in portrait mode - keeping loader visible"
-            );
-            return;
-          }
-
           console.log("[Loader] Max wait time reached, forcing hide");
           self.hideLoader();
         }
@@ -286,14 +220,6 @@
 
     hideLoader: function () {
       if (this.isLoaded) return;
-
-      const isMobile = window.innerWidth <= 768;
-      const isPortrait = window.innerHeight > window.innerWidth;
-
-      if (isMobile && isPortrait) {
-        console.log("[Loader] Cannot hide loader - device in portrait mode");
-        return;
-      }
 
       console.log("[Loader] Hiding loader...");
       this.isLoaded = true;
@@ -386,18 +312,6 @@
         loader.style.visibility = "visible";
         loader.style.pointerEvents = "auto";
         console.log("[Loader] Loader shown for student navigation");
-
-        const loaderContent = loader.querySelector(".loader-content");
-        if (
-          loaderContent &&
-          !loaderContent.querySelector(".orientation-message")
-        ) {
-          const orientationMsg = document.createElement("div");
-          orientationMsg.className = "orientation-message";
-          orientationMsg.innerHTML =
-            '<div class="icon-group"><i class="fas fa-mobile-screen-button"></i><i class="fas fa-arrow-right rotate-icon"></i><i class="fas fa-mobile-screen"></i></div>Please rotate your phone to landscape mode for the best viewing experience';
-          loaderContent.appendChild(orientationMsg);
-        }
       }
 
       const iframe = document.getElementById("yearbookIframe");

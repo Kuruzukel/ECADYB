@@ -1627,6 +1627,35 @@
           initializeCornerHover();
         }
 
+        // Notify parent window that magazine is initialized
+        console.log("📢 Sending yearbook-magazine-initialized signal");
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage(
+            {
+              type: "yearbook-magazine-initialized",
+              timestamp: new Date().toISOString(),
+            },
+            "*"
+          );
+        }
+
+        // Wait for canvas to be visible, then notify parent
+        setTimeout(function () {
+          var canvas = document.getElementById("canvas");
+          if (canvas && window.getComputedStyle(canvas).display !== "none") {
+            console.log("📢 Sending yearbook-cover-visible signal");
+            if (window.parent && window.parent !== window) {
+              window.parent.postMessage(
+                {
+                  type: "yearbook-cover-visible",
+                  timestamp: new Date().toISOString(),
+                },
+                "*"
+              );
+            }
+          }
+        }, 500);
+
         requestAnimationFrame(function () {
           setTimeout(function () {
             if (typeof generateAllThumbnails === "function") {

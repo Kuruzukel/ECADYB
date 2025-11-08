@@ -2074,6 +2074,25 @@
 }
 
 @media (max-width: 768px) {
+  /* Ensure yearbook iframe is properly displayed on mobile devices */
+  .magazine-viewport {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .magazine-viewport .container {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .magazine {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
   .nav-controls {
     bottom: 0.5rem;
     padding: 6px 10px;
@@ -2263,269 +2282,119 @@
   }
 }
 
-/* Large Tablets - Landscape */
-@media (min-width: 1024px) and (max-width: 1366px) and (orientation: landscape) {
-  :fullscreen .magazine-viewport .container,
-  .iframe-fullscreen-mode .magazine-viewport .container {
-    width: 900px;
-    height: 700px;
+/* Mobile devices - Let JavaScript control yearbook loader visibility */
+@media (max-width: 768px) {
+  /* Ensure yearbook iframe is properly displayed on mobile devices */
+  .magazine-viewport {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
 
-  :-webkit-full-screen .magazine-viewport .container {
-    width: 900px;
-    height: 700px;
+  .magazine-viewport .container {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
 
-  :-moz-full-screen .magazine-viewport .container {
-    width: 900px;
-    height: 700px;
+  .magazine {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
 
-  :-ms-fullscreen .magazine-viewport .container {
-    width: 900px;
-    height: 700px;
+  .nav-controls {
+    bottom: 0.5rem;
+    padding: 6px 10px;
+    gap: 4px;
   }
 
-  :fullscreen .top-management-page,
-  .iframe-fullscreen-mode .top-management-page {
-    padding: 20px 40px;
+  .nav-btn {
+    width: 36px;
+    height: 36px;
   }
 
-  :fullscreen .management-name,
-  .iframe-fullscreen-mode .management-name {
-    font-size: 20px;
+  .nav-btn svg {
+    width: 14px;
+    height: 14px;
   }
 
-  :fullscreen .management-position,
-  .iframe-fullscreen-mode .management-position {
-    font-size: 15px;
+  .toc-item {
+    padding: 10px 12px;
   }
 
-  :fullscreen .management-message,
-  .iframe-fullscreen-mode .management-message {
+  .page-number {
     font-size: 13px;
-    line-height: 1.6;
   }
 
-  :fullscreen .management-photo,
-  .iframe-fullscreen-mode .management-photo {
-    width: 180px;
-    height: 180px;
-    margin-bottom: 10px !important;
+  .page-description {
+    font-size: 13px;
   }
 
-  :fullscreen .management-info,
-  .iframe-fullscreen-mode .management-info {
-    margin-bottom: 10px;
-  }
-}
-
-/* Regular Tablets - Landscape */
-@media (min-width: 768px) and (max-width: 1023px) and (orientation: landscape) {
-  :fullscreen .magazine-viewport .container,
-  .iframe-fullscreen-mode .magazine-viewport .container {
-    width: 900px;
-    height: 600px;
+  .thumbnails-modal {
+    width: 90%;
+    height: 80%;
+    padding: 20px;
   }
 
-  :-webkit-full-screen .magazine-viewport .container {
-    width: 900px;
-    height: 600px;
+  #thumbnail-list {
+    padding: 15px;
+    gap: 6px;
   }
 
-  :-moz-full-screen .magazine-viewport .container {
-    width: 900px;
-    height: 600px;
+  .thumbnails-title {
+    font-size: 22px;
   }
 
-  :-ms-fullscreen .magazine-viewport .container {
-    width: 900px;
-    height: 600px;
-  }
-
-  :fullscreen .top-management-page,
-  .iframe-fullscreen-mode .top-management-page {
-    padding: 20px 20px;
-  }
-
-  :fullscreen .management-name,
-  .iframe-fullscreen-mode .management-name {
-    font-size: 18px;
-  }
-
-  :fullscreen .management-position,
-  .iframe-fullscreen-mode .management-position {
-    font-size: 14px;
-  }
-
-  :fullscreen .management-message,
-  .iframe-fullscreen-mode .management-message {
-    font-size: 12px;
-    line-height: 1.6;
-  }
-
-  :fullscreen .management-photo,
-  .iframe-fullscreen-mode .management-photo {
-    width: 170px;
-    height: 170px;
-    margin-bottom: 10px !important;
-  }
-
-  :fullscreen .management-info,
-  .iframe-fullscreen-mode .management-info {
-    margin-bottom: 10px;
-  }
-}
-
-/* Large Phones - Landscape */
-@media (min-width: 668px) and (max-width: 767px) and (orientation: landscape) {
-  :fullscreen .magazine-viewport .container,
-  .iframe-fullscreen-mode .magazine-viewport .container {
-    width: 500px;
-    height: 280px;
-  }
-
-  :-webkit-full-screen .magazine-viewport .container {
-    width: 500px;
-    height: 280px;
-  }
-
-  :-moz-full-screen .magazine-viewport .container {
-    width: 500px;
-    height: 280px;
-  }
-
-  :-ms-fullscreen .magazine-viewport .container {
-    width: 500px;
-    height: 280px;
-  }
-
-  :fullscreen .top-management-page,
-  .iframe-fullscreen-mode .top-management-page {
-    padding: 10px 15px;
-  }
-
-  :fullscreen .management-name,
-  .iframe-fullscreen-mode .management-name {
-    font-size: 16px;
-  }
-
-  :fullscreen .management-position,
-  .iframe-fullscreen-mode .management-position {
+  .thumbnails-subtitle {
     font-size: 12px;
   }
 
-  :fullscreen .management-message,
-  .iframe-fullscreen-mode .management-message {
-    font-size: 11px;
-    line-height: 1.6;
+  .thumbnail-item {
+    padding: 10px 12px;
+    min-height: 45px;
   }
 
-  :fullscreen .management-photo,
-  .iframe-fullscreen-mode .management-photo {
-    width: 150px;
-    height: 150px;
-  }
-}
-
-/* Medium Phones - Landscape */
-@media (min-width: 568px) and (max-width: 667px) and (orientation: landscape) {
-  :fullscreen .magazine-viewport .container,
-  .iframe-fullscreen-mode .magazine-viewport .container {
-    width: 900px;
-    height: 600px;
+  .thumbnail-page-name {
+    font-size: 12px;
   }
 
-  :-webkit-full-screen .magazine-viewport .container {
-    width: 900px;
-    height: 600px;
-  }
-
-  :-moz-full-screen .magazine-viewport .container {
-    width: 900px;
-    height: 600px;
-  }
-
-  :-ms-fullscreen .magazine-viewport .container {
-    width: 900px;
-    height: 600px;
-  }
-
-  :fullscreen .top-management-page,
-  .iframe-fullscreen-mode .top-management-page {
-    padding: 10px;
-  }
-
-  :fullscreen .management-name,
-  .iframe-fullscreen-mode .management-name {
-    font-size: 15px;
-  }
-
-  :fullscreen .management-position,
-  .iframe-fullscreen-mode .management-position {
-    font-size: 11px;
-  }
-
-  :fullscreen .management-message,
-  .iframe-fullscreen-mode .management-message {
-    font-size: 10px;
-    line-height: 1.6;
-  }
-
-  :fullscreen .management-photo,
-  .iframe-fullscreen-mode .management-photo {
-    width: 140px;
-    height: 140px;
-  }
-}
-
-/* Small Phones - Landscape */
-@media (min-width: 320px) and (max-width: 567px) and (orientation: landscape) {
-  :fullscreen .magazine-viewport .container,
-  .iframe-fullscreen-mode .magazine-viewport .container {
-    width: 900px;
-    height: 550px;
-  }
-
-  :-webkit-full-screen .magazine-viewport .container {
-    width: 900px;
-    height: 550px;
-  }
-
-  :-moz-full-screen .magazine-viewport .container {
-    width: 900px;
-    height: 550px;
-  }
-
-  :-ms-fullscreen .magazine-viewport .container {
-    width: 900px;
-    height: 550px;
-  }
-
-  :fullscreen .top-management-page,
-  .iframe-fullscreen-mode .top-management-page {
-    padding: 5px;
-  }
-
-  :fullscreen .management-name,
-  .iframe-fullscreen-mode .management-name {
-    font-size: 14px;
-  }
-
-  :fullscreen .management-position,
-  .iframe-fullscreen-mode .management-position {
+  .thumbnail-page-number {
+    width: 20px;
+    height: 20px;
     font-size: 10px;
   }
 
-  :fullscreen .management-message,
-  .iframe-fullscreen-mode .management-message {
-    font-size: 9px;
-    line-height: 1.6;
+  .page-badge {
+    width: 22px;
+    height: 22px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .yearbook-loader-overlay {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
   }
 
-  :fullscreen .management-photo,
-  .iframe-fullscreen-mode .management-photo {
-    width: 130px;
-    height: 130px;
+  .toc-item {
+    padding: 8px 10px;
+  }
+
+  .page-number {
+    font-size: 12px;
+  }
+
+  .page-description {
+    font-size: 12px;
+  }
+
+  .page-badge {
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
   }
 }
