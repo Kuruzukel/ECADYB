@@ -3,11 +3,11 @@ ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
 ini_set('memory_limit', '1024M');
-ini_set('upload_max_filesize', '100M');
-ini_set('post_max_size', '100M');
-ini_set('max_execution_time', '300');
-ini_set('max_input_time', '300');
-set_time_limit(300);
+ini_set('upload_max_filesize', '500M');
+ini_set('post_max_size', '500M');
+ini_set('max_execution_time', '900');
+ini_set('max_input_time', '900');
+set_time_limit(900);
 
 // Prevent script from stopping if client disconnects
 ignore_user_abort(true);

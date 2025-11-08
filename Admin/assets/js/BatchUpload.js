@@ -1,3 +1,5 @@
+const UPLOAD_TIMEOUT_MS = 900000; // 15 minutes
+
 const themes = {
   "Light Mode": {
     "--primary-bg": "#ffffff",
@@ -812,22 +814,32 @@ window.addEventListener("DOMContentLoaded", () => {
 
                 xhr.ontimeout = () => {
                   console.error("=== UPLOAD TIMEOUT ===");
-                  console.error("Upload exceeded the 5-minute timeout limit");
+                  console.error(
+                    `Upload exceeded the ${Math.round(
+                      UPLOAD_TIMEOUT_MS / 60000
+                    )}-minute timeout limit`
+                  );
                   console.error("Batch size:", currentBatch, "files");
                   console.error("Timeout was set to:", xhr.timeout, "ms");
                   reject(
                     new Error(
-                      "Upload timeout - The upload took longer than 5 minutes. Try uploading fewer files at once (reduce batch size)."
+                      `Upload timeout - The upload took longer than ${Math.round(
+                        UPLOAD_TIMEOUT_MS / 60000
+                      )} minutes. Consider reducing concurrent files or retry once the network stabilizes.`
                     )
                   );
                 };
 
                 console.log("Sending batch request...");
-                console.log("⏱️ Timeout set to: 300 seconds (5 minutes)");
+                console.log(
+                  `⏱️ Timeout set to: ${Math.round(
+                    UPLOAD_TIMEOUT_MS / 1000
+                  )} seconds (${Math.round(UPLOAD_TIMEOUT_MS / 60000)} minutes)`
+                );
                 console.log("📦 Batch size:", currentBatch, "files");
                 console.log("📤 Upload endpoint:", uploadEndpoint);
                 xhr.open("POST", uploadEndpoint);
-                xhr.timeout = 300000;
+                xhr.timeout = UPLOAD_TIMEOUT_MS;
 
                 uploadStartTime = Date.now();
                 xhr.send(batchFormData);
@@ -863,11 +875,6 @@ window.addEventListener("DOMContentLoaded", () => {
                 `Successfully uploaded ${totalUploaded} ${imageText}.`,
                 "success"
               );
-              if (input.id === "student-photos") {
-                setTimeout(() => {
-                  window.location.reload();
-                }, 1500);
-              }
             }
 
             if (totalFailed > 0) {
