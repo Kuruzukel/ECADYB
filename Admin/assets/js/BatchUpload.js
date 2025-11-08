@@ -691,7 +691,7 @@ window.addEventListener("DOMContentLoaded", () => {
           console.log("Base path:", basePath);
           console.log("Window location origin:", window.location.origin);
 
-          const BATCH_SIZE = 5;
+          const BATCH_SIZE = 20;
           const totalFiles = input.files.length;
           let totalUploaded = 0;
           let totalFailed = 0;
@@ -849,11 +849,6 @@ window.addEventListener("DOMContentLoaded", () => {
               } else {
                 totalFailed += currentBatch;
                 console.error(`Batch ${batchNum} failed:`, batchResult.message);
-              }
-
-              if (batchEnd < totalFiles) {
-                console.log("Waiting 500ms before next batch...");
-                await new Promise((resolve) => setTimeout(resolve, 500));
               }
             }
 

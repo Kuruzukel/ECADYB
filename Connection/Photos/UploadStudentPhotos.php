@@ -197,7 +197,7 @@ try {
         error_log("  - Single file name: " . $uploadedFiles['name']);
     }
 
-    $MAX_FILES = 10;
+    $MAX_FILES = 20;
     $fileCount = is_array($uploadedFiles['name']) ? count($uploadedFiles['name']) : 1;
 
     if ($fileCount > $MAX_FILES) {
