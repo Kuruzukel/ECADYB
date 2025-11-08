@@ -868,6 +868,11 @@ window.addEventListener("DOMContentLoaded", () => {
                 `Successfully uploaded ${totalUploaded} ${imageText}.`,
                 "success"
               );
+              if (input.id === "student-photos") {
+                setTimeout(() => {
+                  window.location.reload();
+                }, 1500);
+              }
             }
 
             if (totalFailed > 0) {
