@@ -1690,12 +1690,18 @@ function resizeViewport() {
     .zoom("resize");
 
   if ($(".magazine").turn("zoom") == 1) {
-    // Use default magazine size only - no different sizes for fullscreen or mobile
-    var baseWidth = options.width;
-    var baseHeight = options.height;
+    var isFullscreen =
+      document.fullscreenElement ||
+      document.webkitFullscreenElement ||
+      document.mozFullScreenElement ||
+      document.msFullscreenElement;
+
+    // Always use fullscreen dimensions for Student version
+    var baseWidth = 1200;
+    var baseHeight = 750;
 
     console.log(
-      "ResizeViewport - using default size:",
+      "ResizeViewport - Student always uses fullscreen size (1200x750)",
       "baseWidth:",
       baseWidth,
       "baseHeight:",
@@ -1708,6 +1714,14 @@ function resizeViewport() {
       boundWidth: Math.min(baseWidth, width),
       boundHeight: Math.min(baseHeight, height),
     });
+
+    console.log(
+      "ResizeViewport - calculated bound:",
+      "bound.width:",
+      bound.width,
+      "bound.height:",
+      bound.height
+    );
 
     if (bound.width % 2 !== 0) bound.width -= 1;
 

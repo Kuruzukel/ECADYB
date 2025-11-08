@@ -2,6 +2,27 @@ window.basePath = window.location.pathname.includes("/ECADYB/")
   ? "/ECADYB"
   : "";
 
+(function () {
+  var urlParams = new URLSearchParams(window.location.search);
+  var batchYearFromUrl = urlParams.get("batchYear");
+
+  if (batchYearFromUrl) {
+    console.log("Setting batch year from URL parameter:", batchYearFromUrl);
+    localStorage.setItem("selectedBatchYear", batchYearFromUrl);
+    window.topManagementCache = {};
+    window.topManagementPendingRequests = {};
+    window.studentDataCache = {};
+    window.studentDataPendingRequests = {};
+    window.allStudentsCache = {};
+    window.studentPhotosCache = {};
+  } else {
+    console.log(
+      "No batch year in URL, using localStorage:",
+      localStorage.getItem("selectedBatchYear")
+    );
+  }
+})();
+
 window.studentDataCache = window.studentDataCache || {};
 window.studentDataPendingRequests = window.studentDataPendingRequests || {};
 
@@ -2385,7 +2406,7 @@ function setPreview(view) {
 }
 
 function largeMagazineWidth() {
-  return 2214;
+  return $(".magazine").turn("options").width;
 }
 
 function decodeParams(data) {

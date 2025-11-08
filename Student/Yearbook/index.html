@@ -1400,8 +1400,8 @@
         populateThumbnails();
 
         flipbook.turn({
-          width: 922,
-          height: 600,
+          width: 1200,
+          height: 750,
           duration: 1000,
           acceleration: true,
           gradients: false,
@@ -1626,6 +1626,77 @@
         if (typeof initializeCornerHover === "function") {
           initializeCornerHover();
         }
+
+        // Auto-fullscreen functionality
+        function toggleFullscreen() {
+          if (!document.fullscreenElement) {
+            if (document.documentElement.requestFullscreen) {
+              document.documentElement.requestFullscreen();
+            } else if (document.documentElement.webkitRequestFullscreen) {
+              document.documentElement.webkitRequestFullscreen();
+            } else if (document.documentElement.msRequestFullscreen) {
+              document.documentElement.msRequestFullscreen();
+            }
+          } else {
+            if (document.exitFullscreen) {
+              document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+              document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) {
+              document.msExitFullscreen();
+            }
+          }
+        }
+
+        function updateFullscreenBackground() {
+          var isFullscreen =
+            document.fullscreenElement ||
+            document.webkitFullscreenElement ||
+            document.mozFullScreenElement ||
+            document.msFullscreenElement;
+
+          var curlElement = document.querySelector(".yearbook-lower-curl");
+
+          if (isFullscreen) {
+            document.body.style.background =
+              "url('https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png') center center/cover no-repeat";
+            if (curlElement) {
+              curlElement.style.display = "block";
+            }
+          } else {
+            document.body.style.background = "rgb(17, 45, 78)";
+            if (curlElement) {
+              curlElement.style.display = "none";
+            }
+          }
+        }
+
+        // Add fullscreen event listeners
+        document.addEventListener("fullscreenchange", function () {
+          updateFullscreenBackground();
+          resizeViewport();
+        });
+        document.addEventListener("webkitfullscreenchange", function () {
+          updateFullscreenBackground();
+          resizeViewport();
+        });
+        document.addEventListener("msfullscreenchange", function () {
+          updateFullscreenBackground();
+          resizeViewport();
+        });
+
+        // Apply fullscreen-mode styles immediately for Student version
+        document.documentElement.classList.add("student-fullscreen-mode");
+        document.body.classList.add("student-fullscreen-mode");
+        console.log("🎯 Applied fullscreen-mode styles to Student yearbook");
+
+        // Automatically enter fullscreen mode after a short delay
+        setTimeout(function () {
+          console.log("🔍 Auto-entering fullscreen mode for Student yearbook");
+          if (!document.fullscreenElement) {
+            toggleFullscreen();
+          }
+        }, 1000);
 
         // Notify parent window that magazine is initialized
         console.log("📢 Sending yearbook-magazine-initialized signal");
@@ -1962,7 +2033,7 @@
         }
 
         $("#fullscreenBtn").on("click", function () {
-          exitFullscreen();
+          toggleFullscreen();
         });
 
         $(".nav-prev").on("click", function (e) {
