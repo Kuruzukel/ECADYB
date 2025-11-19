@@ -1156,11 +1156,15 @@ function loadPage(page, pageElement) {
             coverData && coverData.template ? coverData.template : 1;
 
           var studentsPerYearbookPage = 8;
-          var spreadIndex = Math.floor((page - (2 + managementPages)) / 2);
+          var pageOffset = page - (2 + managementPages);
+          var spreadIndex = Math.floor(pageOffset / 2);
           if (spreadIndex < 0) spreadIndex = 0;
 
-          var studentStartIndex = spreadIndex * studentsPerYearbookPage;
-          var studentEndIndex = studentStartIndex + studentsPerYearbookPage;
+          // Determine if this is the left (even) or right (odd) page of the spread
+          var isRightPage = pageOffset % 2 === 1;
+          var studentStartIndex =
+            spreadIndex * studentsPerYearbookPage + (isRightPage ? 4 : 0);
+          var studentEndIndex = studentStartIndex + 4;
 
           var studentsPerAPIPage = 50;
           var apiPage = Math.floor(studentStartIndex / studentsPerAPIPage) + 1;
