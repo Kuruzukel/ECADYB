@@ -2746,7 +2746,7 @@ async function waitForYearbookInit(iframeWindow, iframeDoc) {
             console.log(
               `✅ Yearbook initialized successfully! Total pages: ${totalPages} (took ${elapsedTime}s)`
             );
-            setTimeout(() => resolve(), 2000);
+            setTimeout(() => resolve(), 3000); // Increased for Railway
             return;
           } else {
             if (attempts % 50 === 0) {
@@ -2864,9 +2864,9 @@ async function navigateToPage(iframeWindow, pageNum) {
     iframeWindow.$(".magazine").turn("page", pageNum);
     console.log(`Successfully navigated to page ${pageNum}`);
 
-    // Wait for page turn animation to complete
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
+    // Wait for page turn animation to complete (longer for Railway)
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+    
     // Wait for page to be fully visible and rendered
     await waitForPageReady(iframeWindow, pageNum);
 
@@ -3191,7 +3191,7 @@ function waitForImages(doc) {
 async function waitForPageReady(iframeWindow, pageNum) {
   return new Promise((resolve) => {
     let attempts = 0;
-    const maxAttempts = 50;
+    const maxAttempts = 100; // Increased for Railway (100 * 100ms = 10 seconds max)
 
     const checkReady = () => {
       attempts++;
@@ -3202,7 +3202,7 @@ async function waitForPageReady(iframeWindow, pageNum) {
           const view = iframeWindow.$(".magazine").turn("view") || [];
           if (view.includes(pageNum)) {
             console.log(`Page ${pageNum} is ready and visible`);
-            setTimeout(resolve, 500);
+            setTimeout(resolve, 1000); // Increased from 500ms to 1000ms for Railway
             return;
           }
         }
@@ -3216,7 +3216,7 @@ async function waitForPageReady(iframeWindow, pageNum) {
         console.warn(
           `Page ${pageNum} readiness check timeout, proceeding anyway`
         );
-        setTimeout(resolve, 1000);
+        setTimeout(resolve, 2000); // Increased from 1000ms to 2000ms for Railway
       }
     };
 
@@ -3227,18 +3227,18 @@ async function waitForPageReady(iframeWindow, pageNum) {
 async function waitForPageContentReady(iframeDoc, iframeWindow) {
   // Wait for images to load
   await waitForImages(iframeDoc);
-
-  // Additional wait for content to render
-  await new Promise((resolve) => setTimeout(resolve, 2000));
-
+  
+  // Additional wait for content to render (increased for Railway)
+  await new Promise((resolve) => setTimeout(resolve, 3000));
+  
   // Check if student cards or content is loaded
   const hasContent = iframeDoc.querySelector(
     ".cards-container, .top-management-page, .magazine .page img"
   );
-
+  
   if (hasContent) {
-    // Give extra time for content to fully render
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    // Give extra time for content to fully render (increased for Railway)
+    await new Promise((resolve) => setTimeout(resolve, 2500));
   }
 }
 
