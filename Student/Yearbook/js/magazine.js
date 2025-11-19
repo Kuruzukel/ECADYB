@@ -1155,9 +1155,11 @@ function loadPage(page, pageElement) {
           var template =
             coverData && coverData.template ? coverData.template : 1;
 
-          var studentsPerYearbookPage = 4;
-          var studentStartIndex =
-            (page - (2 + managementPages)) * studentsPerYearbookPage;
+          var studentsPerYearbookPage = 8;
+          var spreadIndex = Math.floor((page - (2 + managementPages)) / 2);
+          if (spreadIndex < 0) spreadIndex = 0;
+
+          var studentStartIndex = spreadIndex * studentsPerYearbookPage;
           var studentEndIndex = studentStartIndex + studentsPerYearbookPage;
 
           var studentsPerAPIPage = 50;
