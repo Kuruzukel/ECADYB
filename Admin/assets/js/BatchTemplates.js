@@ -2817,13 +2817,30 @@ async function waitForYearbookInit(iframeWindow, iframeDoc) {
 
 async function getTotalPagesFromYearbook(iframeWindow) {
   try {
+    if (typeof iframeWindow.calculateTotalPages === "function") {
+      const calculated = iframeWindow.calculateTotalPages();
+      if (calculated && !isNaN(calculated)) {
+        console.log("[PDF] Using calculateTotalPages() result:", calculated);
+        return calculated;
+      } else {
+        console.warn(
+          "[PDF] calculateTotalPages() returned invalid value:",
+          calculated
+        );
+      }
+    }
+
     if (iframeWindow.$ && iframeWindow.$(".magazine").turn) {
       const totalPages = iframeWindow.$(".magazine").turn("pages");
-      return totalPages || 1;
+      if (totalPages && !isNaN(totalPages)) {
+        console.log('[PDF] Using turn("pages") fallback:', totalPages);
+        return totalPages;
+      }
     }
   } catch (e) {
     console.error("Error getting total pages:", e);
   }
+  console.warn("[PDF] Falling back to minimum page count of 1");
   return 1;
 }
 
