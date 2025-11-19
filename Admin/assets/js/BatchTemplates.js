@@ -2866,7 +2866,7 @@ async function navigateToPage(iframeWindow, pageNum) {
 
     // Wait for page turn animation to complete (longer for Railway)
     await new Promise((resolve) => setTimeout(resolve, 3000));
-    
+
     // Wait for page to be fully visible and rendered
     await waitForPageReady(iframeWindow, pageNum);
 
@@ -3227,15 +3227,15 @@ async function waitForPageReady(iframeWindow, pageNum) {
 async function waitForPageContentReady(iframeDoc, iframeWindow) {
   // Wait for images to load
   await waitForImages(iframeDoc);
-  
+
   // Additional wait for content to render (increased for Railway)
   await new Promise((resolve) => setTimeout(resolve, 3000));
-  
+
   // Check if student cards or content is loaded
   const hasContent = iframeDoc.querySelector(
     ".cards-container, .top-management-page, .magazine .page img"
   );
-  
+
   if (hasContent) {
     // Give extra time for content to fully render (increased for Railway)
     await new Promise((resolve) => setTimeout(resolve, 2500));

@@ -1451,7 +1451,7 @@ try {
             const nav1Success = await navigateToPage(iframeWindow, 1);
             if (nav1Success) {
               await waitForPageContentReady(iframeDoc, iframeWindow);
-          let canvas = await capturePage(iframeDoc, iframeWindow);
+              let canvas = await capturePage(iframeDoc, iframeWindow);
               if (canvas) {
                 console.log(`Front cover captured (${canvas.width}x${canvas.height})`);
                 capturedPages.push(canvas);
@@ -1654,7 +1654,7 @@ try {
 
         // Wait for page turn animation to complete (longer for Railway)
         await new Promise(resolve => setTimeout(resolve, 3000));
-        
+
         // Wait for page to be fully visible and rendered
         await waitForPageReady(iframeWindow, pageNum);
 
@@ -1753,19 +1753,19 @@ try {
         const currentView = win.$('.magazine').turn('view') || [];
         const visibleSet = new Set(
           currentView.filter(pageNum => typeof pageNum !== 'undefined' && pageNum !== null)
-            .map(pageNum => String(pageNum))
+          .map(pageNum => String(pageNum))
         );
 
         const hiddenNodes = [];
         const hiddenCards = [];
-        
+
         // Hide all non-visible pages aggressively
         doc.querySelectorAll('.magazine .page').forEach(node => {
           const pageNumber = node.getAttribute('data-page-number') ||
             node.getAttribute('page') ||
             node.dataset?.pageNumber ||
             node.getAttribute('data-page');
-          
+
           if (!pageNumber) {
             // If no page number, try to extract from Turn.js
             const $node = win.$(node);
@@ -1787,7 +1787,7 @@ try {
             }
             return;
           }
-          
+
           const pageNumStr = String(pageNumber);
           if (!visibleSet.has(pageNumStr)) {
             hiddenNodes.push({
@@ -1950,7 +1950,7 @@ try {
       return new Promise((resolve) => {
         let attempts = 0;
         const maxAttempts = 100; // Increased for Railway (100 * 100ms = 10 seconds max)
-        
+
         const checkReady = () => {
           attempts++;
           try {
@@ -1967,7 +1967,7 @@ try {
           } catch (e) {
             console.warn(`Error checking page readiness:`, e);
           }
-          
+
           if (attempts < maxAttempts) {
             setTimeout(checkReady, 100);
           } else {
@@ -1975,7 +1975,7 @@ try {
             setTimeout(resolve, 2000); // Increased from 1000ms to 2000ms for Railway
           }
         };
-        
+
         checkReady();
       });
     }
@@ -1983,14 +1983,14 @@ try {
     async function waitForPageContentReady(iframeDoc, iframeWindow) {
       // Wait for images to load
       await waitForImages(iframeDoc);
-      
+
       // Additional wait for content to render (increased for Railway)
       await new Promise(resolve => setTimeout(resolve, 3000));
-      
+
       // Check if student cards or content is loaded
       const visiblePages = iframeDoc.querySelectorAll('.magazine .page[style*="display: none"]');
       const hasContent = iframeDoc.querySelector('.cards-container, .top-management-page, .magazine .page img');
-      
+
       if (hasContent) {
         // Give extra time for content to fully render (increased for Railway)
         await new Promise(resolve => setTimeout(resolve, 2500));
