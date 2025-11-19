@@ -2457,7 +2457,7 @@ async function captureAllYearbookPages(
         console.log(`\n>>> Capturing front cover (page 1) for ${department}`);
         const nav1Success = await navigateToPage(iframeWindow, 1);
         if (nav1Success) {
-          await new Promise((resolve) => setTimeout(resolve, 2000));
+          await waitForPageContentReady(iframeDoc, iframeWindow);
           let canvas = await capturePage(iframeDoc, iframeWindow);
           if (canvas) {
             console.log(
@@ -2490,11 +2490,9 @@ async function captureAllYearbookPages(
 
           console.log(`Navigated to page ${pageNum}`);
 
-          console.log("Waiting for page to render (2000ms)...");
-          await new Promise((resolve) => setTimeout(resolve, 2000));
-          console.log("Page should be rendered now");
-
-          console.log("Capturing spread...");
+          console.log("Waiting for page content to be ready...");
+          await waitForPageContentReady(iframeDoc, iframeWindow);
+          console.log("Page content is ready, capturing spread...");
           let canvas = await capturePage(iframeDoc, iframeWindow);
           if (canvas) {
             console.log(
@@ -2516,7 +2514,7 @@ async function captureAllYearbookPages(
           );
           const navLastSuccess = await navigateToPage(iframeWindow, totalPages);
           if (navLastSuccess) {
-            await new Promise((resolve) => setTimeout(resolve, 2000));
+            await waitForPageContentReady(iframeDoc, iframeWindow);
             let canvas = await capturePage(iframeDoc, iframeWindow);
             if (canvas) {
               console.log(
@@ -2866,7 +2864,11 @@ async function navigateToPage(iframeWindow, pageNum) {
     iframeWindow.$(".magazine").turn("page", pageNum);
     console.log(`Successfully navigated to page ${pageNum}`);
 
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    // Wait for page turn animation to complete
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    // Wait for page to be fully visible and rendered
+    await waitForPageReady(iframeWindow, pageNum);
 
     return true;
   } catch (e) {
@@ -3182,8 +3184,62 @@ function waitForImages(doc) {
 
     Promise.all(imagePromises).then(resolve);
 
-    setTimeout(resolve, 10000);
+    setTimeout(resolve, 15000);
   });
+}
+
+async function waitForPageReady(iframeWindow, pageNum) {
+  return new Promise((resolve) => {
+    let attempts = 0;
+    const maxAttempts = 50;
+
+    const checkReady = () => {
+      attempts++;
+      try {
+        const currentPage = iframeWindow.$(".magazine").turn("page");
+        if (currentPage === pageNum) {
+          // Check if page is visible
+          const view = iframeWindow.$(".magazine").turn("view") || [];
+          if (view.includes(pageNum)) {
+            console.log(`Page ${pageNum} is ready and visible`);
+            setTimeout(resolve, 500);
+            return;
+          }
+        }
+      } catch (e) {
+        console.warn(`Error checking page readiness:`, e);
+      }
+
+      if (attempts < maxAttempts) {
+        setTimeout(checkReady, 100);
+      } else {
+        console.warn(
+          `Page ${pageNum} readiness check timeout, proceeding anyway`
+        );
+        setTimeout(resolve, 1000);
+      }
+    };
+
+    checkReady();
+  });
+}
+
+async function waitForPageContentReady(iframeDoc, iframeWindow) {
+  // Wait for images to load
+  await waitForImages(iframeDoc);
+
+  // Additional wait for content to render
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+
+  // Check if student cards or content is loaded
+  const hasContent = iframeDoc.querySelector(
+    ".cards-container, .top-management-page, .magazine .page img"
+  );
+
+  if (hasContent) {
+    // Give extra time for content to fully render
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+  }
 }
 
 function getSelectedDepartments() {
