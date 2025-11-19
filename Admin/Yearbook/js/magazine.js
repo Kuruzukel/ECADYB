@@ -1429,6 +1429,7 @@ function loadPage(page, pageElement) {
       $(this).appendTo(pageElement);
 
       pageElement.find(".loader").remove();
+      pageElement.attr("data-page-number", page);
     });
 
     var totalPages = $(".magazine").turn("pages");

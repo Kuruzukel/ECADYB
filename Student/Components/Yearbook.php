@@ -1451,7 +1451,7 @@ try {
             const nav1Success = await navigateToPage(iframeWindow, 1);
             if (nav1Success) {
               await new Promise(resolve => setTimeout(resolve, 2000));
-              let canvas = await capturePage(iframeDoc);
+          let canvas = await capturePage(iframeDoc, iframeWindow);
               if (canvas) {
                 console.log(`Front cover captured (${canvas.width}x${canvas.height})`);
                 capturedPages.push(canvas);
@@ -1473,7 +1473,7 @@ try {
 
               await new Promise(resolve => setTimeout(resolve, 2000));
 
-              let canvas = await capturePage(iframeDoc);
+              let canvas = await capturePage(iframeDoc, iframeWindow);
               if (canvas) {
                 console.log(
                   `Spread captured successfully (${canvas.width}x${canvas.height})`
@@ -1492,7 +1492,7 @@ try {
               const navLastSuccess = await navigateToPage(iframeWindow, totalPages);
               if (navLastSuccess) {
                 await new Promise(resolve => setTimeout(resolve, 2000));
-                let canvas = await capturePage(iframeDoc);
+                let canvas = await capturePage(iframeDoc, iframeWindow);
                 if (canvas) {
                   console.log(
                     `Back cover captured (${canvas.width}x${canvas.height})`);
@@ -1661,7 +1661,7 @@ try {
       }
     }
 
-    async function capturePage(iframeDoc) {
+    async function capturePage(iframeDoc, iframeWindow = null) {
       console.log('>>> capturePage called');
       try {
         const navControls = iframeDoc.querySelector('.nav-controls');
@@ -1679,6 +1679,8 @@ try {
         finalCanvas.width = 1920;
         finalCanvas.height = 1080;
         const ctx = finalCanvas.getContext('2d');
+
+        const restoreVisibility = hideNonVisiblePages(iframeDoc, iframeWindow);
 
         const bgImage = await loadImage('https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png');
         if (bgImage) {
@@ -1719,6 +1721,8 @@ try {
 
         await drawLowerCurl(ctx, 1920, 1080);
 
+        restoreVisibility();
+
         if (navControls && originalNavDisplay !== null) {
           navControls.style.display = originalNavDisplay;
         }
@@ -1732,6 +1736,47 @@ try {
           navControls.style.display = '';
         }
         return null;
+      }
+    }
+
+    function hideNonVisiblePages(doc, iframeWindow = null) {
+      try {
+        const win = iframeWindow || doc.defaultView;
+        if (!win || !win.$ || typeof win.$('.magazine').turn !== 'function') {
+          return () => {};
+        }
+
+        const currentView = win.$('.magazine').turn('view') || [];
+        const visibleSet = new Set(
+          currentView.filter(pageNum => typeof pageNum !== 'undefined' && pageNum !== null)
+            .map(pageNum => String(pageNum))
+        );
+
+        const hiddenNodes = [];
+        doc.querySelectorAll('.magazine .page').forEach(node => {
+          const pageNumber = node.getAttribute('data-page-number') ||
+            node.getAttribute('page') ||
+            node.dataset?.pageNumber;
+          if (!pageNumber || visibleSet.has(String(pageNumber))) {
+            return;
+          }
+          if (node.style.visibility !== 'hidden') {
+            hiddenNodes.push({
+              node,
+              value: node.style.visibility || ''
+            });
+            node.style.visibility = 'hidden';
+          }
+        });
+
+        return () => {
+          hiddenNodes.forEach(entry => {
+            entry.node.style.visibility = entry.value;
+          });
+        };
+      } catch (err) {
+        console.warn('Failed to hide non-visible pages before capture:', err);
+        return () => {};
       }
     }
 

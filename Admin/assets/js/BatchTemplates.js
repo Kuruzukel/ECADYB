@@ -2365,7 +2365,7 @@ function getYearbookUrl(department, batchYear) {
   const basePath = getBasePath();
 
   const deptMapping = {
-    COE: "BSE",
+    COE: "COE",
     CON: "BSN",
     BSCJE: "BSCJ",
   };
@@ -2458,7 +2458,7 @@ async function captureAllYearbookPages(
         const nav1Success = await navigateToPage(iframeWindow, 1);
         if (nav1Success) {
           await new Promise((resolve) => setTimeout(resolve, 2000));
-          let canvas = await capturePage(iframeDoc);
+          let canvas = await capturePage(iframeDoc, iframeWindow);
           if (canvas) {
             console.log(
               `Front cover captured (${canvas.width}x${canvas.height})`
@@ -2495,7 +2495,7 @@ async function captureAllYearbookPages(
           console.log("Page should be rendered now");
 
           console.log("Capturing spread...");
-          let canvas = await capturePage(iframeDoc);
+          let canvas = await capturePage(iframeDoc, iframeWindow);
           if (canvas) {
             console.log(
               `Spread captured successfully (${canvas.width}x${canvas.height})`
@@ -2517,7 +2517,7 @@ async function captureAllYearbookPages(
           const navLastSuccess = await navigateToPage(iframeWindow, totalPages);
           if (navLastSuccess) {
             await new Promise((resolve) => setTimeout(resolve, 2000));
-            let canvas = await capturePage(iframeDoc);
+            let canvas = await capturePage(iframeDoc, iframeWindow);
             if (canvas) {
               console.log(
                 `Back cover captured (${canvas.width}x${canvas.height})`
@@ -2877,7 +2877,7 @@ async function navigateToPage(iframeWindow, pageNum) {
   }
 }
 
-async function capturePage(iframeDoc) {
+async function capturePage(iframeDoc, iframeWindow = null) {
   console.log(">>> capturePage called");
   try {
     console.log("Hiding navigation controls...");
@@ -2914,6 +2914,7 @@ async function capturePage(iframeDoc) {
     }
 
     console.log("Capturing yearbook content...");
+    const restoreVisibility = hideNonVisiblePages(iframeDoc, iframeWindow);
     const canvas = iframeDoc.querySelector("#canvas");
     if (canvas) {
       const yearbookCanvas = await html2canvas(canvas, {
@@ -2948,6 +2949,8 @@ async function capturePage(iframeDoc) {
     console.log("Drawing lower curl...");
     await drawLowerCurl(ctx, 1920, 1080);
 
+    restoreVisibility();
+
     if (navControls && originalNavDisplay !== null) {
       navControls.style.display = originalNavDisplay;
       console.log("Navigation controls restored");
@@ -2973,6 +2976,51 @@ async function capturePage(iframeDoc) {
     }
 
     return null;
+  }
+}
+
+function hideNonVisiblePages(doc, iframeWindow = null) {
+  try {
+    const win = iframeWindow || doc.defaultView;
+    if (!win || !win.$ || typeof win.$(".magazine").turn !== "function") {
+      return () => {};
+    }
+
+    const currentView = win.$(".magazine").turn("view") || [];
+    const visiblePages = new Set(
+      currentView
+        .filter((pageNum) => pageNum !== null && pageNum !== undefined)
+        .map((pageNum) => String(pageNum))
+    );
+
+    const hiddenNodes = [];
+    doc.querySelectorAll(".magazine .page").forEach((node) => {
+      const pageNumber =
+        node.getAttribute("data-page-number") ||
+        node.getAttribute("page") ||
+        node.dataset?.pageNumber;
+
+      if (!pageNumber || visiblePages.has(String(pageNumber))) {
+        return;
+      }
+
+      if (node.style.visibility !== "hidden") {
+        hiddenNodes.push({
+          node,
+          value: node.style.visibility || "",
+        });
+        node.style.visibility = "hidden";
+      }
+    });
+
+    return () => {
+      hiddenNodes.forEach((entry) => {
+        entry.node.style.visibility = entry.value;
+      });
+    };
+  } catch (err) {
+    console.warn("Failed to hide non-visible pages before capture:", err);
+    return () => {};
   }
 }
 
@@ -3582,18 +3630,24 @@ window.addEventListener("DOMContentLoaded", () => {
               completion_date_string: sectionData.completion_date,
               parsed_date: completionDate,
               is_valid: !isNaN(completionDate.getTime()),
-              current_date: currentDate
+              current_date: currentDate,
             });
-            
+
             const yearsSinceCompletion =
               (currentDate - completionDate) / (1000 * 60 * 60 * 24 * 365);
 
             if (yearsSinceCompletion <= 3) {
               section.classList.add("available");
-              console.log(`[BatchTemplates] ✅ ${headerText} marked as AVAILABLE (green header)`);
+              console.log(
+                `[BatchTemplates] ✅ ${headerText} marked as AVAILABLE (green header)`
+              );
             } else {
               section.classList.remove("available");
-              console.log(`[BatchTemplates] ❌ ${headerText} expired (${yearsSinceCompletion.toFixed(1)} years ago)`);
+              console.log(
+                `[BatchTemplates] ❌ ${headerText} expired (${yearsSinceCompletion.toFixed(
+                  1
+                )} years ago)`
+              );
             }
           } else {
             section.classList.remove("available");
