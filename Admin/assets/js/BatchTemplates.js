@@ -2994,28 +2994,82 @@ function hideNonVisiblePages(doc, iframeWindow = null) {
     );
 
     const hiddenNodes = [];
+    const hiddenCards = [];
+
+    // Hide all non-visible pages aggressively
     doc.querySelectorAll(".magazine .page").forEach((node) => {
       const pageNumber =
         node.getAttribute("data-page-number") ||
         node.getAttribute("page") ||
-        node.dataset?.pageNumber;
+        node.dataset?.pageNumber ||
+        node.getAttribute("data-page");
 
-      if (!pageNumber || visiblePages.has(String(pageNumber))) {
+      if (!pageNumber) {
+        // If no page number, try to extract from Turn.js
+        const $node = win.$(node);
+        if ($node.length && $node.data("page")) {
+          const turnPageNum = String($node.data("page"));
+          if (!visiblePages.has(turnPageNum)) {
+            hiddenNodes.push({
+              node,
+              display: node.style.display || "",
+              visibility: node.style.visibility || "",
+              opacity: node.style.opacity || "",
+              transform: node.style.transform || "",
+            });
+            node.style.display = "none";
+            node.style.visibility = "hidden";
+            node.style.opacity = "0";
+            node.style.transform = "translateX(-9999px)";
+          }
+        }
         return;
       }
 
-      if (node.style.visibility !== "hidden") {
+      const pageNumStr = String(pageNumber);
+      if (!visiblePages.has(pageNumStr)) {
         hiddenNodes.push({
           node,
-          value: node.style.visibility || "",
+          display: node.style.display || "",
+          visibility: node.style.visibility || "",
+          opacity: node.style.opacity || "",
+          transform: node.style.transform || "",
         });
+        node.style.display = "none";
         node.style.visibility = "hidden";
+        node.style.opacity = "0";
+        node.style.transform = "translateX(-9999px)";
+      }
+    });
+
+    // Also hide any student cards that might be in overflow areas
+    doc.querySelectorAll(".student-card").forEach((card) => {
+      const page = card.closest(".page");
+      if (page) {
+        const pageNumber =
+          page.getAttribute("data-page-number") ||
+          page.getAttribute("page") ||
+          page.dataset?.pageNumber ||
+          page.getAttribute("data-page");
+        if (pageNumber && !visiblePages.has(String(pageNumber))) {
+          hiddenCards.push({
+            card,
+            display: card.style.display || "",
+          });
+          card.style.display = "none";
+        }
       }
     });
 
     return () => {
       hiddenNodes.forEach((entry) => {
-        entry.node.style.visibility = entry.value;
+        entry.node.style.display = entry.display;
+        entry.node.style.visibility = entry.visibility;
+        entry.node.style.opacity = entry.opacity;
+        entry.node.style.transform = entry.transform;
+      });
+      hiddenCards.forEach((entry) => {
+        entry.card.style.display = entry.display;
       });
     };
   } catch (err) {
