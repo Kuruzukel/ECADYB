@@ -1408,6 +1408,7 @@ try {
         let timeoutHandle;
         let capturedPages = [];
         let iframeLoadFired = false;
+        let cleanupPdfMode = () => {};
 
         iframe.onload = async () => {
           iframeLoadFired = true;
@@ -1431,6 +1432,9 @@ try {
 
             await waitForImages(iframeDoc);
             console.log('Images loaded!');
+
+            cleanupPdfMode = setPdfExportMode(iframeDoc);
+            console.log('PDF export mode applied');
 
             const totalPages = await getTotalPagesFromYearbook(iframeWindow);
             console.log(`Total pages for ${department}:`, totalPages);
@@ -1503,6 +1507,7 @@ try {
 
             console.log(`Total spreads captured: ${captureCount}`);
 
+            cleanupPdfMode();
             clearTimeout(timeoutHandle);
             document.body.removeChild(iframe);
 
@@ -1519,6 +1524,7 @@ try {
             console.error(`\n>>> ERROR in iframe.onload for ${department}`);
             console.error('Error:', error);
 
+            cleanupPdfMode();
             clearTimeout(timeoutHandle);
             if (document.body.contains(iframe)) {
               document.body.removeChild(iframe);
@@ -1713,6 +1719,52 @@ try {
         }
         return null;
       }
+    }
+
+    function setPdfExportMode(doc) {
+      if (!doc) return () => {};
+
+      const html = doc.documentElement;
+      const body = doc.body;
+      const existingStyle = doc.getElementById('pdf-export-style');
+
+      if (!existingStyle) {
+        const style = doc.createElement('style');
+        style.id = 'pdf-export-style';
+        style.textContent = `
+          .pdf-export-mode,
+          .pdf-export-mode body {
+            background: transparent !important;
+            overflow: hidden !important;
+          }
+          .pdf-export-mode #canvas,
+          .pdf-export-mode .magazine-viewport,
+          .pdf-export-mode .magazine-viewport .container {
+            width: 1920px !important;
+            height: 1080px !important;
+            max-width: 1920px !important;
+            max-height: 1080px !important;
+          }
+          .pdf-export-mode .magazine::before,
+          .pdf-export-mode .magazine .page::before,
+          .pdf-export-mode .magazine .page::after {
+            display: none !important;
+          }
+        `;
+        if (doc.head) {
+          doc.head.appendChild(style);
+        } else {
+          doc.documentElement.appendChild(style);
+        }
+      }
+
+      if (html) html.classList.add('pdf-export-mode');
+      if (body) body.classList.add('pdf-export-mode');
+
+      return () => {
+        if (html) html.classList.remove('pdf-export-mode');
+        if (body) body.classList.remove('pdf-export-mode');
+      };
     }
 
     function loadImage(url) {
