@@ -1,9 +1,11 @@
 <?php
 define('ADMIN_DASHBOARD_INCLUDED', true);
 
-$basePath = defined('BASE_URL')
-    ? rtrim(BASE_URL, '/')
-    : (strpos($_SERVER['REQUEST_URI'], '/ECADYB/') !== false ? '/ECADYB' : '');
+$basePath = getenv('RAILWAY_PUBLIC_URL')
+    ? ''
+    : (defined('BASE_URL')
+        ? rtrim(BASE_URL, '/')
+        : (strpos($_SERVER['REQUEST_URI'], '/ECADYB/') !== false ? '/ECADYB' : ''));
 
 
 $mongoPath = realpath(__DIR__ . '/../../Connection/Configuration/MongoConnect.php');
