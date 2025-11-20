@@ -220,32 +220,14 @@ try {
         $safeExt = preg_replace('/[^A-Za-z0-9]/', '', $ext) ?: 'jpg';
 
         if ($academicYear) {
-            $baseFolder = 'Top Management Photos/' . $academicYear;
-            error_log("UploadTopManagementPhotos: Using academic year folder: $baseFolder");
+            $safeFolder = 'Top Management Photos/' . $academicYear;
+            error_log("UploadTopManagementPhotos: Using academic year folder: $safeFolder");
         } else {
-            $baseFolder = 'Top Management Photos';
-            error_log("UploadTopManagementPhotos: No academic year, using default folder: $baseFolder");
+            $safeFolder = 'Top Management Photos';
+            error_log("UploadTopManagementPhotos: No academic year, using default folder: $safeFolder");
         }
 
-        $photoTypeFolder = '';
-        $nameWithoutExt = pathinfo($fileName, PATHINFO_FILENAME);
-
-        if (strpos($nameWithoutExt, '-FILIPINIANA') !== false) {
-            $photoTypeFolder = 'FILIPINIANA';
-            error_log("Detected FILIPINIANA photo for $fileName");
-        } elseif (strpos($nameWithoutExt, '-TOGA') !== false) {
-            $photoTypeFolder = 'TOGA';
-            error_log("Detected TOGA photo for $fileName");
-        } elseif (strpos($nameWithoutExt, '-UNIFORM') !== false) {
-            $photoTypeFolder = 'UNIFORM';
-            error_log("Detected UNIFORM photo for $fileName");
-        } else {
-            $photoTypeFolder = 'UNIFORM';
-            error_log("No photo type detected for $fileName, defaulting to UNIFORM");
-        }
-
-        $safeFolder = $baseFolder . '/' . $photoTypeFolder;
-        error_log("UploadTopManagementPhotos: Using full folder path: $safeFolder");
+        error_log("UploadTopManagementPhotos: Final folder path: $safeFolder");
 
         $filename = sprintf('%s.%s', $safeFileName, $safeExt);
         $path = $safeFolder . '/' . $filename;
@@ -417,7 +399,6 @@ try {
                 'original_name' => $fileName,
                 'url' => $publicUrl,
                 'upload_time' => new \MongoDB\BSON\UTCDateTime(),
-                'photo_type' => $photoTypeFolder,
                 'folder_path' => $safeFolder
             ];
 
