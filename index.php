@@ -307,10 +307,20 @@ $routes = [
 
 if (array_key_exists($requestUri, $routes)) {
     $filePath = $routes[$requestUri];
+    
+    // Enhanced logging for debugging on Railway
+    error_log("index.php: Route matched - URI: $requestUri");
+    error_log("index.php: BASE_PATH: " . BASE_PATH);
+    error_log("index.php: Resolved file path: $filePath");
+    error_log("index.php: File exists check: " . (file_exists($filePath) ? 'YES' : 'NO'));
+    error_log("index.php: Current working directory: " . getcwd());
+    error_log("index.php: __DIR__: " . __DIR__);
+    
     if (file_exists($filePath)) {
         $ext = pathinfo($filePath, PATHINFO_EXTENSION);
 
         if ($ext === 'php') {
+            error_log("index.php: Including PHP file: $filePath");
             include $filePath;
         } else {
             $htmlContent = file_get_contents($filePath);
@@ -420,6 +430,23 @@ if (array_key_exists($requestUri, $routes)) {
         }
         exit;
     } else {
+        // Enhanced error logging
+        error_log("index.php: ERROR - File not found!");
+        error_log("index.php: Requested URI: $requestUri");
+        error_log("index.php: Expected file path: $filePath");
+        error_log("index.php: BASE_PATH constant: " . BASE_PATH);
+        error_log("index.php: __DIR__ constant: " . __DIR__);
+        
+        // List directory contents for debugging
+        $dirToCheck = dirname($filePath);
+        if (is_dir($dirToCheck)) {
+            error_log("index.php: Directory exists: $dirToCheck");
+            $files = scandir($dirToCheck);
+            error_log("index.php: Directory contents: " . implode(', ', $files));
+        } else {
+            error_log("index.php: Directory does NOT exist: $dirToCheck");
+        }
+        
         http_response_code(404);
         echo "❌ File not found for route: $requestUri";
         exit;
