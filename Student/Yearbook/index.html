@@ -1666,8 +1666,9 @@
             }
           } else {
             document.body.style.background = "rgb(17, 45, 78)";
+            // Keep the lower curl visible at all times since the yearbook is always in fullscreen mode within iframe
             if (curlElement) {
-              curlElement.style.display = "none";
+              curlElement.style.display = "block";
             }
           }
         }
