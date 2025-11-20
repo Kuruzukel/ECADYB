@@ -100,12 +100,14 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(90deg,
-      transparent 0%,
-      rgba(255, 255, 255, 0.03) 25%,
-      rgba(99, 102, 241, 0.1) 50%,
-      rgba(255, 255, 255, 0.03) 75%,
-      transparent 100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.03) 25%,
+    rgba(99, 102, 241, 0.1) 50%,
+    rgba(255, 255, 255, 0.03) 75%,
+    transparent 100%
+  );
   background-size: 400% 100%;
   animation: shimmerEffect 1s ease-out;
   z-index: 9998;
@@ -119,10 +121,12 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: radial-gradient(circle at center,
-      rgba(99, 102, 241, 0.1) 0%,
-      rgba(112, 44, 180, 0.05) 30%,
-      transparent 70%);
+  background: radial-gradient(
+    circle at center,
+    rgba(99, 102, 241, 0.1) 0%,
+    rgba(112, 44, 180, 0.05) 30%,
+    transparent 70%
+  );
   z-index: 9999;
   pointer-events: none;
   animation: particleFloat 1s ease-out;
@@ -152,6 +156,11 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 html {
@@ -291,7 +300,6 @@ header.fading {
 }
 
 @keyframes pulse {
-
   0%,
   100% {
     opacity: 1;
@@ -359,7 +367,8 @@ header.fading {
   left: 0;
   width: 100%;
   height: 100%;
-  background: url("https://ecadyb.b-cdn.net/img/ECABG1.jpg") center center/cover no-repeat;
+  background: url("https://ecadyb.b-cdn.net/img/ECABG1.jpg") center center/cover
+    no-repeat;
   pointer-events: none;
   filter: blur(6px);
   transform: scale(1.1);
@@ -843,7 +852,8 @@ header.fading {
   left: 0;
   width: 100%;
   height: 100%;
-  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center center/cover no-repeat;
+  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center
+    center/cover no-repeat;
   pointer-events: none;
   filter: blur(6px);
 }
@@ -853,7 +863,7 @@ header.fading {
   z-index: 2;
 }
 
-.yearbooks-section>*:not(.yearbooks-background) {
+.yearbooks-section > *:not(.yearbooks-background) {
   position: relative;
   z-index: 2;
 }
@@ -881,29 +891,70 @@ header.fading {
 }
 
 .yearbook-lower-curl {
-  position: absolute;
-  left: 0;
+  position: fixed;
   bottom: 0;
+  left: 0;
   width: 100%;
-  height: 60px;
-  z-index: 101;
+  z-index: 1;
   pointer-events: none;
+  display: none;
 }
 
-.yearbook-iframe-container .yearbook-lower-curl {
-  z-index: 101;
-  pointer-events: none;
-}
-
+/* Show curl only in fullscreen mode */
+html:fullscreen .yearbook-lower-curl,
+html:-webkit-full-screen .yearbook-lower-curl,
+html:-moz-full-screen .yearbook-lower-curl,
+html:-ms-fullscreen .yearbook-lower-curl,
+:fullscreen .yearbook-lower-curl,
+:-webkit-full-screen .yearbook-lower-curl,
+:-moz-full-screen .yearbook-lower-curl,
+:-ms-fullscreen .yearbook-lower-curl,
 .yearbook-iframe-container:fullscreen .yearbook-lower-curl,
 .yearbook-iframe-container:-webkit-full-screen .yearbook-lower-curl,
 .yearbook-iframe-container:-moz-full-screen .yearbook-lower-curl,
 .yearbook-iframe-container:-ms-fullscreen .yearbook-lower-curl {
+  display: block;
   z-index: 101;
   pointer-events: none;
 }
 
 .yearbook-lower-curl svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Main yearbook lower curl (parent page, not iframe) - same as main-hero-lower-curl */
+.yearbook-main-lower-curl {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+  z-index: 4;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Hide main curl when iframe container is displayed or in fullscreen mode */
+body.yearbook-iframe-active .yearbook-main-lower-curl,
+.yearbook-iframe-container:fullscreen .yearbook-main-lower-curl,
+.yearbook-iframe-container:-webkit-full-screen .yearbook-main-lower-curl,
+.yearbook-iframe-container:-moz-full-screen .yearbook-main-lower-curl,
+.yearbook-iframe-container:-ms-fullscreen .yearbook-main-lower-curl,
+html:fullscreen .yearbook-main-lower-curl,
+html:-webkit-full-screen .yearbook-main-lower-curl,
+html:-moz-full-screen .yearbook-main-lower-curl,
+html:-ms-fullscreen .yearbook-main-lower-curl,
+:fullscreen .yearbook-main-lower-curl,
+:-webkit-full-screen .yearbook-main-lower-curl,
+:-moz-full-screen .yearbook-main-lower-curl,
+:-ms-fullscreen .yearbook-main-lower-curl {
+  display: none !important;
+}
+
+.yearbook-main-lower-curl svg {
   display: block;
   width: 100%;
   height: 100%;
@@ -1403,9 +1454,11 @@ header.fading {
   pointer-events: none;
   z-index: 2;
   opacity: 0.25;
-  background-image: linear-gradient(to right,
+  background-image: linear-gradient(
+      to right,
       rgba(255, 255, 255, 0.179) 1px,
-      transparent 1px),
+      transparent 1px
+    ),
     linear-gradient(to bottom, rgba(255, 255, 255, 0.25) 1px, transparent 1px);
   background-size: 35px 33px;
 }
@@ -1822,7 +1875,8 @@ header.fading {
   left: 0;
   width: 100%;
   height: 100%;
-  background: url("https://ecadyb.b-cdn.net/img/ECABG1.jpg") center center/cover no-repeat;
+  background: url("https://ecadyb.b-cdn.net/img/ECABG1.jpg") center center/cover
+    no-repeat;
   pointer-events: none;
   filter: blur(6px);
   transform: scale(1.1);
@@ -2005,10 +2059,12 @@ header.fading {
   height: 100%;
   pointer-events: none;
   z-index: 2;
-  background: radial-gradient(ellipse at center,
-      rgba(0, 0, 0, 0) 60%,
-      rgba(0, 0, 0, 0.18) 80%,
-      rgba(0, 0, 0, 0.32) 100%);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0) 60%,
+    rgba(0, 0, 0, 0.18) 80%,
+    rgba(0, 0, 0, 0.32) 100%
+  );
   filter: blur(24px);
   opacity: 0.7;
 }
@@ -2050,7 +2106,8 @@ header.fading {
 }
 
 .memories-section {
-  background: #021326 url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center center/cover no-repeat;
+  background: #021326 url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png")
+    center center/cover no-repeat;
   color: white;
   padding: 8rem 0 4rem 0;
   text-align: center;
@@ -2138,7 +2195,8 @@ header.fading {
   left: 0;
   width: 100%;
   height: 100%;
-  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center center/cover no-repeat;
+  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center
+    center/cover no-repeat;
   backdrop-filter: blur(20px) brightness(0.4);
   -webkit-backdrop-filter: blur(20px) brightness(0.4);
 }
@@ -2403,10 +2461,12 @@ header.fading {
   height: 100%;
   pointer-events: none;
   z-index: 2;
-  background: radial-gradient(ellipse at center,
-      rgba(0, 0, 0, 0) 60%,
-      rgba(0, 0, 0, 0.18) 80%,
-      rgba(0, 0, 0, 0.32) 100%);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0) 60%,
+    rgba(0, 0, 0, 0.18) 80%,
+    rgba(0, 0, 0, 0.32) 100%
+  );
   filter: blur(24px);
   opacity: 0.7;
 }
@@ -2422,9 +2482,11 @@ header.fading {
   pointer-events: none;
   z-index: 2;
   opacity: 0.25;
-  background-image: linear-gradient(to right,
+  background-image: linear-gradient(
+      to right,
       rgba(255, 255, 255, 0.179) 1px,
-      transparent 1px),
+      transparent 1px
+    ),
     linear-gradient(to bottom, rgba(255, 255, 255, 0.25) 1px, transparent 1px);
   background-size: 35px 33px;
 }
@@ -2673,7 +2735,6 @@ header.fading {
 }
 
 @media (min-width: 1440px) {
-
   #mobileLoginDropdownBtn,
   #mobileLoginDropdownMenu {
     display: none !important;
@@ -2681,7 +2742,6 @@ header.fading {
 }
 
 @media (max-width: 1439px) and (min-width: 1200px) {
-
   #mobileLoginDropdownBtn,
   #mobileLoginDropdownMenu {
     display: none !important;
@@ -2856,7 +2916,6 @@ header.fading {
 }
 
 @media (max-width: 1199px) and (min-width: 1120px) {
-
   #mobileLoginDropdownBtn,
   #mobileLoginDropdownMenu {
     display: none !important;
@@ -3039,7 +3098,6 @@ header.fading {
 }
 
 @media (max-width: 1120px) and (min-width: 991px) {
-
   #mobileLoginDropdownBtn,
   #mobileLoginDropdownMenu {
     display: none !important;
@@ -3212,7 +3270,6 @@ header.fading {
 }
 
 @media (max-width: 991px) and (min-width: 768px) {
-
   #mobileLoginDropdownBtn,
   #mobileLoginDropdownMenu {
     display: none !important;
@@ -3408,7 +3465,6 @@ header.fading {
 }
 
 @media (max-width: 768px) and (min-width: 600px) {
-
   .carousel-section,
   .memories-section {
     min-height: auto !important;
@@ -3474,7 +3530,7 @@ header.fading {
     margin-left: auto;
   }
 
-  .hamburger-menu.active+.center-nav,
+  .hamburger-menu.active + .center-nav,
   .center-nav.mobile-active {
     display: flex;
     position: absolute;
@@ -3514,10 +3570,12 @@ header.fading {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg,
-        transparent,
-        rgba(255, 255, 255, 0.1),
-        transparent);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.1),
+      transparent
+    );
     transition: left 0.5s ease;
   }
 
@@ -3872,7 +3930,6 @@ header.fading {
 }
 
 @media (max-width: 600px) and (min-width: 480px) {
-
   .carousel-section,
   .memories-section {
     min-height: auto !important;
@@ -3938,7 +3995,7 @@ header.fading {
     margin-left: auto;
   }
 
-  .hamburger-menu.active+.center-nav,
+  .hamburger-menu.active + .center-nav,
   .center-nav.mobile-active {
     display: flex;
     position: absolute;
@@ -3978,10 +4035,12 @@ header.fading {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg,
-        transparent,
-        rgba(255, 255, 255, 0.1),
-        transparent);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.1),
+      transparent
+    );
     transition: left 0.5s ease;
   }
 
@@ -4404,7 +4463,6 @@ header.fading {
 }
 
 @media (max-width: 480px) and (min-width: 320px) {
-
   .carousel-section,
   .memories-section {
     min-height: auto !important;
@@ -4470,7 +4528,7 @@ header.fading {
     margin-left: auto;
   }
 
-  .hamburger-menu.active+.center-nav,
+  .hamburger-menu.active + .center-nav,
   .center-nav.mobile-active {
     display: flex;
     position: absolute;
@@ -4510,10 +4568,12 @@ header.fading {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg,
-        transparent,
-        rgba(255, 255, 255, 0.1),
-        transparent);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.1),
+      transparent
+    );
     transition: left 0.5s ease;
   }
 
@@ -4979,86 +5039,66 @@ header.fading {
 }
 
 @media only screen and (min-width: 1024px) and (max-width: 1366px) and (orientation: landscape) {
-
   .yearbook-iframe-container:fullscreen,
   .yearbook-iframe-container:-webkit-full-screen,
   .yearbook-iframe-container:-moz-full-screen,
   .yearbook-iframe-container:-ms-fullscreen {
-    overflow: auto;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(6, 182, 212, 0.6) rgba(255, 255, 255, 0.1);
+    overflow: hidden;
   }
 
   .yearbook-iframe-container:fullscreen iframe,
   .yearbook-iframe-container:-webkit-full-screen iframe,
   .yearbook-iframe-container:-moz-full-screen iframe,
   .yearbook-iframe-container:-ms-fullscreen iframe {
-    overflow: auto;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(6, 182, 212, 0.6) rgba(255, 255, 255, 0.1);
+    overflow: hidden;
   }
 }
 
 @media only screen and (min-width: 800px) and (max-width: 1023px) and (orientation: landscape) {
-
   .yearbook-iframe-container:fullscreen,
   .yearbook-iframe-container:-webkit-full-screen,
   .yearbook-iframe-container:-moz-full-screen,
   .yearbook-iframe-container:-ms-fullscreen {
-    overflow: auto;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(6, 182, 212, 0.6) rgba(255, 255, 255, 0.1);
+    overflow: hidden;
   }
 
   .yearbook-iframe-container:fullscreen iframe,
   .yearbook-iframe-container:-webkit-full-screen iframe,
   .yearbook-iframe-container:-moz-full-screen iframe,
   .yearbook-iframe-container:-ms-fullscreen iframe {
-    overflow: auto;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(6, 182, 212, 0.6) rgba(255, 255, 255, 0.1);
+    overflow: hidden;
   }
 }
 
 @media only screen and (min-width: 640px) and (max-width: 799px) and (orientation: landscape) {
-
   .yearbook-iframe-container:fullscreen,
   .yearbook-iframe-container:-webkit-full-screen,
   .yearbook-iframe-container:-moz-full-screen,
   .yearbook-iframe-container:-ms-fullscreen {
-    overflow: auto;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(6, 182, 212, 0.6) rgba(255, 255, 255, 0.1);
+    overflow: hidden;
   }
 
   .yearbook-iframe-container:fullscreen iframe,
   .yearbook-iframe-container:-webkit-full-screen iframe,
   .yearbook-iframe-container:-moz-full-screen iframe,
   .yearbook-iframe-container:-ms-fullscreen iframe {
-    overflow: auto;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(6, 182, 212, 0.6) rgba(255, 255, 255, 0.1);
+    overflow: hidden;
   }
 }
 
 @media only screen and (min-width: 568px) and (max-width: 639px) and (orientation: landscape) {
-
   .yearbook-iframe-container:fullscreen,
   .yearbook-iframe-container:-webkit-full-screen,
   .yearbook-iframe-container:-moz-full-screen,
   .yearbook-iframe-container:-ms-fullscreen {
-    overflow: auto;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(6, 182, 212, 0.6) rgba(255, 255, 255, 0.1);
+    overflow: hidden;
   }
 
   .yearbook-iframe-container:fullscreen iframe,
   .yearbook-iframe-container:-webkit-full-screen iframe,
   .yearbook-iframe-container:-moz-full-screen iframe,
   .yearbook-iframe-container:-ms-fullscreen iframe {
-    overflow: auto;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(6, 182, 212, 0.6) rgba(255, 255, 255, 0.1);
+    overflow: hidden;
   }
 }
 
@@ -5130,8 +5170,10 @@ header.fading {
   width: 100vw;
   height: 100vh;
   margin: 0;
-  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center center/cover no-repeat;
+  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center
+    center/cover no-repeat;
   z-index: 9999;
+  overflow: hidden;
 }
 
 .yearbook-iframe-container:-webkit-full-screen {
@@ -5141,8 +5183,10 @@ header.fading {
   width: 100vw;
   height: 100vh;
   margin: 0;
-  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center center/cover no-repeat;
+  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center
+    center/cover no-repeat;
   z-index: 9999;
+  overflow: hidden;
 }
 
 .yearbook-iframe-container:-moz-full-screen {
@@ -5152,11 +5196,10 @@ header.fading {
   width: 100vw;
   height: 100vh;
   margin: 0;
-  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center center/cover no-repeat;
+  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center
+    center/cover no-repeat;
   z-index: 9999;
-  overflow: auto;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(6, 182, 212, 0.6) rgba(255, 255, 255, 0.1);
+  overflow: hidden;
 }
 
 .yearbook-iframe-container:-ms-fullscreen {
@@ -5166,11 +5209,17 @@ header.fading {
   width: 100vw;
   height: 100vh;
   margin: 0;
-  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center center/cover no-repeat;
+  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center
+    center/cover no-repeat;
   z-index: 9999;
-  overflow: auto;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(6, 182, 212, 0.6) rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+/* Fullscreen backdrop styles */
+:not(:root):fullscreen::backdrop {
+  position: fixed;
+  inset: 0px;
+  background: black;
 }
 
 .yearbook-items-container {
@@ -5326,10 +5375,12 @@ header.fading {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(145deg,
-      rgba(6, 182, 212, 0.02) 0%,
-      rgba(14, 165, 233, 0.01) 50%,
-      rgba(6, 182, 212, 0.02) 100%);
+  background: linear-gradient(
+    145deg,
+    rgba(6, 182, 212, 0.02) 0%,
+    rgba(14, 165, 233, 0.01) 50%,
+    rgba(6, 182, 212, 0.02) 100%
+  );
   border-radius: 12px;
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -5369,10 +5420,12 @@ header.fading {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg,
-      transparent,
-      rgba(255, 255, 255, 0.2),
-      transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
   transition: left 0.5s;
 }
 
@@ -5962,7 +6015,8 @@ header.fading {
     width: 100vw !important;
     height: 100vh !important;
     overflow: hidden !important;
-    background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center center/cover no-repeat !important;
+    background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center
+      center/cover no-repeat !important;
     background-color: #000042 !important;
     border: none !important;
     outline: none !important;
@@ -6015,7 +6069,6 @@ h2.section-title {
 }
 
 @media (max-width: 768px) and (min-width: 600px) {
-
   .about-section .section-title,
   .about-hero-section .section-title,
   .about-hero-content .section-title,
@@ -6148,9 +6201,11 @@ h2.section-title {
 
   .yearbook-slider-nav:hover,
   .yearbook-slider-nav:focus-visible {
-    background: linear-gradient(135deg,
-        rgba(17, 45, 78, 0.95) 0%,
-        #0d39d9 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(17, 45, 78, 0.95) 0%,
+      #0d39d9 100%
+    );
     border: 1px solid #fcda15;
     box-shadow: 0 10px 30px rgba(12, 39, 190, 0.35),
       0 0 0 2px rgba(252, 218, 21, 0.35);
@@ -6186,7 +6241,6 @@ h2.section-title {
 }
 
 @media (max-width: 600px) and (min-width: 480px) {
-
   .about-section .section-title,
   .about-hero-section .section-title,
   .about-hero-content .section-title,
@@ -6319,9 +6373,11 @@ h2.section-title {
 
   .yearbook-slider-nav:hover,
   .yearbook-slider-nav:focus-visible {
-    background: linear-gradient(135deg,
-        rgba(17, 45, 78, 0.95) 0%,
-        #0d39d9 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(17, 45, 78, 0.95) 0%,
+      #0d39d9 100%
+    );
     border: 1px solid #fcda15;
     box-shadow: 0 10px 30px rgba(12, 39, 190, 0.35),
       0 0 0 2px rgba(252, 218, 21, 0.35);
@@ -6357,7 +6413,6 @@ h2.section-title {
 }
 
 @media (max-width: 480px) and (min-width: 320px) {
-
   .about-section .section-title,
   .about-hero-section .section-title,
   .about-hero-content .section-title,
@@ -6490,9 +6545,11 @@ h2.section-title {
 
   .yearbook-slider-nav:hover,
   .yearbook-slider-nav:focus-visible {
-    background: linear-gradient(135deg,
-        rgba(17, 45, 78, 0.95) 0%,
-        #0d39d9 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(17, 45, 78, 0.95) 0%,
+      #0d39d9 100%
+    );
     border: 1px solid #fcda15;
     box-shadow: 0 10px 30px rgba(12, 39, 190, 0.35),
       0 0 0 2px rgba(252, 218, 21, 0.35);
@@ -6543,7 +6600,6 @@ body .about-hero-content .section-title {
 }
 
 @media (max-width: 768px) {
-
   body .about-hero-section .about-hero-content .section-title,
   body .about-section .section-title,
   body .about-hero-content .section-title {
@@ -6557,51 +6613,74 @@ body .about-hero-content .section-title {
 
 /* Large Desktop Fullscreen (1200px - 1439px) */
 @media (max-width: 1439px) and (min-width: 1200px) {
-  html:fullscreen .top-management-page {}
+  html:fullscreen .top-management-page {
+  }
 
-  html:-webkit-full-screen .top-management-page {}
+  html:-webkit-full-screen .top-management-page {
+  }
 
-  html:-moz-full-screen .top-management-page {}
+  html:-moz-full-screen .top-management-page {
+  }
 
-  html:-ms-fullscreen .top-management-page {}
+  html:-ms-fullscreen .top-management-page {
+  }
 
-  html:fullscreen .management-name {}
+  html:fullscreen .management-name {
+  }
 
-  html:-webkit-full-screen .management-name {}
+  html:-webkit-full-screen .management-name {
+  }
 
-  html:-moz-full-screen .management-name {}
+  html:-moz-full-screen .management-name {
+  }
 
-  html:-ms-fullscreen .management-name {}
+  html:-ms-fullscreen .management-name {
+  }
 
-  html:fullscreen .management-position {}
+  html:fullscreen .management-position {
+  }
 
-  html:-webkit-full-screen .management-position {}
+  html:-webkit-full-screen .management-position {
+  }
 
-  html:-moz-full-screen .management-position {}
+  html:-moz-full-screen .management-position {
+  }
 
-  html:-ms-fullscreen .management-position {}
+  html:-ms-fullscreen .management-position {
+  }
 
-  html:fullscreen .management-message {}
+  html:fullscreen .management-message {
+  }
 
-  html:-webkit-full-screen .management-message {}
+  html:-webkit-full-screen .management-message {
+  }
 
-  html:-moz-full-screen .management-message {}
+  html:-moz-full-screen .management-message {
+  }
 
-  html:-ms-fullscreen .management-message {}
+  html:-ms-fullscreen .management-message {
+  }
 
-  html:fullscreen .cards-container {}
+  html:fullscreen .cards-container {
+  }
 
-  html:-webkit-full-screen .cards-container {}
+  html:-webkit-full-screen .cards-container {
+  }
 
-  html:-moz-full-screen .cards-container {}
+  html:-moz-full-screen .cards-container {
+  }
 
-  html:-ms-fullscreen .cards-container {}
+  html:-ms-fullscreen .cards-container {
+  }
 
-  html:fullscreen .student-card {}
+  html:fullscreen .student-card {
+  }
 
-  html:-webkit-full-screen .student-card {}
+  html:-webkit-full-screen .student-card {
+  }
 
-  html:-moz-full-screen .student-card {}
+  html:-moz-full-screen .student-card {
+  }
 
   html:-ms-fullscreen .student-card {
     /* Add your CSS here */
@@ -6797,7 +6876,6 @@ body .about-hero-content .section-title {
 
 /* Medium Desktop Fullscreen (1120px - 1199px) */
 @media (max-width: 1199px) and (min-width: 1120px) {
-
   /* Top Management Page */
   html:fullscreen .top-management-page {
     /* Add your CSS here */
@@ -7090,7 +7168,6 @@ body .about-hero-content .section-title {
 
 /* Small Desktop Fullscreen (991px - 1120px) */
 @media (max-width: 1120px) and (min-width: 991px) {
-
   /* Top Management Page */
   html:fullscreen .top-management-page {
     /* Add your CSS here */
@@ -7400,7 +7477,6 @@ body .about-hero-content .section-title {
 
 /* Tablet Fullscreen (768px - 991px) */
 @media (max-width: 991px) and (min-width: 768px) {
-
   /* Top Management Page */
   html:fullscreen .top-management-page {
     /* Add your CSS here */
@@ -7710,7 +7786,6 @@ body .about-hero-content .section-title {
 
 /* Small Tablet Fullscreen (600px - 768px) */
 @media (max-width: 768px) and (min-width: 600px) {
-
   /* Top Management Page */
   html:fullscreen .top-management-page {
     /* Add your CSS here */
@@ -8020,7 +8095,6 @@ body .about-hero-content .section-title {
 
 /* Large Mobile Fullscreen (480px - 600px) */
 @media (max-width: 600px) and (min-width: 480px) {
-
   /* Top Management Page */
   html:fullscreen .top-management-page {
     /* Add your CSS here */
@@ -8330,7 +8404,6 @@ body .about-hero-content .section-title {
 
 /* Small Mobile Fullscreen (320px - 480px) */
 @media (max-width: 480px) and (min-width: 320px) {
-
   /* Top Management Page */
   html:fullscreen .top-management-page {
     /* Add your CSS here */

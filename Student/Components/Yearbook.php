@@ -751,18 +751,6 @@ try {
 
         <iframe id="yearbookIframe" src="" width="100%" height="100%" style="border: none;"
           title="Digital Yearbook"></iframe>
-
-        <div class="yearbook-lower-curl">
-          <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg"
-            preserveAspectRatio="none" style="display: block; width: 100%; height: 60px">
-            <path d="M0,60 Q180,100 360,60 T720,60 T1080,60 T1440,60 L1440,120 L0,120 Z" fill="#1a237e"
-              opacity="0.4" />
-            <path d="M0,80 Q180,40 360,80 T720,80 T1080,80 T1440,80 L1440,120 L0,120 Z" fill="#112d4e"
-              opacity="0.7" />
-            <path d="M0,100 Q180,60 360,100 T720,100 T1080,100 T1440,100 L1440,120 L0,120 Z"
-              fill="#021326" />
-          </svg>
-        </div>
       </div>
 
       <div class="yearbook-items-container">
@@ -804,7 +792,7 @@ try {
         </ul>
       </div>
 
-      <div class="yearbook-lower-curl">
+      <div class="yearbook-main-lower-curl">
         <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"
           style="display: block; width: 100%; height: 60px">
           <path d="M0,60 Q180,100 360,60 T720,60 T1080,60 T1440,60 L1440,120 L0,120 Z" fill="#1a237e"
@@ -2022,7 +2010,7 @@ try {
       const header = document.querySelector('header');
       const footer = document.querySelector('footer');
       const bottomNav = document.querySelector('.bottom-nav');
-      const lowerCurlElements = document.querySelectorAll('.yearbook-lower-curl');
+      const lowerCurlElements = document.querySelectorAll('.yearbook-main-lower-curl');
 
       console.log('[Yearbook] Opening yearbook:', departmentCode, departmentName);
 
@@ -2041,11 +2029,13 @@ try {
         itemsContainer.style.display = 'none';
       }
 
-      // Hide all lower curl elements except the one inside iframe container
+      // Add class to body to hide main curl when iframe is shown
+      document.body.classList.add('yearbook-iframe-active');
+
+      // Hide all yearbook-main-lower-curl elements when iframe is shown
+      // Only yearbook-lower-curl inside the iframe should be visible
       lowerCurlElements.forEach(curl => {
-        if (!curl.closest('.yearbook-iframe-container')) {
-          curl.style.display = 'none';
-        }
+        curl.style.display = 'none';
       });
 
       // Check if device is in landscape mode
@@ -2172,7 +2162,7 @@ try {
       const header = document.querySelector('header');
       const footer = document.querySelector('footer');
       const bottomNav = document.querySelector('.bottom-nav');
-      const lowerCurlElements = document.querySelectorAll('.yearbook-lower-curl');
+      const lowerCurlElements = document.querySelectorAll('.yearbook-main-lower-curl');
 
       console.log('[Yearbook] Closing yearbook iframe');
 
@@ -2196,11 +2186,12 @@ try {
         itemsContainer.style.display = 'flex';
       }
 
-      // Restore all lower curl elements
+      // Remove class from body to show main curl when iframe is closed
+      document.body.classList.remove('yearbook-iframe-active');
+
+      // Restore all yearbook-main-lower-curl elements when iframe is closed
       lowerCurlElements.forEach(curl => {
-        if (!curl.closest('.yearbook-iframe-container')) {
-          curl.style.display = '';
-        }
+        curl.style.display = '';
       });
 
       // Remove orientation change listeners
