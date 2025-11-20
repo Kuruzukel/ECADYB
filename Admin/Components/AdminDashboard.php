@@ -1,7 +1,9 @@
 <?php
 define('ADMIN_DASHBOARD_INCLUDED', true);
 
-$basePath = strpos($_SERVER['REQUEST_URI'], '/ECADYB/') !== false ? '/ECADYB' : '';
+$basePath = defined('BASE_URL')
+    ? rtrim(BASE_URL, '/')
+    : (strpos($_SERVER['REQUEST_URI'], '/ECADYB/') !== false ? '/ECADYB' : '');
 
 
 $mongoPath = realpath(__DIR__ . '/../../Connection/Configuration/MongoConnect.php');
@@ -72,7 +74,7 @@ if (isset($_SESSION['username']) && !empty($_SESSION['username'])) {
 
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-base-path="<?= htmlspecialchars($basePath, ENT_QUOTES) ?>">
 
 <head>
     <meta charset="UTF-8">
@@ -270,7 +272,13 @@ if (isset($_SESSION['username']) && !empty($_SESSION['username'])) {
     </script>
 </head>
 
-<body>
+<body data-base-path="<?= htmlspecialchars($basePath, ENT_QUOTES) ?>">
+    <script>
+        window.APP_BASE_PATH = <?= json_encode($basePath) ?>;
+        if (typeof document !== "undefined" && document.documentElement) {
+            document.documentElement.dataset.basePath = <?= json_encode($basePath) ?>;
+        }
+    </script>
 
     <main>
         <div class="sidebar">

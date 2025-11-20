@@ -14,6 +14,12 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 use MongoDB\Client;
 
+if (!isset($basePath)) {
+    $basePath = defined('BASE_URL')
+        ? rtrim(BASE_URL, '/')
+        : (strpos($_SERVER['REQUEST_URI'], '/ECADYB/') !== false ? '/ECADYB' : '');
+}
+
 $flashMessage = null;
 if (isset($_SESSION['upload_status'])) {
     if ($_SESSION['upload_status'] === 'success') {

@@ -167,6 +167,31 @@ let currentUploadController = null;
 let isCancelling = false;
 let shouldRefreshAfterNotification = false;
 
+function resolveBasePath() {
+  if (typeof window !== "undefined") {
+    if (typeof window.APP_BASE_PATH !== "undefined") {
+      return window.APP_BASE_PATH || "";
+    }
+
+    const docEl = window.document ? window.document.documentElement : null;
+    if (docEl && docEl.dataset && "basePath" in docEl.dataset) {
+      return docEl.dataset.basePath || "";
+    }
+
+    if (
+      window.location &&
+      typeof window.location.pathname === "string" &&
+      window.location.pathname.includes("/ECADYB/")
+    ) {
+      return "/ECADYB";
+    }
+  }
+
+  return "";
+}
+
+const BASE_PATH = resolveBasePath();
+
 function showNotification(message, type = "success") {
   const container = document.getElementById("notification-container");
   if (!container) return;
@@ -218,16 +243,12 @@ async function refreshParentAcademicYearFilter() {
     const currentlySelected = filterToUpdate.value;
     console.log("Currently selected academic year:", currentlySelected);
 
-    const basePath = window.location.pathname.includes("/ECADYB/")
-      ? "/ECADYB"
-      : "";
-
     console.log(
       "Fetching academic years from:",
-      `${basePath}/Connection/Student/FetchAcademicYears.php`
+      `${BASE_PATH}/Connection/Student/FetchAcademicYears.php`
     );
     const response = await fetch(
-      `${basePath}/Connection/Student/FetchAcademicYears.php`
+      `${BASE_PATH}/Connection/Student/FetchAcademicYears.php`
     );
     const data = await response.json();
 
@@ -676,21 +697,18 @@ window.addEventListener("DOMContentLoaded", () => {
             uploadText.textContent = `Uploading ${uploadType}...`;
           }
 
-          const basePath = window.location.pathname.includes("/ECADYB/")
-            ? "/ECADYB"
-            : "";
           const uploadEndpoint =
             input.id === "student-photos"
               ? window.location.origin +
-                basePath +
+                BASE_PATH +
                 "/Connection/Photos/UploadStudentPhotos.php"
               : window.location.origin +
-                basePath +
+                BASE_PATH +
                 "/Connection/Photos/UploadTopManagementPhotos.php";
 
           console.log("=== UPLOAD ENDPOINT DEBUG ===");
           console.log("Upload endpoint:", uploadEndpoint);
-          console.log("Base path:", basePath);
+          console.log("Base path:", BASE_PATH);
           console.log("Window location origin:", window.location.origin);
 
           const BATCH_SIZE = 20;
