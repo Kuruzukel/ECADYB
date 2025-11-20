@@ -2029,13 +2029,11 @@ try {
         itemsContainer.style.display = 'none';
       }
 
-      // Add class to body to hide main curl when iframe is shown
-      document.body.classList.add('yearbook-iframe-active');
-
-      // Hide all yearbook-main-lower-curl elements when iframe is shown
-      // Only yearbook-lower-curl inside the iframe should be visible
+      // Hide all lower curl elements except the one inside iframe container
       lowerCurlElements.forEach(curl => {
-        curl.style.display = 'none';
+        if (!curl.closest('.yearbook-iframe-container')) {
+          curl.style.display = 'none';
+        }
       });
 
       // Check if device is in landscape mode
@@ -2186,12 +2184,11 @@ try {
         itemsContainer.style.display = 'flex';
       }
 
-      // Remove class from body to show main curl when iframe is closed
-      document.body.classList.remove('yearbook-iframe-active');
-
-      // Restore all yearbook-main-lower-curl elements when iframe is closed
+      // Restore all lower curl elements
       lowerCurlElements.forEach(curl => {
-        curl.style.display = '';
+        if (!curl.closest('.yearbook-iframe-container')) {
+          curl.style.display = '';
+        }
       });
 
       // Remove orientation change listeners

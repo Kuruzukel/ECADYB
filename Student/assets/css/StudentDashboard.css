@@ -937,8 +937,7 @@ html:-ms-fullscreen .yearbook-lower-curl,
   overflow: hidden;
 }
 
-/* Hide main curl when iframe container is displayed or in fullscreen mode */
-body.yearbook-iframe-active .yearbook-main-lower-curl,
+/* Hide main curl when iframe container is in fullscreen mode */
 .yearbook-iframe-container:fullscreen .yearbook-main-lower-curl,
 .yearbook-iframe-container:-webkit-full-screen .yearbook-main-lower-curl,
 .yearbook-iframe-container:-moz-full-screen .yearbook-main-lower-curl,
@@ -951,7 +950,7 @@ html:-ms-fullscreen .yearbook-main-lower-curl,
 :-webkit-full-screen .yearbook-main-lower-curl,
 :-moz-full-screen .yearbook-main-lower-curl,
 :-ms-fullscreen .yearbook-main-lower-curl {
-  display: none !important;
+  display: none;
 }
 
 .yearbook-main-lower-curl svg {
