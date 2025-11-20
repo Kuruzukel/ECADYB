@@ -100,14 +100,12 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.03) 25%,
-    rgba(99, 102, 241, 0.1) 50%,
-    rgba(255, 255, 255, 0.03) 75%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.03) 25%,
+      rgba(99, 102, 241, 0.1) 50%,
+      rgba(255, 255, 255, 0.03) 75%,
+      transparent 100%);
   background-size: 400% 100%;
   animation: shimmerEffect 1s ease-out;
   z-index: 9998;
@@ -121,12 +119,10 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: radial-gradient(
-    circle at center,
-    rgba(99, 102, 241, 0.1) 0%,
-    rgba(112, 44, 180, 0.05) 30%,
-    transparent 70%
-  );
+  background: radial-gradient(circle at center,
+      rgba(99, 102, 241, 0.1) 0%,
+      rgba(112, 44, 180, 0.05) 30%,
+      transparent 70%);
   z-index: 9999;
   pointer-events: none;
   animation: particleFloat 1s ease-out;
@@ -295,6 +291,7 @@ header.fading {
 }
 
 @keyframes pulse {
+
   0%,
   100% {
     opacity: 1;
@@ -362,8 +359,7 @@ header.fading {
   left: 0;
   width: 100%;
   height: 100%;
-  background: url("https://ecadyb.b-cdn.net/img/ECABG1.jpg") center center/cover
-    no-repeat;
+  background: url("https://ecadyb.b-cdn.net/img/ECABG1.jpg") center center/cover no-repeat;
   pointer-events: none;
   filter: blur(6px);
   transform: scale(1.1);
@@ -847,8 +843,7 @@ header.fading {
   left: 0;
   width: 100%;
   height: 100%;
-  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center
-    center/cover no-repeat;
+  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center center/cover no-repeat;
   pointer-events: none;
   filter: blur(6px);
 }
@@ -858,7 +853,7 @@ header.fading {
   z-index: 2;
 }
 
-.yearbooks-section > *:not(.yearbooks-background) {
+.yearbooks-section>*:not(.yearbooks-background) {
   position: relative;
   z-index: 2;
 }
@@ -891,12 +886,12 @@ header.fading {
   bottom: 0;
   width: 100%;
   height: 60px;
-  z-index: 1;
+  z-index: 101;
   pointer-events: none;
 }
 
 .yearbook-iframe-container .yearbook-lower-curl {
-  z-index: 1;
+  z-index: 101;
   pointer-events: none;
 }
 
@@ -904,7 +899,7 @@ header.fading {
 .yearbook-iframe-container:-webkit-full-screen .yearbook-lower-curl,
 .yearbook-iframe-container:-moz-full-screen .yearbook-lower-curl,
 .yearbook-iframe-container:-ms-fullscreen .yearbook-lower-curl {
-  z-index: 1;
+  z-index: 101;
   pointer-events: none;
 }
 
@@ -1408,11 +1403,9 @@ header.fading {
   pointer-events: none;
   z-index: 2;
   opacity: 0.25;
-  background-image: linear-gradient(
-      to right,
+  background-image: linear-gradient(to right,
       rgba(255, 255, 255, 0.179) 1px,
-      transparent 1px
-    ),
+      transparent 1px),
     linear-gradient(to bottom, rgba(255, 255, 255, 0.25) 1px, transparent 1px);
   background-size: 35px 33px;
 }
@@ -1829,8 +1822,7 @@ header.fading {
   left: 0;
   width: 100%;
   height: 100%;
-  background: url("https://ecadyb.b-cdn.net/img/ECABG1.jpg") center center/cover
-    no-repeat;
+  background: url("https://ecadyb.b-cdn.net/img/ECABG1.jpg") center center/cover no-repeat;
   pointer-events: none;
   filter: blur(6px);
   transform: scale(1.1);
@@ -2013,12 +2005,10 @@ header.fading {
   height: 100%;
   pointer-events: none;
   z-index: 2;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(0, 0, 0, 0) 60%,
-    rgba(0, 0, 0, 0.18) 80%,
-    rgba(0, 0, 0, 0.32) 100%
-  );
+  background: radial-gradient(ellipse at center,
+      rgba(0, 0, 0, 0) 60%,
+      rgba(0, 0, 0, 0.18) 80%,
+      rgba(0, 0, 0, 0.32) 100%);
   filter: blur(24px);
   opacity: 0.7;
 }
@@ -2060,8 +2050,7 @@ header.fading {
 }
 
 .memories-section {
-  background: #021326 url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png")
-    center center/cover no-repeat;
+  background: #021326 url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center center/cover no-repeat;
   color: white;
   padding: 8rem 0 4rem 0;
   text-align: center;
@@ -2149,8 +2138,7 @@ header.fading {
   left: 0;
   width: 100%;
   height: 100%;
-  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center
-    center/cover no-repeat;
+  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center center/cover no-repeat;
   backdrop-filter: blur(20px) brightness(0.4);
   -webkit-backdrop-filter: blur(20px) brightness(0.4);
 }
@@ -2415,12 +2403,10 @@ header.fading {
   height: 100%;
   pointer-events: none;
   z-index: 2;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(0, 0, 0, 0) 60%,
-    rgba(0, 0, 0, 0.18) 80%,
-    rgba(0, 0, 0, 0.32) 100%
-  );
+  background: radial-gradient(ellipse at center,
+      rgba(0, 0, 0, 0) 60%,
+      rgba(0, 0, 0, 0.18) 80%,
+      rgba(0, 0, 0, 0.32) 100%);
   filter: blur(24px);
   opacity: 0.7;
 }
@@ -2436,11 +2422,9 @@ header.fading {
   pointer-events: none;
   z-index: 2;
   opacity: 0.25;
-  background-image: linear-gradient(
-      to right,
+  background-image: linear-gradient(to right,
       rgba(255, 255, 255, 0.179) 1px,
-      transparent 1px
-    ),
+      transparent 1px),
     linear-gradient(to bottom, rgba(255, 255, 255, 0.25) 1px, transparent 1px);
   background-size: 35px 33px;
 }
@@ -2689,6 +2673,7 @@ header.fading {
 }
 
 @media (min-width: 1440px) {
+
   #mobileLoginDropdownBtn,
   #mobileLoginDropdownMenu {
     display: none !important;
@@ -2696,6 +2681,7 @@ header.fading {
 }
 
 @media (max-width: 1439px) and (min-width: 1200px) {
+
   #mobileLoginDropdownBtn,
   #mobileLoginDropdownMenu {
     display: none !important;
@@ -2870,6 +2856,7 @@ header.fading {
 }
 
 @media (max-width: 1199px) and (min-width: 1120px) {
+
   #mobileLoginDropdownBtn,
   #mobileLoginDropdownMenu {
     display: none !important;
@@ -3052,6 +3039,7 @@ header.fading {
 }
 
 @media (max-width: 1120px) and (min-width: 991px) {
+
   #mobileLoginDropdownBtn,
   #mobileLoginDropdownMenu {
     display: none !important;
@@ -3224,6 +3212,7 @@ header.fading {
 }
 
 @media (max-width: 991px) and (min-width: 768px) {
+
   #mobileLoginDropdownBtn,
   #mobileLoginDropdownMenu {
     display: none !important;
@@ -3419,6 +3408,7 @@ header.fading {
 }
 
 @media (max-width: 768px) and (min-width: 600px) {
+
   .carousel-section,
   .memories-section {
     min-height: auto !important;
@@ -3484,7 +3474,7 @@ header.fading {
     margin-left: auto;
   }
 
-  .hamburger-menu.active + .center-nav,
+  .hamburger-menu.active+.center-nav,
   .center-nav.mobile-active {
     display: flex;
     position: absolute;
@@ -3524,12 +3514,10 @@ header.fading {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.1),
-      transparent
-    );
+    background: linear-gradient(90deg,
+        transparent,
+        rgba(255, 255, 255, 0.1),
+        transparent);
     transition: left 0.5s ease;
   }
 
@@ -3884,6 +3872,7 @@ header.fading {
 }
 
 @media (max-width: 600px) and (min-width: 480px) {
+
   .carousel-section,
   .memories-section {
     min-height: auto !important;
@@ -3949,7 +3938,7 @@ header.fading {
     margin-left: auto;
   }
 
-  .hamburger-menu.active + .center-nav,
+  .hamburger-menu.active+.center-nav,
   .center-nav.mobile-active {
     display: flex;
     position: absolute;
@@ -3989,12 +3978,10 @@ header.fading {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.1),
-      transparent
-    );
+    background: linear-gradient(90deg,
+        transparent,
+        rgba(255, 255, 255, 0.1),
+        transparent);
     transition: left 0.5s ease;
   }
 
@@ -4417,6 +4404,7 @@ header.fading {
 }
 
 @media (max-width: 480px) and (min-width: 320px) {
+
   .carousel-section,
   .memories-section {
     min-height: auto !important;
@@ -4482,7 +4470,7 @@ header.fading {
     margin-left: auto;
   }
 
-  .hamburger-menu.active + .center-nav,
+  .hamburger-menu.active+.center-nav,
   .center-nav.mobile-active {
     display: flex;
     position: absolute;
@@ -4522,12 +4510,10 @@ header.fading {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.1),
-      transparent
-    );
+    background: linear-gradient(90deg,
+        transparent,
+        rgba(255, 255, 255, 0.1),
+        transparent);
     transition: left 0.5s ease;
   }
 
@@ -4993,6 +4979,7 @@ header.fading {
 }
 
 @media only screen and (min-width: 1024px) and (max-width: 1366px) and (orientation: landscape) {
+
   .yearbook-iframe-container:fullscreen,
   .yearbook-iframe-container:-webkit-full-screen,
   .yearbook-iframe-container:-moz-full-screen,
@@ -5013,6 +5000,7 @@ header.fading {
 }
 
 @media only screen and (min-width: 800px) and (max-width: 1023px) and (orientation: landscape) {
+
   .yearbook-iframe-container:fullscreen,
   .yearbook-iframe-container:-webkit-full-screen,
   .yearbook-iframe-container:-moz-full-screen,
@@ -5033,6 +5021,7 @@ header.fading {
 }
 
 @media only screen and (min-width: 640px) and (max-width: 799px) and (orientation: landscape) {
+
   .yearbook-iframe-container:fullscreen,
   .yearbook-iframe-container:-webkit-full-screen,
   .yearbook-iframe-container:-moz-full-screen,
@@ -5053,6 +5042,7 @@ header.fading {
 }
 
 @media only screen and (min-width: 568px) and (max-width: 639px) and (orientation: landscape) {
+
   .yearbook-iframe-container:fullscreen,
   .yearbook-iframe-container:-webkit-full-screen,
   .yearbook-iframe-container:-moz-full-screen,
@@ -5140,8 +5130,7 @@ header.fading {
   width: 100vw;
   height: 100vh;
   margin: 0;
-  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center
-    center/cover no-repeat;
+  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center center/cover no-repeat;
   z-index: 9999;
 }
 
@@ -5152,8 +5141,7 @@ header.fading {
   width: 100vw;
   height: 100vh;
   margin: 0;
-  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center
-    center/cover no-repeat;
+  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center center/cover no-repeat;
   z-index: 9999;
 }
 
@@ -5164,8 +5152,7 @@ header.fading {
   width: 100vw;
   height: 100vh;
   margin: 0;
-  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center
-    center/cover no-repeat;
+  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center center/cover no-repeat;
   z-index: 9999;
   overflow: auto;
   scrollbar-width: thin;
@@ -5179,8 +5166,7 @@ header.fading {
   width: 100vw;
   height: 100vh;
   margin: 0;
-  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center
-    center/cover no-repeat;
+  background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center center/cover no-repeat;
   z-index: 9999;
   overflow: auto;
   scrollbar-width: thin;
@@ -5340,12 +5326,10 @@ header.fading {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(
-    145deg,
-    rgba(6, 182, 212, 0.02) 0%,
-    rgba(14, 165, 233, 0.01) 50%,
-    rgba(6, 182, 212, 0.02) 100%
-  );
+  background: linear-gradient(145deg,
+      rgba(6, 182, 212, 0.02) 0%,
+      rgba(14, 165, 233, 0.01) 50%,
+      rgba(6, 182, 212, 0.02) 100%);
   border-radius: 12px;
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -5385,12 +5369,10 @@ header.fading {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.2),
-    transparent
-  );
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.2),
+      transparent);
   transition: left 0.5s;
 }
 
@@ -5980,8 +5962,7 @@ header.fading {
     width: 100vw !important;
     height: 100vh !important;
     overflow: hidden !important;
-    background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center
-      center/cover no-repeat !important;
+    background: url("https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png") center center/cover no-repeat !important;
     background-color: #000042 !important;
     border: none !important;
     outline: none !important;
@@ -6034,6 +6015,7 @@ h2.section-title {
 }
 
 @media (max-width: 768px) and (min-width: 600px) {
+
   .about-section .section-title,
   .about-hero-section .section-title,
   .about-hero-content .section-title,
@@ -6166,11 +6148,9 @@ h2.section-title {
 
   .yearbook-slider-nav:hover,
   .yearbook-slider-nav:focus-visible {
-    background: linear-gradient(
-      135deg,
-      rgba(17, 45, 78, 0.95) 0%,
-      #0d39d9 100%
-    );
+    background: linear-gradient(135deg,
+        rgba(17, 45, 78, 0.95) 0%,
+        #0d39d9 100%);
     border: 1px solid #fcda15;
     box-shadow: 0 10px 30px rgba(12, 39, 190, 0.35),
       0 0 0 2px rgba(252, 218, 21, 0.35);
@@ -6206,6 +6186,7 @@ h2.section-title {
 }
 
 @media (max-width: 600px) and (min-width: 480px) {
+
   .about-section .section-title,
   .about-hero-section .section-title,
   .about-hero-content .section-title,
@@ -6338,11 +6319,9 @@ h2.section-title {
 
   .yearbook-slider-nav:hover,
   .yearbook-slider-nav:focus-visible {
-    background: linear-gradient(
-      135deg,
-      rgba(17, 45, 78, 0.95) 0%,
-      #0d39d9 100%
-    );
+    background: linear-gradient(135deg,
+        rgba(17, 45, 78, 0.95) 0%,
+        #0d39d9 100%);
     border: 1px solid #fcda15;
     box-shadow: 0 10px 30px rgba(12, 39, 190, 0.35),
       0 0 0 2px rgba(252, 218, 21, 0.35);
@@ -6378,6 +6357,7 @@ h2.section-title {
 }
 
 @media (max-width: 480px) and (min-width: 320px) {
+
   .about-section .section-title,
   .about-hero-section .section-title,
   .about-hero-content .section-title,
@@ -6510,11 +6490,9 @@ h2.section-title {
 
   .yearbook-slider-nav:hover,
   .yearbook-slider-nav:focus-visible {
-    background: linear-gradient(
-      135deg,
-      rgba(17, 45, 78, 0.95) 0%,
-      #0d39d9 100%
-    );
+    background: linear-gradient(135deg,
+        rgba(17, 45, 78, 0.95) 0%,
+        #0d39d9 100%);
     border: 1px solid #fcda15;
     box-shadow: 0 10px 30px rgba(12, 39, 190, 0.35),
       0 0 0 2px rgba(252, 218, 21, 0.35);
@@ -6565,6 +6543,7 @@ body .about-hero-content .section-title {
 }
 
 @media (max-width: 768px) {
+
   body .about-hero-section .about-hero-content .section-title,
   body .about-section .section-title,
   body .about-hero-content .section-title {
@@ -6578,57 +6557,52 @@ body .about-hero-content .section-title {
 
 /* Large Desktop Fullscreen (1200px - 1439px) */
 @media (max-width: 1439px) and (min-width: 1200px) {
-  html:fullscreen .top-management-page {
-  }
-  html:-webkit-full-screen .top-management-page {
-  }
-  html:-moz-full-screen .top-management-page {
-  }
-  html:-ms-fullscreen .top-management-page {
-  }
+  html:fullscreen .top-management-page {}
 
-  html:fullscreen .management-name {
-  }
-  html:-webkit-full-screen .management-name {
-  }
-  html:-moz-full-screen .management-name {
-  }
-  html:-ms-fullscreen .management-name {
-  }
+  html:-webkit-full-screen .top-management-page {}
 
-  html:fullscreen .management-position {
-  }
-  html:-webkit-full-screen .management-position {
-  }
-  html:-moz-full-screen .management-position {
-  }
-  html:-ms-fullscreen .management-position {
-  }
+  html:-moz-full-screen .top-management-page {}
 
-  html:fullscreen .management-message {
-  }
-  html:-webkit-full-screen .management-message {
-  }
-  html:-moz-full-screen .management-message {
-  }
-  html:-ms-fullscreen .management-message {
-  }
+  html:-ms-fullscreen .top-management-page {}
 
-  html:fullscreen .cards-container {
-  }
-  html:-webkit-full-screen .cards-container {
-  }
-  html:-moz-full-screen .cards-container {
-  }
-  html:-ms-fullscreen .cards-container {
-  }
+  html:fullscreen .management-name {}
 
-  html:fullscreen .student-card {
-  }
-  html:-webkit-full-screen .student-card {
-  }
-  html:-moz-full-screen .student-card {
-  }
+  html:-webkit-full-screen .management-name {}
+
+  html:-moz-full-screen .management-name {}
+
+  html:-ms-fullscreen .management-name {}
+
+  html:fullscreen .management-position {}
+
+  html:-webkit-full-screen .management-position {}
+
+  html:-moz-full-screen .management-position {}
+
+  html:-ms-fullscreen .management-position {}
+
+  html:fullscreen .management-message {}
+
+  html:-webkit-full-screen .management-message {}
+
+  html:-moz-full-screen .management-message {}
+
+  html:-ms-fullscreen .management-message {}
+
+  html:fullscreen .cards-container {}
+
+  html:-webkit-full-screen .cards-container {}
+
+  html:-moz-full-screen .cards-container {}
+
+  html:-ms-fullscreen .cards-container {}
+
+  html:fullscreen .student-card {}
+
+  html:-webkit-full-screen .student-card {}
+
+  html:-moz-full-screen .student-card {}
+
   html:-ms-fullscreen .student-card {
     /* Add your CSS here */
   }
@@ -6637,12 +6611,15 @@ body .about-hero-content .section-title {
   html:fullscreen .nav-controls {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .nav-controls {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .nav-controls {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .nav-controls {
     /* Add your CSS here */
   }
@@ -6651,12 +6628,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-modal.active {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .student-modal.active {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .student-modal.active {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .student-modal.active {
     /* Add your CSS here */
   }
@@ -6665,12 +6645,15 @@ body .about-hero-content .section-title {
   html:fullscreen .magazine-viewport {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .magazine-viewport {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .magazine-viewport {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .magazine-viewport {
     /* Add your CSS here */
   }
@@ -6679,12 +6662,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-info {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .student-info {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .student-info {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .student-info {
     /* Add your CSS here */
   }
@@ -6693,12 +6679,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-details {
     /* Add your CSS here - max-height, min-height, align-items: flex-end */
   }
+
   html:-webkit-full-screen .student-details {
     /* Add your CSS here - max-height, min-height, align-items: flex-end */
   }
+
   html:-moz-full-screen .student-details {
     /* Add your CSS here - max-height, min-height, align-items: flex-end */
   }
+
   html:-ms-fullscreen .student-details {
     /* Add your CSS here - max-height, min-height, align-items: flex-end */
   }
@@ -6707,12 +6696,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-image-navigation {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .student-image-navigation {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .student-image-navigation {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .student-image-navigation {
     /* Add your CSS here */
   }
@@ -6721,12 +6713,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-images {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .student-images {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .student-images {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .student-images {
     /* Add your CSS here */
   }
@@ -6735,12 +6730,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-modal {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .student-modal {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .student-modal {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .student-modal {
     /* Add your CSS here */
   }
@@ -6749,12 +6747,15 @@ body .about-hero-content .section-title {
   html:fullscreen .modal-content {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .modal-content {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .modal-content {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .modal-content {
     /* Add your CSS here */
   }
@@ -6763,12 +6764,15 @@ body .about-hero-content .section-title {
   html:fullscreen .thumbnails {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .thumbnails {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .thumbnails {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .thumbnails {
     /* Add your CSS here */
   }
@@ -6777,12 +6781,15 @@ body .about-hero-content .section-title {
   html:fullscreen .thumbnail-item {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .thumbnail-item {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .thumbnail-item {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .thumbnail-item {
     /* Add your CSS here */
   }
@@ -6790,16 +6797,20 @@ body .about-hero-content .section-title {
 
 /* Medium Desktop Fullscreen (1120px - 1199px) */
 @media (max-width: 1199px) and (min-width: 1120px) {
+
   /* Top Management Page */
   html:fullscreen .top-management-page {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .top-management-page {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .top-management-page {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .top-management-page {
     /* Add your CSS here */
   }
@@ -6808,12 +6819,15 @@ body .about-hero-content .section-title {
   html:fullscreen .management-name {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .management-name {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .management-name {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .management-name {
     /* Add your CSS here */
   }
@@ -6822,12 +6836,15 @@ body .about-hero-content .section-title {
   html:fullscreen .management-position {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .management-position {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .management-position {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .management-position {
     /* Add your CSS here */
   }
@@ -6836,12 +6853,15 @@ body .about-hero-content .section-title {
   html:fullscreen .management-message {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .management-message {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .management-message {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .management-message {
     /* Add your CSS here */
   }
@@ -6850,12 +6870,15 @@ body .about-hero-content .section-title {
   html:fullscreen .cards-container {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .cards-container {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .cards-container {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .cards-container {
     /* Add your CSS here */
   }
@@ -6864,12 +6887,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-card {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .student-card {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .student-card {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .student-card {
     /* Add your CSS here */
   }
@@ -6878,12 +6904,15 @@ body .about-hero-content .section-title {
   html:fullscreen .nav-controls {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .nav-controls {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .nav-controls {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .nav-controls {
     /* Add your CSS here */
   }
@@ -6892,12 +6921,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-modal.active {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .student-modal.active {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .student-modal.active {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .student-modal.active {
     /* Add your CSS here */
   }
@@ -6906,12 +6938,15 @@ body .about-hero-content .section-title {
   html:fullscreen .magazine-viewport {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .magazine-viewport {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .magazine-viewport {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .magazine-viewport {
     /* Add your CSS here */
   }
@@ -6920,12 +6955,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-info {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .student-info {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .student-info {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .student-info {
     /* Add your CSS here */
   }
@@ -6934,12 +6972,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-details {
     /* Add your CSS here - max-height, min-height, align-items: flex-end */
   }
+
   html:-webkit-full-screen .student-details {
     /* Add your CSS here - max-height, min-height, align-items: flex-end */
   }
+
   html:-moz-full-screen .student-details {
     /* Add your CSS here - max-height, min-height, align-items: flex-end */
   }
+
   html:-ms-fullscreen .student-details {
     /* Add your CSS here - max-height, min-height, align-items: flex-end */
   }
@@ -6948,12 +6989,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-image-navigation {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .student-image-navigation {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .student-image-navigation {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .student-image-navigation {
     /* Add your CSS here */
   }
@@ -6962,12 +7006,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-images {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .student-images {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .student-images {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .student-images {
     /* Add your CSS here */
   }
@@ -6976,12 +7023,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-modal {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .student-modal {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .student-modal {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .student-modal {
     /* Add your CSS here */
   }
@@ -6990,12 +7040,15 @@ body .about-hero-content .section-title {
   html:fullscreen .modal-content {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .modal-content {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .modal-content {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .modal-content {
     /* Add your CSS here */
   }
@@ -7004,12 +7057,15 @@ body .about-hero-content .section-title {
   html:fullscreen .thumbnails {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .thumbnails {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .thumbnails {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .thumbnails {
     /* Add your CSS here */
   }
@@ -7018,12 +7074,15 @@ body .about-hero-content .section-title {
   html:fullscreen .thumbnail-item {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .thumbnail-item {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .thumbnail-item {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .thumbnail-item {
     /* Add your CSS here */
   }
@@ -7031,16 +7090,20 @@ body .about-hero-content .section-title {
 
 /* Small Desktop Fullscreen (991px - 1120px) */
 @media (max-width: 1120px) and (min-width: 991px) {
+
   /* Top Management Page */
   html:fullscreen .top-management-page {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .top-management-page {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .top-management-page {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .top-management-page {
     /* Add your CSS here */
   }
@@ -7049,12 +7112,15 @@ body .about-hero-content .section-title {
   html:fullscreen .management-name {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .management-name {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .management-name {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .management-name {
     /* Add your CSS here */
   }
@@ -7063,12 +7129,15 @@ body .about-hero-content .section-title {
   html:fullscreen .management-position {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .management-position {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .management-position {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .management-position {
     /* Add your CSS here */
   }
@@ -7077,12 +7146,15 @@ body .about-hero-content .section-title {
   html:fullscreen .management-message {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .management-message {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .management-message {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .management-message {
     /* Add your CSS here */
   }
@@ -7091,12 +7163,15 @@ body .about-hero-content .section-title {
   html:fullscreen .cards-container {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .cards-container {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .cards-container {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .cards-container {
     /* Add your CSS here */
   }
@@ -7105,12 +7180,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-card {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .student-card {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .student-card {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .student-card {
     /* Add your CSS here */
   }
@@ -7119,12 +7197,15 @@ body .about-hero-content .section-title {
   html:fullscreen .nav-controls {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .nav-controls {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .nav-controls {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .nav-controls {
     /* Add your CSS here */
   }
@@ -7133,12 +7214,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-modal.active {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .student-modal.active {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .student-modal.active {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .student-modal.active {
     /* Add your CSS here */
   }
@@ -7147,12 +7231,15 @@ body .about-hero-content .section-title {
   html:fullscreen .magazine-viewport {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .magazine-viewport {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .magazine-viewport {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .magazine-viewport {
     /* Add your CSS here */
   }
@@ -7161,12 +7248,15 @@ body .about-hero-content .section-title {
   html:fullscreen .magazine {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .magazine {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .magazine {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .magazine {
     /* Add your CSS here */
   }
@@ -7175,12 +7265,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-info {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .student-info {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .student-info {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .student-info {
     /* Add your CSS here */
   }
@@ -7189,12 +7282,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-details {
     /* Add your CSS here - max-height, min-height, align-items: flex-end */
   }
+
   html:-webkit-full-screen .student-details {
     /* Add your CSS here - max-height, min-height, align-items: flex-end */
   }
+
   html:-moz-full-screen .student-details {
     /* Add your CSS here - max-height, min-height, align-items: flex-end */
   }
+
   html:-ms-fullscreen .student-details {
     /* Add your CSS here - max-height, min-height, align-items: flex-end */
   }
@@ -7203,12 +7299,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-image-navigation {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .student-image-navigation {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .student-image-navigation {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .student-image-navigation {
     /* Add your CSS here */
   }
@@ -7217,12 +7316,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-images {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .student-images {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .student-images {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .student-images {
     /* Add your CSS here */
   }
@@ -7231,12 +7333,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-modal {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .student-modal {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .student-modal {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .student-modal {
     /* Add your CSS here */
   }
@@ -7245,12 +7350,15 @@ body .about-hero-content .section-title {
   html:fullscreen .modal-content {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .modal-content {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .modal-content {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .modal-content {
     /* Add your CSS here */
   }
@@ -7259,12 +7367,15 @@ body .about-hero-content .section-title {
   html:fullscreen .thumbnails {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .thumbnails {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .thumbnails {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .thumbnails {
     /* Add your CSS here */
   }
@@ -7273,12 +7384,15 @@ body .about-hero-content .section-title {
   html:fullscreen .thumbnail-item {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .thumbnail-item {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .thumbnail-item {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .thumbnail-item {
     /* Add your CSS here */
   }
@@ -7286,16 +7400,20 @@ body .about-hero-content .section-title {
 
 /* Tablet Fullscreen (768px - 991px) */
 @media (max-width: 991px) and (min-width: 768px) {
+
   /* Top Management Page */
   html:fullscreen .top-management-page {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .top-management-page {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .top-management-page {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .top-management-page {
     /* Add your CSS here */
   }
@@ -7304,12 +7422,15 @@ body .about-hero-content .section-title {
   html:fullscreen .management-name {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .management-name {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .management-name {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .management-name {
     /* Add your CSS here */
   }
@@ -7318,12 +7439,15 @@ body .about-hero-content .section-title {
   html:fullscreen .management-position {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .management-position {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .management-position {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .management-position {
     /* Add your CSS here */
   }
@@ -7332,12 +7456,15 @@ body .about-hero-content .section-title {
   html:fullscreen .management-message {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .management-message {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .management-message {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .management-message {
     /* Add your CSS here */
   }
@@ -7346,12 +7473,15 @@ body .about-hero-content .section-title {
   html:fullscreen .cards-container {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .cards-container {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .cards-container {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .cards-container {
     /* Add your CSS here */
   }
@@ -7360,12 +7490,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-card {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .student-card {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .student-card {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .student-card {
     /* Add your CSS here */
   }
@@ -7374,12 +7507,15 @@ body .about-hero-content .section-title {
   html:fullscreen .nav-controls {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .nav-controls {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .nav-controls {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .nav-controls {
     /* Add your CSS here */
   }
@@ -7388,12 +7524,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-modal.active {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .student-modal.active {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .student-modal.active {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .student-modal.active {
     /* Add your CSS here */
   }
@@ -7402,12 +7541,15 @@ body .about-hero-content .section-title {
   html:fullscreen .magazine-viewport {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .magazine-viewport {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .magazine-viewport {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .magazine-viewport {
     /* Add your CSS here */
   }
@@ -7416,12 +7558,15 @@ body .about-hero-content .section-title {
   html:fullscreen .magazine {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .magazine {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .magazine {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .magazine {
     /* Add your CSS here */
   }
@@ -7430,12 +7575,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-info {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .student-info {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .student-info {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .student-info {
     /* Add your CSS here */
   }
@@ -7444,12 +7592,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-details {
     /* Add your CSS here - max-height, min-height, align-items: flex-end */
   }
+
   html:-webkit-full-screen .student-details {
     /* Add your CSS here - max-height, min-height, align-items: flex-end */
   }
+
   html:-moz-full-screen .student-details {
     /* Add your CSS here - max-height, min-height, align-items: flex-end */
   }
+
   html:-ms-fullscreen .student-details {
     /* Add your CSS here - max-height, min-height, align-items: flex-end */
   }
@@ -7458,12 +7609,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-image-navigation {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .student-image-navigation {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .student-image-navigation {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .student-image-navigation {
     /* Add your CSS here */
   }
@@ -7472,12 +7626,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-images {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .student-images {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .student-images {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .student-images {
     /* Add your CSS here */
   }
@@ -7486,12 +7643,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-modal {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .student-modal {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .student-modal {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .student-modal {
     /* Add your CSS here */
   }
@@ -7500,12 +7660,15 @@ body .about-hero-content .section-title {
   html:fullscreen .modal-content {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .modal-content {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .modal-content {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .modal-content {
     /* Add your CSS here */
   }
@@ -7514,12 +7677,15 @@ body .about-hero-content .section-title {
   html:fullscreen .thumbnails {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .thumbnails {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .thumbnails {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .thumbnails {
     /* Add your CSS here */
   }
@@ -7528,12 +7694,15 @@ body .about-hero-content .section-title {
   html:fullscreen .thumbnail-item {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .thumbnail-item {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .thumbnail-item {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .thumbnail-item {
     /* Add your CSS here */
   }
@@ -7541,16 +7710,20 @@ body .about-hero-content .section-title {
 
 /* Small Tablet Fullscreen (600px - 768px) */
 @media (max-width: 768px) and (min-width: 600px) {
+
   /* Top Management Page */
   html:fullscreen .top-management-page {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .top-management-page {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .top-management-page {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .top-management-page {
     /* Add your CSS here */
   }
@@ -7559,12 +7732,15 @@ body .about-hero-content .section-title {
   html:fullscreen .management-name {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .management-name {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .management-name {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .management-name {
     /* Add your CSS here */
   }
@@ -7573,12 +7749,15 @@ body .about-hero-content .section-title {
   html:fullscreen .management-position {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .management-position {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .management-position {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .management-position {
     /* Add your CSS here */
   }
@@ -7587,12 +7766,15 @@ body .about-hero-content .section-title {
   html:fullscreen .management-message {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .management-message {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .management-message {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .management-message {
     /* Add your CSS here */
   }
@@ -7601,12 +7783,15 @@ body .about-hero-content .section-title {
   html:fullscreen .cards-container {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .cards-container {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .cards-container {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .cards-container {
     /* Add your CSS here */
   }
@@ -7615,12 +7800,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-card {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .student-card {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .student-card {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .student-card {
     /* Add your CSS here */
   }
@@ -7629,12 +7817,15 @@ body .about-hero-content .section-title {
   html:fullscreen .nav-controls {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .nav-controls {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .nav-controls {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .nav-controls {
     /* Add your CSS here */
   }
@@ -7643,12 +7834,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-modal.active {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .student-modal.active {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .student-modal.active {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .student-modal.active {
     /* Add your CSS here */
   }
@@ -7657,12 +7851,15 @@ body .about-hero-content .section-title {
   html:fullscreen .magazine-viewport {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .magazine-viewport {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .magazine-viewport {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .magazine-viewport {
     /* Add your CSS here */
   }
@@ -7671,12 +7868,15 @@ body .about-hero-content .section-title {
   html:fullscreen .magazine {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .magazine {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .magazine {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .magazine {
     /* Add your CSS here */
   }
@@ -7685,12 +7885,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-info {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .student-info {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .student-info {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .student-info {
     /* Add your CSS here */
   }
@@ -7699,12 +7902,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-details {
     /* Add your CSS here - max-height, min-height, align-items: flex-end */
   }
+
   html:-webkit-full-screen .student-details {
     /* Add your CSS here - max-height, min-height, align-items: flex-end */
   }
+
   html:-moz-full-screen .student-details {
     /* Add your CSS here - max-height, min-height, align-items: flex-end */
   }
+
   html:-ms-fullscreen .student-details {
     /* Add your CSS here - max-height, min-height, align-items: flex-end */
   }
@@ -7713,12 +7919,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-image-navigation {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .student-image-navigation {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .student-image-navigation {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .student-image-navigation {
     /* Add your CSS here */
   }
@@ -7727,12 +7936,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-images {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .student-images {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .student-images {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .student-images {
     /* Add your CSS here */
   }
@@ -7741,12 +7953,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-modal {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .student-modal {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .student-modal {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .student-modal {
     /* Add your CSS here */
   }
@@ -7755,12 +7970,15 @@ body .about-hero-content .section-title {
   html:fullscreen .modal-content {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .modal-content {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .modal-content {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .modal-content {
     /* Add your CSS here */
   }
@@ -7769,12 +7987,15 @@ body .about-hero-content .section-title {
   html:fullscreen .thumbnails {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .thumbnails {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .thumbnails {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .thumbnails {
     /* Add your CSS here */
   }
@@ -7783,12 +8004,15 @@ body .about-hero-content .section-title {
   html:fullscreen .thumbnail-item {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .thumbnail-item {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .thumbnail-item {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .thumbnail-item {
     /* Add your CSS here */
   }
@@ -7796,16 +8020,20 @@ body .about-hero-content .section-title {
 
 /* Large Mobile Fullscreen (480px - 600px) */
 @media (max-width: 600px) and (min-width: 480px) {
+
   /* Top Management Page */
   html:fullscreen .top-management-page {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .top-management-page {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .top-management-page {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .top-management-page {
     /* Add your CSS here */
   }
@@ -7814,12 +8042,15 @@ body .about-hero-content .section-title {
   html:fullscreen .management-name {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .management-name {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .management-name {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .management-name {
     /* Add your CSS here */
   }
@@ -7828,12 +8059,15 @@ body .about-hero-content .section-title {
   html:fullscreen .management-position {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .management-position {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .management-position {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .management-position {
     /* Add your CSS here */
   }
@@ -7842,12 +8076,15 @@ body .about-hero-content .section-title {
   html:fullscreen .management-message {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .management-message {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .management-message {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .management-message {
     /* Add your CSS here */
   }
@@ -7856,12 +8093,15 @@ body .about-hero-content .section-title {
   html:fullscreen .cards-container {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .cards-container {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .cards-container {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .cards-container {
     /* Add your CSS here */
   }
@@ -7870,12 +8110,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-card {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .student-card {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .student-card {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .student-card {
     /* Add your CSS here */
   }
@@ -7884,12 +8127,15 @@ body .about-hero-content .section-title {
   html:fullscreen .nav-controls {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .nav-controls {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .nav-controls {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .nav-controls {
     /* Add your CSS here */
   }
@@ -7898,12 +8144,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-modal.active {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .student-modal.active {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .student-modal.active {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .student-modal.active {
     /* Add your CSS here */
   }
@@ -7912,12 +8161,15 @@ body .about-hero-content .section-title {
   html:fullscreen .magazine-viewport {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .magazine-viewport {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .magazine-viewport {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .magazine-viewport {
     /* Add your CSS here */
   }
@@ -7926,12 +8178,15 @@ body .about-hero-content .section-title {
   html:fullscreen .magazine {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .magazine {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .magazine {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .magazine {
     /* Add your CSS here */
   }
@@ -7940,12 +8195,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-info {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .student-info {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .student-info {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .student-info {
     /* Add your CSS here */
   }
@@ -7954,12 +8212,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-details {
     /* Add your CSS here - max-height, min-height, align-items: flex-end */
   }
+
   html:-webkit-full-screen .student-details {
     /* Add your CSS here - max-height, min-height, align-items: flex-end */
   }
+
   html:-moz-full-screen .student-details {
     /* Add your CSS here - max-height, min-height, align-items: flex-end */
   }
+
   html:-ms-fullscreen .student-details {
     /* Add your CSS here - max-height, min-height, align-items: flex-end */
   }
@@ -7968,12 +8229,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-image-navigation {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .student-image-navigation {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .student-image-navigation {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .student-image-navigation {
     /* Add your CSS here */
   }
@@ -7982,12 +8246,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-images {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .student-images {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .student-images {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .student-images {
     /* Add your CSS here */
   }
@@ -7996,12 +8263,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-modal {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .student-modal {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .student-modal {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .student-modal {
     /* Add your CSS here */
   }
@@ -8010,12 +8280,15 @@ body .about-hero-content .section-title {
   html:fullscreen .modal-content {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .modal-content {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .modal-content {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .modal-content {
     /* Add your CSS here */
   }
@@ -8024,12 +8297,15 @@ body .about-hero-content .section-title {
   html:fullscreen .thumbnails {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .thumbnails {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .thumbnails {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .thumbnails {
     /* Add your CSS here */
   }
@@ -8038,12 +8314,15 @@ body .about-hero-content .section-title {
   html:fullscreen .thumbnail-item {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .thumbnail-item {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .thumbnail-item {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .thumbnail-item {
     /* Add your CSS here */
   }
@@ -8051,16 +8330,20 @@ body .about-hero-content .section-title {
 
 /* Small Mobile Fullscreen (320px - 480px) */
 @media (max-width: 480px) and (min-width: 320px) {
+
   /* Top Management Page */
   html:fullscreen .top-management-page {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .top-management-page {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .top-management-page {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .top-management-page {
     /* Add your CSS here */
   }
@@ -8069,12 +8352,15 @@ body .about-hero-content .section-title {
   html:fullscreen .management-name {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .management-name {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .management-name {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .management-name {
     /* Add your CSS here */
   }
@@ -8083,12 +8369,15 @@ body .about-hero-content .section-title {
   html:fullscreen .management-position {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .management-position {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .management-position {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .management-position {
     /* Add your CSS here */
   }
@@ -8097,12 +8386,15 @@ body .about-hero-content .section-title {
   html:fullscreen .management-message {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .management-message {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .management-message {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .management-message {
     /* Add your CSS here */
   }
@@ -8111,12 +8403,15 @@ body .about-hero-content .section-title {
   html:fullscreen .cards-container {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .cards-container {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .cards-container {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .cards-container {
     /* Add your CSS here */
   }
@@ -8125,12 +8420,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-card {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .student-card {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .student-card {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .student-card {
     /* Add your CSS here */
   }
@@ -8139,12 +8437,15 @@ body .about-hero-content .section-title {
   html:fullscreen .nav-controls {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .nav-controls {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .nav-controls {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .nav-controls {
     /* Add your CSS here */
   }
@@ -8153,12 +8454,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-modal.active {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .student-modal.active {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .student-modal.active {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .student-modal.active {
     /* Add your CSS here */
   }
@@ -8167,12 +8471,15 @@ body .about-hero-content .section-title {
   html:fullscreen .magazine-viewport {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .magazine-viewport {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .magazine-viewport {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .magazine-viewport {
     /* Add your CSS here */
   }
@@ -8181,12 +8488,15 @@ body .about-hero-content .section-title {
   html:fullscreen .magazine {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .magazine {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .magazine {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .magazine {
     /* Add your CSS here */
   }
@@ -8195,12 +8505,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-info {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .student-info {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .student-info {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .student-info {
     /* Add your CSS here */
   }
@@ -8209,12 +8522,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-details {
     /* Add your CSS here - max-height, min-height, align-items: flex-end */
   }
+
   html:-webkit-full-screen .student-details {
     /* Add your CSS here - max-height, min-height, align-items: flex-end */
   }
+
   html:-moz-full-screen .student-details {
     /* Add your CSS here - max-height, min-height, align-items: flex-end */
   }
+
   html:-ms-fullscreen .student-details {
     /* Add your CSS here - max-height, min-height, align-items: flex-end */
   }
@@ -8223,12 +8539,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-image-navigation {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .student-image-navigation {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .student-image-navigation {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .student-image-navigation {
     /* Add your CSS here */
   }
@@ -8237,12 +8556,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-images {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .student-images {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .student-images {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .student-images {
     /* Add your CSS here */
   }
@@ -8251,12 +8573,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-modal {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .student-modal {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .student-modal {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .student-modal {
     /* Add your CSS here */
   }
@@ -8265,12 +8590,15 @@ body .about-hero-content .section-title {
   html:fullscreen .modal-content {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .modal-content {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .modal-content {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .modal-content {
     /* Add your CSS here */
   }
@@ -8279,12 +8607,15 @@ body .about-hero-content .section-title {
   html:fullscreen .thumbnails {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .thumbnails {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .thumbnails {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .thumbnails {
     /* Add your CSS here */
   }
@@ -8293,12 +8624,15 @@ body .about-hero-content .section-title {
   html:fullscreen .thumbnail-item {
     /* Add your CSS here */
   }
+
   html:-webkit-full-screen .thumbnail-item {
     /* Add your CSS here */
   }
+
   html:-moz-full-screen .thumbnail-item {
     /* Add your CSS here */
   }
+
   html:-ms-fullscreen .thumbnail-item {
     /* Add your CSS here */
   }
@@ -8307,12 +8641,15 @@ body .about-hero-content .section-title {
   html:fullscreen .student-modal .student-image-large img {
     /* Add your CSS here for student photos */
   }
+
   html:-webkit-full-screen .student-modal .student-image-large img {
     /* Add your CSS here for student photos */
   }
+
   html:-moz-full-screen .student-modal .student-image-large img {
     /* Add your CSS here for student photos */
   }
+
   html:-ms-fullscreen .student-modal .student-image-large img {
     /* Add your CSS here for student photos */
   }
