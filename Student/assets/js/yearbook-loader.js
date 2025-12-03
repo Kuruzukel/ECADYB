@@ -176,35 +176,23 @@
     },
 
     checkReadiness: function () {
-      const urlParams = new URLSearchParams(window.location.search);
-      const hasStudent =
-        urlParams.has("student_id") && urlParams.has("student_name");
-
       console.log("[Loader] Checking readiness:", {
         magazineReady: this.magazineReady,
         coverVisible: this.coverVisible,
         navigationComplete: this.navigationComplete,
-        hasStudent: hasStudent,
       });
 
-      if (hasStudent) {
-        // With student navigation, wait for navigation complete
-        if (
-          this.magazineReady &&
-          this.coverVisible &&
-          this.navigationComplete
-        ) {
-          console.log("[Loader] All conditions met (with student navigation)");
-          this.hideLoader();
-        }
-      } else {
-        // Without student navigation, just wait for magazine and cover
-        if (this.magazineReady && this.coverVisible) {
-          console.log(
-            "[Loader] All conditions met (without student navigation)"
-          );
-          this.hideLoader();
-        }
+      // If navigation is complete, hide immediately (student was found and highlighted)
+      if (this.navigationComplete) {
+        console.log("[Loader] Navigation complete - hiding loader immediately");
+        this.hideLoader();
+        return;
+      }
+
+      // Otherwise wait for magazine and cover to be ready
+      if (this.magazineReady && this.coverVisible) {
+        console.log("[Loader] Magazine ready - hiding loader");
+        this.hideLoader();
       }
     },
 

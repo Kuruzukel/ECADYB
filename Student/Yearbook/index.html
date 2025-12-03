@@ -1,293 +1,469 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Yearbook - Graduation Gallery</title>
-    <meta name="viewport" content="width = 1050, user-scalable = no" />
-    <style>
-      body {
-        overflow: hidden;
+
+<head>
+  <title>Yearbook - Graduation Gallery</title>
+  <meta name="viewport" content="width = 1050, user-scalable = no" />
+  <style>
+    body {
+      overflow: hidden;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    #canvas {
+      overflow: hidden;
+    }
+
+    ::-webkit-scrollbar {
+      display: none;
+    }
+
+    .thumbnails {
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+      transform: translateY(20px);
+    }
+
+    .thumbnails.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out,
+        transform 0.5s ease-in-out;
+    }
+
+    .yearbook-lower-curl {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1;
+      pointer-events: none;
+      display: block;
+      /* Always visible for Student version (always in fullscreen) */
+    }
+
+    /* Show curl only in fullscreen mode */
+    html:fullscreen .yearbook-lower-curl,
+    html:-webkit-full-screen .yearbook-lower-curl,
+    html:-moz-full-screen .yearbook-lower-curl,
+    html:-ms-fullscreen .yearbook-lower-curl,
+    :fullscreen .yearbook-lower-curl,
+    :-webkit-full-screen .yearbook-lower-curl,
+    :-moz-full-screen .yearbook-lower-curl,
+    :-ms-fullscreen .yearbook-lower-curl {
+      display: block;
+    }
+  </style>
+  <meta property="fb:app_id" content="1767810860531321" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:title" content="Graduation Gallery - Exact Colleges of Asia" />
+  <meta property="og:description"
+    content="Step into your digital yearbook. Every achievement and memory comes alive." />
+  <meta property="og:image" content="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png" />
+  <meta property="og:image:secure_url" content="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url" content="https://grad-gallery.up.railway.app" />
+  <meta property="og:type" content="website" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Graduation Gallery - Exact Colleges of Asia" />
+  <meta name="twitter:description"
+    content="Step into your digital yearbook. Every achievement and memory comes alive." />
+  <meta name="twitter:image" content="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png" />
+  <meta name="twitter:image:alt" content="Exact Colleges of Asia Graduation Gallery Preview Logo" />
+
+  <link rel="icon" href="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png" type="image/png" />
+  <script>
+    var assetBasePath = window.location.pathname.includes("/ECADYB/")
+      ? "/ECADYB/"
+      : "/ECADYB/";
+  </script>
+  <script type="text/javascript" src="/ECADYB/Turn.js/extras/jquery.min.js"></script>
+  <script type="text/javascript" src="/ECADYB/Turn.js/lib/hash.js"></script>
+  <script type="text/javascript" src="/ECADYB/Turn.js/lib/turn.min.js"></script>
+  <script type="text/javascript" src="/ECADYB/Turn.js/lib/zoom.min.js"></script>
+  <script type="text/javascript" src="/ECADYB/Student/Yearbook/js/magazine.js?v=1736979600"></script>
+  <link rel="stylesheet" href="/ECADYB/Student/Yearbook/css/magazine.css?v=1736979600" />
+
+  <script type="text/javascript">
+    $.isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+    $.mouseEvents = $.isTouch
+      ? {
+        over: "touchstart",
+        out: "touchend",
+        move: "touchmove",
+        down: "touchstart",
+        up: "touchend",
       }
+      : {
+        over: "mouseover",
+        out: "mouseout",
+        move: "mousemove",
+        down: "mousedown",
+        up: "mouseup",
+      };
 
-      html,
-      body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
+    console.log("$.isTouch:", $.isTouch, typeof $.isTouch);
+    console.log("$.mouseEvents:", $.mouseEvents);
+
+    var coverData = null;
+    var studentData = null;
+
+    function fetchCoverData(template, slot) {
+      if (!template) {
+        template = localStorage.getItem("selectedBatchTemplateNumber") || 1;
+        template = parseInt(template);
       }
+      slot = slot || 1;
 
-      #canvas {
-        overflow: hidden;
-      }
+      var urlParams = new URLSearchParams(window.location.search);
+      var batchYear =
+        urlParams.get("batchYear") ||
+        localStorage.getItem("selectedBatchYear");
 
-      ::-webkit-scrollbar {
-        display: none;
-      }
-
-      .thumbnails {
-        opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
-        transform: translateY(20px);
-      }
-
-      .thumbnails.visible {
-        opacity: 1;
-        visibility: visible;
-        transform: translateY(0);
-        transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out,
-          transform 0.5s ease-in-out;
-      }
-
-      .yearbook-lower-curl {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        z-index: 1;
-        pointer-events: none;
-        display: block; /* Always visible for Student version (always in fullscreen) */
-      }
-
-      /* Show curl only in fullscreen mode */
-      html:fullscreen .yearbook-lower-curl,
-      html:-webkit-full-screen .yearbook-lower-curl,
-      html:-moz-full-screen .yearbook-lower-curl,
-      html:-ms-fullscreen .yearbook-lower-curl,
-      :fullscreen .yearbook-lower-curl,
-      :-webkit-full-screen .yearbook-lower-curl,
-      :-moz-full-screen .yearbook-lower-curl,
-      :-ms-fullscreen .yearbook-lower-curl {
-        display: block;
-      }
-    </style>
-    <meta property="fb:app_id" content="1767810860531321" />
-    <meta property="og:locale" content="en_US" />
-    <meta
-      property="og:title"
-      content="Graduation Gallery - Exact Colleges of Asia"
-    />
-    <meta
-      property="og:description"
-      content="Step into your digital yearbook. Every achievement and memory comes alive."
-    />
-    <meta
-      property="og:image"
-      content="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png"
-    />
-    <meta
-      property="og:image:secure_url"
-      content="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png"
-    />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:url" content="https://grad-gallery.up.railway.app" />
-    <meta property="og:type" content="website" />
-
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta
-      name="twitter:title"
-      content="Graduation Gallery - Exact Colleges of Asia"
-    />
-    <meta
-      name="twitter:description"
-      content="Step into your digital yearbook. Every achievement and memory comes alive."
-    />
-    <meta
-      name="twitter:image"
-      content="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png"
-    />
-    <meta
-      name="twitter:image:alt"
-      content="Exact Colleges of Asia Graduation Gallery Preview Logo"
-    />
-
-    <link
-      rel="icon"
-      href="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png"
-      type="image/png"
-    />
-    <script>
-      var assetBasePath = window.location.pathname.includes("/ECADYB/")
-        ? "/ECADYB/"
-        : "/ECADYB/";
-    </script>
-    <script
-      type="text/javascript"
-      src="/ECADYB/Turn.js/extras/jquery.min.js"
-    ></script>
-    <script type="text/javascript" src="/ECADYB/Turn.js/lib/hash.js"></script>
-    <script
-      type="text/javascript"
-      src="/ECADYB/Turn.js/lib/turn.min.js"
-    ></script>
-    <script
-      type="text/javascript"
-      src="/ECADYB/Turn.js/lib/zoom.min.js"
-    ></script>
-    <script
-      type="text/javascript"
-      src="/ECADYB/Student/Yearbook/js/magazine.js?v=1736979600"
-    ></script>
-    <link
-      rel="stylesheet"
-      href="/ECADYB/Student/Yearbook/css/magazine.css?v=1736979600"
-    />
-
-    <script type="text/javascript">
-      $.isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
-      $.mouseEvents = $.isTouch
-        ? {
-            over: "touchstart",
-            out: "touchend",
-            move: "touchmove",
-            down: "touchstart",
-            up: "touchend",
-          }
-        : {
-            over: "mouseover",
-            out: "mouseout",
-            move: "mousemove",
-            down: "mousedown",
-            up: "mouseup",
-          };
-
-      console.log("$.isTouch:", $.isTouch, typeof $.isTouch);
-      console.log("$.mouseEvents:", $.mouseEvents);
-
-      var coverData = null;
-      var studentData = null;
-
-      function fetchCoverData(template, slot) {
-        if (!template) {
-          template = localStorage.getItem("selectedBatchTemplateNumber") || 1;
-          template = parseInt(template);
-        }
-        slot = slot || 1;
-
-        var urlParams = new URLSearchParams(window.location.search);
-        var batchYear =
-          urlParams.get("batchYear") ||
-          localStorage.getItem("selectedBatchYear");
-
-        if (urlParams.get("batchYear")) {
-          localStorage.setItem("selectedBatchYear", batchYear);
-          console.log(
-            "Updated localStorage with batch year from URL:",
-            batchYear
-          );
-        }
-
+      if (urlParams.get("batchYear")) {
+        localStorage.setItem("selectedBatchYear", batchYear);
         console.log(
-          "Fetching cover data for template:",
-          template,
-          "slot:",
-          slot,
-          "batch_year:",
+          "Updated localStorage with batch year from URL:",
           batchYear
         );
+      }
 
-        var requestData = { template: template, slot: slot };
-        if (batchYear) {
-          requestData.batch_year = batchYear;
-        }
+      console.log(
+        "Fetching cover data for template:",
+        template,
+        "slot:",
+        slot,
+        "batch_year:",
+        batchYear
+      );
 
-        $.ajax({
-          url: "/ECADYB/Admin/Yearbook/FetchCoverData.php",
-          method: "GET",
-          data: requestData,
-          dataType: "json",
-          success: function (response) {
-            console.log("Cover data response:", response);
-            if (response.success) {
-              coverData = response.data;
+      var requestData = { template: template, slot: slot };
+      if (batchYear) {
+        requestData.batch_year = batchYear;
+      }
 
-              console.log("Cover data loaded:", coverData);
+      $.ajax({
+        url: "/ECADYB/Admin/Yearbook/FetchCoverData.php",
+        method: "GET",
+        data: requestData,
+        dataType: "json",
+        success: function (response) {
+          console.log("Cover data response:", response);
+          if (response.success) {
+            coverData = response.data;
 
-              fetchStudentData();
+            console.log("Cover data loaded:", coverData);
 
-              if (typeof loadApp === "function") {
-                loadApp();
-              }
-            } else {
-              console.log("Failed to fetch cover data:", response.message);
-              if (typeof loadApp === "function") {
-                loadApp();
-              }
-            }
-          },
-          error: function (xhr, status, error) {
-            console.log("Error fetching cover data:", error);
-            console.log("XHR:", xhr);
-            console.log("Status:", status);
+            fetchStudentData();
+
             if (typeof loadApp === "function") {
               loadApp();
             }
-          },
-        });
+          } else {
+            console.log("Failed to fetch cover data:", response.message);
+            if (typeof loadApp === "function") {
+              loadApp();
+            }
+          }
+        },
+        error: function (xhr, status, error) {
+          console.log("Error fetching cover data:", error);
+          console.log("XHR:", xhr);
+          console.log("Status:", status);
+          if (typeof loadApp === "function") {
+            loadApp();
+          }
+        },
+      });
+    }
+
+    function fetchStudentData() {
+      var urlParams = new URLSearchParams(window.location.search);
+
+      var pageParam = urlParams.get("page");
+      var departmentCode = urlParams.get("department");
+
+      if (!departmentCode && pageParam) {
+        var pageMap = {
+          maritime: "MARITIME",
+          criminology: "BSCJ",
+          tourism: "BSTM",
+          education: "COE",
+          nursing: "BSN",
+          information: "BSIS",
+          business: "BSBA",
+        };
+        departmentCode = pageMap[pageParam.toLowerCase()] || "MARITIME";
       }
 
-      function fetchStudentData() {
-        var urlParams = new URLSearchParams(window.location.search);
+      if (!departmentCode) {
+        departmentCode = "MARITIME";
+      }
 
-        var pageParam = urlParams.get("page");
-        var departmentCode = urlParams.get("department");
+      if (departmentCode) {
+        departmentCode = departmentCode.toUpperCase();
+      }
 
-        if (!departmentCode && pageParam) {
-          var pageMap = {
-            maritime: "MARITIME",
-            criminology: "BSCJ",
-            tourism: "BSTM",
-            education: "COE",
-            nursing: "BSN",
-            information: "BSIS",
-            business: "BSBA",
-          };
-          departmentCode = pageMap[pageParam.toLowerCase()] || "MARITIME";
+      window.currentYearbookDepartment = departmentCode;
+
+      try {
+        var departments = [
+          "BSME",
+          "MARITIME",
+          "BSCJ",
+          "BSCJE",
+          "BSTM",
+          "COE",
+          "EDUCATION",
+          "BTVTED",
+          "BSECED",
+          "BSN",
+          "BSIS",
+          "BSBA",
+          "BSMA",
+          "BSE",
+        ];
+        departments.forEach(function (dept) {
+          localStorage.removeItem("studentData_" + dept);
+        });
+
+        window.pageSectionCache = {};
+        window.sectionPageNumberMap = {};
+        console.log(
+          "Cleared all department caches before fetching:",
+          departmentCode
+        );
+      } catch (e) {
+        console.log("Error clearing caches:", e);
+      }
+
+      var template = 1;
+      if (coverData && coverData.template) {
+        template = coverData.template;
+      } else {
+        var savedTemplate = localStorage.getItem(
+          "selectedBatchTemplateNumber"
+        );
+        if (savedTemplate) {
+          template = parseInt(savedTemplate);
         }
+      }
 
-        if (!departmentCode) {
-          departmentCode = "MARITIME";
-        }
+      var batchYear = localStorage.getItem("selectedBatchYear");
 
-        if (departmentCode) {
-          departmentCode = departmentCode.toUpperCase();
-        }
+      console.log(
+        "Fetching student data for department:",
+        departmentCode,
+        "template:",
+        template,
+        "batch_year:",
+        batchYear
+      );
 
-        window.currentYearbookDepartment = departmentCode;
+      var requestData = {
+        department: departmentCode,
+        template: template,
+        limit: 500,
+      };
+      if (batchYear) {
+        requestData.batch_year = batchYear;
+      }
 
-        try {
-          var departments = [
-            "BSME",
-            "MARITIME",
-            "BSCJ",
-            "BSCJE",
-            "BSTM",
-            "COE",
-            "EDUCATION",
-            "BTVTED",
-            "BSECED",
-            "BSN",
-            "BSIS",
-            "BSBA",
-            "BSMA",
-            "BSE",
-          ];
-          departments.forEach(function (dept) {
-            localStorage.removeItem("studentData_" + dept);
-          });
+      $.ajax({
+        url: "/ECADYB/Connection/Photos/FetchStudentData.php",
+        method: "GET",
+        data: requestData,
+        dataType: "json",
+        success: function (response) {
+          console.log("Student data response:", response);
+          if (response.success) {
+            studentData = response.data;
 
-          window.pageSectionCache = {};
-          window.sectionPageNumberMap = {};
-          console.log(
-            "Cleared all department caches before fetching:",
-            departmentCode
-          );
-        } catch (e) {
-          console.log("Error clearing caches:", e);
-        }
+            if (studentData && studentData.students) {
+              var originalCount = studentData.students.length;
+              studentData.students = studentData.students.filter(function (
+                student
+              ) {
+                var studentProgram = (student.program || "").toUpperCase();
+                var expectedPrograms = [];
 
+                if (
+                  departmentCode === "BSME" ||
+                  departmentCode === "MARITIME"
+                ) {
+                  expectedPrograms = ["BSME", "BSMT", "MARITIME"];
+                } else if (
+                  departmentCode === "BSCJ" ||
+                  departmentCode === "BSCJE"
+                ) {
+                  expectedPrograms = ["BSCJ", "BSCJE", "CRIMINOLOGY"];
+                } else if (
+                  departmentCode === "COE" ||
+                  departmentCode === "EDUCATION"
+                ) {
+                  expectedPrograms = ["COE", "BTVTED", "BECED", "EDUCATION"];
+                } else if (departmentCode === "BSIS") {
+                  expectedPrograms = ["BSIS"];
+                } else if (departmentCode === "BSBA") {
+                  expectedPrograms = ["BSBA", "BSMA", "BSE"];
+                } else if (departmentCode === "BSN") {
+                  expectedPrograms = ["BSN", "NURSING"];
+                } else if (departmentCode === "BSTM") {
+                  expectedPrograms = ["BSTM", "TOURISM"];
+                }
+
+                var programMatches = expectedPrograms.some(function (
+                  expected
+                ) {
+                  return (
+                    studentProgram.indexOf(expected) === 0 ||
+                    studentProgram.indexOf(expected + " -") === 0
+                  );
+                });
+
+                if (!programMatches && studentProgram) {
+                  console.warn(
+                    "⚠️ Filtering out student with mismatched program:",
+                    {
+                      name: student.name,
+                      student_id: student.student_id,
+                      program: student.program,
+                      expected_department: departmentCode,
+                    }
+                  );
+                }
+
+                return programMatches || !studentProgram;
+              });
+
+              var filteredCount = originalCount - studentData.students.length;
+              if (filteredCount > 0) {
+                console.log(
+                  "Filtered out " +
+                  filteredCount +
+                  " student(s) with mismatched program codes"
+                );
+                studentData.total_students = studentData.students.length;
+              }
+            }
+
+            console.log("Student data loaded:", studentData);
+            console.log("Total students:", studentData.total_students);
+            console.log("Students array:", studentData.students);
+            console.log(
+              "First few students:",
+              studentData.students.slice(0, 3)
+            );
+
+            var yearbook = getCurrentYearbook();
+            if (studentData && studentData.students) {
+              try {
+                localStorage.setItem(
+                  "studentData_" + yearbook.code,
+                  JSON.stringify({
+                    students: studentData.students,
+                    total_students: studentData.total_students,
+                  })
+                );
+                console.log(
+                  "Student data cached in localStorage for section detection"
+                );
+              } catch (e) {
+                console.log(
+                  "Failed to cache student data in localStorage:",
+                  e
+                );
+              }
+            }
+
+            populateThumbnails();
+          } else {
+            console.log("Failed to fetch student data:", response.message);
+            populateThumbnails();
+          }
+        },
+        error: function (xhr, status, error) {
+          console.log("Error fetching student data:", error);
+          populateThumbnails();
+        },
+      });
+    }
+
+    function getCurrentYearbook() {
+      var urlParams = new URLSearchParams(window.location.search);
+
+      var pageParam = urlParams.get("page");
+      var departmentCode = urlParams.get("department");
+
+      if (!departmentCode && pageParam) {
+        var pageMap = {
+          maritime: "MARITIME",
+          criminology: "BSCJ",
+          tourism: "BSTM",
+          education: "COE",
+          nursing: "BSN",
+          information: "BSIS",
+          business: "BSBA",
+        };
+        departmentCode = pageMap[pageParam.toLowerCase()] || "MARITIME";
+      }
+
+      if (!departmentCode) {
+        departmentCode = "MARITIME";
+      }
+
+      if (departmentCode) {
+        departmentCode = departmentCode.toUpperCase();
+      }
+
+      window.currentYearbookDepartment = departmentCode;
+
+      var yearbookMap = {
+        BSME: "Maritime Education",
+        MARITIME: "Maritime Education",
+        BSMT: "Maritime Education",
+        BSCJ: "College of Criminology",
+        BSCJE: "College of Criminology",
+        BSTM: "Tourism Management",
+        COE: "College of Education",
+        EDUCATION: "College of Education",
+        BTVTED: "College of Education",
+        BSECED: "College of Education",
+        BSN: "College of Nursing",
+        BSIS: "Information System",
+        BSBA: "Business Administration",
+        BSMA: "Business Administration",
+        BSE: "Business Administration",
+      };
+
+      return {
+        code: departmentCode,
+        name: yearbookMap[departmentCode] || "Unknown Department",
+      };
+    }
+
+    function getCurrentBatchYear() {
+      var batchYear = localStorage.getItem("selectedBatchYear");
+      if (batchYear) {
+        return batchYear.replace("Batch Year ", "");
+      }
+      return "2025-2026";
+    }
+
+    function getTopManagementNameForPage(pageNumber) {
+      try {
         var template = 1;
         if (coverData && coverData.template) {
           template = coverData.template;
@@ -301,614 +477,80 @@
         }
 
         var batchYear = localStorage.getItem("selectedBatchYear");
+        var cacheKey =
+          "template_" + template + "_" + (batchYear || "default");
 
-        console.log(
-          "Fetching student data for department:",
-          departmentCode,
-          "template:",
-          template,
-          "batch_year:",
-          batchYear
-        );
+        if (
+          window.topManagementCache &&
+          window.topManagementCache[cacheKey]
+        ) {
+          var topManagementData = window.topManagementCache[cacheKey];
+          if (
+            topManagementData &&
+            topManagementData.data &&
+            topManagementData.data.length > 0
+          ) {
+            var topMgmtIndex = pageNumber - 2;
 
-        var requestData = {
-          department: departmentCode,
-          template: template,
-          limit: 500,
-        };
-        if (batchYear) {
-          requestData.batch_year = batchYear;
-        }
-
-        $.ajax({
-          url: "/ECADYB/Connection/Photos/FetchStudentData.php",
-          method: "GET",
-          data: requestData,
-          dataType: "json",
-          success: function (response) {
-            console.log("Student data response:", response);
-            if (response.success) {
-              studentData = response.data;
-
-              if (studentData && studentData.students) {
-                var originalCount = studentData.students.length;
-                studentData.students = studentData.students.filter(function (
-                  student
-                ) {
-                  var studentProgram = (student.program || "").toUpperCase();
-                  var expectedPrograms = [];
-
-                  if (
-                    departmentCode === "BSME" ||
-                    departmentCode === "MARITIME"
-                  ) {
-                    expectedPrograms = ["BSME", "BSMT", "MARITIME"];
-                  } else if (
-                    departmentCode === "BSCJ" ||
-                    departmentCode === "BSCJE"
-                  ) {
-                    expectedPrograms = ["BSCJ", "BSCJE", "CRIMINOLOGY"];
-                  } else if (
-                    departmentCode === "COE" ||
-                    departmentCode === "EDUCATION"
-                  ) {
-                    expectedPrograms = ["COE", "BTVTED", "BECED", "EDUCATION"];
-                  } else if (departmentCode === "BSIS") {
-                    expectedPrograms = ["BSIS"];
-                  } else if (departmentCode === "BSBA") {
-                    expectedPrograms = ["BSBA", "BSMA", "BSE"];
-                  } else if (departmentCode === "BSN") {
-                    expectedPrograms = ["BSN", "NURSING"];
-                  } else if (departmentCode === "BSTM") {
-                    expectedPrograms = ["BSTM", "TOURISM"];
-                  }
-
-                  var programMatches = expectedPrograms.some(function (
-                    expected
-                  ) {
-                    return (
-                      studentProgram.indexOf(expected) === 0 ||
-                      studentProgram.indexOf(expected + " -") === 0
-                    );
-                  });
-
-                  if (!programMatches && studentProgram) {
-                    console.warn(
-                      "⚠️ Filtering out student with mismatched program:",
-                      {
-                        name: student.name,
-                        student_id: student.student_id,
-                        program: student.program,
-                        expected_department: departmentCode,
-                      }
-                    );
-                  }
-
-                  return programMatches || !studentProgram;
-                });
-
-                var filteredCount = originalCount - studentData.students.length;
-                if (filteredCount > 0) {
-                  console.log(
-                    "Filtered out " +
-                      filteredCount +
-                      " student(s) with mismatched program codes"
-                  );
-                  studentData.total_students = studentData.students.length;
-                }
+            if (
+              topMgmtIndex >= 0 &&
+              topMgmtIndex < topManagementData.data.length
+            ) {
+              var topMgmt = topManagementData.data[topMgmtIndex];
+              if (topMgmt && topMgmt.name && topMgmt.position) {
+                return topMgmt.name + " (" + topMgmt.position + ")";
+              } else if (topMgmt && topMgmt.name) {
+                return topMgmt.name;
               }
-
-              console.log("Student data loaded:", studentData);
-              console.log("Total students:", studentData.total_students);
-              console.log("Students array:", studentData.students);
-              console.log(
-                "First few students:",
-                studentData.students.slice(0, 3)
-              );
-
-              var yearbook = getCurrentYearbook();
-              if (studentData && studentData.students) {
-                try {
-                  localStorage.setItem(
-                    "studentData_" + yearbook.code,
-                    JSON.stringify({
-                      students: studentData.students,
-                      total_students: studentData.total_students,
-                    })
-                  );
-                  console.log(
-                    "Student data cached in localStorage for section detection"
-                  );
-                } catch (e) {
-                  console.log(
-                    "Failed to cache student data in localStorage:",
-                    e
-                  );
-                }
-              }
-
-              populateThumbnails();
-            } else {
-              console.log("Failed to fetch student data:", response.message);
-              populateThumbnails();
-            }
-          },
-          error: function (xhr, status, error) {
-            console.log("Error fetching student data:", error);
-            populateThumbnails();
-          },
-        });
-      }
-
-      function getCurrentYearbook() {
-        var urlParams = new URLSearchParams(window.location.search);
-
-        var pageParam = urlParams.get("page");
-        var departmentCode = urlParams.get("department");
-
-        if (!departmentCode && pageParam) {
-          var pageMap = {
-            maritime: "MARITIME",
-            criminology: "BSCJ",
-            tourism: "BSTM",
-            education: "COE",
-            nursing: "BSN",
-            information: "BSIS",
-            business: "BSBA",
-          };
-          departmentCode = pageMap[pageParam.toLowerCase()] || "MARITIME";
-        }
-
-        if (!departmentCode) {
-          departmentCode = "MARITIME";
-        }
-
-        if (departmentCode) {
-          departmentCode = departmentCode.toUpperCase();
-        }
-
-        window.currentYearbookDepartment = departmentCode;
-
-        var yearbookMap = {
-          BSME: "Maritime Education",
-          MARITIME: "Maritime Education",
-          BSMT: "Maritime Education",
-          BSCJ: "College of Criminology",
-          BSCJE: "College of Criminology",
-          BSTM: "Tourism Management",
-          COE: "College of Education",
-          EDUCATION: "College of Education",
-          BTVTED: "College of Education",
-          BSECED: "College of Education",
-          BSN: "College of Nursing",
-          BSIS: "Information System",
-          BSBA: "Business Administration",
-          BSMA: "Business Administration",
-          BSE: "Business Administration",
-        };
-
-        return {
-          code: departmentCode,
-          name: yearbookMap[departmentCode] || "Unknown Department",
-        };
-      }
-
-      function getCurrentBatchYear() {
-        var batchYear = localStorage.getItem("selectedBatchYear");
-        if (batchYear) {
-          return batchYear.replace("Batch Year ", "");
-        }
-        return "2025-2026";
-      }
-
-      function getTopManagementNameForPage(pageNumber) {
-        try {
-          var template = 1;
-          if (coverData && coverData.template) {
-            template = coverData.template;
-          } else {
-            var savedTemplate = localStorage.getItem(
-              "selectedBatchTemplateNumber"
-            );
-            if (savedTemplate) {
-              template = parseInt(savedTemplate);
             }
           }
+        }
 
-          var batchYear = localStorage.getItem("selectedBatchYear");
-          var cacheKey =
-            "template_" + template + "_" + (batchYear || "default");
-
-          if (
-            window.topManagementCache &&
-            window.topManagementCache[cacheKey]
-          ) {
-            var topManagementData = window.topManagementCache[cacheKey];
-            if (
-              topManagementData &&
-              topManagementData.data &&
-              topManagementData.data.length > 0
-            ) {
+        if (typeof localStorage !== "undefined") {
+          var savedTopMgmt = localStorage.getItem("topManagementData");
+          if (savedTopMgmt) {
+            try {
+              var parsedData = JSON.parse(savedTopMgmt);
               var topMgmtIndex = pageNumber - 2;
-
-              if (
-                topMgmtIndex >= 0 &&
-                topMgmtIndex < topManagementData.data.length
-              ) {
-                var topMgmt = topManagementData.data[topMgmtIndex];
+              if (topMgmtIndex >= 0 && topMgmtIndex < parsedData.length) {
+                var topMgmt = parsedData[topMgmtIndex];
                 if (topMgmt && topMgmt.name && topMgmt.position) {
                   return topMgmt.name + " (" + topMgmt.position + ")";
                 } else if (topMgmt && topMgmt.name) {
                   return topMgmt.name;
                 }
               }
-            }
-          }
-
-          if (typeof localStorage !== "undefined") {
-            var savedTopMgmt = localStorage.getItem("topManagementData");
-            if (savedTopMgmt) {
-              try {
-                var parsedData = JSON.parse(savedTopMgmt);
-                var topMgmtIndex = pageNumber - 2;
-                if (topMgmtIndex >= 0 && topMgmtIndex < parsedData.length) {
-                  var topMgmt = parsedData[topMgmtIndex];
-                  if (topMgmt && topMgmt.name && topMgmt.position) {
-                    return topMgmt.name + " (" + topMgmt.position + ")";
-                  } else if (topMgmt && topMgmt.name) {
-                    return topMgmt.name;
-                  }
-                }
-              } catch (e) {
-                console.log("Error parsing top management data:", e);
-              }
-            }
-          }
-        } catch (e) {
-          console.log(
-            "Error getting top management name for page",
-            pageNumber,
-            ":",
-            e
-          );
-        }
-
-        return null;
-      }
-
-      window.pageSectionCache = window.pageSectionCache || {};
-
-      function getStudentSectionForPage(pageNumber) {
-        try {
-          var yearbook = getCurrentYearbook();
-          var cacheKey = yearbook.code + "_" + pageNumber;
-
-          if (window.pageSectionCache[cacheKey]) {
-            return window.pageSectionCache[cacheKey];
-          }
-          var studentsPerPage = 4;
-          var studentStartPage = 6;
-          var studentStartIndex =
-            (pageNumber - studentStartPage) * studentsPerPage;
-
-          var template = 1;
-          if (coverData && coverData.template) {
-            template = coverData.template;
-          } else {
-            var savedTemplate = localStorage.getItem(
-              "selectedBatchTemplateNumber"
-            );
-            if (savedTemplate) {
-              template = parseInt(savedTemplate);
-            }
-          }
-
-          var studentsPerAPIPage = 50;
-          var apiPage = Math.floor(studentStartIndex / studentsPerAPIPage) + 1;
-          var localStartIndex = studentStartIndex % studentsPerAPIPage;
-
-          var cacheKey = yearbook.code + "_" + template + "_" + apiPage;
-
-          if (window.studentDataCache && window.studentDataCache[cacheKey]) {
-            var studentData = window.studentDataCache[cacheKey];
-            if (
-              studentData &&
-              studentData.success &&
-              studentData.data &&
-              studentData.data.students
-            ) {
-              var students = studentData.data.students;
-              if (students.length > localStartIndex) {
-                var firstStudent = students[localStartIndex];
-                if (firstStudent) {
-                  var section =
-                    firstStudent.department_section ||
-                    firstStudent["department section"] ||
-                    firstStudent.section ||
-                    firstStudent.program ||
-                    firstStudent.course ||
-                    firstStudent.department;
-                  if (section) {
-                    var sectionUpper = section.toUpperCase();
-                    var cacheKey = yearbook.code + "_" + pageNumber;
-                    window.pageSectionCache[cacheKey] = sectionUpper;
-                    return sectionUpper;
-                  }
-                }
-              }
-            }
-          }
-
-          if (typeof localStorage !== "undefined") {
-            var savedStudentData = localStorage.getItem(
-              "studentData_" + yearbook.code
-            );
-            if (savedStudentData) {
-              try {
-                var parsedData = JSON.parse(savedStudentData);
-
-                if (
-                  parsedData &&
-                  parsedData.data &&
-                  Array.isArray(parsedData.data) &&
-                  parsedData.data.length > studentStartIndex
-                ) {
-                  var firstStudent = parsedData.data[studentStartIndex];
-                  if (firstStudent) {
-                    var section =
-                      firstStudent.department_section ||
-                      firstStudent["department section"] ||
-                      firstStudent.program ||
-                      firstStudent.section ||
-                      firstStudent.course ||
-                      firstStudent.department;
-                    if (section) {
-                      var sectionUpper = section.toUpperCase();
-                      var cacheKey = yearbook.code + "_" + pageNumber;
-                      window.pageSectionCache[cacheKey] = sectionUpper;
-                      console.log(
-                        "Found section from localStorage (data) for page",
-                        pageNumber,
-                        ":",
-                        sectionUpper
-                      );
-                      return sectionUpper;
-                    }
-                  }
-                }
-
-                if (
-                  parsedData &&
-                  parsedData.students &&
-                  Array.isArray(parsedData.students) &&
-                  parsedData.students.length > studentStartIndex
-                ) {
-                  var firstStudent = parsedData.students[studentStartIndex];
-                  if (firstStudent) {
-                    var section =
-                      firstStudent.department_section ||
-                      firstStudent["department section"] ||
-                      firstStudent.program ||
-                      firstStudent.section ||
-                      firstStudent.course ||
-                      firstStudent.department;
-                    if (section) {
-                      var sectionUpper = section.toUpperCase();
-                      var cacheKey = yearbook.code + "_" + pageNumber;
-                      window.pageSectionCache[cacheKey] = sectionUpper;
-                      console.log(
-                        "Found section from localStorage for page",
-                        pageNumber,
-                        ":",
-                        sectionUpper
-                      );
-                      return sectionUpper;
-                    }
-                  }
-                }
-              } catch (e) {
-                console.log("Error parsing student data:", e);
-              }
-            }
-          }
-
-          if (pageNumber > studentStartPage) {
-            var prevSection = getStudentSectionForPage(pageNumber - 1);
-            var cacheKey = yearbook.code + "_" + pageNumber;
-            if (prevSection && !window.pageSectionCache[cacheKey]) {
-              console.log(
-                "Using previous page section for page",
-                pageNumber,
-                ":",
-                prevSection
-              );
-              return prevSection;
-            }
-          }
-
-          console.log(
-            "No student section data found for page",
-            pageNumber,
-            "- will show generic label"
-          );
-        } catch (e) {
-          console.log(
-            "Error getting student section for page",
-            pageNumber,
-            ":",
-            e
-          );
-        }
-
-        return null;
-      }
-
-      window.sectionPageNumberMap = window.sectionPageNumberMap || {};
-
-      function buildSectionPageNumberMap(totalPages, departmentCode) {
-        var studentStartPage = 6;
-        var sectionCounters = {};
-        var map = {};
-        var pageSections = [];
-
-        for (var pageNum = studentStartPage; pageNum < totalPages; pageNum++) {
-          var section = getStudentSectionForPage(pageNum);
-          pageSections.push({ page: pageNum, section: section });
-        }
-
-        console.log("Raw page sections:", pageSections);
-
-        for (var i = 0; i < pageSections.length; i++) {
-          var currentSection = pageSections[i].section;
-
-          if (
-            currentSection &&
-            currentSection.match(
-              /^(BSME|BSMT|BSCJ|BSCJE|BSTM|BSE|BSN|BSIS|BSBA)$/
-            )
-          ) {
-            for (var j = i + 1; j < pageSections.length; j++) {
-              var nextSection = pageSections[j].section;
-              if (
-                nextSection &&
-                nextSection.indexOf(" - ") > -1 &&
-                nextSection.startsWith(currentSection)
-              ) {
-                console.log(
-                  "Normalizing generic section",
-                  currentSection,
-                  "on page",
-                  pageSections[i].page,
-                  "to",
-                  nextSection
-                );
-                pageSections[i].section = nextSection;
-                break;
-              }
+            } catch (e) {
+              console.log("Error parsing top management data:", e);
             }
           }
         }
-
-        for (var i = 0; i < pageSections.length; i++) {
-          var pageNum = pageSections[i].page;
-          var section = pageSections[i].section;
-
-          if (!sectionCounters[section]) {
-            sectionCounters[section] = 1;
-          } else {
-            sectionCounters[section]++;
-          }
-
-          map[pageNum] = {
-            section: section,
-            sectionPageNumber: sectionCounters[section],
-          };
-        }
-
-        console.log("Final section map:", map);
-        return map;
-      }
-
-      function getPageDescription(pageNumber) {
-        var yearbook = getCurrentYearbook();
-        var departmentCode = yearbook.code;
-        var totalPages = calculateTotalPages();
-
+      } catch (e) {
         console.log(
-          "Getting page description for page",
+          "Error getting top management name for page",
           pageNumber,
-          "in yearbook:",
-          yearbook.name
+          ":",
+          e
         );
-
-        if (pageNumber === 1) {
-          return "Front Cover";
-        }
-
-        if (pageNumber >= 2 && pageNumber <= 5) {
-          var topMgmtPageNumber = pageNumber - 1;
-
-          var topMgmtName = getTopManagementNameForPage(pageNumber);
-          console.log(
-            "Top management name for page",
-            pageNumber,
-            ":",
-            topMgmtName
-          );
-          if (topMgmtName) {
-            return (
-              "Top Management Message - " +
-              topMgmtName +
-              " - Page " +
-              topMgmtPageNumber
-            );
-          } else {
-            return "Top Management Message - Page " + topMgmtPageNumber;
-          }
-        }
-
-        if (pageNumber === totalPages) {
-          return "Back Cover";
-        }
-
-        var studentStartPage = 6;
-        if (pageNumber >= studentStartPage && pageNumber < totalPages) {
-          var mapCacheKey = departmentCode + "_" + totalPages;
-          if (!window.sectionPageNumberMap[mapCacheKey]) {
-            window.sectionPageNumberMap[mapCacheKey] =
-              buildSectionPageNumberMap(totalPages, departmentCode);
-          }
-
-          var pageInfo = window.sectionPageNumberMap[mapCacheKey][pageNumber];
-
-          if (pageInfo && pageInfo.section) {
-            console.log(
-              "Student section for page",
-              pageNumber,
-              ":",
-              pageInfo.section,
-              "- Section Page:",
-              pageInfo.sectionPageNumber
-            );
-
-            return (
-              "Student Graduates - " +
-              pageInfo.section +
-              " - Page " +
-              pageInfo.sectionPageNumber
-            );
-          } else {
-            var fallbackPageNumber = pageNumber - studentStartPage + 1;
-            return "Student Graduates - Page " + fallbackPageNumber;
-          }
-        }
-
-        return "PAGE " + pageNumber;
       }
 
-      function calculateTotalPages() {
-        var studentPages = 0;
+      return null;
+    }
+
+    window.pageSectionCache = window.pageSectionCache || {};
+
+    function getStudentSectionForPage(pageNumber) {
+      try {
+        var yearbook = getCurrentYearbook();
+        var cacheKey = yearbook.code + "_" + pageNumber;
+
+        if (window.pageSectionCache[cacheKey]) {
+          return window.pageSectionCache[cacheKey];
+        }
         var studentsPerPage = 4;
-        var managementPages = 2;
-
-        if (studentData && studentData.total_students) {
-          studentPages = Math.ceil(
-            studentData.total_students / studentsPerPage
-          );
-
-          console.log("Using actual student page calculation:", {
-            total_students_in_db: studentData.total_students,
-            students_per_page: studentsPerPage,
-            calculated_student_pages: studentPages,
-          });
-        }
-
-        if (studentPages === 0) {
-          studentPages = 2;
-          console.log(
-            "No students found - Setting 2 placeholder pages for empty state display"
-          );
-        }
+        var studentStartPage = 6;
+        var studentStartIndex =
+          (pageNumber - studentStartPage) * studentsPerPage;
 
         var template = 1;
         if (coverData && coverData.template) {
@@ -922,101 +564,420 @@
           }
         }
 
-        var batchYear = localStorage.getItem("selectedBatchYear");
-        var cacheKey = "template_" + template + "_" + (batchYear || "default");
+        var studentsPerAPIPage = 50;
+        var apiPage = Math.floor(studentStartIndex / studentsPerAPIPage) + 1;
+        var localStartIndex = studentStartIndex % studentsPerAPIPage;
 
-        console.log("=== CALCULATE TOTAL PAGES - TOP MANAGEMENT CHECK ===");
-        console.log("Cache Key:", cacheKey);
-        console.log(
-          "Top Management Cache exists?",
-          !!window.topManagementCache
-        );
-        console.log(
-          "Cache for this key exists?",
-          !!(window.topManagementCache && window.topManagementCache[cacheKey])
-        );
+        var cacheKey = yearbook.code + "_" + template + "_" + apiPage;
 
-        if (window.topManagementCache && window.topManagementCache[cacheKey]) {
-          var topManagementData = window.topManagementCache[cacheKey];
-          console.log("Top Management Data:", topManagementData);
-          console.log("Success?", topManagementData.success);
-          console.log("Data array?", topManagementData.data);
-          console.log(
-            "Data length?",
-            topManagementData.data ? topManagementData.data.length : "NO DATA"
-          );
-
+        if (window.studentDataCache && window.studentDataCache[cacheKey]) {
+          var studentData = window.studentDataCache[cacheKey];
           if (
-            topManagementData &&
-            topManagementData.success &&
-            topManagementData.data &&
-            topManagementData.data.length > 0
+            studentData &&
+            studentData.success &&
+            studentData.data &&
+            studentData.data.students
           ) {
-            managementPages = topManagementData.data.length;
-            console.log(
-              "✓ Using actual top management pages:",
-              managementPages,
-              "from CSV data"
-            );
-            console.log("✓ Top Management Records:", topManagementData.data);
-          } else {
-            console.log(
-              "✗ No top management data found - using 2 placeholder pages"
-            );
-            console.log(
-              "✗ Reason: success=" +
-                topManagementData.success +
-                ", has data=" +
-                !!topManagementData.data +
-                ", length=" +
-                (topManagementData.data ? topManagementData.data.length : 0)
-            );
+            var students = studentData.data.students;
+            if (students.length > localStartIndex) {
+              var firstStudent = students[localStartIndex];
+              if (firstStudent) {
+                var section =
+                  firstStudent.department_section ||
+                  firstStudent["department section"] ||
+                  firstStudent.section ||
+                  firstStudent.program ||
+                  firstStudent.course ||
+                  firstStudent.department;
+                if (section) {
+                  var sectionUpper = section.toUpperCase();
+                  var cacheKey = yearbook.code + "_" + pageNumber;
+                  window.pageSectionCache[cacheKey] = sectionUpper;
+                  return sectionUpper;
+                }
+              }
+            }
           }
-        } else {
-          console.log(
-            "✗ Top management cache not available - using 2 placeholder pages"
-          );
-          console.log(
-            "✗ All cache keys:",
-            window.topManagementCache
-              ? Object.keys(window.topManagementCache)
-              : "No cache at all"
-          );
         }
 
-        var totalPages = 1 + managementPages + studentPages + 1;
+        if (typeof localStorage !== "undefined") {
+          var savedStudentData = localStorage.getItem(
+            "studentData_" + yearbook.code
+          );
+          if (savedStudentData) {
+            try {
+              var parsedData = JSON.parse(savedStudentData);
+
+              if (
+                parsedData &&
+                parsedData.data &&
+                Array.isArray(parsedData.data) &&
+                parsedData.data.length > studentStartIndex
+              ) {
+                var firstStudent = parsedData.data[studentStartIndex];
+                if (firstStudent) {
+                  var section =
+                    firstStudent.department_section ||
+                    firstStudent["department section"] ||
+                    firstStudent.program ||
+                    firstStudent.section ||
+                    firstStudent.course ||
+                    firstStudent.department;
+                  if (section) {
+                    var sectionUpper = section.toUpperCase();
+                    var cacheKey = yearbook.code + "_" + pageNumber;
+                    window.pageSectionCache[cacheKey] = sectionUpper;
+                    console.log(
+                      "Found section from localStorage (data) for page",
+                      pageNumber,
+                      ":",
+                      sectionUpper
+                    );
+                    return sectionUpper;
+                  }
+                }
+              }
+
+              if (
+                parsedData &&
+                parsedData.students &&
+                Array.isArray(parsedData.students) &&
+                parsedData.students.length > studentStartIndex
+              ) {
+                var firstStudent = parsedData.students[studentStartIndex];
+                if (firstStudent) {
+                  var section =
+                    firstStudent.department_section ||
+                    firstStudent["department section"] ||
+                    firstStudent.program ||
+                    firstStudent.section ||
+                    firstStudent.course ||
+                    firstStudent.department;
+                  if (section) {
+                    var sectionUpper = section.toUpperCase();
+                    var cacheKey = yearbook.code + "_" + pageNumber;
+                    window.pageSectionCache[cacheKey] = sectionUpper;
+                    console.log(
+                      "Found section from localStorage for page",
+                      pageNumber,
+                      ":",
+                      sectionUpper
+                    );
+                    return sectionUpper;
+                  }
+                }
+              }
+            } catch (e) {
+              console.log("Error parsing student data:", e);
+            }
+          }
+        }
+
+        if (pageNumber > studentStartPage) {
+          var prevSection = getStudentSectionForPage(pageNumber - 1);
+          var cacheKey = yearbook.code + "_" + pageNumber;
+          if (prevSection && !window.pageSectionCache[cacheKey]) {
+            console.log(
+              "Using previous page section for page",
+              pageNumber,
+              ":",
+              prevSection
+            );
+            return prevSection;
+          }
+        }
 
         console.log(
-          "Calculated total pages:",
-          totalPages,
-          "(1 front + " +
-            managementPages +
-            " management + " +
-            studentPages +
-            " students + 1 back)"
+          "No student section data found for page",
+          pageNumber,
+          "- will show generic label"
         );
-
-        return totalPages;
+      } catch (e) {
+        console.log(
+          "Error getting student section for page",
+          pageNumber,
+          ":",
+          e
+        );
       }
 
-      function populateThumbnails() {
-        console.log("=== POPULATE THUMBNAILS CALLED ===");
-        var yearbook = getCurrentYearbook();
-        console.log("Populating text-based thumbnails for:", yearbook.name);
+      return null;
+    }
 
-        var thumbnailList = $("#thumbnail-list");
-        console.log("Thumbnail list element found:", thumbnailList.length);
-        thumbnailList.empty();
+    window.sectionPageNumberMap = window.sectionPageNumberMap || {};
 
-        if (thumbnailList.length === 0) {
-          console.log("Creating thumbnail list element");
-          thumbnailList = $('<div id="thumbnail-list"></div>');
+    function buildSectionPageNumberMap(totalPages, departmentCode) {
+      var studentStartPage = 6;
+      var sectionCounters = {};
+      var map = {};
+      var pageSections = [];
+
+      for (var pageNum = studentStartPage; pageNum < totalPages; pageNum++) {
+        var section = getStudentSectionForPage(pageNum);
+        pageSections.push({ page: pageNum, section: section });
+      }
+
+      console.log("Raw page sections:", pageSections);
+
+      for (var i = 0; i < pageSections.length; i++) {
+        var currentSection = pageSections[i].section;
+
+        if (
+          currentSection &&
+          currentSection.match(
+            /^(BSME|BSMT|BSCJ|BSCJE|BSTM|BSE|BSN|BSIS|BSBA)$/
+          )
+        ) {
+          for (var j = i + 1; j < pageSections.length; j++) {
+            var nextSection = pageSections[j].section;
+            if (
+              nextSection &&
+              nextSection.indexOf(" - ") > -1 &&
+              nextSection.startsWith(currentSection)
+            ) {
+              console.log(
+                "Normalizing generic section",
+                currentSection,
+                "on page",
+                pageSections[i].page,
+                "to",
+                nextSection
+              );
+              pageSections[i].section = nextSection;
+              break;
+            }
+          }
+        }
+      }
+
+      for (var i = 0; i < pageSections.length; i++) {
+        var pageNum = pageSections[i].page;
+        var section = pageSections[i].section;
+
+        if (!sectionCounters[section]) {
+          sectionCounters[section] = 1;
+        } else {
+          sectionCounters[section]++;
         }
 
-        var totalPages = calculateTotalPages();
-        console.log("Total pages calculated:", totalPages);
+        map[pageNum] = {
+          section: section,
+          sectionPageNumber: sectionCounters[section],
+        };
+      }
 
-        var headerHtml = `
+      console.log("Final section map:", map);
+      return map;
+    }
+
+    function getPageDescription(pageNumber) {
+      var yearbook = getCurrentYearbook();
+      var departmentCode = yearbook.code;
+      var totalPages = calculateTotalPages();
+
+      console.log(
+        "Getting page description for page",
+        pageNumber,
+        "in yearbook:",
+        yearbook.name
+      );
+
+      if (pageNumber === 1) {
+        return "Front Cover";
+      }
+
+      if (pageNumber >= 2 && pageNumber <= 5) {
+        var topMgmtPageNumber = pageNumber - 1;
+
+        var topMgmtName = getTopManagementNameForPage(pageNumber);
+        console.log(
+          "Top management name for page",
+          pageNumber,
+          ":",
+          topMgmtName
+        );
+        if (topMgmtName) {
+          return (
+            "Top Management Message - " +
+            topMgmtName +
+            " - Page " +
+            topMgmtPageNumber
+          );
+        } else {
+          return "Top Management Message - Page " + topMgmtPageNumber;
+        }
+      }
+
+      if (pageNumber === totalPages) {
+        return "Back Cover";
+      }
+
+      var studentStartPage = 6;
+      if (pageNumber >= studentStartPage && pageNumber < totalPages) {
+        var mapCacheKey = departmentCode + "_" + totalPages;
+        if (!window.sectionPageNumberMap[mapCacheKey]) {
+          window.sectionPageNumberMap[mapCacheKey] =
+            buildSectionPageNumberMap(totalPages, departmentCode);
+        }
+
+        var pageInfo = window.sectionPageNumberMap[mapCacheKey][pageNumber];
+
+        if (pageInfo && pageInfo.section) {
+          console.log(
+            "Student section for page",
+            pageNumber,
+            ":",
+            pageInfo.section,
+            "- Section Page:",
+            pageInfo.sectionPageNumber
+          );
+
+          return (
+            "Student Graduates - " +
+            pageInfo.section +
+            " - Page " +
+            pageInfo.sectionPageNumber
+          );
+        } else {
+          var fallbackPageNumber = pageNumber - studentStartPage + 1;
+          return "Student Graduates - Page " + fallbackPageNumber;
+        }
+      }
+
+      return "PAGE " + pageNumber;
+    }
+
+    function calculateTotalPages() {
+      var studentPages = 0;
+      var studentsPerPage = 4;
+      var managementPages = 2;
+
+      if (studentData && studentData.total_students) {
+        studentPages = Math.ceil(
+          studentData.total_students / studentsPerPage
+        );
+
+        console.log("Using actual student page calculation:", {
+          total_students_in_db: studentData.total_students,
+          students_per_page: studentsPerPage,
+          calculated_student_pages: studentPages,
+        });
+      }
+
+      if (studentPages === 0) {
+        studentPages = 2;
+        console.log(
+          "No students found - Setting 2 placeholder pages for empty state display"
+        );
+      }
+
+      var template = 1;
+      if (coverData && coverData.template) {
+        template = coverData.template;
+      } else {
+        var savedTemplate = localStorage.getItem(
+          "selectedBatchTemplateNumber"
+        );
+        if (savedTemplate) {
+          template = parseInt(savedTemplate);
+        }
+      }
+
+      var batchYear = localStorage.getItem("selectedBatchYear");
+      var cacheKey = "template_" + template + "_" + (batchYear || "default");
+
+      console.log("=== CALCULATE TOTAL PAGES - TOP MANAGEMENT CHECK ===");
+      console.log("Cache Key:", cacheKey);
+      console.log(
+        "Top Management Cache exists?",
+        !!window.topManagementCache
+      );
+      console.log(
+        "Cache for this key exists?",
+        !!(window.topManagementCache && window.topManagementCache[cacheKey])
+      );
+
+      if (window.topManagementCache && window.topManagementCache[cacheKey]) {
+        var topManagementData = window.topManagementCache[cacheKey];
+        console.log("Top Management Data:", topManagementData);
+        console.log("Success?", topManagementData.success);
+        console.log("Data array?", topManagementData.data);
+        console.log(
+          "Data length?",
+          topManagementData.data ? topManagementData.data.length : "NO DATA"
+        );
+
+        if (
+          topManagementData &&
+          topManagementData.success &&
+          topManagementData.data &&
+          topManagementData.data.length > 0
+        ) {
+          managementPages = topManagementData.data.length;
+          console.log(
+            "✓ Using actual top management pages:",
+            managementPages,
+            "from CSV data"
+          );
+          console.log("✓ Top Management Records:", topManagementData.data);
+        } else {
+          console.log(
+            "✗ No top management data found - using 2 placeholder pages"
+          );
+          console.log(
+            "✗ Reason: success=" +
+            topManagementData.success +
+            ", has data=" +
+            !!topManagementData.data +
+            ", length=" +
+            (topManagementData.data ? topManagementData.data.length : 0)
+          );
+        }
+      } else {
+        console.log(
+          "✗ Top management cache not available - using 2 placeholder pages"
+        );
+        console.log(
+          "✗ All cache keys:",
+          window.topManagementCache
+            ? Object.keys(window.topManagementCache)
+            : "No cache at all"
+        );
+      }
+
+      var totalPages = 1 + managementPages + studentPages + 1;
+
+      console.log(
+        "Calculated total pages:",
+        totalPages,
+        "(1 front + " +
+        managementPages +
+        " management + " +
+        studentPages +
+        " students + 1 back)"
+      );
+
+      return totalPages;
+    }
+
+    function populateThumbnails() {
+      console.log("=== POPULATE THUMBNAILS CALLED ===");
+      var yearbook = getCurrentYearbook();
+      console.log("Populating text-based thumbnails for:", yearbook.name);
+
+      var thumbnailList = $("#thumbnail-list");
+      console.log("Thumbnail list element found:", thumbnailList.length);
+      thumbnailList.empty();
+
+      if (thumbnailList.length === 0) {
+        console.log("Creating thumbnail list element");
+        thumbnailList = $('<div id="thumbnail-list"></div>');
+      }
+
+      var totalPages = calculateTotalPages();
+      console.log("Total pages calculated:", totalPages);
+
+      var headerHtml = `
           <div class="thumbnails-header">
             <div class="thumbnails-title">
               Table of Contents
@@ -1028,1057 +989,1024 @@
           <button class="close-thumbnails">×</button>
         `;
 
-        console.log("Total pages for", yearbook.name, ":", totalPages);
+      console.log("Total pages for", yearbook.name, ":", totalPages);
 
-        for (var pageNum = 1; pageNum <= totalPages; pageNum++) {
-          var pageName = getPageDescription(pageNum);
-          console.log("Creating page", pageNum, "with name:", pageName);
+      for (var pageNum = 1; pageNum <= totalPages; pageNum++) {
+        var pageName = getPageDescription(pageNum);
+        console.log("Creating page", pageNum, "with name:", pageName);
 
-          var thumbnailDiv = $('<div class="thumbnail-item"></div>');
-          var pageNameDiv = $('<div class="thumbnail-page-name"></div>').text(
-            pageName
-          );
-          var pageNumberDiv = $(
-            '<div class="thumbnail-page-number"></div>'
-          ).text(pageNum);
-
-          thumbnailDiv.append(pageNameDiv);
-          thumbnailDiv.append(pageNumberDiv);
-          thumbnailDiv.attr("data-page", pageNum);
-          thumbnailList.append(thumbnailDiv);
-        }
-
-        console.log(
-          "Final thumbnail items count:",
-          thumbnailList.find(".thumbnail-item").length
+        var thumbnailDiv = $('<div class="thumbnail-item"></div>');
+        var pageNameDiv = $('<div class="thumbnail-page-name"></div>').text(
+          pageName
         );
+        var pageNumberDiv = $(
+          '<div class="thumbnail-page-number"></div>'
+        ).text(pageNum);
 
-        var modalContainer = $('<div class="thumbnails-modal"></div>');
-        modalContainer.append(headerHtml);
-        modalContainer.append(thumbnailList);
+        thumbnailDiv.append(pageNameDiv);
+        thumbnailDiv.append(pageNumberDiv);
+        thumbnailDiv.attr("data-page", pageNum);
+        thumbnailList.append(thumbnailDiv);
+      }
 
-        $(".thumbnails").html(modalContainer);
-        console.log("Modal container created and appended");
+      console.log(
+        "Final thumbnail items count:",
+        thumbnailList.find(".thumbnail-item").length
+      );
 
-        var currentPage = $(".magazine").turn("page") || 1;
-        var currentPageDescription = getPageDescription(currentPage);
-        $("#current-page-display").text(
-          currentPage + " • " + currentPageDescription
-        );
+      var modalContainer = $('<div class="thumbnails-modal"></div>');
+      modalContainer.append(headerHtml);
+      modalContainer.append(thumbnailList);
 
-        $(".thumbnails")
-          .off("click")
-          .on("click", function (event) {
-            var thumbnailElement = $(event.target).closest(".thumbnail-item");
-            if (thumbnailElement.length) {
-              var pageNumber = thumbnailElement.attr("data-page");
-              $(".magazine").turn("page", pageNumber);
-              $(".thumbnails").removeClass("visible");
-            }
-          });
+      $(".thumbnails").html(modalContainer);
+      console.log("Modal container created and appended");
 
-        $(".close-thumbnails")
-          .off("click")
-          .on("click", function (e) {
-            e.stopPropagation();
+      var currentPage = $(".magazine").turn("page") || 1;
+      var currentPageDescription = getPageDescription(currentPage);
+      $("#current-page-display").text(
+        currentPage + " • " + currentPageDescription
+      );
+
+      $(".thumbnails")
+        .off("click")
+        .on("click", function (event) {
+          var thumbnailElement = $(event.target).closest(".thumbnail-item");
+          if (thumbnailElement.length) {
+            var pageNumber = thumbnailElement.attr("data-page");
+            $(".magazine").turn("page", pageNumber);
             $(".thumbnails").removeClass("visible");
-          });
-
-        $(".thumbnails")
-          .off("click.background")
-          .on("click.background", function (e) {
-            if ($(e.target).hasClass("thumbnails")) {
-              $(".thumbnails").removeClass("visible");
-            }
-          });
-      }
-
-      function refreshThumbnails() {
-        if (!window.pageThumbnails) return;
-
-        for (var pageNum in window.pageThumbnails) {
-          var thumbnailSrc = window.pageThumbnails[pageNum];
-          var existingThumbnail = $(".thumbnails .page-" + pageNum);
-          if (existingThumbnail.length) {
-            existingThumbnail.attr("src", thumbnailSrc);
           }
-        }
+        });
 
-        console.log("Refreshed thumbnails with generated content");
+      $(".close-thumbnails")
+        .off("click")
+        .on("click", function (e) {
+          e.stopPropagation();
+          $(".thumbnails").removeClass("visible");
+        });
+
+      $(".thumbnails")
+        .off("click.background")
+        .on("click.background", function (e) {
+          if ($(e.target).hasClass("thumbnails")) {
+            $(".thumbnails").removeClass("visible");
+          }
+        });
+    }
+
+    function refreshThumbnails() {
+      if (!window.pageThumbnails) return;
+
+      for (var pageNum in window.pageThumbnails) {
+        var thumbnailSrc = window.pageThumbnails[pageNum];
+        var existingThumbnail = $(".thumbnails .page-" + pageNum);
+        if (existingThumbnail.length) {
+          existingThumbnail.attr("src", thumbnailSrc);
+        }
       }
 
-      function createManagementThumbnail(managementIndex, dataToUse) {
-        var backgroundSrc =
-          dataToUse.background_thumb_url || dataToUse.background_url;
-        if (backgroundSrc) {
-          return backgroundSrc;
-        }
+      console.log("Refreshed thumbnails with generated content");
+    }
 
-        return (
-          'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="76" height="100" viewBox="0 0 76 100"%3E%3Crect width="76" height="100" fill="%23e8f4fd"/%3E%3Ccircle cx="38" cy="30" r="15" fill="%23ffffff" stroke="%23cccccc"/%3E%3Ctext x="38" y="35" font-family="Arial" font-size="8" fill="%23666" text-anchor="middle"%3EMGT%3C/text%3E%3Ctext x="38" y="60" font-family="Arial" font-size="6" fill="%23999" text-anchor="middle"%3EPage ' +
-          (managementIndex + 2) +
-          "%3C/text%3E%3C/svg%3E"
-        );
+    function createManagementThumbnail(managementIndex, dataToUse) {
+      var backgroundSrc =
+        dataToUse.background_thumb_url || dataToUse.background_url;
+      if (backgroundSrc) {
+        return backgroundSrc;
       }
 
-      function createStudentThumbnail(studentPageIndex, dataToUse) {
-        var backgroundSrc =
-          dataToUse.background_thumb_url || dataToUse.background_url;
-        if (backgroundSrc) {
-          return backgroundSrc;
-        }
+      return (
+        'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="76" height="100" viewBox="0 0 76 100"%3E%3Crect width="76" height="100" fill="%23e8f4fd"/%3E%3Ccircle cx="38" cy="30" r="15" fill="%23ffffff" stroke="%23cccccc"/%3E%3Ctext x="38" y="35" font-family="Arial" font-size="8" fill="%23666" text-anchor="middle"%3EMGT%3C/text%3E%3Ctext x="38" y="60" font-family="Arial" font-size="6" fill="%23999" text-anchor="middle"%3EPage ' +
+        (managementIndex + 2) +
+        "%3C/text%3E%3C/svg%3E"
+      );
+    }
 
-        return (
-          'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="76" height="100" viewBox="0 0 76 100"%3E%3Crect width="76" height="100" fill="%23f0f8ff"/%3E%3Ccircle cx="38" cy="30" r="15" fill="%23ffffff" stroke="%23cccccc"/%3E%3Ctext x="38" y="35" font-family="Arial" font-size="8" fill="%23666" text-anchor="middle"%3ESTU%3C/text%3E%3Ctext x="38" y="60" font-family="Arial" font-size="6" fill="%23999" text-anchor="middle"%3EPage ' +
-          (studentPageIndex + 6) +
-          "%3C/text%3E%3C/svg%3E"
-        );
+    function createStudentThumbnail(studentPageIndex, dataToUse) {
+      var backgroundSrc =
+        dataToUse.background_thumb_url || dataToUse.background_url;
+      if (backgroundSrc) {
+        return backgroundSrc;
       }
-    </script>
-  </head>
-  <body>
-    <div id="canvas">
-      <div class="magazine-viewport">
-        <div class="container">
-          <div class="magazine"></div>
-        </div>
+
+      return (
+        'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="76" height="100" viewBox="0 0 76 100"%3E%3Crect width="76" height="100" fill="%23f0f8ff"/%3E%3Ccircle cx="38" cy="30" r="15" fill="%23ffffff" stroke="%23cccccc"/%3E%3Ctext x="38" y="35" font-family="Arial" font-size="8" fill="%23666" text-anchor="middle"%3ESTU%3C/text%3E%3Ctext x="38" y="60" font-family="Arial" font-size="6" fill="%23999" text-anchor="middle"%3EPage ' +
+        (studentPageIndex + 6) +
+        "%3C/text%3E%3C/svg%3E"
+      );
+    }
+  </script>
+</head>
+
+<body>
+  <div id="canvas">
+    <div class="magazine-viewport">
+      <div class="container">
+        <div class="magazine"></div>
       </div>
+    </div>
 
-      <div class="nav-controls">
-        <button class="nav-btn prev-btn" id="prevBtn" title="Previous Page">
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <polyline points="15,18 9,12 15,6"></polyline>
-          </svg>
-        </button>
-        <button class="nav-btn toc-btn" id="tocBtn" title="Table of Contents">
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <rect x="3" y="3" width="7" height="7"></rect>
-            <rect x="14" y="3" width="7" height="7"></rect>
-            <rect x="14" y="14" width="7" height="7"></rect>
-            <rect x="3" y="14" width="7" height="7"></rect>
-          </svg>
-        </button>
-        <button
-          class="nav-btn fullscreen-btn"
-          id="fullscreenBtn"
-          title="Exit Fullscreen"
-        >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path
-              d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"
-            ></path>
-          </svg>
-        </button>
-        <button class="nav-btn next-btn" id="nextBtn" title="Next Page">
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <polyline points="9,18 15,12 9,6"></polyline>
-          </svg>
-        </button>
-      </div>
+    <div class="nav-controls">
+      <button class="nav-btn prev-btn" id="prevBtn" title="Previous Page">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15,18 9,12 15,6"></polyline>
+        </svg>
+      </button>
+      <button class="nav-btn toc-btn" id="tocBtn" title="Table of Contents">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7"></rect>
+          <rect x="14" y="3" width="7" height="7"></rect>
+          <rect x="14" y="14" width="7" height="7"></rect>
+          <rect x="3" y="14" width="7" height="7"></rect>
+        </svg>
+      </button>
+      <button class="nav-btn fullscreen-btn" id="fullscreenBtn" title="Exit Fullscreen">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3">
+          </path>
+        </svg>
+      </button>
+      <button class="nav-btn next-btn" id="nextBtn" title="Next Page">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9,18 15,12 9,6"></polyline>
+        </svg>
+      </button>
+    </div>
 
-      <div class="student-modal">
-        <div class="modal-content">
-          <span class="close-modal">&times;</span>
-          <div class="student-details">
-            <div class="student-images">
-              <div class="student-image-large">
-                <img src="" alt="Student TOGA Photo" />
-              </div>
-              <div class="student-image-navigation">
-                <button class="nav-prev">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                  >
-                    <polyline points="15,18 9,12 15,6"></polyline>
-                  </svg>
-                </button>
-                <button class="nav-next">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                  >
-                    <polyline points="9,18 15,12 9,6"></polyline>
-                  </svg>
-                </button>
-              </div>
+    <div class="student-modal">
+      <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <div class="student-details">
+          <div class="student-images">
+            <div class="student-image-large">
+              <img src="" alt="Student TOGA Photo" />
             </div>
-            <div class="student-info">
-              <h2 class="student-name">Student Name</h2>
-              <p class="academic-year">Academic Year: <span>2024-2025</span></p>
-              <div class="latin-awards">
-                <h3>Latin Award</h3>
-                <p>Summa Cum Laude</p>
-              </div>
-              <div class="motto">
-                <h3>Motto</h3>
-                <p>
-                  "Success is not final, failure is not fatal: it is the courage
-                  to continue that counts."
-                </p>
-              </div>
-              <div class="milestones">
-                <h3>Milestone</h3>
-                <p>Dean's Lister (2020-2024)</p>
-              </div>
+            <div class="student-image-navigation">
+              <button class="nav-prev">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="15,18 9,12 15,6"></polyline>
+                </svg>
+              </button>
+              <button class="nav-next">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="9,18 15,12 9,6"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="student-info">
+            <h2 class="student-name">Student Name</h2>
+            <p class="academic-year">Academic Year: <span>2024-2025</span></p>
+            <div class="latin-awards">
+              <h3>Latin Award</h3>
+              <p>Summa Cum Laude</p>
+            </div>
+            <div class="motto">
+              <h3>Motto</h3>
+              <p>
+                "Success is not final, failure is not fatal: it is the courage
+                to continue that counts."
+              </p>
+            </div>
+            <div class="milestones">
+              <h3>Milestone</h3>
+              <p>Dean's Lister (2020-2024)</p>
             </div>
           </div>
         </div>
       </div>
-
-      <div class="thumbnails"></div>
     </div>
 
-    <script type="text/javascript">
-      $(document).ready(function () {
-        var urlParams = new URLSearchParams(window.location.search);
-        var departmentCode = urlParams.get("department");
+    <div class="thumbnails"></div>
+  </div>
 
-        var selectedTemplate =
-          localStorage.getItem("selectedBatchTemplateNumber") || 1;
-        selectedTemplate = parseInt(selectedTemplate);
+  <script type="text/javascript">
+    $(document).ready(function () {
+      var urlParams = new URLSearchParams(window.location.search);
+      var departmentCode = urlParams.get("department");
 
-        var batchYear =
-          urlParams.get("batchYear") ||
-          localStorage.getItem("selectedBatchYear");
+      var selectedTemplate =
+        localStorage.getItem("selectedBatchTemplateNumber") || 1;
+      selectedTemplate = parseInt(selectedTemplate);
 
-        if (urlParams.get("batchYear")) {
-          localStorage.setItem("selectedBatchYear", batchYear);
-          console.log(
-            "Updated localStorage with batch year from URL:",
-            batchYear
-          );
-        }
+      var batchYear =
+        urlParams.get("batchYear") ||
+        localStorage.getItem("selectedBatchYear");
 
-        console.log("Using template from localStorage:", selectedTemplate);
-        console.log("Using batch year:", batchYear);
+      if (urlParams.get("batchYear")) {
+        localStorage.setItem("selectedBatchYear", batchYear);
+        console.log(
+          "Updated localStorage with batch year from URL:",
+          batchYear
+        );
+      }
 
-        if (typeof clearTopManagementCache === "function") {
-          clearTopManagementCache();
-        }
+      console.log("Using template from localStorage:", selectedTemplate);
+      console.log("Using batch year:", batchYear);
 
-        var requestData = {
-          template: selectedTemplate,
-          department: departmentCode,
-        };
-        if (batchYear) {
-          requestData.batch_year = batchYear;
-        }
+      if (typeof clearTopManagementCache === "function") {
+        clearTopManagementCache();
+      }
 
-        $.ajax({
-          url: "/ECADYB/Admin/Yearbook/FetchCoverData.php",
-          method: "GET",
-          data: requestData,
-          dataType: "json",
-          success: function (response) {
-            console.log("Cover data response:", response);
+      var requestData = {
+        template: selectedTemplate,
+        department: departmentCode,
+      };
+      if (batchYear) {
+        requestData.batch_year = batchYear;
+      }
 
-            if (
-              response.success &&
-              response.data.department &&
-              (!departmentCode || departmentCode !== response.data.department)
-            ) {
-              if (response.data.department_page) {
-                var redirectUrl =
-                  "/Admin/Departments/" +
-                  response.data.department_page +
-                  ".php";
-                window.location.href =
-                  redirectUrl + "?department=" + response.data.department;
-                return;
-              }
+      $.ajax({
+        url: "/ECADYB/Admin/Yearbook/FetchCoverData.php",
+        method: "GET",
+        data: requestData,
+        dataType: "json",
+        success: function (response) {
+          console.log("Cover data response:", response);
+
+          if (
+            response.success &&
+            response.data.department &&
+            (!departmentCode || departmentCode !== response.data.department)
+          ) {
+            if (response.data.department_page) {
+              var redirectUrl =
+                "/Admin/Departments/" +
+                response.data.department_page +
+                ".php";
+              window.location.href =
+                redirectUrl + "?department=" + response.data.department;
+              return;
             }
+          }
 
-            if (response.success) {
-              coverData = response.data;
+          if (response.success) {
+            coverData = response.data;
 
-              console.log("Cover data loaded:", coverData);
+            console.log("Cover data loaded:", coverData);
 
-              fetchStudentData();
+            fetchStudentData();
 
-              if (typeof loadApp === "function") {
-                loadApp();
-              }
-            } else {
-              console.log("Failed to fetch cover data:", response.message);
-              if (typeof loadApp === "function") {
-                loadApp();
-              }
-            }
-          },
-          error: function (xhr, status, error) {
-            console.log("Error fetching cover data:", error);
-            console.log("XHR:", xhr);
-            console.log("Status:", status);
             if (typeof loadApp === "function") {
               loadApp();
             }
-          },
-        });
-      });
-
-      function loadApp() {
-        if (!coverData) {
-          console.log("Waiting for cover data to load...");
-          setTimeout(loadApp, 100);
-          return;
-        }
-
-        if (!studentData) {
-          console.log("Waiting for student data to load...");
-          setTimeout(loadApp, 100);
-          return;
-        }
-
-        console.log("Cover data and student data available, initializing app");
-        console.log("Cover data:", coverData);
-        console.log("Student data:", studentData);
-
-        var template = 1;
-        if (coverData && coverData.template) {
-          template = coverData.template;
-        } else {
-          var savedTemplate = localStorage.getItem(
-            "selectedBatchTemplateNumber"
-          );
-          if (savedTemplate) {
-            template = parseInt(savedTemplate);
+          } else {
+            console.log("Failed to fetch cover data:", response.message);
+            if (typeof loadApp === "function") {
+              loadApp();
+            }
           }
+        },
+        error: function (xhr, status, error) {
+          console.log("Error fetching cover data:", error);
+          console.log("XHR:", xhr);
+          console.log("Status:", status);
+          if (typeof loadApp === "function") {
+            loadApp();
+          }
+        },
+      });
+    });
+
+    function loadApp() {
+      if (!coverData) {
+        console.log("Waiting for cover data to load...");
+        setTimeout(loadApp, 100);
+        return;
+      }
+
+      if (!studentData) {
+        console.log("Waiting for student data to load...");
+        setTimeout(loadApp, 100);
+        return;
+      }
+
+      console.log("Cover data and student data available, initializing app");
+      console.log("Cover data:", coverData);
+      console.log("Student data:", studentData);
+
+      var template = 1;
+      if (coverData && coverData.template) {
+        template = coverData.template;
+      } else {
+        var savedTemplate = localStorage.getItem(
+          "selectedBatchTemplateNumber"
+        );
+        if (savedTemplate) {
+          template = parseInt(savedTemplate);
         }
+      }
 
-        var batchYear = localStorage.getItem("selectedBatchYear");
-        var cacheKey = "template_" + template + "_" + (batchYear || "default");
+      var batchYear = localStorage.getItem("selectedBatchYear");
+      var cacheKey = "template_" + template + "_" + (batchYear || "default");
 
-        if (window.topManagementCache && window.topManagementCache[cacheKey]) {
+      if (window.topManagementCache && window.topManagementCache[cacheKey]) {
+        console.log(
+          "Top management data already cached, proceeding with initialization"
+        );
+        initializeMagazine();
+      } else {
+        console.log("Pre-fetching top management data before initialization");
+        fetchTopManagementCached(template, function (response) {
           console.log(
-            "Top management data already cached, proceeding with initialization"
+            "Top management data fetched, now initializing magazine"
           );
           initializeMagazine();
-        } else {
-          console.log("Pre-fetching top management data before initialization");
-          fetchTopManagementCached(template, function (response) {
-            console.log(
-              "Top management data fetched, now initializing magazine"
-            );
-            initializeMagazine();
-          });
+        });
+      }
+    }
+
+    // Auto-fullscreen functionality - defined globally so it can be accessed by button handlers
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        if (document.documentElement.requestFullscreen) {
+          return document.documentElement.requestFullscreen();
+        } else if (document.documentElement.webkitRequestFullscreen) {
+          return document.documentElement.webkitRequestFullscreen();
+        } else if (document.documentElement.msRequestFullscreen) {
+          return document.documentElement.msRequestFullscreen();
+        }
+      } else {
+        if (document.exitFullscreen) {
+          return document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+          return document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+          return document.msExitFullscreen();
         }
       }
+      return Promise.resolve(); // Return resolved promise if no fullscreen API available
+    }
 
-      function initializeMagazine() {
-        $("#canvas").fadeIn(1000);
+    function initializeMagazine() {
+      $("#canvas").fadeIn(1000);
 
-        var flipbook = $(".magazine");
+      var flipbook = $(".magazine");
 
-        if (flipbook.width() == 0 || flipbook.height() == 0) {
-          setTimeout(initializeMagazine, 10);
-          return;
-        }
+      if (flipbook.width() == 0 || flipbook.height() == 0) {
+        setTimeout(initializeMagazine, 10);
+        return;
+      }
 
-        var totalPages = calculateTotalPages();
+      var totalPages = calculateTotalPages();
 
-        console.log("Setting total pages to:", totalPages);
+      console.log("Setting total pages to:", totalPages);
 
-        populateThumbnails();
+      populateThumbnails();
 
-        flipbook.turn({
-          width: 1200,
-          height: 750,
-          duration: 1000,
-          acceleration: true,
-          gradients: false,
-          autoCenter: true,
-          elevation: 50,
-          pages: totalPages,
-          when: {
-            turning: function (event, page, view) {
-              var book = $(this),
-                currentPage = book.turn("page"),
-                pages = book.turn("pages");
+      flipbook.turn({
+        width: 1200,
+        height: 750,
+        duration: 1000,
+        acceleration: true,
+        gradients: false,
+        autoCenter: true,
+        elevation: 50,
+        pages: totalPages,
+        when: {
+          turning: function (event, page, view) {
+            var book = $(this),
+              currentPage = book.turn("page"),
+              pages = book.turn("pages");
 
-              Hash.go("page/" + page).update();
+            Hash.go("page/" + page).update();
 
-              disableControls(page);
+            disableControls(page);
 
-              $(".thumbnails .thumbnail-item").removeClass("current");
+            $(".thumbnails .thumbnail-item").removeClass("current");
 
-              $(
-                ".thumbnails .thumbnail-item[data-page='" + page + "']"
-              ).addClass("current");
+            $(
+              ".thumbnails .thumbnail-item[data-page='" + page + "']"
+            ).addClass("current");
 
-              $("#current-page-display").text(page);
-            },
-
-            turned: function (event, page, view) {
-              disableControls(page);
-              $(this).turn("center");
-            },
-
-            missing: function (event, pages) {
-              for (var i = 0; i < pages.length; i++) {
-                addPage(pages[i], $(this));
-              }
-            },
-          },
-        });
-
-        $(".magazine-viewport").zoom({
-          flipbook: $(".magazine"),
-
-          max: function () {
-            return largeMagazineWidth() / $(".magazine").width();
+            $("#current-page-display").text(page);
           },
 
-          when: {
-            swipeLeft: function () {
-              $(this).zoom("flipbook").turn("next");
-            },
-
-            swipeRight: function () {
-              $(this).zoom("flipbook").turn("previous");
-            },
-
-            resize: function (event, scale, page, pageElement) {
-              if (scale == 1) loadSmallPage(page, pageElement);
-              else loadLargePage(page, pageElement);
-            },
-
-            zoomIn: function () {
-              $(".thumbnails").hide();
-              $(".made").hide();
-              $(".magazine").removeClass("animated").addClass("zoom-in");
-              $(".zoom-icon")
-                .removeClass("zoom-icon-in")
-                .addClass("zoom-icon-out");
-
-              if (!window.escTip && !$.isTouch) {
-                escTip = true;
-
-                $("<div />", { class: "exit-message" })
-                  .html("<div>Press ESC to exit</div>")
-                  .appendTo($("body"))
-                  .delay(2000)
-                  .animate({ opacity: 0 }, 500, function () {
-                    $(this).remove();
-                  });
-              }
-            },
-
-            zoomOut: function () {
-              $(".exit-message").hide();
-              $(".thumbnails").fadeIn();
-              $(".made").fadeIn();
-              $(".zoom-icon")
-                .removeClass("zoom-icon-out")
-                .addClass("zoom-icon-in");
-
-              setTimeout(function () {
-                $(".magazine").addClass("animated").removeClass("zoom-in");
-                resizeViewport();
-              }, 0);
-            },
+          turned: function (event, page, view) {
+            disableControls(page);
+            $(this).turn("center");
           },
-        });
 
-        if ($.isTouch) $(".magazine-viewport").on("zoom.doubleTap", zoomTo);
-        else $(".magazine-viewport").on("zoom.tap", zoomTo);
-
-        $(document).on("keydown", function (e) {
-          var previous = 37,
-            next = 39,
-            esc = 27;
-
-          switch (e.keyCode) {
-            case previous:
-              $(".magazine").turn("previous");
-              e.preventDefault();
-
-              break;
-            case next:
-              $(".magazine").turn("next");
-              e.preventDefault();
-
-              break;
-            case esc:
-              $(".magazine-viewport").zoom("zoomOut");
-              e.preventDefault();
-
-              break;
-          }
-        });
-
-        Hash.on("^page\/([0-9]*)$", {
-          yep: function (path, parts) {
-            var page = parts[1];
-
-            if (page !== undefined) {
-              if ($(".magazine").turn("is")) $(".magazine").turn("page", page);
+          missing: function (event, pages) {
+            for (var i = 0; i < pages.length; i++) {
+              addPage(pages[i], $(this));
             }
           },
-          nop: function (path) {
-            if ($(".magazine").turn("is")) $(".magazine").turn("page", 1);
+        },
+      });
+
+      $(".magazine-viewport").zoom({
+        flipbook: $(".magazine"),
+
+        max: function () {
+          return largeMagazineWidth() / $(".magazine").width();
+        },
+
+        when: {
+          swipeLeft: function () {
+            $(this).zoom("flipbook").turn("next");
           },
-        });
 
-        $(window)
-          .on("resize", function () {
-            resizeViewport();
-          })
-          .on("orientationchange", function () {
-            resizeViewport();
-          });
+          swipeRight: function () {
+            $(this).zoom("flipbook").turn("previous");
+          },
 
-        $(".thumbnails").on("click", function (event) {
-          var page;
+          resize: function (event, scale, page, pageElement) {
+            if (scale == 1) loadSmallPage(page, pageElement);
+            else loadLargePage(page, pageElement);
+          },
 
-          if (
-            event.target &&
-            (page = /page-([0-9]+)/.exec($(event.target).attr("class")))
-          ) {
-            $(".magazine").turn("page", page[1]);
-            $(".thumbnails").removeClass("visible");
-          }
-        });
+          zoomIn: function () {
+            $(".thumbnails").hide();
+            $(".made").hide();
+            $(".magazine").removeClass("animated").addClass("zoom-in");
+            $(".zoom-icon")
+              .removeClass("zoom-icon-in")
+              .addClass("zoom-icon-out");
 
-        $(".thumbnails li")
-          .on($.mouseEvents.over, function () {
-            $(this).addClass("thumb-hover");
-          })
-          .on($.mouseEvents.out, function () {
-            $(this).removeClass("thumb-hover");
-          });
+            if (!window.escTip && !$.isTouch) {
+              escTip = true;
 
-        if ($.isTouch) {
-          $(".thumbnails")
-            .addClass("thumbanils-touch")
-            .on($.mouseEvents.move, function (event) {
-              event.preventDefault();
-            });
-        } else {
-          $(".thumbnails ul")
-            .on("mouseover", function () {
-              $(".thumbnails").addClass("thumbnails-hover");
-            })
-            .on("mousedown", function () {
-              return false;
-            })
-            .on("mouseout", function () {
-              $(".thumbnails").removeClass("thumbnails-hover");
-            });
-        }
-
-        $(".next-button")
-          .on($.mouseEvents.over, function () {
-            $(this).addClass("next-button-hover");
-          })
-          .on($.mouseEvents.out, function () {
-            $(this).removeClass("next-button-hover");
-          })
-          .on($.mouseEvents.down, function () {
-            $(this).addClass("next-button-down");
-          })
-          .on($.mouseEvents.up, function () {
-            $(this).removeClass("next-button-down");
-          })
-          .on("click", function () {
-            $(".magazine").turn("next");
-          });
-
-        $(".previous-button")
-          .on($.mouseEvents.over, function () {
-            $(this).addClass("previous-button-hover");
-          })
-          .on($.mouseEvents.out, function () {
-            $(this).removeClass("previous-button-hover");
-          })
-          .on($.mouseEvents.down, function () {
-            $(this).addClass("previous-button-down");
-          })
-          .on($.mouseEvents.up, function () {
-            $(this).removeClass("previous-button-down");
-          })
-          .on("click", function () {
-            $(".magazine").turn("previous");
-          });
-
-        resizeViewport();
-
-        $(".magazine").addClass("animated");
-
-        if (typeof initializeCornerHover === "function") {
-          initializeCornerHover();
-        }
-
-        // Auto-fullscreen functionality
-        function toggleFullscreen() {
-          if (!document.fullscreenElement) {
-            if (document.documentElement.requestFullscreen) {
-              return document.documentElement.requestFullscreen();
-            } else if (document.documentElement.webkitRequestFullscreen) {
-              return document.documentElement.webkitRequestFullscreen();
-            } else if (document.documentElement.msRequestFullscreen) {
-              return document.documentElement.msRequestFullscreen();
+              $("<div />", { class: "exit-message" })
+                .html("<div>Press ESC to exit</div>")
+                .appendTo($("body"))
+                .delay(2000)
+                .animate({ opacity: 0 }, 500, function () {
+                  $(this).remove();
+                });
             }
-          } else {
-            if (document.exitFullscreen) {
-              return document.exitFullscreen();
-            } else if (document.webkitExitFullscreen) {
-              return document.webkitExitFullscreen();
-            } else if (document.msExitFullscreen) {
-              return document.msExitFullscreen();
-            }
-          }
-          return Promise.resolve(); // Return resolved promise if no fullscreen API available
-        }
+          },
 
-        function updateFullscreenBackground() {
-          var isFullscreen =
-            document.fullscreenElement ||
-            document.webkitFullscreenElement ||
-            document.mozFullScreenElement ||
-            document.msFullscreenElement;
+          zoomOut: function () {
+            $(".exit-message").hide();
+            $(".thumbnails").fadeIn();
+            $(".made").fadeIn();
+            $(".zoom-icon")
+              .removeClass("zoom-icon-out")
+              .addClass("zoom-icon-in");
 
-          var curlElement = document.querySelector(".yearbook-lower-curl");
-
-          if (isFullscreen) {
-            document.body.style.background =
-              "url('https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png') center center/cover no-repeat";
-            if (curlElement) {
-              curlElement.style.display = "block";
-            }
-          } else {
-            document.body.style.background = "rgb(17, 45, 78)";
-            // Keep the lower curl visible at all times since the yearbook is always in fullscreen mode within iframe
-            if (curlElement) {
-              curlElement.style.display = "block";
-            }
-          }
-        }
-
-        // Add fullscreen event listeners
-        document.addEventListener("fullscreenchange", function () {
-          updateFullscreenBackground();
-          resizeViewport();
-        });
-        document.addEventListener("webkitfullscreenchange", function () {
-          updateFullscreenBackground();
-          resizeViewport();
-        });
-        document.addEventListener("msfullscreenchange", function () {
-          updateFullscreenBackground();
-          resizeViewport();
-        });
-
-        // Apply fullscreen-mode styles immediately for Student version
-        document.documentElement.classList.add("student-fullscreen-mode");
-        document.body.classList.add("student-fullscreen-mode");
-        console.log("🎯 Applied fullscreen-mode styles to Student yearbook");
-
-        // Add fullscreen activation on first user interaction
-        var hasUserInteracted = false;
-        var fullscreenActivated = false;
-
-        function activateFullscreenOnInteraction() {
-          if (!hasUserInteracted && !fullscreenActivated) {
-            hasUserInteracted = true;
-            console.log(
-              "🔍 User interaction detected - entering fullscreen mode"
-            );
-
-            // Small delay to ensure the interaction event completes
             setTimeout(function () {
-              if (!document.fullscreenElement) {
-                toggleFullscreen().catch(function (err) {
-                  console.log("Fullscreen activation failed:", err);
-                  // Fullscreen failed, but styles are already applied
-                });
-                fullscreenActivated = true;
-              }
-            }, 100);
-          }
+              $(".magazine").addClass("animated").removeClass("zoom-in");
+              resizeViewport();
+            }, 0);
+          },
+        },
+      });
+
+      if ($.isTouch) $(".magazine-viewport").on("zoom.doubleTap", zoomTo);
+      else $(".magazine-viewport").on("zoom.tap", zoomTo);
+
+      $(document).on("keydown", function (e) {
+        var previous = 37,
+          next = 39,
+          esc = 27;
+
+        switch (e.keyCode) {
+          case previous:
+            $(".magazine").turn("previous");
+            e.preventDefault();
+
+            break;
+          case next:
+            $(".magazine").turn("next");
+            e.preventDefault();
+
+            break;
+          case esc:
+            $(".magazine-viewport").zoom("zoomOut");
+            e.preventDefault();
+
+            break;
         }
+      });
 
-        // Add event listeners for user interaction
-        document.addEventListener("click", activateFullscreenOnInteraction, {
-          once: true,
-        });
-        document.addEventListener("keydown", activateFullscreenOnInteraction, {
-          once: true,
-        });
-        document.addEventListener(
-          "touchstart",
-          activateFullscreenOnInteraction,
-          { once: true }
-        );
+      Hash.on("^page\/([0-9]*)$", {
+        yep: function (path, parts) {
+          var page = parts[1];
 
-        console.log(
-          "🎯 Fullscreen will activate on first user interaction (click, key, or touch)"
-        );
-
-        // Notify parent window that magazine is initialized
-        console.log("📢 Sending yearbook-magazine-initialized signal");
-        if (window.parent && window.parent !== window) {
-          window.parent.postMessage(
-            {
-              type: "yearbook-magazine-initialized",
-              timestamp: new Date().toISOString(),
-            },
-            "*"
-          );
-        }
-
-        // Wait for canvas to be visible, then notify parent
-        setTimeout(function () {
-          var canvas = document.getElementById("canvas");
-          if (canvas && window.getComputedStyle(canvas).display !== "none") {
-            console.log("📢 Sending yearbook-cover-visible signal");
-            if (window.parent && window.parent !== window) {
-              window.parent.postMessage(
-                {
-                  type: "yearbook-cover-visible",
-                  timestamp: new Date().toISOString(),
-                },
-                "*"
-              );
-            }
+          if (page !== undefined) {
+            if ($(".magazine").turn("is")) $(".magazine").turn("page", page);
           }
-        }, 500);
+        },
+        nop: function (path) {
+          if ($(".magazine").turn("is")) $(".magazine").turn("page", 1);
+        },
+      });
 
-        requestAnimationFrame(function () {
-          setTimeout(function () {
-            if (typeof generateAllThumbnails === "function") {
-              generateAllThumbnails();
-              requestAnimationFrame(function () {
-                setTimeout(function () {
-                  if (typeof refreshThumbnails === "function") {
-                    refreshThumbnails();
-                  }
-                }, 3000);
-              });
-            }
-          }, 3000);
+      $(window)
+        .on("resize", function () {
+          resizeViewport();
+        })
+        .on("orientationchange", function () {
+          resizeViewport();
         });
+
+      $(".thumbnails").on("click", function (event) {
+        var page;
+
+        if (
+          event.target &&
+          (page = /page-([0-9]+)/.exec($(event.target).attr("class")))
+        ) {
+          $(".magazine").turn("page", page[1]);
+          $(".thumbnails").removeClass("visible");
+        }
+      });
+
+      $(".thumbnails li")
+        .on($.mouseEvents.over, function () {
+          $(this).addClass("thumb-hover");
+        })
+        .on($.mouseEvents.out, function () {
+          $(this).removeClass("thumb-hover");
+        });
+
+      if ($.isTouch) {
+        $(".thumbnails")
+          .addClass("thumbanils-touch")
+          .on($.mouseEvents.move, function (event) {
+            event.preventDefault();
+          });
+      } else {
+        $(".thumbnails ul")
+          .on("mouseover", function () {
+            $(".thumbnails").addClass("thumbnails-hover");
+          })
+          .on("mousedown", function () {
+            return false;
+          })
+          .on("mouseout", function () {
+            $(".thumbnails").removeClass("thumbnails-hover");
+          });
       }
 
-      $(".zoom-icon")
-        .on("mouseover", function () {
-          if ($(this).hasClass("zoom-icon-in"))
-            $(this).addClass("zoom-icon-in-hover");
-
-          if ($(this).hasClass("zoom-icon-out"))
-            $(this).addClass("zoom-icon-out-hover");
+      $(".next-button")
+        .on($.mouseEvents.over, function () {
+          $(this).addClass("next-button-hover");
         })
-        .on("mouseout", function () {
-          if ($(this).hasClass("zoom-icon-in"))
-            $(this).removeClass("zoom-icon-in-hover");
-
-          if ($(this).hasClass("zoom-icon-out"))
-            $(this).removeClass("zoom-icon-out-hover");
+        .on($.mouseEvents.out, function () {
+          $(this).removeClass("next-button-hover");
+        })
+        .on($.mouseEvents.down, function () {
+          $(this).addClass("next-button-down");
+        })
+        .on($.mouseEvents.up, function () {
+          $(this).removeClass("next-button-down");
+        })
+        .on("click", function () {
+          $(".magazine").turn("next");
         });
 
-      $("#canvas").hide();
+      $(".previous-button")
+        .on($.mouseEvents.over, function () {
+          $(this).addClass("previous-button-hover");
+        })
+        .on($.mouseEvents.out, function () {
+          $(this).removeClass("previous-button-hover");
+        })
+        .on($.mouseEvents.down, function () {
+          $(this).addClass("previous-button-down");
+        })
+        .on($.mouseEvents.up, function () {
+          $(this).removeClass("previous-button-down");
+        })
+        .on("click", function () {
+          $(".magazine").turn("previous");
+        });
 
-      $(document).ready(function () {
-        var urlParams = new URLSearchParams(window.location.search);
-        var isFullscreenParam = urlParams.get("fullscreen") === "true";
+      resizeViewport();
 
-        if (isFullscreenParam) {
-          document.documentElement.classList.add("iframe-fullscreen-mode");
-          document.body.classList.add("iframe-fullscreen-mode");
-          console.log("Iframe fullscreen mode enabled via URL parameter");
-          console.log("Body classes:", document.body.className);
-          console.log("HTML classes:", document.documentElement.className);
+      $(".magazine").addClass("animated");
+
+      if (typeof initializeCornerHover === "function") {
+        initializeCornerHover();
+      }
+
+      // Auto-fullscreen functionality
+      function toggleFullscreen() {
+        if (!document.fullscreenElement) {
+          if (document.documentElement.requestFullscreen) {
+            return document.documentElement.requestFullscreen();
+          } else if (document.documentElement.webkitRequestFullscreen) {
+            return document.documentElement.webkitRequestFullscreen();
+          } else if (document.documentElement.msRequestFullscreen) {
+            return document.documentElement.msRequestFullscreen();
+          }
         } else {
+          if (document.exitFullscreen) {
+            return document.exitFullscreen();
+          } else if (document.webkitExitFullscreen) {
+            return document.webkitExitFullscreen();
+          } else if (document.msExitFullscreen) {
+            return document.msExitFullscreen();
+          }
+        }
+        return Promise.resolve(); // Return resolved promise if no fullscreen API available
+      }
+
+      function updateFullscreenBackground() {
+        var isFullscreen =
+          document.fullscreenElement ||
+          document.webkitFullscreenElement ||
+          document.mozFullScreenElement ||
+          document.msFullscreenElement;
+
+        var curlElement = document.querySelector(".yearbook-lower-curl");
+
+        if (isFullscreen) {
+          document.body.style.background =
+            "url('https://ECADYB.b-cdn.net/img/BGGRALLERY2.0.png') center center/cover no-repeat";
+          if (curlElement) {
+            curlElement.style.display = "block";
+          }
+        } else {
+          document.body.style.background = "rgb(17, 45, 78)";
+          // Keep the lower curl visible at all times since the yearbook is always in fullscreen mode within iframe
+          if (curlElement) {
+            curlElement.style.display = "block";
+          }
+        }
+      }
+
+      // Add fullscreen event listeners
+      document.addEventListener("fullscreenchange", function () {
+        updateFullscreenBackground();
+        resizeViewport();
+      });
+      document.addEventListener("webkitfullscreenchange", function () {
+        updateFullscreenBackground();
+        resizeViewport();
+      });
+      document.addEventListener("msfullscreenchange", function () {
+        updateFullscreenBackground();
+        resizeViewport();
+      });
+
+      // Apply fullscreen-mode styles immediately for Student version
+      document.documentElement.classList.add("student-fullscreen-mode");
+      document.body.classList.add("student-fullscreen-mode");
+      console.log("🎯 Applied fullscreen-mode styles to Student yearbook");
+
+      // Add fullscreen activation on first user interaction
+      var hasUserInteracted = false;
+      var fullscreenActivated = false;
+
+      function activateFullscreenOnInteraction() {
+        if (!hasUserInteracted && !fullscreenActivated) {
+          hasUserInteracted = true;
           console.log(
-            "Fullscreen parameter not detected. URL:",
-            window.location.href
+            "🔍 User interaction detected - entering fullscreen mode"
           );
+
+          // Small delay to ensure the interaction event completes
+          setTimeout(function () {
+            if (!document.fullscreenElement) {
+              toggleFullscreen().catch(function (err) {
+                console.log("Fullscreen activation failed:", err);
+                // Fullscreen failed, but styles are already applied
+              });
+              fullscreenActivated = true;
+            }
+          }, 100);
+        }
+      }
+
+      // Add event listeners for user interaction
+      document.addEventListener("click", activateFullscreenOnInteraction, {
+        once: true,
+      });
+      document.addEventListener("keydown", activateFullscreenOnInteraction, {
+        once: true,
+      });
+      document.addEventListener(
+        "touchstart",
+        activateFullscreenOnInteraction,
+        { once: true }
+      );
+
+      console.log(
+        "🎯 Fullscreen will activate on first user interaction (click, key, or touch)"
+      );
+
+      // Notify parent window that magazine is initialized
+      console.log("📢 Sending yearbook-magazine-initialized signal");
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage(
+          {
+            type: "yearbook-magazine-initialized",
+            timestamp: new Date().toISOString(),
+          },
+          "*"
+        );
+      }
+
+      // Wait for canvas to be visible, then notify parent
+      setTimeout(function () {
+        var canvas = document.getElementById("canvas");
+        if (canvas && window.getComputedStyle(canvas).display !== "none") {
+          console.log("📢 Sending yearbook-cover-visible signal");
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage(
+              {
+                type: "yearbook-cover-visible",
+                timestamp: new Date().toISOString(),
+              },
+              "*"
+            );
+          }
+        }
+      }, 500);
+
+      requestAnimationFrame(function () {
+        setTimeout(function () {
+          if (typeof generateAllThumbnails === "function") {
+            generateAllThumbnails();
+            requestAnimationFrame(function () {
+              setTimeout(function () {
+                if (typeof refreshThumbnails === "function") {
+                  refreshThumbnails();
+                }
+              }, 3000);
+            });
+          }
+        }, 3000);
+      });
+    }
+
+    $(".zoom-icon")
+      .on("mouseover", function () {
+        if ($(this).hasClass("zoom-icon-in"))
+          $(this).addClass("zoom-icon-in-hover");
+
+        if ($(this).hasClass("zoom-icon-out"))
+          $(this).addClass("zoom-icon-out-hover");
+      })
+      .on("mouseout", function () {
+        if ($(this).hasClass("zoom-icon-in"))
+          $(this).removeClass("zoom-icon-in-hover");
+
+        if ($(this).hasClass("zoom-icon-out"))
+          $(this).removeClass("zoom-icon-out-hover");
+      });
+
+    $("#canvas").hide();
+
+    $(document).ready(function () {
+      var urlParams = new URLSearchParams(window.location.search);
+      var isFullscreenParam = urlParams.get("fullscreen") === "true";
+
+      if (isFullscreenParam) {
+        document.documentElement.classList.add("iframe-fullscreen-mode");
+        document.body.classList.add("iframe-fullscreen-mode");
+        console.log("Iframe fullscreen mode enabled via URL parameter");
+        console.log("Body classes:", document.body.className);
+        console.log("HTML classes:", document.documentElement.className);
+      } else {
+        console.log(
+          "Fullscreen parameter not detected. URL:",
+          window.location.href
+        );
+      }
+
+      $(document).on("click", ".student-card", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        var card = $(this);
+        var modal = $(".student-modal");
+
+        var clickedStudent = {
+          student_id: card.attr("data-student-id"),
+          name: card.attr("data-student-name"),
+          year: card.attr("data-student-year"),
+          motto: card.attr("data-student-motto"),
+          milestones: JSON.parse(
+            card.attr("data-student-milestones") || "[]"
+          ),
+          honors: JSON.parse(card.attr("data-student-honors") || "[]"),
+          program: card.attr("data-student-program"),
+          section: card.attr("data-student-section"),
+          status: (
+            card.attr("data-student-status") || "pending"
+          ).toLowerCase(),
+        };
+
+        console.log("Card clicked for student:", clickedStudent);
+
+        if (modal.hasClass("active")) {
+          modal.removeClass("active");
+          $("body").removeClass("modal-active");
         }
 
-        $(document).on("click", ".student-card", function (e) {
-          e.preventDefault();
-          e.stopPropagation();
+        modal.find(".student-name").text(clickedStudent.name);
+        modal.find(".academic-year span").text(clickedStudent.year || "N/A");
+        modal
+          .find(".motto p")
+          .text(clickedStudent.motto || "No motto provided");
 
-          var card = $(this);
-          var modal = $(".student-modal");
+        var milestonesContainer = modal.find(".milestones");
+        var milestonesTitle = modal.find(".milestones h3");
 
-          var clickedStudent = {
-            student_id: card.attr("data-student-id"),
-            name: card.attr("data-student-name"),
-            year: card.attr("data-student-year"),
-            motto: card.attr("data-student-motto"),
-            milestones: JSON.parse(
-              card.attr("data-student-milestones") || "[]"
-            ),
-            honors: JSON.parse(card.attr("data-student-honors") || "[]"),
-            program: card.attr("data-student-program"),
-            section: card.attr("data-student-section"),
-            status: (
-              card.attr("data-student-status") || "pending"
-            ).toLowerCase(),
-          };
+        milestonesContainer.find("p").remove();
 
-          console.log("Card clicked for student:", clickedStudent);
+        var hasMilestones =
+          clickedStudent.milestones && clickedStudent.milestones.length > 0;
 
-          if (modal.hasClass("active")) {
-            modal.removeClass("active");
-            $("body").removeClass("modal-active");
-          }
+        if (hasMilestones) {
+          milestonesContainer.show();
+          milestonesTitle.text("Milestone");
 
-          modal.find(".student-name").text(clickedStudent.name);
-          modal.find(".academic-year span").text(clickedStudent.year || "N/A");
-          modal
-            .find(".motto p")
-            .text(clickedStudent.motto || "No motto provided");
-
-          var milestonesContainer = modal.find(".milestones");
-          var milestonesTitle = modal.find(".milestones h3");
-
-          milestonesContainer.find("p").remove();
-
-          var hasMilestones =
-            clickedStudent.milestones && clickedStudent.milestones.length > 0;
-
-          if (hasMilestones) {
-            milestonesContainer.show();
-            milestonesTitle.text("Milestone");
-
-            clickedStudent.milestones.forEach(function (milestone) {
-              if (
-                milestone &&
-                !milestone.toLowerCase().includes("sample") &&
-                milestone.trim() !== ""
-              ) {
-                milestonesContainer.append("<p>" + milestone + "</p>");
-              }
-            });
-          } else {
-            milestonesContainer.hide();
-          }
-
-          var latinAwardsContainer = modal.find(".latin-awards");
-
-          latinAwardsContainer.find("p").remove();
-
-          if (clickedStudent.honors) {
+          clickedStudent.milestones.forEach(function (milestone) {
             if (
-              typeof clickedStudent.honors === "string" &&
-              clickedStudent.honors.trim() !== ""
+              milestone &&
+              !milestone.toLowerCase().includes("sample") &&
+              milestone.trim() !== ""
             ) {
-              var honorsArray = clickedStudent.honors
-                .split(/[,;|\n]/)
-                .map(function (honor) {
-                  return honor.trim();
-                })
-                .filter(function (honor) {
-                  return honor.length > 0;
-                });
+              milestonesContainer.append("<p>" + milestone + "</p>");
+            }
+          });
+        } else {
+          milestonesContainer.hide();
+        }
 
-              if (honorsArray.length > 0) {
-                latinAwardsContainer.show();
-                honorsArray.forEach(function (honor) {
-                  latinAwardsContainer.append("<p>" + honor + "</p>");
-                });
-              } else {
-                latinAwardsContainer.hide();
-              }
-            } else if (
-              Array.isArray(clickedStudent.honors) &&
-              clickedStudent.honors.length > 0
-            ) {
+        var latinAwardsContainer = modal.find(".latin-awards");
+
+        latinAwardsContainer.find("p").remove();
+
+        if (clickedStudent.honors) {
+          if (
+            typeof clickedStudent.honors === "string" &&
+            clickedStudent.honors.trim() !== ""
+          ) {
+            var honorsArray = clickedStudent.honors
+              .split(/[,;|\n]/)
+              .map(function (honor) {
+                return honor.trim();
+              })
+              .filter(function (honor) {
+                return honor.length > 0;
+              });
+
+            if (honorsArray.length > 0) {
               latinAwardsContainer.show();
-              clickedStudent.honors.forEach(function (honor) {
+              honorsArray.forEach(function (honor) {
                 latinAwardsContainer.append("<p>" + honor + "</p>");
               });
             } else {
               latinAwardsContainer.hide();
             }
+          } else if (
+            Array.isArray(clickedStudent.honors) &&
+            clickedStudent.honors.length > 0
+          ) {
+            latinAwardsContainer.show();
+            clickedStudent.honors.forEach(function (honor) {
+              latinAwardsContainer.append("<p>" + honor + "</p>");
+            });
           } else {
             latinAwardsContainer.hide();
           }
+        } else {
+          latinAwardsContainer.hide();
+        }
 
-          var defaultPhotoUrl =
-            'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect width="300" height="300" fill="%23f0f0f0"/%3E%3Ctext x="150" y="150" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Student Photo%3C/text%3E%3C/svg%3E';
-          modal.find(".student-image-large img").attr("src", defaultPhotoUrl);
+        var defaultPhotoUrl =
+          'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect width="300" height="300" fill="%23f0f0f0"/%3E%3Ctext x="150" y="150" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3ENo Student Photo%3C/text%3E%3C/svg%3E';
+        modal.find(".student-image-large img").attr("src", defaultPhotoUrl);
 
-          if (clickedStudent.status === "pending") {
-            modal.find(".student-images").hide();
-            console.log("Student status is pending - hiding photos in modal");
-          } else {
-            modal.find(".student-images").show();
+        if (clickedStudent.status === "pending") {
+          modal.find(".student-images").hide();
+          console.log("Student status is pending - hiding photos in modal");
+        } else {
+          modal.find(".student-images").show();
 
-            fetchStudentPhotos(
-              clickedStudent.student_id,
-              {
-                program: clickedStudent.program,
-                department: clickedStudent.section,
-              },
-              function (photoResult) {
-                console.log("Student photos result:", photoResult);
+          fetchStudentPhotos(
+            clickedStudent.student_id,
+            {
+              program: clickedStudent.program,
+              department: clickedStudent.section,
+            },
+            function (photoResult) {
+              console.log("Student photos result:", photoResult);
 
-                var orderedPhotos =
-                  photoResult && Array.isArray(photoResult.photos)
-                    ? photoResult.photos
-                    : [];
-                var photoUrls = orderedPhotos
-                  .filter(function (photo) {
-                    return photo && photo.url;
-                  })
-                  .map(function (photo) {
-                    return photo.url;
-                  });
-                var photoTypes = orderedPhotos.map(function (photo) {
-                  return photo.type;
+              var orderedPhotos =
+                photoResult && Array.isArray(photoResult.photos)
+                  ? photoResult.photos
+                  : [];
+              var photoUrls = orderedPhotos
+                .filter(function (photo) {
+                  return photo && photo.url;
+                })
+                .map(function (photo) {
+                  return photo.url;
                 });
+              var photoTypes = orderedPhotos.map(function (photo) {
+                return photo.type;
+              });
 
-                console.log("Available photo URLs:", photoUrls);
+              console.log("Available photo URLs:", photoUrls);
 
-                if (photoUrls.length > 0) {
-                  modal
-                    .find(".student-image-large img")
-                    .attr("src", photoUrls[0]);
-                  modal.data("student-photos", photoUrls);
-                  modal.data("student-photo-types", photoTypes);
-                  modal.data("current-photo-index", 0);
-                  console.log(
-                    "Set student photo:",
-                    photoUrls[0],
-                    "types:",
-                    photoTypes
-                  );
-                } else {
-                  console.log(
-                    "No photos available for student",
-                    photoResult && photoResult.message
-                      ? photoResult.message
-                      : ""
-                  );
-                }
+              if (photoUrls.length > 0) {
+                modal
+                  .find(".student-image-large img")
+                  .attr("src", photoUrls[0]);
+                modal.data("student-photos", photoUrls);
+                modal.data("student-photo-types", photoTypes);
+                modal.data("current-photo-index", 0);
+                console.log(
+                  "Set student photo:",
+                  photoUrls[0],
+                  "types:",
+                  photoTypes
+                );
+              } else {
+                console.log(
+                  "No photos available for student",
+                  photoResult && photoResult.message
+                    ? photoResult.message
+                    : ""
+                );
               }
-            );
+            }
+          );
+        }
+
+        setTimeout(function () {
+          modal.addClass("active");
+          $("body").addClass("modal-active");
+
+          if (typeof window.clearAllPeels === "function") {
+            window.clearAllPeels();
           }
 
-          setTimeout(function () {
-            modal.addClass("active");
-            $("body").addClass("modal-active");
+          if (typeof window.disableMagazineInteractions === "function") {
+            window.disableMagazineInteractions();
+          }
 
-            if (typeof window.clearAllPeels === "function") {
-              window.clearAllPeels();
-            }
-
-            if (typeof window.disableMagazineInteractions === "function") {
-              window.disableMagazineInteractions();
-            }
-
-            if (window.peelClearInterval) {
-              clearInterval(window.peelClearInterval);
-            }
-            window.peelClearInterval = setInterval(function () {
-              if ($(".student-modal").hasClass("active")) {
-                if (typeof window.clearAllPeels === "function") {
-                  window.clearAllPeels();
-                }
-              } else {
-                clearInterval(window.peelClearInterval);
-                window.peelClearInterval = null;
-                $("body").removeClass("modal-active");
+          if (window.peelClearInterval) {
+            clearInterval(window.peelClearInterval);
+          }
+          window.peelClearInterval = setInterval(function () {
+            if ($(".student-modal").hasClass("active")) {
+              if (typeof window.clearAllPeels === "function") {
+                window.clearAllPeels();
               }
-            }, 100);
-          }, 50);
-
-          console.log("Modal opened for student:", clickedStudent.name);
-        });
-
-        $("#prevBtn").on("click", function () {
-          $(".magazine").turn("previous");
-        });
-
-        $("#nextBtn").on("click", function () {
-          $(".magazine").turn("next");
-        });
-
-        $("#tocBtn").on("click", function () {
-          console.log("Table of Contents button clicked");
-          populateThumbnails();
-          $(".thumbnails").addClass("visible");
-
-          setTimeout(function () {
-            if (typeof forceRegenerateThumbnails === "function") {
-              forceRegenerateThumbnails();
-            } else if (typeof refreshThumbnails === "function") {
-              refreshThumbnails();
-            }
-            if (typeof generateAllThumbnails === "function") {
-              generateAllThumbnails();
+            } else {
+              clearInterval(window.peelClearInterval);
+              window.peelClearInterval = null;
+              $("body").removeClass("modal-active");
             }
           }, 100);
-        });
+        }, 50);
 
-        $("#closeThumbnails").on("click", function () {
-          $(".thumbnails").removeClass("visible");
-        });
+        console.log("Modal opened for student:", clickedStudent.name);
+      });
 
-        function exitFullscreen() {
-          if (window.parent !== window) {
-            try {
-              if (window.parent.document.exitFullscreen) {
-                window.parent.document.exitFullscreen();
-              } else if (window.parent.document.webkitExitFullscreen) {
-                window.parent.document.webkitExitFullscreen();
-              } else if (window.parent.document.msExitFullscreen) {
-                window.parent.document.msExitFullscreen();
-              }
-            } catch (e) {
-              console.log("Could not exit parent fullscreen:", e);
-              if (document.exitFullscreen) {
-                document.exitFullscreen();
-              } else if (document.webkitExitFullscreen) {
-                document.webkitExitFullscreen();
-              } else if (document.msExitFullscreen) {
-                document.msExitFullscreen();
-              }
+      $("#prevBtn").on("click", function () {
+        $(".magazine").turn("previous");
+      });
+
+      $("#nextBtn").on("click", function () {
+        $(".magazine").turn("next");
+      });
+
+      $("#tocBtn").on("click", function () {
+        console.log("Table of Contents button clicked");
+        populateThumbnails();
+        $(".thumbnails").addClass("visible");
+
+        setTimeout(function () {
+          if (typeof forceRegenerateThumbnails === "function") {
+            forceRegenerateThumbnails();
+          } else if (typeof refreshThumbnails === "function") {
+            refreshThumbnails();
+          }
+          if (typeof generateAllThumbnails === "function") {
+            generateAllThumbnails();
+          }
+        }, 100);
+      });
+
+      $("#closeThumbnails").on("click", function () {
+        $(".thumbnails").removeClass("visible");
+      });
+
+      function exitFullscreen() {
+        if (window.parent !== window) {
+          try {
+            if (window.parent.document.exitFullscreen) {
+              window.parent.document.exitFullscreen();
+            } else if (window.parent.document.webkitExitFullscreen) {
+              window.parent.document.webkitExitFullscreen();
+            } else if (window.parent.document.msExitFullscreen) {
+              window.parent.document.msExitFullscreen();
             }
-          } else {
+          } catch (e) {
+            console.log("Could not exit parent fullscreen:", e);
             if (document.exitFullscreen) {
               document.exitFullscreen();
             } else if (document.webkitExitFullscreen) {
@@ -2087,57 +2015,84 @@
               document.msExitFullscreen();
             }
           }
+        } else {
+          if (document.exitFullscreen) {
+            document.exitFullscreen();
+          } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+          } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+          }
+        }
+      }
+
+      $("#fullscreenBtn").on("click", function () {
+        toggleFullscreen();
+      });
+
+      $(".nav-prev").on("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        var modal = $(".student-modal");
+        var photos = modal.data("student-photos");
+        var currentIndex = modal.data("current-photo-index") || 0;
+
+        if (photos && photos.length > 0) {
+          currentIndex = (currentIndex - 1 + photos.length) % photos.length;
+          modal.data("current-photo-index", currentIndex);
+          modal
+            .find(".student-image-large img")
+            .attr("src", photos[currentIndex]);
+          console.log("Previous photo:", photos[currentIndex]);
+        }
+      });
+
+      $(".nav-next").on("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        var modal = $(".student-modal");
+        var photos = modal.data("student-photos");
+        var currentIndex = modal.data("current-photo-index") || 0;
+
+        if (photos && photos.length > 0) {
+          currentIndex = (currentIndex + 1) % photos.length;
+          modal.data("current-photo-index", currentIndex);
+          modal
+            .find(".student-image-large img")
+            .attr("src", photos[currentIndex]);
+          console.log("Next photo:", photos[currentIndex]);
+        }
+      });
+
+      $(document).on("click", function (e) {
+        if ($(e.target).hasClass("thumbnails")) {
+          $(".thumbnails").removeClass("visible");
+        }
+      });
+
+      $(".close-modal").on("click", function (e) {
+        e.stopPropagation();
+        $(".student-modal").removeClass("active");
+
+        $("body").removeClass("modal-active");
+
+        if (typeof window.enableMagazineInteractions === "function") {
+          window.enableMagazineInteractions();
         }
 
-        $("#fullscreenBtn").on("click", function () {
-          toggleFullscreen();
-        });
+        if (window.peelClearInterval) {
+          clearInterval(window.peelClearInterval);
+          window.peelClearInterval = null;
+        }
 
-        $(".nav-prev").on("click", function (e) {
-          e.preventDefault();
-          e.stopPropagation();
+        console.log("Modal closed via close button");
+      });
 
-          var modal = $(".student-modal");
-          var photos = modal.data("student-photos");
-          var currentIndex = modal.data("current-photo-index") || 0;
-
-          if (photos && photos.length > 0) {
-            currentIndex = (currentIndex - 1 + photos.length) % photos.length;
-            modal.data("current-photo-index", currentIndex);
-            modal
-              .find(".student-image-large img")
-              .attr("src", photos[currentIndex]);
-            console.log("Previous photo:", photos[currentIndex]);
-          }
-        });
-
-        $(".nav-next").on("click", function (e) {
-          e.preventDefault();
-          e.stopPropagation();
-
-          var modal = $(".student-modal");
-          var photos = modal.data("student-photos");
-          var currentIndex = modal.data("current-photo-index") || 0;
-
-          if (photos && photos.length > 0) {
-            currentIndex = (currentIndex + 1) % photos.length;
-            modal.data("current-photo-index", currentIndex);
-            modal
-              .find(".student-image-large img")
-              .attr("src", photos[currentIndex]);
-            console.log("Next photo:", photos[currentIndex]);
-          }
-        });
-
-        $(document).on("click", function (e) {
-          if ($(e.target).hasClass("thumbnails")) {
-            $(".thumbnails").removeClass("visible");
-          }
-        });
-
-        $(".close-modal").on("click", function (e) {
-          e.stopPropagation();
-          $(".student-modal").removeClass("active");
+      $(".student-modal").on("click", function (e) {
+        if ($(e.target).hasClass("student-modal")) {
+          $(this).removeClass("active");
 
           $("body").removeClass("modal-active");
 
@@ -2150,86 +2105,53 @@
             window.peelClearInterval = null;
           }
 
-          console.log("Modal closed via close button");
-        });
-
-        $(".student-modal").on("click", function (e) {
-          if ($(e.target).hasClass("student-modal")) {
-            $(this).removeClass("active");
-
-            $("body").removeClass("modal-active");
-
-            if (typeof window.enableMagazineInteractions === "function") {
-              window.enableMagazineInteractions();
-            }
-
-            if (window.peelClearInterval) {
-              clearInterval(window.peelClearInterval);
-              window.peelClearInterval = null;
-            }
-
-            console.log("Modal closed via background click");
-          }
-        });
-
-        $(".modal-content").on("click", function (e) {
-          e.stopPropagation();
-        });
-
-        $(document).on("keydown", function (e) {
-          if (e.keyCode === 27 && $(".student-modal").hasClass("active")) {
-            $(".student-modal").removeClass("active");
-            $("body").removeClass("modal-active");
-
-            if (typeof window.enableMagazineInteractions === "function") {
-              window.enableMagazineInteractions();
-            }
-
-            if (window.peelClearInterval) {
-              clearInterval(window.peelClearInterval);
-              window.peelClearInterval = null;
-            }
-
-            console.log("Modal closed via ESC key");
-          }
-        });
-
-        document.addEventListener("fullscreenchange", function () {
-          resizeViewport();
-        });
-        document.addEventListener("webkitfullscreenchange", function () {
-          resizeViewport();
-        });
-        document.addEventListener("msfullscreenchange", function () {
-          resizeViewport();
-        });
+          console.log("Modal closed via background click");
+        }
       });
-    </script>
 
-    <!-- Bottom Curl -->
-    <div class="yearbook-lower-curl">
-      <svg
-        viewBox="0 0 1440 120"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        preserveAspectRatio="none"
-        style="display: block; width: 100%; height: 60px"
-      >
-        <path
-          d="M0,60 Q180,100 360,60 T720,60 T1080,60 T1440,60 L1440,120 L0,120 Z"
-          fill="#1a237e"
-          opacity="0.4"
-        />
-        <path
-          d="M0,80 Q180,40 360,80 T720,80 T1080,80 T1440,80 L1440,120 L0,120 Z"
-          fill="#112d4e"
-          opacity="0.7"
-        />
-        <path
-          d="M0,100 Q180,60 360,100 T720,100 T1080,100 T1440,100 L1440,120 L0,120 Z"
-          fill="#021326"
-        />
-      </svg>
-    </div>
-  </body>
+      $(".modal-content").on("click", function (e) {
+        e.stopPropagation();
+      });
+
+      $(document).on("keydown", function (e) {
+        if (e.keyCode === 27 && $(".student-modal").hasClass("active")) {
+          $(".student-modal").removeClass("active");
+          $("body").removeClass("modal-active");
+
+          if (typeof window.enableMagazineInteractions === "function") {
+            window.enableMagazineInteractions();
+          }
+
+          if (window.peelClearInterval) {
+            clearInterval(window.peelClearInterval);
+            window.peelClearInterval = null;
+          }
+
+          console.log("Modal closed via ESC key");
+        }
+      });
+
+      document.addEventListener("fullscreenchange", function () {
+        resizeViewport();
+      });
+      document.addEventListener("webkitfullscreenchange", function () {
+        resizeViewport();
+      });
+      document.addEventListener("msfullscreenchange", function () {
+        resizeViewport();
+      });
+    });
+  </script>
+
+  <!-- Bottom Curl -->
+  <div class="yearbook-lower-curl">
+    <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"
+      style="display: block; width: 100%; height: 60px">
+      <path d="M0,60 Q180,100 360,60 T720,60 T1080,60 T1440,60 L1440,120 L0,120 Z" fill="#1a237e" opacity="0.4" />
+      <path d="M0,80 Q180,40 360,80 T720,80 T1080,80 T1440,80 L1440,120 L0,120 Z" fill="#112d4e" opacity="0.7" />
+      <path d="M0,100 Q180,60 360,100 T720,100 T1080,100 T1440,100 L1440,120 L0,120 Z" fill="#021326" />
+    </svg>
+  </div>
+</body>
+
 </html>
