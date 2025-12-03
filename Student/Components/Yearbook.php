@@ -793,9 +793,9 @@ try {
       top: calc(100% + 8px);
       left: 0;
       right: 0;
-      background: #112d4e;
-      border-radius: 12px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      background: linear-gradient(135deg, #112d4e 0%, #1a237e 100%);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 12px rgba(17, 45, 78, 0.6);
       backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.1);
       max-height: 180px;
@@ -803,14 +803,26 @@ try {
       z-index: 10000;
       opacity: 0;
       visibility: hidden;
-      transform: translateY(-10px);
-      transition: all 0.3s ease;
+      transform: translateY(-15px) scale(0.98);
+      transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease-in-out;
     }
 
     .yearbook-search-suggestions.show {
       opacity: 1;
       visibility: visible;
-      transform: translateY(0);
+      transform: translateY(0) scale(1);
+      animation: slideDown 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-15px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
     }
 
     .yearbook-search-suggestion-item {
