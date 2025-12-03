@@ -714,6 +714,270 @@ try {
         opacity: 0.8;
       }
     }
+
+    /* Yearbook Search Container Styles */
+    .yearbook-search-wrapper {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 1.5rem auto 0;
+      max-width: 500px;
+      z-index: 100;
+    }
+
+    .yearbook-search-container {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 25px;
+      padding: 8px 16px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .yearbook-search-container:hover {
+      background: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .yearbook-search-input {
+      color: white !important;
+      background: transparent !important;
+      border: none;
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+      width: 100%;
+      outline: none;
+      flex: 1;
+      padding: 0.3rem 0.5rem;
+      min-width: 0;
+    }
+
+    .yearbook-search-input::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .yearbook-search-button {
+      background: none;
+      border: none;
+      border-radius: 50%;
+      padding: 8px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      margin-left: 8px;
+      color: rgba(255, 255, 255, 0.8);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .yearbook-search-button:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: scale(1.05);
+    }
+
+    .yearbook-search-button i {
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .yearbook-search-suggestions {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      right: 0;
+      background: #112d4e;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      max-height: 180px;
+      overflow-y: auto;
+      z-index: 10000;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: all 0.3s ease;
+    }
+
+    .yearbook-search-suggestions.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .yearbook-search-suggestion-item {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      cursor: pointer;
+      transition: background 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .yearbook-search-suggestion-item:last-child {
+      border-bottom: none;
+    }
+
+    .yearbook-search-suggestion-item:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .yearbook-search-suggestion-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.95);
+      font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
+        BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    .yearbook-search-suggestion-id {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.6);
+      font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
+        BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    .yearbook-search-suggestion-program {
+      font-size: 11px;
+      color: #fcda15;
+      font-weight: 500;
+      font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
+        BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    .yearbook-search-suggestion-empty {
+      padding: 1.5rem 1.25rem;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 13px;
+      font-family: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system,
+        BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    .yearbook-search-suggestions::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .yearbook-search-suggestions::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+    }
+
+    .yearbook-search-suggestions::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+    }
+
+    .yearbook-search-suggestions::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Responsive Media Queries for Yearbook Search */
+    @media (max-width: 768px) {
+      .yearbook-search-wrapper {
+        max-width: 90%;
+        margin: 1rem auto 0;
+      }
+
+      .yearbook-search-container {
+        max-width: 100%;
+        padding: 6px 12px;
+      }
+
+      .yearbook-search-input {
+        font-size: 13px;
+        padding: 0.25rem 0.4rem;
+      }
+
+      .yearbook-search-button {
+        padding: 6px;
+      }
+
+      .yearbook-search-button i {
+        font-size: 14px;
+      }
+
+      .yearbook-search-suggestions {
+        max-height: 160px;
+      }
+
+      .yearbook-search-suggestion-item {
+        padding: 0.8rem 1rem;
+      }
+
+      .yearbook-search-suggestion-name {
+        font-size: 13px;
+      }
+
+      .yearbook-search-suggestion-id {
+        font-size: 11px;
+      }
+
+      .yearbook-search-suggestion-program {
+        font-size: 10px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .yearbook-search-wrapper {
+        max-width: 95%;
+        margin: 0.8rem auto 0;
+      }
+
+      .yearbook-search-container {
+        padding: 5px 10px;
+        border-radius: 20px;
+      }
+
+      .yearbook-search-input {
+        font-size: 12px;
+        padding: 0.2rem 0.3rem;
+      }
+
+      .yearbook-search-button {
+        padding: 5px;
+        margin-left: 4px;
+      }
+
+      .yearbook-search-button i {
+        font-size: 13px;
+      }
+
+      .yearbook-search-suggestions {
+        max-height: 140px;
+        border-radius: 10px;
+      }
+
+      .yearbook-search-suggestion-item {
+        padding: 0.7rem 0.8rem;
+      }
+
+      .yearbook-search-suggestion-name {
+        font-size: 12px;
+      }
+
+      .yearbook-search-suggestion-id {
+        font-size: 10px;
+      }
+
+      .yearbook-search-suggestion-program {
+        font-size: 9px;
+      }
+
+      .yearbook-search-suggestion-empty {
+        padding: 1.2rem 1rem;
+        font-size: 12px;
+      }
+    }
   </style>
 </head>
 
@@ -730,6 +994,18 @@ try {
         <p class="yearbook-description" id="yearbook-description-text">
           Click on any yearbook below to explore your department yearbook.
         </p>
+
+        <!-- Search Container -->
+        <div class="yearbook-search-wrapper">
+          <div class="yearbook-search-container">
+            <input type="text" id="yearbook-search-input" name="yearbook-search-input" class="yearbook-search-input"
+              placeholder="Search student ID or name..." autocomplete="off" />
+            <button class="yearbook-search-button">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+          <div class="yearbook-search-suggestions" id="yearbook-search-suggestions"></div>
+        </div>
       </div>
 
       <div class="yearbook-iframe-container" style="display: none; position: relative;">
@@ -2184,6 +2460,12 @@ try {
         itemsContainer.style.display = 'flex';
       }
 
+      // Restore search wrapper
+      const searchWrapper = document.querySelector('.yearbook-search-wrapper');
+      if (searchWrapper) {
+        searchWrapper.style.display = '';
+      }
+
       // Restore all lower curl elements
       lowerCurlElements.forEach(curl => {
         if (!curl.closest('.yearbook-iframe-container')) {
@@ -2426,7 +2708,237 @@ try {
 
         console.log('[Yearbook] 📄 PDF badges added. Modal will show when yearbook is clicked.');
       }
+
+      // Initialize yearbook search functionality
+      initializeYearbookSearch();
     });
+
+    // Yearbook Search Functionality
+    let yearbookSearchTimeout = null;
+
+    function initializeYearbookSearch() {
+      const searchInput = document.getElementById('yearbook-search-input');
+      const searchSuggestions = document.getElementById('yearbook-search-suggestions');
+      const searchButton = document.querySelector('.yearbook-search-button');
+
+      if (!searchInput || !searchSuggestions) return;
+
+      searchInput.addEventListener('input', function() {
+        const query = this.value.trim();
+
+        if (yearbookSearchTimeout) {
+          clearTimeout(yearbookSearchTimeout);
+        }
+
+        if (query.length < 2) {
+          hideYearbookSuggestions();
+          return;
+        }
+
+        yearbookSearchTimeout = setTimeout(() => {
+          searchYearbookStudents(query);
+        }, 300);
+      });
+
+      if (searchButton) {
+        searchButton.addEventListener('click', function(e) {
+          e.preventDefault();
+          const query = searchInput.value.trim();
+          if (query.length >= 2) {
+            searchYearbookStudents(query);
+          }
+        });
+      }
+
+      searchInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const query = this.value.trim();
+          if (query.length >= 2) {
+            searchYearbookStudents(query);
+          }
+        }
+      });
+
+      document.addEventListener('click', function(e) {
+        if (!e.target.closest('.yearbook-search-wrapper')) {
+          hideYearbookSuggestions();
+        }
+      });
+
+      searchInput.addEventListener('focus', function() {
+        if (this.value.trim().length >= 2 && searchSuggestions.children.length > 0) {
+          showYearbookSuggestions();
+        }
+      });
+    }
+
+    function searchYearbookStudents(query) {
+      const searchSuggestions = document.getElementById('yearbook-search-suggestions');
+      if (!searchSuggestions) return;
+
+      const basePath = '<?php echo BASE_URL; ?>';
+      const searchUrl = `${basePath}Connection/Student/SearchStudents.php?query=${encodeURIComponent(query)}&limit=10`;
+
+      searchSuggestions.innerHTML = `
+        <div class="yearbook-search-suggestion-empty">
+          <i class="fas fa-spinner fa-spin"></i> Searching...
+        </div>
+      `;
+      showYearbookSuggestions();
+
+      fetch(searchUrl)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const contentType = response.headers.get('content-type');
+          if (!contentType || !contentType.includes('application/json')) {
+            return response.text().then(text => {
+              console.error('Non-JSON response received:', text.substring(0, 200));
+              throw new Error('Server returned non-JSON response');
+            });
+          }
+          return response.json();
+        })
+        .then(data => {
+          if (data.success && data.results && data.results.length > 0) {
+            displayYearbookSuggestions(data.results);
+          } else {
+            searchSuggestions.innerHTML = `
+              <div class="yearbook-search-suggestion-empty">
+                <i class="fas fa-search"></i> No students found
+              </div>
+            `;
+          }
+        })
+        .catch(error => {
+          console.error('Search error:', error);
+          searchSuggestions.innerHTML = `
+            <div class="yearbook-search-suggestion-empty">
+              <i class="fas fa-exclamation-circle"></i> Error searching students
+            </div>
+          `;
+        });
+    }
+
+    function displayYearbookSuggestions(results) {
+      const searchSuggestions = document.getElementById('yearbook-search-suggestions');
+      if (!searchSuggestions) return;
+
+      searchSuggestions.innerHTML = '';
+
+      results.forEach(student => {
+        const item = document.createElement('div');
+        item.className = 'yearbook-search-suggestion-item';
+
+        let departmentYear = '';
+        if (student.department_section) {
+          departmentYear = escapeHtml(student.department_section);
+          if (student.academic_year) {
+            departmentYear += ' - ' + escapeHtml(student.academic_year);
+          }
+        } else if (student.academic_year) {
+          departmentYear = escapeHtml(student.academic_year);
+        }
+
+        item.innerHTML = `
+          <div class="yearbook-search-suggestion-name">${escapeHtml(student.name)}</div>
+          <div class="yearbook-search-suggestion-id">Student ID: ${escapeHtml(student.student_id)}</div>
+          <div class="yearbook-search-suggestion-program">${departmentYear}</div>
+        `;
+
+        item.addEventListener('click', function() {
+          handleYearbookStudentSelection(student);
+        });
+
+        searchSuggestions.appendChild(item);
+      });
+
+      showYearbookSuggestions();
+    }
+
+    function handleYearbookStudentSelection(student) {
+      console.log('Selected student:', student);
+
+      const searchInput = document.getElementById('yearbook-search-input');
+      if (searchInput) {
+        searchInput.value = student.name;
+      }
+
+      hideYearbookSuggestions();
+
+      // Map collection to department code
+      const collectionToDepartment = {
+        bsme: 'BSME',
+        bsmt: 'BSME',
+        bscje: 'BSCJ',
+        bstm: 'BSTM',
+        btvted: 'COE',
+        beced: 'COE',
+        bsn: 'BSN',
+        bsis: 'BSIS',
+        bsma: 'BSBA',
+        bse: 'BSBA',
+      };
+
+      const departmentCode = collectionToDepartment[student.collection] || 'BSME';
+      
+      // Map department code to department name
+      const departmentNames = {
+        'BSME': 'Maritime Education',
+        'BSTM': 'Tourism Management',
+        'BSCJ': 'Criminal Justice Education',
+        'BSIS': 'Information System',
+        'COE': 'Education',
+        'BSBA': 'Business Administration',
+        'BSN': 'Nursing'
+      };
+
+      const departmentName = departmentNames[departmentCode] || 'Maritime Education';
+
+      // Store student info for the iframe to use
+      sessionStorage.setItem('searchSelectedStudent', JSON.stringify({
+        student_id: student.student_id,
+        name: student.name,
+        department_section: student.department_section,
+        academic_year: student.academic_year,
+        collection: student.collection,
+      }));
+
+      // Use the existing showYearbookIframe function which handles loader and fullscreen
+      showYearbookIframe(departmentCode, departmentName);
+
+      // After iframe starts loading, update the src with student parameters
+      setTimeout(() => {
+        const iframe = document.getElementById('yearbookIframe');
+        if (iframe) {
+          const basePath = '<?php echo BASE_URL; ?>';
+          iframe.src = `${basePath}Student/Yearbook/index.html?department=${departmentCode}&student_id=${encodeURIComponent(student.student_id)}&student_name=${encodeURIComponent(student.name)}&fullscreen=true`;
+          console.log('[Yearbook Search] Updated iframe src with student params:', iframe.src);
+        }
+      }, 100);
+    }
+
+    function showYearbookSuggestions() {
+      const searchSuggestions = document.getElementById('yearbook-search-suggestions');
+      if (searchSuggestions) {
+        searchSuggestions.classList.add('show');
+      }
+    }
+
+    function hideYearbookSuggestions() {
+      const searchSuggestions = document.getElementById('yearbook-search-suggestions');
+      if (searchSuggestions) {
+        searchSuggestions.classList.remove('show');
+      }
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
   </script>
 </body>
 
