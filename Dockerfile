@@ -28,9 +28,14 @@ RUN chown -R www-data:www-data /var/www/html
 RUN a2enmod rewrite headers
 COPY conf/httpd.conf /etc/apache2/sites-available/000-default.conf
 
+# Copy and setup entrypoint script (fixes MPM at runtime - Railway re-enables modules)
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 # Set default PORT if not provided by Railway
 ENV PORT=80
 
 EXPOSE ${PORT}
 
-CMD ["apache2-foreground"]
+# Start Apache via entrypoint
+CMD ["/usr/local/bin/docker-entrypoint.sh"]
