@@ -160,11 +160,64 @@ php -S localhost:8000
 
 ```
 ECADYB/
-├── Connection/     # Database operations & API endpoints
-├── Admin/          # Administrative dashboard
-├── Student/        # Student portal interface
-├── LandingPage/    # Public-facing pages
-└── vendor/         # PHP dependencies
+├── Admin/                    # Administrative dashboard
+│   ├── assets/              # Admin CSS and JavaScript files
+│   ├── Components/          # Admin page components
+│   ├── Departments/         # Department-specific yearbook views
+│   ├── Flipbook/            # Turn.js flipbook library
+│   └── Yearbook/            # Admin yearbook viewer
+│
+├── Student/                 # Student portal interface
+│   ├── assets/              # Student CSS and JavaScript files
+│   ├── Components/          # Student page components
+│   └── Yearbook/            # Student yearbook viewer
+│
+├── Public/                  # Public-facing authentication pages
+│   ├── assets/              # Public page assets
+│   └── Components/          # Login, registration, password reset
+│
+├── LandingPage/             # Main landing page
+│   ├── index.html           # Landing page HTML
+│   ├── style.css            # Landing page styles
+│   ├── script.js            # Landing page functionality
+│   └── service-worker.js    # PWA service worker
+│
+├── Connection/              # Backend API and database operations
+│   ├── Admin/               # Admin-related operations
+│   ├── Announcement/        # Announcement CRUD operations
+│   ├── Configuration/       # Database config and utilities
+│   ├── Cover/               # Yearbook cover management
+│   ├── Logo/                # Logo upload and management
+│   ├── Photos/              # Photo gallery operations
+│   ├── Session/             # Session management
+│   └── Student/             # Student data operations
+│
+├── img/                     # Static images and assets
+│   ├── BATCH TEMPLATES/     # Student batch upload templates
+│   ├── CAROUSEL/            # Carousel images
+│   ├── SampleLogos/         # Sample logo files
+│   ├── YB COVER/            # Yearbook cover images
+│   └── YB COVER B-F/        # Yearbook back/front covers
+│
+├── Turn.js/                 # Turn.js library for flipbook
+├── docker/                  # Docker configuration files
+├── conf/                    # Apache/server configuration
+├── vendor/                  # PHP dependencies (Composer)
+│
+├── .env                     # Environment variables (not in repo)
+├── .env.example             # Environment template
+├── composer.json            # PHP dependencies
+├── composer.lock            # Locked dependency versions
+├── index.php                # Application entry point
+├── Dockerfile               # Docker container definition
+├── docker-entrypoint.sh     # Docker startup script
+├── nixpacks.toml            # Nixpacks build configuration
+├── railway.json             # Railway deployment config
+├── .htaccess                # Apache rewrite rules
+├── .railwayignore           # Railway ignore patterns
+├── README.md                # Project documentation
+├── DEPLOYMENT.md            # Deployment guide
+└── SECURITY.md              # Security policies
 ```
 
 ---
