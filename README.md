@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png" alt="Graduation Gallery Logo" width="200"/>
+![Graduation Gallery Logo](./img/PREVIEWLOGO.png)
 
 # Graduation Gallery Application
 
