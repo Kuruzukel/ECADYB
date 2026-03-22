@@ -1,6 +1,8 @@
 <div align="center">
 
-# 🎓 Graduation Gallery Application
+<img src="https://ECADYB.b-cdn.net/img/PREVIEWLOGO.png" alt="Graduation Gallery Logo" width="200"/>
+
+# Graduation Gallery Application
 
 ### _A Modern Digital Yearbook Platform_
 
@@ -12,30 +14,40 @@
 
 ---
 
-## 🌟 Overview
+## Overview
 
 A comprehensive web platform designed for educational institutions to create, manage, and showcase digital yearbooks with **secure authentication**, **cloud storage**, and **modern media management**.
 
-### ✨ Key Features
+### Key Features
 
-- 📚 **Digital Yearbook Management** - Full-featured platform for creating, customizing, and publishing interactive digital yearbooks with intuitive content management workflows
-- 👤 **Student Profile System** - Centralized database for managing student records, biographical information, and academic achievements with secure data handling
-- 🖼️ **Media Gallery Management** - Enterprise-grade photo organization system with batch upload capabilities, categorization, and high-resolution image display
-- 🔐 **Authentication & Authorization** - Multi-tier role-based access control (RBAC) system with secure session management and granular permission settings
-- ☁️ **Cloud-Native Storage Integration** - Scalable CDN-backed storage infrastructure powered by Bunny.net for optimized global content delivery
-- 📧 **Automated Email Service** - Configurable email notification system supporting both SMTP and API-based delivery (SendGrid) for reliable communication
+- **Digital Yearbook Management** - Full-featured platform for creating, customizing, and publishing interactive digital yearbooks with intuitive content management workflows
+- **Student Profile System** - Centralized database for managing student records, biographical information, and academic achievements with secure data handling
+- **Media Gallery Management** - Enterprise-grade photo organization system with batch upload capabilities, categorization, and high-resolution image display
+- **Authentication & Authorization** - Multi-tier role-based access control (RBAC) system with secure session management and granular permission settings
+- **Cloud-Native Storage Integration** - Scalable CDN-backed storage infrastructure powered by Bunny.net for optimized global content delivery
+- **Automated Email Service** - Configurable email notification system supporting both SMTP and API-based delivery (SendGrid) for reliable communication
 
 ---
 
-## ⚙️ Environment Configuration
+## Certificates and Achievements
 
-### 🔑 Required Environment Variables
+### Introduction to Cybersecurity
+
+This project demonstrates security best practices and secure development principles learned through cybersecurity training.
+
+![Linux for Cybersecurity Certificate](./certificates/LinuxforCybersecurityCruzKel.png)
+
+---
+
+## Environment Configuration
+
+### Required Environment Variables
 
 <table>
 <tr>
 <td width="50%">
 
-#### 🗄️ Database Configuration
+#### Database Configuration
 
 | Variable                     | Description               |
 | ---------------------------- | ------------------------- |
@@ -46,7 +58,7 @@ A comprehensive web platform designed for educational institutions to create, ma
 </td>
 <td width="50%">
 
-#### 🌐 CDN Storage (Bunny.net)
+#### CDN Storage (Bunny.net)
 
 | Variable             | Description                        |
 | -------------------- | ---------------------------------- |
@@ -59,10 +71,10 @@ A comprehensive web platform designed for educational institutions to create, ma
 </tr>
 </table>
 
-#### 📧 Email Service Configuration
+#### Email Service Configuration
 
 <details>
-<summary><b>🚂 For Railway (Production) - Click to expand</b></summary>
+<summary><b>For Railway (Production) - Click to expand</b></summary>
 
 | Variable           | Description                         |
 | ------------------ | ----------------------------------- |
@@ -70,12 +82,12 @@ A comprehensive web platform designed for educational institutions to create, ma
 | `SMTP_FROM_EMAIL`  | Sender email address                |
 | `SMTP_FROM_NAME`   | Sender display name                 |
 
-> **⚠️ Note:** Railway blocks standard SMTP ports, so SendGrid is required for production.
+> **Note:** Railway blocks standard SMTP ports, so SendGrid is required for production.
 
 </details>
 
 <details>
-<summary><b>💻 For Localhost (Development) - Click to expand</b></summary>
+<summary><b>For Localhost (Development) - Click to expand</b></summary>
 
 | Variable          | Description                                   |
 | ----------------- | --------------------------------------------- |
@@ -91,20 +103,20 @@ A comprehensive web platform designed for educational institutions to create, ma
 
 ---
 
-## 🚀 Deployment
+## Deployment
 
-### ☁️ Railway Platform
+### Railway Platform
 
 <table>
 <tr><td>
 
-**Step 1:** 🔗 **Connect Repository**
+**Step 1:** **Connect Repository**
 
 ```
 Connect your GitHub repository to Railway
 ```
 
-**Step 2:** 🔧 **Configure Variables**
+**Step 2:** **Configure Variables**
 
 Set the following in Railway dashboard:
 
@@ -114,7 +126,7 @@ Set the following in Railway dashboard:
 - `SENDGRID_API_KEY` - Email service
 - `SMTP_FROM_EMAIL`, `SMTP_FROM_NAME` - Email sender info
 
-**Step 3:** 🎉 **Deploy**
+**Step 3:** **Deploy**
 
 ```
 Automatic deployment with Nixpacks or Docker
@@ -123,41 +135,41 @@ Automatic deployment with Nixpacks or Docker
 </td></tr>
 </table>
 
-> 📖 **Need help?** Check out [`DEPLOYMENT.md`](DEPLOYMENT.md) for detailed instructions.
+> **Need help?** Check out [`DEPLOYMENT.md`](DEPLOYMENT.md) for detailed instructions.
 
 ---
 
-### 💻 Local Development
+### Local Development
 
 ```bash
-# 📦 Install dependencies
+# Install dependencies
 composer install
 
-# 🔑 Configure environment
+# Configure environment
 cp .env.example .env
 
-# ✏️ Edit .env with your credentials
+# Edit .env with your credentials
 
-# 🚀 Start development server
+# Start development server
 php -S localhost:8000
 ```
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
-📂 ECADYB/
-├── 🔌 Connection/     # Database operations & API endpoints
-├── 👨‍💼 Admin/          # Administrative dashboard
-├── 🎓 Student/        # Student portal interface
-├── 🏠 LandingPage/    # Public-facing pages
-└── 📚 vendor/         # PHP dependencies
+ECADYB/
+├── Connection/     # Database operations & API endpoints
+├── Admin/          # Administrative dashboard
+├── Student/        # Student portal interface
+├── LandingPage/    # Public-facing pages
+└── vendor/         # PHP dependencies
 ```
 
 ---
 
-## 🛠️ Technical Stack
+## Technical Stack
 
 <table>
 <tr>
@@ -182,27 +194,28 @@ php -S localhost:8000
 </tr>
 <tr>
 <td align="center" colspan="2">
-<b>📬 SendGrid API</b> (Railway)
+<b>SendGrid API</b> (Railway)
 </td>
 <td align="center" colspan="2">
-<b>📮 PHPMailer</b> (localhost)
+<b>PHPMailer</b> (localhost)
 </td>
 </tr>
 </table>
 
 ---
 
-## 📚 Documentation
+## Documentation
 
-| Document                            | Description                           |
-| ----------------------------------- | ------------------------------------- |
-| 📘 [`DEPLOYMENT.md`](DEPLOYMENT.md) | Complete deployment guide for Railway |
+| Document                         | Description                           |
+| -------------------------------- | ------------------------------------- |
+| [`DEPLOYMENT.md`](DEPLOYMENT.md) | Complete deployment guide for Railway |
+| [`SECURITY.md`](SECURITY.md)     | Security policies and best practices  |
 
 ---
 
 <div align="center">
 
-**Made with ❤️ by Team Nova Spire**
+**Made by Team Nova Spire**
 
 _Empowering schools to create memorable digital yearbooks_
 
